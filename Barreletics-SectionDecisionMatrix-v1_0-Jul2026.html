@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Barreletics — Section Preview & Decisions</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #eae5da;
+      color: #1c1916;
+    }
+    
+    .container {
+      max-width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: #fff;
+      border-bottom: 1px solid #d6cfc0;
+      padding: 24px 32px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    
+    header h1 {
+      margin: 0 0 12px;
+      font-size: 24px;
+      font-weight: 600;
+    }
+    
+    header p {
+      margin: 0;
+      font-size: 13px;
+      color: #6b645a;
+      max-width: 600px;
+    }
+    
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 0;
+      margin: 0;
+    }
+    
+    .preview-panel {
+      grid-column: 1;
+      min-height: 100vh;
+      background: #fff;
+      border-right: 1px solid #d6cfc0;
+      overflow-y: auto;
+    }
+    
+    .section-preview {
+      display: none;
+      min-height: 100vh;
+      padding: 0;
+    }
+    
+    .section-preview.active {
+      display: block;
+    }
+    
+    .section-preview iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+    
+    .control-panel {
+      grid-column: 2;
+      position: fixed;
+      right: 0;
+      top: 72px;
+      width: 300px;
+      height: calc(100vh - 72px);
+      background: #faf8f3;
+      border-left: 1px solid #d6cfc0;
+      overflow-y: auto;
+      padding: 24px 16px;
+    }
+    
+    .nav-section {
+      margin-bottom: 32px;
+    }
+    
+    .nav-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #9a9182;
+      margin: 0 0 10px;
+      padding: 0 8px;
+    }
+    
+    .nav-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    
+    .nav-item {
+      margin: 0;
+    }
+    
+    .nav-link {
+      display: block;
+      padding: 8px 12px;
+      font-size: 13px;
+      color: #6b645a;
+      text-decoration: none;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    
+    .nav-link:hover {
+      background: #e2dccf;
+      color: #1c1916;
+    }
+    
+    .nav-link.active {
+      background: #1c1916;
+      color: #fff;
+      font-weight: 600;
+    }
+    
+    .control-group {
+      margin-bottom: 16px;
+      background: #fff;
+      padding: 12px;
+      border-radius: 3px;
+      border: 1px solid #d6cfc0;
+    }
+    
+    .control-label {
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #9a9182;
+      margin: 0 0 6px;
+    }
+    
+    select, input {
+      display: block;
+      width: 100%;
+      padding: 8px;
+      font-size: 12px;
+      border: 1px solid #d6cfc0;
+      background: #fff;
+      color: #1c1916;
+      font-family: inherit;
+      border-radius: 3px;
+      margin-top: 4px;
+    }
+    
+    select:focus, input:focus {
+      outline: none;
+      border-color: #1c1916;
+      box-shadow: 0 0 0 2px rgba(28, 25, 22, 0.1);
+    }
+    
+    .status-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 2px;
+      font-size: 10px;
+      font-weight: 600;
+      margin-top: 8px;
+      background: #f3f3f3;
+      color: #6b645a;
+    }
+    
+    .status-badge.keep { background: #e6efe8; color: #3a6b4a; }
+    .status-badge.refactor { background: #fff3e6; color: #8b5a00; }
+    .status-badge.rebuild { background: #fbe9e2; color: #c9502f; }
+    .status-badge.skip { background: #fce6e6; color: #8b3a3a; }
+    
+    .divider {
+      height: 1px;
+      background: #d6cfc0;
+      margin: 16px 0;
+    }
+    
+    .summary {
+      background: #fff;
+      padding: 12px;
+      border-radius: 3px;
+      border: 1px solid #d6cfc0;
+      font-size: 11px;
+    }
+    
+    .summary strong {
+      display: block;
+      font-size: 18px;
+      color: #1c1916;
+      margin-bottom: 4px;
+    }
+    
+    @media (max-width: 1200px) {
+      .grid { grid-template-columns: 1fr; }
+      .control-panel { position: relative; width: 100%; height: auto; border-left: 0; border-top: 1px solid #d6cfc0; top: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Barreletics — Section Preview & Decisions</h1>
+      <p>Select a section from the right panel to preview it. Mark your decision (Keep / Refactor / Rebuild / Skip), assign an owner, and add notes.</p>
+    </header>
+    
+    <div class="grid">
+      <div class="preview-panel" id="preview-panel">
+        <!-- Previews will load here -->
+      </div>
+      
+      <div class="control-panel">
+        <div class="nav-section">
+          <h3 class="nav-title">All Sections</h3>
+          <ul class="nav-list" id="nav-home"></ul>
+        </div>
+
+        <div class="nav-section">
+          <h3 class="nav-title">Footer Variants</h3>
+          <ul class="nav-list" id="nav-footer"></ul>
+        </div>
+
+        <div class="divider"></div>
+
+        <div id="decision-controls"></div>
+
+        <div class="divider"></div>
+
+        <div class="nav-section">
+          <h3 class="nav-title">Preview Tweaks</h3>
+          <div class="control-group">
+            <label class="control-label">Ground</label>
+            <select onchange="updateTweak('ground', this.value)">
+              <option value="">Warm (default)</option>
+              <option value="white">White</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <label class="control-label">Eyebrow</label>
+            <select onchange="updateTweak('eyebrow', this.value)">
+              <option value="">Soft (default)</option>
+              <option value="technical">Technical</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <label class="control-label">Accent</label>
+            <select onchange="updateTweak('accent', this.value)">
+              <option value="">Terracotta (default)</option>
+              <option value="coral">Coral</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SECTIONS = {
+      home: [
+        { id: '01', num: '01', name: 'Hero', desc: 'Opening statement' },
+        { id: '03', num: '03', name: '50/50 split: Progress', desc: 'Editorial moment' },
+        { id: '09', num: '09', name: 'The problem', desc: 'Why socks fail' },
+        { id: '19', num: '19', name: 'Sock math', desc: 'Price comparison' },
+        { id: '04', num: '04', name: 'Coperni + Free People', desc: 'Brand partnership' },
+        { id: '25', num: '25', name: 'Coperni collab (full)', desc: 'Full video split' },
+        { id: '06', num: '06', name: 'Credibility', desc: 'Trust section' },
+        { id: '07', num: '07', name: 'Trust & proof', desc: 'Social validation' },
+        { id: '08', num: '08', name: 'Disciplines (typed)', desc: 'Barre, Pilates, etc.' },
+        { id: '10', num: '10', name: 'Brand & conversion', desc: 'Value section' },
+        { id: '12', num: '12', name: 'Variants grid', desc: 'Product range' },
+        { id: '13', num: '13', name: 'Conversion', desc: 'Social proof' },
+        { id: '14', num: '14', name: 'Variant grid v2', desc: 'Shop the range' },
+        { id: '15', num: '15', name: 'v28 original', desc: 'Legacy variant' },
+        { id: '18', num: '18', name: 'Promo tiles', desc: 'Limited edition' },
+        { id: '20', num: '20', name: 'Split: Never loses grip', desc: 'Video moment' },
+        { id: '21', num: '21', name: 'Split: Safely push harder', desc: 'Advanced move' },
+        { id: '23', num: '23', name: 'Video & content', desc: 'Action shots' },
+        { id: '24', num: '24', name: 'Content section 2', desc: 'Brand stories' },
+        { id: '26', num: '26', name: 'Content section 3', desc: 'User-generated' },
+        { id: '27', num: '27', name: 'SEO section', desc: 'Search optimization' },
+        { id: '28', num: '28', name: 'Conversion support', desc: 'Trust signals' },
+        { id: '29', num: '29', name: 'Final CTA', desc: 'Decision moment' },
+      ],
+      footer: [
+        { id: 'footer-standard', num: '30', name: 'Footer (standard)', desc: 'Full links & legal' },
+        { id: 'footer-dark', num: '31', name: 'Footer (dark)', desc: 'Dark bg variant' },
+        { id: 'footer-minimal', num: '32', name: 'Footer (minimal)', desc: 'Compact layout' },
+      ]
+    };
+    
+    const DECISIONS = ['', 'Keep', 'Refactor', 'Rebuild', 'Skip'];
+    const OWNERS = ['', 'Cowork', 'Claude Code', 'Cursor'];
+    
+    let currentSectionId = null;
+    
+    function buildNav() {
+      // Home sections
+      const navHome = document.getElementById('nav-home');
+      navHome.innerHTML = SECTIONS.home.map(sec => `
+        <li class="nav-item">
+          <button class="nav-link" onclick="selectSection('${sec.id}', '${sec.num}', '${sec.name}')">
+            <strong>${sec.num}</strong> ${sec.name}
+          </button>
+        </li>
+      `).join('');
+
+      // Footer variants
+      const navFooter = document.getElementById('nav-footer');
+      navFooter.innerHTML = SECTIONS.footer.map(sec => `
+        <li class="nav-item">
+          <button class="nav-link" onclick="selectFooter('${sec.id}', '${sec.num}', '${sec.name}')">
+            <strong>${sec.num}</strong> ${sec.name}
+          </button>
+        </li>
+      `).join('');
+    }
+    
+    function selectSection(id, num, name) {
+      currentSectionId = id;
+
+      // Update nav highlighting
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active');
+      });
+      event.target.closest('.nav-link').classList.add('active');
+
+      // Update controls
+      updateControls(id, num, name);
+
+      // Load section iframe
+      const preview = document.getElementById('preview-panel');
+      const sectionFile = `sections/${id}-section.html`;
+      preview.innerHTML = `
+        <div class="section-preview active">
+          <iframe src="${sectionFile}" style="width:100%; height:100%; border:0; display:block;"></iframe>
+        </div>
+      `;
+    }
+
+    function selectFooter(id, num, name) {
+      currentSectionId = id;
+
+      // Update nav highlighting
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active');
+      });
+      event.target.closest('.nav-link').classList.add('active');
+
+      // Update controls
+      updateControls(id, num, name);
+
+      // Show footer placeholder (can be enhanced with actual footer variants)
+      const preview = document.getElementById('preview-panel');
+      preview.innerHTML = `
+        <div class="section-preview active">
+          <div style="padding: 40px; background: #f9f8f3; min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center;">
+            <div>
+              <h2 style="font-size: 24px; margin: 0 0 12px;">Section ${num}: ${name}</h2>
+              <p style="color: #6b645a; margin: 0; font-size: 14px;">Footer variants preview</p>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function updateTweak(key, value) {
+      // Send message to active iframe to update tweaks
+      const iframe = document.querySelector('.section-preview.active iframe');
+      if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage({ type: 'tweak', key, value }, '*');
+      }
+    }
+    
+    function updateControls(id, num, name) {
+      const stored = localStorage.getItem(`sec-${id}`) || '||';
+      const [decision, owner, notes] = stored.split('|');
+      
+      const controls = document.getElementById('decision-controls');
+      controls.innerHTML = `
+        <div style="background: #fff; padding: 14px; border-radius: 3px; border: 1px solid #d6cfc0; margin-bottom: 12px;">
+          <div style="font-size: 11px; color: #9a9182; font-weight: 700; letter-spacing: 0.08em; margin-bottom: 4px;">CURRENT SECTION</div>
+          <div style="font-size: 14px; font-weight: 600;">${num} — ${name}</div>
+        </div>
+        
+        <div class="control-group">
+          <label class="control-label">Decision</label>
+          <select onchange="updateSection('${id}', this.value, 'decision')">
+            ${DECISIONS.map(d => `<option value="${d}" ${decision === d ? 'selected' : ''}>${d || '—'}</option>`).join('')}
+          </select>
+        </div>
+        
+        <div class="control-group">
+          <label class="control-label">Owner</label>
+          <select onchange="updateSection('${id}', this.value, 'owner')">
+            ${OWNERS.map(o => `<option value="${o}" ${owner === o ? 'selected' : ''}>${o || '—'}</option>`).join('')}
+          </select>
+        </div>
+        
+        <div class="control-group">
+          <label class="control-label">Notes</label>
+          <input type="text" placeholder="Optional notes" value="${notes}" onchange="updateSection('${id}', this.value, 'notes')">
+        </div>
+        
+        <div class="summary">
+          <strong id="status">${decision || '—'}</strong>
+          <div style="font-size: 10px; color: #9a9182; margin-top: 4px;">Status</div>
+          <span class="status-badge ${decision.toLowerCase()}">${decision || 'No decision'}</span>
+        </div>
+      `;
+    }
+    
+    function updateSection(id, value, field) {
+      const stored = localStorage.getItem(`sec-${id}`) || '||';
+      const [d, o, n] = stored.split('|');
+      const updated = field === 'decision' ? [value, o, n] :
+                      field === 'owner' ? [d, value, n] :
+                      [d, o, value];
+      localStorage.setItem(`sec-${id}`, updated.join('|'));
+      
+      // Refresh controls to show new status
+      const nums = Object.values(SECTIONS).flat();
+      const sec = nums.find(s => s.id === id);
+      if (sec) updateControls(id, sec.num, sec.name);
+    }
+    
+    // Initialize
+    buildNav();
+    
+    // Select first section by default
+    const firstSection = SECTIONS.home[0];
+    selectSection(firstSection.id, firstSection.num, firstSection.name);
+  </script>
+</body>
+</html>

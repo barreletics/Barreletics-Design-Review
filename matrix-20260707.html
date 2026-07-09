@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Barreletics — Section Decision Matrix</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #eae5da;
+      color: #1c1916;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: #fff;
+      border-bottom: 1px solid #d6cfc0;
+      padding: 20px 32px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    header p {
+      margin: 0;
+      font-size: 13px;
+      color: #6b645a;
+    }
+
+    .main {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 0;
+      height: calc(100vh - 80px);
+    }
+
+    .preview-panel {
+      background: #fff;
+      border-right: 1px solid #d6cfc0;
+      overflow-y: auto;
+      padding: 0;
+    }
+
+    .preview-panel iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .section-list {
+      background: #faf8f3;
+      border-left: 1px solid #d6cfc0;
+      overflow-y: auto;
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .section-row {
+      background: #fff;
+      border: 1px solid #d6cfc0;
+      border-radius: 3px;
+      padding: 10px;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-size: 12px;
+    }
+
+    .section-row:hover {
+      background: #f9f8f3;
+      border-color: #1c1916;
+    }
+
+    .section-row.active {
+      background: #1c1916;
+      color: #fff;
+      border-color: #1c1916;
+    }
+
+    .section-name {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 6px;
+      font-size: 11px;
+    }
+
+    .section-controls {
+      display: grid;
+      gap: 4px;
+      font-size: 10px;
+    }
+
+    .control-input {
+      display: block;
+      width: 100%;
+      padding: 3px 5px;
+      border: 1px solid #d6cfc0;
+      border-radius: 2px;
+      background: #f9f8f3;
+      color: #1c1916;
+      font-family: inherit;
+      font-size: 10px;
+    }
+
+    .section-row.active .control-input {
+      background: #fff;
+      color: #1c1916;
+    }
+
+    .control-label {
+      font-size: 9px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: #9a9182;
+      margin-bottom: 1px;
+      display: block;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 2px 5px;
+      border-radius: 2px;
+      font-size: 9px;
+      font-weight: 600;
+      background: #f0f0f0;
+      color: #666;
+      margin-top: 3px;
+    }
+
+    .status-badge.keep { background: #e6efe8; color: #3a6b4a; }
+    .status-badge.refactor { background: #fff3e6; color: #8b5a00; }
+    .status-badge.rebuild { background: #fbe9e2; color: #c9502f; }
+    .status-badge.skip { background: #fce6e6; color: #8b3a3a; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Barreletics — Section Decision Matrix</h1>
+    <p>Click sections to navigate. Mark your decision on the right.</p>
+  </header>
+
+  <div class="main">
+    <div class="preview-panel">
+      <iframe id="preview-frame" src="Barreletics-Everything-Index.html"></iframe>
+    </div>
+
+    <div class="section-list" id="section-list">
+      <!-- Sections generated here -->
+    </div>
+  </div>
+
+  <script>
+    const SECTIONS = [
+      { id: '01', name: 'Hero' },
+      { id: '03', name: '50/50: Progress' },
+      { id: '04', name: 'Coperni + FP' },
+      { id: '06', name: 'Credibility' },
+      { id: '07', name: 'Trust & proof' },
+      { id: '08', name: 'Disciplines' },
+      { id: '09', name: 'The problem' },
+      { id: '10', name: 'Brand & conv' },
+      { id: '12', name: 'Variants' },
+      { id: '13', name: 'Conversion' },
+      { id: '14', name: 'Variant grid v2' },
+      { id: '15', name: 'v28 original' },
+      { id: '17', name: 'Never slip in chair pose' },
+      { id: '18', name: 'Promo tiles' },
+      { id: '19', name: 'Sock math' },
+      { id: '20', name: 'Never loses grip' },
+      { id: '21', name: 'Push harder' },
+      { id: '23', name: 'Video & content' },
+      { id: '24', name: 'Content 2' },
+      { id: '25', name: 'Coperni collab' },
+      { id: '26', name: 'Content 3' },
+      { id: '27', name: 'SEO section' },
+      { id: '28', name: 'Conv support' },
+      { id: '29', name: 'Final CTA' },
+    ];
+
+    const DECISIONS = ['', 'Keep', 'Refactor', 'Rebuild', 'Skip'];
+    const OWNERS = ['', 'Cowork', 'Claude Code', 'Cursor', 'Claude Design'];
+    const VERSIONS = ['—', 'Current', 'Matured', 'Custom', 'Not sure'];
+
+    function render() {
+      const container = document.getElementById('section-list');
+      container.innerHTML = SECTIONS.map(sec => {
+        const stored = localStorage.getItem(`sec-${sec.id}`) || '||';
+        const [decision, owner, notes] = stored.split('|');
+
+        const stored2 = localStorage.getItem(`version-${sec.id}`) || '';
+
+        return `
+          <div class="section-row" id="row-${sec.id}" onclick="selectSection('${sec.id}')">
+            <div class="section-name">${sec.id} — ${sec.name}</div>
+            <div class="section-controls">
+              <div>
+                <label class="control-label">Version</label>
+                <select class="control-input" onchange="updateSection('${sec.id}', this.value, 'version'); event.stopPropagation();">
+                  ${VERSIONS.map((v, i) => `<option value="${v.toLowerCase()}" ${stored2 === v.toLowerCase() || (i === 0 && !stored2) ? 'selected' : ''}>${v}</option>`).join('')}
+                </select>
+              </div>
+              <div>
+                <label class="control-label">Decision</label>
+                <select class="control-input" onchange="updateSection('${sec.id}', this.value, 'decision'); event.stopPropagation();">
+                  ${DECISIONS.map(d => `<option value="${d}" ${decision === d ? 'selected' : ''}>${d || '—'}</option>`).join('')}
+                </select>
+              </div>
+              <div>
+                <label class="control-label">Owner</label>
+                <select class="control-input" onchange="updateSection('${sec.id}', this.value, 'owner'); event.stopPropagation();">
+                  ${OWNERS.map(o => `<option value="${o}" ${owner === o ? 'selected' : ''}>${o || '—'}</option>`).join('')}
+                </select>
+              </div>
+              <div>
+                <label class="control-label">Refine</label>
+                <input class="control-input" type="text" placeholder="Design notes" value="${notes}" onchange="updateSection('${sec.id}', this.value, 'notes'); event.stopPropagation();" onclick="event.stopPropagation();">
+              </div>
+              ${decision ? `<span class="status-badge ${decision.toLowerCase()}">${decision}</span>` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Add tweaks section at bottom
+      const tweakSection = `
+        <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #d6cfc0;">
+          <div style="font-size: 9px; font-weight: 600; text-transform: uppercase; color: #9a9182; margin-bottom: 8px;">Tweaks</div>
+          <div class="control-input" style="padding: 6px; background: #f9f8f3; border: none; font-size: 10px;">
+            <label style="display: block; margin-bottom: 4px;"><input type="radio" name="ground" value="warm" checked onchange="applyTweak('ground', 'warm')"> Warm</label>
+            <label style="display: block; margin-bottom: 4px;"><input type="radio" name="ground" value="white" onchange="applyTweak('ground', 'white')"> White</label>
+            <label style="display: block; margin-bottom: 6px;"><input type="radio" name="accent" value="terracotta" checked onchange="applyTweak('accent', 'terracotta')"> Terracotta</label>
+            <label style="display: block;"><input type="radio" name="accent" value="coral" onchange="applyTweak('accent', 'coral')"> Coral</label>
+          </div>
+        </div>
+      `;
+      container.innerHTML += tweakSection;
+
+      // Add export button
+      const exportBtn = `
+        <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #d6cfc0;">
+          <button onclick="exportDecisions()" style="width: 100%; padding: 8px; background: #1c1916; color: #fff; border: 0; border-radius: 3px; cursor: pointer; font-weight: 600; font-size: 12px;">Export Decisions</button>
+        </div>
+      `;
+      container.innerHTML += exportBtn;
+    }
+
+    function exportDecisions() {
+      const decisions = {};
+      SECTIONS.forEach(sec => {
+        const stored = localStorage.getItem(`sec-${sec.id}`) || '||';
+        const version = localStorage.getItem(`version-${sec.id}`) || '';
+        const [d, o, n] = stored.split('|');
+        decisions[sec.id] = {
+          name: sec.name,
+          decision: d,
+          owner: o,
+          notes: n,
+          version: version
+        };
+      });
+      const blob = new Blob([JSON.stringify(decisions, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `barreletics-decisions-${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+    }
+
+    function selectSection(id) {
+      document.querySelectorAll('.section-row').forEach(row => row.classList.remove('active'));
+      document.getElementById(`row-${id}`).classList.add('active');
+
+      // Scroll to section in iframe
+      const iframe = document.getElementById('preview-frame');
+      iframe.onload = function() {
+        try {
+          const elem = iframe.contentDocument.getElementById(`section-${id}`);
+          if (elem) elem.scrollIntoView({ behavior: 'auto', block: 'start' });
+        } catch(e) {
+          console.log('Cross-origin or element not found');
+        }
+      };
+      iframe.src = `Barreletics-Everything-Index.html#section-${id}`;
+    }
+
+    function updateSection(id, value, field) {
+      if (field === 'version') {
+        localStorage.setItem(`version-${id}`, value);
+      } else {
+        const stored = localStorage.getItem(`sec-${id}`) || '||';
+        const [d, o, n] = stored.split('|');
+        const updated = field === 'decision' ? [value, o, n] :
+                        field === 'owner' ? [d, value, n] :
+                        [d, o, value];
+        localStorage.setItem(`sec-${id}`, updated.join('|'));
+      }
+      render();
+    }
+
+    function applyTweak(type, value) {
+      // Send to iframe if needed, or store for later
+      localStorage.setItem(`tweak-${type}`, value);
+      const iframe = document.getElementById('preview-frame');
+      if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage({ type: 'tweak', key: type, value: value }, '*');
+      }
+    }
+
+    render();
+  </script>
+</body>
+</html>
