@@ -1,0 +1,950 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Barreletics — Page Wireframes</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="audit-styles.css" />
+<link rel="stylesheet" href="wireframes-styles.css" />
+</head>
+
+<body>
+
+<nav class="wf-nav">
+  <div class="wf-nav__inner">
+    <div class="wf-nav__brand">Barreletics <span>· Wireframes</span></div>
+    <div class="wf-nav__links">
+      <a href="#tpl-home">Home</a>
+      <a href="#tpl-pdp">PDP</a>
+      <a href="#tpl-collection">Collection</a>
+      <a href="#tpl-article">Article</a>
+      <a href="#tpl-blog">Blog index</a>
+    </div>
+    <div class="wf-nav__sep"></div>
+    <a class="wf-nav__back" href="Barreletics Audit.html">← Back to audit</a>
+  </div>
+</nav>
+
+<div class="wf-doc">
+
+  <!-- ============================== COVER ============================== -->
+  <header class="wf-cover">
+    <p class="au-kicker">Step 2 · Wireframes</p>
+    <h1 class="au-h1">Every page, mapped to the 8-section system.</h1>
+    <p class="au-lede">
+      Real copy from your live theme dropped into the new section slots. Every block is tagged with its source — <b style="color:#1f6f4a;">REUSE</b> means we keep the existing Liquid file and just strip the per-instance overrides;
+      <b style="color:#c43d2a;">NEW</b> means a fresh <code>sections/*.liquid</code> file to build. The <b style="color:#6b5b3a;">CONSTANT</b> tags mark the header / footer / PDP main shell that wraps every page.
+    </p>
+    <p class="au-body" style="margin-top: 8px;">
+      <b>Variant grid tabs</b> default to Closed Sole + Open Sole ON; Outdoor + One-Offs OFF, toggleable per template.
+      <b>The benefit grid</b> earns three placements — anchor on PDP, supporting on home, category-specific on collection.
+      <b>Reviews</b> live in two layers: one curated quote per template (br-testimonial) plus the full Judge.me grid below for conversion-critical depth.
+    </p>
+  </header>
+
+  <!-- ============================== LEGEND ============================== -->
+  <div class="wf-legend">
+    <div class="wf-legend__inner">
+      <span style="font-size: 10.5px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--br-text-mute); white-space: nowrap;">Section key</span>
+      <div class="wf-legend__chips">
+        <span class="wf-section-tag wf-section-tag--reuse"><b>REUSE</b> br-multi-box-hero</span>
+        <span class="wf-section-tag wf-section-tag--reuse"><b>REUSE</b> br-media-text-split</span>
+        <span class="wf-section-tag wf-section-tag--reuse"><b>REUSE</b> br-variants</span>
+        <span class="wf-section-tag wf-section-tag--reuse"><b>REUSE</b> br-collab-hero</span>
+        <span class="wf-section-tag wf-section-tag--reuse"><b>REUSE</b> judgeme_widgets</span>
+        <span class="wf-section-tag wf-section-tag--new"><b>NEW</b> br-pillars</span>
+        <span class="wf-section-tag wf-section-tag--new"><b>NEW</b> br-benefit-grid</span>
+        <span class="wf-section-tag wf-section-tag--new"><b>NEW</b> br-testimonial</span>
+        <span class="wf-section-tag wf-section-tag--new"><b>NEW</b> br-product-rail</span>
+        <span class="wf-section-tag wf-section-tag--new"><b>NEW</b> br-editorial</span>
+        <span class="wf-section-tag wf-section-tag--ext"><b>CONSTANT</b> header / footer / PDP main</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================== HOME ============================== -->
+  <article class="wf-template" id="tpl-home" data-screen-label="Home wireframe">
+    <header class="wf-template__head">
+      <div>
+        <p class="au-kicker">01 — Home</p>
+        <h2>Home page</h2>
+        <p>Currently 13 sections, 6 hero types. Reduces to <b>8 sections + chrome.</b> Drops every legacy slideshow/ss-hero-* in favor of one media-split hero plus the recurring section library.</p>
+      </div>
+      <div class="wf-template__path">
+        <b>Template</b>
+        <code>templates/index.json</code>
+        <code style="opacity: 0.7;">currently 54 KB · drops to ~6 KB</code>
+      </div>
+    </header>
+
+    <div class="wf-template__body">
+
+      <!-- announcement + header (constant) -->
+      <div class="wf-block">
+        <div class="wf-block__meta">
+          <span class="wf-block__order">00 · constant</span>
+          <span class="wf-block__name">Announcement bar + header</span>
+          <span class="wf-section-tag wf-section-tag--ext"><b>CONSTANT</b></span>
+          <p class="wf-block__note">Free-shipping strip · main nav (Shop / Studio / Outdoor / Journal) · logo · Account · Cart. <b>No search.</b></p>
+          <span class="wf-block__source">sections/header-group.json</span>
+        </div>
+        <div class="wf-block__stage">
+          <div style="background: #050505; color: #fff; text-align: center; padding: 9px; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;">Free shipping over $75 · 30-day returns · 90-day warranty</div>
+          <div style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 16px 24px; gap: 20px; border-bottom: 1px solid var(--br-line);">
+            <div style="display: flex; gap: 22px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;">
+              <span>Shop</span><span>Studio</span><span>Outdoor</span><span>Journal</span>
+            </div>
+            <div style="border: 1px dashed var(--br-line); padding: 6px 18px; font-family: ui-monospace, Menlo, monospace; font-size: 10px; color: var(--br-text-mute);">[logo slot]</div>
+            <div style="display: flex; gap: 18px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; justify-content: flex-end;">
+              <span>Account</span><span>Cart <span style="display:inline-block; width: 7px; height: 7px; background: var(--br-coral); border-radius: 50%; vertical-align: middle;"></span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 01 hero -->
+      <div class="wf-block">
+        <div class="wf-block__meta">
+          <span class="wf-block__order">01</span>
+          <span class="wf-block__name">Hero · media split (video left, copy right)</span>
+          <span class="wf-section-tag wf-section-tag--reuse"><b>REUSE</b> br-media-text-split</span>
+          <p class="wf-block__note">Lead with the section you already love. Video or image left, headline + body + 1 CTA right. Stacks vertically on mobile — image above copy. Replaces the legacy multi-box hero stack on home.</p>
+          <span class="wf-block__source">sections/br-media-text-split.liquid (variant: hero)</span>
+        </div>
+        <div class="wf-block__stage">
+          <div class="wf-media-split">
+            <div class="wf-media-split__media">[hero video · reformer transition · loop]</div>
+            <div class="wf-media-split__copy">
+              <p class="wf-media-split__eyebrow">Progress, built from the ground up</p>
+              <h3 class="wf-media-split__title" style="font-size: clamp(24px, 2.6vw, 36px); max-width: 18ch;">Secure in every hold. No sliding. No resets.</h3>
+              <p class="wf-media-split__body">The premium grip system that replaced grip socks. Built for reformer, barre, and Megaformer transitions — same grip every class, every transition.</p>
+              <span class="wf-media-split__cta">Shop performance skins</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 02 pillars -->
+      <div class="wf-block">
+        <div class="wf-block__meta">
+          <span class="wf-block__order">02</span>
+          <span class="wf-block__name">Pillar strip · &ldquo;Stop replacing&rdquo;</span>
+          <span class="wf-section-tag wf-section-tag--new"><b>NEW</b> br-pillars</span>
+          <p class="wf-block__note">Promote the &ldquo;Why it works&rdquo; HTML currently buried inside <code>br-variants.custom_html</code> into its own section. Locked 5-slogan copy &mdash; brand voice, not feature list.</p>
+          <span class="wf-block__source">sections/br-pillars.liquid</span>
+        </div>
+        <div class="wf-block__stage">
+          <div class="wf-pillars">
+            <span class="wf-pillars__label">#letusknockyoursocksoff</span>
+            <div class="wf-pillars__pts">
+              <span>Socks fail. This doesn&rsquo;t.</span><span>Stop adjusting. Move.</span><span>Earn the shake. Not the slip.</span><span>Built for the move, not the pose.</span><span>Five days a week. Zero compromises.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 03 variants -->
+      <div class="wf-block">
+        <div class="wf-block__meta">
+          <span class="wf-block__order">03</span>
+          <span class="wf-block__name">Variant grid · Shop all colors &amp; styles</span>
+          <span class="wf-section-tag wf-section-tag--reuse"><b>REUSE</b> br-variants</span>
+          <p class="wf-block__note"><b>Tabs:</b> Closed Sole + Open Sole ON. Outdoor + One-Offs OFF (toggleable). The expand/collapse + Quick Add logic stays exactly as it is — just route colors and type through tokens.</p>
+          <span class="wf-block__source">sections/br-variants.liquid</span>
+        </div>
+        <div class="wf-block__stage">
+          <div class="wf-variants__head">
+            <h3 class="wf-variants__title">Shop all colors &amp; styles</h3>
+            <p class="wf-variants__sub">Grip shoes for barre, Pilates, and yoga — same grip, two builds.</p>
+          </div>
+          <div class="wf-variants__tabs">
+            <button class="wf-variant-tab" aria-selected="true">Closed sole</button>
+            <button class="wf-variant-tab">Open sole</button>
+            <button class="wf-variant-tab" data-state="off">Outdoor</button>
+            <button class="wf-variant-tab wf-variant-tab--exclusive" data-state="off">One-of-a-kind</button>
+          </div>
+          <div class="wf-variants__grid">
+            <article class="wf-variant-card">
+              <div class="wf-variant-card__media">closed · onyx</div>
+              <p class="wf-variant-card__title">Studio Performance Skin · Closed Sole</p>
+              <p class="wf-variant-card__price">Onyx · $68</p>
+            </article>
+            <article class="wf-variant-card">
+              <div class="wf-variant-card__media wf-variant-card__media--blush">closed · blush</div>
+              <p class="wf-variant-card__title">Studio Performance Skin · Closed Sole</p>
+              <p class="wf-variant-card__price">Blush · $68</p>
+            </article>
+            <article class="wf-variant-card">
+              <div class="wf-variant-card__media wf-variant-card__media--stone">closed · stone</div>
+              <p class="wf-variant-card__title">Studio Performance Skin · Closed Sole</p>
+              <p class="wf-variant-card__price">Stone · $68</p>
+            </article>
+            <article class="wf-variant-card">
+              <div class="wf-variant-card__media wf-variant-card__media--dark">open · carbon</div>
+              <p class="wf-variant-card__title">Studio Performance Skin · Open Sole</p>
+              <p class="wf-variant-card__price">Carbon · $58</p>
+            </article>
+          </div>
+        </div>
+      </div>
+
+      <!-- 04 collab -->
+      <div class="wf-block">
+        <div class="wf-block__meta">
+          <span class="wf-block__order">04</span>
+          <span class="wf-block__name">Collab / one-of-a-kind</span>
+          <span class="wf-section-tag wf-section-tag--reuse"><b>REUSE</b> br-collab-hero</span>
+          <p class="wf-block__note">Stays. Currently Coperni × Paris SS26. Doubles as the &ldquo;one-of-a-kind colors&rdquo; spotlight when no collab is running. LE blue chip above headline.</p>
+          <span class="wf-block__source">sections/br-collab-hero.liquid</span>
+        </div>
+        <div class="wf-block__stage">
+          <div class="wf-collab">
+            <div>
+              <span class="wf-collab__le">● Limited Edition · Paris SS26</span>
+              <h3 class="wf-collab__title">Barreletics × Coperni</h3>
+              <p class="wf-collab__sub">A Pilates shoe designed for comfort, grounding, and athletic poise — introduced on the Coperni runway, Spring–Summer 2026. Closed sole. One run.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 05 benefit grid (lifestyle facing) -->
+      <div class="wf-block">
+        <div class="wf-block__meta">
+          <span class="wf-block__order">05</span>
+          <span class="wf-block__name">Benefit grid · what makes Barreletics different</span>
+          <span class="wf-section-tag wf-section-tag--new"><b>NEW</b> br-benefit-grid</span>
+          <p class="wf-block__note">Site-wide values rolled up. Same atom as PDP version — different copy and a heavier heading. Follows the customer value priority: safety → grip → replaces socks.</p>
+          <span class="wf-block__source">sections/br-benefit-grid.liquid</span>
+        </div>
+        <div class="wf-block__stage">
+          <div class="wf-benefits">
+            <header class="wf-benefits__head">
+              <p class="wf-benefits__eyebrow">What you&rsquo;re actually buying</p>
+              <h3 class="wf-benefits__title">Confidence, from the ground up.</h3>
+            </header>
+            <div class="wf-benefits__grid">
+              <div class="wf-benefit"><span class="wf-benefit__num">01 · Safety</span><h4 class="wf-benefit__t">Reduced slip risk</h4><p class="wf-benefit__s">Through reformer transitions, Megaformer movement, and full-contact holds.</p></div>
+              <div class="wf-benefit"><span class="wf-benefit__num">02 · Grip</span><h4 class="wf-benefit__t">360° traction</h4><p class="wf-benefit__s">Full-contact grip — not patches, not gels.</p></div>
+              <div class="wf-benefit"><span class="wf-benefit__num">03 · Upgrade</span><h4 class="wf-benefit__t">Replaces grip socks</h4><p class="wf-benefit__s">A premium upgrade, not another disposable.</p></div>
+              <div class="wf-benefit"><span class="wf-benefit__num">04 · Clean</span><h4 class="wf-benefit__t">Easy to clean</h4><p class="wf-benefit__s">Warm soapy water, air dry. Repeat.</p></div>
+              <div class="wf-benefit"><span class="wf-benefit__num">05 · Barefoot</span><h4 class="wf-benefit__t">Barefoot feel</h4><p class="wf-benefit__s">Designed for natural toe articulation.</p></div>
+              <div class="wf-benefit"><span class="wf-benefit__num">06 · Safe</span><h4 class="wf-benefit__t">No latex · no silicone</h4><p class="wf-benefit__s">Skin-safe materials. Non-toxic.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 06 testimonial -->
+      <div class="wf-block">
+        <div class="wf-block__meta">
+          <span class="wf-block__order">06</span>
+          <span class="wf-block__name">Testimonial · single quote</span>
+          <span class="wf-section-tag wf-section-tag--new"><b>NEW</b> br-testimonial</span>
+          <p class="wf-block__note">One curated quote. Star rating in warm accent. Single big moment — followed below by the full Judge.me grid for depth.</p>
+          <span class="wf-block__source">sections/br-testimonial.liquid</span>
+        </div>
+        <div class="wf-block__stage">
+          <div class="wf-quote">
+            <div class="wf-quote__stars">★★★★★</div>
+            <p class="wf-quote__body">&ldquo;My love-hate relationship with the sock has finally come to a ceremonial end. The vast improvement during the first minute of barre class is beyond words.&rdquo;</p>
+            <div class="wf-quote__attr">Mia Evans · Verified buyer · Studio Performance Skin</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 06b reviews (Judge.me) -->
+      <div class="wf-block">
+        <div class="wf-block__meta">
+          <span class="wf-block__order">06b</span>
+          <span class="wf-block__name">Reviews · Judge.me grid</span>
+          <span class="wf-section-tag wf-section-tag--reuse"><b>REUSE</b> judgeme_widgets</span>
+          <p class="wf-block__note">Native Judge.me widget restyled with locked tokens. 4-up review cards, average + count above, link to full reviews page below. Important for conversion — keeps the trust signal but makes it look intentional.</p>
+          <span class="wf-block__source">snippets/judgeme_widgets.liquid (restyled)</span>
+        </div>
+        <div class="wf-block__stage">
+          <div class="wf-reviews">
+            <header class="wf-reviews__head">
+              <div>
+                <p class="wf-reviews__eyebrow">Verified reviews</p>
+                <h4 class="wf-reviews__title">4.9 average · 2,847 reviews</h4>
+              </div>
+              <div class="wf-reviews__stars">★★★★★</div>
+            </header>
+            <div class="wf-reviews__grid">
+              <article class="wf-review"><div class="wf-review__stars">★★★★★</div><p class="wf-review__body">&ldquo;Game-changer for reformer. I used to slide on every transition — these are rock-solid.&rdquo;</p><p class="wf-review__attr">Jamie L. · Closed Sole · Onyx</p></article>
+              <article class="wf-review"><div class="wf-review__stars">★★★★★</div><p class="wf-review__body">&ldquo;Tried 3 grip sock brands before these. Don&rsquo;t bother with anything else.&rdquo;</p><p class="wf-review__attr">Casey M. · Open Sole · Blush</p></article>
+              <article class="wf-review"><div class="wf-review__stars">★★★★★</div><p class="wf-review__body">&ldquo;I run a barre studio and we now stock these for new students. Worth every penny.&rdquo;</p><p class="wf-review__attr">Priya R. · Studio owner</p></article>
+              <article class="wf-review"><div class="wf-review__stars">★★★★★</div><p class="wf-review__body">&ldquo;Took them paddle-boarding too. Quick-dry, never slip. My do-everything shoe.&rdquo;</p><p class="wf-review__attr">Diane K. · Aquatic Skin</p></article>
+            </div>
+            <a class="wf-reviews__more" href="#">Read all 2,847 reviews →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 07 product rail -->
+      <div class="wf-block">
+        <div class="wf-block__meta">
+          <span class="wf-block__order">07</span>
+          <span class="wf-block__name">Product rail · bestsellers</span>
+          <span class="wf-section-tag wf-section-tag--new"><b>NEW</b> br-product-rail</span>
+          <p class="wf-block__note">Replaces the <code>ss-featured-collection-9</code> carousel + the standalone slideshow product loops. Horizontal scroll, 4 visible + peek.</p>
+          <span class="wf-block__source">sections/br-product-rail.liquid</span>
+        </div>
+        <div class="wf-block__stage">
+          <div class="wf-rail">
+            <header class="wf-rail__head">
+              <h4 class="wf-rail__title">The studio kit</h4>
+              <span class="wf-rail__more">Shop all 24 styles →</span>
+            </header>
+            <div class="wf-rail__cards">
+              <article class="wf-rail-card"><div class="wf-rail-card__media"></div><p class="wf-rail-card__title">Closed Sole · Onyx</p><p class="wf-rail-card__price">$68</p></article>
+              <article class="wf-rail-card"><div class="wf-rail-card__media" style="background: repeating-linear-gradient(135deg, #f3e3dc 0 12px, #efdcd2 12px 24px);"></div><p class="wf-rail-card__title">Closed Sole · Blush</p><p class="wf-rail-card__price">$68</p></article>
+              <article class="wf-rail-card"><div class="wf-rail-card__media" style="background: repeating-linear-gradient(135deg, #d4d0c4 0 12px, #c9c5b8 12px 24px);"></div><p class="wf-rail-card__title">Open Sole · Stone</p><p class="wf-rail-card__price">$58</p></article>
+              <article class="wf-rail-card" style="position:relative;"><div class="wf-rail-card__media" style="background: repeating-linear-gradient(135deg, #2c2c2c 0 12px, #232323 12px 24px);"></div><span class="wf-variant-card__le" style="top: 10px; left: 10px;">Limited Edition</span><p class="wf-rail-card__title">Coperni × Closed</p><p class="wf-rail-card__price">$148</p></article>
+              <article class="wf-rail-card" style="opacity: 0.5;"><div class="wf-rail-card__media"></div><p class="wf-rail-card__title">Open Sole · Carbon</p><p class="wf-rail-card__price">$58</p></article>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 08 editorial -->
+      <div class="wf-block">
+        <div class="wf-block__meta">
+          <span class="wf-block__order">08</span>
+          <span class="wf-block__name">Editorial · from the journal</span>
+          <span class="wf-section-tag wf-section-tag--new"><b>NEW</b> br-editorial</span>
+          <p class="wf-block__note">3-up card grid pointing to articles. Doubles as blog index. Replaces the legacy <code>advanced-content</code> Juicer/Instagram embed.</p>
+          <span class="wf-block__source">sections/br-editorial.liquid</span>
+        </div>
+        <div class="wf-block__stage">
+          <div class="wf-edit-grid">
+            <article class="wf-edit-card">
+              <div class="wf-edit-card__media"></div>
+              <p class="wf-edit-card__meta">Care · 3 min read</p>
+              <h4 class="wf-edit-card__title">How to wash your performance skins.</h4>
+            </article>
+            <article class="wf-edit-card">
+              <div class="wf-edit-card__media" style="background: repeating-linear-gradient(135deg, #f3e3dc 0 14px, #efdcd2 14px 28px);"></div>
+              <p class="wf-edit-card__meta">Founder · 5 min read</p>
+              <h4 class="wf-edit-card__title">Why we built a grip-sock replacement.</h4>
+            </article>
+            <article class="wf-edit-card">
+              <div class="wf-edit-card__media" style="background: repeating-linear-gradient(135deg, #2c2c2c 0 14px, #232323 14px 28px);"></div>
+              <p class="wf-edit-card__meta">Story · 4 min read</p>
+              <h4 class="wf-edit-card__title">Coperni × Barreletics, in Paris.</h4>
+            </article>
+          </div>
+        </div>
+      </div>
+
+      <!-- footer (constant) -->
+      <div class="wf-block">
+        <div class="wf-block__meta">
+          <span class="wf-block__order">09 · constant</span>
+          <span class="wf-block__name">Footer + newsletter</span>
+          <span class="wf-section-tag wf-section-tag--ext"><b>CONSTANT</b></span>
+          <p class="wf-block__note">Inline newsletter (&ldquo;Get 10% off&rdquo;) replaces the popup. 4 link columns. Plain ink-on-white — no cream/plum.</p>
+          <span class="wf-block__source">sections/footer-group.json</span>
+        </div>
+        <div class="wf-block__stage">
+          <div style="padding: 24px; background: #fff; display: grid; grid-template-columns: 1.4fr repeat(4, 1fr); gap: 24px; border-top: 1px solid var(--br-line);">
+            <div>
+              <div style="border: 1px dashed var(--br-line); padding: 8px 14px; font-family: ui-monospace, Menlo, monospace; font-size: 10px; color: var(--br-text-mute); display: inline-block; margin-bottom: 10px;">[logo slot]</div>
+              <p style="font-size: 11px; line-height: 1.5; color: var(--br-text-soft); margin: 0 0 12px;">The premium performance alternative to traditional grip socks.</p>
+              <div style="display: flex; gap: 0; border: 1px solid var(--br-text);">
+                <span style="flex: 1; padding: 6px 10px; font-size: 11px; color: var(--br-text-mute);">email</span>
+                <span style="background: var(--br-text); color: #fff; padding: 6px 10px; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;">Get 10% off</span>
+              </div>
+            </div>
+            <div style="font-size: 11px;"><b style="display: block; margin-bottom: 8px; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.6;">Shop</b><p>Studio collection</p><p>Outdoor</p><p>Bundles</p><p>Gift card</p></div>
+            <div style="font-size: 11px;"><b style="display: block; margin-bottom: 8px; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.6;">Support</b><p>Size chart</p><p>Care guide</p><p>Shipping &amp; returns</p><p>Contact</p></div>
+            <div style="font-size: 11px;"><b style="display: block; margin-bottom: 8px; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.6;">Stories</b><p>Journal</p><p>Coperni × Barreletics</p><p>Brand story</p><p>Affiliates</p></div>
+            <div style="font-size: 11px;"><b style="display: block; margin-bottom: 8px; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.6;">Follow</b><p>Instagram</p><p>TikTok</p><p>YouTube</p><p>Pinterest</p></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </article>
+
+
+  <!-- ============================== PDP ============================== -->
+  <article class="wf-template" id="tpl-pdp" data-screen-label="PDP wireframe">
+    <header class="wf-template__head">
+      <div>
+        <p class="au-kicker">02 — Product detail page</p>
+        <h2>PDP · in-studio reformer / Pilates</h2>
+        <p>Currently 13 sections + 17 PDP blocks. Reduces to <b>PDP main + 5 sections.</b> Tabs collapse Description / Care / Shipping / Returns inside the buy box.</p>
+      </div>
+      <div class="wf-template__path">
+        <b>Template</b>
+        <code>templates/product.json</code>
+        <code style="opacity: 0.7;">replaces product.in-studio-template, product.in-studio-template-v-3, product.in-studio-reformer-pilate</code>
+      </div>
+    </header>
+
+    <div class="wf-template__body">
+
+      <!-- pdp main -->
+      <div class="wf-block">
+        <div class="wf-block__meta">
+          <span class="wf-block__order">00 · constant</span>
+          <span class="wf-block__name">PDP main · gallery + buy box</span>
+          <span class="wf-section-tag wf-section-tag--ext"><b>CONSTANT</b></span>
+          <p class="wf-block__note">The Shopify default <code>main-product</code> section — keep but lock the schema. Color swatches, size buttons, sticky &ldquo;Add to cart&rdquo;, collapsible tabs.</p>
+          <span class="wf-block__source">sections/main-product.liquid</span>
+        </div>
+        <div class="wf-block__stage">
+          <div class="wf-pdp-main">
+            <div class="wf-pdp-main__gallery">
+              <div class="wf-pdp-main__thumbs">
+                <div class="wf-pdp-main__thumb"></div>
+                <div class="wf-pdp-main__thumb"></div>
+                <div class="wf-pdp-main__thumb"></div>
+                <div class="wf-pdp-main__thumb"></div>
+              </div>
+              <div class="wf-pdp-main__hero">[product hero · 1:1]</div>
+            </div>
+            <div class="wf-pdp-main__buy">
+              <span class="wf-pdp-main__crumbs">Shop / Studio / Closed Sole</span>
+              <h3 class="wf-pdp-main__name">Studio Performance Skin · Closed Sole</h3>
+              <p class="wf-pdp-main__price">$68 <span style="color: var(--br-text-soft); font-weight: 400; font-size: 13px;">· Free shipping over $75</span></p>
+              <div class="wf-pdp-main__row">
+                <span class="wf-pdp-main__rowlabel">Color · Onyx</span>
+                <div class="wf-pdp-main__swatches">
+                  <span class="wf-pdp-main__swatch" style="background:#050505;"></span>
+                  <span class="wf-pdp-main__swatch" style="background:#e9d3cb;"></span>
+                  <span class="wf-pdp-main__swatch" style="background:#c9c5b8;"></span>
+                  <span class="wf-pdp-main__swatch" style="background:#4f1c3a;"></span>
+                  <span class="wf-pdp-main__swatch" style="background:#fff; border-color:#bbb;"></span>
+                </div>
+              </div>
+              <div class="wf-pdp-main__row">
+                <span class="wf-pdp-main__rowlabel">Size · women's</span>
+                <div class="wf-pdp-main__sizes">
+                  <span class="wf-pdp-main__size">5</span>
+                  <span class="wf-pdp-main__size">6</span>
+                  <span class="wf-pdp-main__size" aria-selected="true">7</span>
+                  <span class="wf-pdp-main__size">8</span>
+                  <span class="wf-pdp-main__size">9</span>
+                  <span class="wf-pdp-main__size" style="opacity: 0.4;">10</span>
+                </div>
+              </div>
+              <div class="wf-pdp-main__cta">Add to cart · $68</div>
+              <div class="wf-pdp-main__tabs">
+                <div class="wf-pdp-main__tab"><span>Description</span><span>+</span></div>
+                <div class="wf-pdp-main__tab"><span>Care &amp; how to wear</span><span>+</span></div>
+                <div class="wf-pdp-main__tab"><span>Shipping</span><span>+</span></div>
+                <div class="wf-pdp-main__tab"><span>30-day returns + 90-day warranty</span><span>+</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- pillars -->
+      <div class="wf-block">
+        <div class="wf-block__meta">
+          <span class="wf-block__order">01</span>
+          <span class="wf-block__name">Pillar strip · &ldquo;Stop replacing&rdquo;</span>
+          <span class="wf-section-tag wf-section-tag--new"><b>NEW</b> br-pillars</span>
+          <p class="wf-block__note">Anchored to every PDP. Same 5-slogan copy as home &mdash; reinforces brand voice at the point of decision.</p>
+          <span class="wf-block__source">sections/br-pillars.liquid</span>
+        </div>
+        <div class="wf-block__stage">
+          <div class="wf-pillars">
+            <span class="wf-pillars__label">#letusknockyoursocksoff</span>
+            <div class="wf-pillars__pts">
+              <span>Socks fail. This doesn&rsquo;t.</span><span>Stop adjusting. Move.</span><span>Earn the shake. Not the slip.</span><span>Built for the move, not the pose.</span><span>Five days a week. Zero compromises.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- benefit grid (product-specific) -->
+      <div class="wf-block">
+        <div class="wf-block__meta">
+          <span class="wf-block__order">02</span>
+          <span class="wf-block__name">Benefit grid · product-specific</span>
+          <span class="wf-section-tag wf-section-tag--new"><b>NEW</b> br-benefit-grid</span>
+          <p class="wf-block__note">Per-product benefits. In-studio version = grip + safety. Aquatic version = water + quick-dry. Same component, different copy per template.</p>
+          <span class="wf-block__source">sections/br-benefit-grid.liquid</span>
+        </div>
+        <div class="wf-block__stage">
+          <div class="wf-benefits">
+            <header class="wf-benefits__head">
+              <p class="wf-benefits__eyebrow">Built for the studio floor</p>
+              <h3 class="wf-benefits__title">Why this beats a grip sock.</h3>
+            </header>
+            <div class="wf-benefits__grid">
+              <div class="wf-benefit"><span class="wf-benefit__num">01</span><h4 class="wf-benefit__t">Reformer-ready</h4><p class="wf-benefit__s">Tested on Megaformer + reformer carriages.</p></div>
+              <div class="wf-benefit"><span class="wf-benefit__num">02</span><h4 class="wf-benefit__t">No twist</h4><p class="wf-benefit__s">Stays put through every transition.</p></div>
+              <div class="wf-benefit"><span class="wf-benefit__num">03</span><h4 class="wf-benefit__t">Sweat-ready</h4><p class="wf-benefit__s">Performs when the class heats up.</p></div>
+              <div class="wf-benefit"><span class="wf-benefit__num">04</span><h4 class="wf-benefit__t">Rinse &amp; reuse</h4><p class="wf-benefit__s">Warm soapy water resets them.</p></div>
+              <div class="wf-benefit"><span class="wf-benefit__num">05</span><h4 class="wf-benefit__t">Skin-safe</h4><p class="wf-benefit__s">No latex. No silicone. Non-toxic.</p></div>
+              <div class="wf-benefit"><span class="wf-benefit__num">06</span><h4 class="wf-benefit__t">Barefoot feel</h4><p class="wf-benefit__s">Designed for natural toe articulation.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- media split fabric story -->
+      <div class="wf-block">
+        <div class="wf-block__meta">
+          <span class="wf-block__order">03</span>
+          <span class="wf-block__name">Media split · fabric &amp; construction story</span>
+          <span class="wf-section-tag wf-section-tag--reuse"><b>REUSE</b> br-media-text-split</span>
+          <p class="wf-block__note">Video or close-up image on the left, copy on the right. Reuses your strongest existing custom section — just strip the per-instance overrides.</p>
+          <span class="wf-block__source">sections/br-media-text-split.liquid</span>
+        </div>
+        <div class="wf-block__stage">
+          <div class="wf-media-split">
+            <div class="wf-media-split__media">[detail video · sole grip pattern · loop]</div>
+            <div class="wf-media-split__copy">
+              <p class="wf-media-split__eyebrow">Engineered, not accidental</p>
+              <h3 class="wf-media-split__title">Grip that performs when you heat up.</h3>
+              <p class="wf-media-split__body">The performance skin keeps its grip in the conditions that break ordinary studio socks — sweat, transitions, and full-contact holds. Built from non-toxic, skin-safe materials with no latex and no silicone.</p>
+              <span class="wf-media-split__cta">How it&rsquo;s made →</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- testimonial -->
+      <div class="wf-block">
+        <div class="wf-block__meta">
+          <span class="wf-block__order">04</span>
+          <span class="wf-block__name">Testimonial · centered</span>
+          <span class="wf-section-tag wf-section-tag--new"><b>NEW</b> br-testimonial</span>
+          <p class="wf-block__note">One curated quote — the strongest review for this specific product. The Judge.me grid below provides depth.</p>
+          <span class="wf-block__source">sections/br-testimonial.liquid</span>
+        </div>
+        <div class="wf-block__stage">
+          <div class="wf-quote">
+            <div class="wf-quote__stars">★★★★★</div>
+            <p class="wf-quote__body">&ldquo;My love-hate relationship with the sock has finally come to a ceremonial end. The vast improvement during the first minute of barre class is beyond words.&rdquo;</p>
+            <div class="wf-quote__attr">Mia Evans · Verified buyer · Studio Performance Skin</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- reviews (Judge.me) -->
+      <div class="wf-block">
+        <div class="wf-block__meta">
+          <span class="wf-block__order">04b</span>
+          <span class="wf-block__name">Reviews · Judge.me grid (per-product)</span>
+          <span class="wf-section-tag wf-section-tag--reuse"><b>REUSE</b> judgeme_widgets</span>
+          <p class="wf-block__note"><b>Product-scoped reviews.</b> Native Judge.me block restyled — 4 most recent reviews for THIS product, with verified-buyer tag and product variant. Pagination + filter at the bottom.</p>
+          <span class="wf-block__source">snippets/judgeme_widgets.liquid (product-scoped)</span>
+        </div>
+        <div class="wf-block__stage">
+          <div class="wf-reviews">
+            <header class="wf-reviews__head">
+              <div>
+                <p class="wf-reviews__eyebrow">Reviews · Studio Performance Skin · Closed Sole</p>
+                <h4 class="wf-reviews__title">4.9 average · 412 reviews on this product</h4>
+              </div>
+              <div class="wf-reviews__stars">★★★★★</div>
+            </header>
+            <div class="wf-reviews__grid">
+              <article class="wf-review"><div class="wf-review__stars">★★★★★</div><p class="wf-review__body">&ldquo;Game-changer for reformer. I used to slide on every transition — these are rock-solid.&rdquo;</p><p class="wf-review__attr">Jamie L. · Onyx · 2 weeks ago</p></article>
+              <article class="wf-review"><div class="wf-review__stars">★★★★★</div><p class="wf-review__body">&ldquo;Tried 3 grip sock brands before these. Don&rsquo;t bother with anything else.&rdquo;</p><p class="wf-review__attr">Casey M. · Stone · 1 month ago</p></article>
+              <article class="wf-review"><div class="wf-review__stars">★★★★★</div><p class="wf-review__body">&ldquo;Run a barre studio and we now stock these for new students. Worth every penny.&rdquo;</p><p class="wf-review__attr">Priya R. · Onyx · 3 weeks ago</p></article>
+              <article class="wf-review"><div class="wf-review__stars">★★★★☆</div><p class="wf-review__body">&ldquo;Took 2 classes to break in. By class 3, perfect. Just be patient.&rdquo;</p><p class="wf-review__attr">Diane K. · Blush · 6 weeks ago</p></article>
+            </div>
+            <a class="wf-reviews__more" href="#">Read all 412 reviews + write your own →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- product rail pairs -->
+      <div class="wf-block">
+        <div class="wf-block__meta">
+          <span class="wf-block__order">05</span>
+          <span class="wf-block__name">Product rail · pairs with your kit</span>
+          <span class="wf-section-tag wf-section-tag--new"><b>NEW</b> br-product-rail</span>
+          <p class="wf-block__note">4-up carousel of related/complementary product. Replaces <code>product-recommendations</code>. Hand-curate the order from admin.</p>
+          <span class="wf-block__source">sections/br-product-rail.liquid</span>
+        </div>
+        <div class="wf-block__stage">
+          <div class="wf-rail">
+            <header class="wf-rail__head">
+              <h4 class="wf-rail__title">Pairs with your studio kit</h4>
+              <span class="wf-rail__more">Shop the kit →</span>
+            </header>
+            <div class="wf-rail__cards">
+              <article class="wf-rail-card"><div class="wf-rail-card__media" style="background: repeating-linear-gradient(135deg, #d4d0c4 0 12px, #c9c5b8 12px 24px);"></div><p class="wf-rail-card__title">Open Sole · Stone</p><p class="wf-rail-card__price">$58</p></article>
+              <article class="wf-rail-card"><div class="wf-rail-card__media" style="background: repeating-linear-gradient(135deg, #f3e3dc 0 12px, #efdcd2 12px 24px);"></div><p class="wf-rail-card__title">Open Sole · Blush</p><p class="wf-rail-card__price">$58</p></article>
+              <article class="wf-rail-card"><div class="wf-rail-card__media"></div><p class="wf-rail-card__title">Performance Yoga Pant</p><p class="wf-rail-card__price">$98</p></article>
+              <article class="wf-rail-card"><div class="wf-rail-card__media"></div><p class="wf-rail-card__title">Studio Bundle · save 15%</p><p class="wf-rail-card__price">$116</p></article>
+              <article class="wf-rail-card" style="opacity: 0.5;"><div class="wf-rail-card__media"></div></article>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </article>
+
+
+  <!-- ============================== COLLECTION ============================== -->
+  <article class="wf-template" id="tpl-collection" data-screen-label="Collection wireframe">
+    <header class="wf-template__head">
+      <div>
+        <p class="au-kicker">03 — Collection</p>
+        <h2>Collection · Studio Performance Skins</h2>
+        <p>Currently <code>collection.json</code> is 44 KB of section overrides. Reduces to <b>4 sections + chrome.</b> Same template handles every category by changing the variant grid's enabled tabs.</p>
+      </div>
+      <div class="wf-template__path">
+        <b>Template</b>
+        <code>templates/collection.json</code>
+        <code style="opacity: 0.7;">replaces collection.apparel-page, collection.shop-all-products, collection.shop-favorites, collection.collection-landing</code>
+      </div>
+    </header>
+
+    <div class="wf-template__body">
+
+      <!-- variant grid (FIRST — lead with conversion) -->
+      <div class="wf-block">
+        <div class="wf-block__meta">
+          <span class="wf-block__order">01</span>
+          <span class="wf-block__name">Variant grid · the main shop</span>
+          <span class="wf-section-tag wf-section-tag--reuse"><b>REUSE</b> br-variants</span>
+          <p class="wf-block__note"><b>Collection leads with the grid — no hero on top.</b> Customer arrived to convert; show product first. Title + subtitle sit above the tabs.<br/><br/><b>Per-template tab control:</b> set which tabs render from the template JSON. Studio = Closed + Open ON. Outdoor = Outdoor ON. One-of-a-kind = One-Offs ON.</p>
+          <span class="wf-block__source">sections/br-variants.liquid</span>
+        </div>
+        <div class="wf-block__stage">
+          <div class="wf-variants__head">
+            <p style="font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--br-text-soft); margin: 0 0 6px;">Studio collection · 24 styles</p>
+            <h3 class="wf-variants__title">Shop all colors &amp; sizes</h3>
+            <p class="wf-variants__sub">Closed sole for reformer + barre. Open sole for yoga + Pilates floor.</p>
+          </div>
+          <div class="wf-variants__tabs">
+            <button class="wf-variant-tab" aria-selected="true">Closed sole</button>
+            <button class="wf-variant-tab">Open sole</button>
+            <button class="wf-variant-tab" data-state="off">Outdoor</button>
+            <button class="wf-variant-tab wf-variant-tab--exclusive" data-state="off">One-of-a-kind</button>
+          </div>
+          <div class="wf-variants__grid">
+            <article class="wf-variant-card"><div class="wf-variant-card__media">closed · onyx</div><p class="wf-variant-card__title">Closed Sole</p><p class="wf-variant-card__price">Onyx · $68</p></article>
+            <article class="wf-variant-card"><div class="wf-variant-card__media wf-variant-card__media--blush">closed · blush</div><p class="wf-variant-card__title">Closed Sole</p><p class="wf-variant-card__price">Blush · $68</p></article>
+            <article class="wf-variant-card"><div class="wf-variant-card__media wf-variant-card__media--stone">closed · stone</div><p class="wf-variant-card__title">Closed Sole</p><p class="wf-variant-card__price">Stone · $68</p></article>
+            <article class="wf-variant-card"><div class="wf-variant-card__media wf-variant-card__media--dark">closed · LE</div><span class="wf-variant-card__le">Limited</span><p class="wf-variant-card__title">Coperni × Closed</p><p class="wf-variant-card__price">$148</p></article>
+            <article class="wf-variant-card"><div class="wf-variant-card__media">open · onyx</div><p class="wf-variant-card__title">Open Sole</p><p class="wf-variant-card__price">Onyx · $58</p></article>
+            <article class="wf-variant-card"><div class="wf-variant-card__media wf-variant-card__media--blush">open · blush</div><p class="wf-variant-card__title">Open Sole</p><p class="wf-variant-card__price">Blush · $58</p></article>
+            <article class="wf-variant-card"><div class="wf-variant-card__media wf-variant-card__media--stone">open · stone</div><p class="wf-variant-card__title">Open Sole</p><p class="wf-variant-card__price">Stone · $58</p></article>
+            <article class="wf-variant-card"><div class="wf-variant-card__media wf-variant-card__media--dark">open · carbon</div><p class="wf-variant-card__title">Open Sole</p><p class="wf-variant-card__price">Carbon · $58</p></article>
+          </div>
+        </div>
+      </div>
+
+      <!-- pillars -->
+      <div class="wf-block">
+        <div class="wf-block__meta">
+          <span class="wf-block__order">02</span>
+          <span class="wf-block__name">Pillar strip · &ldquo;Stop replacing&rdquo;</span>
+          <span class="wf-section-tag wf-section-tag--new"><b>NEW</b> br-pillars</span>
+          <p class="wf-block__note">Reassurance below the grid, before bounce. Same 5-slogan copy as PDP / home.</p>
+          <span class="wf-block__source">sections/br-pillars.liquid</span>
+        </div>
+        <div class="wf-block__stage">
+          <div class="wf-pillars">
+            <span class="wf-pillars__label">#letusknockyoursocksoff</span>
+            <div class="wf-pillars__pts">
+              <span>Socks fail. This doesn&rsquo;t.</span><span>Stop adjusting. Move.</span><span>Earn the shake. Not the slip.</span><span>Built for the move, not the pose.</span><span>Five days a week. Zero compromises.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- benefit grid category-specific -->
+      <div class="wf-block">
+        <div class="wf-block__meta">
+          <span class="wf-block__order">03</span>
+          <span class="wf-block__name">Benefit grid · category-specific values</span>
+          <span class="wf-section-tag wf-section-tag--new"><b>NEW</b> br-benefit-grid</span>
+          <p class="wf-block__note">Per-collection benefits. Studio collection = grip + safety language. Aquatic collection = water-ready + quick-dry. Same component, different copy.</p>
+          <span class="wf-block__source">sections/br-benefit-grid.liquid</span>
+        </div>
+        <div class="wf-block__stage">
+          <div class="wf-benefits">
+            <header class="wf-benefits__head">
+              <p class="wf-benefits__eyebrow">What every studio skin gives you</p>
+              <h3 class="wf-benefits__title">The system that beats a grip sock.</h3>
+            </header>
+            <div class="wf-benefits__grid">
+              <div class="wf-benefit"><span class="wf-benefit__num">01</span><h4 class="wf-benefit__t">Reformer-ready</h4><p class="wf-benefit__s">Tested on Megaformer + reformer carriages.</p></div>
+              <div class="wf-benefit"><span class="wf-benefit__num">02</span><h4 class="wf-benefit__t">Two builds</h4><p class="wf-benefit__s">Closed for barre + reformer, open for yoga + Pilates floor work.</p></div>
+              <div class="wf-benefit"><span class="wf-benefit__num">03</span><h4 class="wf-benefit__t">Rinse &amp; reuse</h4><p class="wf-benefit__s">No more sweat-logged disposable socks.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- testimonial -->
+      <div class="wf-block">
+        <div class="wf-block__meta">
+          <span class="wf-block__order">04</span>
+          <span class="wf-block__name">Testimonial · centered</span>
+          <span class="wf-section-tag wf-section-tag--new"><b>NEW</b> br-testimonial</span>
+          <p class="wf-block__note">Per-collection quote. Helps bridge the gap before the customer hits a specific PDP.</p>
+          <span class="wf-block__source">sections/br-testimonial.liquid</span>
+        </div>
+        <div class="wf-block__stage">
+          <div class="wf-quote">
+            <div class="wf-quote__stars">★★★★★</div>
+            <p class="wf-quote__body">&ldquo;Trusted by 100,000+ customers — these hug my feet and let me move as if barefoot.&rdquo;</p>
+            <div class="wf-quote__attr">Stef R. · Verified buyer</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- reviews (Judge.me) -->
+      <div class="wf-block">
+        <div class="wf-block__meta">
+          <span class="wf-block__order">05</span>
+          <span class="wf-block__name">Reviews · Judge.me</span>
+          <span class="wf-section-tag wf-section-tag--reuse"><b>REUSE</b> judgeme_widgets</span>
+          <p class="wf-block__note">Native Judge.me review widget, restyled with locked tokens. 4–6 cards · stars in warm accent · ink type. Anchors social proof at the bottom of the page.</p>
+          <span class="wf-block__source">snippets/judgeme_widgets.liquid (restyled)</span>
+        </div>
+        <div class="wf-block__stage">
+          <div class="wf-reviews">
+            <header class="wf-reviews__head">
+              <div>
+                <p class="wf-reviews__eyebrow">Verified reviews</p>
+                <h4 class="wf-reviews__title">4.9 average · 2,847 reviews</h4>
+              </div>
+              <div class="wf-reviews__stars">★★★★★</div>
+            </header>
+            <div class="wf-reviews__grid">
+              <article class="wf-review">
+                <div class="wf-review__stars">★★★★★</div>
+                <p class="wf-review__body">&ldquo;Game-changer for reformer. I used to slide on every transition — these are rock-solid and easy to rinse.&rdquo;</p>
+                <p class="wf-review__attr">Jamie L. · Closed Sole · Onyx</p>
+              </article>
+              <article class="wf-review">
+                <div class="wf-review__stars">★★★★★</div>
+                <p class="wf-review__body">&ldquo;Tried 3 grip sock brands before these. Don&rsquo;t bother with anything else.&rdquo;</p>
+                <p class="wf-review__attr">Casey M. · Open Sole · Blush</p>
+              </article>
+              <article class="wf-review">
+                <div class="wf-review__stars">★★★★★</div>
+                <p class="wf-review__body">&ldquo;Run a barre studio and we now stock these for new students. Worth every penny.&rdquo;</p>
+                <p class="wf-review__attr">Priya R. · Studio owner</p>
+              </article>
+              <article class="wf-review">
+                <div class="wf-review__stars">★★★★★</div>
+                <p class="wf-review__body">&ldquo;Took them paddle-boarding too. Quick-dry, never slip. My do-everything shoe.&rdquo;</p>
+                <p class="wf-review__attr">Diane K. · Aquatic Skin</p>
+              </article>
+            </div>
+            <a class="wf-reviews__more" href="#">Read all 2,847 reviews →</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </article>
+
+
+  <!-- ============================== ARTICLE ============================== -->
+  <article class="wf-template" id="tpl-article" data-screen-label="Article wireframe">
+    <header class="wf-template__head">
+      <div>
+        <p class="au-kicker">04 — Article</p>
+        <h2>Article · journal post</h2>
+        <p>Currently has its own one-off layout + the <code>advanced-content</code> Juicer embed. Reduces to <b>3 sections.</b></p>
+      </div>
+      <div class="wf-template__path">
+        <b>Template</b>
+        <code>templates/article.json</code>
+      </div>
+    </header>
+
+    <div class="wf-template__body">
+
+      <div class="wf-block">
+        <div class="wf-block__meta">
+          <span class="wf-block__order">01</span>
+          <span class="wf-block__name">Article hero · cover + title</span>
+          <span class="wf-section-tag wf-section-tag--new"><b>NEW</b> br-editorial</span>
+          <p class="wf-block__note">Full-bleed cover image with title overlay. Same atom as the journal hero card on home — different size.</p>
+          <span class="wf-block__source">sections/br-editorial.liquid (variant: hero)</span>
+        </div>
+        <div class="wf-block__stage">
+          <div class="wf-article-hero">
+            <p class="wf-article-hero__meta">Care · 3 min read · May 24 2026</p>
+            <h3 class="wf-article-hero__title">How to wash your performance skins.</h3>
+            <p class="wf-article-hero__byline">By Brian S. · Founder</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="wf-block">
+        <div class="wf-block__meta">
+          <span class="wf-block__order">02</span>
+          <span class="wf-block__name">Article body · long-form</span>
+          <span class="wf-section-tag wf-section-tag--new"><b>NEW</b> br-editorial</span>
+          <p class="wf-block__note">Single-column body. Max width 700px. Figures break every 3–4 paragraphs. Pull-quotes optional.</p>
+          <span class="wf-block__source">sections/br-editorial.liquid (variant: body)</span>
+        </div>
+        <div class="wf-block__stage">
+          <div class="wf-article-body">
+            <p class="wf-article-body__lede">Performance skins don&rsquo;t need babying — but a few habits will roughly double their working life. Here&rsquo;s the studio routine we recommend.</p>
+            <p>Most owners ruin their performance skins one of two ways: machine washing them on hot, or putting them away wet after a sweaty class. Both are fixable.</p>
+            <h4 class="wf-article-body__h">The 60-second rinse</h4>
+            <p>After class, run warm water through the underside of the shoe — not hot, not freezing. Add a small drop of mild soap. Massage briefly, rinse, and squeeze gently. Total time: under a minute.</p>
+            <h4 class="wf-article-body__h">Drying — the part people skip</h4>
+            <p>Air-dry, never the machine, and never direct sunlight for more than an hour. The grip surface is engineered for studio temperatures; UV slowly degrades it.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="wf-block">
+        <div class="wf-block__meta">
+          <span class="wf-block__order">03</span>
+          <span class="wf-block__name">Product rail · featured in this story</span>
+          <span class="wf-section-tag wf-section-tag--new"><b>NEW</b> br-product-rail</span>
+          <p class="wf-block__note">Articles always end with the product(s) the story is about. Drives reader → buyer.</p>
+          <span class="wf-block__source">sections/br-product-rail.liquid</span>
+        </div>
+        <div class="wf-block__stage">
+          <div class="wf-rail">
+            <header class="wf-rail__head">
+              <h4 class="wf-rail__title">Featured in this story</h4>
+              <span class="wf-rail__more">Shop all studio →</span>
+            </header>
+            <div class="wf-rail__cards">
+              <article class="wf-rail-card"><div class="wf-rail-card__media"></div><p class="wf-rail-card__title">Closed Sole · Onyx</p><p class="wf-rail-card__price">$68</p></article>
+              <article class="wf-rail-card"><div class="wf-rail-card__media" style="background: repeating-linear-gradient(135deg, #f3e3dc 0 12px, #efdcd2 12px 24px);"></div><p class="wf-rail-card__title">Open Sole · Blush</p><p class="wf-rail-card__price">$58</p></article>
+              <article class="wf-rail-card"><div class="wf-rail-card__media" style="background: repeating-linear-gradient(135deg, #d4d0c4 0 12px, #c9c5b8 12px 24px);"></div><p class="wf-rail-card__title">Care kit · soap</p><p class="wf-rail-card__price">$14</p></article>
+              <article class="wf-rail-card"><div class="wf-rail-card__media"></div><p class="wf-rail-card__title">Studio bundle</p><p class="wf-rail-card__price">$116</p></article>
+              <article class="wf-rail-card" style="opacity: 0.5;"><div class="wf-rail-card__media"></div></article>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </article>
+
+
+  <!-- ============================== BLOG INDEX ============================== -->
+  <article class="wf-template" id="tpl-blog" data-screen-label="Blog index wireframe">
+    <header class="wf-template__head">
+      <div>
+        <p class="au-kicker">05 — Blog index</p>
+        <h2>Blog index · the journal</h2>
+        <p>Currently default template + Juicer embed hack. Reduces to <b>2 sections.</b></p>
+      </div>
+      <div class="wf-template__path">
+        <b>Template</b>
+        <code>templates/blog.json</code>
+      </div>
+    </header>
+
+    <div class="wf-template__body">
+
+      <div class="wf-block">
+        <div class="wf-block__meta">
+          <span class="wf-block__order">01</span>
+          <span class="wf-block__name">Editorial index · 3-up card grid</span>
+          <span class="wf-section-tag wf-section-tag--new"><b>NEW</b> br-editorial</span>
+          <p class="wf-block__note">Centered header + 3-column article cards. Same atom used on home (section 08), just larger and with pagination underneath.</p>
+          <span class="wf-block__source">sections/br-editorial.liquid (variant: index)</span>
+        </div>
+        <div class="wf-block__stage">
+          <div style="padding: 28px 24px 8px; text-align: center;">
+            <p style="font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--br-text-soft); margin: 0 0 6px;">The journal</p>
+            <h3 style="font-size: 24px; font-weight: 500; margin: 0; letter-spacing: -0.005em;">Notes from the studio.</h3>
+          </div>
+          <div class="wf-edit-grid">
+            <article class="wf-edit-card"><div class="wf-edit-card__media"></div><p class="wf-edit-card__meta">Care · 3 min</p><h4 class="wf-edit-card__title">How to wash your performance skins.</h4></article>
+            <article class="wf-edit-card"><div class="wf-edit-card__media" style="background: repeating-linear-gradient(135deg, #f3e3dc 0 14px, #efdcd2 14px 28px);"></div><p class="wf-edit-card__meta">Founder · 5 min</p><h4 class="wf-edit-card__title">Why we built a grip-sock replacement.</h4></article>
+            <article class="wf-edit-card"><div class="wf-edit-card__media" style="background: repeating-linear-gradient(135deg, #2c2c2c 0 14px, #232323 14px 28px);"></div><p class="wf-edit-card__meta">Story · 4 min</p><h4 class="wf-edit-card__title">Coperni × Barreletics, in Paris.</h4></article>
+            <article class="wf-edit-card"><div class="wf-edit-card__media wf-edit-card__media--stone" style="background: repeating-linear-gradient(135deg, #d4d0c4 0 14px, #c9c5b8 14px 28px);"></div><p class="wf-edit-card__meta">Movement · 6 min</p><h4 class="wf-edit-card__title">A barre teacher&rsquo;s shoe routine.</h4></article>
+            <article class="wf-edit-card"><div class="wf-edit-card__media"></div><p class="wf-edit-card__meta">Care · 4 min</p><h4 class="wf-edit-card__title">When to retire your performance skins.</h4></article>
+            <article class="wf-edit-card"><div class="wf-edit-card__media" style="background: repeating-linear-gradient(135deg, #f3e3dc 0 14px, #efdcd2 14px 28px);"></div><p class="wf-edit-card__meta">Story · 3 min</p><h4 class="wf-edit-card__title">Inside the SS26 runway.</h4></article>
+          </div>
+        </div>
+      </div>
+
+      <div class="wf-block">
+        <div class="wf-block__meta">
+          <span class="wf-block__order">02</span>
+          <span class="wf-block__name">Product rail · shop the journal</span>
+          <span class="wf-section-tag wf-section-tag--new"><b>NEW</b> br-product-rail</span>
+          <p class="wf-block__note">Convert journal readers. Same rail component as everywhere else.</p>
+          <span class="wf-block__source">sections/br-product-rail.liquid</span>
+        </div>
+        <div class="wf-block__stage">
+          <div class="wf-rail">
+            <header class="wf-rail__head">
+              <h4 class="wf-rail__title">Shop the journal</h4>
+              <span class="wf-rail__more">Shop all →</span>
+            </header>
+            <div class="wf-rail__cards">
+              <article class="wf-rail-card"><div class="wf-rail-card__media"></div><p class="wf-rail-card__title">Closed Sole · Onyx</p><p class="wf-rail-card__price">$68</p></article>
+              <article class="wf-rail-card"><div class="wf-rail-card__media" style="background: repeating-linear-gradient(135deg, #f3e3dc 0 12px, #efdcd2 12px 24px);"></div><p class="wf-rail-card__title">Open Sole · Blush</p><p class="wf-rail-card__price">$58</p></article>
+              <article class="wf-rail-card"><div class="wf-rail-card__media" style="background: repeating-linear-gradient(135deg, #d4d0c4 0 12px, #c9c5b8 12px 24px);"></div><p class="wf-rail-card__title">Care kit</p><p class="wf-rail-card__price">$14</p></article>
+              <article class="wf-rail-card"><div class="wf-rail-card__media"></div><p class="wf-rail-card__title">Studio bundle</p><p class="wf-rail-card__price">$116</p></article>
+              <article class="wf-rail-card" style="opacity: 0.5;"><div class="wf-rail-card__media"></div></article>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </article>
+
+  <!-- ============================== NEXT ============================== -->
+  <section class="au-section" id="next" style="background: #fff; border: 1px solid var(--br-line); padding: 48px 36px; margin-top: 24px;">
+    <p class="au-kicker">06 — You said let&rsquo;s do it. Here&rsquo;s how.</p>
+    <h2 class="au-h2" style="margin-bottom: 16px;">Recommended path: hybrid.</h2>
+    <p class="au-lede" style="margin-bottom: 24px;">
+      Skip a pixel-final mock for every screen — that&rsquo;s slow and produces a lot of dead-weight artifacts. Instead: I produce <b>desktop + mobile pixel-finals for Home and PDP only</b> (the two pages your dev will agonize over), and the wireframes + audit tokens become the spec for everything else.
+    </p>
+
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 24px;">
+      <div style="background: var(--br-alt-bg); padding: 20px;">
+        <p style="font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: 0.1em; color: var(--br-text-soft); margin: 0 0 6px;">Step 1 · this week</p>
+        <h3 class="au-h3" style="margin-bottom: 8px; font-size: 20px;">Pixel-final Home + PDP</h3>
+        <p class="au-body" style="font-size: 13.5px; color: var(--br-text-soft);">Both pages, desktop + mobile, with real photography slots called out. Includes the full type ramp, button library, and component CSS in usable form for your dev.</p>
+      </div>
+      <div style="background: var(--br-alt-bg); padding: 20px;">
+        <p style="font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: 0.1em; color: var(--br-text-soft); margin: 0 0 6px;">Step 2 · next 2 weeks</p>
+        <h3 class="au-h3" style="margin-bottom: 8px; font-size: 20px;">Dev builds draft theme</h3>
+        <p class="au-body" style="font-size: 13.5px; color: var(--br-text-soft);">Your developer duplicates the live theme, locks the tokens, normalizes the 4 reuse-sections, builds the 5 new sections, recomposes the templates. Phase 1–5 plan in the audit.</p>
+      </div>
+      <div style="background: var(--br-alt-bg); padding: 20px;">
+        <p style="font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: 0.1em; color: var(--br-text-soft); margin: 0 0 6px;">Step 3 · review &amp; ship</p>
+        <h3 class="au-h3" style="margin-bottom: 8px; font-size: 20px;">QA on staging, then cutover</h3>
+        <p class="au-body" style="font-size: 13.5px; color: var(--br-text-soft);">Walk every template on draft theme, compare against live, fix discrepancies, then publish. Snapshot old theme as archive.</p>
+      </div>
+    </div>
+
+    <hr class="au-rule" />
+
+    <p class="au-body"><b>Before I start the pixel-finals — confirm these four:</b></p>
+    <ol style="margin: 12px 0 0; padding-left: 22px; color: var(--br-text-soft); font-size: 16px; line-height: 1.75;">
+      <li>Home leads with media-split hero (video left, copy right). ✅ shown above.</li>
+      <li>Collection skips the hero and leads with the variant grid. ✅ shown above.</li>
+      <li>Reviews = curated quote (br-testimonial) + Judge.me grid (judgeme_widgets restyled) on PDP, Home, Collection. ✅ shown above.</li>
+      <li>One warm accent (#f93820) replaces both sale red and coral. Cart dot, star ratings, sale price, sale badge — all the same warm red. (Open to coral if you want softer; the Tweaks panel on the audit doc lets you test.)</li>
+    </ol>
+
+    <p class="au-body" style="margin-top: 24px;">Once you give the green light I&rsquo;ll start the Home + PDP pixel-finals. <a href="Barreletics Audit.html" style="border-bottom: 1px solid currentColor;">← Back to the audit</a></p>
+  </section>
+
+</div>
+
+</body>
+</html>
