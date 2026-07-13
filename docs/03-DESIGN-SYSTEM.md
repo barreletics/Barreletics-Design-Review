@@ -1,7 +1,9 @@
 # Design System
 
 **Status:** PENDING REVIEW  
-**Purpose:** Design tokens, principles, and system architecture
+**Purpose:** Design tokens, principles, and system architecture  
+**Primary Source:** barreletics-design-review/design_handoff_barreletics 2/README.md (verbatim)  
+**Supplementary Source:** Barreletics_Research_Bible.md Section 7 (Design System Rules)
 
 ---
 
@@ -356,3 +358,54 @@ No app-level state library required.
   before shipping the announcement copy.
 - Confirm SKU availability for the **Closed Sole / Open Sole / Limited Edition**
   taxonomy used in the variant grid.
+
+---
+
+## Design System Rules (from Research Bible)
+
+Source: Barreletics_Research_Bible.md Section 7 (lines 286–301)
+
+### Core Rules
+```
+- Font: Roboto only (300–700), no Josefin Sans
+- Eyebrows: 12px/700/0.14em/uppercase — WHITE rgba(255,255,255,0.7) on dark sections, coral var(--br-accent) only on white/light bg
+- Buttons: Square (radius 0), black #050505
+- "Blog" → "Journal" everywhere
+- Colors: bg=#fff, text=#050505, accent=#f97250, star=#fbc02d
+```
+
+### 50/50 Split Sizing (CANONICAL — DO NOT CHANGE)
+```
+Reference: v18 "Never slip in chair pose" section
+- height: 420px (fixed, not min-height)
+- overflow: hidden
+- padding: 80px 72px on copy side
+- slogan: clamp(28px, 3.2vw, 42px) with min-height: 0
+- Mobile: height: auto
+```
+
+---
+
+## SOURCE CONFLICTS
+
+### Eyebrow Letter-Spacing Conflict
+
+| Source | Value | Location |
+|--------|-------|----------|
+| Design Handoff README | `letter-spacing: 0.08em` | This document, Typography table (--t-eyebrow) |
+| Research Bible Section 7 | `letter-spacing: 0.14em` | Barreletics_Research_Bible.md line 289 |
+
+**CONFLICT:** The design handoff README specifies eyebrow letter-spacing as 0.08em. The Research Bible specifies 0.14em. Both are documented; resolution requires Architect decision.
+
+### Free Shipping Threshold Note
+
+The design handoff states: "Free-shipping threshold is `$150` site-wide (the live `$75` is being raised)."
+
+**Current status (2026-07-13):** The live site now shows $150. The change referenced here has been completed. The $150 threshold is CURRENT PRODUCTION.
+
+Source: docs/08-LIVE-SITE-COPY-AUDIT.md, docs/09-PRODUCT-KNOWLEDGE.md (Shipping section)
+
+---
+
+**STATUS:** PENDING REVIEW  
+**BUILD COMPLETE:** 2026-07-13

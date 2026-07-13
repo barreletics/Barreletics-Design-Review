@@ -1,7 +1,8 @@
 # Brand System
 
 **Status:** PENDING REVIEW  
-**Purpose:** Brand identity, voice, tone, and messaging guidelines
+**Purpose:** Brand identity, voice, tone, and messaging guidelines  
+**Sources:** manychat-kb/12-brand-voice-and-taglines.md, Barreletics_Research_Bible.md (Sections 1, 4, 6)
 
 ---
 
@@ -12,6 +13,8 @@
 **"Trusted by 1,000's of instructors"** appears in the stars/trusted line of every 50/50 split hero, not as a section headline.
 
 **Benefits are distributed, not lumped.** No standalone "benefit grid" section on the home page. Instead, each section carries its own relevant benefit messaging. The benefit grid lives on PDP and Collection pages with context-specific copy.
+
+Source: Barreletics_Research_Bible.md Section 4, docs/06-HOMEPAGE-ARCHITECTURE.md
 
 ---
 
@@ -46,6 +49,8 @@
 ### 50/50 Split Trusted Line (All Splits)
 Stars (★★★★★) + "Trusted by 1,000's of instructors & studios"
 
+Source: Barreletics_Research_Bible.md Section 4 (lines 176–197)
+
 ---
 
 ## 3. Brand Voice & Tone
@@ -55,6 +60,8 @@ Stars (★★★★★) + "Trusted by 1,000's of instructors & studios"
 Confident instructor who's seen it all. Direct, warm, a little dry. Never hype-y. Short sentences. Real benefits. Let reviews and the 30-day trial do the convincing.
 
 Premium, calm, confident. One emoji max or none at all on serious messages.
+
+Source: manychat-kb/12-brand-voice-and-taglines.md (lines 9–11)
 
 ### Power Phrases (Weave Naturally Into Replies)
 
@@ -79,6 +86,8 @@ Premium, calm, confident. One emoji max or none at all on serious messages.
 - One pair. No more socks.
 - Think outside the sock.
 
+Source: manychat-kb/12-brand-voice-and-taglines.md (lines 14–34)
+
 ### Approved Slogans
 
 - Grip Isn't Optional
@@ -95,9 +104,38 @@ Premium, calm, confident. One emoji max or none at all on serious messages.
 - Reformer Girls Know.
 - Never Lose Grip.
 
+Source: manychat-kb/12-brand-voice-and-taglines.md (lines 38–50)
+
+### Additional Approved Slogans (available for rotation)
+
+- "Stop adjusting. Start moving."
+- "Focus on your form, not your feet."
+- "Socks fail. This doesn't."
+- "Built for the move, not the pose."
+- "Earn the shake. Not the slip."
+- "For people who call it their practice."
+- "Five days a week. Zero compromises."
+- "50 minutes. Every transition. Zero adjustments."
+- "Your instructor's secret weapon."
+- "Worn by instructors. Trusted by studios."
+
+Source: Barreletics_Research_Bible.md Section 4 (lines 199–209)
+
+### Slogans Derived from Reviews
+
+- "Greatest invention for Pilates devotees." (from Leslye + Dvorah)
+- "Finally a durable barre shoe." (Laura P., instructor)
+- "I refuse to wear anything else." (Kimberly, 4-year customer)
+- "In one word: safe." (from Deborah R.)
+- "10 fold improvement. First class." (from Jess)
+
+Source: Barreletics_Research_Bible.md Section 4 (lines 211–216)
+
 ### Hashtag
 
 #letusknockyoursocksoff
+
+Source: manychat-kb/12-brand-voice-and-taglines.md (line 54)
 
 ---
 
@@ -106,17 +144,23 @@ Premium, calm, confident. One emoji max or none at all on serious messages.
 ### Double Failure Concept
 "Your foot moves in the sock. The sock moves on the floor. Now neither does." — Use on PDP.
 
+Source: Barreletics_Research_Bible.md Section 1 (line 10)
+
 ### Price Math
 
 - Grip socks = $144–$336/year (8–12 pairs, grip dies after 6–8 washes)
 - Barreletics = $74 once, same grip class 1 to class 260
 - Kimberly = 4 years on one pair
 
+Source: Barreletics_Research_Bible.md Section 1 (lines 12–15)
+
 ### Product Positioning
 
 - **Product:** $74 "performance skin" — NOT a sock. Never call it a sock.
 - **Voice priority:** Safety + grip + "replaces socks" BEFORE lifestyle.
 - **Hero body:** "Not a sock. A performance skin. 360° grip through every pose, transition, class — on the mat or off it."
+
+Source: Barreletics_Research_Bible.md Section 1 (line 8), Section 6 (line 269)
 
 ---
 
@@ -127,3 +171,5 @@ Premium, calm, confident. One emoji max or none at all on serious messages.
 - Generic hype ("amazing!!!")
 - Medical promises
 - Emoji spam
+
+Source: manychat-kb/12-brand-voice-and-taglines.md (line 58)
