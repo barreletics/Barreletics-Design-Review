@@ -1088,5 +1088,22 @@ Cross-reference: docs/09-PRODUCT-KNOWLEDGE.md (Source Conflicts Register), docs/
 
 ---
 
+---
+
+## REPOSITORY RECONCILIATION
+
+### R-001: PDP Design History Imported
+
+**Date:** 2026-07-13  
+**Decision:** Import PDP Complete v37–v49 from Claude Design into repository  
+**Rationale:** Repository contained only v36; 13 versions of approved design evolution were missing. PDP Complete v49 is now the authoritative production design.  
+**Location:** archive/pdp-history/ (v37–v49), docs/history/PDP-Revision-History.md  
+**Impact:** docs/05-PDP-ARCHITECTURE.md source authority updated to reference v49  
+**Supersedes:** Barreletics-PDP-v36-Jul2026.html is now SUPERSEDED (retained for historical reference)  
+**Previous artifacts remain:** All earlier PDP versions (v1–v36) preserved at their existing locations  
+**Source:** Claude Design export, July 13, 2026
+
+---
+
 **STATUS:** PENDING REVIEW  
 **BUILD COMPLETE:** 2026-07-13

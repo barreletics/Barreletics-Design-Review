@@ -2,15 +2,16 @@
 
 **CRITICAL:** This document is a lossless migration of EVERY specification, measurement, code, class name, color value, font size, and decision from the approved Barreletics PDP design system. NO SUMMARIZATION. NO SIMPLIFICATION. ALL DECISIONS PRESERVED EXACTLY.
 
-Last Updated: 2026-07-12  
-Source Authority: Barreletics-PDP-v36-Jul2026.html, Barreletics PDP - Matured.html, pdp-styles.css, pdp-tweaks.jsx  
+Last Updated: 2026-07-13  
+Source Authority: PDP Complete v49.html (archive/pdp-history/), Barreletics PDP - Matured.html, pdp-styles.css, pdp-tweaks.jsx  
+Previous Source: Barreletics-PDP-v36-Jul2026.html (SUPERSEDED by PDP Complete v49)  
 Status: APPROVED
 
 ---
 
 ## EXTRACTED SOURCE CODE AND SPECIFICATIONS
 
-### HTML Structure (from Barreletics-PDP-v36-Jul2026.html)
+### HTML Structure (from PDP Complete v49.html — see archive/pdp-history/; originally extracted from Barreletics-PDP-v36-Jul2026.html)
 
 <!DOCTYPE html>
 <html lang="en">
