@@ -1,4 +1,4 @@
 # Decisions
 
-**Status:** Draft  
+**Status:** STUB  
 **Purpose:** Architectural decisions, rationale, and changelog

@@ -1,6 +1,6 @@
 # Documentation Index
 
-**Status:** Draft  
+**Status:** STUB  
 **Purpose:** Navigation guide for Barreletics operating system documentation
 
 ## Core Documentation

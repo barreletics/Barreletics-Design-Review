@@ -4,7 +4,7 @@
 
 Last Updated: 2026-07-12  
 Source Authority: Barreletics-PDP-v36-Jul2026.html, Barreletics PDP - Matured.html, pdp-styles.css, pdp-tweaks.jsx  
-Status: PRODUCTION SPECIFICATION — Single Source of Truth
+Status: APPROVED
 
 ---
 

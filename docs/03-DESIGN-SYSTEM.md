@@ -1,3 +1,10 @@
+# Design System
+
+**Status:** PENDING REVIEW  
+**Purpose:** Design tokens, principles, and system architecture
+
+---
+
 # Handoff: Barreletics Site Redesign
 
 This bundle is the full output of a multi-week design study for the Barreletics

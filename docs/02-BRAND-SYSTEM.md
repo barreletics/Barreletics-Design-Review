@@ -1,6 +1,6 @@
 # Brand System
 
-**Status:** Draft  
+**Status:** PENDING REVIEW  
 **Purpose:** Brand identity, voice, tone, and messaging guidelines
 
 ---

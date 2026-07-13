@@ -1,4 +1,4 @@
 # Creative Playbook
 
-**Status:** Draft  
+**Status:** STUB  
 **Purpose:** Creative direction, campaigns, and asset specifications

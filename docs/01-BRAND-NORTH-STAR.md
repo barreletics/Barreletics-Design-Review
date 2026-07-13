@@ -1,4 +1,4 @@
 # Brand North Star
 
-**Status:** Draft  
+**Status:** PENDING REVIEW  
 **Purpose:** Brand vision, mission, and core values
