@@ -358,6 +358,25 @@ All ADRs from the prior planning phase (ADR-01 through ADR-07) are resolved per 
 
 ---
 
+### D-035: Milestone 3 Supporting Experience Locked
+**Decided:** 2026-07-18 | **Severity:** Critical
+
+**Decision:** All supporting pages, collection templates, site experience features, GEO/SEO, and production hardening approved. Milestones 1-3 now constitute the canonical Barreletics architecture. All future work extends without redesigning approved systems.
+
+**Context:**
+- All supporting pages built and QA'd (FAQ, About, Contact, Shipping, Returns, Size Guide, Warranty, Wholesale, Ambassador, Studio Program, Grip Comparison, Technology)
+- Blog/Journal system complete (listing + article templates)
+- Search results page complete
+- All sub-collection templates finalized
+- Header/Footer V2, breadcrumb, structured data infrastructure complete
+- 12/12 critical QA fixes resolved (D-033, D-034)
+- BreadcrumbList JSON-LD consolidated to `snippets/breadcrumb.liquid` (single canonical location)
+- `theme-m3.liquid` promoted to `theme.liquid` (canonical layout)
+
+**Impact:** Milestones 1-3 locked as canonical architecture. Milestone 4 (Production Readiness) authorized to begin planning. No architectural redesign permitted without new Decision Log entry.
+
+---
+
 ## ADR Archive
 
 The original ADR documents (ADR-01 through ADR-07) are preserved in `planning/` for historical reference. Their UNRESOLVED status is now superseded by the decisions above.

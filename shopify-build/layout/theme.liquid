@@ -15,6 +15,10 @@
         {{ collection.title }} | Barreletics Grippy Shoes
       {%- when 'article' -%}
         {{ article.title }} | Barreletics Journal
+      {%- when 'blog' -%}
+        {{ blog.title }} | Barreletics Journal
+      {%- when 'page' -%}
+        {{ page.title }} | Barreletics
       {%- else -%}
         {{ page_title }} | Barreletics
     {%- endcase -%}
@@ -25,6 +29,54 @@
   {%- endif -%}
 
   <link rel="canonical" href="{{ canonical_url }}">
+
+  {%- comment -%} Open Graph Meta Tags {%- endcomment -%}
+  <meta property="og:site_name" content="Barreletics">
+  <meta property="og:url" content="{{ canonical_url }}">
+
+  {%- case template.name -%}
+    {%- when 'product' -%}
+      <meta property="og:type" content="product">
+      <meta property="og:title" content="{{ product.title | escape }}">
+      <meta property="og:description" content="{{ product.description | strip_html | truncate: 200 | escape }}">
+      {%- if product.featured_image -%}
+        <meta property="og:image" content="https:{{ product.featured_image | image_url: width: 1200 }}">
+      {%- endif -%}
+      <meta property="og:price:amount" content="{{ product.price | money_without_currency }}">
+      <meta property="og:price:currency" content="{{ shop.currency }}">
+    {%- when 'article' -%}
+      <meta property="og:type" content="article">
+      <meta property="og:title" content="{{ article.title | escape }}">
+      <meta property="og:description" content="{{ article.excerpt_or_content | strip_html | truncate: 200 | escape }}">
+      {%- if article.image -%}
+        <meta property="og:image" content="https:{{ article.image | image_url: width: 1200 }}">
+      {%- endif -%}
+    {%- when 'collection' -%}
+      <meta property="og:type" content="website">
+      <meta property="og:title" content="{{ collection.title | escape }}">
+      <meta property="og:description" content="{{ collection.description | strip_html | truncate: 200 | escape }}">
+      {%- if collection.image -%}
+        <meta property="og:image" content="https:{{ collection.image | image_url: width: 1200 }}">
+      {%- endif -%}
+    {%- when 'blog' -%}
+      <meta property="og:type" content="blog">
+      <meta property="og:title" content="{{ blog.title | escape }}">
+      <meta property="og:description" content="{{ page_description | escape }}">
+    {%- else -%}
+      <meta property="og:type" content="website">
+      <meta property="og:title" content="{{ page_title | escape }}">
+      {%- if page_description -%}
+        <meta property="og:description" content="{{ page_description | escape }}">
+      {%- endif -%}
+  {%- endcase -%}
+
+  {%- comment -%} Fallback OG image {%- endcomment -%}
+  {%- unless template.name == 'product' or template.name == 'article' or template.name == 'collection' -%}
+    <meta property="og:image" content="{{ 'og-default.jpg' | asset_url }}">
+  {%- endunless -%}
+
+  {%- comment -%} Twitter Card {%- endcomment -%}
+  <meta name="twitter:card" content="summary_large_image">
 
   {%- comment -%} Preconnects {%- endcomment -%}
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -38,7 +90,7 @@
   {{ 'design-tokens.css' | asset_url | stylesheet_tag }}
   {{ 'barreletics-base.css' | asset_url | stylesheet_tag }}
 
-  {%- comment -%} Structured data {%- endcomment -%}
+  {%- comment -%} Organization Schema (all pages) {%- endcomment -%}
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -49,43 +101,30 @@
     }
   </script>
 
-  {% if template.name != 'index' %}
+  {%- comment -%} WebSite + SearchAction Schema (homepage only) {%- endcomment -%}
+  {%- if template.name == 'index' -%}
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Home",
-            "item": "{{ shop.url }}"
-          }
-          {%- if template.name == 'collection' -%}
-            ,{
-              "@type": "ListItem",
-              "position": 2,
-              "name": "{{ collection.title | escape }}",
-              "item": "{{ shop.url }}{{ collection.url }}"
-            }
-          {%- elsif template.name == 'product' -%}
-            ,{
-              "@type": "ListItem",
-              "position": 2,
-              "name": "Grippy Shoes",
-              "item": "{{ shop.url }}/collections/grippy-shoes"
-            }
-            ,{
-              "@type": "ListItem",
-              "position": 3,
-              "name": "{{ product.title | escape }}",
-              "item": "{{ shop.url }}{{ product.url }}"
-            }
-          {%- endif -%}
-        ]
+        "@type": "WebSite",
+        "name": "Barreletics",
+        "url": "{{ shop.url }}",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "{{ shop.url }}/search?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
       }
     </script>
-  {% endif %}
+  {%- endif -%}
+
+  {%- comment -%} Page-specific schema snippets {%- endcomment -%}
+  {%- if template.name == 'collection' -%}
+    {% render 'collection-schema' %}
+  {%- endif -%}
+  {%- if template.name == 'article' -%}
+    {% render 'article-schema' %}
+  {%- endif -%}
 
   {{ content_for_header }}
 </head>
@@ -96,7 +135,7 @@
   {%- comment -%} Announcement Strip {%- endcomment -%}
   {% render 'announcement-strip' %}
 
-  {%- comment -%} Header / Navigation (header-nav.liquid provides its own <header> element) {%- endcomment -%}
+  {%- comment -%} Header / Navigation {%- endcomment -%}
   {% render 'header-nav' %}
 
   {%- comment -%} Main Content {%- endcomment -%}
@@ -104,7 +143,7 @@
     {{ content_for_layout }}
   </main>
 
-  {%- comment -%} Footer (footer.liquid provides its own <footer> element) {%- endcomment -%}
+  {%- comment -%} Footer {%- endcomment -%}
   {% render 'footer' %}
 
   {%- comment -%} Cart Drawer (D-024) {%- endcomment -%}
@@ -119,7 +158,7 @@
       z-index: 9999;
       padding: 12px 24px;
       background: var(--color-charcoal);
-      color: #fff;
+      color: var(--color-white);
       font-size: 14px;
       font-weight: 700;
       border-radius: var(--radius-button);

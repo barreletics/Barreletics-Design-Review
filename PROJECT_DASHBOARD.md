@@ -141,16 +141,16 @@
 | Minor Fixes (7/10) | ✅ | Hover, ARIA, color compliance fixes |
 | Deferred (3 minor) | 📋 | Title tags (M-05/M-09), 50/50 dimensions (M-08) |
 
-## Milestone 3: Supporting Experience — 🔵 Ready for Review
+## Milestone 3: Supporting Experience — 🔒 Locked
 
-> **Milestone 3: Supporting Experience built and QA'd — 2026-07-18.** All pages, structured data, and metadata infrastructure complete. 12 critical QA fixes applied.
+> **Milestone 3: Supporting Experience approved and locked — 2026-07-18.** All supporting pages, collection templates, site experience features, GEO/SEO, and production hardening approved. Milestones 1-3 now constitute the canonical Barreletics architecture.
 
 ### Phase 1: Page Builds — ✅ Complete
 
 | Deliverable | Status | File |
 |-------------|--------|------|
 | **Layout** | | |
-| Theme M3 (extended metadata, OG, schemas) | ✅ | `shopify-build/layout/theme-m3.liquid` |
+| Theme (extended metadata, OG, schemas) | ✅ | `shopify-build/layout/theme.liquid` |
 | **Supporting Pages** | | |
 | FAQ Page | ✅ | `shopify-build/sections/page-faq.liquid` / `templates/page.faq.json` |
 | About Page | ✅ | `shopify-build/sections/page-about.liquid` / `templates/page.about.json` |
@@ -180,10 +180,10 @@
 | Article Schema (BlogPosting) | ✅ | `shopify-build/snippets/article-schema.liquid` |
 | Organization Schema (enhanced) | ✅ | `shopify-build/snippets/organization-schema.liquid` |
 | Related Links snippet | ✅ | `shopify-build/snippets/related-links.liquid` |
-| WebSite + SearchAction (homepage) | ✅ | In `layout/theme-m3.liquid` |
-| Open Graph tags (all pages) | ✅ | In `layout/theme-m3.liquid` |
-| Twitter Card (summary_large_image) | ✅ | In `layout/theme-m3.liquid` |
-| Extended BreadcrumbList JSON-LD | ✅ | In `layout/theme-m3.liquid` + `snippets/breadcrumb.liquid` |
+| WebSite + SearchAction (homepage) | ✅ | In `layout/theme.liquid` |
+| Open Graph tags (all pages) | ✅ | In `layout/theme.liquid` |
+| Twitter Card (summary_large_image) | ✅ | In `layout/theme.liquid` |
+| BreadcrumbList JSON-LD | ✅ | `snippets/breadcrumb.liquid` (canonical location) |
 
 ### Phase 3: Quality Assurance — ✅ Complete
 
@@ -202,25 +202,19 @@
 | D-031 | Recently Viewed via localStorage |
 | D-032 | Collection templates reuse existing M2 sections |
 
-### Remaining / Deferred
+### Deferred to Milestone 4
 | Item | Status | Notes |
 |------|--------|-------|
-| Grip Comparison Page | ⚪ | Designed but not yet built (D-029) |
-| Shipping Page | ⚪ | Planned as separate page (D-028) |
-| Returns Page | ⚪ | Planned as separate page (D-028) |
-| Size Guide Page | ⚪ | Content TBD |
-| Warranty Page | ⚪ | Content TBD |
-| Help Scout Integration | ⚪ | Docs 07, 13 approved |
-| Tidio AI Setup | ⚪ | Docs 07, 13 approved |
+| Help Scout Integration | ⚪ | Docs 07, 13 approved — M4 scope |
+| Tidio AI Setup | ⚪ | Docs 07, 13 approved — M4 scope |
 
-## Milestone 4: Systems — ⚪ Not Started
+## Milestone 4: Production Readiness — ⚪ Planning
 
-| Deliverable | Status | Dependencies |
-|-------------|--------|-------------|
-| Shopify Build Spec (updated) | ⚪ | All foundation docs approved |
-| Component Library (Liquid) | ⚪ | Docs 03, 04 approved |
-| Dev Handoff Package | ⚪ | All milestones 1–3 complete |
-| Analytics / Tracking | ⚪ | Shopify build in progress |
+> Next milestone. See `planning/MILESTONES-4-5-6-ROADMAP.md` for full scope.
+
+## Milestone 5: Growth Platform — ⚪ Planning
+
+## Milestone 6: Platform Completion — ⚪ Planning
 
 ---
 
@@ -236,12 +230,7 @@
 
 ## Next Actions
 
-1. **Architect:** Review Milestone 3 — all pages, structured data, QA report ready for approval
-2. **Builder:** Build Grip Comparison page (D-029 — category disruption asset)
-3. **Builder:** Build Shipping + Returns separate pages (D-028)
-4. **Builder:** Build Size Guide and Warranty pages
-5. **Builder:** Implement Header/Footer V2 navigation updates (D-030)
-6. **Builder:** Address deferred M2 minor issues (M-05, M-08, M-09) during deployment
-7. **Builder:** Implement variant grid JavaScript filtering when Shopify collection API is connected
-8. **Builder:** Resolve BreadcrumbList JSON-LD duplication during deployment (theme-m3 vs breadcrumb snippet)
-9. **Builder:** Upload `og-default.jpg` and `logo.png` to Shopify assets
+1. **Owner/Architect:** Review Milestones 4-5-6 Roadmap (`planning/MILESTONES-4-5-6-ROADMAP.md`)
+2. **Builder:** Begin Milestone 4 — Production Readiness (pending roadmap approval)
+3. **Builder:** Address deferred M2 minor issues (M-05, M-08, M-09) during deployment
+4. **Builder:** Upload `og-default.jpg` and `logo.png` to Shopify assets
