@@ -1,7 +1,7 @@
 # Barreletics Blueprint — Project Dashboard
 
 **Last Updated:** 2026-07-18
-**Current Milestone:** 2 — Core Experience (QA Complete, Ready for Review)
+**Current Milestone:** 3 — Supporting Experience
 
 ---
 
@@ -77,7 +77,9 @@
 
 ---
 
-## Milestone 2: Core Experience — 🔵 Ready for Review
+## Milestone 2: Core Experience — 🔒 Locked
+
+> **Milestone 2: Core Experience approved and locked — 2026-07-18.** Shopify build system, core pages, variant selection, cart flow, Judge.me integration, GEO sections complete.
 
 ### Phase 1: Build System — ✅ Complete
 
@@ -139,7 +141,7 @@
 | Minor Fixes (7/10) | ✅ | Hover, ARIA, color compliance fixes |
 | Deferred (3 minor) | 📋 | Title tags (M-05/M-09), 50/50 dimensions (M-08) |
 
-## Milestone 3: Supporting Experience — ⚪ Not Started
+## Milestone 3: Supporting Experience — 🟡 In Progress
 
 | Deliverable | Status | Dependencies |
 |-------------|--------|-------------|
@@ -173,7 +175,7 @@
 
 ## Next Actions
 
-1. **Architect/Owner:** Review PR #2 (`milestone-2-core-experience` → `main`) — QA complete, all critical issues fixed
+1. **Builder:** Begin Milestone 3 — Supporting Experience (FAQ, About, Journal, sub-collections)
 2. **Builder:** Address deferred minor issues (M-05, M-08, M-09) during deployment
-3. **Builder:** Begin Milestone 3 — Supporting Experience (FAQ, About, Journal, sub-collections)
-4. **Builder:** Implement variant grid JavaScript filtering when Shopify collection API is connected
+3. **Builder:** Implement variant grid JavaScript filtering when Shopify collection API is connected
+4. **Builder:** Plan Compare Page (deferred from Milestone 2 Phase 2)

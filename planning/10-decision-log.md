@@ -266,6 +266,21 @@ All ADRs from the prior planning phase (ADR-01 through ADR-07) are resolved per 
 
 ---
 
+### D-027: Milestone 2 Core Experience Locked
+**Decided:** 2026-07-18 | **Severity:** Critical
+
+**Decision:** All Shopify build system components, core page sections, variant selection JS, AJAX cart flow, Judge.me integration, GEO sections, and QA fixes approved and locked. Milestone 2 is complete.
+
+**Context:**
+- Architect reviewed and approved PR #2 (`milestone-2-core-experience` → `main`)
+- 39 files: build spec, design tokens, base CSS, layout, 14 sections, 12 snippets, 3 templates, 2 JS modules
+- QA report: 13/13 critical fixes resolved, 7/10 minor fixes resolved, 3 deferred to deployment
+- Remaining work is implementation polish and deployment (Milestone 3+)
+
+**Impact:** All Milestone 2 deliverables status changed to 🔒 Locked. Dashboard updated. Milestone 3 (Supporting Experience) authorized to begin.
+
+---
+
 ## ADR Archive
 
 The original ADR documents (ADR-01 through ADR-07) are preserved in `planning/` for historical reference. Their UNRESOLVED status is now superseded by the decisions above.
