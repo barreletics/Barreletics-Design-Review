@@ -3,9 +3,9 @@
 ---
 document: 01 – Brand North Star
 version: 1.0
-status: 🔵 Ready for Review
-approved_by: —
-approval_date: —
+status: 🔒 Locked
+approved_by: Owner / Architect
+approval_date: 2026-07-18
 last_modified: 2026-07-18
 depends_on: []
 supersedes: [QA-01-BRAND-NORTH-STAR.md]

@@ -3,9 +3,9 @@
 ---
 document: 10 – Decision Log
 version: 1.0
-status: 🔵 Ready for Review
-approved_by: —
-approval_date: —
+status: 🔒 Locked
+approved_by: Owner / Architect
+approval_date: 2026-07-18
 last_modified: 2026-07-18
 depends_on: [01, 02, 03, 04, 05, 06, 07, 08, 09]
 supersedes: [ADR-01 through ADR-07]
@@ -197,6 +197,20 @@ All ADRs from the prior planning phase (ADR-01 through ADR-07) are resolved per 
 
 ---
 
+### D-021: Milestone 1 Foundation Locked
+**Decided:** 2026-07-18 | **Severity:** Critical
+
+**Decision:** All 13 Foundation documents (01–13) are locked as of 2026-07-18. Architectural changes to any locked document require a new Decision Log entry with Owner/Architect approval before implementation.
+
+**Context:**
+- Owner reviewed and approved all 13 Foundation documents
+- Priority shifts from planning to implementation
+- Milestone 2 (Core Experience) is authorized to begin
+- Locked documents serve as canonical specs for all builds
+
+**Impact:** All Foundation docs status changed from 🔵 Ready for Review to 🔒 Locked. Dashboard updated. Milestone 2 authorized.
+
+---
 ## ADR Archive
 
 The original ADR documents (ADR-01 through ADR-07) are preserved in `planning/` for historical reference. Their UNRESOLVED status is now superseded by the decisions above.

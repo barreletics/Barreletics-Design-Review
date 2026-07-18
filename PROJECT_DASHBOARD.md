@@ -1,7 +1,7 @@
 # Barreletics Blueprint — Project Dashboard
 
 **Last Updated:** 2026-07-18
-**Current Milestone:** 1 — Foundation
+**Current Milestone:** 2 — Core Experience
 
 ---
 
@@ -14,7 +14,9 @@
 
 ---
 
-## Milestone 1: Foundation — 🔵 Ready for Review
+## Milestone 1: Foundation — 🔒 Locked
+
+> **Foundation approved and locked — 2026-07-18.** Architectural changes require Decision Log approval.
 
 ### Completed & Locked
 
@@ -27,31 +29,31 @@
 | — | Brand Copy Skill | 🔒 Locked | `~/.cursor/skills/barreletics-brand-copy/SKILL.md` |
 | — | Slogan Engine Skill | 🔒 Locked | `~/.cursor/skills/barreletics-slogan-engine/SKILL.md` |
 
-### Ready for Review
+### Foundation Documents (Locked)
 
 | # | Document | Status | File |
 |---|----------|--------|------|
-| 01 | Brand North Star | 🔵 | `planning/01-brand-north-star.md` |
-| 02 | Brand System | 🔵 | `planning/02-brand-system.md` |
-| 03 | Design System | 🔵 | `planning/03-design-system.md` |
-| 04 | Component Library | 🔵 | `planning/04-component-library.md` |
-| 05 | PDP Architecture | 🔵 | `planning/05-pdp-architecture.md` |
-| 06 | Homepage Architecture | 🔵 | `planning/06-homepage-architecture.md` |
-| 07 | Product Knowledge Base (Master) | 🔵 | `planning/07-product-knowledge-base.md` |
-| 08 | Copy Guide | 🔵 | `planning/08-copy-guide.md` |
-| 09 | Collection / Pillar Architecture | 🔵 | `planning/09-collection-architecture.md` |
-| 10 | Decision Log | 🔵 | `planning/10-decision-log.md` |
-| 11 | Navigation Architecture | 🔵 | `planning/11-navigation-architecture.md` |
-| 12 | SEO & GEO Standards | 🔵 | `planning/12-seo-geo-standards.md` |
-| 13 | Knowledge Architecture | 🔵 | `planning/13-knowledge-architecture.md` |
+| 01 | Brand North Star | 🔒 | `planning/01-brand-north-star.md` |
+| 02 | Brand System | 🔒 | `planning/02-brand-system.md` |
+| 03 | Design System | 🔒 | `planning/03-design-system.md` |
+| 04 | Component Library | 🔒 | `planning/04-component-library.md` |
+| 05 | PDP Architecture | 🔒 | `planning/05-pdp-architecture.md` |
+| 06 | Homepage Architecture | 🔒 | `planning/06-homepage-architecture.md` |
+| 07 | Product Knowledge Base (Master) | 🔒 | `planning/07-product-knowledge-base.md` |
+| 08 | Copy Guide | 🔒 | `planning/08-copy-guide.md` |
+| 09 | Collection / Pillar Architecture | 🔒 | `planning/09-collection-architecture.md` |
+| 10 | Decision Log | 🔒 | `planning/10-decision-log.md` |
+| 11 | Navigation Architecture | 🔒 | `planning/11-navigation-architecture.md` |
+| 12 | SEO & GEO Standards | 🔒 | `planning/12-seo-geo-standards.md` |
+| 13 | Knowledge Architecture | 🔒 | `planning/13-knowledge-architecture.md` |
 
 ### Supporting Documents
 
 | Document | Status | File |
 |----------|--------|------|
-| Master Roadmap | 🔵 | `planning/MASTER_ROADMAP.md` |
-| Decision Framework | 🔵 | `planning/DECISION_FRAMEWORK.md` |
-| Infrastructure Recommendations | 🔵 | `planning/INFRASTRUCTURE_RECOMMENDATIONS.md` |
+| Master Roadmap | 🔒 | `planning/MASTER_ROADMAP.md` |
+| Decision Framework | 🔒 | `planning/DECISION_FRAMEWORK.md` |
+| Infrastructure Recommendations | 🔒 | `planning/INFRASTRUCTURE_RECOMMENDATIONS.md` |
 
 ### Archived (Superseded by Foundation Docs)
 
@@ -75,7 +77,7 @@
 
 ---
 
-## Milestone 2: Core Experience — ⚪ Not Started
+## Milestone 2: Core Experience — 🟡 In Progress
 
 | Deliverable | Status | Dependencies |
 |-------------|--------|-------------|
@@ -118,7 +120,7 @@
 
 ## Next Actions
 
-1. **Architect/Owner:** Review all 13 foundation documents + supporting docs
-2. **Architect/Owner:** Approve or request changes per document
-3. **Builder:** Incorporate feedback, move approved docs from 🔵 to ✅
-4. **Builder:** Begin Milestone 2 once critical-path docs are approved (03, 04, 05, 06, 07)
+1. **Builder:** Begin Milestone 2 — Core Experience (Homepage, Collection, PDP Shopify builds)
+2. **Builder:** Reference locked Foundation docs (01–13) as canonical specs
+3. **Builder:** Log any architectural deviations in Decision Log before implementing
+4. **Architect/Owner:** Review Milestone 2 deliverables as they complete

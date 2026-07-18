@@ -3,9 +3,9 @@
 ---
 document: 05 – PDP Architecture
 version: 1.0
-status: 🔵 Ready for Review
-approved_by: —
-approval_date: —
+status: 🔒 Locked
+approved_by: Owner / Architect
+approval_date: 2026-07-18
 last_modified: 2026-07-18
 depends_on: [03, 04, 07, 08]
 supersedes: []
