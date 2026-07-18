@@ -42,8 +42,8 @@ depends_on: [09-collection-architecture, 11-navigation-architecture, 12-seo-geo-
 | `/pages/outdoor` | `/collections/outdoor` | 301 | Page → Collection |
 | `/pages/aquatic-footwear` | `/collections/outdoor` | 301 | Page → Collection |
 | `/pages/shop-bundles` | `/collections/grippy-shoes` | 301 | Removed page |
-| `/pages/become-an-affiliate` | `/pages/ambassador` | 301 | Renamed program |
-| `/pages/wholesale-calculator` | `/pages/wholesale` | 301 | Consolidated |
+| `/pages/become-an-affiliate` | `/pages/partners` | 301 | D-042: Consolidated partners page |
+| `/pages/wholesale-calculator` | `/pages/partners` | 301 | D-042: Consolidated partners page |
 | `/pages/bogo-template` | `/collections/sale` | 301 | Promo → Sale collection |
 | `/pages/size-chart` | `/pages/size-guide` | 301 | Handle change |
 | `/pages/blank-page` | `/` | 301 | Remove placeholder |
