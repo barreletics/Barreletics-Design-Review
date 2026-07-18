@@ -79,12 +79,30 @@
 
 ## Milestone 2: Core Experience — 🟡 In Progress
 
+### Phase 1: Build System — 🟡 In Progress
+
+| Deliverable | Status | File |
+|-------------|--------|------|
+| Build Specification v2 | ✅ | `planning/shopify-build-spec-v2.md` |
+| Design Tokens CSS | ✅ | `shopify-build/assets/design-tokens.css` |
+| Base Styles CSS | ✅ | `shopify-build/assets/barreletics-base.css` |
+| Announcement Strip | ✅ | `shopify-build/snippets/announcement-strip.liquid` |
+| Header / Navigation | ✅ | `shopify-build/snippets/header-nav.liquid` |
+| Footer | ✅ | `shopify-build/snippets/footer.liquid` |
+| Product Card | ✅ | `shopify-build/snippets/product-card.liquid` |
+| FAQ Accordion | ✅ | `shopify-build/snippets/faq-accordion.liquid` |
+| Section Wrapper | ✅ | `shopify-build/snippets/section-wrapper.liquid` |
+| Trust Strip | ✅ | `shopify-build/snippets/trust-strip.liquid` |
+| Button | ✅ | `shopify-build/snippets/button.liquid` |
+
+### Phase 2: Page Builds — ⚪ Not Started
+
 | Deliverable | Status | Dependencies |
 |-------------|--------|-------------|
-| Homepage Build (Shopify) | ⚪ | Docs 03, 04, 06 approved |
-| Collection / Pillar Build | ⚪ | Docs 03, 04, 09, 12 approved |
-| PDP Build (Shopify) | ⚪ | Docs 03, 04, 05 approved |
-| Compare Page | ⚪ | Docs 07, 09, 12 approved |
+| Homepage Build (Shopify) | ⚪ | Phase 1 complete |
+| Collection / Pillar Build | ⚪ | Phase 1 complete |
+| PDP Build (Shopify) | ⚪ | Phase 1 complete |
+| Compare Page | ⚪ | Phase 1 complete |
 
 ## Milestone 3: Supporting Experience — ⚪ Not Started
 
