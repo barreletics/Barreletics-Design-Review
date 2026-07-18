@@ -1,0 +1,239 @@
+{% comment %}
+  Variant Grid — Tabbed product grid (All/Closed/Open/One-Offs/Outdoor)
+  Source: Approved Home + Collection prototypes
+  Reused on Homepage and Collection pages
+{% endcomment %}
+
+<section class="variants-section" id="variants" aria-label="Shop all styles">
+  <div class="variants-inner">
+    <header class="variants-head">
+      {% if section.settings.eyebrow != blank %}
+        <p class="variants-head__eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+      <h2 class="variants-head__title">{{ section.settings.title }}</h2>
+      {% if section.settings.body != blank %}
+        <p class="variants-head__body">{{ section.settings.body }}</p>
+      {% endif %}
+    </header>
+
+    <div class="variants-toolbar">
+      <div class="variants-tabs" role="tablist">
+        {% if section.settings.show_all_tab %}
+          <button class="variants-tab is-active" role="tab" aria-selected="true" data-tab="all">All</button>
+        {% endif %}
+        <button class="variants-tab{% unless section.settings.show_all_tab %} is-active{% endunless %}" role="tab" aria-selected="{% unless section.settings.show_all_tab %}true{% else %}false{% endunless %}" data-tab="closed">Closed Sole</button>
+        <button class="variants-tab" role="tab" aria-selected="false" data-tab="open">Open Sole</button>
+        <button class="variants-tab" role="tab" aria-selected="false" data-tab="oneoffs">One-Offs</button>
+        <button class="variants-tab" role="tab" aria-selected="false" data-tab="outdoor">Outdoor</button>
+      </div>
+      <div class="variants-utils">
+        <div class="variants-size">
+          <span class="variants-size__label">Size</span>
+          <button class="variants-size__btn is-active" data-size="m">M</button>
+          <button class="variants-size__btn" data-size="l">L</button>
+        </div>
+        <a href="/pages/size-chart" class="variants-link">Size chart →</a>
+        <a href="/pages/compare-open-closed-sole" class="variants-link">Compare →</a>
+      </div>
+    </div>
+
+    <div class="variants-grid" id="variants-grid">
+      {% assign collection_handle = section.settings.collection | default: 'grippy-shoes' %}
+      {% for product in collections[collection_handle].products limit: section.settings.products_per_page %}
+        {% render 'product-card', product: product %}
+      {% endfor %}
+    </div>
+
+    {% if section.settings.view_all_url != blank %}
+      <div class="variants-footer">
+        <a href="{{ section.settings.view_all_url }}" class="btn btn--outline">View all colors →</a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  .variants-section {
+    padding: var(--space-15) var(--section-padding-x);
+    background: var(--bg-primary);
+  }
+
+  .variants-inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+  }
+
+  .variants-head {
+    text-align: center;
+    margin-bottom: var(--space-9);
+  }
+
+  .variants-head__eyebrow {
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-eyebrow);
+    color: var(--accent-primary);
+    font-weight: var(--weight-bold);
+    margin: 0 0 var(--space-3);
+  }
+
+  .variants-head__title {
+    font-size: var(--text-6xl);
+    font-weight: var(--weight-bold);
+    line-height: 1.1;
+    color: var(--text-primary);
+    margin: 0 0 var(--space-3);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .variants-head__body {
+    font-size: var(--text-md);
+    color: var(--text-body);
+    max-width: 48ch;
+    line-height: 1.55;
+    margin: 0 auto;
+  }
+
+  .variants-toolbar {
+    border-top: 1px solid var(--border-default);
+    border-bottom: 1px solid var(--border-default);
+    padding: 14px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    margin-bottom: var(--space-9);
+  }
+
+  .variants-tabs {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  .variants-tab {
+    padding: 10px 24px;
+    font-size: 12px;
+    font-weight: var(--weight-bold);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    background: var(--bg-primary);
+    border: 1px solid var(--border-default);
+    cursor: pointer;
+    border-radius: var(--radius-button);
+    font-family: inherit;
+    transition: all var(--transition-fast);
+  }
+
+  .variants-tab.is-active {
+    color: #fff;
+    background: var(--color-charcoal);
+    border-color: var(--color-charcoal);
+  }
+
+  .variants-utils {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .variants-size {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .variants-size__label {
+    font-size: 12px;
+    font-weight: var(--weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-primary);
+  }
+
+  .variants-size__btn {
+    font-size: 12px;
+    font-weight: var(--weight-bold);
+    padding: 7px 14px;
+    border: none;
+    cursor: pointer;
+    border-radius: var(--radius-badge);
+    letter-spacing: 0.04em;
+    font-family: inherit;
+    color: var(--text-muted);
+    background: #f0efec;
+    transition: all var(--transition-fast);
+  }
+
+  .variants-size__btn.is-active {
+    color: #fff;
+    background: var(--color-charcoal);
+  }
+
+  .variants-link {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    text-decoration: none;
+    border-bottom: 1px solid #d0c8be;
+    padding-bottom: 1px;
+  }
+
+  .variants-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: var(--grid-gap);
+    row-gap: 56px;
+  }
+
+  .variants-footer {
+    text-align: center;
+    margin-top: var(--space-9);
+  }
+
+  @media (max-width: 1024px) {
+    .variants-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .variants-section {
+      padding: var(--section-padding-y-mobile) var(--section-padding-x-mobile);
+    }
+
+    .variants-head__title {
+      font-size: var(--text-3xl);
+    }
+
+    .variants-toolbar {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .variants-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-4);
+      column-gap: var(--space-3);
+      row-gap: var(--space-6);
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Variant Grid",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Two Versions. One Performance." },
+    { "type": "text", "id": "title", "label": "Title", "default": "Shop All Styles & Colors" },
+    { "type": "textarea", "id": "body", "label": "Body", "default": "One patented grip. Closed Sole or Open Sole — choose the build that fits your practice. $74." },
+    { "type": "collection", "id": "collection", "label": "Collection" },
+    { "type": "range", "id": "products_per_page", "min": 4, "max": 16, "step": 4, "default": 8, "label": "Products to show" },
+    { "type": "checkbox", "id": "show_all_tab", "label": "Show 'All' tab", "default": false },
+    { "type": "url", "id": "view_all_url", "label": "View all link" }
+  ],
+  "presets": [{ "name": "Variant Grid" }]
+}
+{% endschema %}

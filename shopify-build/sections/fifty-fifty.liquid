@@ -1,0 +1,209 @@
+{% comment %}
+  Reusable 50/50 Split Section (Video/Image + Copy)
+  Source: Approved Home + PDP prototypes
+  Used 3× on Home, 2× on PDP, 1× on Collection
+{% endcomment %}
+
+<section
+  class="split-section{% if section.settings.reverse %} split-section--reverse{% endif %}"
+  style="background: {{ section.settings.bg_color | default: '#fff' }};"
+  aria-label="{{ section.settings.title | strip_html | truncate: 60 }}"
+>
+  <div class="split-media">
+    {% if section.settings.video_url != blank %}
+      <div class="split-video-placeholder" aria-label="Video content">
+        <span class="split-video-placeholder__play" aria-hidden="true">▶</span>
+        {% if section.settings.video_caption != blank %}
+          <span class="split-video-placeholder__label">{{ section.settings.video_caption }}</span>
+        {% endif %}
+      </div>
+    {% elsif section.settings.image != blank %}
+      <img
+        src="{{ section.settings.image | image_url: width: 1200 }}"
+        srcset="{{ section.settings.image | image_url: width: 600 }} 600w,
+                {{ section.settings.image | image_url: width: 900 }} 900w,
+                {{ section.settings.image | image_url: width: 1200 }} 1200w"
+        sizes="(max-width: 768px) 100vw, 50vw"
+        alt="{{ section.settings.image_alt | escape }}"
+        loading="lazy"
+      >
+    {% else %}
+      <div class="split-media__placeholder">
+        {{ section.settings.image_alt | default: 'Media placeholder' }}
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="split-text" style="background: {{ section.settings.bg_color | default: '#fff' }};">
+    {% if section.settings.eyebrow != blank %}
+      <p class="split-text__eyebrow">{{ section.settings.eyebrow }}</p>
+    {% endif %}
+    <h2 class="split-text__title">{{ section.settings.title }}</h2>
+    <p class="split-text__body">{{ section.settings.body }}</p>
+    {% if section.settings.cta_text != blank %}
+      <a href="{{ section.settings.cta_url }}" class="btn btn--primary split-cta">{{ section.settings.cta_text }}</a>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  .split-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 580px;
+  }
+
+  .split-section--reverse .split-media {
+    order: 2;
+  }
+
+  .split-section--reverse .split-text {
+    order: 1;
+  }
+
+  .split-media {
+    position: relative;
+    overflow: hidden;
+    min-height: 480px;
+  }
+
+  .split-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    position: absolute;
+    inset: 0;
+  }
+
+  .split-media__placeholder {
+    width: 100%;
+    height: 100%;
+    min-height: 480px;
+    background: linear-gradient(135deg, #c9c5b8, #e9d3cb);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: var(--text-muted);
+    padding: var(--space-8);
+    text-align: center;
+  }
+
+  .split-video-placeholder {
+    width: 100%;
+    height: 100%;
+    min-height: 480px;
+    background: #2d2926;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .split-video-placeholder__play {
+    font-size: 48px;
+    color: rgba(255, 255, 255, 0.7);
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+  }
+
+  .split-video-placeholder__label {
+    position: absolute;
+    bottom: 24px;
+    left: 24px;
+    right: 24px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.45);
+    text-align: center;
+  }
+
+  .split-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: var(--space-14) var(--space-12);
+  }
+
+  .split-text__eyebrow {
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-eyebrow);
+    color: var(--accent-primary);
+    font-weight: var(--weight-bold);
+    margin: 0 0 var(--space-3);
+  }
+
+  .split-text__title {
+    font-size: var(--text-5xl);
+    font-weight: var(--weight-bold);
+    line-height: var(--leading-snug);
+    color: var(--text-primary);
+    margin: 0 0 var(--space-4);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .split-text__body {
+    font-size: var(--text-md);
+    color: var(--text-body);
+    line-height: 1.65;
+    margin: 0 0 var(--space-7);
+    max-width: 36ch;
+  }
+
+  .split-cta {
+    width: fit-content;
+  }
+
+  @media (max-width: 768px) {
+    .split-section {
+      grid-template-columns: 1fr;
+      min-height: auto;
+    }
+
+    .split-section--reverse .split-media {
+      order: 0;
+    }
+
+    .split-section--reverse .split-text {
+      order: 0;
+    }
+
+    .split-media {
+      min-height: 320px;
+    }
+
+    .split-text {
+      padding: var(--section-padding-y-mobile) var(--section-padding-x-mobile);
+    }
+
+    .split-text__title {
+      font-size: 28px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "50/50 Split",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "text", "id": "title", "label": "Title", "default": "Upgrade Your Grip. Upgrade Your Workout." },
+    { "type": "textarea", "id": "body", "label": "Body", "default": "Full-contact molded grip — not printed, not glued. The patented surface holds through every hold, every transition." },
+    { "type": "text", "id": "cta_text", "label": "CTA text", "default": "Shop now" },
+    { "type": "url", "id": "cta_url", "label": "CTA link" },
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "text", "id": "image_alt", "label": "Image alt text" },
+    { "type": "url", "id": "video_url", "label": "Video URL (shows play button placeholder)" },
+    { "type": "text", "id": "video_caption", "label": "Video caption" },
+    { "type": "checkbox", "id": "reverse", "label": "Reverse layout (text left, media right)", "default": false },
+    { "type": "color", "id": "bg_color", "label": "Background color", "default": "#ffffff" }
+  ],
+  "presets": [{ "name": "50/50 Split" }]
+}
+{% endschema %}

@@ -1,7 +1,7 @@
 # Barreletics Blueprint — Project Dashboard
 
 **Last Updated:** 2026-07-18
-**Current Milestone:** 2 — Core Experience
+**Current Milestone:** 2 — Core Experience (QA Complete, Ready for Review)
 
 ---
 
@@ -77,14 +77,67 @@
 
 ---
 
-## Milestone 2: Core Experience — 🟡 In Progress
+## Milestone 2: Core Experience — 🔵 Ready for Review
 
-| Deliverable | Status | Dependencies |
-|-------------|--------|-------------|
-| Homepage Build (Shopify) | ⚪ | Docs 03, 04, 06 approved |
-| Collection / Pillar Build | ⚪ | Docs 03, 04, 09, 12 approved |
-| PDP Build (Shopify) | ⚪ | Docs 03, 04, 05 approved |
-| Compare Page | ⚪ | Docs 07, 09, 12 approved |
+### Phase 1: Build System — ✅ Complete
+
+| Deliverable | Status | File |
+|-------------|--------|------|
+| Build Specification v2 | ✅ | `planning/shopify-build-spec-v2.md` |
+| Design Tokens CSS | ✅ | `shopify-build/assets/design-tokens.css` |
+| Base Styles CSS | ✅ | `shopify-build/assets/barreletics-base.css` |
+| Announcement Strip | ✅ | `shopify-build/snippets/announcement-strip.liquid` |
+| Header / Navigation | ✅ | `shopify-build/snippets/header-nav.liquid` |
+| Footer | ✅ | `shopify-build/snippets/footer.liquid` |
+| Product Card | ✅ | `shopify-build/snippets/product-card.liquid` |
+| FAQ Accordion | ✅ | `shopify-build/snippets/faq-accordion.liquid` |
+| Section Wrapper | ✅ | `shopify-build/snippets/section-wrapper.liquid` |
+| Trust Strip | ✅ | `shopify-build/snippets/trust-strip.liquid` |
+| Button | ✅ | `shopify-build/snippets/button.liquid` |
+
+### Phase 2: Page Builds — ✅ Complete
+
+| Deliverable | Status | File |
+|-------------|--------|------|
+| **Snippets (D-022–D-025)** | | |
+| Sticky ATC (D-023) | ✅ | `shopify-build/snippets/sticky-atc.liquid` |
+| Cart Drawer (D-024) | ✅ | `shopify-build/snippets/cart-drawer.liquid` |
+| Review Card (D-025) | ✅ | `shopify-build/snippets/review-card.liquid` |
+| GEO Section (D-022) | ✅ | `shopify-build/snippets/geo-section.liquid` |
+| **Homepage Sections** | | |
+| Hero (50/50) | ✅ | `shopify-build/sections/hero.liquid` |
+| Value Strip | ✅ | `shopify-build/sections/value-strip.liquid` |
+| Variant Grid (tabbed) | ✅ | `shopify-build/sections/variant-grid.liquid` |
+| Disciplines | ✅ | `shopify-build/sections/disciplines.liquid` |
+| 50/50 Split (reusable) | ✅ | `shopify-build/sections/fifty-fifty.liquid` |
+| Social Proof (reviews) | ✅ | `shopify-build/sections/social-proof.liquid` |
+| Newsletter | ✅ | `shopify-build/sections/newsletter.liquid` |
+| **Collection Sections** | | |
+| Collection Hero | ✅ | `shopify-build/sections/collection-hero.liquid` |
+| (reuses variant-grid, disciplines, fifty-fifty, newsletter) | | |
+| **PDP Sections** | | |
+| PDP Buy Box | ✅ | `shopify-build/sections/pdp-buy-box.liquid` |
+| PDP Features | ✅ | `shopify-build/sections/pdp-features.liquid` |
+| PDP Sock Math | ✅ | `shopify-build/sections/pdp-sock-math.liquid` |
+| PDP Reviews (Judge.me custom) | ✅ | `shopify-build/sections/pdp-reviews.liquid` |
+| PDP Sticky ATC wrapper | ✅ | `shopify-build/sections/pdp-sticky-atc.liquid` |
+| **Templates** | | |
+| Homepage (index.json) | ✅ | `shopify-build/templates/index.json` |
+| Collection (collection.json) | ✅ | `shopify-build/templates/collection.json` |
+| Product (product.json) | ✅ | `shopify-build/templates/product.json` |
+| **Layout** | | |
+| theme.liquid | ✅ | `shopify-build/layout/theme.liquid` |
+| **Remaining** | | |
+| Compare Page | ⚪ | Phase 3 |
+
+### Phase 3: Quality Assurance — ✅ Complete
+
+| Deliverable | Status | File |
+|-------------|--------|------|
+| QA Report | ✅ | `planning/milestone-2-qa-report.md` |
+| Critical Fixes (13/13) | ✅ | Token, accessibility, markup, copy fixes |
+| Minor Fixes (7/10) | ✅ | Hover, ARIA, color compliance fixes |
+| Deferred (3 minor) | 📋 | Title tags (M-05/M-09), 50/50 dimensions (M-08) |
 
 ## Milestone 3: Supporting Experience — ⚪ Not Started
 
@@ -120,7 +173,7 @@
 
 ## Next Actions
 
-1. **Builder:** Begin Milestone 2 — Core Experience (Homepage, Collection, PDP Shopify builds)
-2. **Builder:** Reference locked Foundation docs (01–13) as canonical specs
-3. **Builder:** Log any architectural deviations in Decision Log before implementing
-4. **Architect/Owner:** Review Milestone 2 deliverables as they complete
+1. **Architect/Owner:** Review PR #2 (`milestone-2-core-experience` → `main`) — QA complete, all critical issues fixed
+2. **Builder:** Address deferred minor issues (M-05, M-08, M-09) during deployment
+3. **Builder:** Begin Milestone 3 — Supporting Experience (FAQ, About, Journal, sub-collections)
+4. **Builder:** Implement variant grid JavaScript filtering when Shopify collection API is connected

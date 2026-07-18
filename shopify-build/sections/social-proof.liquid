@@ -1,0 +1,146 @@
+{% comment %}
+  Reviews/Testimonials Section (Homepage)
+  Source: Approved Home prototype — 3-column review cards
+  Uses review-card snippet (D-025)
+{% endcomment %}
+
+<section class="reviews-section" id="reviews" aria-label="Customer reviews">
+  <div class="reviews-inner">
+    <header class="reviews-header">
+      <div class="reviews-header__left">
+        <p class="reviews-header__eyebrow">{{ section.settings.eyebrow }}</p>
+        <div class="reviews-header__rating">
+          <span class="reviews-header__stars" aria-hidden="true">★★★★★</span>
+          <span class="reviews-header__score">
+            <strong>{{ section.settings.rating }}</strong> out of 5 · {{ section.settings.review_count }} reviews
+          </span>
+        </div>
+      </div>
+      {% if section.settings.all_reviews_url != blank %}
+        <a href="{{ section.settings.all_reviews_url }}" class="reviews-header__link">Read all reviews →</a>
+      {% endif %}
+    </header>
+
+    <div class="reviews-grid">
+      {% for block in section.blocks %}
+        <div {{ block.shopify_attributes }}>
+          {% render 'review-card', review: block.settings %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .reviews-section {
+    padding: var(--space-14) var(--section-padding-x);
+    background: var(--bg-alternate);
+  }
+
+  .reviews-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .reviews-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    margin-bottom: var(--space-9);
+  }
+
+  .reviews-header__eyebrow {
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-widest);
+    color: var(--text-muted);
+    font-weight: var(--weight-bold);
+    margin: 0 0 var(--space-2);
+  }
+
+  .reviews-header__rating {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+  }
+
+  .reviews-header__stars {
+    font-size: 22px;
+    color: var(--accent-stars);
+    letter-spacing: 0.16em;
+  }
+
+  .reviews-header__score {
+    font-size: 14px;
+    color: var(--text-body);
+  }
+
+  .reviews-header__link {
+    font-size: 12px;
+    font-weight: var(--weight-semibold);
+    color: var(--text-primary);
+    text-decoration: none;
+    border-bottom: 1px solid var(--text-primary);
+    padding-bottom: 2px;
+  }
+
+  .reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+  }
+
+  .reviews-grid .review-card {
+    height: 100%;
+  }
+
+  @media (max-width: 1024px) {
+    .reviews-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .reviews-section {
+      padding: var(--section-padding-y-mobile) var(--section-padding-x-mobile);
+    }
+
+    .reviews-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Social Proof",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Real Results" },
+    { "type": "text", "id": "rating", "label": "Rating", "default": "4.9" },
+    { "type": "text", "id": "review_count", "label": "Review count", "default": "294" },
+    { "type": "url", "id": "all_reviews_url", "label": "All reviews link" }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        { "type": "range", "id": "rating", "label": "Star rating", "min": 1, "max": 5, "step": 1, "default": 5 },
+        { "type": "textarea", "id": "body", "label": "Review text" },
+        { "type": "text", "id": "author", "label": "Author name" },
+        { "type": "text", "id": "location", "label": "Location / context" }
+      ]
+    }
+  ],
+  "presets": [{
+    "name": "Social Proof",
+    "blocks": [
+      { "type": "review", "settings": { "body": "I looked at these for over a year thinking 'Way too expensive.' I can't tell you how much I spent on Pilates socks that got ruined in no time. Game changer.", "author": "Gwen M.", "location": "Queens · 80 helpful votes" } },
+      { "type": "review", "settings": { "body": "I refuse to wear anything else. I am 70 years old and able to accomplish advanced moves on the Cadillac apparatus. Your foot has to be gripping the bar without fail.", "author": "Dvorah S.", "location": "Fairfield · Pilates 5x/week" } },
+      { "type": "review", "settings": { "body": "Secure on the carriage through the entire footwork series. No more adjusting between sets. Feels like it was engineered for the reformer specifically.", "author": "Lauren T.", "location": "Los Angeles · Reformer 4x/week" } }
+    ]
+  }]
+}
+{% endschema %}
