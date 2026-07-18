@@ -255,6 +255,17 @@ All ADRs from the prior planning phase (ADR-01 through ADR-07) are resolved per 
 
 ---
 
+### D-026: 50/50 Split Section — Flexible Height for Liquid
+**Decided:** 2026-07-18 | **Severity:** Low | **Source:** M-08 (QA Report)
+
+**Decision:** The 50/50 split section uses `min-height: 580px` (not a fixed `height: 420px`) and token-based padding `var(--space-14) var(--space-12)` (not hardcoded `80px 72px`). This is an intentional deviation from Doc 04 Component 5 static prototype specs.
+
+**Rationale:** The Liquid section is reused 6× across three page types with varying content lengths (short eyebrow+title on Homepage, long paragraph on Collection, video placeholder on PDP). A fixed 420px height with overflow:hidden would clip content on mobile and in longer-copy instances. Using `min-height` with token-based padding ensures the section adapts to content while maintaining visual consistency. The static prototype's fixed dimensions were designed for a single content scenario.
+
+**Impact:** No changes needed. The visual result is proportionally consistent with the approved prototype at desktop widths; mobile responsiveness is improved.
+
+---
+
 ## ADR Archive
 
 The original ADR documents (ADR-01 through ADR-07) are preserved in `planning/` for historical reference. Their UNRESOLVED status is now superseded by the decisions above.
