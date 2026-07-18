@@ -281,6 +281,83 @@ All ADRs from the prior planning phase (ADR-01 through ADR-07) are resolved per 
 
 ---
 
+### D-028: Shipping and Returns Split Into Separate Pages
+**Decided:** 2026-07-18 | **Severity:** Medium
+
+**Decision:** Shipping and Returns are separate pages (page.shipping.json, page.returns.json) rather than a combined page. This provides clearer navigation, better SEO targeting, and easier content updates.
+
+**Rationale:** Shipping and returns serve different user intents — pre-purchase confidence vs. post-purchase support. Separate pages allow targeted title tags, meta descriptions, and structured data. Easier to link contextually (FAQ → Returns, PDP → Shipping).
+
+**Impact:** Two page templates planned instead of one combined page. Contact page support links reference separate `/pages/returns` and `/pages/shipping` URLs.
+
+---
+
+### D-029: Grip Comparison as Category Disruption Asset
+**Decided:** 2026-07-18 | **Severity:** High
+
+**Decision:** Dedicated grip-comparison page designed as a conversion asset. Positions "Barreletics vs Grip Socks" comparison as the primary category-creation landing page for consideration-stage traffic.
+
+**Rationale:** Core brand strategy is category creation — replacing grip socks, not competing within the category. A comparison page captures high-intent search queries ("grip socks vs grippy shoes," "best grip for reformer") and converts them with direct feature/value comparison. Serves as SEO and paid landing page.
+
+**Impact:** Grip comparison page planned as standalone template. Will include structured data for competitive comparison content.
+
+---
+
+### D-030: Header/Footer V2 Pattern for Non-Breaking Updates
+**Decided:** 2026-07-18 | **Severity:** Medium
+
+**Decision:** Navigation and footer updates created as v2 files (header-nav-v2.liquid, footer-v2.liquid) rather than modifying locked M2 components. Theme layout swap during deployment.
+
+**Rationale:** M2 components are locked (D-027). Creating v2 files allows M3 navigation additions (FAQ, About, Journal, Contact in nav/footer) without risking M2 regressions. During deployment, theme-m3.liquid renders the v2 snippets.
+
+**Impact:** No M2 files modified. V2 snippets created when navigation changes are finalized. Theme-m3.liquid will swap render calls during deployment.
+
+---
+
+### D-031: Recently Viewed via localStorage
+**Decided:** 2026-07-18 | **Severity:** Medium
+
+**Decision:** Recently viewed products tracked via localStorage (client-side) rather than Shopify customer metafields or cookies. Simpler, no server-side dependency, GDPR-friendly (no PII).
+
+**Rationale:** localStorage persists across sessions without authentication, works for anonymous users (majority of traffic), requires no API calls, and stores no personally identifiable information. Max 8 items tracked, 4 displayed. Client-side rendering from stored JSON avoids additional Liquid/API complexity.
+
+**Impact:** `sections/recently-viewed.liquid` created with full localStorage tracking and client-side rendering. No server-side dependencies. Can be added to any template via JSON.
+
+---
+
+### D-032: Collection Templates Reuse Existing Sections
+**Decided:** 2026-07-18 | **Severity:** Low
+
+**Decision:** All sub-collection templates (open-sole, closed-sole, outdoor, new-arrivals, limited-editions, one-offs, gift-cards, sale) reuse existing collection-hero, variant-grid, value-strip, and newsletter sections with different settings. No new sections created for collection pages.
+
+**Rationale:** Section architecture from M2 was designed for reuse. Collection-hero, variant-grid, and newsletter sections accept settings that customize copy, layout, and behavior per collection. Creating duplicate sections would violate DRY and increase maintenance burden.
+
+**Impact:** 5 new sub-collection templates added (collection.new-arrivals.json, collection.limited-editions.json, collection.one-offs.json, collection.gift-cards.json, collection.sale.json) — all JSON-only, referencing existing section types.
+
+---
+
+### D-033: Architecture Consistency Audit — No Foreign Colors
+**Decided:** 2026-07-18 | **Severity:** High
+
+**Decision:** Form success/error states and comparison highlighting must use brand palette colors, not Material Design green/red (`#e8f5e9`, `#2e7d32`, `#fbe9e7`, `#c62828`). Success states use `var(--bg-alternate)` with `var(--text-primary)`. Error states use `rgba(196, 92, 63, 0.08)` (rust-tinted) with `var(--accent-primary)`. Warranty covered/not-covered uses charcoal/rust distinction. Comparison sock-math uses brand warm cream vs rust-tinted backgrounds.
+
+**Rationale:** The brand palette is warm neutrals + rust accent. Introducing Material Design green/red creates visual dissonance and violates the "no new visual language" principle. The charcoal/rust pairing provides sufficient visual distinction for positive/negative states while maintaining brand coherence.
+
+**Impact:** Fixed in page-ambassador, page-studio-program, page-wholesale, page-warranty, page-grip-comparison, and page-size-guide sections. All 6 files updated.
+
+---
+
+### D-034: JS-Rendered Product Cards Must Match Snippet Classes
+**Decided:** 2026-07-18 | **Severity:** High
+
+**Decision:** When rendering product cards client-side via JavaScript (recommendations, recently-viewed), CSS class names must match `product-card.liquid` snippet exactly: `product-card__content` (not `__info`), `product-card__name` (not `__title`). This ensures JS-rendered cards inherit the same styling as Liquid-rendered cards.
+
+**Rationale:** The recommendations section initially used `product-card__info` and `product-card__title` classes which don't exist in `product-card.liquid`'s `<style>` block, causing broken styling for dynamically loaded cards.
+
+**Impact:** `sections/recommendations.liquid` updated to use correct class names.
+
+---
+
 ## ADR Archive
 
 The original ADR documents (ADR-01 through ADR-07) are preserved in `planning/` for historical reference. Their UNRESOLVED status is now superseded by the decisions above.

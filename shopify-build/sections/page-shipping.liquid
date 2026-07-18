@@ -1,0 +1,273 @@
+{% comment %}
+  Page Shipping Section
+  Shipping information: processing, domestic, international, FAQ accordion.
+  Used on: page.shipping.json
+{% endcomment %}
+
+<section class="section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
+  <div class="section__inner section__inner--narrow">
+    {% if section.settings.eyebrow != blank %}
+      <p class="eyebrow eyebrow--accent">{{ section.settings.eyebrow }}</p>
+    {% endif %}
+    <h1 class="page-shipping__title">{{ section.settings.title }}</h1>
+    {% if section.settings.subtitle != blank %}
+      <p class="page-shipping__subtitle">{{ section.settings.subtitle }}</p>
+    {% endif %}
+  </div>
+</section>
+
+<section class="section section--cream">
+  <div class="section__inner section__inner--narrow">
+    <div class="page-shipping__highlights">
+      {% for block in section.blocks %}
+        {% if block.type == 'highlight' %}
+          <div class="page-shipping__highlight" {{ block.shopify_attributes }}>
+            <h3 class="page-shipping__highlight-title">{{ block.settings.title }}</h3>
+            <p class="page-shipping__highlight-text">{{ block.settings.description }}</p>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section__inner section__inner--narrow">
+    <h2 class="page-shipping__section-title">{{ section.settings.domestic_heading }}</h2>
+    <div class="page-shipping__body">
+      {{ section.settings.domestic_text }}
+    </div>
+  </div>
+</section>
+
+<section class="section section--cream">
+  <div class="section__inner section__inner--narrow">
+    <h2 class="page-shipping__section-title">{{ section.settings.international_heading }}</h2>
+    <div class="page-shipping__body">
+      {{ section.settings.international_text }}
+    </div>
+  </div>
+</section>
+
+{% assign faq_blocks_exist = false %}
+{% for block in section.blocks %}
+  {% if block.type == 'faq_item' %}
+    {% assign faq_blocks_exist = true %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
+{% if faq_blocks_exist %}
+<section class="section">
+  <div class="section__inner section__inner--narrow">
+    <h2 class="page-shipping__section-title">Shipping FAQ</h2>
+    <div class="faq" data-faq-accordion>
+      <div class="faq__inner">
+        <div class="faq__list">
+          {% for block in section.blocks %}
+            {% if block.type == 'faq_item' %}
+              <details class="faq__item" data-faq-item {{ block.shopify_attributes }}>
+                <summary class="faq__trigger" role="button" aria-expanded="false">
+                  <span class="faq__question">{{ block.settings.question }}</span>
+                  <span class="faq__icon" aria-hidden="true"></span>
+                </summary>
+                <div class="faq__body">
+                  {{ block.settings.answer }}
+                </div>
+              </details>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<style>
+  .page-shipping__title {
+    font-size: var(--text-5xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    text-align: center;
+    margin: 0 0 var(--space-3);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .page-shipping__subtitle {
+    font-size: var(--text-md);
+    color: var(--text-body);
+    text-align: center;
+    line-height: var(--leading-relaxed);
+    margin: 0;
+  }
+
+  .page-shipping__highlights {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-5);
+  }
+
+  .page-shipping__highlight {
+    text-align: center;
+    padding: var(--space-6);
+    background: var(--bg-primary);
+    border-radius: var(--radius-card);
+    border: 1px solid var(--border-default);
+  }
+
+  .page-shipping__highlight-title {
+    font-size: var(--text-lg);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    margin: 0 0 var(--space-2);
+  }
+
+  .page-shipping__highlight-text {
+    font-size: var(--text-base);
+    color: var(--text-body);
+    line-height: var(--leading-relaxed);
+    margin: 0;
+  }
+
+  .page-shipping__section-title {
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    margin: 0 0 var(--space-5);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .page-shipping__body {
+    font-size: var(--text-md);
+    color: var(--text-body);
+    line-height: var(--leading-loose);
+  }
+
+  .page-shipping__body p {
+    margin-bottom: var(--space-4);
+  }
+
+  .page-shipping__body p:last-child {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 768px) {
+    .page-shipping__title {
+      font-size: var(--text-3xl);
+    }
+
+    .page-shipping__highlights {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  (function() {
+    document.querySelectorAll('[data-faq-accordion]').forEach(function(accordion) {
+      var items = accordion.querySelectorAll('[data-faq-item]');
+      items.forEach(function(item) {
+        item.addEventListener('toggle', function() {
+          if (item.open) {
+            items.forEach(function(other) {
+              if (other !== item && other.open) other.open = false;
+            });
+            item.querySelector('.faq__trigger').setAttribute('aria-expanded', 'true');
+          } else {
+            item.querySelector('.faq__trigger').setAttribute('aria-expanded', 'false');
+          }
+        });
+      });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Shipping Page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Shipping"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Shipping Information"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Fast, reliable shipping to 195 countries worldwide."
+    },
+    {
+      "type": "text",
+      "id": "domestic_heading",
+      "label": "Domestic section heading",
+      "default": "Domestic Shipping"
+    },
+    {
+      "type": "richtext",
+      "id": "domestic_text",
+      "label": "Domestic shipping text",
+      "default": "<p>Orders ship within 1-2 business days from our US warehouse. Free shipping on orders over $150. Standard delivery typically arrives within 3-7 business days depending on location.</p>"
+    },
+    {
+      "type": "text",
+      "id": "international_heading",
+      "label": "International section heading",
+      "default": "International Shipping"
+    },
+    {
+      "type": "richtext",
+      "id": "international_text",
+      "label": "International shipping text",
+      "default": "<p>We ship to 195 countries via FedEx International Connect Plus. International orders typically arrive within 7-14 business days.</p><p>Customer is responsible for any duties, taxes, or customs fees charged by their country. These charges are determined by your local customs authority and are not included in the product price or shipping cost.</p>"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "highlight",
+      "name": "Highlight",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description"
+        }
+      ]
+    },
+    {
+      "type": "faq_item",
+      "name": "FAQ Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shipping Page"
+    }
+  ]
+}
+{% endschema %}
