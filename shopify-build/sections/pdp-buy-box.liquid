@@ -144,6 +144,8 @@
   </div>
 </section>
 
+{% assign jm_rating_schema = product.metafields.judgeme.average_rating %}
+{% assign jm_count_schema  = product.metafields.judgeme.review_count | plus: 0 %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org/",
@@ -152,17 +154,24 @@
   "description": {{ product.description | strip_html | truncate: 200 | json }},
   "brand": { "@type": "Brand", "name": "Barreletics" },
   "image": {{ product.featured_image | image_url: width: 800 | json }},
+  "url": {{ shop.url | append: product.url | json }},
+  {% if current_variant.sku != blank %}"sku": {{ current_variant.sku | json }},{% endif %}
   "offers": {
     "@type": "Offer",
     "price": {{ current_variant.price | money_without_currency | json }},
     "priceCurrency": "USD",
-    "availability": "{% if current_variant.available %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}"
-  },
+    "availability": "{% if current_variant.available %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}",
+    "url": {{ shop.url | append: product.url | json }},
+    "seller": {
+      "@type": "Organization",
+      "name": "Barreletics"
+    }
+  }{% if jm_rating_schema and jm_count_schema > 0 %},
   "aggregateRating": {
     "@type": "AggregateRating",
-    "ratingValue": "4.9",
-    "reviewCount": "294"
-  }
+    "ratingValue": {{ jm_rating_schema | json }},
+    "reviewCount": {{ jm_count_schema | json }}
+  }{% endif %}
 }
 </script>
 
