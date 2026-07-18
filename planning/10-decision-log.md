@@ -377,6 +377,61 @@ All ADRs from the prior planning phase (ADR-01 through ADR-07) are resolved per 
 
 ---
 
+### D-036: Milestone 4 Divided into Five Gates (M4A–M4E)
+**Decided:** 2026-07-18 | **Severity:** Critical
+
+**Decision:** Milestone 4 (Production Readiness) is divided into five sequential gates with explicit entry and exit criteria: M4A (Production Assembly), M4B (Integrations), M4C (Validation), M4D (Launch), M4E (Stabilization). No gate may begin until the previous gate's exit criteria are satisfied.
+
+**Rationale:** A single monolithic "Production Readiness" milestone obscured dependencies, blocked parallel planning, and made it impossible to verify progress. Sequential gates with defined criteria ensure each phase is complete before the next begins and create natural review checkpoints for Owner and Builder.
+
+**Impact:** `MILESTONES-4-5-6-ROADMAP.md` restructured. `PROJECT_DASHBOARD.md` updated to reflect sub-gates.
+
+---
+
+### D-037: GEO Expansion Is Data-Gated, Not Volume-Driven
+**Decided:** 2026-07-18 | **Severity:** High
+
+**Decision:** Location pages (city, state, international) are authorized ONLY when supported by verified search demand, customer/order concentration data, studio density or active partners, unique local content, and a clear conversion path. No batch-creation of location pages for SEO volume. Each page requires individual Owner approval with supporting data.
+
+**Rationale:** Thin, repetitive location pages provide no user value, risk Google thin-content penalties, and waste build effort. Data-gated expansion ensures every location page has genuine demand and differentiated content.
+
+**Impact:** Milestone 5 §5.8 restructured as "Data-Gated GEO Expansion Program." Automatic 20-city, state-hub, and international page plans removed.
+
+---
+
+### D-038: Milestone 5 Scoped as Finite v1
+**Decided:** 2026-07-18 | **Severity:** High
+
+**Decision:** Milestone 5 is scoped as a finite v1 deliverable, not an ongoing effort. v1 completion requires: reusable landing-page framework, one live campaign, one One-Offs drop workflow, initial Journal taxonomy, initial studio/wholesale resources, CRO baseline with experiment backlog, and GEO qualification framework. Continued campaigns, content publishing, experimentation, and market expansion move to "Post-v1 Operations."
+
+**Rationale:** An open-ended milestone with "Large (ongoing)" effort cannot be declared complete, which blocks Milestone 6 and v1.0 declaration. Finite scope defines a clear finish line while preserving ongoing operational work as a separate concern.
+
+**Impact:** Milestone 5 estimated effort changed from "Large (ongoing)" to "Medium (finite v1 scope)." Post-v1 Operations section added.
+
+---
+
+### D-039: All M4 Tasks Assigned Builder/Owner/Joint Responsibility
+**Decided:** 2026-07-18 | **Severity:** High
+
+**Decision:** Every Milestone 4 task carries an explicit responsibility label: Builder, Owner, Joint, or External Provider. Builder cannot independently complete payment, tax, account-access, or business-policy decisions. Access-dependent work is marked with "Owner credentials required," "Builder can prepare," or "Builder cannot complete without access."
+
+**Rationale:** Previous roadmap implied Builder could independently complete all tasks, including business decisions (payment/tax configuration, policy approvals, pricing) that require Owner authority. Clear labels prevent blocked work, wasted effort, and unauthorized decisions.
+
+**Impact:** All M4 task tables include Responsibility column. Conditional integrations section created for unconfirmed tools.
+
+---
+
+### D-040: Policy Freeze Gate Required Before Production QA
+**Decided:** 2026-07-18 | **Severity:** Critical
+
+**Decision:** A Policy Freeze Gate is an entry criterion for M4C (Validation). Owner must sign off on: shipping terms, return terms, warranty language, pricing, discounts/promo codes, free-shipping threshold ($150), size guidance, product claims, wholesale terms, Studio Program terms, and Ambassador terms before QA begins. Builder must not treat draft business rules as production-approved. Post-freeze changes require a new Decision Log entry.
+
+**Rationale:** QA against draft policies wastes cycles — any policy change after QA invalidates test results and requires re-testing. Freezing policies before QA ensures the validated state matches what ships to production.
+
+**Impact:** Policy Freeze Gate added as M4C entry criterion in `MILESTONES-4-5-6-ROADMAP.md` §8.
+
+---
+
 ## ADR Archive
 
 The original ADR documents (ADR-01 through ADR-07) are preserved in `planning/` for historical reference. Their UNRESOLVED status is now superseded by the decisions above.

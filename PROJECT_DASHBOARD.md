@@ -210,11 +210,32 @@
 
 ## Milestone 4: Production Readiness — ⚪ Planning
 
-> Next milestone. See `planning/MILESTONES-4-5-6-ROADMAP.md` for full scope.
+> Next milestone. Divided into 5 sequential gates per D-036. See `planning/MILESTONES-4-5-6-ROADMAP.md` for full scope.
 
-## Milestone 5: Growth Platform — ⚪ Planning
+| Gate | Name | Status | Entry Criterion |
+|------|------|--------|----------------|
+| M4A | Production Assembly | ⚪ | M1-3 locked + Pre-Deployment Truth Set |
+| M4B | Integrations | ⚪ | M4A complete |
+| M4C | Validation | ⚪ | M4B complete + Policy Freeze Gate (D-040) |
+| M4D | Launch | ⚪ | M4C complete + Pre-Deployment Truth Set verified |
+| M4E | Stabilization | ⚪ | M4D complete (theme live) |
+
+### Key Decisions (M4-6 Roadmap)
+| Decision | Summary |
+|----------|---------|
+| D-036 | Milestone 4 divided into 5 gates (M4A-M4E) with entry/exit criteria |
+| D-037 | GEO expansion is data-gated, not volume-driven |
+| D-038 | Milestone 5 scoped as finite v1, ongoing work → post-v1 operations |
+| D-039 | All M4 tasks assigned Builder/Owner/Joint responsibility |
+| D-040 | Policy Freeze Gate required before production QA |
+
+## Milestone 5: Growth Platform (v1) — ⚪ Planning
+
+> Finite v1 scope per D-038. Post-v1 operations defined separately.
 
 ## Milestone 6: Platform Completion — ⚪ Planning
+
+> Deliverables include `GOVERNANCE-GUIDE.md`, `MAINTENANCE-GUIDE.md`, `DEPLOYMENT-GUIDE.md`, `CHANGELOG.md`, Git tag `v1.0.0`.
 
 ---
 
