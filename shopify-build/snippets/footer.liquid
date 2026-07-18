@@ -1,11 +1,7 @@
 {% comment %}
-  Footer
-  Source: Doc 04 (Component 14), Doc 11 (Navigation Architecture)
-
-  4-column desktop → single-col mobile. Dark bg #1c1916, white text.
-  Columns: Shop | Support | Company | Newsletter
-  Social: Instagram, TikTok, Facebook
-  Copyright: © {year} Barreletics. All rights reserved.
+  Footer — Canonical
+  Matches Doc 11 (Navigation Architecture): 4-column grid with separated links.
+  Shop | Support | Company | Newsletter
 
   Usage: {% render 'footer' %}
 {% endcomment %}
@@ -13,7 +9,6 @@
 <footer class="site-footer" data-theme="dark" role="contentinfo">
   <div class="site-footer__inner">
     <div class="site-footer__grid">
-      {%- comment -%} Shop Column {%- endcomment -%}
       <div class="site-footer__col">
         <h3 class="site-footer__heading">Shop</h3>
         <ul class="site-footer__links" role="list">
@@ -25,18 +20,17 @@
         </ul>
       </div>
 
-      {%- comment -%} Support Column {%- endcomment -%}
       <div class="site-footer__col">
         <h3 class="site-footer__heading">Support</h3>
         <ul class="site-footer__links" role="list">
           <li><a href="/pages/faq">FAQ</a></li>
-          <li><a href="/pages/returns-exchanges">Shipping & Returns</a></li>
+          <li><a href="/pages/shipping">Shipping</a></li>
+          <li><a href="/pages/returns">Returns</a></li>
           <li><a href="/pages/warranty">Warranty</a></li>
           <li><a href="/pages/contact">Contact Us</a></li>
         </ul>
       </div>
 
-      {%- comment -%} Company Column {%- endcomment -%}
       <div class="site-footer__col">
         <h3 class="site-footer__heading">Company</h3>
         <ul class="site-footer__links" role="list">
@@ -47,7 +41,6 @@
         </ul>
       </div>
 
-      {%- comment -%} Newsletter Column {%- endcomment -%}
       <div class="site-footer__col site-footer__col--newsletter">
         <h3 class="site-footer__heading">Join the List</h3>
         <p class="site-footer__newsletter-text">Sign up for 10% off your first order.</p>
@@ -70,7 +63,6 @@
       </div>
     </div>
 
-    {%- comment -%} Bottom Bar {%- endcomment -%}
     <div class="site-footer__bottom">
       <div class="site-footer__social">
         <a href="https://instagram.com/barreletics" aria-label="Instagram" rel="noopener noreferrer" target="_blank">
@@ -119,6 +111,9 @@
     color: rgba(255, 255, 255, 0.7);
     text-decoration: none;
     transition: color var(--transition-fast);
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
   }
   .site-footer__links a:hover { color: var(--color-white); text-decoration: none; }
 
@@ -158,6 +153,7 @@
     letter-spacing: var(--tracking-wider);
     text-transform: uppercase;
     transition: opacity var(--transition-fast);
+    min-height: 44px;
   }
   .site-footer__submit:hover { opacity: 0.85; }
   .site-footer__privacy {
@@ -181,6 +177,11 @@
   .site-footer__social a {
     color: rgba(255, 255, 255, 0.6);
     transition: color var(--transition-fast);
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
   .site-footer__social a:hover { color: var(--color-white); text-decoration: none; }
   .site-footer__copyright {

@@ -1,7 +1,7 @@
 # Barreletics Blueprint — Project Dashboard
 
 **Last Updated:** 2026-07-18
-**Current Milestone:** 3 — Supporting Experience
+**Current Milestone:** 4A — Production Assembly
 
 ---
 
@@ -208,17 +208,33 @@
 | Help Scout Integration | ⚪ | Docs 07, 13 approved — M4 scope |
 | Tidio AI Setup | ⚪ | Docs 07, 13 approved — M4 scope |
 
-## Milestone 4: Production Readiness — ⚪ Planning
+## Milestone 4: Production Readiness — 🟡 In Progress
 
-> Next milestone. Divided into 5 sequential gates per D-036. See `planning/MILESTONES-4-5-6-ROADMAP.md` for full scope.
+> Divided into 5 sequential gates per D-036. See `planning/MILESTONES-4-5-6-ROADMAP.md` for full scope.
 
 | Gate | Name | Status | Entry Criterion |
 |------|------|--------|----------------|
-| M4A | Production Assembly | ⚪ | M1-3 locked + Pre-Deployment Truth Set |
+| M4A | Production Assembly | 🔵 Ready for Review | M1-3 locked + Pre-Deployment Truth Set |
 | M4B | Integrations | ⚪ | M4A complete |
 | M4C | Validation | ⚪ | M4B complete + Policy Freeze Gate (D-040) |
 | M4D | Launch | ⚪ | M4C complete + Pre-Deployment Truth Set verified |
 | M4E | Stabilization | ⚪ | M4D complete (theme live) |
+
+### M4A Deliverables
+
+| Deliverable | Status | File |
+|-------------|--------|------|
+| Theme consolidation (v2 → canonical) | ✅ | `shopify-build/snippets/header-nav.liquid`, `footer.liquid` |
+| Settings schema | ✅ | `shopify-build/config/settings_schema.json` |
+| Settings data | ✅ | `shopify-build/config/settings_data.json` |
+| Locale strings | ✅ | `shopify-build/locales/en.default.json` |
+| Missing templates (cart, 404, page, customers/) | ✅ | `shopify-build/templates/` |
+| Content Inventory | ✅ | `planning/m4a-content-inventory.md` |
+| Navigation Config | ✅ | `planning/m4a-navigation-config.md` |
+| Metafield Spec | ✅ | `planning/m4a-metafield-spec.md` |
+| Asset Inventory | ✅ | `planning/m4a-asset-inventory.md` |
+| Redirect Map | ✅ | `planning/m4a-redirect-map.md` |
+| Pre-Deployment Baseline | ✅ | `planning/m4a-pre-deployment-baseline.md` |
 
 ### Key Decisions (M4-6 Roadmap)
 | Decision | Summary |
@@ -251,7 +267,8 @@
 
 ## Next Actions
 
-1. **Owner/Architect:** Review Milestones 4-5-6 Roadmap (`planning/MILESTONES-4-5-6-ROADMAP.md`)
-2. **Builder:** Begin Milestone 4 — Production Readiness (pending roadmap approval)
-3. **Builder:** Address deferred M2 minor issues (M-05, M-08, M-09) during deployment
-4. **Builder:** Upload `og-default.jpg` and `logo.png` to Shopify assets
+1. **Owner:** Review M4A PR — approve content inventory, navigation config, redirect map
+2. **Owner:** Provide assets flagged in `m4a-asset-inventory.md` (favicon, OG image, logo SVG)
+3. **Owner:** Approve content flagged "Needs Review" in `m4a-content-inventory.md`
+4. **Builder:** Begin M4B (Integrations) upon M4A approval
+5. **Builder:** Address deferred M2 minor issues (M-05, M-08, M-09) during deployment
