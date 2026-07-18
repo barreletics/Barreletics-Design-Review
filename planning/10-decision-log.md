@@ -465,6 +465,23 @@ All ADRs from the prior planning phase (ADR-01 through ADR-07) are resolved per 
 
 ---
 
+### D-044: M4A Production Assembly Locked
+**Decided:** 2026-07-18 | **Severity:** Critical
+
+**Decision:** M4A Production Assembly gate is complete and locked. All deliverables verified: theme consolidation, settings schema/data, locale strings, missing templates, planning documentation (content inventory, navigation config, metafield spec, asset inventory, redirect map, pre-deployment baseline), hero alt concept (D-041), consolidated partners page (D-042). QA passed all 11 validation categories. PR #4 merged to main.
+
+**Context:**
+- 29 files: 19 added, 3 modified, 2 deleted (v2 consolidation)
+- 16/16 JSON files validated
+- 4/4 Liquid files verified (syntax, schema, references)
+- 1 defect found and fixed (redirect map stale targets)
+- No M1-M3 architecture conflicts
+- No unauthorized business-policy decisions
+
+**Impact:** M4A status changed to 🔒 Locked. M4B (Integrations) authorized to begin. Dashboard updated.
+
+---
+
 ## ADR Archive
 
 The original ADR documents (ADR-01 through ADR-07) are preserved in `planning/` for historical reference. Their UNRESOLVED status is now superseded by the decisions above.

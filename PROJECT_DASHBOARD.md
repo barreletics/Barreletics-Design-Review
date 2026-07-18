@@ -214,8 +214,8 @@
 
 | Gate | Name | Status | Entry Criterion |
 |------|------|--------|----------------|
-| M4A | Production Assembly | 🔵 Ready for Review | M1-3 locked + Pre-Deployment Truth Set |
-| M4B | Integrations | ⚪ | M4A complete |
+| M4A | Production Assembly | 🔒 Locked | M1-3 locked + Pre-Deployment Truth Set |
+| M4B | Integrations | 🟡 In Progress | M4A complete |
 | M4C | Validation | ⚪ | M4B complete + Policy Freeze Gate (D-040) |
 | M4D | Launch | ⚪ | M4C complete + Pre-Deployment Truth Set verified |
 | M4E | Stabilization | ⚪ | M4D complete (theme live) |
