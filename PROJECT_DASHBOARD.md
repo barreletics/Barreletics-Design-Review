@@ -1,7 +1,7 @@
 # Barreletics Blueprint — Project Dashboard
 
 **Last Updated:** 2026-07-18
-**Current Milestone:** 3 — Supporting Experience
+**Current Milestone:** 4A — Production Assembly
 
 ---
 
@@ -208,17 +208,35 @@
 | Help Scout Integration | ⚪ | Docs 07, 13 approved — M4 scope |
 | Tidio AI Setup | ⚪ | Docs 07, 13 approved — M4 scope |
 
-## Milestone 4: Production Readiness — ⚪ Planning
+## Milestone 4: Production Readiness — 🟡 In Progress
 
-> Next milestone. Divided into 5 sequential gates per D-036. See `planning/MILESTONES-4-5-6-ROADMAP.md` for full scope.
+> Divided into 5 sequential gates per D-036. See `planning/MILESTONES-4-5-6-ROADMAP.md` for full scope.
 
 | Gate | Name | Status | Entry Criterion |
 |------|------|--------|----------------|
-| M4A | Production Assembly | ⚪ | M1-3 locked + Pre-Deployment Truth Set |
+| M4A | Production Assembly | 🔵 Ready for Review | M1-3 locked + Pre-Deployment Truth Set |
 | M4B | Integrations | ⚪ | M4A complete |
 | M4C | Validation | ⚪ | M4B complete + Policy Freeze Gate (D-040) |
 | M4D | Launch | ⚪ | M4C complete + Pre-Deployment Truth Set verified |
 | M4E | Stabilization | ⚪ | M4D complete (theme live) |
+
+### M4A Deliverables
+
+| Deliverable | Status | File |
+|-------------|--------|------|
+| Theme consolidation (v2 → canonical) | ✅ | `shopify-build/snippets/header-nav.liquid`, `footer.liquid` |
+| Settings schema | ✅ | `shopify-build/config/settings_schema.json` |
+| Settings data | ✅ | `shopify-build/config/settings_data.json` |
+| Locale strings | ✅ | `shopify-build/locales/en.default.json` |
+| Missing templates (cart, 404, page, customers/) | ✅ | `shopify-build/templates/` |
+| Content Inventory | ✅ | `planning/m4a-content-inventory.md` |
+| Navigation Config | ✅ | `planning/m4a-navigation-config.md` |
+| Metafield Spec | ✅ | `planning/m4a-metafield-spec.md` |
+| Asset Inventory | ✅ | `planning/m4a-asset-inventory.md` |
+| Redirect Map (+ verification audit) | ✅ | `planning/m4a-redirect-map.md` |
+| Pre-Deployment Baseline | ✅ | `planning/m4a-pre-deployment-baseline.md` |
+| Hero Alt Concept (D-041) | ✅ | `shopify-build/sections/hero-alt.liquid` |
+| Consolidated Partners Page (D-042) | ✅ | `shopify-build/sections/page-partners.liquid` / `templates/page.partners.json` |
 
 ### Key Decisions (M4-6 Roadmap)
 | Decision | Summary |
@@ -228,6 +246,9 @@
 | D-038 | Milestone 5 scoped as finite v1, ongoing work → post-v1 operations |
 | D-039 | All M4 tasks assigned Builder/Owner/Joint responsibility |
 | D-040 | Policy Freeze Gate required before production QA |
+| D-041 | Homepage hero — two concepts built for side-by-side comparison |
+| D-042 | Partner Programs consolidated into single page |
+| D-043 | Collections created only when products/merchandising require them |
 
 ## Milestone 5: Growth Platform (v1) — ⚪ Planning
 
@@ -251,7 +272,10 @@
 
 ## Next Actions
 
-1. **Owner/Architect:** Review Milestones 4-5-6 Roadmap (`planning/MILESTONES-4-5-6-ROADMAP.md`)
-2. **Builder:** Begin Milestone 4 — Production Readiness (pending roadmap approval)
-3. **Builder:** Address deferred M2 minor issues (M-05, M-08, M-09) during deployment
-4. **Builder:** Upload `og-default.jpg` and `logo.png` to Shopify assets
+1. **Owner:** Choose hero concept — compare Concept A (`hero.liquid`) vs Concept B (`hero-alt.liquid`) in Theme Customizer
+2. **Owner:** Review M4A PR — approve content inventory, navigation config, redirect map
+3. **Owner:** Provide assets flagged in `m4a-asset-inventory.md` (favicon, OG image, logo SVG)
+4. **Owner:** Approve content flagged "Needs Review" in `m4a-content-inventory.md`
+5. **Owner:** Review flagged redirect items in redirect verification audit (outdoor, sale, collaborations, blog articles)
+6. **Builder:** Begin M4B (Integrations) upon M4A approval
+7. **Builder:** Address deferred M2 minor issues (M-05, M-08, M-09) during deployment

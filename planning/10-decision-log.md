@@ -432,6 +432,39 @@ All ADRs from the prior planning phase (ADR-01 through ADR-07) are resolved per 
 
 ---
 
+### D-041: Homepage Hero — Two Concepts for Side-by-Side Comparison
+**Decided:** 2026-07-18 | **Severity:** High
+
+**Decision:** Homepage hero is NOT locked. Two concepts built for Owner side-by-side comparison before final lock. Current concept ("The Pilates Sock Era Is Over" / "Studio Workouts & Footwear Will Never Be The Same") preserved in `hero.liquid`. Alternative concept ("Think Outside the Sock." / "No Socks. Just Grip." / "Meet the Performance Skin.") built in `hero-alt.liquid`. Same layout, design tokens, and structure — only copy/messaging differs.
+
+**Rationale:** Hero headline is the highest-impact brand decision. Owner requested two directions to compare before committing. Building both as functional sections enables real preview in the Theme Customizer rather than abstract copy review.
+
+**Impact:** `hero-alt.liquid` created. Content inventory updated to flag hero as "TWO concepts pending Owner comparison — do not lock." Neither concept is finalized until Owner makes selection.
+
+---
+
+### D-042: Partner Programs Consolidated Into Single Page
+**Decided:** 2026-07-18 | **Severity:** High
+
+**Decision:** Three separate partner pages (Wholesale, Studio Program, Ambassador) consolidated into a single `/pages/partners` page with three sections and a unified inquiry form. Individual page templates (`page.wholesale.json`, `page.studio-program.json`, `page.ambassador.json`) are superseded. Wholesale/Studio/Ambassador terms (pricing, minimums, commission structures) remain internal — never displayed publicly. Ambassador section is architected with a clear integration point for a future affiliate platform. No affiliate/commission functionality built.
+
+**Rationale:** Three separate pages with overlapping structure and minimal content created unnecessary navigation complexity and maintenance burden. A single page with anchor-linked sections provides a cleaner user experience and simplifies the inquiry flow. Internal pricing (50% off MSRP, 10-pair minimum) must never appear on public pages.
+
+**Impact:** `page-partners.liquid` and `page.partners.json` created. Redirect map updated: old `/pages/wholesale`, `/pages/ambassador`, `/pages/studio-program` all 301 to `/pages/partners`. Content inventory and forms inventory updated. Navigation config updated.
+
+---
+
+### D-043: Collections Created Only When Products Require Them
+**Decided:** 2026-07-18 | **Severity:** High
+
+**Decision:** Shopify collections are created in admin ONLY when products/merchandising require them. Collection TEMPLATES exist (from M3) and are ready to use, but the actual Shopify collections should not be batch-created until there are products to populate them. No unnecessary collection proliferation.
+
+**Rationale:** Creating empty collections degrades the storefront experience (empty pages) and creates false navigation expectations. Templates are the reusable asset; the Shopify admin collections are the content decision. Content follows merchandising readiness, not template availability.
+
+**Impact:** Navigation config updated to mark planned collections as "Create only when products/merchandising require it." Instruction to batch-create all 13 collections removed.
+
+---
+
 ## ADR Archive
 
 The original ADR documents (ADR-01 through ADR-07) are preserved in `planning/` for historical reference. Their UNRESOLVED status is now superseded by the decisions above.
