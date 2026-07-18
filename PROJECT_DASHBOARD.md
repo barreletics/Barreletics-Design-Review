@@ -141,14 +141,75 @@
 | Minor Fixes (7/10) | ✅ | Hover, ARIA, color compliance fixes |
 | Deferred (3 minor) | 📋 | Title tags (M-05/M-09), 50/50 dimensions (M-08) |
 
-## Milestone 3: Supporting Experience — 🟡 In Progress
+## Milestone 3: Supporting Experience — 🔵 Ready for Review
 
-| Deliverable | Status | Dependencies |
-|-------------|--------|-------------|
-| FAQ Page | ⚪ | Doc 07 approved |
-| About Us Page | ⚪ | Docs 01, 02 approved |
-| Journal (Blog) Template | ⚪ | Docs 08, 12 approved |
-| Sub-Collection Pages | ⚪ | Docs 09, 11 approved |
+> **Milestone 3: Supporting Experience built and QA'd — 2026-07-18.** All pages, structured data, and metadata infrastructure complete. 12 critical QA fixes applied.
+
+### Phase 1: Page Builds — ✅ Complete
+
+| Deliverable | Status | File |
+|-------------|--------|------|
+| **Layout** | | |
+| Theme M3 (extended metadata, OG, schemas) | ✅ | `shopify-build/layout/theme-m3.liquid` |
+| **Supporting Pages** | | |
+| FAQ Page | ✅ | `shopify-build/sections/page-faq.liquid` / `templates/page.faq.json` |
+| About Page | ✅ | `shopify-build/sections/page-about.liquid` / `templates/page.about.json` |
+| Contact Page | ✅ | `shopify-build/sections/page-contact.liquid` / `templates/page.contact.json` |
+| **Blog / Journal** | | |
+| Blog Listing | ✅ | `shopify-build/sections/blog-listing.liquid` / `templates/blog.json` |
+| Article Content | ✅ | `shopify-build/sections/article-content.liquid` / `templates/article.json` |
+| **Search** | | |
+| Search Results | ✅ | `shopify-build/sections/search-results.liquid` / `templates/search.json` |
+| **PDP Enhancements** | | |
+| Recently Viewed (localStorage) | ✅ | `shopify-build/sections/recently-viewed.liquid` |
+| Product Recommendations | ✅ | `shopify-build/sections/recommendations.liquid` |
+| **Sub-Collection Pages** | | |
+| New Arrivals | ✅ | `shopify-build/templates/collection.new-arrivals.json` |
+| Limited Editions | ✅ | `shopify-build/templates/collection.limited-editions.json` |
+| One-Offs | ✅ | `shopify-build/templates/collection.one-offs.json` |
+| Gift Cards | ✅ | `shopify-build/templates/collection.gift-cards.json` |
+| Sale | ✅ | `shopify-build/templates/collection.sale.json` |
+| **Navigation** | | |
+| Breadcrumb (all page types) | ✅ | `shopify-build/snippets/breadcrumb.liquid` |
+
+### Phase 2: Structured Data & SEO — ✅ Complete
+
+| Deliverable | Status | File |
+|-------------|--------|------|
+| Collection Schema (CollectionPage) | ✅ | `shopify-build/snippets/collection-schema.liquid` |
+| Article Schema (BlogPosting) | ✅ | `shopify-build/snippets/article-schema.liquid` |
+| Organization Schema (enhanced) | ✅ | `shopify-build/snippets/organization-schema.liquid` |
+| Related Links snippet | ✅ | `shopify-build/snippets/related-links.liquid` |
+| WebSite + SearchAction (homepage) | ✅ | In `layout/theme-m3.liquid` |
+| Open Graph tags (all pages) | ✅ | In `layout/theme-m3.liquid` |
+| Twitter Card (summary_large_image) | ✅ | In `layout/theme-m3.liquid` |
+| Extended BreadcrumbList JSON-LD | ✅ | In `layout/theme-m3.liquid` + `snippets/breadcrumb.liquid` |
+
+### Phase 3: Quality Assurance — ✅ Complete
+
+| Deliverable | Status | File |
+|-------------|--------|------|
+| QA Report | ✅ | `planning/milestone-3-qa-report.md` |
+| Critical Fixes (12/12) | ✅ | Token, accessibility, color compliance fixes |
+| Decision Log entries D-028 through D-032 | ✅ | `planning/10-decision-log.md` |
+
+### Architectural Decisions (M3)
+| Decision | Summary |
+|----------|---------|
+| D-028 | Shipping/Returns as separate pages |
+| D-029 | Grip Comparison as category disruption asset |
+| D-030 | Header/Footer V2 pattern for non-breaking updates |
+| D-031 | Recently Viewed via localStorage |
+| D-032 | Collection templates reuse existing M2 sections |
+
+### Remaining / Deferred
+| Item | Status | Notes |
+|------|--------|-------|
+| Grip Comparison Page | ⚪ | Designed but not yet built (D-029) |
+| Shipping Page | ⚪ | Planned as separate page (D-028) |
+| Returns Page | ⚪ | Planned as separate page (D-028) |
+| Size Guide Page | ⚪ | Content TBD |
+| Warranty Page | ⚪ | Content TBD |
 | Help Scout Integration | ⚪ | Docs 07, 13 approved |
 | Tidio AI Setup | ⚪ | Docs 07, 13 approved |
 
@@ -175,7 +236,12 @@
 
 ## Next Actions
 
-1. **Builder:** Begin Milestone 3 — Supporting Experience (FAQ, About, Journal, sub-collections)
-2. **Builder:** Address deferred minor issues (M-05, M-08, M-09) during deployment
-3. **Builder:** Implement variant grid JavaScript filtering when Shopify collection API is connected
-4. **Builder:** Plan Compare Page (deferred from Milestone 2 Phase 2)
+1. **Architect:** Review Milestone 3 — all pages, structured data, QA report ready for approval
+2. **Builder:** Build Grip Comparison page (D-029 — category disruption asset)
+3. **Builder:** Build Shipping + Returns separate pages (D-028)
+4. **Builder:** Build Size Guide and Warranty pages
+5. **Builder:** Implement Header/Footer V2 navigation updates (D-030)
+6. **Builder:** Address deferred M2 minor issues (M-05, M-08, M-09) during deployment
+7. **Builder:** Implement variant grid JavaScript filtering when Shopify collection API is connected
+8. **Builder:** Resolve BreadcrumbList JSON-LD duplication during deployment (theme-m3 vs breadcrumb snippet)
+9. **Builder:** Upload `og-default.jpg` and `logo.png` to Shopify assets

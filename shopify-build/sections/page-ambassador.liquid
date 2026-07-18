@@ -1,0 +1,352 @@
+{% comment %}
+  Page Ambassador Section
+  Ambassador program overview with application form and social proof.
+  Used on: page.ambassador.json
+{% endcomment %}
+
+<section class="section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
+  <div class="section__inner section__inner--narrow">
+    {% if section.settings.eyebrow != blank %}
+      <p class="eyebrow eyebrow--accent">{{ section.settings.eyebrow }}</p>
+    {% endif %}
+    <h1 class="page-ambassador__title">{{ section.settings.title }}</h1>
+    {% if section.settings.subtitle != blank %}
+      <p class="page-ambassador__subtitle">{{ section.settings.subtitle }}</p>
+    {% endif %}
+  </div>
+</section>
+
+<section class="section section--cream">
+  <div class="section__inner">
+    <h2 class="page-ambassador__heading">{{ section.settings.benefits_heading }}</h2>
+    <div class="page-ambassador__benefits">
+      {% for block in section.blocks %}
+        {% if block.type == 'benefit' %}
+          <div class="page-ambassador__benefit" {{ block.shopify_attributes }}>
+            <h3 class="page-ambassador__benefit-title">{{ block.settings.title }}</h3>
+            <p class="page-ambassador__benefit-desc">{{ block.settings.description }}</p>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section__inner section__inner--narrow">
+    <h2 class="page-ambassador__form-heading">{{ section.settings.form_heading }}</h2>
+    <p class="page-ambassador__form-subtitle">{{ section.settings.form_subtitle }}</p>
+
+    {% form 'contact' %}
+      {% if form.posted_successfully? %}
+        <div class="page-ambassador__success" role="alert">
+          <p>{{ section.settings.success_message }}</p>
+        </div>
+      {% endif %}
+
+      {% if form.errors %}
+        <div class="page-ambassador__errors" role="alert">
+          {{ form.errors | default_errors }}
+        </div>
+      {% endif %}
+
+      <input type="hidden" name="contact[subject]" value="Ambassador Application">
+
+      <div class="page-ambassador__fields">
+        <div class="page-ambassador__field-row">
+          <div class="page-ambassador__field">
+            <label for="ambassador-first" class="page-ambassador__label">First Name</label>
+            <input type="text" id="ambassador-first" name="contact[first_name]" class="page-ambassador__input" required autocomplete="given-name">
+          </div>
+          <div class="page-ambassador__field">
+            <label for="ambassador-last" class="page-ambassador__label">Last Name</label>
+            <input type="text" id="ambassador-last" name="contact[last_name]" class="page-ambassador__input" required autocomplete="family-name">
+          </div>
+        </div>
+
+        <div class="page-ambassador__field">
+          <label for="ambassador-email" class="page-ambassador__label">Email</label>
+          <input type="email" id="ambassador-email" name="contact[email]" class="page-ambassador__input" required autocomplete="email">
+        </div>
+
+        <div class="page-ambassador__field-row">
+          <div class="page-ambassador__field">
+            <label for="ambassador-instagram" class="page-ambassador__label">Instagram Handle</label>
+            <input type="text" id="ambassador-instagram" name="contact[instagram]" class="page-ambassador__input" placeholder="@yourhandle">
+          </div>
+          <div class="page-ambassador__field">
+            <label for="ambassador-tiktok" class="page-ambassador__label">TikTok Handle (optional)</label>
+            <input type="text" id="ambassador-tiktok" name="contact[tiktok]" class="page-ambassador__input" placeholder="@yourhandle">
+          </div>
+        </div>
+
+        <div class="page-ambassador__field">
+          <label for="ambassador-discipline" class="page-ambassador__label">Primary Discipline</label>
+          <select id="ambassador-discipline" name="contact[discipline]" class="page-ambassador__select">
+            <option value="" disabled selected>Select your primary discipline</option>
+            <option value="Barre">Barre</option>
+            <option value="Reformer Pilates">Reformer Pilates</option>
+            <option value="Lagree / Megaformer">Lagree / Megaformer</option>
+            <option value="Mat Pilates">Mat Pilates</option>
+            <option value="Yoga">Yoga</option>
+            <option value="Multiple">Multiple Disciplines</option>
+          </select>
+        </div>
+
+        <div class="page-ambassador__field">
+          <label for="ambassador-message" class="page-ambassador__label">Why Barreletics?</label>
+          <textarea id="ambassador-message" name="contact[body]" class="page-ambassador__textarea" rows="4" placeholder="Tell us about your practice, your audience, and why you'd be a great ambassador..."></textarea>
+        </div>
+
+        <div class="page-ambassador__field">
+          {% render 'button', label: section.settings.submit_text, type: 'submit', style: 'primary', size: 'lg' %}
+        </div>
+      </div>
+    {% endform %}
+  </div>
+</section>
+
+<style>
+  .page-ambassador__title {
+    font-size: var(--text-5xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    text-align: center;
+    margin: 0 0 var(--space-3);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .page-ambassador__subtitle {
+    font-size: var(--text-md);
+    color: var(--text-body);
+    text-align: center;
+    line-height: var(--leading-relaxed);
+    margin: 0;
+    max-width: var(--max-width-copy);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .page-ambassador__heading {
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    text-align: center;
+    margin: 0 0 var(--space-8);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .page-ambassador__benefits {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--grid-gap);
+  }
+
+  .page-ambassador__benefit {
+    text-align: center;
+    padding: var(--space-6);
+    background: var(--bg-primary);
+    border-radius: var(--radius-card);
+    border: 1px solid var(--border-default);
+  }
+
+  .page-ambassador__benefit-title {
+    font-size: var(--text-lg);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    margin: 0 0 var(--space-2);
+  }
+
+  .page-ambassador__benefit-desc {
+    font-size: var(--text-base);
+    color: var(--text-body);
+    line-height: var(--leading-relaxed);
+    margin: 0;
+  }
+
+  .page-ambassador__form-heading {
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    text-align: center;
+    margin: 0 0 var(--space-2);
+  }
+
+  .page-ambassador__form-subtitle {
+    font-size: var(--text-base);
+    color: var(--text-body);
+    text-align: center;
+    margin: 0 0 var(--space-8);
+  }
+
+  .page-ambassador__fields {
+    display: grid;
+    gap: var(--space-4);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .page-ambassador__field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+  }
+
+  .page-ambassador__label {
+    display: block;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    margin-bottom: var(--space-1);
+  }
+
+  .page-ambassador__input,
+  .page-ambassador__select,
+  .page-ambassador__textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--border-default);
+    background: var(--bg-primary);
+    font-size: var(--text-base);
+    font-family: var(--font-family);
+    color: var(--text-primary);
+    border-radius: var(--radius-button);
+    transition: border-color var(--transition-fast);
+    min-height: 44px;
+  }
+
+  .page-ambassador__input:focus,
+  .page-ambassador__select:focus,
+  .page-ambassador__textarea:focus {
+    outline: none;
+    border-color: var(--text-primary);
+    box-shadow: 0 0 0 1px var(--text-primary);
+  }
+
+  .page-ambassador__textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  .page-ambassador__select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath fill='%234a4a4a' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+  }
+
+  .page-ambassador__success {
+    padding: var(--space-4);
+    background: var(--bg-alternate);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-button);
+    margin-bottom: var(--space-5);
+    color: var(--text-primary);
+    text-align: center;
+  }
+
+  .page-ambassador__errors {
+    padding: var(--space-4);
+    background: rgba(196, 92, 63, 0.08);
+    border: 1px solid var(--accent-primary);
+    border-radius: var(--radius-button);
+    margin-bottom: var(--space-5);
+    color: var(--accent-primary);
+  }
+
+  @media (max-width: 768px) {
+    .page-ambassador__title {
+      font-size: var(--text-3xl);
+    }
+
+    .page-ambassador__field-row {
+      grid-template-columns: 1fr;
+    }
+
+    .page-ambassador__benefits {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Ambassador Page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Ambassador Program"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Represent the Next Generation of Grip"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Join our community of instructors and athletes who are redefining studio performance. Earn commission, get early access, and help spread the word."
+    },
+    {
+      "type": "text",
+      "id": "benefits_heading",
+      "label": "Benefits heading",
+      "default": "Ambassador Benefits"
+    },
+    {
+      "type": "text",
+      "id": "form_heading",
+      "label": "Form heading",
+      "default": "Apply Now"
+    },
+    {
+      "type": "text",
+      "id": "form_subtitle",
+      "label": "Form subtitle",
+      "default": "We review applications on a rolling basis and respond within 5-7 business days."
+    },
+    {
+      "type": "text",
+      "id": "submit_text",
+      "label": "Submit button text",
+      "default": "Submit Application"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Success message",
+      "default": "Application received! We'll review and get back to you within 5-7 business days."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Benefit",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Ambassador Page"
+    }
+  ]
+}
+{% endschema %}
