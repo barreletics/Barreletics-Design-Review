@@ -148,6 +148,55 @@ All ADRs from the prior planning phase (ADR-01 through ADR-07) are resolved per 
 
 ---
 
+### D-014: Product Knowledge Base — Single Source of Truth
+**Decided:** 2026-07-18 | **Severity:** Critical
+
+**Decision:** The Product Knowledge Base (doc 07) is the single source of truth for all factual product claims across all channels. Any factual claim that appears on the website, in Help Scout, Tidio, wholesale materials, or any other channel must originate from doc 07.
+
+---
+
+### D-015: Foundation Documents Supersede Legacy QA Documents
+**Decided:** 2026-07-18 | **Severity:** High
+
+**Decision:** Foundation documents (01–13) supersede all legacy QA documents. The QA-* files in `planning/archive/` are historical reference only and must not be treated as authoritative for any domain.
+
+---
+
+### D-016: Component Library Is Fully Self-Contained
+**Decided:** 2026-07-18 | **Severity:** High
+
+**Decision:** The Component Library (doc 04) contains complete specifications for all 26 components plus additional components. No Foundation document depends on archived documentation for specifications.
+
+---
+
+### D-017: Evidence Classifications Adopted
+**Decided:** 2026-07-18 | **Severity:** High
+
+**Decision:** All factual claims carry evidence-level metadata using five canonical types: Engineering Verified, Manufacturing Specification, Customer Testimonial, Brand Positioning, Internal Guidance. See doc 07 Evidence Classification section.
+
+---
+
+### D-018: "Never Degrades" Retired
+**Decided:** 2026-07-18 | **Severity:** Medium
+
+**Decision:** The claim "never degrades" is retired and replaced with specific manufacturing language: "Injection-molded grip won't peel or flake like silicone dots" or "Injection-molded grip maintains full-contact traction throughout the life of the product." Added to `RETIRED_CLAIMS.md`.
+
+---
+
+### D-019: "No Allergic Reaction Risk" Retired
+**Decided:** 2026-07-18 | **Severity:** Medium
+
+**Decision:** The claim "No allergic reaction risk" is retired and replaced with "Skin-safe, non-toxic material." Added to `RETIRED_CLAIMS.md`.
+
+---
+
+### D-020: Foundation Approved for Lock
+**Decided:** 2026-07-18 | **Severity:** Critical
+
+**Decision:** All 13 Foundation documents are complete and internally consistent. Final revision applied (claims governance, materials language, component library completion, evidence classifications, canonical ownership). Priority shifts from planning to implementation pending Architect/Owner approval.
+
+---
+
 ## ADR Archive
 
 The original ADR documents (ADR-01 through ADR-07) are preserved in `planning/` for historical reference. Their UNRESOLVED status is now superseded by the decisions above.

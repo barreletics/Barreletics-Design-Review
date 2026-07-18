@@ -149,7 +149,7 @@ Traditional grip socks fail in two ways:
 1. **Grip failure:** Silicone dots degrade with use, becoming unreliable when you need them most
 2. **Material failure:** Fabric absorbs sweat, harbors bacteria, stretches out, loses shape
 
-Barreletics solves both: injection-molded 360° grip that never degrades + non-porous material that rinses clean.
+Barreletics solves both: injection-molded 360° grip that maintains full-contact traction throughout the life of the product + non-porous material that rinses clean.
 
 ### Sock Math (price comparison)
 - Traditional grip socks: $14–$18/pair × 6–8 pairs/year = $112–$144/year

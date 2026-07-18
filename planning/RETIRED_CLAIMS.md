@@ -16,6 +16,8 @@
 | "Try them in class for 30 days" | Implies trial program that does not exist | 2026-07 | "30-day returns on items in new, sellable condition" |
 | "Warranty covers grip wear" | Warranty covers manufacturing defects only | 2026-07 | "90-day warranty against manufacturing defects" |
 | Black and orange design palette | Brand palette evolved | 2026-07 | Warm neutrals + rust accent (see Doc 03) |
+| Never degrades | Absolute durability claim replaced with specific manufacturing language | 2026-07 | "Injection-molded grip won't peel or flake like silicone dots" / "Injection-molded grip maintains full-contact traction throughout the life of the product" |
+| No allergic reaction risk | Absolute safety claim replaced with factual material description | 2026-07 | "Skin-safe, non-toxic material" |
 
 ---
 

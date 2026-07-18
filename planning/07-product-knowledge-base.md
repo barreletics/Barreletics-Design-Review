@@ -59,15 +59,19 @@ Each topic contains:
 
 Every factual claim in this Knowledge Base should carry an evidence level. This prevents unsupported claims from accidentally becoming "facts" over time — especially as content cascades into AI systems, chatbots, and customer-facing channels.
 
-| Level | Tag | Definition |
-|-------|-----|------------|
-| 1 | **Verified by testing** | Confirmed through physical product testing |
-| 2 | **Manufacturing specification** | From manufacturing partner documentation |
-| 3 | **Customer reported** | Sourced from customer reviews, Help Scout conversations, or testimonials |
-| 4 | **Founder observation** | Based on founder's direct experience or judgment |
-| 5 | **Marketing language** | Persuasive framing, not a factual claim |
+### Canonical Claim Types
 
-**Implementation note:** Evidence tags will be added to individual claims incrementally. New claims entering this document must include an evidence level. Existing claims will be tagged during quarterly reviews. When in doubt, tag conservatively — it is better to mark a claim as "Founder observation" than to leave it untagged and have it treated as verified fact.
+These are the five canonical evidence classifications. All factual claims across Foundation documents must use one of these labels.
+
+| Type | Tag | Definition |
+|------|-----|------------|
+| 1 | **Engineering Verified** | Confirmed through product engineering or physical testing |
+| 2 | **Manufacturing Specification** | From manufacturing partner documentation or process specs |
+| 3 | **Customer Testimonial** | Sourced from customer reviews, Help Scout, or direct feedback |
+| 4 | **Brand Positioning** | Strategic messaging that frames the product's market position |
+| 5 | **Internal Guidance** | Operational direction for team use, not customer-facing |
+
+**Implementation note:** Evidence tags will be added to individual claims incrementally. New claims entering this document must include an evidence level. Existing claims will be tagged during quarterly reviews. When in doubt, tag conservatively — it is better to mark a claim as "Brand Positioning" than to leave it untagged and have it treated as engineering-verified fact.
 
 ---
 
@@ -366,7 +370,7 @@ This is the core category-creation comparison. Every mention should move the cus
 
 | Feature | Traditional Grip Socks | Barreletics Performance Skins |
 |---------|----------------------|-------------------------------|
-| Grip | Silicone dots — inconsistent when wet, wear off | 360° full-contact surface — injection-molded, never degrades |
+| Grip | Silicone dots — inconsistent when wet, wear off | 360° full-contact surface — injection-molded grip won't peel or flake like silicone dots |
 | Material | Fabric — absorbs sweat, harbors bacteria, stretches | Non-porous — rinse clean, antimicrobial, maintains shape |
 | Cost | $14–$18/pair × 6–8 pairs/year = $112–$144/year | $74 one-time |
 | Lifespan | 6–8 weeks per pair | 18+ months (many report 3–4 years) |
@@ -391,7 +395,7 @@ Grip socks fail two ways: dots wear off, fabric absorbs sweat. Barreletics: 360�
 
 - **Material:** Proprietary injection-molded compound. Non-porous — does not absorb sweat, bacteria, or odor.
 - **Antimicrobial:** Built into the material, not a coating that wears off.
-- **Latex-free and silicone-free:** Safe for latex-sensitive skin. No allergic reaction risk from common grip-sock adhesives.
+- **Latex-free and silicone-free:** Safe for latex-sensitive skin. Skin-safe, non-toxic material — free from common grip-sock adhesives.
 - **Sweat-resistant:** Material repels moisture rather than absorbing it.
 - **Breathability:** Open-toe design + lightweight material = cool and breathable. Not like a shoe or sock that traps heat.
 - **Made in USA:** Manufactured domestically.

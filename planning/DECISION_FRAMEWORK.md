@@ -65,6 +65,28 @@ The Knowledge Base (doc 07) is the canonical source for product facts. If a down
 
 ---
 
+## Canonical Ownership
+
+Each Foundation document is the single authoritative source for its domain. If two documents ever disagree, the owner document listed here is authoritative for that domain.
+
+| Domain | Owner Document |
+|--------|---------------|
+| Brand | 01 – Brand North Star |
+| Brand System & Guardrails | 02 – Brand System |
+| Design Tokens & Visual System | 03 – Design System |
+| Components | 04 – Component Library |
+| PDP | 05 – PDP Architecture |
+| Homepage | 06 – Homepage Architecture |
+| Product Knowledge & Facts | 07 – Product Knowledge Base |
+| Copy & Messaging | 08 – Copy Guide |
+| Collection Pages | 09 – Collection Architecture |
+| Decisions | 10 – Decision Log |
+| Navigation | 11 – Navigation Architecture |
+| SEO & GEO | 12 – SEO & GEO Standards |
+| Knowledge Flow & AI Governance | 13 – Knowledge Architecture |
+
+---
+
 **Cross-references:**
 - Foundation docs → `planning/01-*.md` through `planning/13-*.md`
 - Decision log → `planning/10-decision-log.md`
