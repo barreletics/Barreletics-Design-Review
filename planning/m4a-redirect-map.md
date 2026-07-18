@@ -108,8 +108,11 @@ Redirect from,Redirect to
 /pages/outdoor,/collections/outdoor
 /pages/aquatic-footwear,/collections/outdoor
 /pages/shop-bundles,/collections/grippy-shoes
-/pages/become-an-affiliate,/pages/ambassador
-/pages/wholesale-calculator,/pages/wholesale
+/pages/become-an-affiliate,/pages/partners
+/pages/wholesale-calculator,/pages/partners
+/pages/wholesale,/pages/partners
+/pages/ambassador,/pages/partners
+/pages/studio-program,/pages/partners
 /pages/bogo-template,/collections/sale
 /pages/size-chart,/pages/size-guide
 /pages/blank-page,/
@@ -119,7 +122,64 @@ Redirect from,Redirect to
 
 ---
 
-## Verification Plan
+## Redirect Verification Audit
+
+> **Final redirect implementation requires Owner sign-off. Items flagged for Brian review must be resolved before M4D Launch.**
+
+### Collection Redirects
+
+| Source URL | Destination URL | Still Necessary? | Redirect Chains? | Redirect Loops? | SEO Concerns | Requires Owner/Brian Review? |
+|-----------|----------------|-------------------|-------------------|-----------------|--------------|------------------------------|
+| `/collections/barre-pilates-yoga-shoe-sock-footwear` | `/collections/grippy-shoes` | Yes | No | No | High-equity URL — must 301 | No |
+| `/collections/shop-all-products` | `/collections/grippy-shoes` | Yes | No | No | None | No |
+| `/collections/shop-favorites` | `/collections/grippy-shoes` | Yes | No | No | None | No |
+| `/collections/collection-landing` | `/collections/grippy-shoes` | Yes | No | No | None | No |
+| `/collections/apparel-page` | `/collections/apparel` | Yes | No | No | None | No |
+
+### Page Redirects
+
+| Source URL | Destination URL | Still Necessary? | Redirect Chains? | Redirect Loops? | SEO Concerns | Requires Owner/Brian Review? |
+|-----------|----------------|-------------------|-------------------|-----------------|--------------|------------------------------|
+| `/pages/compare-open-vs-closed` | `/pages/compare-open-closed-sole` | Yes | No | No | None | No |
+| `/pages/shipping-retruns` | `/pages/shipping` | Yes | No | No | Typo correction — SEO positive | No |
+| `/pages/start-a-retrun` | `/pages/returns` | Yes | No | No | Typo correction — SEO positive | No |
+| `/pages/outdoor` | `/collections/outdoor` | Yes | No | No | Page→Collection type change | **Yes** — verify outdoor collection exists with products |
+| `/pages/aquatic-footwear` | `/collections/outdoor` | Yes | No | No | Page→Collection type change | **Yes** — verify outdoor collection exists with products |
+| `/pages/shop-bundles` | `/collections/grippy-shoes` | Yes | No | No | Bundle concept removed | No |
+| `/pages/become-an-affiliate` | `/pages/partners` | Yes | No | No | Updated: now routes to consolidated partners page | No |
+| `/pages/wholesale-calculator` | `/pages/partners` | Yes | No | No | Updated: now routes to consolidated partners page | No |
+| `/pages/bogo-template` | `/collections/sale` | Unknown | No | No | Promo page — may no longer exist | **Yes** — confirm sale collection exists |
+| `/pages/size-chart` | `/pages/size-guide` | Yes | No | No | None | No |
+| `/pages/blank-page` | `/` | Yes | No | No | Remove placeholder | No |
+| `/pages/free-people` | `/collections/collaborations` | Unknown | No | No | Collab may be inactive | **Yes** — confirm collaboration status |
+| `/pages/wholesale` | `/pages/partners` | Yes | No | No | D-042: consolidated partners page | No |
+| `/pages/ambassador` | `/pages/partners` | Yes | No | No | D-042: consolidated partners page | No |
+| `/pages/studio-program` | `/pages/partners` | Yes | No | No | D-042: consolidated partners page | No |
+
+### Blog Redirects
+
+| Source URL | Destination URL | Still Necessary? | Redirect Chains? | Redirect Loops? | SEO Concerns | Requires Owner/Brian Review? |
+|-----------|----------------|-------------------|-------------------|-----------------|--------------|------------------------------|
+| `/blogs/blog` | `/blogs/journal` | Yes | No | No | Blog equity preservation | No |
+| `/blogs/blog/*` | `/blogs/journal/*` | Yes | No | No | Individual articles need per-entry redirects (no wildcard support) | **Yes** — article inventory needed |
+
+### Product Redirects
+
+| Source URL | Destination URL | Still Necessary? | Redirect Chains? | Redirect Loops? | SEO Concerns | Requires Owner/Brian Review? |
+|-----------|----------------|-------------------|-------------------|-----------------|--------------|------------------------------|
+| (none expected) | — | — | — | — | Product handles unchanged | No |
+
+### Flagged for Owner/Brian Review
+
+1. **Outdoor collection redirect** — `/pages/outdoor` and `/pages/aquatic-footwear` redirect to `/collections/outdoor`, but collection must exist with products before redirect goes live
+2. **Sale collection** — `/pages/bogo-template` → `/collections/sale` requires sale collection to exist
+3. **Collaborations** — `/pages/free-people` → `/collections/collaborations` requires confirmation collaboration is still active/relevant
+4. **Blog articles** — Each article under `/blogs/blog/` needs individual redirect entry; Shopify has no wildcard support. Full article inventory required before implementation.
+5. **Partner page consolidation** — Old `/pages/wholesale`, `/pages/ambassador`, `/pages/studio-program` all redirect to `/pages/partners` per D-042
+
+---
+
+## Post-Publish Verification Plan
 
 After theme publish:
 1. Test each redirect with `curl -I` to confirm 301 status

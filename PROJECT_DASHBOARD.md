@@ -233,8 +233,10 @@
 | Navigation Config | ✅ | `planning/m4a-navigation-config.md` |
 | Metafield Spec | ✅ | `planning/m4a-metafield-spec.md` |
 | Asset Inventory | ✅ | `planning/m4a-asset-inventory.md` |
-| Redirect Map | ✅ | `planning/m4a-redirect-map.md` |
+| Redirect Map (+ verification audit) | ✅ | `planning/m4a-redirect-map.md` |
 | Pre-Deployment Baseline | ✅ | `planning/m4a-pre-deployment-baseline.md` |
+| Hero Alt Concept (D-041) | ✅ | `shopify-build/sections/hero-alt.liquid` |
+| Consolidated Partners Page (D-042) | ✅ | `shopify-build/sections/page-partners.liquid` / `templates/page.partners.json` |
 
 ### Key Decisions (M4-6 Roadmap)
 | Decision | Summary |
@@ -244,6 +246,9 @@
 | D-038 | Milestone 5 scoped as finite v1, ongoing work → post-v1 operations |
 | D-039 | All M4 tasks assigned Builder/Owner/Joint responsibility |
 | D-040 | Policy Freeze Gate required before production QA |
+| D-041 | Homepage hero — two concepts built for side-by-side comparison |
+| D-042 | Partner Programs consolidated into single page |
+| D-043 | Collections created only when products/merchandising require them |
 
 ## Milestone 5: Growth Platform (v1) — ⚪ Planning
 
@@ -267,8 +272,10 @@
 
 ## Next Actions
 
-1. **Owner:** Review M4A PR — approve content inventory, navigation config, redirect map
-2. **Owner:** Provide assets flagged in `m4a-asset-inventory.md` (favicon, OG image, logo SVG)
-3. **Owner:** Approve content flagged "Needs Review" in `m4a-content-inventory.md`
-4. **Builder:** Begin M4B (Integrations) upon M4A approval
-5. **Builder:** Address deferred M2 minor issues (M-05, M-08, M-09) during deployment
+1. **Owner:** Choose hero concept — compare Concept A (`hero.liquid`) vs Concept B (`hero-alt.liquid`) in Theme Customizer
+2. **Owner:** Review M4A PR — approve content inventory, navigation config, redirect map
+3. **Owner:** Provide assets flagged in `m4a-asset-inventory.md` (favicon, OG image, logo SVG)
+4. **Owner:** Approve content flagged "Needs Review" in `m4a-content-inventory.md`
+5. **Owner:** Review flagged redirect items in redirect verification audit (outdoor, sale, collaborations, blog articles)
+6. **Builder:** Begin M4B (Integrations) upon M4A approval
+7. **Builder:** Address deferred M2 minor issues (M-05, M-08, M-09) during deployment

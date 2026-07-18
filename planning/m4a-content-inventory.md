@@ -20,8 +20,8 @@ Inventory of all production content required for launch. Each item is cross-refe
 | Announcement strip — Message 1 | "Buy 2, Save 15% — Code SAVE15" | Doc 07 §16, Doc 08 | ✅ Ready |
 | Announcement strip — Message 2 | "Free Shipping Over $150" | Doc 07 §15 (D-002) | ✅ Ready |
 | Announcement strip — Message 3 | "30-Day Returns · Made in USA" | Doc 07 §13, §12 | ✅ Ready |
-| Hero headline | Category-creation headline (editorial) | Doc 08 brand voice | ⚠️ Needs Review |
-| Hero subheadline | Supporting statement | Doc 08 | ⚠️ Needs Review |
+| Hero headline | **TWO concepts pending Owner comparison — do not lock.** Concept A: "The Pilates Sock Era Is Over" / Concept B: "Think Outside the Sock." | Doc 08 brand voice | ⚠️ Owner Comparison Pending (D-041) |
+| Hero subheadline | Concept A: "Studio Workouts & Footwear Will Never Be The Same" / Concept B: "No Socks. Just Grip." | Doc 08 | ⚠️ Owner Comparison Pending (D-041) |
 | Hero CTA | "Shop Performance Skins" or similar | Doc 08 | ✅ Ready |
 | Value strip — 6 pillars | 360° Grip · Antimicrobial · Barefoot Control · Studio-Tested · Made in USA · Replaces Socks | Doc 07 §1, §12, §11 | ✅ Ready |
 | 50/50 split — Category creation | "The grip sock era is over" framing | Doc 07 §11, Doc 08 | ✅ Ready |
@@ -65,9 +65,10 @@ Inventory of all production content required for launch. Each item is cross-refe
 | `/pages/compare-open-closed-sole` | Open vs Closed Sole comparison | Doc 07 §2 | ✅ Ready |
 | `/pages/grip-comparison` | Barreletics vs Grip Socks | Doc 07 §11 | ✅ Ready |
 | `/pages/technology` | Materials, manufacturing, performance | Doc 07 §12 | ✅ Ready |
-| `/pages/wholesale` | Wholesale inquiry, terms | Doc 07 (placeholder) | ⚠️ Needs Review |
-| `/pages/ambassador` | Ambassador program details | — | ⚠️ Needs Review |
-| `/pages/studio-program` | Studio partnership details | — | ⚠️ Needs Review |
+| `/pages/partners` | Consolidated Partner Programs (Wholesale + Studio + Ambassador) | D-042 | ✅ Built |
+| ~~`/pages/wholesale`~~ | ~~Wholesale inquiry~~ → Superseded by `/pages/partners` (D-042) | — | 🔄 Redirected |
+| ~~`/pages/ambassador`~~ | ~~Ambassador program~~ → Superseded by `/pages/partners` (D-042) | — | 🔄 Redirected |
+| ~~`/pages/studio-program`~~ | ~~Studio partnership~~ → Superseded by `/pages/partners` (D-042) | — | 🔄 Redirected |
 
 ## Navigation
 
@@ -87,12 +88,10 @@ Inventory of all production content required for launch. Each item is cross-refe
 
 | Item | Reason | Priority |
 |------|--------|----------|
-| Homepage hero headline/subheadline | Brand voice — editorial tone approval | High |
+| Homepage hero headline/subheadline | D-041: TWO concepts built for side-by-side comparison — Owner must choose before lock | Critical |
 | About page — founder story & mission | Personal/brand narrative | High |
 | Contact page — business hours & email | Operational detail | Medium |
-| Wholesale page — terms & minimums | Business policy | Medium |
-| Ambassador page — program details | Business policy | Medium |
-| Studio Program page — partnership terms | Business policy | Medium |
+| Partners page — wholesale/studio/ambassador terms | D-042: Consolidated page built. Internal pricing never public. | Medium |
 | New Arrivals/Limited Editions/One-Offs descriptions | Merchandising tone | Low |
 | GEO content blocks | Location-specific claims | Low |
 | Collection hero headlines (pillar pages) | Editorial voice approval | Medium |
@@ -117,9 +116,7 @@ All "Ready" content is directly sourceable from locked Foundation documents. "Ne
 |------|----------|-----------|----------------|---------|
 | Newsletter signup | Footer, Newsletter section | Shopify customer create | Email | Shopify (tag: "newsletter") |
 | Contact form | `/pages/contact` | Shopify form endpoint | Name, Email, Subject, Message | Help Scout forwarding |
-| Wholesale inquiry | `/pages/wholesale` | Shopify form endpoint | Company, Contact, Email, Phone, Message | Help Scout forwarding |
-| Studio Program application | `/pages/studio-program` | Shopify form endpoint | Studio name, Location, Contact, Disciplines, Message | Help Scout forwarding |
-| Ambassador application | `/pages/ambassador` | Shopify form endpoint | Name, Email, Social handles, Why, Discipline | Help Scout forwarding |
+| Partner inquiry (unified) | `/pages/partners` | Shopify form endpoint | Name, Email, Program interest (dropdown), Message | Help Scout forwarding |
 | Review submission | PDP (via Judge.me) | Judge.me API | Rating, Title, Body, Name, Email | Judge.me |
 
 ### Form Configuration Notes

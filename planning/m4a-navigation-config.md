@@ -89,9 +89,10 @@ Company
 | Compare Open vs Closed Sole | `compare-open-closed-sole` | `/pages/compare-open-closed-sole` |
 | Grip Comparison | `grip-comparison` | `/pages/grip-comparison` |
 | Technology | `technology` | `/pages/technology` |
-| Wholesale | `wholesale` | `/pages/wholesale` |
-| Ambassador | `ambassador` | `/pages/ambassador` |
-| Studio Program | `studio-program` | `/pages/studio-program` |
+| Partner Programs | `partners` | `/pages/partners` |
+| ~~Wholesale~~ | ~~`wholesale`~~ | ~~`/pages/wholesale`~~ → redirects to `/pages/partners` (D-042) |
+| ~~Ambassador~~ | ~~`ambassador`~~ | ~~`/pages/ambassador`~~ → redirects to `/pages/partners` (D-042) |
+| ~~Studio Program~~ | ~~`studio-program`~~ | ~~`/pages/studio-program`~~ → redirects to `/pages/partners` (D-042) |
 
 ## Blog Handle
 
@@ -103,19 +104,22 @@ Company
 
 1. **Main menu** — Create in Navigation > Add menu > Handle: `main-menu`
 2. **Footer menu** — Not used as a Shopify menu; footer is hardcoded in `snippets/footer.liquid` per Doc 11 structure (4-column grid doesn't map to Shopify's flat menu model)
-3. **Collection creation** — All collections above must exist in Shopify admin before theme deployment
+3. **Collection creation** — D-043: Create collections ONLY when products/merchandising require them. Templates are ready (from M3). Do NOT batch-create all 13 collections immediately — create each collection in Shopify admin only when there are actual products to populate it.
 4. **Page creation** — All pages above must exist with correct handles before navigation links work
 5. **Blog creation** — Blog named "Journal" with handle `journal` must exist
+6. **Partner page consolidation** — D-042: `/pages/wholesale`, `/pages/ambassador`, and `/pages/studio-program` are superseded by unified `/pages/partners`. Old handles redirect to partners page.
 
 ## Current Live Site → New Mapping
 
+> **D-043:** Collections are created ONLY when products/merchandising require them. Templates exist and are ready. Do not batch-create all collections.
+
 | Current Live Handle | New Handle | Action |
 |--------------------|------------|--------|
-| `barre-pilates-yoga-shoe-sock-footwear` | `grippy-shoes` | Create new, redirect old |
-| (none — single collection template) | `open-sole` | Create new |
-| (none) | `closed-sole` | Create new |
-| (none) | `outdoor` | Create new |
-| (none) | `apparel` | Create new |
-| (none) | `tops` | Create new |
-| (none) | `bottoms` | Create new |
-| `compare-open-vs-closed` | `compare-open-closed-sole` | Create new, redirect old |
+| `barre-pilates-yoga-shoe-sock-footwear` | `grippy-shoes` | Create when ready, redirect old |
+| (none — single collection template) | `open-sole` | Create only when products/merchandising require it |
+| (none) | `closed-sole` | Create only when products/merchandising require it |
+| (none) | `outdoor` | Create only when products/merchandising require it |
+| (none) | `apparel` | Create only when products/merchandising require it |
+| (none) | `tops` | Create only when products/merchandising require it |
+| (none) | `bottoms` | Create only when products/merchandising require it |
+| `compare-open-vs-closed` | `compare-open-closed-sole` | Create new page, redirect old |
