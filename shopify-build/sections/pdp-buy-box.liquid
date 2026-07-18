@@ -121,23 +121,23 @@
     </div>
 
     <div class="pdp-buy__accordions">
-      <details class="pdp-accordion">
-        <summary class="pdp-accordion__trigger">Description <span>+</span></summary>
+      <details class="pdp-accordion" data-pdp-accordion>
+        <summary class="pdp-accordion__trigger" aria-expanded="false">Description <span>+</span></summary>
         <div class="pdp-accordion__body">{{ product.description }}</div>
       </details>
-      <details class="pdp-accordion">
-        <summary class="pdp-accordion__trigger">Care & how to wear <span>+</span></summary>
+      <details class="pdp-accordion" data-pdp-accordion>
+        <summary class="pdp-accordion__trigger" aria-expanded="false">Care & how to wear <span>+</span></summary>
         <div class="pdp-accordion__body">
           <p><strong>How to put on:</strong> pull from the top of the foot — not the straps — to help extend their lifespan.</p>
           <p><strong>Cleaning:</strong> warm soapy water, rinse well, air dry. No machine washing.</p>
         </div>
       </details>
-      <details class="pdp-accordion">
-        <summary class="pdp-accordion__trigger">Shipping <span>+</span></summary>
+      <details class="pdp-accordion" data-pdp-accordion>
+        <summary class="pdp-accordion__trigger" aria-expanded="false">Shipping <span>+</span></summary>
         <div class="pdp-accordion__body">Free shipping on orders over $150. Standard 3–5 days. Express 1–2 days at checkout.</div>
       </details>
-      <details class="pdp-accordion">
-        <summary class="pdp-accordion__trigger">30-day returns + 90-day warranty <span>+</span></summary>
+      <details class="pdp-accordion" data-pdp-accordion>
+        <summary class="pdp-accordion__trigger" aria-expanded="false">30-day returns + 90-day warranty <span>+</span></summary>
         <div class="pdp-accordion__body">30-day returns on items in new, sellable condition — try on for fit at home. 90-day warranty covers manufacturing defects only.</div>
       </details>
     </div>
@@ -493,6 +493,17 @@
     }
   }
 </style>
+
+<script>
+  (function() {
+    document.querySelectorAll('[data-pdp-accordion]').forEach(function(item) {
+      item.addEventListener('toggle', function() {
+        var summary = item.querySelector('.pdp-accordion__trigger');
+        if (summary) summary.setAttribute('aria-expanded', item.open ? 'true' : 'false');
+      });
+    });
+  })();
+</script>
 
 {% schema %}
 {
