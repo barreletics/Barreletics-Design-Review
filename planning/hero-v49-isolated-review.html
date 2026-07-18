@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hero Component Review — PDP Complete v49 (Isolated)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif; color: #1c1916; background: #faf9f7; line-height: 1.5; }
+    a { color: #1c1916; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .pdp-hero { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; max-width: 1400px; margin: 0 auto; padding: 64px 80px 64px 40px; align-items: flex-start; }
+    .pdp-gallery { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 64px; }
+    .pdp-gallery__hero { aspect-ratio: 1; background: #f9f9f9; overflow: hidden; border-radius: 8px; }
+    .pdp-gallery__hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .pdp-buy { display: flex; flex-direction: column; gap: 24px; }
+    .pdp-buy__badge { display: inline-block; background: #c45c3f; color: #fff; padding: 4px 10px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; border-radius: 3px; }
+    .pdp-buy__stars { font-size: 16px; color: #d4af37; letter-spacing: 2px; }
+    .pdp-buy__name { font-size: 44px; font-weight: 700; line-height: 1.08; margin: 0; color: #1c1916; }
+    .pdp-buy__desc { font-size: 16px; color: #4a4a4a; margin: 0; line-height: 1.6; }
+    .pdp-buy__price-now { font-size: 36px; font-weight: 700; color: #1c1916; }
+    .pdp-buy__price-meta { font-size: 13px; color: #8a8a8a; }
+    .pdp-buy__cta { width: 100%; padding: 18px; background: #1c1916; color: #fff; font-size: 15px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border: none; border-radius: 4px; cursor: pointer; font-family: inherit; }
+    .pdp-buy__cta:hover { background: #c45c3f; }
+    .pdp-buy__swatches { display: flex; gap: 8px; flex-wrap: wrap; }
+    .pdp-buy__swatch { width: 23px; height: 23px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: all 0.2s; padding: 9px; box-sizing: content-box; background-clip: content-box; }
+    .pdp-buy__swatch:hover { border-color: #9a9182; }
+    .pdp-buy__swatch[aria-selected="true"] { border-color: #1c1916; outline: none; }
+
+    @media (max-width: 768px) {
+      .pdp-hero { grid-template-columns: 1fr; gap: 32px; padding: 32px 16px; }
+      .pdp-gallery { position: static; }
+      .pdp-buy__name { font-size: 32px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HERO — EXACT REPRODUCTION FROM PDP COMPLETE v49, LINES 138–259 -->
+<section style="background:#fff;">
+<section class="pdp-hero">
+
+  <!-- GALLERY -->
+  <div class="pdp-gallery">
+    <div class="pdp-gallery__hero">
+      <img id="v10-main-img" src="https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=800" alt="Studio Performance Skin — Onyx" />
+    </div>
+    <div style="display:flex;gap:6px;margin-top:8px;">
+      <button onclick="v10Thumb(this,'https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=400')" style="width:72px;height:72px;border:2px solid #1c1916;background:#f9f9f9;padding:0;cursor:pointer;overflow:hidden;flex-shrink:0;"><img src="https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=400" style="width:100%;height:100%;object-fit:cover;display:block;" alt="View 1" /></button>
+      <button onclick="v10Thumb(this,'https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=400')" style="width:72px;height:72px;border:1px solid #e6e6e6;background:#f9f9f9;padding:0;cursor:pointer;overflow:hidden;flex-shrink:0;"><img src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=400" style="width:100%;height:100%;object-fit:cover;display:block;" alt="View 2" /></button>
+      <button onclick="v10Thumb(this,'https://barreletics.com/cdn/shop/files/A14_TopBottom_LightGrey-1000x1000_d30b6fcb-229e-4af9-8062-e1c4901df31e.jpg?v=1773920300&width=400')" style="width:72px;height:72px;border:1px solid #e6e6e6;background:#f9f9f9;padding:0;cursor:pointer;overflow:hidden;flex-shrink:0;"><img src="https://barreletics.com/cdn/shop/files/A14_TopBottom_LightGrey-1000x1000_d30b6fcb-229e-4af9-8062-e1c4901df31e.jpg?v=1773920300&width=400" style="width:100%;height:100%;object-fit:cover;display:block;" alt="View 3" /></button>
+      <button onclick="v10Thumb(this,'https://barreletics.com/cdn/shop/files/Copreni_Final_More_grey.png?v=1774119812&width=400')" style="width:72px;height:72px;border:1px solid #e6e6e6;background:#f9f9f9;padding:0;cursor:pointer;overflow:hidden;flex-shrink:0;"><img src="https://barreletics.com/cdn/shop/files/Copreni_Final_More_grey.png?v=1774119812&width=400" style="width:100%;height:100%;object-fit:cover;display:block;" alt="View 4" /></button>
+    </div>
+  </div>
+
+  <!-- BUY PANEL -->
+  <div class="pdp-buy" style="gap:24px;">
+
+    <!-- Reviews -->
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span class="pdp-buy__stars" style="font-size:14px;letter-spacing:1px;">★★★★★</span>
+      <span style="font-size:13px;font-weight:400;color:#4a4a4a;">Trusted by 1000's of Instructors</span>
+      <span style="color:#d6cfc0;">·</span>
+      <a href="#reviews" style="font-size:12px;color:#8a8a8a;font-weight:400;">Reviews →</a>
+    </div>
+
+    <!-- Title block -->
+    <div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+        <h1 style="font-size:18px;letter-spacing:0;color:#2d2926;font-weight:600;margin:0;">Best Grippy Shoes for Barre, Pilates &amp; Yoga</h1>
+        <span class="pdp-buy__badge">Closed Sole</span>
+      </div>
+      <p class="pdp-buy__name" style="margin:0;"><span style="font-weight:300;">Secure in every hold.</span><br/><span style="font-weight:700;">No sliding. No resets.</span></p>
+      <p class="pdp-buy__desc" style="margin-top:20px;max-width:40ch;line-height:1.65;font-weight:400;color:#5a5248;">The premium grip system that replaces traditional grip socks—built for reformer, barre, Pilates and Megaformer.</p>
+    </div>
+
+    <!-- Price -->
+    <div style="padding:16px 0;border-top:1px solid #e6e6e6;border-bottom:1px solid #e6e6e6;">
+      <span class="pdp-buy__price-now">$74</span>
+      <span style="font-size:13px;color:#8a8a8a;margin-left:8px;">or 4 payments · free shipping over $150</span>
+    </div>
+
+    <!-- Color -->
+    <div style="padding:16px 0;border-bottom:1px solid #e6e6e6;">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;">
+        <span style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;">Color · <span id="v10-color-name">Onyx</span></span>
+        <a href="#variants" style="font-size:12px;text-decoration:none;color:#8a8a8a;font-weight:400;">View all colors →</a>
+      </div>
+      <div class="pdp-buy__swatches" style="gap:6px;flex-wrap:wrap;row-gap:6px;">
+        <button class="pdp-buy__swatch" style="background:#050505;" aria-selected="true" aria-label="Onyx" onclick="v10Color(this,'Onyx','https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=800')"></button>
+        <button class="pdp-buy__swatch" style="background:#e9d3cb;" aria-label="Dusty Rose" onclick="v10Color(this,'Dusty Rose','https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=800')"></button>
+        <button class="pdp-buy__swatch" style="background:#c9c5b8;" aria-label="Stone" onclick="v10Color(this,'Stone','https://barreletics.com/cdn/shop/files/A14_TopBottom_LightGrey-1000x1000_d30b6fcb-229e-4af9-8062-e1c4901df31e.jpg?v=1773920300&width=800')"></button>
+        <button class="pdp-buy__swatch" style="background:#7b8c84;" aria-label="Sage" onclick="v10Color(this,'Sage','https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=800')"></button>
+        <button class="pdp-buy__swatch" style="background:#fff;border-color:#ccc;" aria-label="White" onclick="v10Color(this,'White','https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=800')"></button>
+        <button class="pdp-buy__swatch" style="background:#d4a78a;" aria-label="Terracotta" onclick="v10Color(this,'Terracotta','https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=800')"></button>
+        <button class="pdp-buy__swatch" style="background:#3d3530;" aria-label="Espresso" onclick="v10Color(this,'Espresso','https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=800')"></button>
+        <button class="pdp-buy__swatch" style="background:#b8c4c0;" aria-label="Mist" onclick="v10Color(this,'Mist','https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=800')"></button>
+        <button class="pdp-buy__swatch" style="background:#e8e0d0;" aria-label="Cream" onclick="v10Color(this,'Cream','https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=800')"></button>
+        <button class="pdp-buy__swatch" style="background:#8b7355;" aria-label="Mocha" onclick="v10Color(this,'Mocha','https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=800')"></button>
+        <button class="pdp-buy__swatch" style="background:#5c6b5e;" aria-label="Forest" onclick="v10Color(this,'Forest','https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=800')"></button>
+        <div style="position:relative;display:inline-flex;">
+          <button class="pdp-buy__swatch" style="background:#c8b99a;" aria-label="Coperni" onclick="v10Color(this,'Coperni','https://barreletics.com/cdn/shop/files/Copreni_Final_More_grey.png?v=1774119812&width=800')"></button>
+          <span style="position:absolute;top:-2px;right:-2px;background:#2563eb;color:#fff;font-size:8px;font-weight:700;padding:1px 4px;border-radius:2px;line-height:1.4;pointer-events:none;">LE</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Size -->
+    <div style="padding:16px 0;border-bottom:1px solid #e6e6e6;">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;">
+        <span style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;">Size</span>
+        <a href="#" style="font-size:12px;text-decoration:none;color:#1c1916;border-bottom:1px solid #1c1916;padding-bottom:1px;">Size Chart →</a>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;">
+        <button style="padding:14px;border:1px solid #e6e6e6;background:#faf9f7;text-align:center;cursor:pointer;font-size:14px;font-weight:600;border-radius:6px;font-family:inherit;" onclick="v10Size(this,'M')">M<span style="display:block;font-size:11px;color:#8a8a8a;font-weight:400;margin-top:4px;">Women 5–7.5 · Men 6–8</span></button>
+        <button style="padding:14px;border:2px solid #1c1916;background:#faf9f7;text-align:center;cursor:pointer;font-size:14px;font-weight:600;border-radius:6px;font-family:inherit;" onclick="v10Size(this,'L')">L<span style="display:block;font-size:11px;color:#8a8a8a;font-weight:400;margin-top:4px;">Women 8–10 · Men 8.5–11</span></button>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <button class="pdp-buy__cta">Add to cart · $74</button>
+
+    <!-- Trust -->
+    <div style="display:flex;gap:20px;flex-wrap:wrap;font-size:12px;color:#8a8a8a;padding:12px 0;border-top:1px solid #e6e6e6;">
+      <span><b style="color:#1c1916;">✓</b> Ships 1–2 days</span>
+      <span><b style="color:#1c1916;">✓</b> 30-day returns</span>
+      <span><b style="color:#1c1916;">✓</b> 90-day warranty</span>
+      <span><b style="color:#1c1916;">✓</b> Latex- &amp; silicone-free</span>
+    </div>
+
+    <!-- Accordion -->
+    <div style="border-top:1px solid #e6e6e6;">
+      <details style="border-bottom:1px solid #e6e6e6;">
+        <summary style="padding:14px 0;font-size:14px;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;">Description <span>+</span></summary>
+        <div style="padding:0 0 16px;font-size:14px;color:#4a4a4a;line-height:1.7;">
+          <p style="margin:0 0 10px;">The Studio Performance Skin Closed Sole is the premium grip system that replaced traditional studio socks for thousands of reformer, barre, Megaformer, and Pilates practitioners. Full-contact 360° grip across the entire underfoot — not patches, not gels — for consistent traction every transition, every class.</p>
+          <p style="margin:0;">Built from non-toxic, skin-safe materials with no latex and no silicone. Rinses clean in warm soapy water and air-dries in under an hour.</p>
+        </div>
+      </details>
+      <details style="border-bottom:1px solid #e6e6e6;">
+        <summary style="padding:14px 0;font-size:14px;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;">Care &amp; how to wear <span>+</span></summary>
+        <div style="padding:0 0 16px;font-size:14px;color:#4a4a4a;line-height:1.7;">
+          <p style="margin:0 0 10px;"><b>How to put on:</b> pull from the top of the foot — not the straps — to help extend their lifespan.</p>
+          <p style="margin:0;"><b>Cleaning:</b> warm soapy water, rinse well, air dry. No machine washing.</p>
+        </div>
+      </details>
+      <details style="border-bottom:1px solid #e6e6e6;">
+        <summary style="padding:14px 0;font-size:14px;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;">Shipping <span>+</span></summary>
+        <div style="padding:0 0 16px;font-size:14px;color:#4a4a4a;line-height:1.7;">Free shipping on orders over $75. Standard 3–5 days. Express 1–2 days at checkout.</div>
+      </details>
+      <details style="border-bottom:1px solid #e6e6e6;">
+        <summary style="padding:14px 0;font-size:14px;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;">30-day returns + 90-day warranty <span>+</span></summary>
+        <div style="padding:0 0 16px;font-size:14px;color:#4a4a4a;line-height:1.7;">30-day returns on items returned in new, unused condition. 90-day warranty covers grip-surface wear under normal use.</div>
+      </details>
+    </div>
+  </div>
+</section>
+</section>
+
+<script>
+function v10Thumb(btn, src) {
+  document.querySelectorAll('.pdp-hero button[onclick^="v10Thumb"]').forEach(b => b.style.border = '1px solid #e6e6e6');
+  btn.style.border = '2px solid #1c1916';
+  document.getElementById('v10-main-img').src = src;
+}
+function v10Color(btn, name, src) {
+  document.querySelectorAll('.pdp-buy__swatch').forEach(s => s.removeAttribute('aria-selected'));
+  btn.setAttribute('aria-selected','true');
+  document.getElementById('v10-color-name').textContent = name;
+  document.getElementById('v10-main-img').src = src;
+}
+function v10Size(btn, name) {
+  document.querySelectorAll('[onclick^="v10Size"]').forEach(s => { s.style.border='1px solid #e6e6e6'; s.style.background='#faf9f7'; });
+  btn.style.border = '2px solid #1c1916';
+  btn.style.background = '#f9f9f9';
+}
+</script>
+
+</body>
+</html>

@@ -517,6 +517,194 @@
       font-family: var(--t-font);
     }
     .h-news__btn:hover { opacity: 0.85; }
+
+    /* --- Home 50/50 media split --- */
+    .h-5050 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 520px;
+    }
+    .h-5050__media {
+      position: relative;
+      overflow: hidden;
+    }
+    .h-5050__media img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .h-5050__copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 72px 56px;
+    }
+    .h-5050__eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--br-accent);
+      margin: 0 0 14px;
+    }
+    .h-5050__title {
+      font-size: clamp(28px, 3.5vw, 42px);
+      font-weight: 400;
+      line-height: 1.15;
+      margin: 0 0 16px;
+    }
+    .h-5050__title strong { font-weight: 600; }
+    .h-5050__body {
+      font-size: 16px;
+      color: var(--br-text-soft);
+      line-height: 1.6;
+      margin: 0 0 28px;
+      max-width: 440px;
+    }
+    .h-5050__cta {
+      display: inline-block;
+      background: var(--br-button);
+      color: var(--br-button-text);
+      padding: 14px 28px;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      text-decoration: none;
+      align-self: flex-start;
+    }
+    .h-5050__cta:hover { opacity: 0.8; }
+    @media (max-width: 900px) {
+      .h-5050 { grid-template-columns: 1fr; }
+      .h-5050__media { min-height: 360px; position: relative; }
+      .h-5050__copy { padding: 48px 24px; }
+    }
+
+    /* --- Layout A editorial review --- */
+    .h-edrev {
+      background: var(--br-alt-bg);
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      min-height: 540px;
+    }
+    .h-edrev__media {
+      position: relative;
+      overflow: hidden;
+    }
+    .h-edrev__media img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .h-edrev__copy {
+      padding: 72px 56px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .h-edrev__rating {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      color: var(--br-text-mute);
+      margin: 0 0 30px;
+    }
+    .h-edrev__stars {
+      color: var(--br-star);
+      font-size: 16px;
+      letter-spacing: 0.12em;
+    }
+    .h-edrev__quote {
+      font-size: clamp(22px, 2.5vw, 32px);
+      font-weight: 300;
+      line-height: 1.35;
+      margin: 0 0 32px;
+      letter-spacing: -0.01em;
+      max-width: 500px;
+    }
+    .h-edrev__quote strong { font-weight: 600; }
+    .h-edrev__attr {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--br-text-mute);
+      margin: 0 0 6px;
+    }
+    .h-edrev__detail {
+      font-size: 13px;
+      color: var(--br-text-soft);
+      margin: 0;
+    }
+    @media (max-width: 900px) {
+      .h-edrev { grid-template-columns: 1fr; }
+      .h-edrev__media { min-height: 360px; }
+      .h-edrev__copy { padding: 48px 24px; }
+    }
+
+    /* --- Home full-bleed image --- */
+    .h-fullbleed {
+      position: relative;
+      min-height: 60vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      text-align: center;
+    }
+    .h-fullbleed__img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .h-fullbleed::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.35);
+      z-index: 1;
+    }
+    .h-fullbleed__copy {
+      position: relative;
+      z-index: 2;
+      padding: 64px 32px;
+      max-width: 720px;
+    }
+    .h-fullbleed__title {
+      font-size: clamp(32px, 5vw, 60px);
+      font-weight: 300;
+      color: #fff;
+      margin: 0 0 16px;
+      letter-spacing: -0.02em;
+      line-height: 1.08;
+    }
+    .h-fullbleed__title strong { font-weight: 600; }
+    .h-fullbleed__sub {
+      font-size: 17px;
+      color: rgba(255,255,255,0.8);
+      margin: 0 0 32px;
+      line-height: 1.55;
+    }
+    .h-fullbleed__cta {
+      display: inline-block;
+      background: #fff;
+      color: var(--br-text);
+      padding: 15px 30px;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      text-decoration: none;
+    }
+    .h-fullbleed__cta:hover { opacity: 0.88; }
   </style>
 
   <script type="application/ld+json">
@@ -952,7 +1140,55 @@
 </section>
 
 <!-- ============================================================
-     12. GUARANTEE
+     12a. 50/50 MEDIA SPLIT — "Why not have the right gear?"
+     ============================================================ -->
+<section class="h-5050">
+  <div class="h-5050__media">
+    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect fill='%23e8e0d8' width='800' height='600'/%3E%3Ctext x='400' y='300' text-anchor='middle' fill='%239c8b7e' font-size='24' font-family='sans-serif'%3ELifestyle — At the Barre%3C/text%3E%3C/svg%3E" alt="Athlete at the barre wearing Barreletics">
+  </div>
+  <div class="h-5050__copy">
+    <p class="h-5050__eyebrow">The right gear matters</p>
+    <h2 class="h-5050__title">You already <strong>invest</strong> in the practice.<br>Invest in the <strong>grip.</strong></h2>
+    <p class="h-5050__body">You're spending time, energy, and money on classes. Why compromise with socks that slide, fray, and need replacing every month? One pair. Hundreds of classes.</p>
+    <a href="Barreletics PDP - Final.html" class="h-5050__cta">Shop now →</a>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     12b. LAYOUT A — EDITORIAL HERO REVIEW
+     ============================================================ -->
+<section class="h-edrev">
+  <div class="h-edrev__media">
+    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect fill='%23d4ccc4' width='800' height='600'/%3E%3Ctext x='400' y='300' text-anchor='middle' fill='%239c8b7e' font-size='22' font-family='sans-serif'%3ECustomer — Studio Close-up%3C/text%3E%3C/svg%3E" alt="Customer wearing Barreletics in studio">
+  </div>
+  <div class="h-edrev__copy">
+    <div class="h-edrev__rating">
+      <span class="h-edrev__stars">★★★★★</span>
+      <span>Verified buyer</span>
+    </div>
+    <blockquote class="h-edrev__quote">"I run a barre studio and we now <strong>stock them for all new students.</strong> They actually grip the carriage instead of sliding. Worth every penny."</blockquote>
+    <p class="h-edrev__attr">Priya R. · Studio Owner</p>
+    <p class="h-edrev__detail">Onyx · Purchased 3 weeks ago</p>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     12c. FULL-BLEED STATEMENT IMAGE
+     ============================================================ -->
+<section class="h-fullbleed">
+  <img class="h-fullbleed__img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1600' height='900'%3E%3Crect fill='%231a1a1a' width='1600' height='900'/%3E%3Ctext x='800' y='450' text-anchor='middle' fill='%23555' font-size='32' font-family='sans-serif'%3EFull-bleed — Studio Aerial%3C/text%3E%3C/svg%3E" alt="Aerial view of reformer studio">
+  <div class="h-fullbleed__copy">
+    <h2 class="h-fullbleed__title">The sock era <strong>is over.</strong></h2>
+    <p class="h-fullbleed__sub">360° grip. Zero latex. Zero silicone. Outlasts 8+ pairs of grip socks. Made in the USA.</p>
+    <a href="Barreletics PDP - Final.html" class="h-fullbleed__cta">See the difference →</a>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     13. GUARANTEE
      ============================================================ -->
 <section class="h-guar">
   <div class="h-guar__inner">

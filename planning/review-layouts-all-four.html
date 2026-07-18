@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Review Layouts — All Four Options</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --br-bg: #fff;
+      --br-alt-bg: #f9f7f4;
+      --br-text: #1c1916;
+      --br-text-soft: #6b645a;
+      --br-text-mute: #9a9182;
+      --br-line: #e6e6e6;
+      --br-accent: #c45c3f;
+      --br-star: #d4af37;
+      --br-le: #2563eb;
+      --br-le-bg: rgba(37,99,235,0.08);
+      --br-button: #1c1916;
+      --br-button-text: #fff;
+
+      --m-bg: #f1ede4;
+      --m-surface: #faf8f3;
+      --m-ink: #1c1916;
+      --m-soft: #6b645a;
+      --m-mute: #9a9182;
+      --m-line: #e2dccf;
+      --m-accent: #c45c3f;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif; color: #1c1916; background: #fff; line-height: 1.5; }
+
+    .divider { padding: 40px; background: #1c1916; color: #fff; text-align: center; font-size: 14px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+    .divider small { display: block; margin-top: 8px; font-size: 11px; font-weight: 400; letter-spacing: 0.06em; color: rgba(255,255,255,0.6); text-transform: none; }
+
+    /* ═══════════════════════════════════════
+       LAYOUT A: Matured Editorial (m-rev)
+       ═══════════════════════════════════════ */
+    .m-rev { background: var(--m-surface); display: grid; grid-template-columns: 1fr 1.1fr; min-height: 540px; }
+    .m-rev__media { position: relative; overflow: hidden; }
+    .m-rev__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .m-rev__copy { padding: 72px 56px; display: flex; flex-direction: column; justify-content: center; }
+    .m-rev__rating { display: flex; align-items: center; gap: 10px; font-size: 12px; letter-spacing: 0.06em; color: var(--m-soft); margin: 0 0 30px; }
+    .m-rev__rating b { color: var(--m-ink); font-weight: 600; }
+    .m-rev__rating-stars { color: var(--m-accent); letter-spacing: 2px; font-size: 13px; }
+    .m-rev__quote { font-size: clamp(24px, 2.7vw, 34px); font-weight: 300; letter-spacing: -0.02em; line-height: 1.18; color: var(--m-ink); margin: 0; }
+    .m-rev__quote strong { font-weight: 600; }
+    .m-rev__attr { margin: 28px 0 0; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--m-mute); }
+    .m-rev__attr b { color: var(--m-ink); font-weight: 600; }
+    .m-rev__support { list-style: none; margin: 34px 0 0; padding: 26px 0 0; border-top: 1px solid var(--m-line); display: flex; flex-direction: column; gap: 16px; }
+    .m-rev__support li { font-size: 14px; line-height: 1.5; color: var(--m-soft); }
+    .m-rev__support b { color: var(--m-ink); font-weight: 600; }
+
+    /* ═══════════════════════════════════════
+       LAYOUT B: v11-rc Masonry with Photos
+       ═══════════════════════════════════════ */
+    .v11-rev2 { padding: clamp(56px,7vw,96px) clamp(24px,5vw,64px); background: var(--br-alt-bg); }
+    .v11-rev2__inner { max-width: 1320px; margin: 0 auto; }
+    .v11-rev2__head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; margin-bottom: 40px; padding-bottom: 26px; border-bottom: 1px solid var(--br-line); }
+    .v11-rev2__eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--br-accent); margin: 0 0 10px; }
+    .v11-rev2__title { font-size: clamp(26px,3vw,40px); font-weight: 500; letter-spacing: -0.015em; margin: 0; line-height: 1.05; }
+    .v11-rev2__summary { font-size: 14px; color: var(--br-text-soft); margin: 10px 0 0; }
+    .v11-rev2__summary b { color: var(--br-text); font-weight: 600; }
+    .v11-rev2__link { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--br-text); text-decoration: none; border-bottom: 1px solid var(--br-text); padding-bottom: 2px; font-weight: 600; white-space: nowrap; }
+    .v11-rev2__grid { column-count: 3; column-gap: 16px; }
+    .v11-rc { break-inside: avoid; margin: 0 0 16px; background: #fff; border: 1px solid var(--br-line); display: flex; flex-direction: column; }
+    .v11-rc__media { overflow: hidden; position: relative; }
+    .v11-rc__media img { width: 100%; height: auto; object-fit: cover; display: block; }
+    .v11-rc__tag { position: absolute; left: 12px; bottom: 12px; background: rgba(0,0,0,0.55); color: #fff; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 9px; backdrop-filter: blur(4px); }
+    .v11-rc__body { padding: 22px 22px 24px; }
+    .v11-rc__stars { color: var(--br-star); font-size: 14px; letter-spacing: 1.5px; margin-bottom: 11px; }
+    .v11-rc__badge { display: inline-block; font-size: 9.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 8px; background: var(--br-le-bg); color: var(--br-le); margin-bottom: 11px; }
+    .v11-rc__quote { font-size: 15px; line-height: 1.55; color: var(--br-text); margin: 0 0 15px; letter-spacing: -0.005em; }
+    .v11-rc--media .v11-rc__quote { font-size: 14px; }
+    .v11-rc__attr { font-size: 11px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--br-text-mute); }
+
+    /* ═══════════════════════════════════════
+       LAYOUT C: PDP Reviews Grid (2-col feed)
+       ═══════════════════════════════════════ */
+    .pdp-reviews-wrap { padding: clamp(56px,7vw,96px) clamp(24px,5vw,64px); background: #fff; }
+    .pdp-reviews-wrap__inner { max-width: 1100px; margin: 0 auto; }
+    .pdp-reviews__head { display: flex; align-items: end; justify-content: space-between; margin-bottom: 32px; gap: 24px; flex-wrap: wrap; padding-bottom: 24px; border-bottom: 1px solid var(--br-line); }
+    .pdp-reviews__head-bigstars { font-size: 32px; color: var(--br-accent); letter-spacing: 0.18em; line-height: 1; }
+    .pdp-reviews__head-summary { font-size: 14px; color: var(--br-text-soft); margin-top: 4px; }
+    .pdp-reviews__head-summary b { color: var(--br-text); font-weight: 600; }
+    .pdp-reviews__grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0; border-top: 1px solid var(--br-line); }
+    .pdp-review { padding: 24px 32px; border-bottom: 1px solid var(--br-line); border-right: 1px solid var(--br-line); display: flex; flex-direction: column; gap: 12px; }
+    .pdp-review:nth-child(2n) { border-right: 0; }
+    .pdp-review__head { display: flex; align-items: center; justify-content: space-between; font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--br-text-soft); }
+    .pdp-review__stars { color: var(--br-accent); letter-spacing: 0.16em; font-size: 13px; }
+    .pdp-review__verified { display: inline-flex; align-items: center; gap: 6px; }
+    .pdp-review__verified::before { content: "✓"; color: var(--br-accent); font-weight: 700; }
+    .pdp-review__title { font-size: 15px; font-weight: 600; margin: 0; letter-spacing: -0.005em; }
+    .pdp-review__body { font-size: 14px; line-height: 1.6; color: var(--br-text); margin: 0; }
+    .pdp-review__attr { font-size: 11.5px; letter-spacing: 0.06em; color: var(--br-text-soft); margin: 0; }
+    .pdp-review__attr b { color: var(--br-text); font-weight: 600; }
+    .pdp-reviews__foot { display: flex; justify-content: space-between; align-items: center; gap: 24px; margin-top: 32px; flex-wrap: wrap; }
+    .pdp-reviews__more { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--br-text); text-decoration: none; border-bottom: 1px solid var(--br-text); padding-bottom: 2px; font-weight: 500; }
+    .pdp-reviews__write { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; background: var(--br-text); color: #fff; padding: 12px 20px; font-weight: 700; }
+
+    /* ═══════════════════════════════════════
+       LAYOUT D: v11 Reviews (3-col clean grid)
+       ═══════════════════════════════════════ */
+    .v11-reviews { padding: 80px 64px; background: var(--br-alt-bg); }
+    .v11-reviews__inner { max-width: 1280px; margin: 0 auto; }
+    .v11-reviews__head { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 56px; }
+    .v11-reviews__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+    .v11-review { background: var(--br-bg); padding: 40px; }
+    .v11-review__stars { font-size: 16px; color: var(--br-star); letter-spacing: 1px; margin-bottom: 16px; }
+    .v11-review__title { font-size: 17px; font-weight: 500; margin: 0 0 12px; }
+    .v11-review__body { font-size: 15px; line-height: 1.65; color: var(--br-text-soft); margin: 0 0 20px; }
+    .v11-review__attr { font-size: 12px; color: var(--br-text-mute); font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; }
+    .v11-review__badge { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 2px 8px; background: var(--br-le-bg); color: var(--br-le); margin-bottom: 12px; }
+
+    @media (max-width: 760px) {
+      .m-rev { grid-template-columns: 1fr; }
+      .m-rev__media { min-height: 300px; }
+      .v11-rev2__grid { column-count: 1; }
+      .pdp-reviews__grid { grid-template-columns: 1fr; }
+      .pdp-review { border-right: 0; }
+      .v11-reviews__grid { grid-template-columns: 1fr; }
+      .v11-reviews { padding: 48px 24px; }
+    }
+    @media (max-width: 1100px) {
+      .v11-rev2__grid { column-count: 2; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="divider">
+  LAYOUT A — Matured Editorial
+  <small>Single featured review + half-page customer image — standalone component</small>
+</div>
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<div class="m-rev">
+  <div class="m-rev__media">
+    <img src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=800" alt="Customer in studio" />
+  </div>
+  <div class="m-rev__copy">
+    <p class="m-rev__rating"><span class="m-rev__rating-stars">★★★★★</span><b>4.9</b>&nbsp;· 294 verified reviews</p>
+    <p class="m-rev__quote">"I was back to the footwork series after almost a year off the foot bar. I finally <strong>feel secure on the equipment again.</strong>"</p>
+    <p class="m-rev__attr"><b>Donna R.</b> &nbsp;·&nbsp; Verified buyer, Pilates</p>
+    <ul class="m-rev__support">
+      <li>"At 70, I can do advanced moves on the Cadillac — <b>the grip never fails.</b>"</li>
+      <li>"I keep a pair in my bag for every class and <b>recommend them to my students.</b>"</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="divider">
+  LAYOUT B — v11 Masonry Cards (with Customer Photos)
+  <small>Pinterest-style masonry — mix of image cards + text-only — for collection pages</small>
+</div>
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<section class="v11-rev2">
+  <div class="v11-rev2__inner">
+    <div class="v11-rev2__head">
+      <div>
+        <p class="v11-rev2__eyebrow">Reviews</p>
+        <h2 class="v11-rev2__title">Real people. Real results.</h2>
+        <p class="v11-rev2__summary"><b>4.9</b> average · 294 verified reviews</p>
+      </div>
+      <a href="#" class="v11-rev2__link">Write a Review →</a>
+    </div>
+    <div class="v11-rev2__grid">
+      <div class="v11-rc v11-rc--media">
+        <div class="v11-rc__media">
+          <img src="https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=400" alt="Customer photo" style="aspect-ratio:1;" />
+          <span class="v11-rc__tag">Barre Instructor</span>
+        </div>
+        <div class="v11-rc__body">
+          <div class="v11-rc__stars">★★★★★</div>
+          <p class="v11-rc__quote">"I've tried everything. This is the only grip system that lasts through my entire class without adjusting."</p>
+          <p class="v11-rc__attr">Sarah M. · NYC</p>
+        </div>
+      </div>
+      <div class="v11-rc">
+        <div class="v11-rc__body">
+          <div class="v11-rc__stars">★★★★★</div>
+          <p class="v11-rc__quote">"No slipping in chair pose. No adjusting mid-class. This is what I've been waiting for."</p>
+          <p class="v11-rc__attr">Jessica R. · Studio Owner, LA</p>
+        </div>
+      </div>
+      <div class="v11-rc v11-rc--media">
+        <div class="v11-rc__media">
+          <img src="https://barreletics.com/cdn/shop/files/A14_TopBottom_LightGrey-1000x1000_d30b6fcb-229e-4af9-8062-e1c4901df31e.jpg?v=1773920300&width=400" alt="Customer photo" style="aspect-ratio:4/3;" />
+          <span class="v11-rc__tag">Pilates Professional</span>
+        </div>
+        <div class="v11-rc__body">
+          <div class="v11-rc__stars">★★★★★</div>
+          <p class="v11-rc__quote">"After a year of daily use, zero degradation. This is a genuine upgrade from disposable socks."</p>
+          <p class="v11-rc__attr">Marcus L. · Chicago</p>
+        </div>
+      </div>
+      <div class="v11-rc">
+        <div class="v11-rc__body">
+          <div class="v11-rc__stars">★★★★★</div>
+          <span class="v11-rc__badge">Verified Instructor</span>
+          <p class="v11-rc__quote">"We recommend Barreletics to all new members now. It cuts our slip-related safety concerns to zero."</p>
+          <p class="v11-rc__attr">Brooklyn Barre Studio</p>
+        </div>
+      </div>
+      <div class="v11-rc v11-rc--media">
+        <div class="v11-rc__media">
+          <img src="https://barreletics.com/cdn/shop/files/Copreni_Final_More_grey.png?v=1774119812&width=400" alt="Customer photo" style="aspect-ratio:1;" />
+          <span class="v11-rc__tag">Megaformer</span>
+        </div>
+        <div class="v11-rc__body">
+          <div class="v11-rc__stars">★★★★★</div>
+          <p class="v11-rc__quote">"Invested a year ago. Still gripping the same. The upgrade I didn't know I needed."</p>
+          <p class="v11-rc__attr">Maya K. · Megaformer Lover</p>
+        </div>
+      </div>
+      <div class="v11-rc">
+        <div class="v11-rc__body">
+          <div class="v11-rc__stars">★★★★★</div>
+          <p class="v11-rc__quote">"I've bought 3 pairs for different studios. It's the only grip product I'll recommend to friends."</p>
+          <p class="v11-rc__attr">Amanda K. · Studio Hopper</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="divider">
+  LAYOUT C — PDP Reviews Grid (2-Column Bordered Feed)
+  <small>Continuous rows, 2-column grid with borders — closest to a Judge.me feed replacement</small>
+</div>
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<div class="pdp-reviews-wrap">
+  <div class="pdp-reviews-wrap__inner">
+    <div class="pdp-reviews__head">
+      <div>
+        <div class="pdp-reviews__head-bigstars">★★★★★</div>
+        <p class="pdp-reviews__head-summary"><b>4.9</b> average from <b>294</b> verified reviews</p>
+      </div>
+      <a href="#" class="pdp-reviews__write">Write a Review</a>
+    </div>
+
+    <div class="pdp-reviews__grid">
+      <div class="pdp-review">
+        <div class="pdp-review__head">
+          <span class="pdp-review__stars">★★★★★</span>
+          <span class="pdp-review__verified">Verified Buyer</span>
+        </div>
+        <h4 class="pdp-review__title">Finally feel secure on the reformer</h4>
+        <p class="pdp-review__body">I was back to the footwork series after almost a year off the foot bar. I finally feel secure on the equipment again. The grip is incredible and doesn't degrade after washing.</p>
+        <p class="pdp-review__attr"><b>Donna R.</b> · Pilates · 3 weeks ago</p>
+      </div>
+
+      <div class="pdp-review">
+        <div class="pdp-review__head">
+          <span class="pdp-review__stars">★★★★★</span>
+          <span class="pdp-review__verified">Verified Buyer</span>
+        </div>
+        <h4 class="pdp-review__title">Best grip socks I've ever owned</h4>
+        <p class="pdp-review__body">I've tried everything on the market. This is the only grip system that lasts through my entire class without adjusting. My students notice the difference immediately.</p>
+        <p class="pdp-review__attr"><b>Sarah M.</b> · Barre Instructor · 1 month ago</p>
+      </div>
+
+      <div class="pdp-review">
+        <div class="pdp-review__head">
+          <span class="pdp-review__stars">★★★★★</span>
+          <span class="pdp-review__verified">Verified Buyer</span>
+        </div>
+        <h4 class="pdp-review__title">No slipping in chair pose</h4>
+        <p class="pdp-review__body">No slipping in chair pose. No adjusting mid-class. This is what I've been waiting for. Worth every penny.</p>
+        <p class="pdp-review__attr"><b>Jessica R.</b> · Studio Owner, LA · 1 month ago</p>
+      </div>
+
+      <div class="pdp-review">
+        <div class="pdp-review__head">
+          <span class="pdp-review__stars">★★★★★</span>
+          <span class="pdp-review__verified">Verified Buyer</span>
+        </div>
+        <h4 class="pdp-review__title">Zero degradation after a year</h4>
+        <p class="pdp-review__body">After a year of daily use, zero degradation. This is a genuine upgrade from disposable socks. I keep a pair in my bag for every class.</p>
+        <p class="pdp-review__attr"><b>Marcus L.</b> · Chicago · 2 months ago</p>
+      </div>
+
+      <div class="pdp-review">
+        <div class="pdp-review__head">
+          <span class="pdp-review__stars">★★★★★</span>
+          <span class="pdp-review__verified">Verified Buyer</span>
+        </div>
+        <h4 class="pdp-review__title">Recommend to all new members</h4>
+        <p class="pdp-review__body">We recommend Barreletics to all new members now. It cuts our slip-related safety concerns to zero. The quality is unmatched.</p>
+        <p class="pdp-review__attr"><b>Brooklyn Barre Studio</b> · 2 months ago</p>
+      </div>
+
+      <div class="pdp-review">
+        <div class="pdp-review__head">
+          <span class="pdp-review__stars">★★★★★</span>
+          <span class="pdp-review__verified">Verified Buyer</span>
+        </div>
+        <h4 class="pdp-review__title">The upgrade I didn't know I needed</h4>
+        <p class="pdp-review__body">Invested a year ago. Still gripping the same. The upgrade I didn't know I needed. I've bought 3 pairs for different studios.</p>
+        <p class="pdp-review__attr"><b>Maya K.</b> · Megaformer · 3 months ago</p>
+      </div>
+    </div>
+
+    <div class="pdp-reviews__foot">
+      <a href="#" class="pdp-reviews__more">Show More Reviews →</a>
+      <a href="#" class="pdp-reviews__write">Write a Review</a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="divider">
+  LAYOUT D — v11 Reviews (3-Column Clean Grid)
+  <small>Seamless 3-column grid, no borders, generous padding — text-only feed</small>
+</div>
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<section class="v11-reviews">
+  <div class="v11-reviews__inner">
+    <div class="v11-reviews__head">
+      <div>
+        <p class="v11-rev2__eyebrow">Reviews</p>
+        <h2 class="v11-rev2__title">What our community says</h2>
+        <p class="v11-rev2__summary"><b>4.9</b> average · 294 verified reviews</p>
+      </div>
+      <a href="#" class="v11-rev2__link">Read All Reviews →</a>
+    </div>
+    <div class="v11-reviews__grid">
+      <div class="v11-review">
+        <div class="v11-review__stars">★★★★★</div>
+        <span class="v11-review__badge">Verified Instructor</span>
+        <h4 class="v11-review__title">Finally feel secure on the reformer</h4>
+        <p class="v11-review__body">I was back to the footwork series after almost a year off the foot bar. I finally feel secure on the equipment again.</p>
+        <p class="v11-review__attr">Donna R. · Pilates</p>
+      </div>
+      <div class="v11-review">
+        <div class="v11-review__stars">★★★★★</div>
+        <h4 class="v11-review__title">Best grip socks I've ever owned</h4>
+        <p class="v11-review__body">I've tried everything. This is the only grip system that lasts through my entire class without adjusting.</p>
+        <p class="v11-review__attr">Sarah M. · Barre Instructor</p>
+      </div>
+      <div class="v11-review">
+        <div class="v11-review__stars">★★★★★</div>
+        <h4 class="v11-review__title">No slipping in chair pose</h4>
+        <p class="v11-review__body">No slipping in chair pose. No adjusting mid-class. This is what I've been waiting for. Worth every penny.</p>
+        <p class="v11-review__attr">Jessica R. · Studio Owner, LA</p>
+      </div>
+      <div class="v11-review">
+        <div class="v11-review__stars">★★★★★</div>
+        <span class="v11-review__badge">Verified Buyer</span>
+        <h4 class="v11-review__title">Zero degradation after a year</h4>
+        <p class="v11-review__body">After a year of daily use, zero degradation. This is a genuine upgrade from disposable socks.</p>
+        <p class="v11-review__attr">Marcus L. · Chicago</p>
+      </div>
+      <div class="v11-review">
+        <div class="v11-review__stars">★★★★★</div>
+        <h4 class="v11-review__title">Recommend to all new members</h4>
+        <p class="v11-review__body">We recommend Barreletics to all new members now. It cuts our slip-related safety concerns to zero.</p>
+        <p class="v11-review__attr">Brooklyn Barre Studio</p>
+      </div>
+      <div class="v11-review">
+        <div class="v11-review__stars">★★★★★</div>
+        <h4 class="v11-review__title">The upgrade I didn't know I needed</h4>
+        <p class="v11-review__body">Invested a year ago. Still gripping the same. The upgrade I didn't know I needed.</p>
+        <p class="v11-review__attr">Maya K. · Megaformer</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Layout C — PDP Reviews Grid (Judge.me Restyled) | Barreletics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --br-bg:           #ffffff;
+  --br-alt-bg:       #f9f9f9;
+  --br-alt-bg-2:     #f3f3f3;
+  --br-text:         #050505;
+  --br-text-soft:    #4a4a4a;
+  --br-text-mute:    #8a8a8a;
+  --br-line:         #e6e6e6;
+  --br-line-soft:    #efefef;
+  --br-accent:       #f97250;
+  --br-accent-hover: #e85e3c;
+  --br-coral:        var(--br-accent);
+  --br-sale:         var(--br-text);
+  --br-star:         #fbc02d;
+  --br-info:         #3a8de8;
+  --br-le:           #3a8de8;
+  --br-le-bg:        #eaf3fc;
+  --br-button:       #050505;
+  --br-button-text:  #ffffff;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+  background: var(--br-bg);
+  color: var(--br-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-wrap: pretty;
+}
+
+img { max-width: 100%; display: block; }
+
+/* ============================================================
+   PDP Reviews — Judge.me Restyled (from sections/testimonial.html)
+   ============================================================ */
+.pdp-reviews { padding: clamp(48px, 6vw, 80px) clamp(24px, 5vw, 64px); background: var(--br-bg); }
+.pdp-reviews__inner { max-width: 1100px; margin: 0 auto; }
+
+.pdp-reviews__head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  gap: 24px;
+  flex-wrap: wrap;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--br-line);
+}
+.pdp-reviews__head-bigstars {
+  font-size: 32px;
+  color: var(--br-accent);
+  letter-spacing: 0.18em;
+  line-height: 1;
+}
+.pdp-reviews__head-summary {
+  font-size: 14px;
+  color: var(--br-text-soft);
+  margin-top: 4px;
+}
+.pdp-reviews__head-summary b { color: var(--br-text); font-weight: 600; }
+
+.pdp-reviews__head-action {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  background: var(--br-text);
+  color: #fff;
+  padding: 12px 20px;
+  font-weight: 700;
+}
+.pdp-reviews__head-action:hover { opacity: 0.88; }
+
+.pdp-reviews__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--br-line);
+}
+
+.pdp-review {
+  padding: 24px 32px;
+  border-bottom: 1px solid var(--br-line);
+  border-right: 1px solid var(--br-line);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.pdp-review:nth-child(2n) { border-right: 0; }
+
+.pdp-review__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--br-text-soft);
+}
+.pdp-review__stars { color: var(--br-accent); letter-spacing: 0.16em; font-size: 13px; }
+.pdp-review__verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.pdp-review__verified::before {
+  content: "✓";
+  color: var(--br-accent);
+  font-weight: 700;
+}
+.pdp-review__title {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: -0.005em;
+}
+.pdp-review__body {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--br-text);
+  margin: 0;
+}
+.pdp-review__photo {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid var(--br-line);
+  margin-top: 4px;
+}
+.pdp-review__attr {
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  color: var(--br-text-soft);
+  margin: 0;
+}
+.pdp-review__attr b { color: var(--br-text); font-weight: 600; }
+
+@media (max-width: 720px) {
+  .pdp-reviews__grid { grid-template-columns: 1fr; }
+  .pdp-review { border-right: 0; }
+}
+
+.pdp-reviews__foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  margin-top: 32px;
+  flex-wrap: wrap;
+}
+.pdp-reviews__more {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--br-text);
+  text-decoration: none;
+  border-bottom: 1px solid var(--br-text);
+  padding-bottom: 2px;
+  font-weight: 500;
+}
+.pdp-reviews__write {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  background: var(--br-text);
+  color: #fff;
+  padding: 12px 20px;
+  font-weight: 700;
+}
+.pdp-reviews__write:hover { opacity: 0.88; }
+</style>
+</head>
+<body>
+
+<section class="pdp-reviews">
+  <div class="pdp-reviews__inner">
+    <div class="pdp-reviews__head">
+      <div>
+        <div class="pdp-reviews__head-bigstars">★★★★★</div>
+        <p class="pdp-reviews__head-summary"><b>4.9</b> out of 5 · Based on 294 reviews</p>
+      </div>
+      <a href="#" class="pdp-reviews__head-action">Write a Review</a>
+    </div>
+
+    <div class="pdp-reviews__grid">
+      <!-- Review 1 — text only -->
+      <div class="pdp-review">
+        <div class="pdp-review__head">
+          <span class="pdp-review__stars">★★★★★</span>
+          <span class="pdp-review__verified">Verified Buyer</span>
+        </div>
+        <h4 class="pdp-review__title">Game changer for my barre classes</h4>
+        <p class="pdp-review__body">I've been through so many grip socks that lose their stick after a few washes. These are completely different — the grip pattern is still 100% intact after 3 months of weekly use. No slipping on the reformer, no adjusting mid-class.</p>
+        <p class="pdp-review__attr"><b>Sarah M.</b> · New York, NY · Jun 2025</p>
+      </div>
+
+      <!-- Review 2 — text only -->
+      <div class="pdp-review">
+        <div class="pdp-review__head">
+          <span class="pdp-review__stars">★★★★★</span>
+          <span class="pdp-review__verified">Verified Buyer</span>
+        </div>
+        <h4 class="pdp-review__title">Worth every penny</h4>
+        <p class="pdp-review__body">I was skeptical about the price point, but these have outlasted 4 pairs of cheaper alternatives. The arch support is also surprisingly good — my feet don't fatigue like they used to during longer sessions.</p>
+        <p class="pdp-review__attr"><b>Jessica R.</b> · Los Angeles, CA · May 2025</p>
+      </div>
+
+      <!-- Review 3 — WITH customer photo -->
+      <div class="pdp-review">
+        <div class="pdp-review__head">
+          <span class="pdp-review__stars">★★★★★</span>
+          <span class="pdp-review__verified">Verified Buyer</span>
+        </div>
+        <h4 class="pdp-review__title">My studio switched entirely</h4>
+        <p class="pdp-review__body">After testing these with our instructors for a month, we now recommend Barreletics to every new member. The grip consistency class after class is unmatched. Zero slip-related incidents since we made the switch.</p>
+        <img class="pdp-review__photo" src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=600" alt="Customer photo — socks in studio" />
+        <p class="pdp-review__attr"><b>Marcus L.</b> · Chicago, IL · May 2025</p>
+      </div>
+
+      <!-- Review 4 — text only -->
+      <div class="pdp-review">
+        <div class="pdp-review__head">
+          <span class="pdp-review__stars">★★★★★</span>
+          <span class="pdp-review__verified">Verified Buyer</span>
+        </div>
+        <h4 class="pdp-review__title">Finally — no bunching on the reformer</h4>
+        <p class="pdp-review__body">The fit around the toes is perfect. No excess fabric bunching up during footwork on the reformer. They stay exactly where they're supposed to. Already ordered a second pair in black.</p>
+        <p class="pdp-review__attr"><b>Tina H.</b> · Portland, OR · Apr 2025</p>
+      </div>
+
+      <!-- Review 5 — text only -->
+      <div class="pdp-review">
+        <div class="pdp-review__head">
+          <span class="pdp-review__stars">★★★★☆</span>
+          <span class="pdp-review__verified">Verified Buyer</span>
+        </div>
+        <h4 class="pdp-review__title">Great grip, sizing runs slightly small</h4>
+        <p class="pdp-review__body">The grip is absolutely incredible — best I've tried. Only reason for 4 stars is I'm between sizes and the smaller one feels a touch snug. Would recommend sizing up if you're in between. The quality is outstanding though.</p>
+        <p class="pdp-review__attr"><b>Amanda K.</b> · Denver, CO · Apr 2025</p>
+      </div>
+
+      <!-- Review 6 — WITH customer photo -->
+      <div class="pdp-review">
+        <div class="pdp-review__head">
+          <span class="pdp-review__stars">★★★★★</span>
+          <span class="pdp-review__verified">Verified Buyer</span>
+        </div>
+        <h4 class="pdp-review__title">Megaformer approved</h4>
+        <p class="pdp-review__body">I teach 6 classes a day on the Megaformer. These socks grip the carriage better than anything else I've used. A year in and they're still performing like new. Attached a pic from today's class.</p>
+        <img class="pdp-review__photo" src="https://barreletics.com/cdn/shop/files/A14_TopBottom_LightGrey-1000x1000_d30b6fcb-229e-4af9-8062-e1c4901df31e.jpg?v=1773920300&width=600" alt="Customer photo — workout session" />
+        <p class="pdp-review__attr"><b>Maya K.</b> · Austin, TX · Mar 2025</p>
+      </div>
+
+      <!-- Review 7 — text only -->
+      <div class="pdp-review">
+        <div class="pdp-review__head">
+          <span class="pdp-review__stars">★★★★★</span>
+          <span class="pdp-review__verified">Verified Buyer</span>
+        </div>
+        <h4 class="pdp-review__title">Bought 3 pairs, zero regrets</h4>
+        <p class="pdp-review__body">One for barre, one for pilates, one for yoga. The grip performs differently than anything else on the market — it's not just rubber dots, it's a whole system. Friends keep asking what brand I'm wearing.</p>
+        <p class="pdp-review__attr"><b>Rachel D.</b> · Denver, CO · Mar 2025</p>
+      </div>
+
+      <!-- Review 8 — text only -->
+      <div class="pdp-review">
+        <div class="pdp-review__head">
+          <span class="pdp-review__stars">★★★★★</span>
+          <span class="pdp-review__verified">Verified Buyer</span>
+        </div>
+        <h4 class="pdp-review__title">The durability is real</h4>
+        <p class="pdp-review__body">I machine wash these weekly and after 8 months they look and perform like the day I bought them. The grip hasn't degraded at all. Compare that to my old brand where I was replacing every 6 weeks.</p>
+        <p class="pdp-review__attr"><b>Lauren P.</b> · Seattle, WA · Feb 2025</p>
+      </div>
+
+      <!-- Review 9 — text only -->
+      <div class="pdp-review">
+        <div class="pdp-review__head">
+          <span class="pdp-review__stars">★★★★★</span>
+          <span class="pdp-review__verified">Verified Buyer</span>
+        </div>
+        <h4 class="pdp-review__title">Perfect for hot yoga too</h4>
+        <p class="pdp-review__body">Wasn't sure these would work for hot yoga since my feet sweat a lot, but the grip actually seems to get better when wet. No sliding, even in a 95-degree room. Converted from going barefoot.</p>
+        <p class="pdp-review__attr"><b>Nina C.</b> · Miami, FL · Feb 2025</p>
+      </div>
+
+      <!-- Review 10 — text only -->
+      <div class="pdp-review">
+        <div class="pdp-review__head">
+          <span class="pdp-review__stars">★★★★★</span>
+          <span class="pdp-review__verified">Verified Buyer</span>
+        </div>
+        <h4 class="pdp-review__title">Instructor-approved quality</h4>
+        <p class="pdp-review__body">As a Lagree instructor, I'm on my feet 8 hours a day. These socks provide grip without compromising on comfort. The cushioning is minimal but effective — you still feel connected to the machine.</p>
+        <p class="pdp-review__attr"><b>Brooklyn Barre Studio</b> · Brooklyn, NY · Jan 2025</p>
+      </div>
+    </div>
+
+    <div class="pdp-reviews__foot">
+      <a href="#" class="pdp-reviews__more">Show More Reviews →</a>
+      <a href="#" class="pdp-reviews__write">Write a Review</a>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

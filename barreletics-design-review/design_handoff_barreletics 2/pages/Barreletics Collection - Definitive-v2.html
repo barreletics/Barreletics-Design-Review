@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Barreletics — Shop All Grippy Shoes | Closed Sole & Open Sole</title>
+  <meta name="description" content="Browse all Barreletics performance skins. Closed Sole or Open Sole — choose the grip shoe built for your barre, Pilates, reformer, or Megaformer practice. $74. Free shipping over $150.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif; color: #1c1916; background: #fff; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+    a { color: #1c1916; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    img { display: block; max-width: 100%; }
+
+    /* === TRUST STRIP === */
+    .trust-strip { background: #f5f2ec; padding: 14px 40px; }
+    .trust-strip__inner { max-width: 1200px; margin: 0 auto; text-align: center; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: #6b645a; }
+    .trust-strip__sep { color: #9a9182; margin: 0 8px; }
+
+    /* === COLLECTION HERO === */
+    .coll-hero { padding: 80px 40px 56px; max-width: 1200px; margin: 0 auto; }
+    .coll-hero__eyebrow { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #9a9182; font-weight: 600; margin: 0 0 12px; }
+    .coll-hero__title { font-size: 48px; font-weight: 700; line-height: 1.1; color: #1c1916; margin: 0 0 16px; }
+    .coll-hero__body { font-size: 16px; color: #4a4a4a; line-height: 1.6; max-width: 56ch; margin: 0; }
+
+    /* === SOLE EXPLAINER === */
+    .sole-explain { padding: 0 40px 64px; max-width: 1200px; margin: 0 auto; }
+    .sole-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .sole-card { border: 1px solid #d6cfc0; border-radius: 8px; padding: 32px; display: flex; flex-direction: column; gap: 12px; }
+    .sole-card__tag { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #8a8a8a; }
+    .sole-card__title { font-size: 22px; font-weight: 700; color: #1c1916; margin: 0; }
+    .sole-card__desc { font-size: 14px; color: #4a4a4a; line-height: 1.6; margin: 0; }
+    .sole-card__img { width: 100%; aspect-ratio: 16/9; background: #f5f2ec; border-radius: 4px; overflow: hidden; margin-top: 8px; }
+    .sole-card__img img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* === VARIANT GRID === */
+    .variants-section { padding: 0 40px 80px; max-width: 1200px; margin: 0 auto; }
+    .variants-toolbar { border-top: 1px solid #d6cfc0; padding: 13px 0; margin-bottom: 40px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; border-bottom: 1px solid #d6cfc0; }
+    .variants-tabs { display: flex; align-items: center; gap: 12px; }
+    .variants-utils { display: flex; align-items: center; gap: 16px; }
+    .var-grid { display: grid; grid-template-columns: repeat(4, 1fr); column-gap: 24px; row-gap: 48px; }
+    .var-card { display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .var-card__img { width: 100%; aspect-ratio: 1; overflow: hidden; background: #f5f2ec; margin-bottom: 16px; border-radius: 4px; position: relative; }
+    .var-card__img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s ease; }
+    .var-card__img:hover img { transform: scale(1.04); }
+    .var-card__badge { position: absolute; bottom: 8px; left: 8px; font-size: 9px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; background: rgba(28,25,22,0.7); color: #fff; padding: 3px 8px; border-radius: 2px; }
+    .var-card__name { font-size: 16px; font-weight: 700; color: #1c1916; margin: 0 0 4px; }
+    .var-card__meta { font-size: 12px; color: #8a8a8a; margin: 0 0 6px; }
+    .var-card__price { font-size: 14px; font-weight: 700; color: #1c1916; margin: 0 0 10px; }
+    .var-card__add { font-size: 12px; font-weight: 600; color: #1c1916; cursor: pointer; border-bottom: 1.5px solid #9a9182; padding-bottom: 2px; background: none; border-top: none; border-left: none; border-right: none; font-family: inherit; }
+
+    /* === 50/50 SPLITS === */
+    .split-section { display: grid; grid-template-columns: 1fr 1fr; min-height: 480px; }
+    .split-media { position: relative; overflow: hidden; min-height: 360px; }
+    .split-media img { width: 100%; height: 100%; object-fit: cover; display: block; position: absolute; inset: 0; }
+    .split-text { display: flex; flex-direction: column; justify-content: center; padding: 64px 56px; }
+    .split-text h2 { font-size: 32px; font-weight: 700; line-height: 1.15; color: #1c1916; margin: 0 0 14px; }
+    .split-text p { font-size: 15px; color: #4a4a4a; line-height: 1.6; margin: 0 0 20px; max-width: 36ch; }
+    .split-cta { display: inline-block; padding: 14px 28px; background: #1c1916; color: #fff; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; transition: background 0.2s; width: fit-content; }
+    .split-cta:hover { background: #c45c3f; text-decoration: none; }
+
+    /* === LIFESTYLE BREAK === */
+    .lifestyle-break { width: 100%; height: 320px; background: #d6cfc0; display: flex; align-items: center; justify-content: center; }
+    .lifestyle-break__label { font-size: 13px; color: #8a8a8a; letter-spacing: 0.04em; }
+
+    /* === TRUST BOTTOM === */
+    .trust-bottom { padding: 48px 40px; background: #f5f2ec; border-top: 1px solid #d6cfc0; }
+    .trust-bottom__inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: center; gap: 48px; flex-wrap: wrap; text-align: center; }
+    .trust-bottom__item { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .trust-bottom__item h4 { font-size: 13px; font-weight: 700; color: #1c1916; margin: 0; }
+    .trust-bottom__item p { font-size: 12px; color: #6b645a; margin: 0; }
+
+    /* === SEO/GEO SECTION === */
+    .geo-section { padding: 56px 40px; background: #fff; }
+    .geo-container { max-width: 900px; margin: 0 auto; }
+    .geo-item { border-top: 1px solid #d6cfc0; }
+    .geo-item:last-child { border-bottom: 1px solid #d6cfc0; }
+    .geo-item summary { cursor: pointer; font-size: 12px; font-weight: 500; color: #9a9182; padding: 14px 0; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+    .geo-item summary::after { content: "+"; font-size: 14px; color: #d6cfc0; }
+    .geo-item[open] summary::after { content: "−"; }
+    .geo-item div { padding: 0 0 14px; font-size: 12px; color: #9a9182; line-height: 1.7; }
+
+    /* === VIDEO PLACEHOLDER === */
+    .video-placeholder { width: 100%; height: 100%; min-height: 360px; background: #2d2926; display: flex; align-items: center; justify-content: center; position: relative; }
+    .video-placeholder::after { content: "▶"; font-size: 40px; color: rgba(255,255,255,0.7); width: 72px; height: 72px; display: flex; align-items: center; justify-content: center; border: 2px solid rgba(255,255,255,0.4); border-radius: 50%; }
+
+    /* === FOOTER === */
+    .site-footer { background: #1c1916; padding: 64px 40px 40px; }
+    .site-footer__inner { max-width: 1200px; margin: 0 auto; }
+    .site-footer__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; }
+    .site-footer__col h6 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #fff; margin: 0 0 20px; }
+    .site-footer__col ul { list-style: none; padding: 0; margin: 0; }
+    .site-footer__col li { margin: 0 0 10px; }
+    .site-footer__col a { font-size: 13px; font-weight: 400; color: #9a9182; text-decoration: none; transition: color 0.2s; }
+    .site-footer__col a:hover { color: #fff; text-decoration: none; }
+    .site-footer__bottom { display: flex; justify-content: space-between; align-items: center; padding: 24px 0 0; margin-top: 40px; border-top: 1px solid #333; }
+    .site-footer__copyright { font-size: 12px; color: #6b645a; }
+    .site-footer__usa { font-size: 12px; color: #8a8a8a; }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 1024px) {
+      .var-grid { grid-template-columns: repeat(3, 1fr) !important; }
+      .site-footer__grid { grid-template-columns: repeat(2, 1fr); }
+      .split-section { min-height: 400px; }
+    }
+
+    @media (max-width: 768px) {
+      .coll-hero { padding: 48px 16px 32px; }
+      .coll-hero__title { font-size: 32px; }
+      .sole-explain { padding: 0 16px 40px; }
+      .sole-cards { grid-template-columns: 1fr; }
+      .variants-section { padding: 0 16px 56px; }
+      .variants-toolbar { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .var-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 16px !important; }
+      .split-section { grid-template-columns: 1fr; min-height: auto; }
+      .split-media { min-height: 280px; position: relative; }
+      .split-text { padding: 40px 24px; }
+      .split-text h2 { font-size: 26px; }
+      .lifestyle-break { height: 220px; }
+      .trust-bottom { padding: 32px 16px; }
+      .trust-bottom__inner { gap: 20px; flex-direction: column; align-items: center; }
+      .geo-section { padding: 40px 16px; }
+      .trust-strip { padding: 12px 16px; }
+      .site-footer__grid { grid-template-columns: 1fr; }
+      .site-footer__bottom { flex-direction: column; gap: 8px; text-align: center; }
+      .site-footer { padding: 48px 16px 32px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════
+     TRUST STRIP
+     ═══════════════════════════════════════════════════════ -->
+<div class="trust-strip">
+  <div class="trust-strip__inner">
+    Free Shipping Over $150<span class="trust-strip__sep"> · </span>30-Day Returns<span class="trust-strip__sep"> · </span>90-Day Warranty<span class="trust-strip__sep"> · </span>Made in USA<span class="trust-strip__sep"> · </span>No Latex · No Silicone
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     1. COLLECTION HERO
+     ═══════════════════════════════════════════════════════ -->
+<section class="coll-hero">
+  <p class="coll-hero__eyebrow">The Studio Collection</p>
+  <h1 class="coll-hero__title">Shop All Performance Skins</h1>
+  <p class="coll-hero__body">One patented grip system, two builds. Closed Sole wraps your entire foot. Open Sole frees your heel for a barefoot feel. Same 360° grip, same durability, same $74. Choose the one that fits your practice.</p>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     2. OPEN vs CLOSED SOLE EXPLAINER
+     ═══════════════════════════════════════════════════════ -->
+<section class="sole-explain">
+  <div class="sole-cards">
+    <div class="sole-card">
+      <div class="sole-card__img">
+        <img src="https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=600" alt="Closed Sole">
+      </div>
+      <span class="sole-card__tag">Full Coverage</span>
+      <h3 class="sole-card__title">Closed Sole</h3>
+      <p class="sole-card__desc">Full coverage including heel — more protection everywhere. 360° grip across the entire underfoot. Ideal for reformer footwork, barre, and versatile enough for outdoor activities like paddleboarding or beach training.</p>
+    </div>
+    <div class="sole-card">
+      <div class="sole-card__img">
+        <img src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=600" alt="Open Sole">
+      </div>
+      <span class="sole-card__tag">Barefoot Feel</span>
+      <h3 class="sole-card__title">Open Sole</h3>
+      <p class="sole-card__desc">Open heel with a mid-foot vent — your heel contacts the surface directly for a grounded, barefoot-like feel with extra airflow. Same 360° grip where it matters most. Ideal for mat work, yoga, and heated studios.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     3. FULL VARIANT GRID — ALL PRODUCTS
+     ═══════════════════════════════════════════════════════ -->
+<section class="variants-section">
+  <div class="variants-toolbar">
+    <div class="variants-tabs">
+      <button id="tab-all" onclick="switchTab('all')" style="padding:8px 20px;font-size:11px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#fff;background:#1c1916;border:1px solid #1c1916;cursor:pointer;font-family:inherit;border-radius:4px;">All</button>
+      <button id="tab-closed" onclick="switchTab('closed')" style="padding:8px 20px;font-size:11px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#8a8a8a;background:#fff;border:1px solid #d6cfc0;cursor:pointer;font-family:inherit;border-radius:4px;">Closed Sole</button>
+      <button id="tab-open" onclick="switchTab('open')" style="padding:8px 20px;font-size:11px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#8a8a8a;background:#fff;border:1px solid #d6cfc0;cursor:pointer;font-family:inherit;border-radius:4px;">Open Sole</button>
+      <button disabled style="padding:8px 20px;font-size:11px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#ccc;background:#fff;border:1px solid #e6e6e6;cursor:default;font-family:inherit;border-radius:4px;">Outdoor</button>
+      <button disabled style="padding:8px 20px;font-size:11px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#ccc;background:#fff;border:1px solid #e6e6e6;cursor:default;font-family:inherit;border-radius:4px;">One-Off</button>
+    </div>
+    <div class="variants-utils">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:#4a4a4a;">Size</span>
+        <button id="size-m" onclick="switchSize('m')" style="font-size:11px;font-weight:700;color:#fff;background:#1c1916;padding:4px 10px;border:none;cursor:pointer;font-family:inherit;border-radius:3px;">M</button>
+        <button id="size-l" onclick="switchSize('l')" style="font-size:11px;font-weight:700;color:#8a8a8a;background:#f0efec;padding:4px 10px;border:none;cursor:pointer;font-family:inherit;border-radius:3px;">L</button>
+      </div>
+      <a href="#" style="font-size:11px;color:#8a8a8a;text-decoration:none;border-bottom:1px solid #d0c8be;padding-bottom:1px;">Size chart →</a>
+      <a href="#" style="font-size:11px;color:#8a8a8a;text-decoration:none;border-bottom:1px solid #d0c8be;padding-bottom:1px;">Compare styles →</a>
+    </div>
+  </div>
+
+  <!-- Product Grid -->
+  <div class="var-grid" id="product-grid">
+    <!-- Closed Sole: Onyx -->
+    <div class="var-card" data-sole="closed">
+      <div class="var-card__img"><img src="https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=600" alt="Onyx Closed"><span class="var-card__badge">Closed Sole</span></div>
+      <p class="var-card__name">Onyx</p>
+      <p class="var-card__meta">Closed Sole · Size M</p>
+      <p class="var-card__price">$74</p>
+      <button class="var-card__add">Quick Add →</button>
+    </div>
+    <!-- Closed Sole: Dusty Rose -->
+    <div class="var-card" data-sole="closed">
+      <div class="var-card__img"><img src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=600" alt="Dusty Rose Closed"><span class="var-card__badge">Closed Sole</span></div>
+      <p class="var-card__name">Dusty Rose</p>
+      <p class="var-card__meta">Closed Sole · Size L</p>
+      <p class="var-card__price">$74</p>
+      <button class="var-card__add">Quick Add →</button>
+    </div>
+    <!-- Closed Sole: Stone (Sold Out) -->
+    <div class="var-card" data-sole="closed" style="opacity:0.5;">
+      <div class="var-card__img"><img src="https://barreletics.com/cdn/shop/files/A14_TopBottom_LightGrey-1000x1000_d30b6fcb-229e-4af9-8062-e1c4901df31e.jpg?v=1773920300&width=600" alt="Stone Closed" style="filter:grayscale(0.4);"><span style="position:absolute;top:8px;left:8px;font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;background:#1c1916;color:#fff;padding:3px 8px;border-radius:2px;">Sold Out</span><span class="var-card__badge">Closed Sole</span></div>
+      <p class="var-card__name">Stone</p>
+      <p class="var-card__meta">Closed Sole · Size L</p>
+      <p class="var-card__price">$74</p>
+      <span style="font-size:12px;font-weight:500;color:#8a8a8a;">Sold Out</span>
+    </div>
+    <!-- Closed Sole: Coperni (LE) -->
+    <div class="var-card" data-sole="closed">
+      <div class="var-card__img"><img src="https://barreletics.com/cdn/shop/files/Copreni_Final_More_grey.png?v=1774119812&width=600" alt="Coperni Closed"><span style="position:absolute;top:8px;left:8px;font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;background:#458CD9;color:#fff;padding:3px 8px;border-radius:2px;">Limited Edition</span><span class="var-card__badge">Closed Sole</span></div>
+      <p class="var-card__name">Coperni</p>
+      <p class="var-card__meta">Closed Sole · Limited Edition</p>
+      <p class="var-card__price">$115</p>
+      <button class="var-card__add">Quick Add →</button>
+    </div>
+    <!-- Closed Sole: Ebony -->
+    <div class="var-card" data-sole="closed">
+      <div class="var-card__img"><img src="https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=600" alt="Ebony Closed"><span class="var-card__badge">Closed Sole</span></div>
+      <p class="var-card__name">Ebony</p>
+      <p class="var-card__meta">Closed Sole · Size M</p>
+      <p class="var-card__price">$74</p>
+      <button class="var-card__add">Quick Add →</button>
+    </div>
+    <!-- Closed Sole: Sage -->
+    <div class="var-card" data-sole="closed">
+      <div class="var-card__img"><img src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=600" alt="Sage Closed"><span class="var-card__badge">Closed Sole</span></div>
+      <p class="var-card__name">Sage</p>
+      <p class="var-card__meta">Closed Sole · Size L</p>
+      <p class="var-card__price">$74</p>
+      <button class="var-card__add">Quick Add →</button>
+    </div>
+    <!-- Closed Sole: Mist -->
+    <div class="var-card" data-sole="closed">
+      <div class="var-card__img"><img src="https://barreletics.com/cdn/shop/files/A14_TopBottom_LightGrey-1000x1000_d30b6fcb-229e-4af9-8062-e1c4901df31e.jpg?v=1773920300&width=600" alt="Mist Closed"><span class="var-card__badge">Closed Sole</span></div>
+      <p class="var-card__name">Mist</p>
+      <p class="var-card__meta">Closed Sole · Size M</p>
+      <p class="var-card__price">$74</p>
+      <button class="var-card__add">Quick Add →</button>
+    </div>
+    <!-- Closed Sole: Espresso -->
+    <div class="var-card" data-sole="closed">
+      <div class="var-card__img"><img src="https://barreletics.com/cdn/shop/files/Copreni_Final_More_grey.png?v=1774119812&width=600" alt="Espresso Closed"><span class="var-card__badge">Closed Sole</span></div>
+      <p class="var-card__name">Espresso</p>
+      <p class="var-card__meta">Closed Sole · Size L</p>
+      <p class="var-card__price">$74</p>
+      <button class="var-card__add">Quick Add →</button>
+    </div>
+    <!-- Closed Sole: Terracotta -->
+    <div class="var-card" data-sole="closed">
+      <div class="var-card__img"><img src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=600" alt="Terracotta Closed"><span class="var-card__badge">Closed Sole</span></div>
+      <p class="var-card__name">Terracotta</p>
+      <p class="var-card__meta">Closed Sole · Size M</p>
+      <p class="var-card__price">$74</p>
+      <button class="var-card__add">Quick Add →</button>
+    </div>
+    <!-- Closed Sole: Forest -->
+    <div class="var-card" data-sole="closed">
+      <div class="var-card__img"><img src="https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=600" alt="Forest Closed"><span class="var-card__badge">Closed Sole</span></div>
+      <p class="var-card__name">Forest</p>
+      <p class="var-card__meta">Closed Sole · Size L</p>
+      <p class="var-card__price">$74</p>
+      <button class="var-card__add">Quick Add →</button>
+    </div>
+    <!-- Closed Sole: Mocha -->
+    <div class="var-card" data-sole="closed">
+      <div class="var-card__img"><img src="https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=600" alt="Mocha Closed"><span class="var-card__badge">Closed Sole</span></div>
+      <p class="var-card__name">Mocha</p>
+      <p class="var-card__meta">Closed Sole · Size M</p>
+      <p class="var-card__price">$74</p>
+      <button class="var-card__add">Quick Add →</button>
+    </div>
+    <!-- Closed Sole: Cream -->
+    <div class="var-card" data-sole="closed">
+      <div class="var-card__img"><img src="https://barreletics.com/cdn/shop/files/A14_TopBottom_LightGrey-1000x1000_d30b6fcb-229e-4af9-8062-e1c4901df31e.jpg?v=1773920300&width=600" alt="Cream Closed"><span class="var-card__badge">Closed Sole</span></div>
+      <p class="var-card__name">Cream</p>
+      <p class="var-card__meta">Closed Sole · Size L</p>
+      <p class="var-card__price">$74</p>
+      <button class="var-card__add">Quick Add →</button>
+    </div>
+
+    <!-- Open Sole Variants -->
+    <div class="var-card" data-sole="open">
+      <div class="var-card__img"><img src="https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=600" alt="Onyx Open"><span class="var-card__badge">Open Sole</span></div>
+      <p class="var-card__name">Onyx</p>
+      <p class="var-card__meta">Open Sole · Size M</p>
+      <p class="var-card__price">$74</p>
+      <button class="var-card__add">Quick Add →</button>
+    </div>
+    <div class="var-card" data-sole="open">
+      <div class="var-card__img"><img src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=600" alt="Dusty Rose Open"><span class="var-card__badge">Open Sole</span></div>
+      <p class="var-card__name">Dusty Rose</p>
+      <p class="var-card__meta">Open Sole · Size L</p>
+      <p class="var-card__price">$74</p>
+      <button class="var-card__add">Quick Add →</button>
+    </div>
+    <div class="var-card" data-sole="open">
+      <div class="var-card__img"><img src="https://barreletics.com/cdn/shop/files/A14_TopBottom_LightGrey-1000x1000_d30b6fcb-229e-4af9-8062-e1c4901df31e.jpg?v=1773920300&width=600" alt="Stone Open"><span class="var-card__badge">Open Sole</span></div>
+      <p class="var-card__name">Stone</p>
+      <p class="var-card__meta">Open Sole · Size M</p>
+      <p class="var-card__price">$74</p>
+      <button class="var-card__add">Quick Add →</button>
+    </div>
+    <div class="var-card" data-sole="open">
+      <div class="var-card__img"><img src="https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=600" alt="Ebony Open"><span class="var-card__badge">Open Sole</span></div>
+      <p class="var-card__name">Ebony</p>
+      <p class="var-card__meta">Open Sole · Size L</p>
+      <p class="var-card__price">$74</p>
+      <button class="var-card__add">Quick Add →</button>
+    </div>
+    <div class="var-card" data-sole="open">
+      <div class="var-card__img"><img src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=600" alt="Sage Open"><span class="var-card__badge">Open Sole</span></div>
+      <p class="var-card__name">Sage</p>
+      <p class="var-card__meta">Open Sole · Size M</p>
+      <p class="var-card__price">$74</p>
+      <button class="var-card__add">Quick Add →</button>
+    </div>
+    <div class="var-card" data-sole="open">
+      <div class="var-card__img"><img src="https://barreletics.com/cdn/shop/files/A14_TopBottom_LightGrey-1000x1000_d30b6fcb-229e-4af9-8062-e1c4901df31e.jpg?v=1773920300&width=600" alt="Mist Open"><span class="var-card__badge">Open Sole</span></div>
+      <p class="var-card__name">Mist</p>
+      <p class="var-card__meta">Open Sole · Size L</p>
+      <p class="var-card__price">$74</p>
+      <button class="var-card__add">Quick Add →</button>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     4. LIFESTYLE BREAK IMAGE
+     ═══════════════════════════════════════════════════════ -->
+<div class="lifestyle-break">
+  <span class="lifestyle-break__label">[Lifestyle Image: Wide shot — studio class in session, multiple reformers, warm light, editorial crop]</span>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     5. 50/50 SPLIT — VIDEO + "NEVER LOSES SHAPE"
+     ═══════════════════════════════════════════════════════ -->
+<section class="split-section" style="background:#f5f2ec;">
+  <div class="split-media">
+    <div class="video-placeholder"></div>
+  </div>
+  <div class="split-text" style="background:#f5f2ec;">
+    <p style="font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:#9a9182;font-weight:600;margin:0 0 12px;">The Difference</p>
+    <h2>Never Loses Shape. Never Loses Grip.</h2>
+    <p>The patented grip surface never degrades — not after 100 classes, not after 1,000. No silicone dots to peel off. No fabric to absorb sweat. Just grip that performs class after class.</p>
+    <a href="#" class="split-cta">Learn More</a>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     6. 50/50 SPLIT — LIFESTYLE + COMMITMENT MESSAGE
+     ═══════════════════════════════════════════════════════ -->
+<section class="split-section" style="background:#fff;">
+  <div class="split-text">
+    <p style="font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:#9a9182;font-weight:600;margin:0 0 12px;">Your Practice, Elevated</p>
+    <h2>You commit to the class.<br>Commit to the gear.</h2>
+    <p>You already invest time, money, and energy into your practice. Your footwear should match that commitment. One pair. No more socks.</p>
+    <a href="#" class="split-cta">Shop Now</a>
+  </div>
+  <div class="split-media">
+    <div style="width:100%;height:100%;min-height:360px;background:#d6cfc0;display:flex;align-items:center;justify-content:center;position:absolute;inset:0;">
+      <span style="font-size:13px;color:#8a8a8a;letter-spacing:0.04em;">[Lifestyle Image: Close-up feet on barre, natural light, warm tones]</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     7. TRUST STRIP (BOTTOM)
+     ═══════════════════════════════════════════════════════ -->
+<section class="trust-bottom">
+  <div class="trust-bottom__inner">
+    <div class="trust-bottom__item">
+      <h4>360° Grip</h4>
+      <p>Full-contact, never degrades</p>
+    </div>
+    <div class="trust-bottom__item">
+      <h4>Ships 1–2 Days</h4>
+      <p>Free over $150</p>
+    </div>
+    <div class="trust-bottom__item">
+      <h4>30-Day Returns</h4>
+      <p>New, sellable condition</p>
+    </div>
+    <div class="trust-bottom__item">
+      <h4>90-Day Warranty</h4>
+      <p>Manufacturing defects</p>
+    </div>
+    <div class="trust-bottom__item">
+      <h4>Made in USA</h4>
+      <p>No latex, no silicone</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     8. SEO/GEO CONTENT — LIGHT ACCORDION
+     ═══════════════════════════════════════════════════════ -->
+<section class="geo-section">
+  <div class="geo-container">
+    <p style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:#8a8a8a;font-weight:700;margin:0 0 24px;">Trusted in studios everywhere</p>
+
+    <details class="geo-item">
+      <summary>Best grippy shoes for barre &amp; Pilates — how Barreletics compares</summary>
+      <div>Barreletics performance skins use a patented full-contact grip surface across the entire underfoot — not silicone dots, not rubber patches. The result: consistent traction from day 1 to day 500+, no replacements, and better performance per dollar than any grip sock on the market. Built for barre, reformer Pilates, Lagree, Megaformer, and yoga practitioners who demand more from their footwear.</div>
+    </details>
+    <details class="geo-item">
+      <summary>Florida, Texas &amp; the South — where studio culture runs deep</summary>
+      <div>From Miami and Sarasota to Austin and Houston, the South has some of the most vibrant barre, Pilates, and Lagree communities in the country. Florida's year-round studio culture — barre in Boca Raton, reformer in Tampa and Naples, Lagree in Miami Beach — demands grip that performs in heat and humidity. Texas studios from Austin to Dallas to San Antonio rely on 360° traction through flat back chair, water ski, footwork series, and Super Lunges.</div>
+    </details>
+    <details class="geo-item">
+      <summary>California studios — Los Angeles, Santa Barbara, San Diego &amp; beyond</summary>
+      <div>California's reformer and Megaformer community has adopted Barreletics as the performance standard. From Santa Monica and West Hollywood to Santa Barbara and San Diego, instructors trust the 360° grip through footwork, elephant, knee stretches, and the full Lagree repertoire — Catfish, Bear, Scrambled Eggs — even in high-heat rooms. No silicone, no latex, no compromises.</div>
+    </details>
+    <details class="geo-item">
+      <summary>New York, Northeast &amp; East Coast barre and Pilates studios</summary>
+      <div>Barreletics is the preferred grip footwear at barre, Pilates, and reformer studios across Manhattan, Brooklyn, and the greater NYC area — plus Pittsburgh, Philadelphia, Washington DC, and Boston. Whether you're in flat back chair and water ski at the barre, footwork series and bridging on the reformer, or Super Lunges on the Megaformer — the 360° grip surface handles every surface, every transition.</div>
+    </details>
+    <details class="geo-item">
+      <summary>International shipping — Canada, UK, Australia &amp; 30+ countries</summary>
+      <div>Barreletics ships worldwide to barre and Pilates studios across Toronto, Vancouver, London, Melbourne, Sydney, Mexico City, Dubai, Milan, and Singapore. The same 360° grip trusted by instructors across North America — built for reformer footwork and bridging, Cadillac apparatus, Classical Pilates, and contemporary mat work. Available in both Open Sole and Closed Sole builds.</div>
+    </details>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     FOOTER
+     ═══════════════════════════════════════════════════════ -->
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div class="site-footer__grid">
+      <div class="site-footer__col">
+        <h6>Shop</h6>
+        <ul>
+          <li><a href="#">Closed Sole</a></li>
+          <li><a href="#">Open Sole</a></li>
+          <li><a href="#">All Colors</a></li>
+          <li><a href="#">Gift Cards</a></li>
+          <li><a href="#">Bundles</a></li>
+        </ul>
+      </div>
+      <div class="site-footer__col">
+        <h6>Learn</h6>
+        <ul>
+          <li><a href="#">Our Story</a></li>
+          <li><a href="#">How It Works</a></li>
+          <li><a href="#">Journal</a></li>
+          <li><a href="#">Size Guide</a></li>
+          <li><a href="#">Compare</a></li>
+        </ul>
+      </div>
+      <div class="site-footer__col">
+        <h6>Support</h6>
+        <ul>
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Shipping &amp; Returns</a></li>
+          <li><a href="#">Warranty</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Track Order</a></li>
+        </ul>
+      </div>
+      <div class="site-footer__col">
+        <h6>Connect</h6>
+        <ul>
+          <li><a href="#">Instagram</a></li>
+          <li><a href="#">TikTok</a></li>
+          <li><a href="#">Facebook</a></li>
+          <li><a href="#">Pinterest</a></li>
+          <li><a href="#">Email Us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-footer__bottom">
+      <span class="site-footer__copyright">&copy; 2026 Barreletics. All rights reserved.</span>
+      <span class="site-footer__usa">Made in USA</span>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     SCRIPTS
+     ═══════════════════════════════════════════════════════ -->
+<script>
+var activeTab = 'all';
+
+function switchTab(tab) {
+  activeTab = tab;
+  var cards = document.querySelectorAll('#product-grid .var-card');
+  cards.forEach(function(card) {
+    if (tab === 'all') {
+      card.style.display = 'flex';
+    } else {
+      card.style.display = card.getAttribute('data-sole') === tab ? 'flex' : 'none';
+    }
+  });
+
+  var tabs = ['all', 'closed', 'open'];
+  tabs.forEach(function(t) {
+    var btn = document.getElementById('tab-' + t);
+    if (btn) {
+      btn.style.background = t === tab ? '#1c1916' : '#fff';
+      btn.style.color = t === tab ? '#fff' : '#8a8a8a';
+      btn.style.borderColor = t === tab ? '#1c1916' : '#d6cfc0';
+    }
+  });
+}
+
+function switchSize(size) {
+  document.getElementById('size-m').style.background = size === 'm' ? '#1c1916' : '#f0efec';
+  document.getElementById('size-m').style.color = size === 'm' ? '#fff' : '#8a8a8a';
+  document.getElementById('size-l').style.background = size === 'l' ? '#1c1916' : '#f0efec';
+  document.getElementById('size-l').style.color = size === 'l' ? '#fff' : '#8a8a8a';
+}
+</script>
+
+</body>
+</html>

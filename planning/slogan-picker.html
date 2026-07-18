@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Barreletics — Slogan Picker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #f5f2ec;
+      color: #1c1916;
+      -webkit-font-smoothing: antialiased;
+      padding: 32px 24px 120px;
+    }
+    .wrap { max-width: 820px; margin: 0 auto; }
+    h1 { font-size: 28px; font-weight: 700; margin: 0 0 6px; }
+    .sub { font-size: 14px; color: #6b645a; margin: 0 0 24px; line-height: 1.5; }
+
+    .toolbar {
+      display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+      margin-bottom: 20px; position: sticky; top: 0; z-index: 20;
+      background: #f5f2ec; padding: 12px 0; border-bottom: 1px solid #d6cfc0;
+    }
+    .btn {
+      border: 1px solid #d6cfc0; background: #fff; color: #1c1916;
+      padding: 8px 14px; border-radius: 4px; font-size: 12px; font-weight: 600;
+      cursor: pointer; font-family: inherit;
+    }
+    .btn:hover { border-color: #1c1916; }
+    .btn.active { background: #1c1916; color: #fff; border-color: #1c1916; }
+    .btn.coral { background: #c85a38; color: #fff; border-color: #c85a38; }
+    .counts { margin-left: auto; font-size: 12px; color: #6b645a; font-weight: 500; }
+
+    .kept-panel {
+      background: #fff; border: 1px solid #d6cfc0; border-radius: 8px;
+      padding: 16px 20px; margin-bottom: 28px;
+    }
+    .kept-panel h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: #8a8a8a; margin: 0 0 10px; }
+    .kept-list { font-size: 15px; line-height: 1.7; }
+    .kept-list li { margin-left: 18px; }
+    .kept-empty { color: #8a8a8a; font-size: 14px; font-style: italic; }
+
+    .group { margin-bottom: 28px; }
+    .group h3 {
+      font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em;
+      color: #8a8a8a; font-weight: 700; margin: 0 0 10px; padding-bottom: 6px;
+      border-bottom: 1px solid #d6cfc0;
+    }
+    .group.existing h3 { color: #c85a38; }
+
+    .row {
+      display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center;
+      background: #fff; border: 1px solid #d6cfc0; border-radius: 6px;
+      padding: 14px 16px; margin-bottom: 8px; transition: opacity 0.15s, border-color 0.15s;
+    }
+    .row.keep { border-color: #3a6b4a; background: #f4faf5; }
+    .row.kill { opacity: 0.45; border-color: #e0d9ce; background: #faf8f3; }
+    .row.kill .slogan { text-decoration: line-through; color: #8a8a8a; }
+    .slogan { font-size: 16px; font-weight: 600; margin: 0 0 4px; }
+    .meta { font-size: 12px; color: #6b645a; line-height: 1.4; }
+    .badge {
+      display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.06em; padding: 2px 6px; border-radius: 3px; margin-right: 6px;
+      background: #f0ebe3; color: #6b645a;
+    }
+    .badge.top { background: #fbe9e2; color: #c85a38; }
+    .badge.existing { background: #e6efe8; color: #3a6b4a; }
+
+    .actions { display: flex; gap: 6px; }
+    .actions button {
+      border: 1px solid #d6cfc0; background: #fff; border-radius: 4px;
+      padding: 8px 12px; font-size: 11px; font-weight: 700; cursor: pointer;
+      font-family: inherit; text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .actions button.keep-btn:hover, .row.keep .keep-btn { background: #3a6b4a; color: #fff; border-color: #3a6b4a; }
+    .actions button.kill-btn:hover, .row.kill .kill-btn { background: #8b3a3a; color: #fff; border-color: #8b3a3a; }
+    .actions button.unset-btn { color: #8a8a8a; }
+
+    .hidden { display: none !important; }
+
+    .export {
+      margin-top: 8px; width: 100%; min-height: 80px; font-family: inherit;
+      font-size: 13px; padding: 12px; border: 1px solid #d6cfc0; border-radius: 4px;
+      background: #faf8f3; color: #1c1916; resize: vertical;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Slogan Picker</h1>
+    <p class="sub">Check <strong>Keep</strong> or <strong>Eliminate</strong> for each line. Choices save in this browser. Copy your Keep list when done.</p>
+
+    <div class="toolbar">
+      <button class="btn active" data-filter="all" onclick="setFilter('all')">All</button>
+      <button class="btn" data-filter="keep" onclick="setFilter('keep')">Kept</button>
+      <button class="btn" data-filter="kill" onclick="setFilter('kill')">Eliminated</button>
+      <button class="btn" data-filter="unset" onclick="setFilter('unset')">Undecided</button>
+      <button class="btn coral" onclick="copyKept()">Copy Kept List</button>
+      <button class="btn" onclick="resetAll()">Reset</button>
+      <span class="counts" id="counts"></span>
+    </div>
+
+    <div class="kept-panel">
+      <h2>Kept for Home / Campaigns</h2>
+      <div id="kept-summary" class="kept-empty">Nothing kept yet — click Keep on slogans below.</div>
+      <textarea class="export hidden" id="export" readonly></textarea>
+    </div>
+
+    <div id="groups"></div>
+  </div>
+
+  <script>
+    const SLOGANS = [
+      // Round 2 — greatness pass (start here)
+      { id: 'r201', text: 'Socks were never the answer.', cat: 'Hero', place: 'Home hero', why: 'Ownable era tension — beats soft Round 1', group: 'Round 2 — Aim for great', top: true },
+      { id: 'r202', text: 'Grip the class. Own the hold.', cat: 'Hero', place: 'Hero / full-bleed', why: 'Nike energy, studio-specific', group: 'Round 2 — Aim for great', top: true },
+      { id: 'r203', text: "The floor doesn't move. Neither should you.", cat: 'Performance', place: 'Full-bleed / never-slip', why: 'Visual + Tesla-smart', group: 'Round 2 — Aim for great', top: true },
+      { id: 'r204', text: 'Disposable grip is over.', cat: 'Hero', place: 'Statement strip', why: 'Sharper than end-of-socks', group: 'Round 2 — Aim for great', top: true },
+      { id: 'r205', text: "Plant. Pulse. Don't slide.", cat: 'Movement', place: 'Disciplines / IG', why: 'Barre language, rhythmic', group: 'Round 2 — Aim for great', top: true },
+      { id: 'r206', text: 'The sock was a workaround.', cat: 'Hero', place: 'Home hero alt', why: '', group: 'Round 2 — Aim for great' },
+      { id: 'r207', text: "Grip socks had their decade.", cat: 'Hero', place: 'Full-bleed', why: '', group: 'Round 2 — Aim for great' },
+      { id: 'r208', text: "This is what socks couldn't be.", cat: 'Brand', place: '50/50 closer', why: '', group: 'Round 2 — Aim for great' },
+      { id: 'r209', text: 'Not a sock. A system.', cat: 'Brand', place: 'Category line', why: '', group: 'Round 2 — Aim for great' },
+      { id: 'r210', text: 'Dots peel. Practice doesn\'t wait.', cat: 'Problem', place: 'Problem section', why: '', group: 'Round 2 — Aim for great' },
+      { id: 'r211', text: "If you're adjusting, you're losing.", cat: 'Problem', place: 'Fed-up / problem', why: '', group: 'Round 2 — Aim for great' },
+      { id: 'r212', text: 'Sliding is not a technique.', cat: 'Problem', place: 'Statement / IG', why: '', group: 'Round 2 — Aim for great' },
+      { id: 'r213', text: 'Hold through the shake.', cat: 'Performance', place: 'Disciplines / barre', why: '', group: 'Round 2 — Aim for great' },
+      { id: 'r214', text: 'Zero slide. Full class.', cat: 'Performance', place: 'Hero sub / strip', why: '', group: 'Round 2 — Aim for great' },
+      { id: 'r215', text: 'Carriage. Mat. Barre. Same grip.', cat: 'Performance', place: 'Discipline strip', why: '', group: 'Round 2 — Aim for great' },
+      { id: 'r216', text: 'One pair outlasts the drawer.', cat: 'Value', place: 'Value / sock math cousin', why: '', group: 'Round 2 — Aim for great' },
+      { id: 'r217', text: 'Replace the habit, not the socks.', cat: 'Value', place: 'Conversion closer', why: '', group: 'Round 2 — Aim for great' },
+      { id: 'r218', text: 'Built where socks fail.', cat: 'Brand', place: 'Product story', why: '', group: 'Round 2 — Aim for great' },
+      { id: 'r219', text: 'Instructors already know.', cat: 'Brand', place: 'Trust / social proof', why: '', group: 'Round 2 — Aim for great' },
+      { id: 'r220', text: 'Skip the sock aisle.', cat: 'Instagram', place: 'IG', why: '', group: 'Round 2 — Aim for great' },
+
+      // Round 1 — Top picks (mixed quality)
+      { id: 'n1', text: 'The grip sock era ends here.', cat: 'Hero', place: 'Home hero / full-bleed', why: 'Echoes sock-era line without cloning it', group: 'Round 1 — Top picks', top: true },
+      { id: 'n2', text: 'Hold still. Move hard.', cat: 'Performance', place: 'Full-bleed / Instagram', why: 'Nike-short; grip + intensity', group: 'Round 1 — Top picks', top: true },
+      { id: 'n3', text: 'Your practice upgraded.', cat: 'Brand', place: '50/50 or Coperni closer', why: 'Alo calm — may be too soft', group: 'Round 1 — Top picks', top: true },
+
+      // Hero
+      { id: 'h1', text: "Grip that doesn't quit.", cat: 'Hero', place: 'Home hero / statement', why: '', group: 'New — Hero' },
+      { id: 'h2', text: 'Studio feet. Finally solved.', cat: 'Hero', place: 'Home hero alt', why: '', group: 'New — Hero' },
+      { id: 'h3', text: 'Stop adjusting. Start training.', cat: 'Hero', place: 'Hero / problem bridge', why: '', group: 'New — Hero' },
+      { id: 'h4', text: 'The end of grip socks.', cat: 'Hero', place: 'Full-bleed', why: '', group: 'New — Hero' },
+
+      // Problem
+      { id: 'p1', text: "Socks slip. This doesn't.", cat: 'Problem', place: 'Discipline / value strip', why: '', group: 'New — Problem / Solution' },
+      { id: 'p2', text: 'No dots. No peel. No excuses.', cat: 'Problem', place: 'Below variant grid', why: '', group: 'New — Problem / Solution' },
+      { id: 'p3', text: 'Every hold. Zero slide.', cat: 'Problem', place: 'Condensed Secure line', why: '', group: 'New — Problem / Solution' },
+      { id: 'p4', text: 'Adjust less. Achieve more.', cat: 'Problem', place: 'Softer Alo version', why: '', group: 'New — Problem / Solution' },
+
+      // Value
+      { id: 'v1', text: 'Buy once. Grip for years.', cat: 'Value', place: 'Home value moment', why: '', group: 'New — Value / Commitment' },
+      { id: 'v2', text: 'Two classes. Unlimited grip.', cat: 'Value', place: 'Cost framing, short', why: '', group: 'New — Value / Commitment' },
+      { id: 'v3', text: 'One investment. Every class.', cat: 'Value', place: 'Commitment framing', why: '', group: 'New — Value / Commitment' },
+
+      // Performance
+      { id: 'f1', text: '360° of locked-in.', cat: 'Performance', place: 'Shoe lineup strip', why: '', group: 'New — Performance' },
+      { id: 'f2', text: 'Transitions without the reset.', cat: 'Performance', place: 'Reformer / Megaformer', why: '', group: 'New — Performance' },
+      { id: 'f3', text: 'Barefoot control. Full-body grip.', cat: 'Performance', place: 'Identity + performance', why: '', group: 'New — Performance' },
+      { id: 'f4', text: 'Stay planted. Stay powerful.', cat: 'Performance', place: 'Alo energy', why: '', group: 'New — Performance' },
+
+      // Movement
+      { id: 'm1', text: 'Flat back. Water ski. Zero slip.', cat: 'Movement', place: 'Disciplines / geo', why: '', group: 'New — Movement-specific' },
+      { id: 'm2', text: 'Footwork that stays put.', cat: 'Movement', place: 'Reformer section', why: '', group: 'New — Movement-specific' },
+      { id: 'm3', text: 'From plank to pike — locked in.', cat: 'Movement', place: 'Lagree / Megaformer', why: '', group: 'New — Movement-specific' },
+      { id: 'm4', text: 'Warrior to downward dog. Same grip.', cat: 'Movement', place: 'Yoga', why: '', group: 'New — Movement-specific' },
+
+      // Brand
+      { id: 'b1', text: 'Performance skin. Not a sock.', cat: 'Brand', place: 'Category ownership', why: '', group: 'New — Brand identity' },
+      { id: 'b2', text: 'Built for the studio floor.', cat: 'Brand', place: 'Tesla-smart', why: '', group: 'New — Brand identity' },
+      { id: 'b3', text: 'Designed for the move.', cat: 'Brand', place: 'Short identity', why: '', group: 'New — Brand identity' },
+      { id: 'b4', text: 'The studio standard.', cat: 'Brand', place: 'Premium (use carefully)', why: '', group: 'New — Brand identity' },
+
+      // IG
+      { id: 'i1', text: 'No slide. All class.', cat: 'Instagram', place: 'IG caption / sticker', why: '', group: 'New — Instagram shorts' },
+      { id: 'i2', text: 'Grip > dots.', cat: 'Instagram', place: 'IG caption / sticker', why: '', group: 'New — Instagram shorts' },
+      { id: 'i3', text: 'One pair. Done repeating.', cat: 'Instagram', place: 'IG caption / sticker', why: '', group: 'New — Instagram shorts' },
+      { id: 'i4', text: 'Second skin. First choice.', cat: 'Instagram', place: 'IG caption / sticker', why: '', group: 'New — Instagram shorts' },
+      { id: 'i5', text: 'Leave the socks in the drawer.', cat: 'Instagram', place: 'IG caption / sticker', why: '', group: 'New — Instagram shorts' },
+
+      // Existing strong (already approved)
+      { id: 'e1', text: 'The Pilates Sock Era is Over', cat: 'Existing', place: 'Hero', why: 'Already strong — keep in rotation', group: 'Existing — already strong', existing: true },
+      { id: 'e2', text: 'Unleash Your Best Workout', cat: 'Existing', place: 'Statement band', why: 'Already strong — keep in rotation', group: 'Existing — already strong', existing: true },
+      { id: 'e3', text: 'Let Us Knock Your Socks Off', cat: 'Existing', place: 'Brand signature', why: 'Already strong — keep in rotation', group: 'Existing — already strong', existing: true },
+      { id: 'e4', text: 'Secure in Every Hold. No Sliding. No Resets.', cat: 'Existing', place: 'Hero / performance', why: 'Already strong — keep in rotation', group: 'Existing — already strong', existing: true },
+      { id: 'e5', text: 'Never Loses Shape / Never Loses Grip', cat: 'Existing', place: '50/50 or video', why: 'Already strong — keep in rotation', group: 'Existing — already strong', existing: true },
+      { id: 'e6', text: 'Join the Movement', cat: 'Existing', place: 'Lifestyle full-bleed', why: 'Already strong — keep in rotation', group: 'Existing — already strong', existing: true },
+    ];
+
+    const KEY = 'barreletics-slogan-picker-v1';
+    let state = JSON.parse(localStorage.getItem(KEY) || '{}');
+    let filter = 'all';
+
+    function save() {
+      localStorage.setItem(KEY, JSON.stringify(state));
+      renderSummary();
+      updateCounts();
+    }
+
+    function setStatus(id, status) {
+      if (status === 'unset') delete state[id];
+      else state[id] = status;
+      save();
+      renderGroups();
+    }
+
+    function setFilter(f) {
+      filter = f;
+      document.querySelectorAll('.toolbar .btn[data-filter]').forEach(b => {
+        b.classList.toggle('active', b.dataset.filter === f);
+      });
+      renderGroups();
+    }
+
+    function resetAll() {
+      if (!confirm('Clear all Keep / Eliminate choices?')) return;
+      state = {};
+      save();
+      renderGroups();
+    }
+
+    function copyKept() {
+      const kept = SLOGANS.filter(s => state[s.id] === 'keep').map(s => s.text);
+      const text = kept.length ? kept.map(t => '• ' + t).join('\n') : '(none kept yet)';
+      const ta = document.getElementById('export');
+      ta.classList.remove('hidden');
+      ta.value = text;
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Kept list copied (' + kept.length + ')');
+      }).catch(() => {
+        ta.select();
+        alert('Select + copy the list in the box below');
+      });
+    }
+
+    function updateCounts() {
+      const keep = SLOGANS.filter(s => state[s.id] === 'keep').length;
+      const kill = SLOGANS.filter(s => state[s.id] === 'kill').length;
+      const unset = SLOGANS.length - keep - kill;
+      document.getElementById('counts').textContent =
+        keep + ' kept · ' + kill + ' eliminated · ' + unset + ' undecided';
+    }
+
+    function renderSummary() {
+      const kept = SLOGANS.filter(s => state[s.id] === 'keep');
+      const el = document.getElementById('kept-summary');
+      if (!kept.length) {
+        el.className = 'kept-empty';
+        el.textContent = 'Nothing kept yet — click Keep on slogans below.';
+        return;
+      }
+      el.className = 'kept-list';
+      el.innerHTML = '<ul>' + kept.map(s =>
+        '<li><strong>' + escapeHtml(s.text) + '</strong> <span style="color:#8a8a8a">(' + escapeHtml(s.cat) + ')</span></li>'
+      ).join('') + '</ul>';
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    function renderGroups() {
+      const container = document.getElementById('groups');
+      const groups = [];
+      SLOGANS.forEach(s => {
+        if (!groups.includes(s.group)) groups.push(s.group);
+      });
+
+      container.innerHTML = groups.map(gName => {
+        const items = SLOGANS.filter(s => s.group === gName).filter(s => {
+          const st = state[s.id] || 'unset';
+          if (filter === 'all') return true;
+          return st === filter;
+        });
+        if (!items.length) return '';
+        const isExisting = gName.startsWith('Existing');
+        return `
+          <div class="group ${isExisting ? 'existing' : ''}">
+            <h3>${escapeHtml(gName)}</h3>
+            ${items.map(s => {
+              const st = state[s.id] || 'unset';
+              return `
+                <div class="row ${st === 'keep' ? 'keep' : ''} ${st === 'kill' ? 'kill' : ''}">
+                  <div>
+                    <p class="slogan">
+                      ${s.top ? '<span class="badge top">Top pick</span>' : ''}
+                      ${s.existing ? '<span class="badge existing">Existing</span>' : ''}
+                      “${escapeHtml(s.text)}”
+                    </p>
+                    <p class="meta"><span class="badge">${escapeHtml(s.cat)}</span>${escapeHtml(s.place)}${s.why ? ' — ' + escapeHtml(s.why) : ''}</p>
+                  </div>
+                  <div class="actions">
+                    <button class="keep-btn" onclick="setStatus('${s.id}', 'keep')">Keep</button>
+                    <button class="kill-btn" onclick="setStatus('${s.id}', 'kill')">Eliminate</button>
+                    <button class="unset-btn" onclick="setStatus('${s.id}', 'unset')">Clear</button>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `;
+      }).join('');
+
+      updateCounts();
+      renderSummary();
+    }
+
+    renderGroups();
+  </script>
+</body>
+</html>
