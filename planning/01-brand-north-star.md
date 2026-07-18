@@ -1,8 +1,14 @@
 # 01 — Brand North Star
 
-**Status:** 🔵 Ready for Review
-**Last Updated:** 2026-07-18
-
+---
+document: 01 – Brand North Star
+version: 1.0
+status: 🔵 Ready for Review
+approved_by: —
+approval_date: —
+last_modified: 2026-07-18
+depends_on: []
+supersedes: [QA-01-BRAND-NORTH-STAR.md]
 ---
 
 ## Vision

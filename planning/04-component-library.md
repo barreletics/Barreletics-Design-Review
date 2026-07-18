@@ -1,10 +1,17 @@
 # 04 — Component Library
 
-**Status:** 🔵 Ready for Review
-**Last Updated:** 2026-07-18
-**Source:** Promoted from `component-inventory.md` (archived)
-
 ---
+document: 04 – Component Library
+version: 1.0
+status: 🔵 Ready for Review
+approved_by: —
+approval_date: —
+last_modified: 2026-07-18
+depends_on: [03]
+supersedes: [component-inventory.md]
+---
+
+**Source:** Promoted from `component-inventory.md` (archived)
 
 ## Component Index
 

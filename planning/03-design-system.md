@@ -1,8 +1,14 @@
 # 03 — Design System
 
-**Status:** 🔵 Ready for Review
-**Last Updated:** 2026-07-18
-
+---
+document: 03 – Design System
+version: 1.0
+status: 🔵 Ready for Review
+approved_by: —
+approval_date: —
+last_modified: 2026-07-18
+depends_on: [01, 02]
+supersedes: [QA-03-DESIGN-SYSTEM.md]
 ---
 
 ## Canonical Source

@@ -1,8 +1,14 @@
 # 13 — Knowledge Architecture
 
-**Status:** 🔵 Ready for Review
-**Last Updated:** 2026-07-18
-
+---
+document: 13 – Knowledge Architecture
+version: 1.0
+status: 🔵 Ready for Review
+approved_by: —
+approval_date: —
+last_modified: 2026-07-18
+depends_on: [07]
+supersedes: []
 ---
 
 ## Purpose
@@ -13,11 +19,47 @@ This document defines how knowledge flows throughout the company. The Master Pro
 
 ## Architecture
 
+Knowledge **originates** from upstream sources, is **validated and approved** in the Master Knowledge Base, and then **cascades** to downstream systems. No downstream system may invent facts — only reformat approved ones.
+
 ```
-                Master Product Knowledge Base (07)
-                              │
-          ┌───────────────────┼───────────────────┐
-          │                   │                   │
+UPSTREAM SOURCES
+├── Founder
+├── Manufacturing Partner
+├── Customer Support (Help Scout)
+├── Customer Reviews
+├── Product Testing
+└── Market Research
+        │
+        ▼
+MASTER KNOWLEDGE BASE (07)
+        │
+ ┌──────┼────────┐
+ │      │        │
+Website Help Scout Tidio AI
+ │      │        │
+ ├──────┼────────┤
+ │      │        │
+SEO/GEO Wholesale Internal Team
+ │      │        │
+ └──────┼────────┘
+        │
+ Future AI Systems
+```
+
+### Upstream → Knowledge Base (Ingestion)
+- **Founder:** Product vision, strategic decisions, positioning, pricing
+- **Manufacturing Partner:** Specs, materials data, QC results, production capabilities
+- **Customer Support (Help Scout):** Recurring questions, friction patterns, policy gaps
+- **Customer Reviews:** Verified performance claims, real-world use cases, testimonials
+- **Product Testing:** Durability data, surface performance, fit validation
+- **Market Research:** Competitive landscape, pricing benchmarks, category trends
+
+All upstream information enters through the Knowledge Base. Nothing goes directly to a downstream system.
+
+### Knowledge Base → Downstream (Cascade)
+Each downstream system reformats approved facts for its context. The facts must match — only the words and format may differ.
+
+```
       Website            Help Scout           Tidio AI
       │                   │                   │
       ├── PDP             ├── Saved Replies    ├── Q&A Pairs
@@ -192,9 +234,27 @@ The category creation strategy applies to EVERY channel — not just the website
 
 ---
 
+## AI Governance Principle
+
+> **AI may generate wording. AI may never generate facts.**
+>
+> Facts originate only from the Master Knowledge Base. AI systems may rephrase, restructure, and adapt approved facts for different channels and audiences. AI systems may never invent, infer, or extrapolate product claims, performance data, policy details, or customer promises.
+
+### Implementation Rules
+
+1. **Source constraint:** Every factual claim in AI-generated content must trace back to a specific Knowledge Base entry with a documented evidence level (see Doc 07, Evidence Classification).
+2. **Guardrail enforcement:** AI systems must respect the Brand Guardrails in Doc 02 — the "Never" list is non-negotiable regardless of prompt.
+3. **Product lifecycle compliance:** AI must check product status before generating content. "Upcoming," "Experimental," and "Cancelled" products must not appear in customer-facing output (see Doc 07, Product Lifecycle).
+4. **Retired claims:** AI must cross-reference `RETIRED_CLAIMS.md` before generating content. Any match is a hard block.
+5. **Transparency:** When AI generates content, the source Knowledge Base entries should be traceable for audit purposes.
+
+---
+
 **Cross-references:**
 - Master Knowledge Base → `07-product-knowledge-base.md`
 - Brand positioning → `02-brand-system.md`
+- Brand guardrails → `02-brand-system.md` (Brand Guardrails section)
 - Copy rules per channel → `08-copy-guide.md`
 - SEO/GEO standards → `12-seo-geo-standards.md`
+- Retired claims → `RETIRED_CLAIMS.md`
 - Decision governance → `DECISION_FRAMEWORK.md`

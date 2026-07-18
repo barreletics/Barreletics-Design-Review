@@ -1,10 +1,17 @@
 # 09 — Collection / Pillar Page Architecture
 
-**Status:** 🔵 Ready for Review
-**Last Updated:** 2026-07-18
-**Approved Source:** `Barreletics Collection - Definitive-v4.html`
-
 ---
+document: 09 – Collection / Pillar Page Architecture
+version: 1.0
+status: 🔵 Ready for Review
+approved_by: —
+approval_date: —
+last_modified: 2026-07-18
+depends_on: [03, 04, 07, 12]
+supersedes: []
+---
+
+**Approved Source:** `Barreletics Collection - Definitive-v4.html`
 
 ## Page Purpose
 

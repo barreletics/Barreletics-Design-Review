@@ -1,8 +1,14 @@
 # 02 — Brand System
 
-**Status:** 🔵 Ready for Review
-**Last Updated:** 2026-07-18
-
+---
+document: 02 – Brand System
+version: 1.0
+status: 🔵 Ready for Review
+approved_by: —
+approval_date: —
+last_modified: 2026-07-18
+depends_on: [01]
+supersedes: [QA-02-BRAND-SYSTEM.md]
 ---
 
 ## Strategic Foundation
@@ -165,6 +171,29 @@ Barreletics solves both: injection-molded 360° grip that never degrades + non-p
 - ~~Aggressive/pushy tone~~ → Confident, premium
 - ~~Wall of text~~ → High-impact statements, editorial brevity
 - ~~Heat makes grip better~~ → Not an approved claim
+
+## Brand Guardrails
+
+Separate from Brand Voice. These are hard constraints on all Barreletics communication — human and AI.
+
+### Always
+- **Educate** — Lead with knowledge, not pressure
+- **Elevate** — Position the customer's practice as worthy of premium gear
+- **Simplify** — One clear message per touchpoint, not a wall of claims
+- **Demonstrate** — Show the product in context (studio, discipline, movement)
+- **Support every important claim with evidence** — Reference the Knowledge Base evidence level
+
+### Never
+- Shame grip sock users — They're our future customers, not our adversaries
+- Attack competitors by name — Category creation, not brand warfare
+- Overpromise on durability or performance — "Months to years" not "lasts forever"
+- Use fake urgency — No "Only 3 left!" or countdown timers on evergreen products
+- Use unsupported performance claims — No claims not backed by the Knowledge Base
+- Make health or medical claims — We are performance footwear, not medical devices
+
+**These guardrails function as AI safety rails as much as brand rules.** Any AI system trained on Barreletics content must respect these constraints. Violation of a "Never" rule is a content failure regardless of channel.
+
+---
 
 ## Hashtag
 

@@ -1,8 +1,14 @@
 # 08 — Copy Guide
 
-**Status:** 🔵 Ready for Review
-**Last Updated:** 2026-07-18
-
+---
+document: 08 – Copy Guide
+version: 1.0
+status: 🔵 Ready for Review
+approved_by: —
+approval_date: —
+last_modified: 2026-07-18
+depends_on: [02, 07]
+supersedes: [QA-07-COPY-GUIDE.md]
 ---
 
 ## Purpose

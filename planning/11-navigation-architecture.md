@@ -1,8 +1,14 @@
 # 11 — Navigation Architecture
 
-**Status:** 🔵 Ready for Review
-**Last Updated:** 2026-07-18
-
+---
+document: 11 – Navigation Architecture
+version: 1.0
+status: 🔵 Ready for Review
+approved_by: —
+approval_date: —
+last_modified: 2026-07-18
+depends_on: [02, 09]
+supersedes: []
 ---
 
 ## Primary Navigation (flat, no mega-menu)

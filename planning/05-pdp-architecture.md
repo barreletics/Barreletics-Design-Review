@@ -1,10 +1,17 @@
 # 05 — PDP Architecture
 
-**Status:** 🔵 Ready for Review
-**Last Updated:** 2026-07-18
-**Approved Source:** `Barreletics PDP - APPROVED July 17.html`
-
 ---
+document: 05 – PDP Architecture
+version: 1.0
+status: 🔵 Ready for Review
+approved_by: —
+approval_date: —
+last_modified: 2026-07-18
+depends_on: [03, 04, 07, 08]
+supersedes: []
+---
+
+**Approved Source:** `Barreletics PDP - APPROVED July 17.html`
 
 ## Page Purpose
 

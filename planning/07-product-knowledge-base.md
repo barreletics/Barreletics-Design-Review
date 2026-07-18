@@ -1,15 +1,46 @@
-# 07 — Master Product Knowledge Base
+# 07 — Master Knowledge Base
 
-**Status:** 🔵 Ready for Review
-**Last Updated:** 2026-07-18
-
+---
+document: 07 – Master Knowledge Base
+version: 1.0
+status: 🔵 Ready for Review
+approved_by: —
+approval_date: —
+last_modified: 2026-07-18
+depends_on: [01, 02]
+supersedes: [QA-09-PRODUCT-KNOWLEDGE.md]
 ---
 
 ## Purpose
 
-This is the company's **Master Knowledge System** — the single source of truth that powers every customer-facing and internal system. A product update should only need to be made ONCE here. That single update then cascades into every downstream system. No drift. No conflicting answers across channels.
+This is the company's **Master Knowledge Operating System** — the single source of truth that powers every customer-facing, internal, and AI-driven system. A fact should only need to be recorded ONCE here. That single entry then cascades into every downstream consumer. No drift. No conflicting answers across channels.
 
 **We're not simply building a better website. We're building the operating system for the Barreletics brand.**
+
+The website is only one consumer. This document is the canonical authority for ALL company knowledge — every system, every channel, every team member, and every AI agent draws from this single source.
+
+### Knowledge Domains
+
+This Knowledge Base owns authoritative information across the following domains. Product knowledge (Sections 1–16 below) is fully populated. Other domains are established as placeholders and will be populated over time.
+
+| Domain | Status | Scope |
+|--------|--------|-------|
+| **Product** | ✅ Populated | Specs, fit, care, materials, comparison, surface use, disciplines |
+| **Brand** | → Doc 02 | Voice, positioning, category creation, slogans |
+| **Policies** | ✅ Populated | Returns, warranty, shipping, pricing (Sections 13–16) |
+| **Manufacturing** | 🔲 Placeholder | Partner specs, QC process, materials sourcing, production timelines |
+| **Customer Support** | 🔲 Placeholder | Help Scout saved replies, macros, workflows, escalation rules |
+| **Tidio AI** | 🔲 Placeholder | Chatbot Q&A pairs, intent routing, handoff rules |
+| **Wholesale** | 🔲 Placeholder | Partner terms, pitch materials, buyer education, MOQs |
+| **Partnerships** | 🔲 Placeholder | Studio partnerships, brand collaborations, co-marketing |
+| **Retail** | 🔲 Placeholder | In-store education, display guidelines, retail partner terms |
+| **Studio Education** | 🔲 Placeholder | Instructor training, studio onboarding, discipline-specific guides |
+| **FAQ** | 🔲 Placeholder | Master FAQ bank (all channels), schema-ready Q&A pairs |
+| **Email Templates** | 🔲 Placeholder | Transactional, marketing, lifecycle, win-back sequences |
+| **Approved Messaging** | → Doc 08 | Copy rules, channel-specific guidelines |
+| **PR** | 🔲 Placeholder | Press kit, media talking points, founder bio, brand story |
+| **Product Launches** | 🔲 Placeholder | Launch playbooks, timeline templates, channel coordination |
+| **Future AI Systems** | 🔲 Placeholder | Training data rules, guardrails, structured output formats |
 
 ### Consumers
 Website (FAQ, PDP, Collection, Compare, pillar pages) · Help Scout (saved replies, email templates, macros) · Tidio AI (chatbot knowledge base) · Internal team training · Wholesale education · Studio education · Retail education · Journal / educational content · SEO / GEO content · AI search optimization · Future AI agents · Future product launches
@@ -20,6 +51,49 @@ Each topic contains:
 - **Key customer quotes** — With name and city where available
 - **Surface map** — Where this content appears across channels
 - **Abbreviated version** — For short-form uses (Collection page, chatbot, Help Scout quick reply)
+- **Evidence level** — See Evidence Classification below
+
+---
+
+## Evidence Classification
+
+Every factual claim in this Knowledge Base should carry an evidence level. This prevents unsupported claims from accidentally becoming "facts" over time — especially as content cascades into AI systems, chatbots, and customer-facing channels.
+
+| Level | Tag | Definition |
+|-------|-----|------------|
+| 1 | **Verified by testing** | Confirmed through physical product testing |
+| 2 | **Manufacturing specification** | From manufacturing partner documentation |
+| 3 | **Customer reported** | Sourced from customer reviews, Help Scout conversations, or testimonials |
+| 4 | **Founder observation** | Based on founder's direct experience or judgment |
+| 5 | **Marketing language** | Persuasive framing, not a factual claim |
+
+**Implementation note:** Evidence tags will be added to individual claims incrementally. New claims entering this document must include an evidence level. Existing claims will be tagged during quarterly reviews. When in doubt, tag conservatively — it is better to mark a claim as "Founder observation" than to leave it untagged and have it treated as verified fact.
+
+---
+
+## Product Lifecycle
+
+Every product carries a lifecycle status. AI systems and content creators must respect these statuses when generating customer-facing content.
+
+| Status | Definition | Customer-Facing? |
+|--------|------------|-------------------|
+| **Active** | Currently sold and supported | Yes |
+| **Upcoming** | Planned but not yet public | No — do not reference unless explicitly authorized |
+| **Experimental** | Under development or testing | No |
+| **Sunset** | Being phased out | Limited — clearance/transition messaging only |
+| **Cancelled** | Will not launch | Never reference |
+
+### Current Product Status
+
+| Product | Status |
+|---------|--------|
+| Open Sole Grippy Shoes | Active |
+| Closed Sole Grippy Shoes | Active |
+| Apparel (Yoga Tights, etc.) | Active |
+| Barreletics Socks | Upcoming (not yet public) |
+| Outdoor/Water Shoes | Active (Closed Sole variant) |
+
+**AI systems and content creators must never reference products with "Upcoming," "Experimental," or "Cancelled" status in customer-facing content unless explicitly authorized by the Founder.**
 
 ---
 

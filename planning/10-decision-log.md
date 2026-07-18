@@ -1,8 +1,14 @@
 # 10 — Decision Log
 
-**Status:** 🔵 Ready for Review
-**Last Updated:** 2026-07-18
-
+---
+document: 10 – Decision Log
+version: 1.0
+status: 🔵 Ready for Review
+approved_by: —
+approval_date: —
+last_modified: 2026-07-18
+depends_on: [01, 02, 03, 04, 05, 06, 07, 08, 09]
+supersedes: [ADR-01 through ADR-07]
 ---
 
 ## Purpose

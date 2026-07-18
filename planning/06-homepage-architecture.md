@@ -1,10 +1,17 @@
 # 06 — Homepage Architecture
 
-**Status:** 🔵 Ready for Review
-**Last Updated:** 2026-07-18
-**Approved Source:** `Barreletics Home - APPROVED July 17.html`
-
 ---
+document: 06 – Homepage Architecture
+version: 1.0
+status: 🔵 Ready for Review
+approved_by: —
+approval_date: —
+last_modified: 2026-07-18
+depends_on: [02, 03, 04, 07, 08]
+supersedes: []
+---
+
+**Approved Source:** `Barreletics Home - APPROVED July 17.html`
 
 ## Page Purpose
 

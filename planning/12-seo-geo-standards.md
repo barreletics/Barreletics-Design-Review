@@ -1,8 +1,14 @@
 # 12 — SEO & GEO Standards
 
-**Status:** 🔵 Ready for Review
-**Last Updated:** 2026-07-18
-
+---
+document: 12 – SEO & GEO Standards
+version: 1.0
+status: 🔵 Ready for Review
+approved_by: —
+approval_date: —
+last_modified: 2026-07-18
+depends_on: [07, 08]
+supersedes: []
 ---
 
 ## Core Strategy
