@@ -404,6 +404,23 @@
     font-size: var(--text-base);
   }
 
+  .pdp-buy__cta.btn--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .pdp-buy__size-btn.is-unavailable {
+    opacity: 0.35;
+    cursor: not-allowed;
+    text-decoration: line-through;
+  }
+
+  .pdp-buy__error {
+    color: #c45c3f;
+    font-size: var(--text-sm);
+    margin: var(--space-2) 0 0;
+  }
+
   .pdp-buy__trust {
     display: flex;
     gap: var(--space-5);
@@ -504,6 +521,15 @@
     });
   })();
 </script>
+
+{%- comment -%} Product JSON for variant selector {%- endcomment -%}
+<script>
+  window.__pdpProduct = {{ product | json }};
+</script>
+
+{%- comment -%} Variant selector + AJAX cart (PDP only) {%- endcomment -%}
+{{ 'variant-selector.js' | asset_url | script_tag }}
+{{ 'cart.js' | asset_url | script_tag }}
 
 {% schema %}
 {

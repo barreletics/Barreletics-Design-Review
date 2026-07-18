@@ -317,50 +317,12 @@
     var drawer = document.getElementById('cart-drawer');
     if (!drawer) return;
 
-    var focusableSelector = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
-    var firstFocusable, lastFocusable;
-
-    function open() {
-      drawer.classList.add('is-open');
-      drawer.setAttribute('aria-hidden', 'false');
-      document.body.style.overflow = 'hidden';
-      var focusables = drawer.querySelectorAll(focusableSelector);
-      firstFocusable = focusables[0];
-      lastFocusable = focusables[focusables.length - 1];
-      if (firstFocusable) firstFocusable.focus();
-    }
-
-    function close() {
-      drawer.classList.remove('is-open');
-      drawer.setAttribute('aria-hidden', 'true');
-      document.body.style.overflow = '';
-    }
-
-    drawer.querySelectorAll('[data-cart-close]').forEach(function(el) {
-      el.addEventListener('click', close);
-    });
-
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape' && drawer.classList.contains('is-open')) {
-        close();
-      }
-      if (e.key === 'Tab' && drawer.classList.contains('is-open')) {
-        if (e.shiftKey && document.activeElement === firstFocusable) {
-          e.preventDefault();
-          lastFocusable.focus();
-        } else if (!e.shiftKey && document.activeElement === lastFocusable) {
-          e.preventDefault();
-          firstFocusable.focus();
-        }
-      }
-    });
-
-    window.CartDrawer = { open: open, close: close };
-
     document.querySelectorAll('[data-cart-trigger]').forEach(function(el) {
       el.addEventListener('click', function(e) {
         e.preventDefault();
-        open();
+        if (window.BarreleticsCart) {
+          window.BarreleticsCart.open();
+        }
       });
     });
   })();

@@ -36,7 +36,8 @@
       <button
         type="button"
         class="sticky-atc__btn btn btn--primary"
-        data-add-to-cart
+        id="sticky-atc-btn"
+        data-variant-id="{{ product.selected_or_first_available_variant.id }}"
         aria-label="Add {{ product.title }} to cart"
       >
         Add to Cart — {{ product.selected_or_first_available_variant.price | money }}
@@ -133,7 +134,7 @@
     }
 
     .sticky-atc__size {
-      display: none;
+      font-size: 11px;
     }
 
     .sticky-atc__btn {
@@ -149,6 +150,11 @@
     var buyBox = document.querySelector('[data-buy-box]');
     if (!stickyBar || !buyBox) return;
 
+    var stickyBtn = document.getElementById('sticky-atc-btn');
+    var stickySize = document.getElementById('sticky-atc-size');
+    var stickyPrice = stickyBar.querySelector('.sticky-atc__price');
+    var stickyThumb = stickyBar.querySelector('.sticky-atc__thumb');
+
     var observer = new IntersectionObserver(function(entries) {
       entries.forEach(function(entry) {
         if (entry.isIntersecting) {
@@ -162,5 +168,58 @@
     }, { threshold: 0 });
 
     observer.observe(buyBox);
+
+    document.addEventListener('variant:changed', function(e) {
+      var variant = e.detail.variant;
+      if (!variant) return;
+
+      if (stickyBtn) {
+        stickyBtn.setAttribute('data-variant-id', variant.id);
+        if (variant.available) {
+          stickyBtn.disabled = false;
+          stickyBtn.textContent = 'Add to Cart \u2014 ' + formatMoney(variant.price);
+          stickyBtn.classList.remove('btn--disabled');
+        } else {
+          stickyBtn.disabled = true;
+          stickyBtn.textContent = 'Sold Out';
+          stickyBtn.classList.add('btn--disabled');
+        }
+      }
+
+      if (stickyPrice) {
+        stickyPrice.textContent = formatMoney(variant.price);
+      }
+
+      if (stickySize) {
+        stickySize.textContent = 'Size: ' + variant.title;
+      }
+
+      if (stickyThumb && variant.featured_image) {
+        stickyThumb.src = variant.featured_image.src.replace(/(\.[a-z]+)(\?|$)/, '_80x$1$2');
+      }
+    });
+
+    if (stickyBtn) {
+      stickyBtn.addEventListener('click', function() {
+        var vid = parseInt(stickyBtn.getAttribute('data-variant-id'), 10);
+        if (!vid || stickyBtn.disabled) return;
+        if (window.BarreleticsCart) {
+          stickyBtn.disabled = true;
+          stickyBtn.textContent = 'Adding\u2026';
+          window.BarreleticsCart.add(vid, 1).finally(function() {
+            stickyBtn.disabled = false;
+            stickyBtn.textContent = 'Add to Cart \u2014 ' + formatMoney(parseInt(stickyBtn.getAttribute('data-price') || '0', 10));
+            document.addEventListener('variant:changed', function handler(ev) {
+              stickyBtn.textContent = 'Add to Cart \u2014 ' + formatMoney(ev.detail.variant.price);
+              document.removeEventListener('variant:changed', handler);
+            });
+          });
+        }
+      });
+    }
+
+    function formatMoney(cents) {
+      return '$' + (cents / 100).toFixed(2).replace(/\.00$/, '');
+    }
   })();
 </script>
