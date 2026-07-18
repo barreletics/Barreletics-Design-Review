@@ -1,0 +1,133 @@
+{% comment %}
+  Disciplines + Proof — Line-divider strip
+  Source: Approved Home + Collection prototypes
+{% endcomment %}
+
+<section class="disciplines-proof" aria-label="Disciplines">
+  <div class="disciplines-proof__inner">
+    <p class="disciplines-proof__headline">{{ section.settings.headline }}</p>
+    <div class="disciplines-proof__grid">
+      {% for block in section.blocks %}
+        <div class="dp-item{% if block.settings.secondary %} dp-item--secondary{% endif %}" {{ block.shopify_attributes }}>
+          <p class="dp-item__discipline">{{ block.settings.discipline }}</p>
+          <p class="dp-item__proof">{{ block.settings.proof }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .disciplines-proof {
+    padding: var(--space-10) var(--section-padding-x);
+    background: var(--bg-primary);
+    border-top: 1px solid #e8e2d8;
+    border-bottom: 1px solid #e8e2d8;
+  }
+
+  .disciplines-proof__inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .disciplines-proof__headline {
+    text-align: center;
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent-primary);
+    font-weight: var(--weight-bold);
+    margin: 0 0 var(--space-8);
+  }
+
+  .disciplines-proof__grid {
+    display: flex;
+  }
+
+  .dp-item {
+    flex: 1;
+    text-align: center;
+    padding: 0 var(--space-5);
+    border-right: 1px solid #e8e2d8;
+  }
+
+  .dp-item:last-child {
+    border-right: none;
+  }
+
+  .dp-item--secondary {
+    opacity: 0.65;
+  }
+
+  .dp-item__discipline {
+    font-size: 12px;
+    font-weight: var(--weight-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-widest);
+    color: var(--text-primary);
+    margin: 0 0 6px;
+  }
+
+  .dp-item__proof {
+    font-size: 13px;
+    color: var(--text-body);
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  @media (max-width: 1024px) {
+    .disciplines-proof__grid {
+      flex-wrap: wrap;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .disciplines-proof {
+      padding: var(--space-9) var(--section-padding-x-mobile);
+    }
+
+    .disciplines-proof__grid {
+      flex-direction: column;
+    }
+
+    .dp-item {
+      border-right: none;
+      border-bottom: 1px solid #e8e2d8;
+      padding: var(--space-4) 0;
+    }
+
+    .dp-item:last-child {
+      border-bottom: none;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Disciplines",
+  "settings": [
+    { "type": "text", "id": "headline", "label": "Headline", "default": "Grip That Holds Where It Matters Most" }
+  ],
+  "blocks": [
+    {
+      "type": "discipline",
+      "name": "Discipline",
+      "settings": [
+        { "type": "text", "id": "discipline", "label": "Discipline name", "default": "Barre" },
+        { "type": "text", "id": "proof", "label": "Proof statement", "default": "Never slip in flat back chair" },
+        { "type": "checkbox", "id": "secondary", "label": "Secondary (dimmed)", "default": false }
+      ]
+    }
+  ],
+  "presets": [{
+    "name": "Disciplines",
+    "blocks": [
+      { "type": "discipline", "settings": { "discipline": "Barre", "proof": "Never slip in flat back chair" } },
+      { "type": "discipline", "settings": { "discipline": "Reformer", "proof": "Locked in through footwork series" } },
+      { "type": "discipline", "settings": { "discipline": "Lagree & Mega", "proof": "Grip through every Super Lunge" } },
+      { "type": "discipline", "settings": { "discipline": "Cadillac", "proof": "Secure on the push-through bar" } },
+      { "type": "discipline", "settings": { "discipline": "Yoga", "proof": "Grip through every flow", "secondary": true } }
+    ]
+  }]
+}
+{% endschema %}

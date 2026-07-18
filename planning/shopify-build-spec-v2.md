@@ -67,13 +67,16 @@ shopify-build/
 │   ├── section-wrapper.liquid     ← ✅ Built (Phase 1)
 │   ├── trust-strip.liquid         ← ✅ Built (Phase 1)
 │   ├── button.liquid              ← ✅ Built (Phase 1)
-│   ├── breadcrumb.liquid          ← Phase 2
-│   ├── review-card.liquid         ← Phase 2
-│   ├── icon-set.liquid            ← Phase 2
-│   ├── price-display.liquid       ← Phase 2
-│   ├── size-selector.liquid       ← Phase 2
-│   ├── color-swatch.liquid        ← Phase 2
-│   └── pagination.liquid          ← Phase 2
+│   ├── sticky-atc.liquid           ← ✅ Built (Phase 2, D-023)
+│   ├── cart-drawer.liquid          ← ✅ Built (Phase 2, D-024)
+│   ├── review-card.liquid          ← ✅ Built (Phase 2, D-025)
+│   ├── geo-section.liquid          ← ✅ Built (Phase 2, D-022)
+│   ├── breadcrumb.liquid           ← Phase 2
+│   ├── icon-set.liquid             ← Phase 2
+│   ├── price-display.liquid        ← Phase 2
+│   ├── size-selector.liquid        ← Phase 2
+│   ├── color-swatch.liquid         ← Phase 2
+│   └── pagination.liquid           ← Phase 2
 └── templates/
     ├── index.json                 ← Homepage
     ├── product.json               ← PDP
@@ -147,7 +150,7 @@ Every component from Doc 04 mapped to its implementation file:
 | 8 | Sock Math | `sections/section-sock-math.liquid` | Phase 2 |
 | 9 | Benefit Grid | `sections/section-benefit-grid.liquid` | Phase 2 |
 | 10 | Accordion (FAQ) | `snippets/faq-accordion.liquid` | ✅ Phase 1 |
-| 11 | Reviews | `sections/section-reviews.liquid` | Phase 2 |
+| 11 | Reviews | `sections/section-reviews.liquid` + `snippets/review-card.liquid` | Phase 2 (D-025) |
 | 12 | Guarantee | `sections/section-guarantee.liquid` | Phase 2 |
 | 13 | Newsletter | `sections/section-newsletter.liquid` | Phase 2 |
 | 14 | Footer | `snippets/footer.liquid` | ✅ Phase 1 |
@@ -159,7 +162,7 @@ Every component from Doc 04 mapped to its implementation file:
 | 20 | Trust Badges | `snippets/trust-strip.liquid` | ✅ Phase 1 |
 | 21 | Variant Grid | `sections/section-variant-grid.liquid` | Phase 2 |
 | 22 | Range Section | `sections/section-product-grid.liquid` (variant) | Phase 2 |
-| 23 | Sticky ATC | `sections/section-sticky-atc.liquid` | Phase 2 |
+| 23 | Sticky ATC | `snippets/sticky-atc.liquid` + `sections/pdp-sticky-atc.liquid` | ✅ Phase 2 (D-023) |
 | 24 | Promo Tiles | `sections/section-promo-tiles.liquid` | Phase 2 |
 | 25 | Association Strip | `sections/section-association.liquid` | Phase 2 |
 | 26 | FAQ Section | `sections/section-faq.liquid` (uses accordion snippet) | Phase 2 |
@@ -224,9 +227,10 @@ All templates use OS 2.0 JSON format (section references).
 
 | Template | File | Sections |
 |----------|------|----------|
-| Homepage | `templates/index.json` | 13+ sections per Homepage order |
-| Product | `templates/product.json` | PDP sections |
-| Collection | `templates/collection.json` | Collection sections |
+| Homepage | `templates/index.json` | 13+ sections per Homepage order + GEO (D-022) |
+| Product | `templates/product.json` | PDP sections + Sticky ATC (D-023) + GEO (D-022) |
+| Collection | `templates/collection.json` | Collection sections + GEO (D-022) |
+| Cart | `templates/cart.json` | Full cart page fallback (D-024, primary = drawer) |
 | Page | `templates/page.json` | Rich text + custom |
 | Page (About) | `templates/page.about.json` | Founder + Manifesto + custom |
 | Article | `templates/article.json` | Hero + body + related |
@@ -496,12 +500,12 @@ All templates use OS 2.0 JSON format (section references).
 
 ## Architectural Notes
 
-### Gaps Identified (for Decision Log review)
+### Gaps Resolved (Decision Log D-022 through D-025)
 
-1. **GEO Content section** — Not in original v1 build spec. Doc 09/12 requires it below FAQ. Added to section map.
-2. **Sticky ATC visibility** — Prototype shows PDP-only but Doc 04 doesn't define viewport-specific show/hide triggers precisely. Needs UX clarification.
-3. **Cart drawer vs page** — v1 spec says drawer is primary, page is fallback. No drawer prototype exists yet in approved pages. Phase 3 item.
-4. **Judge.me integration** — Reviews section requires Judge.me data. API integration approach TBD (app blocks vs custom fetch).
+1. **GEO Content section** — ✅ Resolved (D-022). Required on all major pages. `snippets/geo-section.liquid` + FAQPage schema.
+2. **Sticky ATC visibility** — ✅ Resolved (D-023). Hidden when native CTA visible, appears on scroll-out. IntersectionObserver trigger.
+3. **Cart drawer vs page** — ✅ Resolved (D-024). Drawer is primary (AJAX), full page is secondary. Both built.
+4. **Judge.me integration** — ✅ Resolved (D-025). Judge.me as data source only. Custom rendering via `snippets/review-card.liquid`.
 
 ---
 

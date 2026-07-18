@@ -1,0 +1,290 @@
+{% comment %}
+  PDP Reviews Section — Custom Judge.me rendering (D-025)
+  Source: Approved PDP July 17 — Featured + compact community grid
+{% endcomment %}
+
+<section class="pdp-reviews" id="reviews" aria-label="Customer reviews">
+  <div class="pdp-reviews__inner">
+    <header class="pdp-reviews__head">
+      <div>
+        <div class="pdp-reviews__stars" aria-hidden="true">★★★★★</div>
+        <p class="pdp-reviews__score"><strong>4.9</strong> out of 5</p>
+      </div>
+      <a href="#write-review" class="btn btn--primary pdp-reviews__write">Write a Review</a>
+    </header>
+
+    <div class="pdp-reviews__featured">
+      {% for block in section.blocks %}
+        {% if block.type == 'featured_review' %}
+          <div class="pdp-review-featured" {{ block.shopify_attributes }}>
+            <div class="pdp-review-featured__media" style="background: {{ block.settings.bg_gradient | default: 'linear-gradient(135deg, #c9c5b8, #e6e0d4)' }};"></div>
+            <div class="pdp-review-featured__content">
+              <span class="pdp-review-featured__stars">★★★★★</span>
+              <h4 class="pdp-review-featured__title">{{ block.settings.title }}</h4>
+              <p class="pdp-review-featured__body">"{{ block.settings.body }}"</p>
+              <div class="pdp-review-featured__attr">
+                <span class="pdp-review-featured__author">{{ block.settings.author }}</span>
+                <span class="pdp-review-featured__badge">Verified Purchase ✓</span>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <p class="pdp-reviews__community-label">More from the community</p>
+
+    <div class="pdp-reviews__compact-grid">
+      {% for block in section.blocks %}
+        {% if block.type == 'compact_review' %}
+          <div class="pdp-review-compact" {{ block.shopify_attributes }}>
+            <div class="pdp-review-compact__stars">★★★★★</div>
+            <p class="pdp-review-compact__body">"{{ block.settings.body }}"</p>
+            <span class="pdp-review-compact__author">{{ block.settings.author }}</span>
+            <span class="pdp-review-compact__location">{{ block.settings.location }}</span>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <a href="#" class="pdp-reviews__all-link">Read all reviews →</a>
+  </div>
+</section>
+
+<style>
+  .pdp-reviews {
+    padding: var(--space-14) var(--section-padding-x);
+    background: var(--bg-primary);
+  }
+
+  .pdp-reviews__inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .pdp-reviews__head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: var(--space-9);
+    gap: var(--space-6);
+    flex-wrap: wrap;
+    padding-bottom: var(--space-6);
+    border-bottom: 1px solid var(--border-default);
+  }
+
+  .pdp-reviews__stars {
+    font-size: 22px;
+    color: var(--accent-stars);
+    letter-spacing: 0.16em;
+    line-height: 1;
+  }
+
+  .pdp-reviews__score {
+    font-size: 14px;
+    color: var(--text-body);
+    margin: 6px 0 0;
+  }
+
+  .pdp-reviews__write {
+    padding: 12px 20px;
+    font-size: 12px;
+  }
+
+  .pdp-reviews__featured {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .pdp-review-featured {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 1px solid #e6e6e6;
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    background: var(--bg-primary);
+  }
+
+  .pdp-review-featured:nth-child(even) .pdp-review-featured__media {
+    order: 2;
+  }
+
+  .pdp-review-featured:nth-child(even) .pdp-review-featured__content {
+    order: 1;
+  }
+
+  .pdp-review-featured__media {
+    aspect-ratio: 1;
+    min-height: 280px;
+  }
+
+  .pdp-review-featured__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: var(--space-9);
+    gap: var(--space-3);
+  }
+
+  .pdp-review-featured__stars {
+    color: var(--accent-stars);
+    letter-spacing: 0.16em;
+    font-size: 14px;
+  }
+
+  .pdp-review-featured__title {
+    font-size: var(--text-lg);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    margin: 0;
+  }
+
+  .pdp-review-featured__body {
+    font-size: var(--text-base);
+    line-height: var(--leading-loose);
+    color: var(--text-body);
+    font-style: italic;
+    margin: 0;
+  }
+
+  .pdp-review-featured__attr {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 4px;
+  }
+
+  .pdp-review-featured__author {
+    font-size: 13px;
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+  }
+
+  .pdp-review-featured__badge {
+    font-size: var(--text-sm);
+    color: #7b8c84;
+    letter-spacing: 0.04em;
+  }
+
+  .pdp-reviews__community-label {
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-widest);
+    color: var(--text-muted);
+    text-align: center;
+    margin: var(--space-10) 0 var(--space-6);
+  }
+
+  .pdp-reviews__compact-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-5);
+  }
+
+  .pdp-review-compact {
+    background: var(--bg-primary);
+    border: 1px solid #e6e6e6;
+    border-radius: var(--radius-card);
+    padding: var(--space-6);
+  }
+
+  .pdp-review-compact__stars {
+    color: var(--accent-stars);
+    font-size: 14px;
+    letter-spacing: 0.12em;
+    margin-bottom: var(--space-3);
+  }
+
+  .pdp-review-compact__body {
+    font-size: 14px;
+    font-style: italic;
+    color: var(--text-body);
+    line-height: var(--leading-relaxed);
+    margin: 0 0 var(--space-3);
+  }
+
+  .pdp-review-compact__author {
+    font-size: 12px;
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+  }
+
+  .pdp-review-compact__location {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .pdp-reviews__all-link {
+    display: block;
+    text-align: center;
+    margin-top: var(--space-7);
+    font-size: 12px;
+    letter-spacing: var(--tracking-wider);
+    font-weight: var(--weight-semibold);
+    color: var(--text-primary);
+    text-decoration: none;
+    border-bottom: 1px solid var(--text-primary);
+    padding-bottom: 2px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  @media (max-width: 1024px) {
+    .pdp-review-featured {
+      grid-template-columns: 1fr;
+    }
+
+    .pdp-review-featured:nth-child(even) .pdp-review-featured__media {
+      order: 0;
+    }
+
+    .pdp-reviews__compact-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .pdp-reviews {
+      padding: var(--section-padding-y-mobile) var(--section-padding-x-mobile);
+    }
+
+    .pdp-reviews__compact-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .pdp-review-featured__content {
+      padding: var(--space-7) var(--space-5);
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "PDP Reviews",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "featured_review",
+      "name": "Featured Review",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "textarea", "id": "body", "label": "Review body" },
+        { "type": "text", "id": "author", "label": "Author" },
+        { "type": "text", "id": "bg_gradient", "label": "Media gradient", "default": "linear-gradient(135deg, #c9c5b8, #e6e0d4)" }
+      ]
+    },
+    {
+      "type": "compact_review",
+      "name": "Compact Review",
+      "settings": [
+        { "type": "textarea", "id": "body", "label": "Review body" },
+        { "type": "text", "id": "author", "label": "Author" },
+        { "type": "text", "id": "location", "label": "Location" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "PDP Reviews" }]
+}
+{% endschema %}

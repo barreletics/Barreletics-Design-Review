@@ -79,7 +79,7 @@
 
 ## Milestone 2: Core Experience — 🟡 In Progress
 
-### Phase 1: Build System — 🟡 In Progress
+### Phase 1: Build System — ✅ Complete
 
 | Deliverable | Status | File |
 |-------------|--------|------|
@@ -95,14 +95,40 @@
 | Trust Strip | ✅ | `shopify-build/snippets/trust-strip.liquid` |
 | Button | ✅ | `shopify-build/snippets/button.liquid` |
 
-### Phase 2: Page Builds — ⚪ Not Started
+### Phase 2: Page Builds — 🟡 In Progress
 
-| Deliverable | Status | Dependencies |
-|-------------|--------|-------------|
-| Homepage Build (Shopify) | ⚪ | Phase 1 complete |
-| Collection / Pillar Build | ⚪ | Phase 1 complete |
-| PDP Build (Shopify) | ⚪ | Phase 1 complete |
-| Compare Page | ⚪ | Phase 1 complete |
+| Deliverable | Status | File |
+|-------------|--------|------|
+| **Snippets (D-022–D-025)** | | |
+| Sticky ATC (D-023) | ✅ | `shopify-build/snippets/sticky-atc.liquid` |
+| Cart Drawer (D-024) | ✅ | `shopify-build/snippets/cart-drawer.liquid` |
+| Review Card (D-025) | ✅ | `shopify-build/snippets/review-card.liquid` |
+| GEO Section (D-022) | ✅ | `shopify-build/snippets/geo-section.liquid` |
+| **Homepage Sections** | | |
+| Hero (50/50) | ✅ | `shopify-build/sections/hero.liquid` |
+| Value Strip | ✅ | `shopify-build/sections/value-strip.liquid` |
+| Variant Grid (tabbed) | ✅ | `shopify-build/sections/variant-grid.liquid` |
+| Disciplines | ✅ | `shopify-build/sections/disciplines.liquid` |
+| 50/50 Split (reusable) | ✅ | `shopify-build/sections/fifty-fifty.liquid` |
+| Social Proof (reviews) | ✅ | `shopify-build/sections/social-proof.liquid` |
+| Newsletter | ✅ | `shopify-build/sections/newsletter.liquid` |
+| **Collection Sections** | | |
+| Collection Hero | ✅ | `shopify-build/sections/collection-hero.liquid` |
+| (reuses variant-grid, disciplines, fifty-fifty, newsletter) | | |
+| **PDP Sections** | | |
+| PDP Buy Box | ✅ | `shopify-build/sections/pdp-buy-box.liquid` |
+| PDP Features | ✅ | `shopify-build/sections/pdp-features.liquid` |
+| PDP Sock Math | ✅ | `shopify-build/sections/pdp-sock-math.liquid` |
+| PDP Reviews (Judge.me custom) | ✅ | `shopify-build/sections/pdp-reviews.liquid` |
+| PDP Sticky ATC wrapper | ✅ | `shopify-build/sections/pdp-sticky-atc.liquid` |
+| **Templates** | | |
+| Homepage (index.json) | ✅ | `shopify-build/templates/index.json` |
+| Collection (collection.json) | ✅ | `shopify-build/templates/collection.json` |
+| Product (product.json) | ✅ | `shopify-build/templates/product.json` |
+| **Layout** | | |
+| theme.liquid | ✅ | `shopify-build/layout/theme.liquid` |
+| **Remaining** | | |
+| Compare Page | ⚪ | Phase 3 |
 
 ## Milestone 3: Supporting Experience — ⚪ Not Started
 

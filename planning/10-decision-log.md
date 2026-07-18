@@ -211,6 +211,50 @@ All ADRs from the prior planning phase (ADR-01 through ADR-07) are resolved per 
 **Impact:** All Foundation docs status changed from 🔵 Ready for Review to 🔒 Locked. Dashboard updated. Milestone 2 authorized.
 
 ---
+### D-022: GEO Content Sections — Required on All Major Pages
+**Decided:** 2026-07-18 | **Severity:** High
+
+**Decision:** Every major indexable page includes a GEO section (Homepage, Collection, PDPs, key educational pages). Purpose: AI discoverability, semantic relevance, long-tail search, LLM retrieval. Must be designed as premium editorial content — not keyword blocks or SEO filler.
+
+**Rationale:** Doc 12 requires GEO/SEO content for AI retrieval and long-tail capture. Approved PDP and Collection prototypes both include GEO accordion sections with regional content.
+
+**Impact:** GEO section added to section architecture for all major page types.
+
+---
+
+### D-023: Sticky Add-to-Cart Behavior
+**Decided:** 2026-07-18 | **Severity:** High
+
+**Decision:** Desktop & Mobile: hidden when native Add to Cart is visible, appears only when purchase module scrolls completely out of view, disappears immediately when it returns. Mobile: compact bar with product thumbnail, price, selected size, Add to Cart button. Must never compete with the primary purchase module.
+
+**Rationale:** Standard PDP UX pattern. Ensures purchase access at all scroll depths without visual noise when native CTA is visible.
+
+**Impact:** `snippets/sticky-atc.liquid` created. Section wrapper `sections/pdp-sticky-atc.liquid` added to PDP template.
+
+---
+
+### D-024: Cart Experience — Drawer + Full Page
+**Decided:** 2026-07-18 | **Severity:** High
+
+**Decision:** Primary: AJAX Cart Drawer (default on Add to Cart). Secondary: Full Cart Page (for editing quantities, discount codes, large orders, familiarity). Flow: Add to Cart → Cart Drawer → Checkout (with option to go to full cart page).
+
+**Rationale:** Drawer minimizes friction for single-product purchases (dominant use case). Full cart page preserves familiarity for multi-item orders and discount code entry.
+
+**Impact:** `snippets/cart-drawer.liquid` created. Cart drawer integrated into `layout/theme.liquid`. Full cart page remains as `templates/cart.json`.
+
+---
+
+### D-025: Judge.me Reviews — Custom Styled
+**Decided:** 2026-07-18 | **Severity:** High
+
+**Decision:** Judge.me as data source only — not for rendering. All reviews rendered using Barreletics design tokens (typography, colors, spacing, border radius, icons, card styling, mobile behavior). Review experience must feel native to the Barreletics design system.
+
+**Rationale:** Approved PDP prototype renders reviews with custom typography, gold stars (D-007), 12px card radius (D-006), and Barreletics spacing. Judge.me app blocks would override this styling. Custom rendering ensures brand coherence.
+
+**Impact:** `snippets/review-card.liquid` created. Reviews sections use Judge.me API/metafields for data, custom templates for rendering.
+
+---
+
 ## ADR Archive
 
 The original ADR documents (ADR-01 through ADR-07) are preserved in `planning/` for historical reference. Their UNRESOLVED status is now superseded by the decisions above.
