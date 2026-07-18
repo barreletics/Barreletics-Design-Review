@@ -1,7 +1,7 @@
 # Barreletics Blueprint — Project Dashboard
 
 **Last Updated:** 2026-07-18
-**Current Milestone:** 2 — Core Experience
+**Current Milestone:** 2 — Core Experience (QA Complete, Ready for Review)
 
 ---
 
@@ -77,7 +77,7 @@
 
 ---
 
-## Milestone 2: Core Experience — 🟡 In Progress
+## Milestone 2: Core Experience — 🔵 Ready for Review
 
 ### Phase 1: Build System — ✅ Complete
 
@@ -95,7 +95,7 @@
 | Trust Strip | ✅ | `shopify-build/snippets/trust-strip.liquid` |
 | Button | ✅ | `shopify-build/snippets/button.liquid` |
 
-### Phase 2: Page Builds — 🟡 In Progress
+### Phase 2: Page Builds — ✅ Complete
 
 | Deliverable | Status | File |
 |-------------|--------|------|
@@ -129,6 +129,15 @@
 | theme.liquid | ✅ | `shopify-build/layout/theme.liquid` |
 | **Remaining** | | |
 | Compare Page | ⚪ | Phase 3 |
+
+### Phase 3: Quality Assurance — ✅ Complete
+
+| Deliverable | Status | File |
+|-------------|--------|------|
+| QA Report | ✅ | `planning/milestone-2-qa-report.md` |
+| Critical Fixes (13/13) | ✅ | Token, accessibility, markup, copy fixes |
+| Minor Fixes (7/10) | ✅ | Hover, ARIA, color compliance fixes |
+| Deferred (3 minor) | 📋 | Title tags (M-05/M-09), 50/50 dimensions (M-08) |
 
 ## Milestone 3: Supporting Experience — ⚪ Not Started
 
@@ -164,7 +173,7 @@
 
 ## Next Actions
 
-1. **Builder:** Begin Milestone 2 — Core Experience (Homepage, Collection, PDP Shopify builds)
-2. **Builder:** Reference locked Foundation docs (01–13) as canonical specs
-3. **Builder:** Log any architectural deviations in Decision Log before implementing
-4. **Architect/Owner:** Review Milestone 2 deliverables as they complete
+1. **Architect/Owner:** Review PR #2 (`milestone-2-core-experience` → `main`) — QA complete, all critical issues fixed
+2. **Builder:** Address deferred minor issues (M-05, M-08, M-09) during deployment
+3. **Builder:** Begin Milestone 3 — Supporting Experience (FAQ, About, Journal, sub-collections)
+4. **Builder:** Implement variant grid JavaScript filtering when Shopify collection API is connected
