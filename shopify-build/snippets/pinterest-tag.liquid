@@ -1,0 +1,88 @@
+{% comment %}
+  Pinterest Tag — Base Code + Standard Events
+  Placement: Inside <head> via theme.liquid
+
+  Events: pagevisit, viewcategory, addtocart, checkout
+
+  OWNER ACTION REQUIRED:
+  Replace 'PINTEREST_TAG_ID' with the actual tag ID from
+  Pinterest Business > Ads > Conversions > Tag Manager.
+{% endcomment %}
+
+<!-- Pinterest Tag -->
+<script>
+!function(e){if(!window.pintrk){window.pintrk=function(){
+window.pintrk.queue.push(Array.prototype.slice.call(arguments))};var
+n=window.pintrk;n.queue=[],n.version="3.0";var
+t=document.createElement("script");t.async=!0,t.src=e;var
+r=document.getElementsByTagName("script")[0];
+r.parentNode.insertBefore(t,r)}}("https://s.pinimg.com/ct/core.js");
+pintrk('load', 'PINTEREST_TAG_ID', { em: '<user_email_if_available>' });
+pintrk('page');
+</script>
+<noscript>
+<img height="1" width="1" style="display:none;" alt=""
+src="https://ct.pinterest.com/v3/?event=init&tid=PINTEREST_TAG_ID&noscript=1" />
+</noscript>
+<!-- End Pinterest Tag -->
+
+{% if request.page_type == 'collection' %}
+<script>
+  pintrk('track', 'viewcategory', {
+    category: {{ collection.title | json }}
+  });
+</script>
+{% endif %}
+
+{% if request.page_type == 'product' %}
+<script>
+  pintrk('track', 'pagevisit', {
+    line_items: [{
+      product_name: {{ product.title | json }},
+      product_id: {{ product.id | json }},
+      product_category: {{ product.type | json }},
+      product_price: {{ product.selected_or_first_available_variant.price | money_without_currency | remove: ',' }}
+    }]
+  });
+</script>
+{% endif %}
+
+<script>
+(function() {
+  'use strict';
+
+  if (typeof pintrk === 'undefined') return;
+
+  document.addEventListener('cart:item-added', function(e) {
+    var item = e.detail;
+    if (!item) return;
+    pintrk('track', 'addtocart', {
+      value: item.price / 100,
+      currency: {{ cart.currency.iso_code | json }},
+      line_items: [{
+        product_name: item.title,
+        product_id: String(item.product_id || item.id),
+        product_price: item.price / 100,
+        product_quantity: item.quantity || 1
+      }]
+    });
+  });
+
+  document.addEventListener('click', function(e) {
+    var checkoutBtn = e.target.closest('[data-checkout-button], [name="checkout"]');
+    if (checkoutBtn) {
+      pintrk('track', 'checkout', {
+        value: {{ cart.total_price | money_without_currency | remove: ',' }},
+        currency: {{ cart.currency.iso_code | json }},
+        line_items: [{% for item in cart.items %}{
+          product_name: {{ item.product.title | json }},
+          product_id: '{{ item.product.id }}',
+          product_price: {{ item.final_price | money_without_currency | remove: ',' }},
+          product_quantity: {{ item.quantity }}
+        }{% unless forloop.last %},{% endunless %}{% endfor %}]
+      });
+    }
+  });
+
+})();
+</script>

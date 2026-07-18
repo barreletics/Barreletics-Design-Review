@@ -1,0 +1,106 @@
+{% comment %}
+  GA4 Enhanced Ecommerce Events
+  Placement: Before </body> via theme.liquid
+
+  Fires standard ecommerce events based on page context.
+  Events: view_item, view_item_list, add_to_cart, begin_checkout, purchase
+  Custom: size_selector_click, sticky_atc_click, cart_drawer_open
+
+  Purchase event is handled by Shopify's checkout (Additional Scripts or
+  Customer Events) — documented below but not fired from theme code.
+{% endcomment %}
+
+<script>
+(function() {
+  'use strict';
+
+  if (typeof gtag === 'undefined') return;
+
+  var template = {{ request.page_type | json }};
+
+  {% if request.page_type == 'product' %}
+    gtag('event', 'view_item', {
+      currency: {{ cart.currency.iso_code | json }},
+      value: {{ product.selected_or_first_available_variant.price | money_without_currency | remove: ',' }},
+      items: [{
+        item_id: {{ product.selected_or_first_available_variant.sku | default: product.id | json }},
+        item_name: {{ product.title | json }},
+        item_brand: 'Barreletics',
+        item_category: {{ product.type | json }},
+        item_variant: {{ product.selected_or_first_available_variant.title | json }},
+        price: {{ product.selected_or_first_available_variant.price | money_without_currency | remove: ',' }},
+        quantity: 1
+      }]
+    });
+  {% endif %}
+
+  {% if request.page_type == 'collection' %}
+    gtag('event', 'view_item_list', {
+      item_list_id: {{ collection.handle | json }},
+      item_list_name: {{ collection.title | json }},
+      items: [
+        {% for product in collection.products limit: 12 %}
+          {
+            item_id: {{ product.selected_or_first_available_variant.sku | default: product.id | json }},
+            item_name: {{ product.title | json }},
+            item_brand: 'Barreletics',
+            item_category: {{ product.type | json }},
+            price: {{ product.selected_or_first_available_variant.price | money_without_currency | remove: ',' }},
+            index: {{ forloop.index }}
+          }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ]
+    });
+  {% endif %}
+
+  document.addEventListener('cart:item-added', function(e) {
+    var item = e.detail;
+    if (!item) return;
+    gtag('event', 'add_to_cart', {
+      currency: {{ cart.currency.iso_code | json }},
+      value: item.price / 100,
+      items: [{
+        item_id: item.sku || item.id,
+        item_name: item.title,
+        item_brand: 'Barreletics',
+        item_variant: item.variant_title,
+        price: item.price / 100,
+        quantity: item.quantity || 1
+      }]
+    });
+  });
+
+  document.addEventListener('click', function(e) {
+    var sizeBtn = e.target.closest('[data-size-option]');
+    if (sizeBtn) {
+      gtag('event', 'size_selector_click', {
+        size_value: sizeBtn.getAttribute('data-size-option')
+      });
+    }
+
+    var stickyAtc = e.target.closest('[data-sticky-atc]');
+    if (stickyAtc) {
+      gtag('event', 'sticky_atc_click');
+    }
+
+    var cartTrigger = e.target.closest('[data-cart-trigger]');
+    if (cartTrigger) {
+      gtag('event', 'cart_drawer_open');
+    }
+  });
+
+})();
+</script>
+
+{% comment %}
+  PURCHASE EVENT NOTE:
+  The 'purchase' event should be configured in Shopify Admin >
+  Settings > Customer events (or checkout.liquid Additional Scripts
+  for Shopify Plus). Shopify's checkout is a separate domain and
+  theme code cannot fire events there. Use Shopify's built-in
+  GA4 integration or add a Custom Pixel for the purchase event.
+
+  begin_checkout: Fires when customer clicks "Checkout" button.
+  This is captured by the cart drawer/page checkout button click.
+  Shopify redirects to checkout — the event fires before redirect.
+{% endcomment %}
