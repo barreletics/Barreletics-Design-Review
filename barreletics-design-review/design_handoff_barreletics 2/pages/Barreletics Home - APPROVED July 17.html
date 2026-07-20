@@ -135,9 +135,9 @@
     .problem-resolve__cta:hover { background: #1c1916; border-color: #1c1916; }
 
     /* === MERGED DISCIPLINES + PROOF — Line Divider Style === */
-    .disciplines-proof { padding: 48px 40px; background: #fff; border-top: 1px solid #e8e2d8; border-bottom: 1px solid #e8e2d8; }
+    .disciplines-proof { padding: 56px 40px; background: #1c1916; border-top: none; border-bottom: none; }
     .disciplines-proof__inner { max-width: 1100px; margin: 0 auto; }
-    .disciplines-proof__headline { text-align: center; font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: #c45c3f; font-weight: 700; margin: 0 0 32px; }
+    .disciplines-proof__headline { text-align: center; font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: #e8927c; font-weight: 700; margin: 0 0 32px; }
     .disciplines-proof__grid {
       display: flex;
     }
@@ -174,16 +174,24 @@
     .var-card__price { font-size: 16px; font-weight: 700; color: #1c1916; margin: 4px 0 0; }
     .var-card__installment { font-size: 12px; color: #8a8a8a; margin: 2px 0 0; }
     .var-card__add {
-      margin-top: 12px; font-size: 13px; font-weight: 600; color: #1c1916;
-      cursor: pointer; background: transparent;
-      border: 1px solid #1c1916; border-radius: 4px;
+      margin-top: 12px; font-size: 13px; font-weight: 600; color: #fff;
+      cursor: pointer; background: #c45c3f;
+      border: 1px solid #c45c3f; border-radius: 4px;
       padding: 10px 20px; letter-spacing: 0.03em;
       transition: background 0.2s, color 0.2s;
     }
-    .var-card__add:hover { background: #1c1916; color: #fff; }
+    .var-card__add:hover { background: #1c1916; border-color: #1c1916; color: #fff; }
 
     /* === 50/50 SPLIT === */
     .split-section { display: grid; grid-template-columns: 1fr 1fr; min-height: 640px; }
+    .split-section--tall { min-height: 92vh; }
+    .split-section--tall .split-media { min-height: 92vh; }
+    .split-section--dark { background: #1c1916; }
+    .split-section--dark .split-text { background: #1c1916; color: #fff; }
+    .split-section--dark .split-text h2 { color: #fff; }
+    .split-section--dark .split-text p { color: rgba(255,255,255,0.78); }
+    .split-section--dark .split-cta { background: #fff; color: #1c1916; border-color: #fff; }
+    .split-section--dark .split-cta:hover { background: #c45c3f; color: #fff; border-color: #c45c3f; }
     .split-media { position: relative; overflow: hidden; min-height: 480px; }
     .split-media img,
     .split-media video { width: 100%; height: 100%; object-fit: cover; display: block; position: absolute; inset: 0; }
@@ -221,10 +229,26 @@
     .review-card__author { font-size: 13px; font-weight: 700; color: #1c1916; }
     .review-card__loc { font-size: 12px; color: #8a8a8a; }
 
-    /* === INSTAGRAM === */
-    .ig-section { padding: 80px 40px; background: #fff; }
-    .ig-inner { max-width: 1200px; margin: 0 auto; text-align: center; }
-    .ig-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin: 32px 0 28px; border-radius: 8px; overflow: hidden; }
+    /* === JUICER / CONTINUOUS SOCIAL FEED === */
+    .ig-section { padding: 72px 0 56px; background: #fff; overflow: hidden; }
+    .ig-inner { max-width: none; margin: 0 auto; text-align: center; }
+    .ig-inner__head { max-width: 720px; margin: 0 auto 28px; padding: 0 40px; }
+    .juicer-rail { overflow: hidden; width: 100%; mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); }
+    .juicer-track {
+      display: flex; gap: 10px; width: max-content;
+      animation: juicer-scroll 48s linear infinite;
+    }
+    .juicer-track:hover { animation-play-state: paused; }
+    @keyframes juicer-scroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+    .juicer-cell {
+      width: 220px; height: 220px; flex: 0 0 auto; border-radius: 4px; overflow: hidden;
+      position: relative; background: #f0ede8;
+    }
+    .juicer-cell img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .ig-follow { display: inline-block; margin-top: 28px; font-size: 13px; color: #1c1916; text-transform: uppercase; letter-spacing: 0.06em; text-decoration: none; font-weight: 600; border-bottom: 1px solid #1c1916; padding-bottom: 2px; }
     .ig-cell { aspect-ratio: 1; background: #f0ede8; position: relative; overflow: hidden; cursor: pointer; }
     .ig-cell::after { content: ''; position: absolute; inset: 0; background: rgba(28,25,22,0); transition: background 0.3s; }
     .ig-cell:hover::after { background: rgba(28,25,22,0.15); }
@@ -282,7 +306,7 @@
       .guarantee-item:nth-child(3), .guarantee-item:nth-child(4) { border-top: 1px solid #d6cfc0; }
       .site-footer__grid { grid-template-columns: repeat(2, 1fr); }
       .footer-newsletter { grid-template-columns: 1fr; gap: 32px; }
-      .ig-grid { grid-template-columns: repeat(3, 1fr); }
+      .juicer-cell { width: 160px; height: 160px; }
       .problem-inner { gap: 40px; }
       .site-nav__links { display: none; }
       .disciplines-proof__grid { flex-wrap: wrap; }
@@ -321,8 +345,9 @@
       .fullbleed__statement { font-size: 32px; }
       .reviews-section { padding: 48px 16px; }
       .reviews-grid { grid-template-columns: 1fr; }
-      .ig-section { padding: 48px 16px; }
-      .ig-grid { grid-template-columns: repeat(2, 1fr); }
+      .ig-section { padding: 48px 0 40px; }
+      .ig-inner__head { padding: 0 16px; }
+      .split-section--tall, .split-section--tall .split-media { min-height: 70vh; }
       .guarantee-section { padding: 48px 16px 32px; }
       .guarantee-head__title { font-size: 28px; }
       .guarantee-inner { grid-template-columns: 1fr !important; }
@@ -708,16 +733,17 @@
 </section>
 
 
-<!-- 8. COPERNI — one seasonal 50/50 (LE badge stays in shop grid) -->
-<section class="split-section" id="coperni" style="background:#f5f2ec;">
+<!-- 8. COPERNI — tall cinematic seasonal (live energy) -->
+<section class="split-section split-section--tall split-section--dark" id="coperni">
   <div class="split-media">
-    <img src="https://barreletics.com/cdn/shop/files/Copreni_Final_More_grey.png?v=1774119812&width=1200" alt="Barreletics × Coperni limited edition">
+    <img src="https://barreletics.com/cdn/shop/files/Copreni_Final_More_grey.png?v=1774119812&width=1600" alt="Barreletics × Coperni limited edition">
   </div>
-  <div class="split-text" style="background:#f5f2ec;">
-    <p style="font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:#c45c3f;font-weight:700;margin:0 0 12px;">Limited Edition · Collaborations</p>
-    <h2>Barreletics × Coperni</h2>
+  <div class="split-text">
+    <p style="font-size:11px;text-transform:uppercase;letter-spacing:0.12em;color:#c45c3f;font-weight:700;margin:0 0 16px;">Limited Edition · Paris SS26</p>
+    <h2 style="font-size:48px;">Barreletics × Coperni</h2>
     <p>Built for the body in motion — introduced on the Coperni runway, Spring–Summer 2026. One run. One collaboration.</p>
-    <a href="#variants" class="split-cta" onclick="document.getElementById('tab-oneoffs')&&document.getElementById('tab-oneoffs').click();">Shop the Collab</a>
+    <p style="font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.55);margin:-12px 0 28px;">Closed Sole · Special Release · One Run</p>
+    <a href="#variants" class="split-cta" onclick="document.getElementById('tab-oneoffs')&&document.getElementById('tab-oneoffs').click();">See the Collaboration</a>
   </div>
 </section>
 
@@ -771,16 +797,15 @@
 </section>
 
 
-<!-- 12. ONE PAIR — 50/50 sock math -->
+<!-- 12. ONE PAIR — 50/50 sock math + lifestyle -->
 <section class="split-section">
   <div class="split-media">
-    <div style="width:100%;height:100%;min-height:480px;background:#f5f2ec;display:flex;align-items:center;justify-content:center;position:relative;">
-      <div style="text-align:center;padding:40px;">
-        <p style="font-size:11px;text-transform:uppercase;letter-spacing:0.12em;color:#c45c3f;font-weight:700;margin:0 0 24px;">The math</p>
-        <p style="font-size:56px;font-weight:700;color:#1c1916;margin:0 0 8px;letter-spacing:-0.03em;line-height:1;">$74</p>
-        <p style="font-size:15px;color:#6b645a;margin:0 0 24px;">One pair. 18+ months.</p>
-        <p style="font-size:14px;color:#8a8a8a;margin:0;line-height:1.6;">vs. $14–$18/pair × 6–8 pairs/year<br>= $112–$144/year on grip socks</p>
-      </div>
+    <img src="https://barreletics.com/cdn/shop/files/Multi_Image.jpg?v=1768346625&width=1400" alt="One pair replaces a year of grip socks">
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(28,25,22,0.15),rgba(28,25,22,0.55));"></div>
+    <div style="position:absolute;left:40px;bottom:40px;z-index:1;color:#fff;">
+      <p style="font-size:11px;text-transform:uppercase;letter-spacing:0.12em;font-weight:700;margin:0 0 10px;opacity:0.85;">The math</p>
+      <p style="font-size:56px;font-weight:700;margin:0 0 6px;letter-spacing:-0.03em;line-height:1;">$74</p>
+      <p style="font-size:15px;margin:0;opacity:0.9;">vs $112–$144/year in grip socks</p>
     </div>
   </div>
   <div class="split-text">
@@ -792,21 +817,45 @@
 </section>
 
 
-<!-- 13. INSTAGRAM -->
-<section class="ig-section">
+<!-- 13. JUICER — continuous social feed (mock of live continuous rail) -->
+<section class="ig-section" aria-label="Community feed">
   <div class="ig-inner">
-    <p style="font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:#8a8a8a;font-weight:600;margin:0 0 12px;">Follow the Movement</p>
-    <h2 style="font-size:32px;font-weight:500;color:#1c1916;margin:0 0 6px;">@barreletics</h2>
-    <p style="font-size:15px;color:#4a4a4a;margin:0;">Real practitioners. Real studios. Real grip.</p>
-    <div class="ig-grid">
-      <div class="ig-cell"><img src="https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=600" alt="" style="width:100%;height:100%;object-fit:cover;"><div class="ig-cell__hover"><span>♥ 342</span></div></div>
-      <div class="ig-cell"><img src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=600" alt="" style="width:100%;height:100%;object-fit:cover;"><div class="ig-cell__hover"><span>♥ 518</span></div></div>
-      <div class="ig-cell"><img src="https://barreletics.com/cdn/shop/files/IMG_2917.jpg?v=1741040637&width=600" alt="" style="width:100%;height:100%;object-fit:cover;"><div class="ig-cell__hover"><span>♥ 291</span></div></div>
-      <div class="ig-cell"><img src="https://barreletics.com/cdn/shop/files/Multi_Image.jpg?v=1768346625&width=600" alt="" style="width:100%;height:100%;object-fit:cover;"><div class="ig-cell__hover"><span>♥ 407</span></div></div>
-      <div class="ig-cell"><img src="https://barreletics.com/cdn/shop/products/barreletixxjumpingtogether.jpg?v=1619360969&width=600" alt="" style="width:100%;height:100%;object-fit:cover;"><div class="ig-cell__hover"><span>♥ 623</span></div></div>
-      <div class="ig-cell"><img src="https://barreletics.com/cdn/shop/files/Copreni_Final_More_grey.png?v=1774119812&width=600" alt="" style="width:100%;height:100%;object-fit:cover;"><div class="ig-cell__hover"><span>♥ 185</span></div></div>
+    <div class="ig-inner__head">
+      <p style="font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:#8a8a8a;font-weight:600;margin:0 0 12px;">Follow the Movement</p>
+      <h2 style="font-size:32px;font-weight:500;color:#1c1916;margin:0 0 6px;">@barreletics</h2>
+      <p style="font-size:15px;color:#4a4a4a;margin:0;">Real practitioners. Real studios. Real grip. Continuous feed — like Juicer on the live site.</p>
     </div>
-    <a href="https://www.instagram.com/barreletics/" target="_blank" rel="noopener" style="font-size:13px;color:#1c1916;text-transform:uppercase;letter-spacing:0.06em;text-decoration:none;font-weight:600;border-bottom:1px solid #1c1916;padding-bottom:2px;">Follow on Instagram →</a>
+    <div class="juicer-rail">
+      <div class="juicer-track">
+        <!-- duplicated set for seamless loop -->
+        <div class="juicer-cell"><img src="https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=600" alt=""></div>
+        <div class="juicer-cell"><img src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=600" alt=""></div>
+        <div class="juicer-cell"><img src="https://barreletics.com/cdn/shop/files/IMG_2917.jpg?v=1741040637&width=600" alt=""></div>
+        <div class="juicer-cell"><img src="https://barreletics.com/cdn/shop/files/Multi_Image.jpg?v=1768346625&width=600" alt=""></div>
+        <div class="juicer-cell"><img src="https://barreletics.com/cdn/shop/products/barreletixxjumpingtogether.jpg?v=1619360969&width=600" alt=""></div>
+        <div class="juicer-cell"><img src="https://barreletics.com/cdn/shop/files/Copreni_Final_More_grey.png?v=1774119812&width=600" alt=""></div>
+        <div class="juicer-cell"><img src="https://barreletics.com/cdn/shop/files/Square_Pink.png?v=1764627088&width=600" alt=""></div>
+        <div class="juicer-cell"><img src="https://barreletics.com/cdn/shop/products/Yellow_Image-Blue_Shoe_1200x1200_59ef7b79-1661-4c2f-a2da-c6b9211e2c42.jpg?v=1678412911&width=600" alt=""></div>
+        <div class="juicer-cell"><img src="https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=600" alt=""></div>
+        <div class="juicer-cell"><img src="https://barreletics.com/cdn/shop/files/A14_TopBottom_LightGrey-1000x1000_d30b6fcb-229e-4af9-8062-e1c4901df31e.jpg?v=1773920300&width=600" alt=""></div>
+        <div class="juicer-cell"><img src="https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=600" alt=""></div>
+        <div class="juicer-cell"><img src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=600" alt=""></div>
+        <div class="juicer-cell"><img src="https://barreletics.com/cdn/shop/files/IMG_2917.jpg?v=1741040637&width=600" alt=""></div>
+        <div class="juicer-cell"><img src="https://barreletics.com/cdn/shop/files/Multi_Image.jpg?v=1768346625&width=600" alt=""></div>
+        <div class="juicer-cell"><img src="https://barreletics.com/cdn/shop/products/barreletixxjumpingtogether.jpg?v=1619360969&width=600" alt=""></div>
+        <div class="juicer-cell"><img src="https://barreletics.com/cdn/shop/files/Copreni_Final_More_grey.png?v=1774119812&width=600" alt=""></div>
+        <div class="juicer-cell"><img src="https://barreletics.com/cdn/shop/files/Square_Pink.png?v=1764627088&width=600" alt=""></div>
+        <div class="juicer-cell"><img src="https://barreletics.com/cdn/shop/products/Yellow_Image-Blue_Shoe_1200x1200_59ef7b79-1661-4c2f-a2da-c6b9211e2c42.jpg?v=1678412911&width=600" alt=""></div>
+        <div class="juicer-cell"><img src="https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=600" alt=""></div>
+        <div class="juicer-cell"><img src="https://barreletics.com/cdn/shop/files/A14_TopBottom_LightGrey-1000x1000_d30b6fcb-229e-4af9-8062-e1c4901df31e.jpg?v=1773920300&width=600" alt=""></div>
+      </div>
+    </div>
+    <a class="ig-follow" href="https://www.instagram.com/barreletics/" target="_blank" rel="noopener">Follow on Instagram →</a>
+    <!-- Production: replace rail with Juicer embed
+    <script src="https://assets.juicer.io/embed.js" type="text/javascript"></script>
+    <link href="https://assets.juicer.io/embed.css" media="all" rel="stylesheet" type="text/css" />
+    <ul class="juicer-feed" data-feed-id="barreletics"></ul>
+    -->
   </div>
 </section>
 
