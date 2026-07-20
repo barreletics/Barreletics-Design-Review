@@ -106,15 +106,25 @@
       transition: transform 0.45s ease;
     }
     .vm-tile:hover img, .vm-tile:hover video { transform: scale(1.04); }
-    .vm-tile__shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(28,25,22,0.1) 20%, rgba(28,25,22,0.65) 100%); z-index: 1; }
-    .vm-tile__content { position: absolute; left: 20px; right: 20px; bottom: 20px; z-index: 2; }
-    .vm-tile__label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin: 0 0 8px; opacity: 0.9; }
-    .vm-tile__title { font-size: 28px; font-weight: 700; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.02em; }
-    .vm-tile__body { font-size: 14px; margin: 0 0 14px; opacity: 0.92; max-width: 28ch; }
-    .vm-tile__cta {
-      display: inline-block; padding: 10px 16px; border: 1px solid #fff; color: #fff;
-      font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    .vm-tile__shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(28,25,22,0.05) 30%, rgba(28,25,22,0.72) 100%); z-index: 1; }
+    .vm-tile__content {
+      position: absolute; left: 24px; right: auto; bottom: 24px; z-index: 2;
+      display: flex; flex-direction: column; align-items: flex-start;
+      max-width: min(340px, calc(100% - 48px));
     }
+    .vm-tile__label,
+    .vm-tile__title,
+    .vm-tile__body,
+    .vm-tile__cta { display: block; width: auto; }
+    .vm-tile__label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin: 0 0 10px; opacity: 0.9; }
+    .vm-tile__title { font-size: 32px; font-weight: 700; line-height: 1.12; margin: 0 0 10px; letter-spacing: -0.02em; }
+    .vm-tile__body { font-size: 14px; line-height: 1.45; margin: 0 0 16px; opacity: 0.92; }
+    .vm-tile__cta {
+      display: inline-block; padding: 11px 18px; border: 1px solid #fff; color: #fff;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+      background: rgba(28,25,22,0.35);
+    }
+    .vm-tile--sm .vm-tile__content { left: 18px; bottom: 18px; max-width: none; }
     .vm-tile--sm .vm-tile__title { font-size: 22px; margin: 0; }
 
     /* === PROBLEM === */
@@ -413,12 +423,12 @@
     <a class="vm-tile vm-tile--hero" href="#variants">
       <img src="https://barreletics.com/cdn/shop/files/Square_Pink.png?v=1764627088&width=1200" alt="Performance Skins in studio">
       <span class="vm-tile__shade"></span>
-      <span class="vm-tile__content">
+      <div class="vm-tile__content">
         <span class="vm-tile__label">Performance Skins</span>
         <span class="vm-tile__title">Secure in every hold</span>
-        <span class="vm-tile__body">No sliding. No resets. Shop the grip that replaced the sock.</span>
+        <span class="vm-tile__body">No sliding. No resets.<br>Shop the grip that replaced the sock.</span>
         <span class="vm-tile__cta">Shop Now</span>
-      </span>
+      </div>
     </a>
     <a class="vm-tile vm-tile--sm" href="#variants">
       <img src="https://barreletics.com/cdn/shop/files/IMG_2917.jpg?v=1741040637&width=900" alt="Stability in class">
