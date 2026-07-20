@@ -2,78 +2,94 @@
 
 ---
 document: M4B Blockers Log
-status: 🟡 Active
+status: 🟡 Active — credential-dependent only
 created: 2026-07-18
+updated: 2026-07-19
 ---
 
 ## Active Blockers
 
-### B-001: GA4 Measurement ID Unknown
-**Severity:** Medium (code uses placeholder)
-**What's blocked:** GA4 snippet has `G-XXXXXXXXXX` placeholder — events won't fire until replaced
-**Owner action:** Provide Measurement ID from GA4 Admin > Data Streams > Web stream
-**Builder prepared:** Full gtag.js + enhanced ecommerce implementation ready
+All remaining blockers are **credential-dependent only**. All Builder code work is complete. Each blocker resolves by pasting a single value into Theme Settings → Tracking & Integrations, or configuring an external platform.
 
-### B-002: Meta Pixel ID Unknown
-**Severity:** Medium (code uses placeholder)
-**What's blocked:** Pixel snippet has `PIXEL_ID_HERE` placeholder — no Meta tracking until replaced
-**Owner action:** Provide Pixel ID from Meta Business Manager > Events Manager
-**Builder prepared:** Full pixel code + browser events + deduplication ready
+### B-001: GA4 Measurement ID
+**Severity:** Medium
+**What's blocked:** GA4 events won't fire until Measurement ID is set
+**Resolution:** Theme Settings → Tracking & Integrations → GA4 Measurement ID
+**How to obtain:** GA4 Admin → Data Streams → Web stream → Measurement ID (format: G-XXXXXXXXXX)
+**Builder status:** ✅ Complete — gtag.js + enhanced ecommerce + graceful degradation
 
-### B-003: Pinterest Tag ID Unknown
+### B-002: Meta Pixel ID
+**Severity:** Medium
+**What's blocked:** No Meta conversion tracking until Pixel ID is set
+**Resolution:** Theme Settings → Tracking & Integrations → Meta Pixel ID
+**How to obtain:** Meta Business Manager → Events Manager → Pixel ID
+**Builder status:** ✅ Complete — Pixel code + standard events + event_id dedup + noscript fallback
+
+### B-003: Pinterest Tag ID
 **Severity:** Low (not launch-blocking)
-**What's blocked:** Pinterest snippet has `PINTEREST_TAG_ID` placeholder
-**Owner action:** Provide Tag ID from Pinterest Business > Conversions
-**Builder prepared:** Full tag code + standard events ready
+**What's blocked:** No Pinterest conversion tracking
+**Resolution:** Theme Settings → Tracking & Integrations → Pinterest Tag ID
+**How to obtain:** Pinterest Business → Ads → Conversions → Tag Manager
+**Builder status:** ✅ Complete — Tag code + events + enhanced match
 
-### B-004: Microsoft Clarity Project ID Unknown
+### B-004: Microsoft Clarity Project ID
 **Severity:** Low (not launch-blocking)
-**What's blocked:** Clarity snippet has `CLARITY_PROJECT_ID` placeholder
-**Owner action:** Provide Project ID from clarity.microsoft.com > Settings
-**Builder prepared:** Clarity script ready
+**What's blocked:** No session recording or heatmaps
+**Resolution:** Theme Settings → Tracking & Integrations → Microsoft Clarity Project ID
+**How to obtain:** clarity.microsoft.com → Settings → Setup
+**Builder status:** ✅ Complete — Clarity script with dynamic ID
 
-### B-005: Help Scout Account Access
-**Severity:** Medium (not launch-blocking but important for support quality)
-**What's blocked:** Saved replies can't be created, email forwarding can't be configured
-**Owner action:** Create saved replies from `m4b-helpscout-alignment.md`, configure forwarding
-**Builder prepared:** All 10 saved replies written with approved copy
-
-### B-006: Tidio Account Access
+### B-005: Help Scout Account Configuration
 **Severity:** Medium (not launch-blocking)
-**What's blocked:** Knowledge base can't be imported, flows can't be configured
-**Owner action:** Import Q&A pairs from `m4b-tidio-knowledge-base.md`, configure widget
-**Builder prepared:** All Q&A pairs formatted, conversation flows documented
+**What's blocked:** Saved replies, email forwarding, Beacon widget
+**Resolution:** 1. Create saved replies from `m4b-helpscout-alignment.md`. 2. Configure email forwarding. 3. Copy Beacon ID → Theme Settings.
+**Builder status:** ✅ Complete — Beacon snippet, saved reply content documented
+
+### B-006: Tidio Account Configuration
+**Severity:** Medium (not launch-blocking)
+**What's blocked:** AI knowledge base, conversation flows, widget
+**Resolution:** 1. Import Q&A from `m4b-tidio-knowledge-base.md`. 2. Configure flows. 3. Copy Widget Key → Theme Settings.
+**Builder status:** ✅ Complete — Widget snippet, knowledge base content documented
 
 ### B-007: Judge.me App Configuration
 **Severity:** High (affects review display on PDP)
-**What's blocked:** Need to confirm metafield sync is active and default widget is disabled
-**Owner action:** Verify in Judge.me app admin: metafield sync ON, default widget OFF
-**Builder prepared:** Theme reads metafields correctly, custom rendering per D-025 complete
+**What's blocked:** Metafield sync must be active, default widget must be disabled
+**Resolution:** Judge.me app admin → metafield sync ON, default widget OFF
+**Builder status:** ✅ Complete — Custom review rendering, metafield reads, API hydration
 
-### B-008: Google Search Console Access
-**Severity:** Low (monitoring only — not needed for launch code)
-**What's blocked:** Can't verify domain, submit sitemap, or record baseline
-**Owner action:** Verify domain, submit `/sitemap.xml`, record index coverage
-**Builder prepared:** Canonical tags, sitemap (auto), robots.txt (auto) all in place
+### B-008: Google Search Console Verification
+**Severity:** Low (monitoring only)
+**What's blocked:** Domain verification for SEO monitoring
+**Resolution:** 1. Get verification code from GSC. 2. Paste into Theme Settings → Search Console Verification. 3. Verify in GSC. 4. Submit `/sitemap.xml`.
+**Builder status:** ✅ Complete — Conditional meta tag in theme.liquid
 
 ### B-009: Google Merchant Center Configuration
-**Severity:** Low (enhancement, not launch-blocking)
-**What's blocked:** Product feed sync can't be verified
-**Owner action:** Confirm GMC account, install Google & YouTube channel, verify sync
-**Builder prepared:** Product structured data on all PDPs with required fields
+**Severity:** Low (enhancement)
+**What's blocked:** Product feed sync, free Shopping listings
+**Resolution:** Install Google & YouTube channel in Shopify Admin → connect GMC account
+**Builder status:** ✅ Complete — Product structured data on all PDPs (existing from M3)
+
+### B-010: Meta CAPI Access Token
+**Severity:** Medium (needed for server-side dedup)
+**What's blocked:** Server-side conversion events (browser events work without this)
+**Resolution:** Meta Business Manager → Events Manager → Settings → Generate Access Token → configure via Shopify Meta channel
+**Builder status:** ✅ Complete — CAPI setup documented, browser events include event_id for dedup
 
 ---
 
 ## Resolved Blockers
 
-(None yet)
+(None resolved yet — all require Owner credentials)
 
 ---
 
-## Notes
+## Summary
 
-- All Tier 1 integration CODE is complete with placeholders
-- Owner needs to provide 4 IDs (GA4, Meta, Pinterest, Clarity) to activate tracking
-- Help Scout + Tidio documentation is complete — Owner implements in their admin
-- Judge.me requires app-level configuration check only (theme code is ready)
-- No blockers prevent code deployment — only live data flow activation is blocked
+| Category | Blockers | Resolution Method |
+|----------|---------|------------------|
+| **Theme Settings paste** (30 seconds each) | B-001, B-002, B-003, B-004, B-008 | Paste ID into Theme Settings → Save |
+| **Theme Settings + platform config** | B-005, B-006 | Paste key + configure platform admin |
+| **App admin only** | B-007 | Judge.me admin toggle |
+| **Shopify Admin only** | B-009, B-010 | Sales channel / app configuration |
+
+**All Builder code work is complete.** Next step: Owner pastes production IDs and validates.

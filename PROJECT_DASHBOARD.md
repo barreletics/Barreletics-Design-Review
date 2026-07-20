@@ -1,7 +1,7 @@
 # Barreletics Blueprint — Project Dashboard
 
-**Last Updated:** 2026-07-18
-**Current Milestone:** 4A — Production Assembly
+**Last Updated:** 2026-07-19
+**Current Milestone:** 4B — Integrations (Builder complete, awaiting Owner credentials)
 
 ---
 
@@ -215,10 +215,47 @@
 | Gate | Name | Status | Entry Criterion |
 |------|------|--------|----------------|
 | M4A | Production Assembly | 🔒 Locked | M1-3 locked + Pre-Deployment Truth Set |
-| M4B | Integrations | 🟡 In Progress | M4A complete |
+| M4B | Integrations | 🔵 Builder Complete — Owner Credentials Needed | M4A complete |
 | M4C | Validation | ⚪ | M4B complete + Policy Freeze Gate (D-040) |
 | M4D | Launch | ⚪ | M4C complete + Pre-Deployment Truth Set verified |
 | M4E | Stabilization | ⚪ | M4D complete (theme live) |
+
+### M4B Deliverables
+
+| Deliverable | Status | File |
+|-------------|--------|------|
+| **Tracking Snippets** | | |
+| GA4 (gtag.js + enhanced ecommerce) | ✅ | `snippets/analytics-head.liquid`, `snippets/analytics-events.liquid` |
+| Meta Pixel (base + events + dedup) | ✅ | `snippets/meta-pixel.liquid` |
+| Pinterest Tag (base + events + enhanced match) | ✅ | `snippets/pinterest-tag.liquid` |
+| Microsoft Clarity (session recording) | ✅ | `snippets/clarity.liquid` |
+| Help Scout Beacon (chat widget) | ✅ | `snippets/helpscout-beacon.liquid` |
+| Tidio AI Chat (support widget) | ✅ | `snippets/tidio-widget.liquid` |
+| **Theme Configuration** | | |
+| Settings Schema (Tracking & Integrations) | ✅ | `config/settings_schema.json` |
+| Search Console verification meta tag | ✅ | `layout/theme.liquid` |
+| Theme.liquid integration includes | ✅ | `layout/theme.liquid` |
+| Graceful degradation (all snippets) | ✅ | All snippets use `{% if settings.* != blank %}` |
+| Duplicate prevention (GA4/Meta warnings) | ✅ | Settings schema info text + snippet comments |
+| **Judge.me** | | |
+| Custom review rendering (D-025) | ✅ | `sections/pdp-reviews.liquid`, `snippets/review-card.liquid` |
+| Metafield reads + API hydration | ✅ | `sections/pdp-reviews.liquid` |
+| **Planning Documents** | | |
+| Environment Config | ✅ | `planning/m4b-environment-config.md` |
+| Verification Checklist | ✅ | `planning/m4b-verification-checklist.md` |
+| Help Scout Alignment | ✅ | `planning/m4b-helpscout-alignment.md` |
+| Tidio Knowledge Base | ✅ | `planning/m4b-tidio-knowledge-base.md` |
+| Integration Plan | ✅ | `planning/m4b-integration-plan.md` |
+| Implementation Checklist | ✅ | `planning/m4b-implementation-checklist.md` |
+| Blockers Log | ✅ | `planning/m4b-blockers.md` |
+| **Owner Actions Remaining** | | |
+| Paste 5 tracking IDs into Theme Settings | ⚪ | GA4, Meta, Pinterest, Clarity, Search Console |
+| Paste 2 widget keys into Theme Settings | ⚪ | Help Scout Beacon, Tidio |
+| Configure Judge.me app (metafields + widget) | ⚪ | Judge.me admin |
+| Configure CAPI (Meta & Instagram channel) | ⚪ | Shopify admin |
+| Configure Google Merchant Center | ⚪ | Shopify admin |
+| Create Help Scout saved replies | ⚪ | Help Scout admin |
+| Import Tidio knowledge base | ⚪ | Tidio admin |
 
 ### M4A Deliverables
 
@@ -272,10 +309,11 @@
 
 ## Next Actions
 
-1. **Owner:** Choose hero concept — compare Concept A (`hero.liquid`) vs Concept B (`hero-alt.liquid`) in Theme Customizer
-2. **Owner:** Review M4A PR — approve content inventory, navigation config, redirect map
-3. **Owner:** Provide assets flagged in `m4a-asset-inventory.md` (favicon, OG image, logo SVG)
-4. **Owner:** Approve content flagged "Needs Review" in `m4a-content-inventory.md`
-5. **Owner:** Review flagged redirect items in redirect verification audit (outdoor, sale, collaborations, blog articles)
-6. **Builder:** Begin M4B (Integrations) upon M4A approval
-7. **Builder:** Address deferred M2 minor issues (M-05, M-08, M-09) during deployment
+1. **Owner:** Paste production IDs into Theme Settings → Tracking & Integrations (GA4, Meta, Pinterest, Clarity, Search Console, Help Scout, Tidio) — see `planning/m4b-environment-config.md`
+2. **Owner:** Configure Judge.me app — enable metafield sync, disable default widget
+3. **Owner:** Create Help Scout saved replies from `planning/m4b-helpscout-alignment.md`
+4. **Owner:** Import Tidio knowledge base from `planning/m4b-tidio-knowledge-base.md`
+5. **Owner:** Configure CAPI via Shopify Meta & Instagram channel
+6. **Owner:** Install Google & YouTube channel for Merchant Center product feed
+7. **Owner+Builder:** Run verification checklist (`planning/m4b-verification-checklist.md`)
+8. **Builder:** Address deferred M2 minor issues (M-05, M-08, M-09) during deployment
