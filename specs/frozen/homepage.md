@@ -22,8 +22,9 @@ updated: 2026-07-20
 
 ## Approved section list (conversion spine)
 1. Announcement strip + header nav (chrome)
-2. **Hero** — ★★★★★ + Trusted by 1,000's of athletes (top); Sock Era H1; rust Shop Now + outline See Why
-3. **Problem** fifty-fifty — one H2 (“Tired of slipping…?”) + body + list + rust Shop Now (no stacked slogans / no THE FIX)
+2. **Hero** — ★★★★★ trust top; Sock Era H1; rust + outline CTAs; live lifestyle image
+3. **Problem** — H2 + Yoga Socks Are Useless. + body + list + Shop (no THE FIX / no extra closers)
+4. Disciplines → **Variant grid** (no lineup placeholder) → Editorial → Grip video 50/50 → Coperni one 50/50 → Full-bleed one line → Reviews → Sock Math → IG (6) → Guarantee → GEO → Footer
 4. **Disciplines** proof
 5. **Value strip** (shared)
 6. **Variant grid** (Closed/Open + quick-add)
