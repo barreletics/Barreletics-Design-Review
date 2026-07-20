@@ -5,6 +5,7 @@
 {% endcomment %}
 
 <section
+  {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | handleize }}"{% endif %}
   class="split-section{% if section.settings.reverse %} split-section--reverse{% endif %}"
   style="background: {{ section.settings.bg_color | default: '#fff' }};"
   aria-label="{{ section.settings.title | strip_html | truncate: 60 }}"
@@ -192,6 +193,7 @@
 {
   "name": "50/50 Split",
   "settings": [
+    { "type": "text", "id": "anchor_id", "label": "Anchor ID (optional)", "info": "e.g. problem for #problem links" },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
     { "type": "text", "id": "title", "label": "Title", "default": "Upgrade Your Grip. Upgrade Your Workout." },
     { "type": "textarea", "id": "body", "label": "Body", "default": "Full-contact molded grip — not printed, not glued. The patented surface holds through every hold, every transition." },

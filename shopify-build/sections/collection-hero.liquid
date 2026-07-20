@@ -8,13 +8,20 @@
     {% if section.settings.eyebrow != blank %}
       <p class="coll-hero__eyebrow">{{ section.settings.eyebrow }}</p>
     {% endif %}
-    <h1 class="coll-hero__title">{{ collection.title | default: section.settings.title }}</h1>
-    <p class="coll-hero__body">{{ collection.description | default: section.settings.body }}</p>
+    {% comment %} Shop-first H1 (DP-04): prefer theme setting over Admin collection title {% endcomment %}
+    <h1 class="coll-hero__title">{{ section.settings.title | default: collection.title }}</h1>
+    {% if section.settings.body != blank %}
+      <p class="coll-hero__body">{{ section.settings.body }}</p>
+    {% elsif collection.description != blank %}
+      <div class="coll-hero__body">{{ collection.description }}</div>
+    {% endif %}
   </div>
 
   {% if section.settings.show_sole_cards %}
+    {% assign closed_href = section.settings.closed_url | default: '/collections/closed-sole' %}
+    {% assign open_href = section.settings.open_url | default: '/collections/open-sole' %}
     <div class="sole-cards">
-      <div class="sole-card">
+      <a class="sole-card" href="{{ closed_href }}">
         {% if section.settings.closed_image != blank %}
           <div class="sole-card__img">
             <img
@@ -32,8 +39,9 @@
           <p class="sole-card__best">Pick this if: {{ section.settings.closed_best_for }}</p>
         {% endif %}
         <p class="sole-card__desc">{{ section.settings.closed_desc }}</p>
-      </div>
-      <div class="sole-card">
+        <span class="sole-card__cta">Shop Closed Sole →</span>
+      </a>
+      <a class="sole-card" href="{{ open_href }}">
         {% if section.settings.open_image != blank %}
           <div class="sole-card__img">
             <img
@@ -51,7 +59,8 @@
           <p class="sole-card__best">Pick this if: {{ section.settings.open_best_for }}</p>
         {% endif %}
         <p class="sole-card__desc">{{ section.settings.open_desc }}</p>
-      </div>
+        <span class="sole-card__cta">Shop Open Sole →</span>
+      </a>
     </div>
   {% endif %}
 </section>
@@ -104,6 +113,23 @@
     flex-direction: column;
     gap: 10px;
     background: var(--bg-primary);
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .sole-card:hover {
+    border-color: #1c1916;
+    box-shadow: 0 8px 24px rgba(28, 25, 22, 0.08);
+    text-decoration: none;
+  }
+  .sole-card__cta {
+    margin-top: auto;
+    padding-top: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1c1916;
+    border-bottom: 1px solid #1c1916;
+    align-self: flex-start;
   }
 
   .sole-card__tag {
@@ -171,13 +197,15 @@
   "name": "Collection Hero",
   "settings": [
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Two Versions. One Performance." },
-    { "type": "text", "id": "title", "label": "Title (fallback)", "default": "Shop All Styles & Colors" },
-    { "type": "textarea", "id": "body", "label": "SEO / category subhead (fallback)", "default": "Performance Skins replace disposable grip socks — one patented 360° grip system, two builds. Closed Sole or Open Sole. Same durability. Same $74. Shop all styles and colors." },
+    { "type": "text", "id": "title", "label": "Shop-first H1", "default": "Shop All Styles & Colors" },
+    { "type": "textarea", "id": "body", "label": "SEO / category subhead", "default": "Performance Skins replace disposable grip socks — one patented 360° grip system, two builds. Closed Sole or Open Sole. Same durability. Same $74. Shop all styles and colors." },
     { "type": "checkbox", "id": "show_sole_cards", "label": "Show Open/Closed comparison cards", "default": true },
     { "type": "image_picker", "id": "closed_image", "label": "Closed Sole image" },
+    { "type": "url", "id": "closed_url", "label": "Closed Sole link" },
     { "type": "text", "id": "closed_best_for", "label": "Closed Sole — Pick this if", "default": "you want full-foot lockdown for reformer, barre, and Lagree." },
     { "type": "textarea", "id": "closed_desc", "label": "Closed Sole description", "default": "Full coverage including heel — more protection everywhere. 360° grip across the entire underfoot." },
     { "type": "image_picker", "id": "open_image", "label": "Open Sole image" },
+    { "type": "url", "id": "open_url", "label": "Open Sole link" },
     { "type": "text", "id": "open_best_for", "label": "Open Sole — Pick this if", "default": "you want a grounded heel feel for mat work, yoga, and heated studios." },
     { "type": "textarea", "id": "open_desc", "label": "Open Sole description", "default": "Open heel with a mid-foot vent — your heel contacts the surface directly for a grounded, barefoot-like feel." }
   ],

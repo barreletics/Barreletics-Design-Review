@@ -15,8 +15,9 @@
 ## Modify
 | File | Change |
 |------|--------|
-| `templates/collection.json` | Stronger SEO body; insert social-proof + FAQ before GEO |
-| `sections/collection-hero.liquid` | Best-for labels on sole cards; SEO subhead settings |
+| `templates/collection.json` | Reviews + FAQ + GEO; shop-first copy; FAQ = Product FAQ |
+| `sections/collection-hero.liquid` | Shop-first H1 setting; Pick-this-if; clickable sole cards |
+| `snippets/product-card.liquid` | Value line + Quick Add — $74 |
 
 ## New
 | File | Role |

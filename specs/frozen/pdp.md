@@ -30,10 +30,19 @@ updated: 2026-07-20
 11. Newsletter
 12. **pdp-sticky-atc**
 
-## Messaging
-- Category reinforce near buy box; $74; 4×$18.50; free shipping over $150
-- Policies: 30-day returns (new/sellable); 90-day manufacturing warranty
-- Micro-quotes: short instructor/customer lines (not full justifier grid unless assets ready)
+## Messaging (slogan consistency — no redesign)
+| Placement | Line | Decision |
+|-----------|------|----------|
+| Problem video | Yoga Socks Are Useless. | **Keep** (PDP-primary) |
+| Problem body | Silicone dots / sweat / reset → 360° rinse-reuse | **Tighten** (was generic comfort copy) |
+| Variant grid | Shop All Styles & Colors | **Align** with Home/Collection |
+| Lifestyle | Transform Your Practice + Secure in every hold… | **Keep** + support line |
+| Sock Math | One Pair. Done. | **Keep** (full module OK on PDP) |
+
+Also: $74; 4×$18.50; free shipping over $150; 30-day returns (new/sellable); 90-day manufacturing warranty; buy-box micro-quotes.
+
+## Matrix note (PDP)
+No Collection/Home matrix sections added to PDP. Skip Founder/Manifesto/6-pillars/promo tiles. Motion + full Sock Math already covered.
 
 ## Critical includes
 - Announcement strip (layout); buy box; value-strip; video fifty-fifty; reviews; GEO; sticky ATC

@@ -8,6 +8,7 @@
 | `sections/disciplines.liquid` | Discipline proof |
 | `sections/variant-grid.liquid` | Shop grid ATC |
 | `sections/fifty-fifty.liquid` | Problem/grip, Sock Math lite, Coperni seasonal |
+| `sections/statement-band.liquid` | Commit full-bleed (July 17) |
 | `sections/social-proof.liquid` | Reviews |
 | `sections/geo-section.liquid` | GEO (DP-03) |
 | `sections/newsletter.liquid` | Email |
@@ -16,14 +17,15 @@
 ## Modify
 | File | Change |
 |------|--------|
-| `templates/index.json` | Order toward frozen stack; Coperni seasonal settings; add UGC + guarantee blocks |
-| `sections/hero.liquid` | Keep Concept A; optional CTA specificity later |
+| `templates/index.json` | July 17 order + slogans; UGC; guarantee; statement band |
+| `sections/hero.liquid` | Concept A; default CTA URLs; specific Shop CTA |
 
 ## New
 | File | Role |
 |------|------|
 | `sections/home-ugc.liquid` | Instagram / UGC band (DP-09) |
 | `sections/guarantee-band.liquid` | Guarantee trust band |
+| `sections/statement-band.liquid` | Commit statement |
 
 ## Dependencies
 - v49 CSS variables in theme assets

@@ -12,14 +12,16 @@
     {% endif %}
     <h1 class="hero__title">{{ section.settings.title }}</h1>
     <p class="hero__body">{{ section.settings.body }}</p>
+    {% assign hero_primary_url = section.settings.cta_primary_url | default: '/collections/grippy-shoes' %}
+    {% assign hero_secondary_url = section.settings.cta_secondary_url | default: '#problem' %}
     <div class="hero__ctas">
       {% if section.settings.cta_primary_text != blank %}
-        <a href="{{ section.settings.cta_primary_url }}" class="btn btn--primary hero__cta">
+        <a href="{{ hero_primary_url }}" class="btn btn--primary hero__cta">
           {{ section.settings.cta_primary_text }}
         </a>
       {% endif %}
       {% if section.settings.cta_secondary_text != blank %}
-        <a href="{{ section.settings.cta_secondary_url }}" class="btn btn--outline hero__cta hero__cta--outline">
+        <a href="{{ hero_secondary_url }}" class="btn btn--outline hero__cta hero__cta--outline">
           {{ section.settings.cta_secondary_text }}
         </a>
       {% endif %}
