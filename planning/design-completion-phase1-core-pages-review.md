@@ -1,9 +1,11 @@
 # Design Completion Phase 1 — Core Pages Lock Review
 
+> **Superseded for active work** by [`planning/design-completion-core-pages-system.md`](design-completion-core-pages-system.md) (v2 — conversion system + Decision Packet). Keep this file as historical inventory; do not open new blockers from §1/§8 here.
+
 ---
 document: Design Completion Phase 1 — Home / Collections / PDP Lock Review
 version: 1.0
-status: 🔴 Review — Owner approval required before any implementation
+status: ⚪ Historical — superseded by design-completion-core-pages-system.md
 created: 2026-07-20
 branch: design-completion-phase1-core-review
 scope: Homepage · Collections (`/collections/grippy-shoes` pillar) · PDP only
