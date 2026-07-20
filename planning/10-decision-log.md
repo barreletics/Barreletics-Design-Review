@@ -541,6 +541,22 @@ All ADRs from the prior planning phase (ADR-01 through ADR-07) are resolved per 
 
 ---
 
+### D-048: M4D Launch Package and Technical Documentation Locked
+**Decided:** 2026-07-19 | **Severity:** Critical
+
+**Decision:** M4D Launch Preparation (12 launch documents) and Technical Documentation (25 developer reference documents) are approved and locked. Architecture phase is complete. Next phase is deployment and live validation. No architectural changes unless deployment uncovers an actual defect.
+
+**Context:**
+- PR #7 (M4D Launch Preparation) merged
+- PR #8 (Technical Documentation) merged
+- M1–M4C remain locked; M4D planning locked; M4D Execution and M4E Stabilization await Owner prerequisites and deployment
+
+**Impact:** Dashboard updated to reflect locked M4D planning + locked technical docs. Current focus: Owner prerequisites → preview → publish → stabilization.
+
+**Status:** Approved
+
+---
+
 ## ADR Archive
 
 The original ADR documents (ADR-01 through ADR-07) are preserved in `planning/` for historical reference. Their UNRESOLVED status is now superseded by the decisions above.
