@@ -15,6 +15,8 @@ After pasting production IDs into Theme Settings → Tracking & Integrations, ve
 
 ## 1. GA4 (Google Analytics 4)
 
+> ⚠️ **Pre-check (D-045):** Before enabling theme-level GA4 tracking, verify Shopify native Google & YouTube channel status. If the native channel is active and firing events, leave GA4 Measurement ID blank. Only ONE source must be active — native OR theme, never both.
+
 | Field | Value |
 |-------|-------|
 | **Integration** | GA4 Enhanced Ecommerce |
@@ -45,6 +47,8 @@ After pasting production IDs into Theme Settings → Tracking & Integrations, ve
 ---
 
 ## 2. Meta Pixel
+
+> ⚠️ **Pre-check (D-045):** Before enabling theme-level Meta Pixel, verify Shopify native Meta & Instagram channel status. If the native channel is active and firing events, leave Meta Pixel ID blank. Only ONE source must be active — native OR theme, never both.
 
 | Field | Value |
 |-------|-------|
@@ -194,6 +198,7 @@ After pasting production IDs into Theme Settings → Tracking & Integrations, ve
 
 Run these checks in order after pasting all IDs:
 
+0. ☐ **D-045 Duplicate Prevention Check:** Confirm only ONE tracking source is active for GA4 (native Google & YouTube channel OR theme-level snippet, never both). Confirm only ONE tracking source is active for Meta (native Meta & Instagram channel OR theme-level snippet, never both).
 1. ☐ Open site in Chrome with DevTools Network tab open
 2. ☐ Verify gtag.js loads (filter: `googletagmanager`)
 3. ☐ Verify fbevents.js loads (filter: `fbevents`)

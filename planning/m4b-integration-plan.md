@@ -457,6 +457,41 @@ Known from theme analysis:
 
 ---
 
+---
+
+## Production Tracking Strategy (D-045)
+
+**Shopify native channels are the preferred production implementation for GA4 and Meta.**
+
+| Tracking Domain | Preferred Production Method | Theme-Level Fallback |
+|----------------|---------------------------|---------------------|
+| GA4 | Shopify Google & YouTube channel | `snippets/analytics-head.liquid` + `snippets/analytics-events.liquid` |
+| Meta Pixel + CAPI | Shopify Meta & Instagram channel | `snippets/meta-pixel.liquid` |
+| Pinterest | Theme-managed (no native equivalent) | `snippets/pinterest-tag.liquid` |
+| Clarity | Theme-managed (no native equivalent) | `snippets/clarity.liquid` |
+| Help Scout | Theme-managed | `snippets/helpscout-beacon.liquid` |
+| Tidio | Theme-managed | `snippets/tidio-widget.liquid` |
+| Search Console | Theme-managed (meta verification tag) | `layout/theme.liquid` |
+
+### Rules
+
+1. **When Shopify's Google & YouTube channel is active:** Leave GA4 Measurement ID blank in Theme Settings. The native channel handles `page_view`, enhanced ecommerce events, and `purchase` server-side.
+2. **When Shopify's Meta & Instagram channel is active:** Leave Meta Pixel ID blank in Theme Settings. The native channel handles `PageView`, standard events, CAPI, and deduplication.
+3. **Theme snippets activate ONLY when** the corresponding Theme Settings ID is populated AND the native channel is NOT active.
+4. **Never enable both simultaneously** — duplicate events corrupt attribution, inflate conversions, and break ROAS measurement.
+5. **Integrations without Shopify native equivalents** (Clarity, Pinterest, Help Scout, Tidio, Search Console verification) remain theme-managed regardless.
+
+### When to Use Theme-Level Fallback
+
+- Shopify native channel is unavailable or broken
+- Custom event tracking beyond what the native channel provides (e.g., `size_selector_click`, `sticky_atc_click`, `cart_drawer_open`)
+- Testing/staging environments where native channel isn't connected
+- Owner explicitly opts out of native channel for a documented reason
+
+**Reference:** Decision Log D-045 (permanent architectural decision)
+
+---
+
 ## Summary
 
 - **Tier 1 (launch-blocking):** 5 integrations — Builder can prepare all code; Owner provides credentials and verification

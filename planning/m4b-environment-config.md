@@ -15,10 +15,12 @@ To configure: **Shopify Admin → Online Store → Themes → Customize → Them
 
 ## Analytics & Tracking
 
+> ⚠️ **Per D-045:** GA4 and Meta Pixel theme-level tracking are **Conditional**. Only configure these if NOT using Shopify's native Google & YouTube / Meta & Instagram channels. Enabling both creates duplicate tracking and corrupts analytics data. See Decision Log D-045.
+
 | Integration | Config Key | Theme Setting ID | Value | Status |
 |-------------|-----------|-----------------|-------|--------|
-| GA4 | Measurement ID | `ga4_measurement_id` | _____ | Pending |
-| Meta Pixel | Pixel ID | `meta_pixel_id` | _____ | Pending |
+| GA4 | Measurement ID | `ga4_measurement_id` | _____ | Conditional — see D-045 |
+| Meta Pixel | Pixel ID | `meta_pixel_id` | _____ | Conditional — see D-045 |
 | Meta CAPI | Access Token | _(Shopify Admin config)_ | _____ | Pending |
 | Pinterest Tag | Tag ID | `pinterest_tag_id` | _____ | Pending |
 | Microsoft Clarity | Project ID | `clarity_project_id` | _____ | Pending |
@@ -28,12 +30,14 @@ To configure: **Shopify Admin → Online Store → Themes → Customize → Them
 - **Where referenced:** `snippets/analytics-head.liquid` (gtag.js config), `snippets/analytics-events.liquid` (event firing)
 - **How to obtain:** GA4 Admin → Data Streams → Web stream → Measurement ID (not the Property ID 300437005)
 - **Where to configure:** Theme Settings → Tracking & Integrations → GA4 Measurement ID
+- ⚠️ **Per D-045:** Only configure this if NOT using Shopify's native Google & YouTube channel. Enabling both creates duplicate tracking.
 
 ### Meta Pixel ID
 - **Format:** 15-16 digit number (e.g., `123456789012345`)
 - **Where referenced:** `snippets/meta-pixel.liquid` (fbq init, noscript fallback, all standard events)
 - **How to obtain:** Meta Business Manager → Events Manager → Data Sources → select Pixel → Pixel ID
 - **Where to configure:** Theme Settings → Tracking & Integrations → Meta Pixel ID
+- ⚠️ **Per D-045:** Only configure this if NOT using Shopify's native Meta & Instagram channel. Enabling both creates duplicate tracking.
 
 ### Meta CAPI Access Token
 - **Format:** Long alphanumeric token
