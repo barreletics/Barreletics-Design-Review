@@ -1,0 +1,74 @@
+{% comment %}
+  Collection FAQ (DP-06) — abbreviated accordion + FAQPage schema
+{% endcomment %}
+
+{% render 'faq-accordion',
+  items: section.blocks,
+  heading: section.settings.heading,
+  bg_class: section.settings.bg_class,
+  include_schema: true
+%}
+
+{% schema %}
+{
+  "name": "Collection FAQ",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Questions before you shop" },
+    {
+      "type": "select",
+      "id": "bg_class",
+      "label": "Background",
+      "options": [
+        { "value": "cream", "label": "Cream" },
+        { "value": "white", "label": "White" }
+      ],
+      "default": "cream"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "FAQ item",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question" },
+        { "type": "richtext", "id": "answer", "label": "Answer" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection FAQ",
+      "blocks": [
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "What’s the difference between Open Sole and Closed Sole?",
+            "answer": "<p><strong>Closed Sole</strong> covers the full underfoot including the heel — best for reformer footwork, barre, and Lagree. <strong>Open Sole</strong> frees the heel for a barefoot feel — ideal for mat work, yoga, and heated studios. Same 360° grip. Same $74.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Are Performance Skins just expensive grip socks?",
+            "answer": "<p>No. Traditional grip socks use silicone dots that wear off and fabric that absorbs sweat. Barreletics use a full-contact injection-molded grip surface you rinse and reuse — built as performance footwear, not disposable socks.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "How long do they last?",
+            "answer": "<p>Longevity varies by use. Many customers report 18+ months to several years of regular studio use. The molded grip doesn’t peel or flake like silicone dots.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "What’s your return policy?",
+            "answer": "<p>30-day returns on items in new, sellable condition. 90-day warranty against manufacturing defects. Free shipping on orders over $150.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

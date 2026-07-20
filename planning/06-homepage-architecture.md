@@ -2,16 +2,18 @@
 
 ---
 document: 06 – Homepage Architecture
-version: 1.0
+version: 1.1
 status: 🔒 Locked
 approved_by: Owner / Architect
 approval_date: 2026-07-18
-last_modified: 2026-07-18
+last_modified: 2026-07-20
 depends_on: [02, 03, 04, 07, 08]
 supersedes: []
+frozen_spec: specs/frozen/homepage.md
 ---
 
-**Approved Source:** `Barreletics Home - APPROVED July 17.html`
+**Approved Source:** `Barreletics Home - APPROVED July 17.html`  
+**Build freeze (2026-07-20):** DP-01–DP-12 defaults applied — Hero A (Sock Era); keep GEO; Coperni seasonal; Home IG/UGC; value-strip (not 6-pillars); defer Founder/Manifesto/full Sock Math to About / Optional. Canonical frozen stack: `specs/frozen/homepage.md`.
 
 ## Page Purpose
 
@@ -33,10 +35,9 @@ Establish Barreletics as a category-creating brand — not just a product. The h
 - Secondary CTA: See in action → scrolls to motion/video section
 - Trust line: star rating + "Trusted by 1,000's of instructors & studios"
 
-### Section 2: Pillar Strip
-- Warm cream background (`#f5f2ec`)
-- 6 pillars: 360° Grip · Second-Skin Fit · Reformer-Ready · Rinse & Reuse · No Latex/Silicone · Barefoot-Inspired
-- Same component used on PDP and Collection
+### Section 2: Value / Trust Strip (launch)
+- Shared `value-strip` component (DP-10) — **not** a forced 6-pillar strip at launch
+- Optional later: dedicated 6-pillar strip if needed
 
 ### Section 3: 50/50 Split — "Progress, built from the ground up"
 - Image left, copy right
@@ -50,12 +51,9 @@ Establish Barreletics as a category-creating brand — not just a product. The h
 - Product cards with quick-add (add to cart from homepage, no PDP redirect required)
 - Gap: 28px
 
-### Section 5: Sock Math — "Stop replacing. Start performing."
-- Full variant (not condensed PDP version)
-- Dark background
-- Comparison: Traditional Socks ($336/year) vs Barreletics ($74)
-- 6 benefit grid cells
-- CTA to collection or PDP
+### Section 5: Sock Math lite — "One Pair. Done." (launch)
+- Condensed fifty-fifty / lite module (DP-11) — full dark 6-cell Sock Math is Optional / PDP-primary
+- CTA to collection or shop
 
 ### Section 6: 50/50 Split — "The Problem"
 - Copy left, image right (reversed layout)
@@ -71,22 +69,18 @@ Establish Barreletics as a category-creating brand — not just a product. The h
 - Star ratings in `#d4af37`
 - Load More button
 
-### Section 9: Founder Letter
-- Dark background, 2-column: portrait left, quote + body + signature right
-- Personal brand communication
-- Mobile: stack image top, copy below
+### Section 9–11: Founder / Manifesto / Closing — DEFERRED (DP-11)
+- Ship on **About** first; do not block Home conversion spine
+- Optional on Home after launch if length budget allows
 
-### Section 10: Manifesto
-- Dark background, centered
-- Rotating headline statements (0.7s transitions)
-- Voice/tone tags
-- `prefers-reduced-motion` → static
+### Section 9b (launch): GEO accordion (DP-03 / D-022)
+- Required on Home for SEO/AI retrieval
 
-### Section 11: Closing Statement
-- Dark background, centered
-- Bold headline + subtitle
-- Inverted CTA (white bg, dark text)
-- Final conversion push before footer
+### Section 9c (launch): Instagram / UGC band (DP-09)
+- Home IG pattern; Collection uses reviews band instead
+
+### Section 9d (launch): Coperni collab — seasonal (DP-08)
+- Removable when campaign ends
 
 ### Section 12: Newsletter — "Join the list"
 - Email input + subscribe

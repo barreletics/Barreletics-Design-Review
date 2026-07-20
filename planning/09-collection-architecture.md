@@ -2,16 +2,18 @@
 
 ---
 document: 09 – Collection / Pillar Page Architecture
-version: 1.0
+version: 1.1
 status: 🔒 Locked
 approved_by: Owner / Architect
 approval_date: 2026-07-18
-last_modified: 2026-07-18
+last_modified: 2026-07-20
 depends_on: [03, 04, 07, 12]
 supersedes: []
+frozen_spec: specs/frozen/collections.md
 ---
 
-**Approved Source:** `Barreletics Collection - Definitive-v4.html`
+**Approved Source:** `Barreletics Collection - Definitive-v4.html`  
+**Build freeze (2026-07-20):** DP-04 shop-first H1 + stronger SEO subhead; DP-05 reviews band; DP-06 keep FAQ; DP-10 value-strip. See `specs/frozen/collections.md`.
 
 ## Page Purpose
 
@@ -35,15 +37,14 @@ This dual role supports the category creation strategy: customers arrive searchi
 
 ## Section Architecture
 
-### Section 1: Collection Hero
-- Category-creation headline (e.g., "Your body moves in 360°. Your grip should too.")
-- Subheadline with educational framing
-- Trust signals: star rating, review count, "Trusted by 1,000's of instructors"
-- Background: lifestyle/studio image
+### Section 1: Collection Hero (DP-04)
+- **Shop-first H1** (e.g., “Shop All Styles & Colors” / collection title)
+- **Stronger SEO/category subhead** — Performance Skins vs grip socks; two builds; $74
+- Sole chooser cards with “Best for…” / Pick this if labels
+- Trust signals as available
 
-### Section 2: Pillar Strip
-- Same 6 pillars as Home/PDP (shared component)
-- Warm cream background (`#f5f2ec`)
+### Section 2: Value / Trust Strip
+- Shared `value-strip` (DP-10); 6-pillar strip Optional
 
 ### Section 3: Sole Type Chooser
 - Visual comparison: Open Sole card vs Closed Sole card
@@ -66,13 +67,17 @@ This dual role supports the category creation strategy: customers arrive searchi
 - "The Pilates sock era is over" framing
 - Educational content about why Performance Skins replace grip socks
 
-### Section 7: FAQ (abbreviated)
+### Section 7: Reviews band (DP-05) — required
+- 3–6 curated reviews / instructor quotes (`social-proof` section)
+- Collection does **not** use Home IG widget (DP-09)
+
+### Section 8: FAQ (abbreviated) — required (DP-06)
 - 4–6 most common questions
 - Accordion format, max-width 760px
 - Content sourced from Master Knowledge Base (doc 07)
 - FAQ schema markup for SEO
 
-### Section 8: GEO Content (below FAQ)
+### Section 9: GEO Content (below FAQ)
 - Positioned for crawlers, not shoppers
 - City/state-specific content with discipline-specific moves
 - Studio types, equipment, and specific exercises

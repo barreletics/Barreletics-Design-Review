@@ -120,6 +120,27 @@
       <span><strong>✓</strong> Made in USA</span>
     </div>
 
+    {% if section.settings.micro_quote_1 != blank or section.settings.micro_quote_2 != blank %}
+      <div class="pdp-buy__micro-quotes" aria-label="Customer quotes">
+        {% if section.settings.micro_quote_1 != blank %}
+          <blockquote class="pdp-buy__micro-quote">
+            <p>“{{ section.settings.micro_quote_1 }}”</p>
+            {% if section.settings.micro_quote_1_attr != blank %}
+              <cite>{{ section.settings.micro_quote_1_attr }}</cite>
+            {% endif %}
+          </blockquote>
+        {% endif %}
+        {% if section.settings.micro_quote_2 != blank %}
+          <blockquote class="pdp-buy__micro-quote">
+            <p>“{{ section.settings.micro_quote_2 }}”</p>
+            {% if section.settings.micro_quote_2_attr != blank %}
+              <cite>{{ section.settings.micro_quote_2_attr }}</cite>
+            {% endif %}
+          </blockquote>
+        {% endif %}
+      </div>
+    {% endif %}
+
     <div class="pdp-buy__accordions">
       <details class="pdp-accordion" data-pdp-accordion>
         <summary class="pdp-accordion__trigger" aria-expanded="false">Description <span>+</span></summary>
@@ -444,6 +465,36 @@
     color: var(--text-primary);
   }
 
+  .pdp-buy__micro-quotes {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 0 0 var(--space-5);
+  }
+
+  .pdp-buy__micro-quote {
+    margin: 0;
+    padding: 12px 14px;
+    border-left: 3px solid var(--accent-primary, #c45c3f);
+    background: var(--bg-alternate, #f5f2ec);
+  }
+
+  .pdp-buy__micro-quote p {
+    margin: 0 0 6px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-body);
+  }
+
+  .pdp-buy__micro-quote cite {
+    font-size: 11px;
+    font-style: normal;
+    font-weight: var(--weight-semibold);
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
   .pdp-accordion {
     border-bottom: 1px solid var(--border-default);
   }
@@ -543,7 +594,32 @@
 {% schema %}
 {
   "name": "PDP Buy Box",
-  "settings": [],
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "micro_quote_1",
+      "label": "Micro-quote 1",
+      "default": "Secure on the carriage through the entire footwork series. No more adjusting between sets."
+    },
+    {
+      "type": "text",
+      "id": "micro_quote_1_attr",
+      "label": "Micro-quote 1 attribution",
+      "default": "Lauren T. · Reformer"
+    },
+    {
+      "type": "textarea",
+      "id": "micro_quote_2",
+      "label": "Micro-quote 2",
+      "default": "I refuse to wear anything else. Your foot has to be gripping without fail."
+    },
+    {
+      "type": "text",
+      "id": "micro_quote_2_attr",
+      "label": "Micro-quote 2 attribution",
+      "default": "Dvorah S. · Pilates"
+    }
+  ],
   "presets": [{ "name": "PDP Buy Box" }]
 }
 {% endschema %}
