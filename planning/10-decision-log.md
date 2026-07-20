@@ -523,6 +523,24 @@ All ADRs from the prior planning phase (ADR-01 through ADR-07) are resolved per 
 
 ---
 
+### D-047: M4C Validation Gate Locked
+**Decided:** 2026-07-19 | **Severity:** Critical
+
+**Decision:** M4C Validation gate is complete and locked. 130 validations executed: 109 pass, 6 failures fixed and re-verified, 15 N/A (deferred to M4D for runtime evidence on deployed preview). Zero unresolved failures. Evidence-first validation framework established.
+
+**Context:**
+- All code-verifiable validations pass
+- 6 remediated failures: NAV-004 (mobile utility menu), HOME-003 (value strip), HOME-004/COL-004 (variant grid tabs), HOME-010 (hardcoded hex), CART-010 (focus trap)
+- 15 N/A items require deployed Shopify preview or device testing — methods documented for M4D
+- No Owner blockers remaining at code level
+- Advisory findings (non-blocking): organization schema orphan, fifty-fifty bg_color setting, mobile menu focus trap
+
+**Impact:** M4C status changed to 🔒 Locked. M4D (Launch) authorized to begin. Dashboard updated.
+
+**Status:** Approved
+
+---
+
 ## ADR Archive
 
 The original ADR documents (ADR-01 through ADR-07) are preserved in `planning/` for historical reference. Their UNRESOLVED status is now superseded by the decisions above.

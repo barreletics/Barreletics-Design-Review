@@ -216,8 +216,8 @@
 |------|------|--------|----------------|
 | M4A | Production Assembly | 🔒 Locked | M1-3 locked + Pre-Deployment Truth Set |
 | M4B | Integrations | 🔒 Locked | M4A complete |
-| M4C | Validation | 🔵 Ready for Review | M4B complete + Policy Freeze Gate (D-040) |
-| M4D | Launch | ⚪ | M4C complete + Pre-Deployment Truth Set verified |
+| M4C | Validation | 🔒 Locked | M4B complete + Policy Freeze Gate (D-040) |
+| M4D | Launch | 🟡 In Progress | M4C complete + Pre-Deployment Truth Set verified |
 | M4E | Stabilization | ⚪ | M4D complete (theme live) |
 
 > **M4B locked** — all integration code in place with graceful degradation. D-045 documents production tracking strategy (Shopify native preferred, theme-level as fallback). Credential-dependent activation deferred to M4D Launch.
