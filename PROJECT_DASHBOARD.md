@@ -259,6 +259,40 @@
 | Create Help Scout saved replies | ⚪ | Help Scout admin |
 | Import Tidio knowledge base | ⚪ | Tidio admin |
 
+### M4C Deliverables
+
+| Deliverable | Status | File |
+|-------------|--------|------|
+| Validation Plan | ✅ | `planning/m4c-validation-plan.md` |
+| QA Report (130 validations) | ✅ | `planning/m4c-qa-report.md` |
+| 6 remediated failures | ✅ | NAV-004, HOME-003, HOME-004/COL-004, HOME-010, CART-010 |
+| 15 deferred validations documented | ✅ | Deferred to M4D for runtime evidence |
+
+### M4D Deliverables
+
+| Deliverable | Status | File |
+|-------------|--------|------|
+| **Planning Documents** | | |
+| Launch Plan | 🟡 | `planning/m4d-launch-plan.md` |
+| Deferred Validations (15 items) | 🟡 | `planning/m4d-deferred-validations.md` |
+| Rollback Procedure | 🟡 | `planning/m4d-rollback-procedure.md` |
+| DNS Checklist | 🟡 | `planning/m4d-dns-checklist.md` |
+| Theme Publish Checklist | 🟡 | `planning/m4d-theme-publish-checklist.md` |
+| Launch Day Timeline | 🟡 | `planning/m4d-launch-day-timeline.md` |
+| Monitoring Plan (24h) | 🟡 | `planning/m4d-monitoring-plan.md` |
+| 24-Hour Post-Launch Checklist | 🟡 | `planning/m4d-24h-checklist.md` |
+| 7-Day Stabilization Checklist | 🟡 | `planning/m4d-7day-stabilization.md` |
+| Severity Matrix | 🟡 | `planning/m4d-severity-matrix.md` |
+| Decision Tree (Go/Rollback) | 🟡 | `planning/m4d-decision-tree.md` |
+| Owner Launch Checklist | 🟡 | `planning/m4d-owner-launch-checklist.md` |
+| **Execution Items** | | |
+| 15 deferred validations executed with evidence | ⚪ | Requires deployed preview |
+| Theme uploaded to Shopify | ⚪ | Builder action |
+| Test transaction completed | ⚪ | Joint action |
+| Theme published to production | ⚪ | Joint action |
+| 24-hour monitoring complete | ⚪ | Joint action |
+| 7-day stabilization complete | ⚪ | Joint action |
+
 ### M4A Deliverables
 
 | Deliverable | Status | File |
@@ -291,6 +325,7 @@
 | D-044 | M4A Production Assembly locked |
 | D-045 | Production tracking strategy — Shopify native preferred, theme-level fallback only |
 | D-046 | M4B Integrations locked — credential activation deferred to M4D |
+| D-047 | M4C Validation Gate locked — 109 pass, 6 fixed, 15 deferred to M4D |
 
 ## Milestone 5: Growth Platform (v1) — ⚪ Planning
 
@@ -314,11 +349,29 @@
 
 ## Next Actions
 
-1. **Owner:** Paste production IDs into Theme Settings → Tracking & Integrations (GA4, Meta, Pinterest, Clarity, Search Console, Help Scout, Tidio) — see `planning/m4b-environment-config.md`
-2. **Owner:** Configure Judge.me app — enable metafield sync, disable default widget
-3. **Owner:** Create Help Scout saved replies from `planning/m4b-helpscout-alignment.md`
-4. **Owner:** Import Tidio knowledge base from `planning/m4b-tidio-knowledge-base.md`
-5. **Owner:** Configure CAPI via Shopify Meta & Instagram channel
-6. **Owner:** Install Google & YouTube channel for Merchant Center product feed
-7. **Owner+Builder:** Run verification checklist (`planning/m4b-verification-checklist.md`)
-8. **Builder:** Address deferred M2 minor issues (M-05, M-08, M-09) during deployment
+### Owner (blocks launch)
+1. Provide all 7 tracking IDs/keys — see `planning/m4b-environment-config.md`
+2. Complete Policy Freeze Gate sign-off (shipping, returns, warranty, pricing, discounts, wholesale, studio, ambassador)
+3. Choose hero headline (D-041) — current vs. alternative concept
+4. Deliver production assets (favicon, OG image, logo variants)
+5. Review and approve content inventory items marked "Needs Review"
+6. Confirm collection structure
+7. Review and approve redirect map
+8. Configure Judge.me app — enable metafield sync, disable default widget
+9. Create Help Scout saved replies from `planning/m4b-helpscout-alignment.md`
+10. Import Tidio knowledge base from `planning/m4b-tidio-knowledge-base.md`
+11. Configure CAPI via Shopify Meta & Instagram channel
+12. Install Google & YouTube channel for Merchant Center product feed
+
+### Builder (can proceed independently)
+1. Insert tracking IDs into theme settings (after Owner provides)
+2. Upload theme to Shopify as unpublished preview
+3. Configure theme settings with production values
+4. Create navigation menus per `m4a-navigation-config.md`
+5. Create required collections (only those approved by Owner)
+6. Create supporting pages, populate metafields
+7. Address deferred M2 minor issues (M-05, M-08, M-09)
+
+### Joint
+1. Run 15 deferred M4C validations on preview with evidence — see `planning/m4d-deferred-validations.md`
+2. Execute launch per `planning/m4d-launch-day-timeline.md`
