@@ -1,7 +1,7 @@
 # Barreletics Blueprint — Project Dashboard
 
 **Last Updated:** 2026-07-19
-**Current Milestone:** 4C — Validation (Planning)
+**Current Milestone:** 4C — Validation (Ready for Review)
 
 ---
 
@@ -216,7 +216,7 @@
 |------|------|--------|----------------|
 | M4A | Production Assembly | 🔒 Locked | M1-3 locked + Pre-Deployment Truth Set |
 | M4B | Integrations | 🔒 Locked | M4A complete |
-| M4C | Validation | ⚪ Planning | M4B complete + Policy Freeze Gate (D-040) |
+| M4C | Validation | 🔵 Ready for Review | M4B complete + Policy Freeze Gate (D-040) |
 | M4D | Launch | ⚪ | M4C complete + Pre-Deployment Truth Set verified |
 | M4E | Stabilization | ⚪ | M4D complete (theme live) |
 

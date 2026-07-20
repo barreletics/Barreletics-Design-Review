@@ -281,12 +281,38 @@
     close: closeDrawer
   };
 
-  /* ── Keyboard handling for drawer ── */
+  /* ── Keyboard handling + focus trap for drawer ── */
   document.addEventListener('keydown', function (e) {
     var drawer = document.getElementById('cart-drawer');
     if (!drawer) return;
-    if (e.key === 'Escape' && drawer.classList.contains('is-open')) {
+    if (!drawer.classList.contains('is-open')) return;
+
+    if (e.key === 'Escape') {
       closeDrawer();
+      return;
+    }
+
+    if (e.key === 'Tab') {
+      var panel = drawer.querySelector('.cart-drawer__panel');
+      if (!panel) return;
+      var focusable = panel.querySelectorAll(
+        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusable.length === 0) return;
+      var first = focusable[0];
+      var last = focusable[focusable.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     }
   });
 
