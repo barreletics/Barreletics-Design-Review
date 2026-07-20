@@ -482,6 +482,26 @@ All ADRs from the prior planning phase (ADR-01 through ADR-07) are resolved per 
 
 ---
 
+### D-045: Production Tracking Strategy
+**Decided:** 2026-07-19 | **Severity:** Critical
+
+**Decision:** Shopify native channel integrations are the preferred production implementation for GA4 and Meta tracking:
+- **GA4:** Shopify Google & YouTube channel is the preferred production implementation
+- **Meta Pixel + CAPI:** Shopify Meta & Instagram channel is the preferred production implementation
+- Theme-level GA4 and Meta snippets (`snippets/analytics-head.liquid`, `snippets/meta-pixel.liquid`) exist as fallback/custom implementation ONLY
+- Theme-level GA4 and Meta tracking MUST remain disabled (IDs left blank in Theme Settings) whenever Shopify native integrations are active
+- Enabling both simultaneously creates duplicate tracking and corrupts analytics data
+- Integrations NOT natively handled by Shopify remain theme-managed: Microsoft Clarity, Help Scout, Tidio, Pinterest Tag, Google Search Console verification
+- This is a permanent architectural decision — future developers must not enable both sources
+
+**Rationale:** Shopify's native channels provide server-side event delivery (CAPI), automatic deduplication, enhanced match quality, and zero-maintenance updates. Theme-level snippets duplicate these events browser-side, causing inflated metrics, broken attribution, and corrupted conversion data. The theme snippets exist for scenarios where native channels are unavailable or insufficient (custom events, non-standard configurations).
+
+**Impact:** `m4b-integration-plan.md`, `m4b-environment-config.md`, and `m4b-verification-checklist.md` updated to reference this decision. All future integration work must verify native channel status before enabling theme-level tracking.
+
+**Status:** Approved
+
+---
+
 ## ADR Archive
 
 The original ADR documents (ADR-01 through ADR-07) are preserved in `planning/` for historical reference. Their UNRESOLVED status is now superseded by the decisions above.

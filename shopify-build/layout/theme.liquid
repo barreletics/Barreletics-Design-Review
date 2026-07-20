@@ -82,6 +82,25 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+  <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+  <link rel="preconnect" href="https://connect.facebook.net" crossorigin>
+
+  {%- comment -%} Google Search Console verification {%- endcomment -%}
+  {% if settings.search_console_verification != blank %}
+    <meta name="google-site-verification" content="{{ settings.search_console_verification }}">
+  {% endif %}
+
+  {%- comment -%} Analytics — GA4 {%- endcomment -%}
+  {% render 'analytics-head' %}
+
+  {%- comment -%} Meta Pixel {%- endcomment -%}
+  {% render 'meta-pixel' %}
+
+  {%- comment -%} Pinterest Tag {%- endcomment -%}
+  {% render 'pinterest-tag' %}
+
+  {%- comment -%} Microsoft Clarity {%- endcomment -%}
+  {% render 'clarity' %}
 
   {%- comment -%} Fonts {%- endcomment -%}
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -148,6 +167,15 @@
 
   {%- comment -%} Cart Drawer (D-024) {%- endcomment -%}
   {% render 'cart-drawer' %}
+
+  {%- comment -%} Analytics Events (enhanced ecommerce) {%- endcomment -%}
+  {% render 'analytics-events' %}
+
+  {%- comment -%} Help Scout Beacon {%- endcomment -%}
+  {% render 'helpscout-beacon' %}
+
+  {%- comment -%} Tidio AI Chat {%- endcomment -%}
+  {% render 'tidio-widget' %}
 
   {%- comment -%} Skip link styles {%- endcomment -%}
   <style>
