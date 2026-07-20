@@ -90,6 +90,33 @@
       display: block; position: absolute; inset: 0;
     }
 
+    /* === VISUAL MOSAIC (live-site energy) === */
+    .visual-mosaic { padding: 16px 16px 8px; background: #fff; }
+    .visual-mosaic__grid {
+      max-width: 1400px; margin: 0 auto;
+      display: grid; grid-template-columns: 1.4fr 1fr 1fr; grid-template-rows: 220px 220px; gap: 12px;
+    }
+    .vm-tile {
+      position: relative; overflow: hidden; border-radius: 4px; display: block; text-decoration: none; color: #fff;
+      min-height: 180px;
+    }
+    .vm-tile--hero { grid-row: 1 / span 2; }
+    .vm-tile img, .vm-tile video {
+      width: 100%; height: 100%; object-fit: cover; display: block; position: absolute; inset: 0;
+      transition: transform 0.45s ease;
+    }
+    .vm-tile:hover img, .vm-tile:hover video { transform: scale(1.04); }
+    .vm-tile__shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(28,25,22,0.1) 20%, rgba(28,25,22,0.65) 100%); z-index: 1; }
+    .vm-tile__content { position: absolute; left: 20px; right: 20px; bottom: 20px; z-index: 2; }
+    .vm-tile__label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin: 0 0 8px; opacity: 0.9; }
+    .vm-tile__title { font-size: 28px; font-weight: 700; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.02em; }
+    .vm-tile__body { font-size: 14px; margin: 0 0 14px; opacity: 0.92; max-width: 28ch; }
+    .vm-tile__cta {
+      display: inline-block; padding: 10px 16px; border: 1px solid #fff; color: #fff;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .vm-tile--sm .vm-tile__title { font-size: 22px; margin: 0; }
+
     /* === PROBLEM === */
     .problem-section { padding: 80px 40px; background: #f5f2ec; }
     .problem-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 64px; align-items: center; }
@@ -263,11 +290,14 @@
 
     @media (max-width: 768px) {
       .hero { grid-template-columns: 1fr; min-height: auto; }
-      .hero__copy { padding: 48px 24px 40px; align-items: center; text-align: center; }
+      .hero__copy { padding: 48px 24px 40px; align-items: center; text-align: center; order: 2; }
       .hero__title { font-size: 34px; }
       .hero__body { max-width: none; }
       .hero__ctas { justify-content: center; }
-      .hero__image { min-height: 400px; }
+      .hero__image { min-height: 400px; order: 1; }
+      .visual-mosaic__grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+      .vm-tile--hero { grid-row: auto; grid-column: 1 / -1; min-height: 280px; }
+      .vm-tile__title { font-size: 22px; }
       .problem-section { padding: 56px 16px; }
       .problem-inner { grid-template-columns: 1fr; gap: 32px; }
       .problem-title { font-size: 28px; }
@@ -334,8 +364,11 @@
 </header>
 
 
-<!-- 2. HERO — 50/50: stars first (live-site pattern), rust + outline CTAs -->
+<!-- 2. HERO — image left (live energy), stars + dual CTAs -->
 <section class="hero" aria-label="Hero">
+  <div class="hero__image">
+    <img src="https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=1600" alt="Barreletics Performance Skins — grip that holds in every studio workout" width="1600" height="1600">
+  </div>
   <div class="hero__copy">
     <p class="hero__trust"><span class="hero__stars" aria-hidden="true">★★★★★</span> Trusted by 1,000's of athletes</p>
     <p class="hero__disciplines">Barre · Reformer · Megaformer · Pilates · Yoga</p>
@@ -346,8 +379,44 @@
       <a href="#problem" class="hero__cta hero__cta--outline">See Why →</a>
     </div>
   </div>
-  <div class="hero__image">
-    <img src="https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=1600" alt="Barreletics Performance Skins — grip that holds in every studio workout" width="1600" height="1600">
+</section>
+
+
+<!-- 2b. VISUAL MOSAIC — lifestyle energy from live site assets -->
+<section class="visual-mosaic" aria-label="Studio proof">
+  <div class="visual-mosaic__grid">
+    <a class="vm-tile vm-tile--hero" href="#variants">
+      <img src="https://barreletics.com/cdn/shop/files/Square_Pink.png?v=1764627088&width=1200" alt="Performance Skins in studio">
+      <span class="vm-tile__shade"></span>
+      <span class="vm-tile__content">
+        <span class="vm-tile__label">Performance Skins</span>
+        <span class="vm-tile__title">Secure in every hold</span>
+        <span class="vm-tile__body">No sliding. No resets. Shop the grip that replaced the sock.</span>
+        <span class="vm-tile__cta">Shop Now</span>
+      </span>
+    </a>
+    <a class="vm-tile vm-tile--sm" href="#variants">
+      <img src="https://barreletics.com/cdn/shop/files/IMG_2917.jpg?v=1741040637&width=900" alt="Stability in class">
+      <span class="vm-tile__shade"></span>
+      <span class="vm-tile__content"><span class="vm-tile__title">Stability</span></span>
+    </a>
+    <a class="vm-tile vm-tile--sm" href="#variants">
+      <video autoplay muted loop playsinline preload="metadata" poster="https://barreletics.com/cdn/shop/files/Multi_Image.jpg?v=1768346625&width=900">
+        <source src="https://barreletics.com/cdn/shop/videos/c/vp/75bddc3407e341c1aab81ca4f2dc8d66/75bddc3407e341c1aab81ca4f2dc8d66.HD-720p-4.5Mbps.mp4" type="video/mp4">
+      </video>
+      <span class="vm-tile__shade"></span>
+      <span class="vm-tile__content"><span class="vm-tile__title">Balance</span></span>
+    </a>
+    <a class="vm-tile vm-tile--sm" href="#variants">
+      <img src="https://barreletics.com/cdn/shop/products/barreletixxjumpingtogether.jpg?v=1619360969&width=900" alt="Durability">
+      <span class="vm-tile__shade"></span>
+      <span class="vm-tile__content"><span class="vm-tile__title">Durability</span></span>
+    </a>
+    <a class="vm-tile vm-tile--sm" href="#variants">
+      <img src="https://barreletics.com/cdn/shop/products/Yellow_Image-Blue_Shoe_1200x1200_59ef7b79-1661-4c2f-a2da-c6b9211e2c42.jpg?v=1678412911&width=900" alt="Breathability">
+      <span class="vm-tile__shade"></span>
+      <span class="vm-tile__content"><span class="vm-tile__title">Breathability</span></span>
+    </a>
   </div>
 </section>
 
@@ -656,7 +725,7 @@
 <!-- 9. FULL-BLEED — one statement + CTA -->
 <section class="fullbleed">
   <div class="fullbleed__bg">
-    <img src="https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=2000" alt="">
+    <img src="https://barreletics.com/cdn/shop/files/IMG_2917.jpg?v=1741040637&width=2000" alt="">
   </div>
   <div class="fullbleed__content">
     <p class="fullbleed__statement">You Commit to the Class. Commit to the Gear.</p>
@@ -730,12 +799,12 @@
     <h2 style="font-size:32px;font-weight:500;color:#1c1916;margin:0 0 6px;">@barreletics</h2>
     <p style="font-size:15px;color:#4a4a4a;margin:0;">Real practitioners. Real studios. Real grip.</p>
     <div class="ig-grid">
-      <div class="ig-cell"><span class="ig-cell__label">Reformer flow</span><div class="ig-cell__hover"><span>♥ 342</span></div></div>
-      <div class="ig-cell" style="background:#e9d3cb;"><span class="ig-cell__label">Dusty Rose close-up</span><div class="ig-cell__hover"><span>♥ 518</span></div></div>
-      <div class="ig-cell" style="background:#d6cfc0;"><span class="ig-cell__label">Studio class shot</span><div class="ig-cell__hover"><span>♥ 291</span></div></div>
-      <div class="ig-cell" style="background:#c9c5b8;"><span class="ig-cell__label">Barre workout</span><div class="ig-cell__hover"><span>♥ 407</span></div></div>
-      <div class="ig-cell" style="background:#e6e0d4;"><span class="ig-cell__label">Flat lay product</span><div class="ig-cell__hover"><span>♥ 623</span></div></div>
-      <div class="ig-cell" style="background:#d4c8b8;"><span class="ig-cell__label">Instructor feature</span><div class="ig-cell__hover"><span>♥ 185</span></div></div>
+      <div class="ig-cell"><img src="https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=600" alt="" style="width:100%;height:100%;object-fit:cover;"><div class="ig-cell__hover"><span>♥ 342</span></div></div>
+      <div class="ig-cell"><img src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=600" alt="" style="width:100%;height:100%;object-fit:cover;"><div class="ig-cell__hover"><span>♥ 518</span></div></div>
+      <div class="ig-cell"><img src="https://barreletics.com/cdn/shop/files/IMG_2917.jpg?v=1741040637&width=600" alt="" style="width:100%;height:100%;object-fit:cover;"><div class="ig-cell__hover"><span>♥ 291</span></div></div>
+      <div class="ig-cell"><img src="https://barreletics.com/cdn/shop/files/Multi_Image.jpg?v=1768346625&width=600" alt="" style="width:100%;height:100%;object-fit:cover;"><div class="ig-cell__hover"><span>♥ 407</span></div></div>
+      <div class="ig-cell"><img src="https://barreletics.com/cdn/shop/products/barreletixxjumpingtogether.jpg?v=1619360969&width=600" alt="" style="width:100%;height:100%;object-fit:cover;"><div class="ig-cell__hover"><span>♥ 623</span></div></div>
+      <div class="ig-cell"><img src="https://barreletics.com/cdn/shop/files/Copreni_Final_More_grey.png?v=1774119812&width=600" alt="" style="width:100%;height:100%;object-fit:cover;"><div class="ig-cell__hover"><span>♥ 185</span></div></div>
     </div>
     <a href="https://www.instagram.com/barreletics/" target="_blank" rel="noopener" style="font-size:13px;color:#1c1916;text-transform:uppercase;letter-spacing:0.06em;text-decoration:none;font-weight:600;border-bottom:1px solid #1c1916;padding-bottom:2px;">Follow on Instagram →</a>
   </div>
