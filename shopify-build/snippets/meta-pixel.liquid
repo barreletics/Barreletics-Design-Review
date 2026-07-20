@@ -1,15 +1,17 @@
 {% comment %}
   Meta Pixel — Base Code + Standard Events
   Placement: Inside <head> via theme.liquid
+  Configuration: Theme Settings → Tracking & Integrations → Meta Pixel ID
 
-  Events: PageView, ViewContent, AddToCart, InitiateCheckout, Purchase
+  Events: PageView, ViewContent, AddToCart, InitiateCheckout
   Deduplication: event_id parameter prevents double-counting with CAPI.
+  Purchase event handled by Shopify checkout — see note at bottom.
 
-  OWNER ACTION REQUIRED:
-  Replace 'PIXEL_ID_HERE' with the actual Meta Pixel ID from
-  Meta Business Manager > Events Manager > Data Sources.
+  IMPORTANT: If using Shopify's native Meta & Instagram channel,
+  leave the Pixel ID blank to prevent duplicate tracking.
 {% endcomment %}
 
+{% if settings.meta_pixel_id != blank %}
 <!-- Meta Pixel Code -->
 <script>
 !function(f,b,e,v,n,t,s)
@@ -20,11 +22,11 @@ n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', 'PIXEL_ID_HERE');
+fbq('init', {{ settings.meta_pixel_id | json }});
 fbq('track', 'PageView');
 </script>
 <noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=PIXEL_ID_HERE&ev=PageView&noscript=1"
+src="https://www.facebook.com/tr?id={{ settings.meta_pixel_id }}&ev=PageView&noscript=1"
 /></noscript>
 <!-- End Meta Pixel Code -->
 
@@ -67,7 +69,7 @@ src="https://www.facebook.com/tr?id=PIXEL_ID_HERE&ev=PageView&noscript=1"
         value: {{ cart.total_price | money_without_currency | remove: ',' }},
         currency: {{ cart.currency.iso_code | json }},
         num_items: {{ cart.item_count }},
-        content_ids: [{% for item in cart.items %}'{{ item.sku | default: item.variant_id }}'{% unless forloop.last %},{% endunless %}{% endfor %}],
+        content_ids: [{% for item in cart.items %}{{ item.sku | default: item.variant_id | json }}{% unless forloop.last %},{% endunless %}{% endfor %}],
         content_type: 'product'
       }, { eventID: 'ic_' + Date.now() });
     }
@@ -75,20 +77,27 @@ src="https://www.facebook.com/tr?id=PIXEL_ID_HERE&ev=PageView&noscript=1"
 
 })();
 </script>
+{% endif %}
 
 {% comment %}
-  PURCHASE EVENT NOTE:
-  The 'Purchase' event must be configured in Shopify Admin >
-  Settings > Customer events as a Custom Pixel, or via the
+  PURCHASE EVENT:
+  The 'Purchase' event must be configured in Shopify Admin →
+  Settings → Customer events as a Custom Pixel, or via the
   Meta & Instagram sales channel CAPI integration.
   Theme code cannot fire on the checkout thank-you page.
 
-  CAPI SETUP:
-  1. Install Meta & Instagram sales channel in Shopify admin
+  CAPI SETUP (Owner action):
+  1. Install Meta & Instagram sales channel in Shopify Admin
   2. Connect Meta Business Manager account
   3. Enable Conversions API (CAPI) in channel settings
   4. CAPI automatically sends server-side events
   5. Event deduplication: browser event_id matches CAPI event_id
      (Shopify's Meta channel handles this automatically)
-  6. Verify in Events Manager > Test Events tab
+  6. Verify in Events Manager → Test Events tab
+
+  DUPLICATE PREVENTION:
+  If using Shopify's native Meta & Instagram channel (Sales Channels),
+  that integration fires PageView, ViewContent, AddToCart,
+  InitiateCheckout, and Purchase events automatically. In that case,
+  leave the Meta Pixel ID blank in Theme Settings to avoid double-counting.
 {% endcomment %}

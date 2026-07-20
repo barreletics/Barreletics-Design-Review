@@ -1,14 +1,13 @@
 {% comment %}
   Pinterest Tag — Base Code + Standard Events
   Placement: Inside <head> via theme.liquid
+  Configuration: Theme Settings → Tracking & Integrations → Pinterest Tag ID
 
-  Events: pagevisit, viewcategory, addtocart, checkout
-
-  OWNER ACTION REQUIRED:
-  Replace 'PINTEREST_TAG_ID' with the actual tag ID from
-  Pinterest Business > Ads > Conversions > Tag Manager.
+  Events: pagevisit (PDP), viewcategory (collection), addtocart, checkout
+  Enhanced match: passes hashed email if customer is logged in.
 {% endcomment %}
 
+{% if settings.pinterest_tag_id != blank %}
 <!-- Pinterest Tag -->
 <script>
 !function(e){if(!window.pintrk){window.pintrk=function(){
@@ -17,12 +16,12 @@ n=window.pintrk;n.queue=[],n.version="3.0";var
 t=document.createElement("script");t.async=!0,t.src=e;var
 r=document.getElementsByTagName("script")[0];
 r.parentNode.insertBefore(t,r)}}("https://s.pinimg.com/ct/core.js");
-pintrk('load', 'PINTEREST_TAG_ID', { em: '<user_email_if_available>' });
+pintrk('load', {{ settings.pinterest_tag_id | json }}{% if customer %}, { em: {{ customer.email | json }} }{% endif %});
 pintrk('page');
 </script>
 <noscript>
 <img height="1" width="1" style="display:none;" alt=""
-src="https://ct.pinterest.com/v3/?event=init&tid=PINTEREST_TAG_ID&noscript=1" />
+src="https://ct.pinterest.com/v3/?event=init&tid={{ settings.pinterest_tag_id }}&noscript=1" />
 </noscript>
 <!-- End Pinterest Tag -->
 
@@ -86,3 +85,4 @@ src="https://ct.pinterest.com/v3/?event=init&tid=PINTEREST_TAG_ID&noscript=1" />
 
 })();
 </script>
+{% endif %}

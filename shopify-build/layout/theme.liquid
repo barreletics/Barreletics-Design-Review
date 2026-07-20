@@ -85,6 +85,11 @@
   <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
   <link rel="preconnect" href="https://connect.facebook.net" crossorigin>
 
+  {%- comment -%} Google Search Console verification {%- endcomment -%}
+  {% if settings.search_console_verification != blank %}
+    <meta name="google-site-verification" content="{{ settings.search_console_verification }}">
+  {% endif %}
+
   {%- comment -%} Analytics — GA4 {%- endcomment -%}
   {% render 'analytics-head' %}
 
@@ -165,6 +170,12 @@
 
   {%- comment -%} Analytics Events (enhanced ecommerce) {%- endcomment -%}
   {% render 'analytics-events' %}
+
+  {%- comment -%} Help Scout Beacon {%- endcomment -%}
+  {% render 'helpscout-beacon' %}
+
+  {%- comment -%} Tidio AI Chat {%- endcomment -%}
+  {% render 'tidio-widget' %}
 
   {%- comment -%} Skip link styles {%- endcomment -%}
   <style>

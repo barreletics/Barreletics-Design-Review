@@ -1,22 +1,28 @@
 {% comment %}
   GA4 Enhanced Ecommerce Events
   Placement: Before </body> via theme.liquid
+  Configuration: Requires GA4 Measurement ID set in analytics-head.liquid
 
-  Fires standard ecommerce events based on page context.
-  Events: view_item, view_item_list, add_to_cart, begin_checkout, purchase
+  Fires standard ecommerce events based on page context:
+  - view_item (PDP)
+  - view_item_list (collection)
+  - add_to_cart (cart:item-added custom event)
+  - begin_checkout (checkout button click)
   Custom: size_selector_click, sticky_atc_click, cart_drawer_open
 
-  Purchase event is handled by Shopify's checkout (Additional Scripts or
-  Customer Events) — documented below but not fired from theme code.
+  Purchase event is handled by Shopify checkout — see note at bottom.
+
+  IMPORTANT: If using Shopify's native Google channel integration,
+  leave the GA4 Measurement ID blank in Theme Settings to prevent
+  duplicate event tracking.
 {% endcomment %}
 
+{% if settings.ga4_measurement_id != blank %}
 <script>
 (function() {
   'use strict';
 
   if (typeof gtag === 'undefined') return;
-
-  var template = {{ request.page_type | json }};
 
   {% if request.page_type == 'product' %}
     gtag('event', 'view_item', {
@@ -71,6 +77,26 @@
   });
 
   document.addEventListener('click', function(e) {
+    var checkoutBtn = e.target.closest('[data-checkout-button], [name="checkout"]');
+    if (checkoutBtn) {
+      gtag('event', 'begin_checkout', {
+        currency: {{ cart.currency.iso_code | json }},
+        value: {{ cart.total_price | money_without_currency | remove: ',' }},
+        items: [
+          {% for item in cart.items %}
+            {
+              item_id: {{ item.sku | default: item.variant_id | json }},
+              item_name: {{ item.product.title | json }},
+              item_brand: 'Barreletics',
+              item_variant: {{ item.variant.title | json }},
+              price: {{ item.final_price | money_without_currency | remove: ',' }},
+              quantity: {{ item.quantity }}
+            }{% unless forloop.last %},{% endunless %}
+          {% endfor %}
+        ]
+      });
+    }
+
     var sizeBtn = e.target.closest('[data-size-option]');
     if (sizeBtn) {
       gtag('event', 'size_selector_click', {
@@ -91,16 +117,19 @@
 
 })();
 </script>
+{% endif %}
 
 {% comment %}
-  PURCHASE EVENT NOTE:
-  The 'purchase' event should be configured in Shopify Admin >
-  Settings > Customer events (or checkout.liquid Additional Scripts
-  for Shopify Plus). Shopify's checkout is a separate domain and
-  theme code cannot fire events there. Use Shopify's built-in
-  GA4 integration or add a Custom Pixel for the purchase event.
+  PURCHASE EVENT:
+  Configured in Shopify Admin → Settings → Customer events (or
+  checkout.liquid Additional Scripts on Shopify Plus). Shopify's
+  checkout is a separate domain — theme code cannot fire events there.
+  Use Shopify's built-in GA4 integration or a Custom Pixel for purchase.
 
-  begin_checkout: Fires when customer clicks "Checkout" button.
-  This is captured by the cart drawer/page checkout button click.
-  Shopify redirects to checkout — the event fires before redirect.
+  DUPLICATE PREVENTION:
+  If using Shopify's native Google channel (Sales Channels → Google),
+  that integration already fires page_view, view_item, add_to_cart,
+  begin_checkout, and purchase events. In that case, leave the
+  GA4 Measurement ID blank in Theme Settings to avoid double-counting.
+  Only use this theme-level tracking if NOT using the native channel.
 {% endcomment %}
