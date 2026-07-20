@@ -82,6 +82,7 @@ updated: 2026-07-20
 
 ## Critical includes
 - Hero Concept A; problem early; GEO; value-strip; variant-grid; statement band; guarantee; announcement in theme layout
+- **Videos:** every `<video>` must autoplay muted (`muted` + `autoplay` + `loop` + `playsinline`; harden via JS `muted`/`defaultMuted` for Firefox) — see July 17 Home mockup comment + mute script
 
 ## Deferred Optionals
 - Rotating 5-message eyebrow; dedicated 6-pillar strip; full dark Sock Math; Founder/Manifesto/Closing (About); hero video above fold; promo tiles; full Coperni video split
