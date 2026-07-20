@@ -1,7 +1,7 @@
 # Barreletics Blueprint — Project Dashboard
 
 **Last Updated:** 2026-07-19
-**Current Milestone:** 4B — Integrations (Builder complete, awaiting Owner credentials)
+**Current Milestone:** 4C — Validation (Planning)
 
 ---
 
@@ -215,10 +215,12 @@
 | Gate | Name | Status | Entry Criterion |
 |------|------|--------|----------------|
 | M4A | Production Assembly | 🔒 Locked | M1-3 locked + Pre-Deployment Truth Set |
-| M4B | Integrations | 🔵 Builder Complete — Owner Credentials Needed | M4A complete |
-| M4C | Validation | ⚪ | M4B complete + Policy Freeze Gate (D-040) |
+| M4B | Integrations | 🔒 Locked | M4A complete |
+| M4C | Validation | ⚪ Planning | M4B complete + Policy Freeze Gate (D-040) |
 | M4D | Launch | ⚪ | M4C complete + Pre-Deployment Truth Set verified |
 | M4E | Stabilization | ⚪ | M4D complete (theme live) |
+
+> **M4B locked** — all integration code in place with graceful degradation. D-045 documents production tracking strategy (Shopify native preferred, theme-level as fallback). Credential-dependent activation deferred to M4D Launch.
 
 ### M4B Deliverables
 
@@ -286,6 +288,9 @@
 | D-041 | Homepage hero — two concepts built for side-by-side comparison |
 | D-042 | Partner Programs consolidated into single page |
 | D-043 | Collections created only when products/merchandising require them |
+| D-044 | M4A Production Assembly locked |
+| D-045 | Production tracking strategy — Shopify native preferred, theme-level fallback only |
+| D-046 | M4B Integrations locked — credential activation deferred to M4D |
 
 ## Milestone 5: Growth Platform (v1) — ⚪ Planning
 

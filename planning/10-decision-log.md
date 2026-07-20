@@ -502,6 +502,27 @@ All ADRs from the prior planning phase (ADR-01 through ADR-07) are resolved per 
 
 ---
 
+### D-046: M4B Integrations Locked
+**Decided:** 2026-07-19 | **Severity:** Critical
+
+**Decision:** M4B Integrations gate is complete and locked. All integration snippets, configuration system, Help Scout alignment, Tidio knowledge base, and verification checklist are complete. Credential insertion and platform activation deferred to M4D Launch.
+
+**Context:**
+- All tracking snippets built with graceful degradation (GA4, Meta Pixel, Pinterest, Clarity, Help Scout Beacon, Tidio)
+- Settings schema extended with Tracking & Integrations section
+- Theme.liquid integration includes added
+- Duplicate prevention documented (D-045)
+- Help Scout saved reply content prepared (`m4b-helpscout-alignment.md`)
+- Tidio knowledge base content prepared (`m4b-tidio-knowledge-base.md`)
+- Verification checklist ready for post-credential activation (`m4b-verification-checklist.md`)
+- Owner actions documented: paste IDs, configure apps, run verification
+
+**Impact:** M4B status changed to 🔒 Locked. M4C (Validation) authorized to begin planning. Dashboard updated.
+
+**Status:** Approved
+
+---
+
 ## ADR Archive
 
 The original ADR documents (ADR-01 through ADR-07) are preserved in `planning/` for historical reference. Their UNRESOLVED status is now superseded by the decisions above.
