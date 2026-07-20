@@ -23,7 +23,7 @@ updated: 2026-07-20
 ## Approved section list (conversion spine)
 1. Announcement strip + header nav (chrome)
 2. **Hero** — Sock Era H1; primary CTA → `/collections/grippy-shoes`; secondary See Why → `#problem`
-3. **Problem** fifty-fifty — “Yoga Socks Are Useless”
+3. **Problem** fifty-fifty — H2 “Tired of slipping…?”; punch “Yoga Socks Are Useless.”; resolve = hairline + “One Pair. Done.” + CTA (no THE FIX card)
 4. **Disciplines** proof
 5. **Value strip** (shared)
 6. **Variant grid** (Closed/Open + quick-add)
@@ -42,7 +42,10 @@ updated: 2026-07-20
 |-----------|------|----------|
 | Hero H1 | The Pilates Sock Era Is Over | **Keep** (approved inventory) |
 | Hero CTA | Shop Grippy Shoes — $74 | **Ship** (specific CTA; CRO H-02 fit) |
-| Problem | Yoga Socks Are Useless | **Keep** (July 17 Home) |
+| Problem eyebrow | The Problem · Grip Socks | **Ship** (13px; larger than micro-meta) |
+| Problem H2 | Tired of slipping in your yoga socks? | **Ship** (pain as headline) |
+| Problem punch | Yoga Socks Are Useless. | **Keep** (brand cut under H2) |
+| Problem resolve | One Pair. Done. + Shop CTA | **Ship** (no THE FIX card) |
 | Grip 50/50 | Upgrade Your Grip. Upgrade Your Workout. | **Keep** |
 | Coperni | Barreletics × Coperni / Built for the body in motion | **Keep** (seasonal) |
 | Statement | You Commit to the Class. Commit to the Gear. | **Keep** |
