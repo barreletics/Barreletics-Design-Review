@@ -63,27 +63,32 @@ They already commit to barre/Pilates — time, money, energy. The gear should ma
 
 ## Slogan-to-Section Mapping
 
-Hero-level slogans anchor page sections. Each section has one slogan — never stack competing statements.
+One slogan per section — never stack competing statements. Updated 2026-07-20 (owner keepers).
 
-| Slogan | Primary Placement |
-|--------|-------------------|
-| The Pilates Sock Era is Over | Home hero, Collection hero |
-| Let Us Knock Your Socks Off | Home hero rotation |
-| Think Outside the Sock | Home hero rotation |
-| One Pair Replaces Eight | Sock Math section |
-| You Commit to the Class. Commit to the Gear. | PDP, brand storytelling |
-| Upgrade Your Grip. Upgrade Your Workout. | Collection, paid ads |
-| Never Loses Grip | 50/50 split, PDP |
+| Slogan | Placement |
+|--------|-----------|
+| The Pilates Sock Era is Over | Home hero H1, Collection hero |
+| Think Outside the Sock | Home mosaic hero tile |
+| Let Us Knock Your Socks Off | Home solo statement band |
+| Never Loses Shape. Never Loses Grip. | Home video 50/50; PDP/Collection with Nike wrap visual (side-by-side, **no vs/comparison copy**) |
+| Feels Like a Second Skin / 360° grip | Home hero body + value strip |
+| One Pair. Done. | Home sock-math lite (packshot) |
+| You Commit to the Class. Commit to the Gear. | Home full-bleed |
+| Tired Of Slipping in Your Yoga Socks? | Home late text band (or PDP) |
+| Yoga Socks Are Useless | PDP (not Home) |
+| Upgrade Your Grip. Upgrade Your Workout. | Collection / paid ads |
+| Real people. Real results. | Home Instagram head |
+| Stop adjusting. Start moving. | Optional / secondary surfaces |
 
 ### Hero Eyebrow Rotation (5 messages, 3.5s cycle)
 
 1. Barre. Reformer. Megaformer. One shoe.
 2. Trusted by 1,000's of instructors
-3. 360° grip. No latex, no silicone.
+3. 360° grip. Feels like a second skin.
 4. Made in USA
-5. One Pair. No More Socks.
+5. Never loses shape. Never loses grip.
 
-## Approved Slogans (Full Inventory)
+## Approved Slogans (Owner Keepers — July 20, 2026)
 
 ### Hero-level
 - The Pilates Sock Era is Over
@@ -95,19 +100,14 @@ Hero-level slogans anchor page sections. Each section has one slogan — never s
 
 ### Problem / Solution
 - Tired Of Slipping in Your Yoga Socks?
-- Fed Up With Yoga Socks?
 - Upgrade Your Grip. Upgrade Your Workout.
 - Secure in Every Hold. No Sliding. No Resets.
 - Never Slip in Chair Pose
 - Experience Anti-Slip
-- No More Slipping
 
 ### Value / Commitment
 - One Pair. Done.
-- One Pair. No More Socks.
-- One Pair Replaces Eight.
 - You Commit to the Class. Commit to the Gear.
-- The Cost of Two Classes. For Every Class After.
 
 ### Performance
 - Never Loses Shape
@@ -115,12 +115,11 @@ Hero-level slogans anchor page sections. Each section has one slogan — never s
 - Locked-in Grip Through Holds, Transitions, and Balance
 - Increase Strength
 - Built for the Body in Motion
-- Built for the Move, Not the Pose
 - All Over Grip
 - Feels Like a Second Skin
 - Smarter Than Grip Socks
 - Beyond Yoga Socks
-- 360° grip. No latex, no silicone. Trusted by 1,000's of instructors.
+- 360° grip. Trusted by 1,000's of instructors.
 - The performance skin engineered for barre, reformer Pilates, Lagree and Megaformer.
 
 ### From Reviews (approved for use)
@@ -132,15 +131,7 @@ Hero-level slogans anchor page sections. Each section has one slogan — never s
 
 ### Additional Approved
 - Stop adjusting. Start moving.
-- Focus on your form, not your feet.
-- Socks fail. This doesn't.
-- Built for the move, not the pose.
-- Earn the shake. Not the slip.
-- For people who call it their practice.
-- Five days a week. Zero compromises.
-- 50 minutes. Every transition. Zero adjustments.
-- Your instructor's secret weapon.
-- Worn by instructors. Trusted by studios.
+- Every transition. Zero adjustments.
 
 ## Brand Intelligence
 
