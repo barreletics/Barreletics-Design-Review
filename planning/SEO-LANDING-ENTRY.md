@@ -1,27 +1,35 @@
 # SEO Landing Entry — Best Grippy Socks
 
-**Mock:** `Barreletics SEO - Best Grippy Socks - Definitive-v12.html` ← **open this**  
-**Prior (keep for compare):** `Definitive-v11.html` — do not overwrite  
+**Mock:** `Barreletics SEO - Best Grippy Socks - Definitive-v13.html` ← **open this**  
+**Prior (keep for compare):** `Definitive-v12.html` — do not overwrite  
 **Andrew-liked convert lock:** `Definitive-v6.html`  
 **Prior convert lock:** `Definitive-v5.html` (Collection-style spine — keep for compare)  
 **Convert grid CSS/JS source:** Collection `Definitive-v12.html`  
 **Reviews + IG pattern:** Home `Definitive-WORKING.html` (+ v11 reviews carousel)  
 **Reusable hero module:** `.hero-fullbleed` — see `planning/HERO-FULLBLEED.md` · `sections/hero-fullbleed-snippet.html`  
 **Archived framework:** `Definitive-v1.html` (early text/SEO shell)  
-**Experiments (compare only):** v2 Home-like · v3 media pass · v4 light commerce · v5 Collection clone · v6 convert lock · v7 warmth + reviews cream · v8 reviews white · v9 IG cream · v10 Sock Era + Commit · v11 Yoga Socks / Upgrade  
+**Experiments (compare only):** v2 Home-like · v3 media pass · v4 light commerce · v5 Collection clone · v6 convert lock · v7 warmth + reviews cream · v8 reviews white · v9 IG cream · v10 Sock Era + Commit · v11 Yoga Socks / Upgrade · v12 rejected epigram support  
 **Live:** `https://barreletics.com/pages/best-barre-pilates-yoga-grippy-socks`  
-**Updated:** 2026-07-23 (v12 — drop-dead support under Yoga Socks Are Useless)  
+**Updated:** 2026-07-23 (v13 — Yoga Socks support = inventory Molded 360° grip. Not sock dots.)  
 **Preview hub:** Featured under Shop spine as **Latest SEO**
 
 ## Job
 
 Organic + paid sock searches (Pilates socks / yoga socks / barre grip socks) land here → **shop on-page**. Footer SEO destination — not primary nav. Performance Skins = the upgrade. Convert engine = variant grid + Quick Add.
 
+## What changed in v13 (from v12)
+
+| Area | v13 |
+|------|-----|
+| Problem cream support | **Molded 360° grip. Not sock dots.** *(inventory — `planning/home-copy-v24.md` Top 12 #10)* |
+| Rejected (v12) | ~~Printed dots were never grip.~~ |
+| Everything else | Unchanged from v12 |
+
 ## What changed in v12 (from v11)
 
 | Area | v12 |
 |------|-----|
-| Problem cream support | **Printed dots were never grip.** *(was soft pose-list body)* |
+| Problem cream support | **Printed dots were never grip.** *(rejected — lame epigram)* |
 | Everything else | Unchanged from v11 |
 
 ## What changed in v11 (from v10)
@@ -41,7 +49,7 @@ Organic + paid sock searches (Pilates socks / yoga socks / barre grip socks) lan
 |---------|-----------------|
 | Hero | The Pilates Sock Era Is Over |
 | Problem cream | Yoga Socks Are Useless |
-| Problem support | Printed dots were never grip. *(candidate — complements inventory)* |
+| Problem support | Molded 360° grip. Not sock dots. *(home-copy-v24 Top 12)* |
 | Shop | Shop all colors & styles (+ Secure body) |
 | Disciplines cream | Upgrade your grip. Upgrade your workout. |
 | Pose | Never Slip in Chair Pose |
@@ -53,7 +61,7 @@ Organic + paid sock searches (Pilates socks / yoga socks / barre grip socks) lan
 
 **Note:** “Studio workouts…” is not in `home-copy-v24.md` inventory — used per Andrew SEO ask as IG headline (stronger than From the studio).
 
-## Cream rhythm map (v12 = v11)
+## Cream rhythm map (v13 = v12 = v11)
 
 | Section | Bg |
 |---------|-----|
@@ -69,7 +77,7 @@ Organic + paid sock searches (Pilates socks / yoga socks / barre grip socks) lan
 | Trust strip | white |
 | FAQ | cream once |
 
-## Architecture (v12)
+## Architecture (v13)
 
 - **Spine:** trust/nav/logo → **full-bleed Sock Era hero** → thin Yoga Socks problem (cream) → mid trust (**white**) → **variant grid `#shop`** → Upgrade disciplines (cream) → pose (**white**) → Never Loses (**white** 50/50) → Commit (cream 50/50) → reviews (**white** + arrows) → IG (**cream**) → trust strip → FAQ cream/GEO → footer
 - **H1:** The Pilates Sock Era Is Over · brand signal in overlay · SEO lede for barre/Pilates/yoga grippy socks
@@ -86,4 +94,4 @@ Organic + paid sock searches (Pilates socks / yoga socks / barre grip socks) lan
 
 ## Preview
 
-`http://127.0.0.1:8766/Barreletics%20SEO%20-%20Best%20Grippy%20Socks%20-%20Definitive-v12.html`
+`http://127.0.0.1:8766/Barreletics%20SEO%20-%20Best%20Grippy%20Socks%20-%20Definitive-v13.html`
