@@ -1,26 +1,23 @@
 # SEO Landing Entry — Best Grippy Socks
 
-**Mock:** `Barreletics SEO - Best Grippy Socks - Definitive-v16.html` ← **open this** (production polish lock)  
-**Prior (keep for compare):** `Definitive-v15.html` — do not overwrite  
+**Mock:** `Barreletics SEO - Best Grippy Socks - Definitive-v29.html` ← **open this**  
+**Prior (keep for compare):** `Definitive-v28.html` — do not overwrite  
 **Andrew-liked convert lock:** `Definitive-v6.html`  
 **Prior convert lock:** `Definitive-v5.html` (Collection-style spine — keep for compare)  
 **Convert grid CSS/JS source:** Collection `Definitive-v12.html`  
 **Reviews + IG pattern:** Home `Definitive-WORKING.html` (+ v11 reviews carousel)  
 **Reusable hero module:** `.hero-fullbleed` — see `planning/HERO-FULLBLEED.md` · `sections/hero-fullbleed-snippet.html`  
 **Archived framework:** `Definitive-v1.html` (early text/SEO shell)  
-**Experiments (compare only):** v2–v15 history · v17–v29 later spines (not hub authority for this lock)  
+**Experiments (compare only):** v2–v28 history · v16 = older production-polish spine (not hub authority)  
 **Live:** `https://barreletics.com/pages/best-barre-pilates-yoga-grippy-socks`  
-**Updated:** 2026-07-24 (hub locked to **v16** production polish)  
-**Preview hub:** SEO **v16 · Locked**  
-**Sock Math:** **No** separate Shopify page for this GEO LP. Convert job = hero → Upgrade → shop → proof.
+**Updated:** 2026-07-24 (v29 full-bleed Never Loses video · still hero — hub restored after mistaken v16 lock)  
+**Preview hub:** SEO **v29 · Locked**  
+**Sock Math:** on-page after shop (PDP compact — One pair. Done.) — not a separate Shopify page
 
 ## Job
 
 Organic + paid sock searches (Pilates socks / yoga socks / barre grip socks) land here → **shop on-page**. Footer SEO destination — not primary nav. Performance Skins = the upgrade. Convert engine = variant grid + Quick Add.
 
-## Production spine (v16)
-
-hero (full-bleed Sock Era) → Upgrade cream → mid trust → shop → Never Slip (white) → Never Loses 50/50 → We Outgrew cream 50/50 → reviews → IG → FAQ white hairlines → footer
 
 ## What changed in v29 (from v28)
 
