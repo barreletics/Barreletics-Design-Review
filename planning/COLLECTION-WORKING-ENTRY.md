@@ -10,6 +10,17 @@
 **v16 (from v15):** Also removed late **Closed Sole or Open Sole** 50/50. Sole education = **grid tabs + FAQ only**.  
 **v15 (from v14):** Removed early `#explain` sole cards. Spine: hero → value → shop.
 
+## Theme build — Collection hero media controls (required)
+
+Mock default = **inset** image in the right half of `.coll-hero--split` (rounded, ~4:5). Do **not** lock the theme to inset-only.
+
+| Setting | Values | Notes |
+|---------|--------|--------|
+| `media_type` | `image` \| `video` | Video off by default on Collection hero |
+| `media_fill` | `inset` (default) \| `column` | `column` = image/video fills the **entire 50%** column edge-to-edge (`object-fit: cover`, no card radius) |
+
+Markup hint: `data-media-fill="inset|column"` on `.coll-hero__media` (or section). See hub Brian notes.
+
 **v12 (from v11):** Removed separate “Studio search topics” GEO block. Product FAQ + sock/discipline SEO + hot thin sock + verified moves + soft shipping → **one** accordion under **Questions from the studio**. Same visual treatment for all items. Convert path / videos / Quick Add unchanged from v11.
 
 **v11 (from v10):** Commit full-bleed video + Never Loses video kept; second 50/50 → **image** (Closed/Open sole proof, no Shop Now). Mid-value drops grip echo. Sole cards = verified moves. Quick Add full-width Home solid. Reviews 1-col mobile. Commit sub no Secure stack.

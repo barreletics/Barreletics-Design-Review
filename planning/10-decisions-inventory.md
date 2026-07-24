@@ -696,6 +696,12 @@
 - **Source:** Owner 2026-07-24 · Collection v16
 - **Category:** BRAND
 
+### BZ-023: Collection Hero — Media Fill Control (theme)
+- **Decision:** Theme schema for Collection split hero must include **`media_fill`**: `inset` (default — matches mock) \| `column` (fills entire right 50%). Also `media_type` image\|video. Mock stays inset; merchant/Brian can switch to full-column fill without code change.
+- **Rationale:** Owner wants full-half fill available at build time without changing the locked mock look now.
+- **Source:** Owner 2026-07-24 · planning/COLLECTION-WORKING-ENTRY.md
+- **Category:** BRAND / OPERATIONAL
+
 ---
 
 ## OPERATIONAL DECISIONS
