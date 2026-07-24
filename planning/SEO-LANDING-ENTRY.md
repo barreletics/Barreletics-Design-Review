@@ -1,23 +1,32 @@
 # SEO Landing Entry — Best Grippy Socks
 
-**Mock:** `Barreletics SEO - Best Grippy Socks - Definitive-v29.html` ← **open this**  
-**Prior (keep for compare):** `Definitive-v28.html` — do not overwrite  
+**Mock:** `Barreletics SEO - Best Grippy Socks - Definitive-v30.html` ← **open this**  
+**Prior (keep for compare):** `Definitive-v29.html` — do not overwrite  
 **Andrew-liked convert lock:** `Definitive-v6.html`  
 **Prior convert lock:** `Definitive-v5.html` (Collection-style spine — keep for compare)  
 **Convert grid CSS/JS source:** Collection `Definitive-v12.html`  
 **Reviews + IG pattern:** Home `Definitive-WORKING.html` (+ v11 reviews carousel)  
 **Reusable hero module:** `.hero-fullbleed` — see `planning/HERO-FULLBLEED.md` · `sections/hero-fullbleed-snippet.html`  
 **Archived framework:** `Definitive-v1.html` (early text/SEO shell)  
-**Experiments (compare only):** v2–v28 history · v16 = older production-polish spine (not hub authority)  
+**Experiments (compare only):** v2–v29 history · v16 = older production-polish spine (not hub authority)  
 **Live:** `https://barreletics.com/pages/best-barre-pilates-yoga-grippy-socks`  
-**Updated:** 2026-07-24 (v29 full-bleed Never Loses video · still hero — hub restored after mistaken v16 lock)  
-**Preview hub:** SEO **v29 · Locked**  
+**Updated:** 2026-07-24 (v30 type calm — Home 400 / smaller hero)  
+**Preview hub:** SEO **v30 · Locked**  
 **Sock Math:** on-page after shop (PDP compact — One pair. Done.) — not a separate Shopify page
 
 ## Job
 
 Organic + paid sock searches (Pilates socks / yoga socks / barre grip socks) land here → **shop on-page**. Footer SEO destination — not primary nav. Performance Skins = the upgrade. Convert engine = variant grid + Quick Add.
 
+
+## What changed in v30 (from v29)
+
+| Area | v30 |
+|------|-----|
+| Type | Display/section titles → **400** (Home/live calm) |
+| Hero H1 | `clamp(34px, 4vw, 46px)` · **400** (was ~64px / 500) |
+| Statements | Upgrade / Never Slip / Never Loses / Sock Math / Reviews / IG / FAQ / Shop → **400** |
+| Kept | v29 spine · still hero · full-bleed Never Loses video · 700 CTAs/badges/tabs only |
 
 ## What changed in v29 (from v28)
 

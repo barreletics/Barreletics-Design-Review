@@ -676,12 +676,12 @@
 - **Category:** BRAND
 
 ### BZ-020: Type Weight Roles (Roboto 400 / 500 / 700)
-- **Decision:** Keep the **dual weight system** — do not make every H2 700.
-  - **400** body / handles / quiet UI
-  - **500** section & display titles (Shop, Reviews, FAQ, IG “Studio workouts…”, hero H1)
-  - **700** statement heat only (We Outgrew, Never Loses, Knock Socks, Commit, Sock Math title) + CTAs / badges
-- **Rationale:** Owner liked the lighter IG line vs heavier statement bands — that contrast is intentional. IG at 400 was leftover under-spec; lock IG at **500** (section), not 700.
-- **Source:** barreletics-design-system skill · SEO v29 · Home WORKING craft
+- **Decision:** Marketing calm default = **400** display (match live / Home WORKING vibe). Do not make every H2 700.
+  - **400** body + section/display titles (hero H1, Shop, Reviews, FAQ, IG, statements) — SEO **v30** authority
+  - **500** quiet UI labels / FAQ summary / mid-weight UI (not loud page titles)
+  - **700** CTAs / badges / tabs / prices / nav brand only on SEO v30 (statement heat was over-applied on v23–v29)
+- **Rationale:** Owner: live site vibe > denser mock. SEO v29 hero at 500 + up to 64px + mid-page 700s felt heavy; v30 restores Home clamp (~34–46px) + 400 titles.
+- **Source:** barreletics-design-system skill · SEO Definitive-v30 · Home WORKING · owner 2026-07-24
 - **Category:** BRAND
 
 ### BZ-021: SEO Never Loses — Full-Bleed Barre Short Video
