@@ -203,7 +203,7 @@
       padding: 88px 40px 80px; text-align: center;
     }
     .discipline-film__line {
-      font-size: clamp(28px, 3.5vw, 40px); font-weight: 400; color: #1c1916;
+      font-size: clamp(28px, 3.5vw, 40px); font-weight: 700; color: #1c1916;
       letter-spacing: -0.028em; line-height: 1.15; margin: 0 0 32px;
     }
     .discipline-film__moves {
@@ -229,7 +229,7 @@
     .variants-inner { max-width: 1200px; margin: 0 auto; }
     .variants-head { text-align: center; margin-bottom: 36px; }
     .variants-head__eyebrow { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #c45c3f; font-weight: 700; margin: 0 0 12px; }
-    .variants-head__title { font-size: clamp(28px, 3.2vw, 36px); font-weight: 400; line-height: 1.15; color: #1c1916; margin: 0 0 16px; letter-spacing: -0.028em; }
+    .variants-head__title { font-size: clamp(28px, 3.2vw, 36px); font-weight: 500; line-height: 1.15; color: #1c1916; margin: 0 0 16px; letter-spacing: -0.028em; }
     .variants-head__body { font-size: 17px; color: #4a4a4a; max-width: 42ch; line-height: 1.45; margin: 0 auto; }
     .variants-toolbar { border-top: 1px solid #d6cfc0; padding: 14px 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; border-bottom: 1px solid #d6cfc0; }
     .variants-tabs { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
@@ -311,7 +311,7 @@
     /* === REVIEWS === */
     .reviews-section { padding: 96px 40px; background: #f5f2ec; }
     .reviews-head { margin-bottom: 8px; }
-    .reviews-head__title { font-size: clamp(28px, 3.5vw, 40px); font-weight: 400; color: #1c1916; letter-spacing: -0.028em; margin: 0 0 16px; line-height: 1.15; }
+    .reviews-head__title { font-size: clamp(28px, 3.5vw, 40px); font-weight: 500; color: #1c1916; letter-spacing: -0.028em; margin: 0 0 16px; line-height: 1.15; }
     .reviews-head__body { font-size: 17px; color: #4a4a4a; margin: 0; max-width: 28ch; line-height: 1.45; }
     .reviews-head__more { font-size: 13px; font-weight: 500; color: #1c1916; text-decoration: none; }
     .reviews-head__more:hover { color: #c45c3f; }
@@ -765,7 +765,18 @@
       .split-text h2, .problem-title, .variants-head__title, .fullbleed__statement { font-size: 24px; }
       .site-nav__actions a:first-child { display: none; }
     }
-  </style>
+  
+    /* === VARIANTS GRID — universal collapse (planning/VARIANTS-GRID.md) === */
+    .variants-section .var-card.is-variants-hidden { display: none !important; }
+    .variants-see-all { text-align: center; margin: 36px 0 0; }
+    .variants-see-all__btn {
+      font-family: inherit; font-size: 13px; font-weight: 600; letter-spacing: 0.04em;
+      color: #1c1916; background: transparent; border: none; border-bottom: 1px solid #d0c8be;
+      padding: 4px 0; cursor: pointer;
+    }
+    .variants-see-all__btn:hover { color: #c45c3f; border-bottom-color: #c45c3f; }
+    .variants-see-all[hidden] { display: none !important; }
+</style>
 </head>
 <body>
 <!--
@@ -871,7 +882,7 @@
 
 
 <!-- 5. VARIANT GRID -->
-<section class="variants-section" id="variants">
+<section class="variants-section" id="variants" data-variants-collapse data-initial-rows="2" data-see-all="expand" data-variants-expanded="false">
   <div class="variants-inner">
     <div class="variants-head">
       <h2 class="variants-head__title">Shop all colors &amp; styles</h2>
@@ -1066,9 +1077,10 @@
       </div>
     </div>
 
-    <div style="text-align:center;margin-top:40px;">
-      <a href="#" style="display:inline-block;font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:#1c1916;border:1px solid #d6cfc0;padding:14px 36px;border-radius:4px;text-decoration:none;">View all colors →</a>
-    </div>
+  </div>
+
+  <div class="variants-see-all">
+    <button type="button" class="variants-see-all__btn" data-variants-see-all aria-expanded="false">See all colors &amp; styles</button>
   </div>
 </section>
 
@@ -1486,4 +1498,83 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-<div data-lastpass-root="" style="position: absolute !important; top: 0px !important; left: 0px !important; height: 0px !important; width: 0px !important; display: initial !important;"></div><protonpass-root-3fa1 data-protonpass-role="root" data-protonpass-theme="os"></protonpass-root-3fa1></body></html>
+<div data-lastpass-root="" style="position: absolute !important; top: 0px !important; left: 0px !important; height: 0px !important; width: 0px !important; display: initial !important;"></div><protonpass-root-3fa1 data-protonpass-role="root" data-protonpass-theme="os"></protonpass-root-3fa1>
+<script>
+/* Variants grid collapse — planning/VARIANTS-GRID.md
+   data-initial-rows (default 2) · data-see-all expand|link|off · per-page overrides on .variants-section */
+(function () {
+  function cols() { return window.matchMedia('(max-width: 1024px)').matches ? 2 : 4; }
+  function sectionEl() { return document.querySelector('.variants-section[data-variants-collapse]'); }
+  function limitFor(section) {
+    var rows = parseInt(section.getAttribute('data-initial-rows') || '2', 10);
+    if (!rows || rows < 1) rows = 2;
+    return rows * cols();
+  }
+  function activeGrid(section) {
+    var grids = section.querySelectorAll('.var-grid');
+    for (var i = 0; i < grids.length; i++) {
+      var g = grids[i];
+      if (g.offsetParent !== null && window.getComputedStyle(g).display !== 'none') return g;
+    }
+    return grids[0] || null;
+  }
+  function cardsOf(grid) {
+    return Array.prototype.filter.call(grid.children, function (el) {
+      return el.classList && el.classList.contains('var-card');
+    });
+  }
+  window.applyVariantsCollapse = function () {
+    var section = sectionEl();
+    if (!section) return;
+    var mode = section.getAttribute('data-see-all') || 'expand';
+    var expanded = section.getAttribute('data-variants-expanded') === 'true' || mode === 'off';
+    var limit = limitFor(section);
+    var wrap = section.querySelector('.variants-see-all');
+    var btn = section.querySelector('[data-variants-see-all]');
+    section.querySelectorAll('.var-grid').forEach(function (grid) {
+      cardsOf(grid).forEach(function (card, i) {
+        if (expanded || i < limit) card.classList.remove('is-variants-hidden');
+        else card.classList.add('is-variants-hidden');
+      });
+    });
+    var grid = activeGrid(section);
+    var total = grid ? cardsOf(grid).length : 0;
+    var needs = mode !== 'off' && total > limit;
+    if (wrap) {
+      if (needs) wrap.removeAttribute('hidden');
+      else wrap.setAttribute('hidden', '');
+    }
+    if (btn && mode === 'expand') {
+      btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+      btn.textContent = expanded ? 'Show fewer' : 'See all colors & styles';
+    }
+  };
+  document.addEventListener('DOMContentLoaded', function () {
+    var section = sectionEl();
+    if (!section) return;
+    var mode = section.getAttribute('data-see-all') || 'expand';
+    var btn = section.querySelector('[data-variants-see-all]');
+    if (btn && mode === 'expand') {
+      btn.addEventListener('click', function () {
+        var open = section.getAttribute('data-variants-expanded') === 'true';
+        section.setAttribute('data-variants-expanded', open ? 'false' : 'true');
+        window.applyVariantsCollapse();
+      });
+    }
+    if (typeof window.switchTab === 'function') {
+      var _st = window.switchTab;
+      window.switchTab = function (tab) {
+        _st(tab);
+        window.applyVariantsCollapse();
+      };
+    }
+    window.applyVariantsCollapse();
+    window.addEventListener('resize', function () {
+      window.clearTimeout(window.__variantsResizeT);
+      window.__variantsResizeT = window.setTimeout(window.applyVariantsCollapse, 120);
+    });
+  });
+})();
+</script>
+
+</body></html>
