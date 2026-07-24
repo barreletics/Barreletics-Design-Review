@@ -1,7 +1,7 @@
 # SEO Landing Entry — Best Grippy Socks
 
-**Mock:** `Barreletics SEO - Best Grippy Socks - Definitive-v19.html` ← **open this**  
-**Prior (keep for compare):** `Definitive-v18.html` — do not overwrite  
+**Mock:** `Barreletics SEO - Best Grippy Socks - Definitive-v20.html` ← **open this**  
+**Prior (keep for compare):** `Definitive-v19.html` — do not overwrite  
 **Andrew-liked convert lock:** `Definitive-v6.html`  
 **Prior convert lock:** `Definitive-v5.html` (Collection-style spine — keep for compare)  
 **Convert grid CSS/JS source:** Collection `Definitive-v12.html`  
@@ -10,14 +10,25 @@
 **Archived framework:** `Definitive-v1.html` (early text/SEO shell)  
 **Experiments (compare only):** v2–v15 history · v15 had post-hero We Outgrew cream strip (superseded)  
 **Live:** `https://barreletics.com/pages/best-barre-pilates-yoga-grippy-socks`  
-**Updated:** 2026-07-24 (v19 Collection convert strip)  
-**Preview hub:** SEO **v19 · Locked**  
+**Updated:** 2026-07-24 (v20 hero→shop clean cards)  
+**Preview hub:** SEO **v20 · Locked**  
 **Sock Math:** on-page after shop (PDP compact — One pair. Done.) — not a separate Shopify page
 
 ## Job
 
 Organic + paid sock searches (Pilates socks / yoga socks / barre grip socks) land here → **shop on-page**. Footer SEO destination — not primary nav. Performance Skins = the upgrade. Convert engine = variant grid + Quick Add.
 
+
+## What changed in v20 (from v19)
+
+| Area | v20 |
+|------|-----|
+| Spine | **Big hero → shop** (no value strip between) |
+| Cards | **No** Open/Closed/Outdoor sole badges on images |
+| Meta | Size / Limited Edition only (sole type via tabs + Compare) |
+| Tabs | **All · Closed · Open** only (Outdoor separate; One-Offs out) |
+| Sock Math | White field + cream “them” / rust-edged “us” (less flat) |
+| Deferred | Version-picker section = different design later |
 
 ## What changed in v19 (from v18)
 
@@ -135,9 +146,9 @@ Organic + paid sock searches (Pilates socks / yoga socks / barre grip socks) lan
 | Trust strip | white |
 | FAQ | **white** (hairlines) |
 
-## Architecture (v19)
+## Architecture (v20)
 
-- **Spine:** top bar → hero → **thin value strip** → **shop** → Sock Math → We Outgrew → Never Loses → Upgrade 50/50 → reviews → IG → FAQ → footer
+- **Spine:** top bar → **big hero** → **shop** → Sock Math → We Outgrew → Never Loses → Upgrade 50/50 → reviews → IG → FAQ → footer
 - **H1:** The Pilates Sock Era Is Over · brand signal in overlay · SEO lede for barre/Pilates/yoga grippy socks
 - **Module:** `.hero-fullbleed` drop-in for any page — `planning/HERO-FULLBLEED.md`
 
