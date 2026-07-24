@@ -1,7 +1,7 @@
 # SEO Landing Entry — Best Grippy Socks
 
-**Mock:** `Barreletics SEO - Best Grippy Socks - Definitive-v24.html` ← **open this**  
-**Prior (keep for compare):** `Definitive-v23.html` — do not overwrite  
+**Mock:** `Barreletics SEO - Best Grippy Socks - Definitive-v25.html` ← **open this**  
+**Prior (keep for compare):** `Definitive-v24.html` — do not overwrite  
 **Andrew-liked convert lock:** `Definitive-v6.html`  
 **Prior convert lock:** `Definitive-v5.html` (Collection-style spine — keep for compare)  
 **Convert grid CSS/JS source:** Collection `Definitive-v12.html`  
@@ -10,14 +10,22 @@
 **Archived framework:** `Definitive-v1.html` (early text/SEO shell)  
 **Experiments (compare only):** v2–v15 history · v15 had post-hero We Outgrew cream strip (superseded)  
 **Live:** `https://barreletics.com/pages/best-barre-pilates-yoga-grippy-socks`  
-**Updated:** 2026-07-24 (v24 hero stars)  
-**Preview hub:** SEO **v24 · Locked**  
+**Updated:** 2026-07-24 (v25 value strip after shop)  
+**Preview hub:** SEO **v25 · Locked**  
 **Sock Math:** on-page after shop (PDP compact — One pair. Done.) — not a separate Shopify page
 
 ## Job
 
 Organic + paid sock searches (Pilates socks / yoga socks / barre grip socks) land here → **shop on-page**. Footer SEO destination — not primary nav. Performance Skins = the upgrade. Convert engine = variant grid + Quick Add.
 
+
+## What changed in v25 (from v24)
+
+| Area | v25 |
+|------|-----|
+| Value strip | **After shop** (before Sock Math) — Ships · Returns · Warranty · USA |
+| Why | Cold traffic needs trust after browse; keeps **hero → shop** convert flow |
+| Not | Between hero and shop |
 
 ## What changed in v24 (from v23)
 
@@ -181,9 +189,9 @@ Organic + paid sock searches (Pilates socks / yoga socks / barre grip socks) lan
 | Trust strip | white |
 | FAQ | **white** (hairlines) |
 
-## Architecture (v23)
+## Architecture (v25)
 
-- **Spine:** top bar → **big hero** → **shop** → Sock Math → We Outgrew → Never Loses → Upgrade 50/50 → reviews → IG → FAQ → footer
+- **Spine:** top bar → **big hero** (+★★★★★) → **shop** → **value strip** → Sock Math → We Outgrew → Never Loses → Upgrade → reviews → IG → FAQ → footer
 - **H1:** The Pilates Sock Era Is Over · brand signal in overlay · SEO lede for barre/Pilates/yoga grippy socks
 - **Module:** `.hero-fullbleed` drop-in for any page — `planning/HERO-FULLBLEED.md`
 
@@ -198,7 +206,7 @@ Organic + paid sock searches (Pilates socks / yoga socks / barre grip socks) lan
 
 ## Preview
 
-`http://127.0.0.1:8766/Barreletics%20SEO%20-%20Best%20Grippy%20Socks%20-%20Definitive-v24.html`
+`http://127.0.0.1:8766/Barreletics%20SEO%20-%20Best%20Grippy%20Socks%20-%20Definitive-v25.html`
 
 **Public (GitHub Pages):**  
-`https://barreletics.github.io/Barreletics-Design-Review/Barreletics%20SEO%20-%20Best%20Grippy%20Socks%20-%20Definitive-v24.html`
+`https://barreletics.github.io/Barreletics-Design-Review/Barreletics%20SEO%20-%20Best%20Grippy%20Socks%20-%20Definitive-v25.html`
