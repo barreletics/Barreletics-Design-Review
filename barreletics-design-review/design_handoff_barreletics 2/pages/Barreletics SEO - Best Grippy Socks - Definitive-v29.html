@@ -222,9 +222,14 @@
     }
     .lifestyle-break img,
     .lifestyle-break video {
-      width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; opacity: 0.85;
+      width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; opacity: 1;
     }
-    .lifestyle-break__overlay { position: relative; z-index: 1; text-align: center; padding: 80px 40px; color: #fff; }
+    .lifestyle-break::after {
+      content: ""; position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(180deg, rgba(28,25,22,0.25) 0%, rgba(28,25,22,0.45) 55%, rgba(28,25,22,0.55) 100%);
+      pointer-events: none;
+    }
+    .lifestyle-break__overlay { position: relative; z-index: 2; text-align: center; padding: 80px 40px; color: #fff; }
     .lifestyle-break__line { font-size: clamp(28px, 4vw, 44px); font-weight: 700; letter-spacing: -0.028em; line-height: 1.12; margin: 0 0 12px; }
     .lifestyle-break__sub { font-size: 16px; font-weight: 400; color: rgba(255,255,255,0.85); margin: 0; max-width: 36ch; margin-left: auto; margin-right: auto; }
     .split-media img,
@@ -1069,8 +1074,8 @@
 </section>
 
 <!-- Full-bleed video band — Never Loses (former hero Barre Short Video; mid-page, not first viewport) -->
-<section class="lifestyle-break" style="min-height:72vh;" data-media-type="video" aria-label="Never loses grip">
-  <video autoplay muted loop playsinline webkit-playsinline preload="metadata" poster="https://barreletics.com/cdn/shop/files/IMG_2917.jpg?v=1741040637&width=1400" aria-label="Never loses grip — studio motion">
+<section class="lifestyle-break" id="never-loses" style="min-height:90vh;" data-media-type="video" aria-label="Never loses grip">
+  <video autoplay muted loop playsinline webkit-playsinline preload="auto" poster="https://barreletics.com/cdn/shop/files/IMG_2917.jpg?v=1741040637&width=1400" aria-label="Never loses grip — studio motion">
     <source src="https://cdn.shopify.com/s/files/1/0045/0612/4391/files/Barre_Short_Video_-nosound.mp4?v=1590451878" type="video/mp4">
   </video>
   <div class="lifestyle-break__overlay">
