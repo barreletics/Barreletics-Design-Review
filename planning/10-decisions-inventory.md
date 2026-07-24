@@ -633,6 +633,63 @@
 - **Source:** docs/09-PRODUCT-KNOWLEDGE.md (Shipping section), manychat-kb/08-shipping.md
 - **Category:** BUSINESS
 
+### BZ-014: We Outgrew Grip Socks — Category Slogan (Not Primary H1)
+- **Decision:** Add *We Outgrew Grip Socks.* as approved category-creation slogan. Primary hero H1 stays *The Pilates Sock Era Is Over*. *Studio Workouts and Footwear Will Never Be the Same* demoted to legacy/meta only.
+- **Rationale:** Strongest north-star line for category break; "We" acceptable as evolution statement in mid-page band, not hero. Pilates Sock Era retains SEO + discipline specificity.
+- **Supersedes:** N/A
+- **Source:** planning/02-brand-system.md, Definitive-v16 Home mockup
+- **Category:** BRAND
+
+### BZ-015: Home Typography — Hybrid (Alo UI + Nike Display)
+- **Decision:** Lock Hybrid type: **Manrope** for UI/body (Alo ≈ Avenir); **Barlow Condensed** weight 600, sentence case, for hero H1 and section statements (Nike Futura-condensed energy without ALL CAPS). Coperni keeps Syne + Cormorant. Do not use Roboto as primary Home face; no Fraunces/italic display serifs on Home.
+- **Rationale:** Matches real Alo/Nike patterns; AI serif stacks felt generic.
+- **Supersedes:** v49 Roboto-only default for Home marketing surfaces
+- **Status:** SUPERSEDED by BZ-016 (kept as experiment — Definitive-v20.html retained)
+- **Source:** Definitive-v20, barreletics-design-system skill
+- **Category:** BRAND
+
+### BZ-016: Home Typography — Jost + Helvetica Neue (Home Run)
+- **Decision:** Lock Home type: **Helvetica Neue** for UI/body/nav; **Jost** weight 500–600, sentence case, tight line-height (~1.0–1.05) for hero H1 and major display statements (Knock Socks, Commit full-bleed, We Outgrew, section H2s). Slightly larger hero/statement scale. Coperni keeps Syne + Cormorant. No ALL CAPS display shout; no Fraunces/Cormorant on Home marketing.
+- **Rationale:** Hybrid (Manrope + Barlow Condensed) was neat but not a home run — Barlow reads gym-flyer condensed; Jost carries Futura geometric DNA with studio-premium calm. Helvetica Neue is the real Nike/Alo web UI face.
+- **Supersedes:** BZ-015 Hybrid for Home marketing surfaces. Keep all prior mocks (v16–v20, v19 type-lab) — do not delete.
+- **Status:** SUPERSEDED by BZ-017 (kept as experiment — Definitive-v21.html retained)
+- **Source:** Definitive-v21, barreletics-design-system skill
+- **Category:** BRAND
+
+### BZ-017: Home Typography — Roboto Craft (Lulu / On Precision)
+- **Decision:** Lock Home type to **Roboto only** (weights 400 / 500 / 700). Elevate via tracking, hierarchy, and moderate scale — Lululemon / On-level precision, not bigger-for-bigger. Shop/UI quiet; Barreletics heat in slogans, rust, imagery, and a few stronger statement lines (700). Coperni keeps Syne + Cormorant. Keep warm neutrals + category punch (do not become Lulu).
+- **Rationale:** Font-hopping (Fraunces/Syne/Cormorant Home, Barlow gym, Hybrid, Jost) was not a home run. Single-family craft matches premium athletic ecom (Lulu/On) while keeping Barreletics voice.
+- **Supersedes:** BZ-016 for Home marketing surfaces. Keep all prior mocks (v16–v21, v19 type-lab) — do not delete.
+- **Source:** Definitive-v22, barreletics-design-system skill
+- **Category:** BRAND
+
+### BZ-018: Home Copy OS — Master Slogan Inventory
+- **Decision:** `planning/HOME-WORKING-ENTRY.md` is the Home start entry (sections build/refine/change + instructions). `planning/home-copy-v24.md` holds the deep slogan/copy inventory. Brand-copy + slogan-engine skills must point here. Agents must not require the owner to re-paste the inventory.
+- **Rationale:** Owner repeatedly resurfaces the full live/approved slogan set; it belongs in repo OS, not chat.
+- **Source:** Owner paste 2026-07-23 + live barreletics.com Home + WORKING v29
+- **Category:** BRAND / OPERATIONAL
+
+### BZ-019: Home Working Authority — Definitive-v28 → v29
+- **Decision:** Working Home mock = `Barreletics Home - Definitive-WORKING.html` (**v29**). Same as v28 difference spine + optional quiet Knock Socks sub: *Safely push harder in every studio move.* v28 kept without sub for A/B. Next edits = **v30+**.
+- **Rationale:** Owner: “20000% better” on v28; then asked for Knock Socks secondary (keep-or-drop).
+- **Source:** Definitive-v28/v29, Compare-v24-v28, planning/home-copy-v24.md
+- **Category:** BRAND
+
+### BZ-020: Type Weight Roles (Roboto 400 / 500 / 700)
+- **Decision:** Keep the **dual weight system** — do not make every H2 700.
+  - **400** body / handles / quiet UI
+  - **500** section & display titles (Shop, Reviews, FAQ, IG “Studio workouts…”, hero H1)
+  - **700** statement heat only (We Outgrew, Never Loses, Knock Socks, Commit, Sock Math title) + CTAs / badges
+- **Rationale:** Owner liked the lighter IG line vs heavier statement bands — that contrast is intentional. IG at 400 was leftover under-spec; lock IG at **500** (section), not 700.
+- **Source:** barreletics-design-system skill · SEO v29 · Home WORKING craft
+- **Category:** BRAND
+
+### BZ-021: SEO Never Loses — Full-Bleed Barre Short Video
+- **Decision:** SEO mid-page Never Loses uses **Barre Short Video** (`Barre_Short_Video_-nosound.mp4`) full-bleed ~**90vh** (`.lifestyle-break`), not the first-viewport hero. Hero stays still `IMG_2917`. Same clip as Home Never Loses proof.
+- **Rationale:** Still hero = message/LCP; full-bleed video mid-page = grip proof without diluting Sock Era CTA.
+- **Source:** SEO Definitive-v29 · owner 2026-07-24
+- **Category:** BRAND
+
 ---
 
 ## OPERATIONAL DECISIONS

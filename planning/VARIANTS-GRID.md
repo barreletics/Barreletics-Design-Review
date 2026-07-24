@@ -1,8 +1,20 @@
 # Variants Grid — Universal Rule
 
 **Updated:** 2026-07-24  
-**Applies to:** Home · Collection · SEO (any page with `.variants-section` / `.var-grid`)  
-**Mocks:** SEO `Definitive-v23` · Home `Definitive-WORKING` · Collection `Definitive-v14`
+**Applies to:** any page with `.variants-section` / `.var-grid`  
+**Mocks locked:** SEO `Definitive-v29` · Home `Definitive-WORKING` · Collection `Definitive-v14`
+
+## Page status
+
+| Page | Authority mock | 2-row + See all |
+|------|----------------|-----------------|
+| Home | `Definitive-WORKING` | **Yes** |
+| Collection | `Definitive-v14` | **Yes** |
+| SEO Best Grippy Socks | `Definitive-v29` | **Yes** |
+| PDP | `Definitive-v15` | **No** — full grid still |
+| Journal shop strip | `Definitive-v4` | **No** — full strip still |
+
+Bring PDP + Journal onto this rule before theme build if those grids ship.
 
 ## Defaults (all pages)
 

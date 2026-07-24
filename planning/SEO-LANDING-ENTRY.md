@@ -23,9 +23,10 @@ Organic + paid sock searches (Pilates socks / yoga socks / barre grip socks) lan
 
 | Area | v29 |
 |------|-----|
-| Never Loses | **Full-bleed** `.lifestyle-break` video (~72vh) — former hero Barre Short Video |
+| Never Loses | **Full-bleed** `.lifestyle-break` · **Barre Short Video** ~**90vh** (BZ-021) |
 | Removed | Never Loses 50/50 split |
-| Hero | Unchanged still (`IMG_2917`) · trust → H1 → lede → CTA |
+| Hero | Still `IMG_2917` · trust → H1 → lede → CTA |
+| Type | IG “Studio workouts…” → **500** (BZ-020 section weight; statements stay 700) |
 
 ## What changed in v28 (from v27)
 
