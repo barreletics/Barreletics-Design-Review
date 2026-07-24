@@ -676,12 +676,13 @@
 - **Category:** BRAND
 
 ### BZ-020: Type Weight Roles (Roboto 400 / 500 / 700)
-- **Decision:** Marketing calm default = **400** display (match live / Home WORKING vibe). Do not make every H2 700.
-  - **400** body + section/display titles (hero H1, Shop, Reviews, FAQ, IG, statements) — SEO **v30** authority
-  - **500** quiet UI labels / FAQ summary / mid-weight UI (not loud page titles)
-  - **700** CTAs / badges / tabs / prices / nav brand only on SEO v30 (statement heat was over-applied on v23–v29)
-- **Rationale:** Owner: live site vibe > denser mock. SEO v29 hero at 500 + up to 64px + mid-page 700s felt heavy; v30 restores Home clamp (~34–46px) + 400 titles.
-- **Source:** barreletics-design-system skill · SEO Definitive-v30 · Home WORKING · owner 2026-07-24
+- **Decision:** **Shop-wide marketing calm** = **400** display (match live / Home WORKING vibe). Do not make every H2 700.
+  - **400** body + section/display/statement titles (hero H1, Shop, Reviews, FAQ, IG, statements)
+  - **500** quiet UI labels / FAQ summaries / meta (not loud page titles)
+  - **700** CTAs / badges / tabs / prices / nav brand only
+- **Authorities:** SEO **v30** · Collection **v18** · Home WORKING · PDP **v16** · Journal **v5**
+- **Rationale:** Owner landed SEO v30 calm; propagate OS so pages don’t fight. Global tweak still allowed later.
+- **Source:** barreletics-design-system skill · owner 2026-07-24
 - **Category:** BRAND
 
 ### BZ-021: SEO Never Loses — Full-Bleed Barre Short Video
@@ -691,9 +692,9 @@
 - **Category:** BRAND
 
 ### BZ-022: Collection — No Closed/Open Sole Sections (tabs + FAQ only)
-- **Decision:** Collection authority = `Definitive-v17` (type lock on v16 spine). Spine: **hero → value strip → variants**. Remove early `#explain` sole cards **and** late “Closed Sole or Open Sole” 50/50. Closed/Open via **grid tabs + FAQ** only. Hero may still name the choice. Type: BZ-020 (500 section/H1 · 700 Commit / Never Loses / Knock Socks).
+- **Decision:** Collection authority = `Definitive-v18` (v16 spine + v18 type calm). Spine: **hero → value strip → variants**. Remove early `#explain` sole cards **and** late “Closed Sole or Open Sole” 50/50. Closed/Open via **grid tabs + FAQ** only. Hero may still name the choice. Type: BZ-020 calm (**400** display · 700 CTAs).
 - **Rationale:** Shop-first convert (matches SEO); sole explainer bands delayed/duplicated the grid without adding interaction.
-- **Source:** Owner 2026-07-24 · Collection v16 → v17
+- **Source:** Owner 2026-07-24 · Collection v16 → v17 → v18
 - **Category:** BRAND
 
 ### BZ-023: Collection Hero — Media Fill Control (theme)

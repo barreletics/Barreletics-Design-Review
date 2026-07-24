@@ -1,13 +1,14 @@
-**Latest:** **v17** ← **open this** · BZ-020 type lock · no early sole cards · no late Closed/Open 50/50  
-**Priors:** v16 / v15 / v14 (keep for compare)
+**Latest:** **v18** ← **open this** · BZ-020 type calm · no early sole cards · no late Closed/Open 50/50  
+**Priors:** v17 / v16 / v15 / v14 (keep for compare)
 
 # Collection Working Entry — Barreletics
 
-**Authority mock:** `Barreletics Collection - Definitive-v17.html`  
-**Priors:** v5–v16 — do not overwrite · Hub: `PREVIEW-HUB.html` / `docs/index.html`  
+**Authority mock:** `Barreletics Collection - Definitive-v18.html`  
+**Priors:** v5–v17 — do not overwrite · Hub: `PREVIEW-HUB.html` / `docs/index.html`  
 **Updated:** 2026-07-24  
 
-**v17 (from v16):** BZ-020 type OS — **500** section/H1 · **700** statement heat only (Commit, Never Loses, Knock Socks) · hero trust slightly bumped (stars 15px / trust 14px). Spine unchanged.  
+**v18 (from v17):** BZ-020 **type calm** — display/section/statement **400** · H1 Home-sized `clamp(34–46)` · 700 CTAs only. Spine unchanged.  
+**v17 (from v16):** Prior type pass (500/700) + hero trust bump — superseded for weight by v18.  
 **v16 (from v15):** Also removed late **Closed Sole or Open Sole** 50/50. Sole education = **grid tabs + FAQ only**.  
 **v15 (from v14):** Removed early `#explain` sole cards. Spine: hero → value → shop.
 
@@ -32,15 +33,15 @@ Markup hint: `data-media-fill="inset|column"` on `.coll-hero__media` (or section
 
 ---
 
-## Type OS (BZ-020) — Collection lock
+## Type OS (BZ-020) — Collection lock (calm)
 
 | Role | Weight | Size | Examples |
 |------|--------|------|----------|
 | Body | **400** | 15–16px | hero body, band copy |
-| Section / H1 | **500** | H1 `clamp(36–48)` · section `clamp(28–40)` | Secure in Every Hold · Shop · Never Slip · Upgrade · Reviews · FAQ |
-| Statement heat | **700** | `clamp(32–44)` | Commit · Never Loses · Knock Socks (+ CTAs) |
+| Section / H1 / statements | **400** | H1 `clamp(34–46)` · section `clamp(28–40)` | Secure in Every Hold · Shop · Never Slip · Commit · Never Loses · Knock Socks · Reviews · FAQ |
+| CTAs / badges / tabs / prices | **700** | — | Shop Now, Quick Add, tabs |
 
-Do **not** flatten all titles to 700.
+Do **not** stack 500/700 on every title — matches SEO v30 / live calm.
 
 ---
 
