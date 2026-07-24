@@ -2,14 +2,14 @@
 
 **Updated:** 2026-07-24  
 **Applies to:** any page with `.variants-section` / `.var-grid`  
-**Mocks locked:** SEO `Definitive-v29` · Home `Definitive-WORKING` · Collection `Definitive-v14`
+**Mocks locked:** SEO `Definitive-v29` · Home `Definitive-WORKING` · Collection `Definitive-v17`
 
 ## Page status
 
 | Page | Authority mock | 2-row + See all |
 |------|----------------|-----------------|
 | Home | `Definitive-WORKING` | **Yes** |
-| Collection | `Definitive-v16` | **Yes** |
+| Collection | `Definitive-v17` | **Yes** |
 | SEO Best Grippy Socks | `Definitive-v29` | **Yes** |
 | PDP | `Definitive-v15` | **No** — full grid still |
 | Journal shop strip | `Definitive-v4` | **No** — full strip still |

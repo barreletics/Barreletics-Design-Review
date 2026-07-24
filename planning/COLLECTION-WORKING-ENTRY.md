@@ -1,12 +1,13 @@
-**Latest:** **v16** ← **open this** · no early sole cards · no late Closed/Open 50/50 (BZ-022)  
-**Priors:** v15 / v14 (keep for compare)
+**Latest:** **v17** ← **open this** · BZ-020 type lock · no early sole cards · no late Closed/Open 50/50  
+**Priors:** v16 / v15 / v14 (keep for compare)
 
 # Collection Working Entry — Barreletics
 
-**Authority mock:** `Barreletics Collection - Definitive-v16.html`  
-**Priors:** v5–v15 — do not overwrite · Hub: `PREVIEW-HUB.html` / `docs/index.html`  
+**Authority mock:** `Barreletics Collection - Definitive-v17.html`  
+**Priors:** v5–v16 — do not overwrite · Hub: `PREVIEW-HUB.html` / `docs/index.html`  
 **Updated:** 2026-07-24  
 
+**v17 (from v16):** BZ-020 type OS — **500** section/H1 · **700** statement heat only (Commit, Never Loses, Knock Socks) · hero trust slightly bumped (stars 15px / trust 14px). Spine unchanged.  
 **v16 (from v15):** Also removed late **Closed Sole or Open Sole** 50/50. Sole education = **grid tabs + FAQ only**.  
 **v15 (from v14):** Removed early `#explain` sole cards. Spine: hero → value → shop.
 
@@ -31,6 +32,18 @@ Markup hint: `data-media-fill="inset|column"` on `.coll-hero__media` (or section
 
 ---
 
+## Type OS (BZ-020) — Collection lock
+
+| Role | Weight | Size | Examples |
+|------|--------|------|----------|
+| Body | **400** | 15–16px | hero body, band copy |
+| Section / H1 | **500** | H1 `clamp(36–48)` · section `clamp(28–40)` | Secure in Every Hold · Shop · Never Slip · Upgrade · Reviews · FAQ |
+| Statement heat | **700** | `clamp(32–44)` | Commit · Never Loses · Knock Socks (+ CTAs) |
+
+Do **not** flatten all titles to 700.
+
+---
+
 ## Two versions (pick)
 
 | | **v5 — Shop-first** | **v6 — Secure + Pose** |
@@ -43,9 +56,9 @@ Markup hint: `data-media-fill="inset|column"` on `.coll-hero__media` (or section
 | **Proof** | Real people. Real results. (no aggregate count) | Same |
 | **Keep** | FAQ + footer | FAQ + footer (GEO merged into FAQ) |
 
-**Working spine (v12):** Secure hero → sole chooser → trust strip → **Shop all colors** grid → Never Slip pose → Commit video → disciplines → Never Loses video → Closed/Open image 50/50 → Knock Socks → reviews → **Questions from the studio** (unified FAQ).
+**Working spine (v17):** Secure hero → value → **Shop all colors** grid → Never Slip pose → Commit video → disciplines → Never Loses video → Knock Socks → reviews → **Questions from the studio** (unified FAQ). Sole via tabs + FAQ only.
 
-**Preview:** `http://127.0.0.1:8766/Barreletics%20Collection%20-%20Definitive-v12.html`
+**Preview:** `http://127.0.0.1:8766/Barreletics%20Collection%20-%20Definitive-v17.html`
 
 ---
 
@@ -55,17 +68,17 @@ Markup hint: `data-media-fill="inset|column"` on `.coll-hero__media` (or section
 |---------|----|----|--------|
 | Trust + nav | ✓ | ✓ | Built |
 | Hero | Shop-first | Secure + image | Built — pick one |
-| Sole chooser | ✓ + product imgs | ✓ + product imgs | Built → refine |
+| Sole chooser | ✓ + product imgs | ✓ + product imgs | Removed v15+ (tabs + FAQ) |
 | Value strip | ✓ | ✓ | Built → optional trim |
-| Pose band (Chair Pose) | — | ✓ | **New in v6** |
+| Pose band (Chair Pose) | — | ✓ | Built · **500** section |
 | Product grid | ✓ | ✓ + shop head | Built → live data |
-| Lifestyle / full-bleed | Secure | Commit | Built → image\|video |
-| Disciplines | Upgrade your grip… | Same | Built |
-| Never Loses 50/50 | ✓ + img | ✓ + open-toe body | Built |
+| Lifestyle / full-bleed | Secure | Commit | Built · **700** statement |
+| Disciplines | Upgrade your grip… | Same | Built · **500** section |
+| Never Loses 50/50 | ✓ + img | ✓ + open-toe body | Built · **700** statement |
 | Commit 50/50 | ✓ | — (in bleed) | Built |
-| Knock Socks | — | ✓ | Built in v6 |
-| Reviews | Quote-led | Quote-led | Built → Judge.me |
-| FAQ (+ GEO merged) | ✓ | ✓ | **v12 — one accordion** |
+| Knock Socks | — | ✓ | Built · **700** (`--heat`) |
+| Reviews | Quote-led | Quote-led | Built → Judge.me · **500** |
+| FAQ (+ GEO merged) | ✓ | ✓ | **v12 — one accordion** · **500** |
 | Footer | ✓ | ✓ | Built |
 
 ---
@@ -81,7 +94,7 @@ Markup hint: `data-media-fill="inset|column"` on `.coll-hero__media` (or section
 - You Commit to the Class. Commit to the Gear.  
 - Let Us Knock Your Socks Off + Safely push harder…  
 - Real people. Real results. / See the difference. Feel the grip.  
-- Closed Sole or Open Sole *(v11 late 50/50 — chooser proof, not Secure restack)*
+- Closed Sole or Open Sole *(v11 late 50/50 — removed v16+)*
 
 Rules: one featured slogan per section; difference bodies; no aggregate review counts.
 
@@ -89,7 +102,6 @@ Rules: one featured slogan per section; difference bodies; no aggregate review c
 
 ## Next
 
-- [ ] Andrew picks v5 or v6 (or hybrid) as Collection WORKING — **v12 is convert candidate**
 - [ ] Wire live variants / stock  
 - [ ] Image\|video settings on lifestyle + splits  
 - [ ] Update `specs/frozen/collections.md` when locked  
