@@ -1,11 +1,13 @@
-**Latest:** **v14** = v13 + universal variants 2-row + See all (`planning/VARIANTS-GRID.md`)
+**Latest:** **v15** ← **open this** · from v14: remove early Closed/Open sole cards (BZ-022)  
+**Prior:** v14 (keep for compare) · variants 2-row + See all
 
 # Collection Working Entry — Barreletics
 
-**Latest base:** `Barreletics Collection - Definitive-v4.html`  
-**Latest:** **v12** = unified FAQ + GEO from v11 (one accordion, Journal v4 pattern)  
-**Priors:** v5–v11 — do not overwrite · Hub: `PREVIEW-HUB.html`  
-**Updated:** 2026-07-23  
+**Authority mock:** `Barreletics Collection - Definitive-v15.html`  
+**Priors:** v5–v14 — do not overwrite · Hub: `PREVIEW-HUB.html` / `docs/index.html`  
+**Updated:** 2026-07-24  
+
+**v15 (from v14):** Removed `#explain` Closed/Open sole cards. Spine: **Secure hero → value strip → Shop grid** (tabs educate sole type). Late “Closed Sole or Open Sole” 50/50 + FAQ kept.
 
 **v12 (from v11):** Removed separate “Studio search topics” GEO block. Product FAQ + sock/discipline SEO + hot thin sock + verified moves + soft shipping → **one** accordion under **Questions from the studio**. Same visual treatment for all items. Convert path / videos / Quick Add unchanged from v11.
 

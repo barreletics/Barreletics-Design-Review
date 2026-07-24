@@ -690,6 +690,12 @@
 - **Source:** SEO Definitive-v29 · owner 2026-07-24
 - **Category:** BRAND
 
+### BZ-022: Collection — No Early Closed/Open Sole Cards
+- **Decision:** Collection authority = `Definitive-v15`. Spine: **hero → value strip → variants**. Remove early `#explain` Closed/Open sole cards. Closed/Open via grid tabs + FAQ + late 50/50. Hero may still name the choice.
+- **Rationale:** Shop-first convert (matches SEO); sole cards delayed the grid without adding interaction.
+- **Source:** Owner 2026-07-24 · Collection v15
+- **Category:** BRAND
+
 ---
 
 ## OPERATIONAL DECISIONS

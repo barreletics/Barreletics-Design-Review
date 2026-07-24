@@ -9,7 +9,7 @@
 | Page | Authority mock | 2-row + See all |
 |------|----------------|-----------------|
 | Home | `Definitive-WORKING` | **Yes** |
-| Collection | `Definitive-v14` | **Yes** |
+| Collection | `Definitive-v15` | **Yes** |
 | SEO Best Grippy Socks | `Definitive-v29` | **Yes** |
 | PDP | `Definitive-v15` | **No** — full grid still |
 | Journal shop strip | `Definitive-v4` | **No** — full strip still |
