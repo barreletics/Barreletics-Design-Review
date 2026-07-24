@@ -1,7 +1,7 @@
 # SEO Landing Entry — Best Grippy Socks
 
-**Mock:** `Barreletics SEO - Best Grippy Socks - Definitive-v20.html` ← **open this**  
-**Prior (keep for compare):** `Definitive-v19.html` — do not overwrite  
+**Mock:** `Barreletics SEO - Best Grippy Socks - Definitive-v21.html` ← **open this**  
+**Prior (keep for compare):** `Definitive-v20.html` — do not overwrite  
 **Andrew-liked convert lock:** `Definitive-v6.html`  
 **Prior convert lock:** `Definitive-v5.html` (Collection-style spine — keep for compare)  
 **Convert grid CSS/JS source:** Collection `Definitive-v12.html`  
@@ -10,14 +10,24 @@
 **Archived framework:** `Definitive-v1.html` (early text/SEO shell)  
 **Experiments (compare only):** v2–v15 history · v15 had post-hero We Outgrew cream strip (superseded)  
 **Live:** `https://barreletics.com/pages/best-barre-pilates-yoga-grippy-socks`  
-**Updated:** 2026-07-24 (v20 hero→shop clean cards)  
-**Preview hub:** SEO **v20 · Locked**  
+**Updated:** 2026-07-24 (v21 Secure shop-head try)  
+**Preview hub:** SEO **v21 · Try**  
 **Sock Math:** on-page after shop (PDP compact — One pair. Done.) — not a separate Shopify page
 
 ## Job
 
 Organic + paid sock searches (Pilates socks / yoga socks / barre grip socks) land here → **shop on-page**. Footer SEO destination — not primary nav. Performance Skins = the upgrade. Convert engine = variant grid + Quick Add.
 
+
+## What changed in v21 (from v20)
+
+| Area | v21 |
+|------|-----|
+| Shop H2 | **Secure in Every Hold** (slogan as heading — try) |
+| Shop sub | No Slipping. No Resets. + **Shop all colors & styles** link |
+| Removed | $74 from shop head (price stays on cards) |
+| Grid | Unchanged from v20 |
+| Note | Home/Collection still use H2 = Shop all… + Grip shoes…Secure body — this is SEO-only try |
 
 ## What changed in v20 (from v19)
 
