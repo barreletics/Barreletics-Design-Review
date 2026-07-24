@@ -2,7 +2,7 @@
 
 Reusable edge-to-edge hero for **any page**: Home (optional), Collection, SEO, campaign LPs.
 
-**Authority mock:** SEO `Definitive-v27.html`  
+**Authority mock:** SEO `Definitive-v28.html` (still + trust → H1; eyebrow optional)  
 **Snippet:** `sections/hero-fullbleed-snippet.html`
 
 ## Settings
@@ -10,14 +10,14 @@ Reusable edge-to-edge hero for **any page**: Home (optional), Collection, SEO, c
 | Attr / control | Values | Notes |
 |----------------|--------|--------|
 | `data-media-type` | `image` \| `video` | Put on `<section class="hero-fullbleed">` |
-| Media | `<img>` or muted loop `<video>` + `poster` | Inside `.hero-fullbleed__media` |
-| Eyebrow | Soft white/muted on dark | `rgba(255,255,255,0.72)` — **not** rust |
+| Media | `<img>` or muted loop `<video>` + `poster` | Inside `.hero-fullbleed__media` · prefer **image** for LCP on SEO |
+| Eyebrow | Soft white/muted on dark · **optional** | `rgba(255,255,255,0.72)` — **not** rust · SEO v28 omits |
 
 ## Overlay budget
 
-Optional **`.hero-fullbleed__trust`** as **first line** of the overlay stack · eyebrow · **one H1** · short lede · CTA group.  
+Optional **`.hero-fullbleed__trust`** as **first line** of the overlay stack · optional eyebrow · **one H1** · short lede · CTA group.  
 Brand (`.hero-fullbleed__brand`) is optional — omit when nav already has the logo.  
-No cards, choosers, badges, or floating stickers on the media (trust belongs in the copy stack, not absolute-positioned on the video).
+No cards, choosers, badges, or floating stickers on the media (trust belongs in the copy stack, not absolute-positioned on the media).
 
 ## Class list
 
@@ -73,4 +73,4 @@ No cards, choosers, badges, or floating stickers on the media (trust belongs in 
 4. Left-weighted overlay is fine for trust-first stacks; soften left gradient for readability.
 5. Theme: map settings → media source, eyebrow, H1, lede, CTA label + URL.
 
-First shipped: Best Grippy Socks SEO v6 · refined as reusable module in **v8** · trust-in-stack + no brand in **v27**.
+First shipped: Best Grippy Socks SEO v6 · refined as reusable module in **v8** · trust-in-stack + no brand in **v27** · still hero + no eyebrow in **v28**.
