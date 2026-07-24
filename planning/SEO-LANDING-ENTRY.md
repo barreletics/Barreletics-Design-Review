@@ -1,7 +1,7 @@
 # SEO Landing Entry — Best Grippy Socks
 
-**Mock:** `Barreletics SEO - Best Grippy Socks - Definitive-v28.html` ← **open this**  
-**Prior (keep for compare):** `Definitive-v27.html` — do not overwrite  
+**Mock:** `Barreletics SEO - Best Grippy Socks - Definitive-v29.html` ← **open this**  
+**Prior (keep for compare):** `Definitive-v28.html` — do not overwrite  
 **Andrew-liked convert lock:** `Definitive-v6.html`  
 **Prior convert lock:** `Definitive-v5.html` (Collection-style spine — keep for compare)  
 **Convert grid CSS/JS source:** Collection `Definitive-v12.html`  
@@ -10,14 +10,22 @@
 **Archived framework:** `Definitive-v1.html` (early text/SEO shell)  
 **Experiments (compare only):** v2–v15 history · v15 had post-hero We Outgrew cream strip (superseded)  
 **Live:** `https://barreletics.com/pages/best-barre-pilates-yoga-grippy-socks`  
-**Updated:** 2026-07-24 (v28 still hero · no eyebrow · video in Never Loses)  
-**Preview hub:** SEO **v28 · Locked**  
+**Updated:** 2026-07-24 (v29 full-bleed Never Loses video · still hero)  
+**Preview hub:** SEO **v29 · Locked**  
 **Sock Math:** on-page after shop (PDP compact — One pair. Done.) — not a separate Shopify page
 
 ## Job
 
 Organic + paid sock searches (Pilates socks / yoga socks / barre grip socks) land here → **shop on-page**. Footer SEO destination — not primary nav. Performance Skins = the upgrade. Convert engine = variant grid + Quick Add.
 
+
+## What changed in v29 (from v28)
+
+| Area | v29 |
+|------|-----|
+| Never Loses | **Full-bleed** `.lifestyle-break` video (~72vh) — former hero Barre Short Video |
+| Removed | Never Loses 50/50 split |
+| Hero | Unchanged still (`IMG_2917`) · trust → H1 → lede → CTA |
 
 ## What changed in v28 (from v27)
 
@@ -209,16 +217,16 @@ Organic + paid sock searches (Pilates socks / yoga socks / barre grip socks) lan
 | Mid trust | white |
 | Shop grid | white |
 | Pose band | **white** |
-| Never Loses | white |
-| We Outgrew 50/50 | cream |
+| Never Loses | **full-bleed video** |
+| Upgrade 50/50 | cream |
 | Reviews | white |
 | Instagram | cream |
 | Trust strip | white |
 | FAQ | **white** (hairlines) |
 
-## Architecture (v28)
+## Architecture (v29)
 
-- **Spine:** top bar → **big hero** (trust → H1 → lede → CTA · still) → **shop** → **value strip** → Sock Math → We Outgrew → Never Loses *(Barre Short Video)* → Upgrade → reviews → IG → FAQ → footer
+- **Spine:** top bar → **big hero** (trust → H1 → lede → CTA · still) → **shop** → **value strip** → Sock Math → We Outgrew → **Never Loses full-bleed video** → Upgrade → reviews → IG → FAQ → footer
 - **H1:** The Pilates Sock Era Is Over · brand via nav logo only · SEO lede for barre/Pilates/yoga grippy socks
 - **Module:** `.hero-fullbleed` drop-in for any page — `planning/HERO-FULLBLEED.md`
 
@@ -233,7 +241,7 @@ Organic + paid sock searches (Pilates socks / yoga socks / barre grip socks) lan
 
 ## Preview
 
-`http://127.0.0.1:8766/Barreletics%20SEO%20-%20Best%20Grippy%20Socks%20-%20Definitive-v28.html`
+`http://127.0.0.1:8766/Barreletics%20SEO%20-%20Best%20Grippy%20Socks%20-%20Definitive-v29.html`
 
 **Public (GitHub Pages):**  
-`https://barreletics.github.io/Barreletics-Design-Review/Barreletics%20SEO%20-%20Best%20Grippy%20Socks%20-%20Definitive-v28.html`
+`https://barreletics.github.io/Barreletics-Design-Review/Barreletics%20SEO%20-%20Best%20Grippy%20Socks%20-%20Definitive-v29.html`
