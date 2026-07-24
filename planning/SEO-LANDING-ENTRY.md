@@ -1,21 +1,32 @@
 # SEO Landing Entry — Best Grippy Socks
 
-**Mock:** `Barreletics SEO - Best Grippy Socks - Definitive-v15.html` ← **open this**  
-**Prior (keep for compare):** `Definitive-v14.html` — do not overwrite  
+**Mock:** `Barreletics SEO - Best Grippy Socks - Definitive-v16.html` ← **open this**  
+**Prior (keep for compare):** `Definitive-v15.html` — do not overwrite  
 **Andrew-liked convert lock:** `Definitive-v6.html`  
 **Prior convert lock:** `Definitive-v5.html` (Collection-style spine — keep for compare)  
 **Convert grid CSS/JS source:** Collection `Definitive-v12.html`  
 **Reviews + IG pattern:** Home `Definitive-WORKING.html` (+ v11 reviews carousel)  
 **Reusable hero module:** `.hero-fullbleed` — see `planning/HERO-FULLBLEED.md` · `sections/hero-fullbleed-snippet.html`  
 **Archived framework:** `Definitive-v1.html` (early text/SEO shell)  
-**Experiments (compare only):** v2 Home-like · v3 media pass · v4 light commerce · v5 Collection clone · v6 convert lock · v7 warmth + reviews cream · v8 reviews white · v9 IG cream · v10 Sock Era + Commit · v11 Yoga Socks / Upgrade · v12 rejected epigram support · v13 rejected sock-dots support · v14 rejected Never Loses as Yoga Socks body  
+**Experiments (compare only):** v2–v15 history · v15 had post-hero We Outgrew cream strip (superseded)  
 **Live:** `https://barreletics.com/pages/best-barre-pilates-yoga-grippy-socks`  
-**Updated:** 2026-07-23 (v15 — cream strip = We Outgrew Grip Socks. + Built to hold… body. Zero dots.)  
-**Preview hub:** Featured under Shop spine as **Latest SEO**
+**Updated:** 2026-07-24 (v16 production polish)  
+**Preview hub:** SEO **v16 · Locked**  
+**Sock Math:** not on this GEO LP — existing Sock Math mocks / PDP craft only if needed later
 
 ## Job
 
 Organic + paid sock searches (Pilates socks / yoga socks / barre grip socks) land here → **shop on-page**. Footer SEO destination — not primary nav. Performance Skins = the upgrade. Convert engine = variant grid + Quick Add.
+
+## What changed in v16 (from v15)
+
+| Area | v16 |
+|------|-----|
+| Post-hero | **Upgrade your grip. Upgrade your workout.** (cream) — moved up from after shop |
+| We Outgrew | Cream **50/50** H2 (was Commit) + Built to hold… body — cream strip removed |
+| Never Slip | After shop (white) · type matched to Upgrade (`clamp(28→40)` / weight 400) — no longer stacked on Upgrade |
+| FAQ | **White** + hairline accordion (Collection pattern) — no white cards on cream |
+| Type | Statement H2s weight **400** (not 700) |
 
 ## What changed in v15 (from v14)
 
@@ -67,39 +78,36 @@ Organic + paid sock searches (Pilates socks / yoga socks / barre grip socks) lan
 | Section | Featured slogan |
 |---------|-----------------|
 | Hero | The Pilates Sock Era Is Over |
-| Cream key-slogan strip | We Outgrew Grip Socks. |
-| Cream support | Built to hold when it matters most—so you can push deeper, stay longer, and move with confidence. |
+| Disciplines cream (post-hero) | Upgrade your grip. Upgrade your workout. |
 | Shop | Shop all colors & styles (+ Secure body) |
-| Disciplines cream | Upgrade your grip. Upgrade your workout. |
 | Pose | Never Slip in Chair Pose |
 | Never Loses | Never Loses Shape. Never Loses Grip. |
-| Commit | You Commit to the Class. Commit to the Gear. |
+| Cream 50/50 | We Outgrew Grip Socks. |
 | Reviews | Real people. Real results. |
 | Instagram | Studio workouts and footwear will never be the same |
 | FAQ | Questions from the studio *(utility)* |
 
 **Note:** “Studio workouts…” is not in `home-copy-v24.md` inventory — used per Andrew SEO ask as IG headline (stronger than From the studio).  
-**Note:** Yoga Socks Are Useless stays inventory (PDP/ads) — not Top 12; demoted from this strip in v15.
+**Note:** Commit slogan demoted from this page in v16 (We Outgrew took the cream 50/50).
 
-## Cream rhythm map (v15 = v14 = v13 = v12 = v11)
+## Cream rhythm map (v16)
 
 | Section | Bg |
 |---------|-----|
-| Key-slogan strip | cream `#f5f2ec` |
+| **Disciplines Upgrade** (post-hero) | **cream** |
 | Mid trust | white |
 | Shop grid | white |
-| **Disciplines Upgrade** | **cream** |
 | Pose band | **white** |
 | Never Loses | white |
-| Commit | cream |
+| We Outgrew 50/50 | cream |
 | Reviews | white |
 | Instagram | cream |
 | Trust strip | white |
-| FAQ | cream once |
+| FAQ | **white** (hairlines) |
 
-## Architecture (v15)
+## Architecture (v16)
 
-- **Spine:** trust/nav/logo → **full-bleed Sock Era hero** → cream **We Outgrew** key-slogan strip → mid trust (**white**) → **variant grid `#shop`** → Upgrade disciplines (cream) → pose (**white**) → Never Loses (**white** 50/50) → Commit (cream 50/50) → reviews (**white** + arrows) → IG (**cream**) → trust strip → FAQ cream/GEO → footer
+- **Spine:** trust/nav/logo → **full-bleed Sock Era hero** → **Upgrade** (cream) → mid trust (**white**) → **variant grid `#shop`** → pose (**white**) → Never Loses (**white** 50/50) → **We Outgrew** (cream 50/50) → reviews (**white** + arrows) → IG (**cream**) → trust strip → FAQ (**white** hairlines) → footer
 - **H1:** The Pilates Sock Era Is Over · brand signal in overlay · SEO lede for barre/Pilates/yoga grippy socks
 - **Module:** `.hero-fullbleed` drop-in for any page — `planning/HERO-FULLBLEED.md`
 
@@ -114,7 +122,7 @@ Organic + paid sock searches (Pilates socks / yoga socks / barre grip socks) lan
 
 ## Preview
 
-`http://127.0.0.1:8766/Barreletics%20SEO%20-%20Best%20Grippy%20Socks%20-%20Definitive-v15.html`
+`http://127.0.0.1:8766/Barreletics%20SEO%20-%20Best%20Grippy%20Socks%20-%20Definitive-v16.html`
 
 **Public (GitHub Pages):**  
-`https://barreletics.github.io/Barreletics-Design-Review/Barreletics%20SEO%20-%20Best%20Grippy%20Socks%20-%20Definitive-v15.html`
+`https://barreletics.github.io/Barreletics-Design-Review/Barreletics%20SEO%20-%20Best%20Grippy%20Socks%20-%20Definitive-v16.html`
