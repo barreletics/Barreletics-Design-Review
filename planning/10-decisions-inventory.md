@@ -690,10 +690,10 @@
 - **Source:** SEO Definitive-v29 · owner 2026-07-24
 - **Category:** BRAND
 
-### BZ-022: Collection — No Early Closed/Open Sole Cards
-- **Decision:** Collection authority = `Definitive-v15`. Spine: **hero → value strip → variants**. Remove early `#explain` Closed/Open sole cards. Closed/Open via grid tabs + FAQ + late 50/50. Hero may still name the choice.
-- **Rationale:** Shop-first convert (matches SEO); sole cards delayed the grid without adding interaction.
-- **Source:** Owner 2026-07-24 · Collection v15
+### BZ-022: Collection — No Closed/Open Sole Sections (tabs + FAQ only)
+- **Decision:** Collection authority = `Definitive-v16`. Spine: **hero → value strip → variants**. Remove early `#explain` sole cards **and** late “Closed Sole or Open Sole” 50/50. Closed/Open via **grid tabs + FAQ** only. Hero may still name the choice.
+- **Rationale:** Shop-first convert (matches SEO); sole explainer bands delayed/duplicated the grid without adding interaction.
+- **Source:** Owner 2026-07-24 · Collection v16
 - **Category:** BRAND
 
 ---

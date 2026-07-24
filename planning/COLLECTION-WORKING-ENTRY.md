@@ -1,13 +1,14 @@
-**Latest:** **v15** ← **open this** · from v14: remove early Closed/Open sole cards (BZ-022)  
-**Prior:** v14 (keep for compare) · variants 2-row + See all
+**Latest:** **v16** ← **open this** · no early sole cards · no late Closed/Open 50/50 (BZ-022)  
+**Priors:** v15 / v14 (keep for compare)
 
 # Collection Working Entry — Barreletics
 
-**Authority mock:** `Barreletics Collection - Definitive-v15.html`  
-**Priors:** v5–v14 — do not overwrite · Hub: `PREVIEW-HUB.html` / `docs/index.html`  
+**Authority mock:** `Barreletics Collection - Definitive-v16.html`  
+**Priors:** v5–v15 — do not overwrite · Hub: `PREVIEW-HUB.html` / `docs/index.html`  
 **Updated:** 2026-07-24  
 
-**v15 (from v14):** Removed `#explain` Closed/Open sole cards. Spine: **Secure hero → value strip → Shop grid** (tabs educate sole type). Late “Closed Sole or Open Sole” 50/50 + FAQ kept.
+**v16 (from v15):** Also removed late **Closed Sole or Open Sole** 50/50. Sole education = **grid tabs + FAQ only**.  
+**v15 (from v14):** Removed early `#explain` sole cards. Spine: hero → value → shop.
 
 **v12 (from v11):** Removed separate “Studio search topics” GEO block. Product FAQ + sock/discipline SEO + hot thin sock + verified moves + soft shipping → **one** accordion under **Questions from the studio**. Same visual treatment for all items. Convert path / videos / Quick Add unchanged from v11.
 
