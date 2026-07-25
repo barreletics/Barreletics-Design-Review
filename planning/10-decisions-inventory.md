@@ -685,16 +685,18 @@
 - **Source:** barreletics-design-system skill · owner 2026-07-24
 - **Category:** BRAND
 
-### BZ-024: Display Casing — Editorial Sentence Case
-- **Decision:** Shop marketing display uses **editorial sentence case** only — capitalize **first word of each sentence** + **proper nouns**. Do **not** Title Case every word in slogans. Do **not** invent hero-only hybrids.
+### BZ-024: Display Casing — Title Case Hero + Editorial Sections
+- **Decision:** Locked hybrid — **Title Case heroes only**; everything else editorial sentence case.
+  - **Hero H1** (full-bleed / statement hero-level lines) = **Title Case** — capitalize each major word. Example: *The Pilates Sock Era Is Over* (prefer no trailing period on Title Case heroes unless needed)
+  - **All other display / section titles** = **editorial sentence case** — first word of each sentence + proper nouns only. Examples: *We outgrew grip socks.* · *Never loses shape. Never loses grip.* · *Shop all colors & styles*
   - Proper nouns include: Barreletics, Pilates, Performance Skins, Megaformer, Lagree, Cadillac, Coperni (as needed)
-  - Product terms stay: Closed Sole, Open Sole, size letters
+  - **Product / collection / color names** keep major-word caps (e.g. Closed Sole, Open Sole, Performance Skins, colorway names)
   - UI stays ALL CAPS: CTAs, tabs, eyebrows, badges
-  - Authority examples: *The Pilates sock era is over.* · *We outgrew grip socks.* · *Never loses shape. Never loses grip.* · *Upgrade your grip. Upgrade your workout.*
-- **Supersedes:** SEO v30 mixed Title Case slogans; v31/v32 casing compare experiments (keep files, not hub authority)
-- **Authority mock:** SEO `Definitive-v33.html`
-- **Rationale:** Alo/On/Lulu precision; v30 casing had no rule and confused review. One system, applied to every display line.
-- **Source:** Owner 2026-07-24 · casing OS precision lock
+  - Do **not** Title Case secondary slogans or section stacks (avoids v30 chaos)
+- **Supersedes:** SEO v33 all-sentence-case lock; v30 mixed Title Case slogans; v31/v32 casing compare experiments (keep files, not hub authority)
+- **Authority mock:** SEO `Definitive-v34.html`
+- **Rationale:** Owner wants hero-level Title Case punch; section lines stay calm editorial. Narrow hybrid — not a return to random Title Case mixes.
+- **Source:** Owner 2026-07-24 · Title Case hero refinement (override of prior all-sentence-case BZ-024)
 - **Category:** BRAND
 
 ### BZ-021: SEO Never Loses — Full-Bleed Barre Short Video
