@@ -679,7 +679,7 @@
 - **Decision:** Shop-wide Roboto. **v9 size + light weight** on opening H1 only — site flows without heavy 500 or tiny Home-sized heroes. Stop further trials unless owner reopens.
   | Role | Size | Weight | Case |
   |------|------|--------|------|
-  | **Opening H1** | `clamp(40px, 6vw, 64px)` · mobile `clamp(34px, 9vw, 44px)` · lh **1.08** · **-0.03em** | **400** (not 500) | **Title Case** |
+  | **Opening H1** | `clamp(40px, 6vw, 64px)` · mobile `clamp(34px, 9vw, 44px)` · lh **1.08** · **-0.03em** | **400** (not 500) | **Title case (v6 / Chicago)** — major words only |
   | **Section / mid-page** | ~28–40 | **400** | Editorial sentence case |
   | **Body** | 15–16px | **400** | Sentence |
   | **Quiet UI** | — | **500** | as needed |
@@ -690,15 +690,18 @@
 - **Source:** Owner 2026-07-25 — perfect balance / site flow
 - **Category:** BRAND
 
-### BZ-024: Display Casing — Title Case Hero + Editorial Sections
-- **Decision:** With BZ-020 — **Title Case opening H1 only**; everywhere else editorial sentence case (first word + proper nouns). No Title Case section stacks.
-- **Authority:** SEO `Definitive-v36.html` · Home WORKING · Pattern-v2
-- **Source:** Owner 2026-07-24/25
+### BZ-024: Display Casing — Title Case Hero (v6) + Editorial Sections
+- **Decision:** Opening H1 only uses **traditional title case** (SEO v6 / Chicago-style): capitalize major words; **do not** capitalize short function words (*a, an, the, and, or, but, in, on, of, to, for, is, as, at, by, from…*) unless first or last word.
+  - Examples: *The Pilates Sock Era is Over* · *Secure in Every Hold* · *From the Studio*
+  - **Wrong:** *…Era Is Over* · *Secure In Every Hold* · *From The Studio*
+  - Everywhere else = editorial **sentence case** (first word + proper nouns). No title-case section stacks.
+- **Authority:** SEO `Definitive-v36.html` · Home WORKING · Collection v18 · Pattern-v2
+- **Source:** Owner 2026-07-25 — match v6; stop capping *is* / *in*
 - **Category:** BRAND
 
 ### BZ-025: Centered Full-Bleed Hero Pattern
 - **Decision:** Reusable **centered** full-bleed for Help / Journal / content / SEO-style (not Home/Collection split).
-  - Type = **BZ-020** opening H1 (**64/400** Title Case) · CTAs 700 ALL CAPS
+  - Type = **BZ-020** opening H1 (**64/400** · v6 title case) · CTAs 700 ALL CAPS
   - Left commerce = SEO **v36** (same tokens)
 - **Authority:** `docs/Barreletics Hero - Centered Fullbleed - Pattern-v2.html` · `sections/hero-fullbleed-snippet.html` · `planning/HERO-FULLBLEED.md`
 - **Source:** Owner 2026-07-25

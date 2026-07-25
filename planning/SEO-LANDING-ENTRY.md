@@ -45,7 +45,7 @@ Organic + paid sock searches (Pilates socks / yoga socks / barre grip socks) lan
 
 | Area | v34 |
 |------|-----|
-| Hero H1 | **Title Case** — *The Pilates Sock Era Is Over* (no period) |
+| Hero H1 | **v6 title case** — *The Pilates Sock Era is Over* (short words lower) |
 | Elsewhere | Section / statement titles stay editorial sentence case (as v33) |
 | Banner | Locked — Title Case hero · sentence case elsewhere |
 | Kept | v30 type calm · v29 spine / media |
@@ -247,7 +247,7 @@ Organic + paid sock searches (Pilates socks / yoga socks / barre grip socks) lan
 
 | Section | Featured slogan |
 |---------|-----------------|
-| Hero | The Pilates Sock Era Is Over |
+| Hero | The Pilates Sock Era is Over |
 | Disciplines cream (post-hero) | Upgrade your grip. Upgrade your workout. |
 | Shop | Shop all colors & styles (+ Secure body) |
 | Pose | Never Slip in Chair Pose |
@@ -278,7 +278,7 @@ Organic + paid sock searches (Pilates socks / yoga socks / barre grip socks) lan
 ## Architecture (v29)
 
 - **Spine:** top bar → **big hero** (trust → H1 → lede → CTA · still) → **shop** → **value strip** → Sock Math → We Outgrew → **Never Loses full-bleed video** → Upgrade → reviews → IG → FAQ → footer
-- **H1:** The Pilates Sock Era Is Over · brand via nav logo only · SEO lede for barre/Pilates/yoga grippy socks
+- **H1:** The Pilates Sock Era is Over · brand via nav logo only · SEO lede for barre/Pilates/yoga grippy socks
 - **Module:** `.hero-fullbleed` drop-in for any page — `planning/HERO-FULLBLEED.md`
 
 ## Brian / theme notes

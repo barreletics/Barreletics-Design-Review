@@ -63,22 +63,32 @@ They already commit to barre/Pilates — time, money, energy. The gear should ma
 
 ## Slogan-to-Section Mapping
 
-One slogan per section — never stack competing statements. Updated 2026-07-20 (owner keepers).
+One slogan per section — never stack competing statements. Updated 2026-07-22 (owner keepers).
+
+**WORKING Home:** `Definitive-WORKING.html` (= v29). Entry: `planning/HOME-WORKING-ENTRY.md`. Copy inventory: `planning/home-copy-v24.md`.
+
+**Hero hierarchy:** Primary H1 = *The Pilates Sock Era is Over* (v6 title case — *is* lower) · Shop/Collection = *Secure in Every Hold* · Category alt *We Outgrew Grip Socks.* · *Studio Workouts…* = legacy/meta only.
 
 | Slogan | Placement |
 |--------|-----------|
 | The Pilates Sock Era is Over | Home hero H1, Collection hero |
+| We Outgrew Grip Socks. | Home late problem band H2; Collection hero rotation; paid/social category lines |
 | Think Outside the Sock | Home mosaic hero tile |
 | Let Us Knock Your Socks Off | Home solo statement band |
 | Never Loses Shape. Never Loses Grip. | Home video 50/50; PDP/Collection with Nike wrap visual (side-by-side, **no vs/comparison copy**) |
 | Feels Like a Second Skin / 360° grip | Home hero body + value strip |
 | One Pair. Done. | Home sock-math lite (packshot) |
 | You Commit to the Class. Commit to the Gear. | Home full-bleed |
-| Tired Of Slipping in Your Yoga Socks? | Home late text band (or PDP) |
+| Tired Of Slipping in Your Yoga Socks? | Home late problem eyebrow (under *We Outgrew Grip Socks.*) or PDP |
+| Secure in Every Hold. No Sliding. No Resets. | Mosaic + shop substance |
+| Never Slip in Chair Pose / flat back chair / water ski / footwork | Problem list — pose slip → solution |
 | Yoga Socks Are Useless | PDP (not Home) |
 | Upgrade Your Grip. Upgrade Your Workout. | Collection / paid ads |
-| Real people. Real results. | Home Instagram head |
+| Real people. Real results. | **Home Reviews head** (not IG) |
+| From the studio | Home Instagram head |
+| *(No aggregate review count on Home)* | Do not show 4.9 · 294 reviews or helpful-vote counts — quote-led social proof only; ratings OK on PDP |
 | Stop adjusting. Start moving. | Optional / secondary surfaces |
+| **Master inventory** | `planning/home-copy-v24.md` — OS authority for all Home slogans + live lines |
 
 ### Hero Eyebrow Rotation (5 messages, 3.5s cycle)
 
@@ -92,6 +102,7 @@ One slogan per section — never stack competing statements. Updated 2026-07-20 
 
 ### Hero-level
 - The Pilates Sock Era is Over
+- We Outgrew Grip Socks. *(category-creation alt — not primary H1; see hero hierarchy above)*
 - Let Us Knock Your Socks Off
 - Unleash Your Best Workout
 - Join the Movement
