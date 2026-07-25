@@ -1,6 +1,7 @@
 # SEO Landing Entry — Best Grippy Socks
 
-**Mock:** `Barreletics SEO - Best Grippy Socks - Definitive-v34.html` ← **open this**  
+**Mock (authority):** `Barreletics SEO - Best Grippy Socks - Definitive-v36.html` ← **locked balance**  
+**Trial (soft size):** `Definitive-v35.html` — `clamp(36–52)` / **400** · compare vs v34  
 **Prior (keep for compare):** `Definitive-v33.html` — all sentence case (superseded by Title Case hero)  
 **Earlier prior:** `Definitive-v30.html` — type calm, mixed casing  
 **Andrew-liked convert lock:** `Definitive-v6.html`  
@@ -9,10 +10,11 @@
 **Reviews + IG pattern:** Home `Definitive-WORKING.html` (+ v11 reviews carousel)  
 **Reusable hero module:** `.hero-fullbleed` — see `planning/HERO-FULLBLEED.md` · `sections/hero-fullbleed-snippet.html`  
 **Archived framework:** `Definitive-v1.html` (early text/SEO shell)  
-**Experiments (compare only):** v2–v33 history · **v31/v32/v33 casing tries superseded** by BZ-024 Title Case hero · v16 = older production-polish spine  
+**Experiments (compare only):** v2–v33 history · **v36** = v9 opening hero trial · **v35** = soft size · casing tries superseded · v16 older spine  
 **Live:** `https://barreletics.com/pages/best-barre-pilates-yoga-grippy-socks`  
-**Updated:** 2026-07-24 (v34 Title Case hero · BZ-024 refined · type calm from v30)  
-**Preview hub:** SEO **v34 · Locked**  
+**Updated:** 2026-07-25 (v36 LOCKED balance — opening 64/400 Title Case · sentence elsewhere)  
+**Preview hub:** SEO **v36 · Locked balance**  
+
 **Sock Math:** on-page after shop (PDP compact — One pair. Done.) — not a separate Shopify page  
 **Casing (BZ-024):** Title Case heroes only · editorial sentence case elsewhere · CTAs/tabs/eyebrows ALL CAPS
 
@@ -20,6 +22,24 @@
 
 Organic + paid sock searches (Pilates socks / yoga socks / barre grip socks) land here → **shop on-page**. Footer SEO destination — not primary nav. Performance Skins = the upgrade. Convert engine = variant grid + Quick Add.
 
+
+## What changed in v36 (from v34) — LOCKED BALANCE
+
+| Area | v36 |
+|------|-----|
+| Opening hero H1 only | v9 size `clamp(40px, 6vw, 64px)` / **400** / `lh 1.08` / Title Case |
+| Mid-page titles | Stay **400** / calm (not all heroes) |
+| Status | **Locked** — shop-wide BZ-020 balance |
+
+## What changed in v35 (from v34) — Trial
+
+| Area | v35 |
+|------|-----|
+| Hero H1 | `clamp(36px, 4.5vw, 52px)` / **400** / `-0.03em` (was max 46) |
+| Mobile | `clamp(34px, 8.5vw, 44px)` (was max 40) |
+| Kept | Title Case · type calm weight · v34 spine |
+| Not | v9 weight **500** or max **64** |
+| Status | Trial — not authority until locked |
 
 ## What changed in v34 (from v33)
 

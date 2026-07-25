@@ -675,39 +675,33 @@
 - **Source:** Definitive-v28/v29, Compare-v24-v28, planning/home-copy-v24.md
 - **Category:** BRAND
 
-### BZ-020: Type Weight Roles (Roboto 400 / 500 / 700)
-- **Decision:** **Shop-wide marketing calm** = **400** display (match live / Home WORKING vibe). Do not make every H2 700.
-  - **400** body + section/display/statement titles (hero H1, Shop, Reviews, FAQ, IG, statements)
-  - **500** quiet UI labels / FAQ summaries / meta (not loud page titles)
-  - **700** CTAs / badges / tabs / prices / nav brand only
-- **Authorities:** SEO **v33** · Collection **v18** · Home WORKING · PDP **v16** · Journal **v5**
-- **Rationale:** Owner landed SEO type calm; propagate OS so pages don’t fight. Global tweak still allowed later.
-- **Source:** barreletics-design-system skill · owner 2026-07-24
+### BZ-020: Type OS — Opening Punch + Calm Flow (FINAL BALANCE)
+- **Decision:** Shop-wide Roboto. **v9 size + light weight** on opening H1 only — site flows without heavy 500 or tiny Home-sized heroes. Stop further trials unless owner reopens.
+  | Role | Size | Weight | Case |
+  |------|------|--------|------|
+  | **Opening H1** | `clamp(40px, 6vw, 64px)` · mobile `clamp(34px, 9vw, 44px)` · lh **1.08** · **-0.03em** | **400** (not 500) | **Title Case** |
+  | **Section / mid-page** | ~28–40 | **400** | Editorial sentence case |
+  | **Body** | 15–16px | **400** | Sentence |
+  | **Quiet UI** | — | **500** | as needed |
+  | **CTAs / tabs / eyebrows / badges** | 11–12px | **700** | **ALL CAPS** |
+- **Opening H1:** Home · Collection · SEO · Pattern · Journal · Help · PDP name. **Not** mid-page full-bleeds / pose / statements / Sock Math / reviews.
+- **Authorities:** SEO **v36** · Pattern **v2** · Home WORKING · Collection **v18** · PDP **v16** · Journal **v5** · Help **v3**
+- **Supersedes:** 34–46 opening · opening **500** · SEO v34/v35 · Pattern-v1 · endless hybrids
+- **Source:** Owner 2026-07-25 — perfect balance / site flow
 - **Category:** BRAND
 
 ### BZ-024: Display Casing — Title Case Hero + Editorial Sections
-- **Decision:** Locked hybrid — **Title Case heroes only**; everything else editorial sentence case.
-  - **Hero H1** (full-bleed / statement hero-level lines) = **Title Case** — capitalize each major word. Example: *The Pilates Sock Era Is Over* (prefer no trailing period on Title Case heroes unless needed)
-  - **All other display / section titles** = **editorial sentence case** — first word of each sentence + proper nouns only. Examples: *We outgrew grip socks.* · *Never loses shape. Never loses grip.* · *Shop all colors & styles*
-  - Proper nouns include: Barreletics, Pilates, Performance Skins, Megaformer, Lagree, Cadillac, Coperni (as needed)
-  - **Product / collection / color names** keep major-word caps (e.g. Closed Sole, Open Sole, Performance Skins, colorway names)
-  - UI stays ALL CAPS: CTAs, tabs, eyebrows, badges
-  - Do **not** Title Case secondary slogans or section stacks (avoids v30 chaos)
-- **Supersedes:** SEO v33 all-sentence-case lock; v30 mixed Title Case slogans; v31/v32 casing compare experiments (keep files, not hub authority)
-- **Authority mock:** SEO `Definitive-v34.html`
-- **Rationale:** Owner wants hero-level Title Case punch; section lines stay calm editorial. Narrow hybrid — not a return to random Title Case mixes.
-- **Source:** Owner 2026-07-24 · Title Case hero refinement (override of prior all-sentence-case BZ-024)
+- **Decision:** With BZ-020 — **Title Case opening H1 only**; everywhere else editorial sentence case (first word + proper nouns). No Title Case section stacks.
+- **Authority:** SEO `Definitive-v36.html` · Home WORKING · Pattern-v2
+- **Source:** Owner 2026-07-24/25
 - **Category:** BRAND
 
 ### BZ-025: Centered Full-Bleed Hero Pattern
-- **Decision:** Lock a **reusable centered full-bleed hero** as the shared alternate for content / Help / Journal / SEO-style pages (not Home WORKING, not Collection split shop hero).
-  - Full-bleed image (or muted video) · **centered** writing · brand signal (`.hero-fullbleed__brand`) · Title Case H1 · short lede · CTA group
-  - Type stays BZ-020 calm: H1 **400** · `clamp(34px, 4vw, 46px)` · CTAs **700** ALL CAPS — do **not** restore 64px / weight 500 unless asked
-  - `data-align="center"` · even vertical wash gradient (not left-weighted)
-  - Left-stack commerce hero remains on SEO v34 (trust → H1 → shop)
-- **Authority:** `docs/Barreletics Hero - Centered Fullbleed - Pattern-v1.html` · snippet `sections/hero-fullbleed-snippet.html` · `planning/HERO-FULLBLEED.md`
-- **Rationale:** Pages beyond SEO need one copyable centered composition; keep Home/Collection heroes distinct.
-- **Source:** Owner 2026-07-25 · finish-home-collections
+- **Decision:** Reusable **centered** full-bleed for Help / Journal / content / SEO-style (not Home/Collection split).
+  - Type = **BZ-020** opening H1 (**64/400** Title Case) · CTAs 700 ALL CAPS
+  - Left commerce = SEO **v36** (same tokens)
+- **Authority:** `docs/Barreletics Hero - Centered Fullbleed - Pattern-v2.html` · `sections/hero-fullbleed-snippet.html` · `planning/HERO-FULLBLEED.md`
+- **Source:** Owner 2026-07-25
 - **Category:** BRAND
 
 ### BZ-021: SEO Never Loses — Full-Bleed Barre Short Video
