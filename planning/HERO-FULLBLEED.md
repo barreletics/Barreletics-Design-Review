@@ -1,23 +1,30 @@
-# Hero full-bleed module (Brian)
+# Hero full-bleed module
 
-Reusable edge-to-edge hero for **any page**: Home (optional), Collection, SEO, campaign LPs.
+Reusable edge-to-edge hero. Two alignments share the same class stack and tokens.
 
-**Authority mock:** SEO `Definitive-v28.html` (still + trust → H1; eyebrow optional)  
-**Snippet:** `sections/hero-fullbleed-snippet.html`
+| Alignment | When | Authority |
+|-----------|------|-----------|
+| **Centered** (`data-align="center"`) | Help · Journal · content · SEO-style · campaign LPs | **BZ-025** · `docs/Barreletics Hero - Centered Fullbleed - Pattern-v1.html` |
+| **Left / start** (default on SEO) | Commerce SEO landings (trust → H1 → shop) | SEO `Definitive-v34.html` |
+
+**Snippet (centered):** `sections/hero-fullbleed-snippet.html`  
+**Tokens:** BZ-020 (400 display · Home size 34–46 · 700 CTAs) · BZ-024 (Title Case hero H1)  
+**Not this module:** Home WORKING split/left · Collection shop split hero (BZ-023)
 
 ## Settings
 
 | Attr / control | Values | Notes |
 |----------------|--------|--------|
-| `data-media-type` | `image` \| `video` | Put on `<section class="hero-fullbleed">` |
-| Media | `<img>` or muted loop `<video>` + `poster` | Inside `.hero-fullbleed__media` · prefer **image** for LCP on SEO |
-| Eyebrow | Soft white/muted on dark · **optional** | `rgba(255,255,255,0.72)` — **not** rust · SEO v28 omits |
+| `data-media-type` | `image` \| `video` | On `<section class="hero-fullbleed">` |
+| `data-align` | `center` \| omit/`start` | Centered = Pattern-v1; left = SEO v34 |
+| Media | `<img>` or muted loop `<video>` + `poster` | Prefer **image** for LCP |
+| Brand | `.hero-fullbleed__brand` | **Include** on content pages (hero-level brand signal). Optional when nav logo is enough. |
+| Eyebrow / trust | Optional | Soft white/muted — **not** rust. Trust stars may use `#c45c3f`. |
 
 ## Overlay budget
 
-Optional **`.hero-fullbleed__trust`** as **first line** of the overlay stack · optional eyebrow · **one H1** · short lede · CTA group.  
-Brand (`.hero-fullbleed__brand`) is optional — omit when nav already has the logo.  
-No cards, choosers, badges, or floating stickers on the media (trust belongs in the copy stack, not absolute-positioned on the media).
+Brand (recommended on content pages) · optional trust · optional eyebrow · **one H1** · short lede · CTA group.  
+No cards, choosers, badges, or floating stickers on the media.
 
 ## Class list
 
@@ -25,41 +32,30 @@ No cards, choosers, badges, or floating stickers on the media (trust belongs in 
 .hero-fullbleed
 .hero-fullbleed__media
 .hero-fullbleed__overlay
-.hero-fullbleed__trust          (optional — first overlay line; Home rhythm)
-.hero-fullbleed__stars          (inside trust; rust #c45c3f)
-.hero-fullbleed__brand          (optional — skip if nav has logo)
-.hero-fullbleed__eyebrow
-.hero-fullbleed__title          (H1)
+.hero-fullbleed__brand          (recommended on centered content heroes)
+.hero-fullbleed__trust          (optional)
+.hero-fullbleed__stars
+.hero-fullbleed__eyebrow        (optional)
+.hero-fullbleed__title          (H1 — Title Case · 400 · clamp 34–46)
 .hero-fullbleed__lede
 .hero-fullbleed__cta-group
-.hero-fullbleed__cta
+.hero-fullbleed__cta            (ALL CAPS · 700)
 .hero-fullbleed__cta--ghost     (optional secondary)
 ```
 
-## Copy-paste HTML skeleton
+## Centered skeleton
 
 ```html
-<!-- REUSABLE — hero-fullbleed. data-media-type: image|video -->
-<section class="hero-fullbleed" aria-label="Page hero" data-media-type="video">
+<section class="hero-fullbleed" aria-label="Page hero" data-media-type="image" data-align="center">
   <div class="hero-fullbleed__media">
-    <!-- image: <img src="…" alt=""> -->
-    <video autoplay muted loop playsinline webkit-playsinline preload="metadata" poster="POSTER_URL" aria-hidden="true">
-      <source src="VIDEO_URL" type="video/mp4">
-    </video>
+    <img src="…" alt="" width="2000" height="1333" fetchpriority="high" decoding="async">
   </div>
   <div class="hero-fullbleed__overlay">
-    <!-- optional first line — not a floating sticker -->
-    <p class="hero-fullbleed__trust">
-      <span class="hero-fullbleed__stars" aria-hidden="true">★★★★★</span>
-      <a href="#reviews">Trusted by 1,000&#39;s of instructors &amp; studios</a>
-    </p>
-    <!-- optional: <p class="hero-fullbleed__brand">Barreletics</p> -->
-    <p class="hero-fullbleed__eyebrow">Eyebrow line</p>
-    <h1 class="hero-fullbleed__title">Headline</h1>
+    <p class="hero-fullbleed__brand">Barreletics</p>
+    <h1 class="hero-fullbleed__title">Headline In Title Case</h1>
     <p class="hero-fullbleed__lede">One short supporting sentence.</p>
     <div class="hero-fullbleed__cta-group">
-      <a href="#shop" class="hero-fullbleed__cta">Shop Now</a>
-      <!-- optional: <a href="…" class="hero-fullbleed__cta hero-fullbleed__cta--ghost">Secondary</a> -->
+      <a href="#main" class="hero-fullbleed__cta">Primary Cta</a>
     </div>
   </div>
 </section>
@@ -67,10 +63,8 @@ No cards, choosers, badges, or floating stickers on the media (trust belongs in 
 
 ## Usage notes
 
-1. Copy the CSS block commented **REUSABLE — copy this section + CSS to any page** from SEO v27 (or the snippet file).
-2. Set `data-media-type` to match the child (`img` vs `video`).
-3. Keep ~100vh / min 90vh; full-bleed edge-to-edge — no inset media cards.
-4. Left-weighted overlay is fine for trust-first stacks; soften left gradient for readability.
-5. Theme: map settings → media source, eyebrow, H1, lede, CTA label + URL.
-
-First shipped: Best Grippy Socks SEO v6 · refined as reusable module in **v8** · trust-in-stack + no brand in **v27** · still hero + no eyebrow in **v28**.
+1. Copy CSS + markup from Pattern-v1 or `sections/hero-fullbleed-snippet.html`.
+2. Keep ~100vh / min 90vh; full-bleed — no inset media cards.
+3. Centered uses even vertical wash; left SEO uses left-weighted gradient.
+4. Do **not** restore 64px / weight 500 unless explicitly asked.
+5. Theme: map settings → media, align, brand, H1, lede, CTA label + URL.

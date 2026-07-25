@@ -699,6 +699,17 @@
 - **Source:** Owner 2026-07-24 · Title Case hero refinement (override of prior all-sentence-case BZ-024)
 - **Category:** BRAND
 
+### BZ-025: Centered Full-Bleed Hero Pattern
+- **Decision:** Lock a **reusable centered full-bleed hero** as the shared alternate for content / Help / Journal / SEO-style pages (not Home WORKING, not Collection split shop hero).
+  - Full-bleed image (or muted video) · **centered** writing · brand signal (`.hero-fullbleed__brand`) · Title Case H1 · short lede · CTA group
+  - Type stays BZ-020 calm: H1 **400** · `clamp(34px, 4vw, 46px)` · CTAs **700** ALL CAPS — do **not** restore 64px / weight 500 unless asked
+  - `data-align="center"` · even vertical wash gradient (not left-weighted)
+  - Left-stack commerce hero remains on SEO v34 (trust → H1 → shop)
+- **Authority:** `docs/Barreletics Hero - Centered Fullbleed - Pattern-v1.html` · snippet `sections/hero-fullbleed-snippet.html` · `planning/HERO-FULLBLEED.md`
+- **Rationale:** Pages beyond SEO need one copyable centered composition; keep Home/Collection heroes distinct.
+- **Source:** Owner 2026-07-25 · finish-home-collections
+- **Category:** BRAND
+
 ### BZ-021: SEO Never Loses — Full-Bleed Barre Short Video
 - **Decision:** SEO mid-page Never Loses uses **Barre Short Video** (`Barre_Short_Video_-nosound.mp4`) full-bleed ~**90vh** (`.lifestyle-break`), not the first-viewport hero. Hero stays still `IMG_2917`. Same clip as Home Never Loses proof.
 - **Rationale:** Still hero = message/LCP; full-bleed video mid-page = grip proof without diluting Sock Era CTA.
