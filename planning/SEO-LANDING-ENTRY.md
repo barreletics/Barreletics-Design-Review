@@ -1,23 +1,33 @@
 # SEO Landing Entry — Best Grippy Socks
 
-**Mock:** `Barreletics SEO - Best Grippy Socks - Definitive-v30.html` ← **open this**  
-**Prior (keep for compare):** `Definitive-v29.html` — do not overwrite  
+**Mock:** `Barreletics SEO - Best Grippy Socks - Definitive-v33.html` ← **open this**  
+**Prior (keep for compare):** `Definitive-v30.html` — type calm, mixed casing (superseded for casing)  
 **Andrew-liked convert lock:** `Definitive-v6.html`  
 **Prior convert lock:** `Definitive-v5.html` (Collection-style spine — keep for compare)  
 **Convert grid CSS/JS source:** Collection `Definitive-v12.html`  
 **Reviews + IG pattern:** Home `Definitive-WORKING.html` (+ v11 reviews carousel)  
 **Reusable hero module:** `.hero-fullbleed` — see `planning/HERO-FULLBLEED.md` · `sections/hero-fullbleed-snippet.html`  
 **Archived framework:** `Definitive-v1.html` (early text/SEO shell)  
-**Experiments (compare only):** v2–v29 history · v16 = older production-polish spine (not hub authority)  
+**Experiments (compare only):** v2–v32 history · **v31/v32 casing tries superseded** by BZ-024 · v16 = older production-polish spine  
 **Live:** `https://barreletics.com/pages/best-barre-pilates-yoga-grippy-socks`  
-**Updated:** 2026-07-24 (v30 type calm — Home 400 / smaller hero)  
-**Preview hub:** SEO **v30 · Locked**  
-**Sock Math:** on-page after shop (PDP compact — One pair. Done.) — not a separate Shopify page
+**Updated:** 2026-07-24 (v33 editorial casing · BZ-024 · type calm from v30)  
+**Preview hub:** SEO **v33 · Locked**  
+**Sock Math:** on-page after shop (PDP compact — One pair. Done.) — not a separate Shopify page  
+**Casing (BZ-024):** Editorial sentence case on all display lines — first word + proper nouns only
 
 ## Job
 
 Organic + paid sock searches (Pilates socks / yoga socks / barre grip socks) land here → **shop on-page**. Footer SEO destination — not primary nav. Performance Skins = the upgrade. Convert engine = variant grid + Quick Add.
 
+
+## What changed in v33 (from v30)
+
+| Area | v33 |
+|------|-----|
+| Casing | **BZ-024** editorial sentence case on every display line (hero + statements + section heads) |
+| Examples | *The Pilates sock era is over.* · *We outgrew grip socks.* · *Never loses shape. Never loses grip.* |
+| Kept | v30 type calm (400 display · Home-sized hero · 700 CTAs) · v29 spine / media |
+| Supersedes | v30 mixed Title Case · v31 full sentence · v32 hybrid (compare only) |
 
 ## What changed in v30 (from v29)
 

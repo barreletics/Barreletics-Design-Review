@@ -680,9 +680,21 @@
   - **400** body + section/display/statement titles (hero H1, Shop, Reviews, FAQ, IG, statements)
   - **500** quiet UI labels / FAQ summaries / meta (not loud page titles)
   - **700** CTAs / badges / tabs / prices / nav brand only
-- **Authorities:** SEO **v30** · Collection **v18** · Home WORKING · PDP **v16** · Journal **v5**
-- **Rationale:** Owner landed SEO v30 calm; propagate OS so pages don’t fight. Global tweak still allowed later.
+- **Authorities:** SEO **v33** · Collection **v18** · Home WORKING · PDP **v16** · Journal **v5**
+- **Rationale:** Owner landed SEO type calm; propagate OS so pages don’t fight. Global tweak still allowed later.
 - **Source:** barreletics-design-system skill · owner 2026-07-24
+- **Category:** BRAND
+
+### BZ-024: Display Casing — Editorial Sentence Case
+- **Decision:** Shop marketing display uses **editorial sentence case** only — capitalize **first word of each sentence** + **proper nouns**. Do **not** Title Case every word in slogans. Do **not** invent hero-only hybrids.
+  - Proper nouns include: Barreletics, Pilates, Performance Skins, Megaformer, Lagree, Cadillac, Coperni (as needed)
+  - Product terms stay: Closed Sole, Open Sole, size letters
+  - UI stays ALL CAPS: CTAs, tabs, eyebrows, badges
+  - Authority examples: *The Pilates sock era is over.* · *We outgrew grip socks.* · *Never loses shape. Never loses grip.* · *Upgrade your grip. Upgrade your workout.*
+- **Supersedes:** SEO v30 mixed Title Case slogans; v31/v32 casing compare experiments (keep files, not hub authority)
+- **Authority mock:** SEO `Definitive-v33.html`
+- **Rationale:** Alo/On/Lulu precision; v30 casing had no rule and confused review. One system, applied to every display line.
+- **Source:** Owner 2026-07-24 · casing OS precision lock
 - **Category:** BRAND
 
 ### BZ-021: SEO Never Loses — Full-Bleed Barre Short Video
