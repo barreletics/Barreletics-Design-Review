@@ -1,47 +1,101 @@
 {% comment %}
-  Site footer — Shopify menus + newsletter. CSS in assets/chrome.css
+  Site footer — Theme Editor menu pickers only.
+  Adapts to the store: no required Navigation handles.
+  Priority: optional column menus → else primary menu (nested = columns, flat = one list).
+  CSS: assets/chrome.css
 {% endcomment %}
+
+{% assign menu_primary = section.settings.menu %}
+{% assign menu_shop = section.settings.menu_shop %}
+{% assign menu_support = section.settings.menu_support %}
+{% assign menu_company = section.settings.menu_company %}
+{% assign use_column_pickers = false %}
+{% if menu_shop != blank or menu_support != blank or menu_company != blank %}
+  {% assign use_column_pickers = true %}
+{% endif %}
 
 <footer class="site-footer" data-theme="dark" role="contentinfo" {{ section.shopify_attributes }}>
   <div class="site-footer__inner">
-    <div class="site-footer__grid">
-      <div class="site-footer__col">
-        <h3 class="site-footer__heading">{{ section.settings.shop_heading }}</h3>
-        <ul class="site-footer__links" role="list">
-          {% if section.settings.menu_shop != blank %}
-            {% for link in section.settings.menu_shop.links %}
-              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
-            {% endfor %}
-          {% endif %}
-        </ul>
-      </div>
+    <div class="site-footer__grid{% unless use_column_pickers or menu_primary != blank %} site-footer__grid--newsletter-only{% endunless %}">
 
-      <div class="site-footer__col">
-        <h3 class="site-footer__heading">{{ section.settings.support_heading }}</h3>
-        <ul class="site-footer__links" role="list">
-          {% if section.settings.menu_support != blank %}
-            {% for link in section.settings.menu_support.links %}
-              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
-            {% endfor %}
-          {% endif %}
-        </ul>
-      </div>
+      {% if use_column_pickers %}
+        {% if menu_shop != blank %}
+          <div class="site-footer__col">
+            <h3 class="site-footer__heading">{{ section.settings.shop_heading }}</h3>
+            <ul class="site-footer__links" role="list">
+              {% for link in menu_shop.links %}
+                <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+        {% if menu_support != blank %}
+          <div class="site-footer__col">
+            <h3 class="site-footer__heading">{{ section.settings.support_heading }}</h3>
+            <ul class="site-footer__links" role="list">
+              {% for link in menu_support.links %}
+                <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+        {% if menu_company != blank %}
+          <div class="site-footer__col">
+            <h3 class="site-footer__heading">{{ section.settings.company_heading }}</h3>
+            <ul class="site-footer__links" role="list">
+              {% for link in menu_company.links %}
+                <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
 
-      <div class="site-footer__col">
-        <h3 class="site-footer__heading">{{ section.settings.company_heading }}</h3>
-        <ul class="site-footer__links" role="list">
-          {% if section.settings.menu_company != blank %}
-            {% for link in section.settings.menu_company.links %}
-              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
-            {% endfor %}
+      {% elsif menu_primary != blank %}
+        {% assign nested_columns = false %}
+        {% for link in menu_primary.links %}
+          {% if link.links != blank %}
+            {% assign nested_columns = true %}
           {% endif %}
-        </ul>
-      </div>
+        {% endfor %}
+
+        {% if nested_columns %}
+          {% for link in menu_primary.links %}
+            <div class="site-footer__col">
+              {% if link.links != blank %}
+                <h3 class="site-footer__heading">{{ link.title }}</h3>
+                <ul class="site-footer__links" role="list">
+                  {% for child in link.links %}
+                    <li><a href="{{ child.url }}">{{ child.title }}</a></li>
+                  {% endfor %}
+                </ul>
+              {% else %}
+                <h3 class="site-footer__heading">{{ link.title }}</h3>
+                <ul class="site-footer__links" role="list">
+                  <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                </ul>
+              {% endif %}
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="site-footer__col">
+            {% if section.settings.menu_heading != blank %}
+              <h3 class="site-footer__heading">{{ section.settings.menu_heading }}</h3>
+            {% endif %}
+            <ul class="site-footer__links" role="list">
+              {% for link in menu_primary.links %}
+                <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+      {% endif %}
 
       {% if section.settings.show_newsletter %}
         <div class="site-footer__col site-footer__col--newsletter">
           <h3 class="site-footer__heading">{{ section.settings.newsletter_heading }}</h3>
-          <p class="site-footer__newsletter-text">{{ section.settings.newsletter_text }}</p>
+          {% if section.settings.newsletter_text != blank %}
+            <p class="site-footer__newsletter-text">{{ section.settings.newsletter_text }}</p>
+          {% endif %}
           {% form 'customer', id: 'footer-newsletter' %}
             <div class="site-footer__form">
               <input
@@ -56,7 +110,9 @@
               <input type="hidden" name="contact[tags]" value="newsletter">
               <button type="submit" class="site-footer__submit">{{ section.settings.newsletter_cta }}</button>
             </div>
-            <p class="site-footer__privacy">{{ section.settings.newsletter_privacy }}</p>
+            {% if section.settings.newsletter_privacy != blank %}
+              <p class="site-footer__privacy">{{ section.settings.newsletter_privacy }}</p>
+            {% endif %}
           {% endform %}
         </div>
       {% endif %}
@@ -93,37 +149,66 @@
   "class": "footer-section",
   "settings": [
     {
+      "type": "header",
+      "content": "Menus"
+    },
+    {
+      "type": "paragraph",
+      "content": "Assign menus in the Theme Editor. No special Navigation handles are required. If column menus are empty, the primary footer menu is used (nested items become columns)."
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Primary footer menu",
+      "info": "Used when column menus below are left blank. Nested top-level items render as columns."
+    },
+    {
+      "type": "text",
+      "id": "menu_heading",
+      "label": "Heading for flat primary menu",
+      "info": "Only used when the primary menu has no nested items.",
+      "default": "Explore"
+    },
+    {
+      "type": "header",
+      "content": "Optional column menus"
+    },
+    {
       "type": "text",
       "id": "shop_heading",
-      "label": "Shop column heading",
+      "label": "Column 1 heading",
       "default": "Shop"
     },
     {
       "type": "link_list",
       "id": "menu_shop",
-      "label": "Shop menu"
+      "label": "Column 1 menu"
     },
     {
       "type": "text",
       "id": "support_heading",
-      "label": "Support column heading",
+      "label": "Column 2 heading",
       "default": "Support"
     },
     {
       "type": "link_list",
       "id": "menu_support",
-      "label": "Support menu"
+      "label": "Column 2 menu"
     },
     {
       "type": "text",
       "id": "company_heading",
-      "label": "Company column heading",
+      "label": "Column 3 heading",
       "default": "Company"
     },
     {
       "type": "link_list",
       "id": "menu_company",
-      "label": "Company menu"
+      "label": "Column 3 menu"
+    },
+    {
+      "type": "header",
+      "content": "Newsletter"
     },
     {
       "type": "checkbox",
@@ -154,6 +239,10 @@
       "id": "newsletter_privacy",
       "label": "Newsletter privacy line",
       "default": "No spam. Unsubscribe anytime."
+    },
+    {
+      "type": "header",
+      "content": "Social"
     },
     {
       "type": "url",
