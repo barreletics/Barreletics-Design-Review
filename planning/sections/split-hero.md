@@ -1,7 +1,10 @@
 # Split hero
 
 **Status:** Awaits visual QA — **not frozen**  
-**Blocker:** Need Andrew to paste a **new disposable draft theme ID** → deploy → return preview URL + Theme Editor URL  
+**QA theme:** `187144929571` — **M4 Visual QA** (unpublished; never publish)  
+**Preview:** https://barreletics.myshopify.com?preview_theme_id=187144929571  
+**Editor:** https://admin.shopify.com/store/barreletics/themes/187144929571/editor  
+**TE note:** `templates/index.json` does not include Split hero — add via Theme Editor → **Add section → Split hero** for homepage visibility.  
 **Note:** Implementation / GitHub code review alone is **insufficient**. Visual approval = Shopify preview (desktop + mobile, TE controls, schema, crop, performance).  
 **Filename:** `shopify-build/sections/split-hero.liquid`  
 **CSS:** `shopify-build/assets/split-hero.css` (loaded in the section)  
@@ -53,7 +56,7 @@ Reusable 50/50 first-viewport hero: media | copy on desktop; image first, center
 | Reverse layout | Desktop-only modifier | Justified for Collection/SEO reuse; mobile keeps LCP image-first |
 | Legacy `hero` / `hero-alt` | Kept for now | H3: delete only after freeze approved |
 | Next sections | Blocked | Gate until Andrew freezes `split-hero` after visual QA on draft preview |
-| Approval path | Shopify preview | Deploy disposable draft + preview URL; not approve from GitHub alone |
+| Approval path | Shopify preview | QA theme M4 Visual QA `187144929571` + preview URL; not approve from GitHub alone |
 
 ---
 

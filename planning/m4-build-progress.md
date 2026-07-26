@@ -5,8 +5,9 @@
 **Visual approval:** Shopify draft preview (TE + storefront) — **not** GitHub source/PR alone  
 **Shopify push:** disposable draft QA **only** when Andrew names a theme ID in-message; never invent; never live  
 **Retired draft ID:** `187143618851` (dead — do not use)  
+**QA theme:** `187144929571` — **M4 Visual QA** (unpublished; never publish)  
 **2a:** Pre-approved per handoff KEEP/DROP  
-**Tracker updated:** 2026-07-26 (`split-hero` built — **awaits visual QA; not frozen**)
+**Tracker updated:** 2026-07-26 (QA theme ready; `split-hero` awaits Andrew visual review)
 
 ## ARCHITECTURE APPROVED
 
@@ -16,8 +17,8 @@
 |------|--------|
 | Architecture decisions (H1–X3) | **APPROVED** |
 | Final inventory CONTRACT | **written** — acknowledged |
-| Next production work | **`split-hero` AWAITS VISUAL QA** — not frozen; blocked on disposable draft theme ID |
-| Shopify | **blocked** — need Andrew to paste a **new disposable draft theme ID** for deploy + preview URL |
+| Next production work | **`split-hero` AWAITS VISUAL QA** — not frozen; QA theme ready |
+| Shopify | **ready** — theme `187144929571` **M4 Visual QA** (unpublished). Preview + TE for Andrew visual review |
 
 - Deliverable = **section library in repo**, not homepage assembly on Shopify  
 - Visual approval = Shopify preview — implementation/code review alone is **insufficient**  
@@ -28,7 +29,7 @@
 
 | ID | Item | Status |
 |----|------|--------|
-| 0 | Draft ID + hard rule (user + project) | **superseded** — draft abandoned; repo-only rules updated |
+| 0 | Draft ID + hard rule (user + project) | **done** — QA theme `187144929571` M4 Visual QA (unpublished) |
 | 0b | Repo backup `backups/m4-pre-phase1-2026-07-26/` + git commit | **done** |
 | 0c | Pull draft theme into backup before first push | **done** → `backups/.../draft-theme-pull/` (historical) |
 | 1 | Shell: tokens, layout, header/footer in `shopify-build/` | **done** (live untouched; draft path abandoned) |
@@ -49,7 +50,7 @@
 
 | Section | Status | Notes |
 |---------|--------|-------|
-| `split-hero` | **AWAITS VISUAL QA** | Built in repo. **Blocked:** need Andrew to provide a **new disposable draft theme ID** → deploy → return preview URL + TE URL. Code/PR review alone insufficient. Not frozen. Docs: `planning/sections/split-hero.md` |
+| `split-hero` | **AWAITS VISUAL QA** | Deployed to **M4 Visual QA** `187144929571` (unpublished). Awaiting Andrew visual review (desktop + mobile, TE). Homepage `index.json` does **not** include Split hero — **Add section → Split hero** in Theme Editor. Not frozen. Docs: `planning/sections/split-hero.md` |
 | `hero-fullbleed` | **blocked** | Do not start until `split-hero` frozen |
 | All other library sections | **blocked** | One at a time after freeze |
 
