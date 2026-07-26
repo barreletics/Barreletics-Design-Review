@@ -5,7 +5,7 @@
 **Shopify push:** disposable draft QA **only** when Andrew names a theme ID in-message; never invent; never live  
 **Retired draft ID:** `187143618851` (dead — do not use)  
 **2a:** Pre-approved per handoff KEEP/DROP  
-**Tracker updated:** 2026-07-26 (architecture APPROVED; GitHub-master workflow encoded)
+**Tracker updated:** 2026-07-26 (`split-hero` built — **in review, not frozen**)
 
 ## ARCHITECTURE APPROVED
 
@@ -14,13 +14,13 @@
 | Gate | Status |
 |------|--------|
 | Architecture decisions (H1–X3) | **APPROVED** |
-| Final inventory CONTRACT | **written** — acknowledge before production code |
-| Next production work | **`split-hero` only** (rebuild/rename from `home-split-hero`) after contract acknowledge |
+| Final inventory CONTRACT | **written** — acknowledged |
+| Next production work | **`split-hero` IN REVIEW** — not frozen; no other sections |
 | Shopify | **none** |
 
 - Deliverable = **section library in repo**, not homepage assembly on Shopify  
 - Proposal doc superseded: `planning/m4-section-library-architecture.md`  
-- `home-split-hero` remains reference WIP — **not frozen**; becomes `split-hero` as first freeze target  
+- **`split-hero`** replaces `home-split-hero` — **in review, not frozen**  
 - Blocked until `split-hero` frozen: every other new/rebuild marketing section  
 - No parallel builds; one section at a time
 
@@ -32,7 +32,7 @@
 | 1 | Shell: tokens, layout, header/footer in `shopify-build/` | **done** (live untouched; draft path abandoned) |
 | ARCH | Section library architecture | **APPROVED** → CONTRACT |
 | CONTRACT | Final section inventory contract | **done** → `planning/m4-section-library-CONTRACT.md` |
-| 1b | Heroes / section library | **next = `split-hero` only** after contract acknowledge; no Shopify |
+| 1b | Heroes / section library | **`split-hero` IN REVIEW** (not frozen); next section **blocked** |
 | AUDIT | Shell audit report | **done** → `planning/m4-shell-audit-report.md` |
 | 2.0 | Post–layout-swap functional QA | **PASS** → `planning/m4-phase-2.0-qa-report.md` (historical draft QA) |
 | 2a | KEEP/DROP (handoff) | **done** (pre-approved) |
@@ -42,6 +42,14 @@
 | 4 | Lighthouse / a11y / metafields | pending |
 | HANDOFF | Repo → Brian via GitHub | **operating model** |
 | PUBLISH | Owner only | **blocked** |
+
+## Section freeze queue
+
+| Section | Status | Notes |
+|---------|--------|-------|
+| `split-hero` | **IN REVIEW** | Built in repo; DS gaps from audit addressed; awaiting Andrew approve → freeze. Docs: `planning/sections/split-hero.md` |
+| `hero-fullbleed` | **blocked** | Do not start until `split-hero` frozen |
+| All other library sections | **blocked** | One at a time after freeze |
 
 ## Phase 1 local deliverables
 - BZ-020 tokens in `design-tokens.css` + base type utilities

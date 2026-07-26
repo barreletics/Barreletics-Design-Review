@@ -1,9 +1,11 @@
 {% comment %}
-  Home split hero — 50/50 media | copy
+  Split hero — 50/50 media | copy
   Authority: docs/Barreletics Home - Definitive-WORKING.html
-  Type: BZ-020 (H1 clamp 40–64 / 400 · rust CTA 700)
-  CSS: assets/heroes.css
+  Type: BZ-020 (title clamp 40–64 / 400 · rust CTA 700)
+  CSS: assets/split-hero.css (loaded here — not global)
 {% endcomment %}
+
+{{ 'split-hero.css' | asset_url | stylesheet_tag }}
 
 {%- liquid
   assign trust_text = section.settings.trust_text
@@ -16,18 +18,23 @@
   assign tag_url = section.settings.tag_url
   assign image = section.settings.image
   assign image_alt = section.settings.image_alt
+  assign heading_level = section.settings.heading_level | default: 'h1'
+  if heading_level != 'h1' and heading_level != 'h2' and heading_level != 'h3'
+    assign heading_level = 'h1'
+  endif
   if image_alt == blank and image != blank
     assign image_alt = image.alt | default: title
   endif
+  assign reverse_layout = section.settings.reverse_layout
 -%}
 
-<section
-  class="home-split-hero"
-  id="home-split-hero-{{ section.id }}"
+<div
+  class="split-hero{% if reverse_layout %} split-hero--reverse{% endif %}"
+  id="split-hero-{{ section.id }}"
+  role="region"
   aria-label="{{ section.settings.aria_label | default: 'Hero' | escape }}"
-  {{ section.shopify_attributes }}
 >
-  <div class="home-split-hero__image">
+  <div class="split-hero__image">
     {%- if image != blank -%}
       {{
         image
@@ -41,65 +48,84 @@
           decoding: 'async'
       }}
     {%- else -%}
-      <div class="home-split-hero__image-placeholder" role="img" aria-label="{{ image_alt | default: 'Hero lifestyle image' | escape }}">
+      <div class="split-hero__image-placeholder" role="img" aria-label="{{ image_alt | default: 'Hero lifestyle image' | escape }}">
         {{ image_alt | default: 'Add hero image in Theme Editor' }}
       </div>
     {%- endif -%}
   </div>
 
-  <div class="home-split-hero__copy">
+  <div class="split-hero__copy">
     {%- if section.settings.show_trust and trust_text != blank -%}
-      <p class="home-split-hero__trust">
+      <p class="split-hero__trust">
         {%- if section.settings.show_stars -%}
-          <span class="home-split-hero__stars" aria-hidden="true">★★★★★</span>
+          <span class="split-hero__stars" aria-hidden="true">★★★★★</span>
         {%- endif -%}
         {%- if trust_url != blank -%}
-          <a href="{{ trust_url }}">{{ trust_text }}</a>
+          <a href="{{ trust_url }}">{{ trust_text | escape }}</a>
         {%- else -%}
-          <span>{{ trust_text }}</span>
+          <span>{{ trust_text | escape }}</span>
         {%- endif -%}
       </p>
     {%- endif -%}
 
     {%- if title != blank -%}
-      <h1 class="home-split-hero__title">{{ title }}</h1>
+      <{{ heading_level }} class="split-hero__title">{{ title | escape }}</{{ heading_level }}>
     {%- endif -%}
 
     {%- if body != blank -%}
-      <p class="home-split-hero__body">{{ body }}</p>
+      <p class="split-hero__body">{{ body | escape }}</p>
     {%- endif -%}
 
     {%- if cta_text != blank -%}
-      <div class="home-split-hero__ctas">
+      <div class="split-hero__ctas">
         <a
           href="{{ cta_url | default: routes.all_products_collection_url }}"
-          class="home-split-hero__cta"
+          class="split-hero__cta"
         >
-          {{ cta_text }}
+          {{ cta_text | escape }}
         </a>
       </div>
     {%- endif -%}
 
-    {%- if tag_text != blank -%}
-      <a
-        class="home-split-hero__tag"
-        href="{{ tag_url | default: '#knock-socks' }}"
-      >
-        {{ tag_text }}
-      </a>
+    {%- if tag_text != blank and tag_url != blank -%}
+      <a class="split-hero__tag" href="{{ tag_url }}">{{ tag_text | escape }}</a>
+    {%- elsif tag_text != blank -%}
+      <span class="split-hero__tag">{{ tag_text | escape }}</span>
     {%- endif -%}
   </div>
-</section>
+</div>
 
 {% schema %}
 {
-  "name": "Home split hero",
+  "name": "Split hero",
   "tag": "section",
-  "class": "section-home-split-hero",
+  "class": "section-split-hero",
   "settings": [
     {
       "type": "header",
-      "content": "Copy"
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Hero image"
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image alt text",
+      "default": "Barreletics Performance Skins — grip that holds in every studio workout"
+    },
+    {
+      "type": "checkbox",
+      "id": "reverse_layout",
+      "label": "Reverse layout (copy left / image right)",
+      "default": false,
+      "info": "Desktop only. Mobile stays image first."
+    },
+    {
+      "type": "header",
+      "content": "Trust"
     },
     {
       "type": "checkbox",
@@ -126,10 +152,26 @@
       "info": "Optional. Home WORKING links to #reviews."
     },
     {
+      "type": "header",
+      "content": "Copy"
+    },
+    {
       "type": "text",
       "id": "title",
       "label": "Headline",
       "default": "The Pilates Sock Era is Over"
+    },
+    {
+      "type": "select",
+      "id": "heading_level",
+      "label": "Heading level",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" }
+      ],
+      "default": "h1",
+      "info": "Use H1 once per page. Choose H2/H3 when reusing off the primary entry."
     },
     {
       "type": "textarea",
@@ -159,22 +201,11 @@
       "type": "url",
       "id": "tag_url",
       "label": "Tag link",
-      "info": "Optional. Mock uses #knock-socks."
+      "info": "Optional. If blank, tag text renders without a link (no hardcoded URL)."
     },
     {
       "type": "header",
-      "content": "Media"
-    },
-    {
-      "type": "image_picker",
-      "id": "image",
-      "label": "Hero image"
-    },
-    {
-      "type": "text",
-      "id": "image_alt",
-      "label": "Image alt text",
-      "default": "Barreletics Performance Skins — grip that holds in every studio workout"
+      "content": "Accessibility"
     },
     {
       "type": "text",
@@ -185,7 +216,7 @@
   ],
   "presets": [
     {
-      "name": "Home split hero"
+      "name": "Split hero"
     }
   ]
 }
