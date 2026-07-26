@@ -1,11 +1,11 @@
 # M4 Production Build — Progress
 
-**Delivery:** repo `shopify-build/` → GitHub handoff to Brian (not draft Theme Editor)  
-**Shopify:** draft theme abandoned — **no agent push/pull/dev** unless Andrew names a **new** theme ID in-message  
+**Delivery:** GitHub / `shopify-build/` = Design System **master**; Shopify = disposable QA runtime only  
+**Handoff:** approved repo → Brian → production  
+**Shopify push:** disposable draft QA **only** when Andrew names a theme ID in-message; never invent; never live  
 **Retired draft ID:** `187143618851` (dead — do not use)  
-**Live theme:** still forbidden  
 **2a:** Pre-approved per handoff KEEP/DROP  
-**Tracker updated:** 2026-07-26 (architecture APPROVED; contract freeze)
+**Tracker updated:** 2026-07-26 (architecture APPROVED; GitHub-master workflow encoded)
 
 ## ARCHITECTURE APPROVED
 

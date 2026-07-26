@@ -1,33 +1,48 @@
 ---
-description: HARD RULE — no Shopify theme mutations by default; repo shopify-build/ is the deliverable
+description: HARD — GitHub/shopify-build is Design System master; Shopify is disposable QA runtime only
 alwaysApply: true
 ---
 
-# Shopify theme safety (HARD — non-negotiable)
+# Shopify vs repository (HARD — non-negotiable)
 
-## Default: no Shopify theme mutations
+## Source of truth
 
-Agents **MUST NOT** run `shopify theme push`, `pull`, `dev`, `delete`, publish, rename, or Theme Editor API changes against **any** theme unless Andrew **explicitly names a new theme ID in that same message**.
+**The repository is the Design System.** GitHub / **`shopify-build/`** owns sections, snippets, assets, CSS, JS, and docs.
+
+Shopify is **only the runtime** for testing — never the master. Do **not** develop primarily in Theme Editor. Do **not** treat a remote theme as source of truth. Any fix found in QA → revise in **repo first**, then re-push to draft if needed.
+
+## Workflow
+
+1. Build in repository  
+2. Commit (GitHub master)  
+3. QA push to a **disposable draft** — **only** when Andrew names a theme ID in that same message (ask if missing; never invent)  
+4. Revise in repository  
+5. Repeat until approved  
+6. **Brian** pulls approved repo → production theme  
+
+Draft themes are temporary and may be deleted anytime.
+
+## Default: no Shopify mutations
+
+Agents **MUST NOT** run `shopify theme push`, `pull`, `dev`, `delete`, publish, rename, or Theme Editor API changes unless Andrew **explicitly names a theme ID in that same message**.
 
 ## Retired / dead draft
 
 - Theme ID **`187143618851`** is **retired / deleted** — do **not** use it.
-- Fail closed. Never guess a replacement draft ID. Never “just push to the store.”
+- Fail closed. Never guess a replacement. New disposable ID must be explicitly provided.
 
 ## Forbidden without explicit in-message approval
 
-- The **live / published** theme (any ID that is Current)
-- Any Theme library copy, backup, duplicate, or “backcopy”
-- Local donor folder as a push target: `/Users/andrewnehra/barreletics-theme-live-apr2026` (read-only reference only)
+- Live / published theme (any Current)
+- Any Theme library copy, backup, duplicate, or “backcopy” used as master
+- Local donor `/Users/andrewnehra/barreletics-theme-live-apr2026` as a push target (read-only reference only)
 - Publishing any theme
-- Any Shopify CLI theme command without a **new** theme ID supplied by Andrew in the current message
+- Any Shopify CLI theme command without a theme ID from Andrew in the current message
 
 ## If ambiguous
 
-STOP and ask. Never invent a draft ID. Never use a second draft/backup “to be safe.”
+STOP and ask for a disposable draft theme ID. Never invent. Never push “to be safe.”
 
-## Primary deliverable
+## Production integration
 
-- Production-ready sections live in the repo: **`shopify-build/`**
-- Built from locked HTML mocks; handed to Brian via GitHub
-- Homepage / Theme Editor assembly is **Brian’s (or later) job** after sections are approved in repo — not assembled on a draft theme by agents
+Homepage / Theme Editor assembly and production integration = **Brian** from the approved repository — not agents treating Shopify as the Design System.

@@ -33,15 +33,39 @@
 
 ## 2. Operating model
 
+### Source of truth (HARD)
+
+**The repository is the Design System.** Every piece of custom code lives in the repo as source of truth. Shopify is **only the runtime** where sections are tested — never the master copy.
+
+| Layer | Role |
+|-------|------|
+| **GitHub / `shopify-build/`** | **Master** — sections, snippets, assets, CSS, JS, documentation. Fully editable + version-controlled. |
+| **Disposable draft theme** | Temporary QA runtime only. May be deleted anytime. |
+| **Production theme** | Brian integrates from approved repository — not agent-owned. |
+
+**Do not** treat Theme Editor / remote theme as source of truth. **Do not** develop primarily in Shopify. Fixes discovered during QA are revised **in the repository first**, then re-pushed to a disposable draft if needed.
+
+### QA workflow
+
+1. Build section in repository (`shopify-build/`)
+2. Commit it (GitHub master)
+3. QA it in a **disposable draft theme** (push **only** when Andrew names a theme ID in that message; ask if missing; never invent; never live)
+4. Revise code in the repository
+5. Repeat until approved / frozen in repo
+6. Brian pulls approved repository and integrates into production theme
+
+### Rules table
+
 | Rule | Detail |
 |------|--------|
-| Deliverable | Production-ready sections in **`shopify-build/`** |
-| Handoff | GitHub → **Brian** (Theme Editor / homepage assembly) |
-| Shopify CLI | **No agent push / pull / dev** unless Andrew names a **new** theme ID in-message |
-| Retired draft | `187143618851` — dead; do not use |
-| Live theme | Forbidden |
-| Library doctrine | Final theme = **only** this approved production library. Replace the legacy set — do not add generations on top. No duplicate heroes, experiments, or obsolete sections in the shipped theme. |
-| Workflow | One section → QA → Andrew approve → freeze in repo → next |
+| Master | GitHub / **`shopify-build/`** = Design System source of truth |
+| Handoff | Approved repo → **Brian** → production theme |
+| Disposable draft QA | Allowed **only** when Andrew names a theme ID in the current message; ask before any push if no ID |
+| Retired draft | `187143618851` — dead; do not use; new disposable ID must be explicit |
+| Live / production theme | Forbidden for agent push |
+| Remote ≠ master | Never treat Theme Editor or remote theme as source; pull learnings back into repo first |
+| Library doctrine | Final theme = **only** this approved production library. Replace legacy — no duplicate generations. |
+| Section cadence | One section → commit → disposable QA → revise in repo → approve → freeze → next |
 
 **Explicit gate:** No production section code until this CONTRACT is acknowledged. After acknowledgment, only **`split-hero`** until that section is frozen.
 

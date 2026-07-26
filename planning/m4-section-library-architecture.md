@@ -1,6 +1,6 @@
 # M4 Section Library Architecture — Inventory + Proposed Final Library
 
-> **SUPERSEDED / LOCKED (2026-07-26):** Architecture decisions are frozen in **`planning/m4-section-library-CONTRACT.md`**. Use the CONTRACT for the final library, classifications, and build order. This file is historical inventory + proposal only.
+> **SUPERSEDED / LOCKED (2026-07-26):** Architecture decisions are frozen in **`planning/m4-section-library-CONTRACT.md`**. Use the CONTRACT for the final library, classifications, build order, and **GitHub-master / disposable-draft QA** workflow. This file is historical inventory + proposal only.
 
 **Date:** 2026-07-26  
 **Status:** **SUPERSEDED** — see CONTRACT (ARCHITECTURE APPROVED)  

@@ -1,44 +1,49 @@
 ---
-description: HARD — Barreletics Design System section library; contract-gated; one section at a time
+description: HARD — Barreletics Design System section library; GitHub master; contract-gated; one section at a time
 alwaysApply: true
 ---
 
 # Barreletics Design System — section library (HARD)
 
-Reusable Shopify **section library**, not a homepage. Brian (or later) assembles templates after sections freeze in repo.
+**The repository is the Design System.** GitHub / `shopify-build/` = master. Shopify = disposable QA runtime only. Brian integrates production from the approved repo.
 
 ## Contract (authority)
 
 - **Frozen inventory:** `planning/m4-section-library-CONTRACT.md` (ARCHITECTURE APPROVED 2026-07-26)
-- Proposal history only: `planning/m4-section-library-architecture.md` (superseded)
+- Proposal history: `planning/m4-section-library-architecture.md` (superseded)
 - Final theme = **only** the approved production library — replace legacy; no duplicate generations
 
-## Delivery
+## Source of truth + QA
 
-- Repo only: `shopify-build/` from locked HTML mocks → GitHub → Brian
-- **No agent Shopify push** by default (`shopify-draft-theme-only.mdc`)
+1. Build section in repository  
+2. Commit (GitHub master)  
+3. QA in disposable draft — push **only** when Andrew names a theme ID in that message  
+4. Revise in repository (never Theme Editor as master)  
+5. Approve → freeze in repo → next  
+6. Brian pulls approved repo → production  
+
+See `.cursor/rules/shopify-draft-theme-only.mdc`.
 
 ## Locked decisions (abbrev)
 
 | Rule | Detail |
 |------|--------|
-| Heroes | **No artificial hero cap** — build distinct capabilities only (`split-hero`, `hero-fullbleed`, `collection-split`, …) |
-| Naming | `home-split-hero` → **`split-hero`**; collection entry → **`collection-split`** |
-| Companions | **`sole-cards`** = own reusable section (not permanently coupled to `collection-split`) |
-| Statement | **`statement-band`** standalone; full-bleed commit/lifestyle = separate sections |
-| PDP | **`pdp-features` kept** — do not merge into `fifty-fifty` |
+| Heroes | **No artificial hero cap** — distinct capabilities only |
+| Naming | `home-split-hero` → **`split-hero`**; collection → **`collection-split`** |
+| Companions | **`sole-cards`** = own section (not permanently coupled) |
+| Statement | **`statement-band`** standalone; full-bleed = separate sections |
+| PDP | **`pdp-features` kept** — not merged into `fifty-fifty` |
 | Reviews | One **`reviews`** section |
 | GEO | Inside **`studio-trust`** |
 | Newsletter | Footer **and** standalone `newsletter` |
 | Campaign | `campaign-stage` **deferred** |
 | variant-grid | KEEP logic non-negotiable |
 
-## Workflow
+## Build gate
 
-1. Acknowledge CONTRACT before production code  
-2. Build **ONE** section → QA → Andrew approve → freeze in repo → next  
-3. **First after contract:** `split-hero` only (rebuild/rename from `home-split-hero`) until frozen  
-4. Blocked until that freeze: every other new/rebuild marketing section  
+1. No production section code until CONTRACT acknowledged  
+2. **First after contract:** `split-hero` only until frozen  
+3. One section at a time thereafter  
 
 ## Architecture (every major component)
 
@@ -54,12 +59,11 @@ Reusable Shopify **section library**, not a homepage. Brian (or later) assembles
 ## Anti-patterns
 
 - Multiple new sections in one pass  
-- Homepage-only Liquid/CSS  
-- Sibling-section hard dependencies  
-- Monolithic page sections  
+- Developing in Shopify as primary source  
+- Treating Theme Editor / remote theme as master  
+- Homepage-only Liquid/CSS; sibling hard dependencies  
 - Building past `split-hero` before it is frozen  
-- Assembling pages on Shopify instead of freezing in repo  
 
 ## Shopify
 
-No theme push/pull/dev by default. Draft `187143618851` retired. Only if Andrew names a **new** theme ID in-message.
+Disposable draft QA only with explicit theme ID in-message. `187143618851` retired. Never live/production.
