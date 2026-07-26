@@ -1,23 +1,26 @@
 {% comment %}
   Split hero — 50/50 media | copy
-  Authority: docs/Barreletics Home - Definitive-WORKING.html
-  Type: BZ-020 (title clamp 40–64 / 400 · rust CTA 700)
-  CSS: assets/split-hero.css (loaded here — not global)
+  Authority: Home WORKING layout + DS tokens (star gold default = production)
+  CSS: assets/split-hero.css
 {% endcomment %}
 
 {{ 'split-hero.css' | asset_url | stylesheet_tag }}
 
 {%- liquid
-  assign trust_text = section.settings.trust_text
-  assign trust_url = section.settings.trust_url
+  assign media_type = section.settings.media_type | default: 'image'
+  assign image = section.settings.image
+  assign video = section.settings.video
+  assign video_url = section.settings.video_url
+  assign image_alt = section.settings.image_alt
   assign title = section.settings.title
   assign body = section.settings.body
   assign cta_text = section.settings.cta_text
   assign cta_url = section.settings.cta_url
   assign tag_text = section.settings.tag_text
   assign tag_url = section.settings.tag_url
-  assign image = section.settings.image
-  assign image_alt = section.settings.image_alt
+  assign trust_text = section.settings.trust_text
+  assign trust_url = section.settings.trust_url
+  assign star_color = section.settings.star_color | default: '#d4af37'
   assign heading_level = section.settings.heading_level | default: 'h1'
   if heading_level != 'h1' and heading_level != 'h2' and heading_level != 'h3'
     assign heading_level = 'h1'
@@ -26,7 +29,35 @@
     assign image_alt = image.alt | default: title
   endif
   assign reverse_layout = section.settings.reverse_layout
+  assign heading_font = section.settings.heading_font
+  assign body_font = section.settings.body_font
+  assign title_size = section.settings.title_size | default: 64
+  assign body_size = section.settings.body_size | default: 17
+  assign title_size_mobile = section.settings.title_size_mobile | default: 40
 -%}
+
+{%- unless heading_font.system? -%}
+  {{ heading_font | font_face: font_display: 'swap' }}
+{%- endunless -%}
+{%- unless body_font.system? -%}
+  {{ body_font | font_face: font_display: 'swap' }}
+{%- endunless -%}
+
+{%- style -%}
+  #split-hero-{{ section.id }} {
+    --split-hero-heading-font: {{ heading_font.family }}, {{ heading_font.fallback_families }};
+    --split-hero-body-font: {{ body_font.family }}, {{ body_font.fallback_families }};
+    --split-hero-title-size: {{ title_size }}px;
+    --split-hero-title-size-mobile: {{ title_size_mobile }}px;
+    --split-hero-body-size: {{ body_size }}px;
+    --split-hero-star-color: {{ star_color }};
+    --split-hero-bg: {{ section.settings.bg_color | default: '#ffffff' }};
+    --split-hero-text: {{ section.settings.text_color | default: '#1c1916' }};
+    --split-hero-body-color: {{ section.settings.body_color | default: '#4a4a4a' }};
+    --split-hero-cta-bg: {{ section.settings.cta_bg_color | default: '#c45c3f' }};
+    --split-hero-cta-text: {{ section.settings.cta_text_color | default: '#ffffff' }};
+  }
+{%- endstyle -%}
 
 <div
   class="split-hero{% if reverse_layout %} split-hero--reverse{% endif %}"
@@ -34,38 +65,89 @@
   role="region"
   aria-label="{{ section.settings.aria_label | default: 'Hero' | escape }}"
 >
-  <div class="split-hero__image">
-    {%- if image != blank -%}
-      {{
-        image
-        | image_url: width: 1600
-        | image_tag:
-          widths: '600, 900, 1200, 1600',
-          sizes: '(max-width: 768px) 100vw, 50vw',
-          alt: image_alt,
-          loading: 'eager',
-          fetchpriority: 'high',
-          decoding: 'async'
-      }}
+  <div class="split-hero__media" data-media-type="{{ media_type }}">
+    {%- if media_type == 'video' -%}
+      {%- if video != blank -%}
+        {{
+          video
+          | video_tag:
+            image_size: '1600x',
+            autoplay: true,
+            loop: true,
+            muted: true,
+            controls: section.settings.video_controls,
+            playsinline: true,
+            class: 'split-hero__video'
+        }}
+      {%- elsif video_url != blank -%}
+        <video
+          class="split-hero__video"
+          src="{{ video_url }}"
+          {% if image != blank %}poster="{{ image | image_url: width: 1600 }}"{% endif %}
+          autoplay
+          muted
+          loop
+          playsinline
+          {% if section.settings.video_controls %}controls{% endif %}
+        ></video>
+      {%- elsif image != blank -%}
+        {{
+          image
+          | image_url: width: 1600
+          | image_tag:
+            widths: '600, 900, 1200, 1600',
+            sizes: '(max-width: 768px) 100vw, 50vw',
+            alt: image_alt,
+            loading: 'eager',
+            fetchpriority: 'high',
+            decoding: 'async',
+            class: 'split-hero__img'
+        }}
+      {%- else -%}
+        <div class="split-hero__placeholder" role="img" aria-label="Add video or poster image">
+          Add video (or poster image) in Theme Editor
+        </div>
+      {%- endif -%}
     {%- else -%}
-      <div class="split-hero__image-placeholder" role="img" aria-label="{{ image_alt | default: 'Hero lifestyle image' | escape }}">
-        {{ image_alt | default: 'Add hero image in Theme Editor' }}
-      </div>
+      {%- if image != blank -%}
+        {{
+          image
+          | image_url: width: 1600
+          | image_tag:
+            widths: '600, 900, 1200, 1600',
+            sizes: '(max-width: 768px) 100vw, 50vw',
+            alt: image_alt,
+            loading: 'eager',
+            fetchpriority: 'high',
+            decoding: 'async',
+            class: 'split-hero__img'
+        }}
+      {%- else -%}
+        <div class="split-hero__placeholder" role="img" aria-label="{{ image_alt | default: 'Hero lifestyle image' | escape }}">
+          {{ image_alt | default: 'Add hero image in Theme Editor' }}
+        </div>
+      {%- endif -%}
     {%- endif -%}
   </div>
 
   <div class="split-hero__copy">
-    {%- if section.settings.show_trust and trust_text != blank -%}
-      <p class="split-hero__trust">
-        {%- if section.settings.show_stars -%}
-          <span class="split-hero__stars" aria-hidden="true">★★★★★</span>
-        {%- endif -%}
-        {%- if trust_url != blank -%}
-          <a href="{{ trust_url }}">{{ trust_text | escape }}</a>
-        {%- else -%}
-          <span>{{ trust_text | escape }}</span>
-        {%- endif -%}
-      </p>
+    {%- if section.settings.show_trust -%}
+      {%- assign trust_plain = trust_text | strip_html | strip -%}
+      {%- if section.settings.show_stars or trust_plain != blank -%}
+        <div class="split-hero__trust">
+          {%- if section.settings.show_stars -%}
+            <span class="split-hero__stars" aria-hidden="true">★★★★★</span>
+            <span class="visually-hidden">5 out of 5 stars</span>
+          {%- endif -%}
+          {%- if trust_plain != blank -%}
+            {%- if trust_url != blank -%}
+              <a class="split-hero__trust-link" href="{{ trust_url }}">{{ trust_plain | escape }}</a>
+            {%- else -%}
+              <div class="split-hero__trust-text rte">{{ trust_text }}</div>
+            {%- endif -%}
+          {%- endif -%}
+        </div>
+      {%- endif -%}
     {%- endif -%}
 
     {%- if title != blank -%}
@@ -73,7 +155,7 @@
     {%- endif -%}
 
     {%- if body != blank -%}
-      <p class="split-hero__body">{{ body | escape }}</p>
+      <div class="split-hero__body rte">{{ body }}</div>
     {%- endif -%}
 
     {%- if cta_text != blank -%}
@@ -106,9 +188,20 @@
       "content": "Media"
     },
     {
+      "type": "select",
+      "id": "media_type",
+      "label": "Media type",
+      "options": [
+        { "value": "image", "label": "Image" },
+        { "value": "video", "label": "Video" }
+      ],
+      "default": "image"
+    },
+    {
       "type": "image_picker",
       "id": "image",
-      "label": "Hero image"
+      "label": "Image / video poster",
+      "info": "Used for image mode, or as poster when using an external video URL."
     },
     {
       "type": "text",
@@ -117,39 +210,65 @@
       "default": "Barreletics Performance Skins — grip that holds in every studio workout"
     },
     {
+      "type": "video",
+      "id": "video",
+      "label": "Shopify video",
+      "info": "Preferred for video mode (hosted in Files)."
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "External video URL",
+      "info": "MP4/WebM URL if not using Shopify video. Poster uses the image above."
+    },
+    {
+      "type": "checkbox",
+      "id": "video_controls",
+      "label": "Show video controls",
+      "default": false
+    },
+    {
       "type": "checkbox",
       "id": "reverse_layout",
-      "label": "Reverse layout (copy left / image right)",
+      "label": "Reverse layout (copy left / media right)",
       "default": false,
-      "info": "Desktop only. Mobile stays image first."
+      "info": "Desktop only. Mobile stays media first."
     },
     {
       "type": "header",
-      "content": "Trust"
+      "content": "Trust line & stars"
     },
     {
       "type": "checkbox",
       "id": "show_trust",
-      "label": "Show trust line",
-      "default": true
+      "label": "Show trust row",
+      "default": true,
+      "info": "Stars + “Trusted by…” above the headline (Home WORKING order)."
     },
     {
       "type": "checkbox",
       "id": "show_stars",
-      "label": "Show star rating",
+      "label": "Show stars",
       "default": true
     },
     {
-      "type": "text",
+      "type": "color",
+      "id": "star_color",
+      "label": "Star color",
+      "default": "#d4af37",
+      "info": "Production / design-token default is gold. Mock used rust #c45c3f if you prefer."
+    },
+    {
+      "type": "richtext",
       "id": "trust_text",
-      "label": "Trust line",
-      "default": "Trusted by 1,000's of instructors & studios"
+      "label": "Trust text",
+      "default": "<p>Trusted by 1,000's of instructors & studios</p>"
     },
     {
       "type": "url",
       "id": "trust_url",
-      "label": "Trust line link",
-      "info": "Optional. Home WORKING links to #reviews."
+      "label": "Trust link",
+      "info": "Optional. Wraps the trust text (e.g. #reviews)."
     },
     {
       "type": "header",
@@ -170,14 +289,13 @@
         { "value": "h2", "label": "H2" },
         { "value": "h3", "label": "H3" }
       ],
-      "default": "h1",
-      "info": "Use H1 once per page. Choose H2/H3 when reusing off the primary entry."
+      "default": "h1"
     },
     {
-      "type": "textarea",
+      "type": "richtext",
       "id": "body",
       "label": "Body",
-      "default": "Outperforms barre socks, Pilates socks, and yoga socks — combined."
+      "default": "<p>Outperforms barre socks, Pilates socks, and yoga socks — combined.</p>"
     },
     {
       "type": "text",
@@ -188,20 +306,98 @@
     {
       "type": "url",
       "id": "cta_url",
-      "label": "Primary CTA link",
-      "info": "Defaults to all products if blank."
+      "label": "Primary CTA link"
     },
     {
       "type": "text",
       "id": "tag_text",
-      "label": "Tag link text",
+      "label": "Tag text",
       "default": "#letusknockyoursocksoff"
     },
     {
       "type": "url",
       "id": "tag_url",
-      "label": "Tag link",
-      "info": "Optional. If blank, tag text renders without a link (no hardcoded URL)."
+      "label": "Tag link"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "roboto_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "roboto_n4"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Headline size (desktop)",
+      "min": 32,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "label": "Headline size (mobile)",
+      "min": 28,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "body_size",
+      "label": "Body size",
+      "min": 14,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 17
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Copy background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Headline color",
+      "default": "#1c1916"
+    },
+    {
+      "type": "color",
+      "id": "body_color",
+      "label": "Body / trust color",
+      "default": "#4a4a4a"
+    },
+    {
+      "type": "color",
+      "id": "cta_bg_color",
+      "label": "CTA background",
+      "default": "#c45c3f"
+    },
+    {
+      "type": "color",
+      "id": "cta_text_color",
+      "label": "CTA text",
+      "default": "#ffffff"
     },
     {
       "type": "header",

@@ -1,25 +1,27 @@
 /**
  * Split hero — 50/50 media | copy
- * Authority: docs/Barreletics Home - Definitive-WORKING.html
- * Loaded only when the section is present (section stylesheet_tag).
+ * Typography/colors driven by section CSS variables from Theme Editor.
  */
 
 .split-hero {
   display: grid;
   grid-template-columns: 1fr 1fr;
   min-height: 75vh;
-  background: var(--bg-primary, #fff);
-  font-family: var(--font-body, 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif);
+  background: var(--split-hero-bg, #fff);
+  font-family: var(--split-hero-body-font, 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif);
 }
 
-.split-hero__image {
+.split-hero__media {
   position: relative;
   overflow: hidden;
   min-height: 500px;
   background: var(--color-warm-cream, #f5f2ec);
 }
 
-.split-hero__image img {
+.split-hero__media .split-hero__img,
+.split-hero__media .split-hero__video,
+.split-hero__media img,
+.split-hero__media video {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -28,7 +30,7 @@
   inset: 0;
 }
 
-.split-hero__image-placeholder {
+.split-hero__placeholder {
   width: 100%;
   height: 100%;
   min-height: 500px;
@@ -43,13 +45,15 @@
 }
 
 .split-hero__copy {
-  background: var(--bg-primary, #fff);
+  background: var(--split-hero-bg, #fff);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
   padding: 72px 64px;
-  max-width: 560px;
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
 }
 
 .split-hero__trust {
@@ -59,44 +63,62 @@
   flex-wrap: wrap;
   margin: 0 0 28px;
   font-size: 13px;
-  color: var(--text-body, #4a4a4a);
+  color: var(--split-hero-body-color, #4a4a4a);
   font-weight: 400;
+  font-family: var(--split-hero-body-font, inherit);
 }
 
-.split-hero__trust a {
+.split-hero__trust-link,
+.split-hero__trust-text {
   color: inherit;
   text-decoration: none;
 }
 
-.split-hero__trust a:hover {
+.split-hero__trust-link:hover {
   text-decoration: underline;
 }
 
+.split-hero__trust-text p,
+.split-hero__trust-link p {
+  margin: 0;
+  display: inline;
+}
+
 .split-hero__stars {
-  color: var(--accent-primary, #c45c3f);
+  color: var(--split-hero-star-color, var(--accent-stars, #d4af37));
   font-size: 14px;
   letter-spacing: 0.1em;
   line-height: 1;
+  flex-shrink: 0;
 }
 
-/* BZ-020 opening H1 */
 .split-hero__title {
-  font-family: var(--font-body, 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif);
-  font-size: clamp(40px, 6vw, 64px);
+  font-family: var(--split-hero-heading-font, 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif);
+  font-size: clamp(40px, 6vw, var(--split-hero-title-size, 64px));
   font-weight: 400;
   line-height: 1.08;
-  color: var(--text-primary, #1c1916);
+  color: var(--split-hero-text, #1c1916);
   margin: 0 0 20px;
   letter-spacing: -0.03em;
+  max-width: 18ch;
 }
 
 .split-hero__body {
-  font-size: 17px;
+  font-family: var(--split-hero-body-font, inherit);
+  font-size: var(--split-hero-body-size, 17px);
   font-weight: 400;
-  color: var(--text-body, #4a4a4a);
+  color: var(--split-hero-body-color, #4a4a4a);
   line-height: 1.45;
   margin: 0 0 32px;
-  max-width: 28ch;
+  max-width: 36ch;
+}
+
+.split-hero__body p {
+  margin: 0 0 0.75em;
+}
+
+.split-hero__body p:last-child {
+  margin-bottom: 0;
 }
 
 .split-hero__ctas {
@@ -113,16 +135,17 @@
   justify-content: center;
   min-height: 48px;
   padding: 16px 36px;
-  background: var(--accent-primary, #c45c3f);
-  color: #fff;
+  background: var(--split-hero-cta-bg, #c45c3f);
+  color: var(--split-hero-cta-text, #fff);
+  font-family: var(--split-hero-body-font, inherit);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   border-radius: 4px;
   text-decoration: none;
-  transition: background 0.2s, border-color 0.2s;
-  border: 1px solid var(--accent-primary, #c45c3f);
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  border: 1px solid var(--split-hero-cta-bg, #c45c3f);
 }
 
 .split-hero__cta:hover {
@@ -138,26 +161,26 @@
 }
 
 .split-hero__tag {
+  font-family: var(--split-hero-body-font, inherit);
   font-size: 13px;
   font-weight: 500;
-  color: var(--text-primary, #1c1916);
+  color: var(--split-hero-text, #1c1916);
   letter-spacing: 0.02em;
   text-decoration: none;
 }
 
 a.split-hero__tag:hover {
-  color: var(--accent-primary, #c45c3f);
+  color: var(--split-hero-cta-bg, #c45c3f);
   text-decoration: none;
 }
 
 a.split-hero__tag:focus-visible {
-  outline: 2px solid var(--accent-primary, #c45c3f);
+  outline: 2px solid var(--split-hero-cta-bg, #c45c3f);
   outline-offset: 3px;
 }
 
-/* Desktop reverse: copy left / media right. Mobile stays image-first. */
 @media (min-width: 769px) {
-  .split-hero--reverse .split-hero__image {
+  .split-hero--reverse .split-hero__media {
     order: 2;
   }
 
@@ -172,14 +195,14 @@ a.split-hero__tag:focus-visible {
     min-height: auto;
   }
 
-  .split-hero__image {
+  .split-hero__media {
     order: 1;
     min-height: 0;
     aspect-ratio: 4 / 5;
     max-height: 62vh;
   }
 
-  .split-hero__image-placeholder {
+  .split-hero__placeholder {
     min-height: 0;
     aspect-ratio: 4 / 5;
   }
@@ -189,7 +212,6 @@ a.split-hero__tag:focus-visible {
     padding: 40px 24px 48px;
     align-items: center;
     text-align: center;
-    max-width: none;
   }
 
   .split-hero__trust {
@@ -198,13 +220,14 @@ a.split-hero__tag:focus-visible {
   }
 
   .split-hero__title {
-    font-size: clamp(34px, 9vw, 44px);
+    font-size: clamp(34px, 9vw, var(--split-hero-title-size-mobile, 40px));
     margin-bottom: 16px;
+    max-width: none;
   }
 
   .split-hero__body {
     max-width: 34ch;
-    font-size: 15px;
+    font-size: max(15px, calc(var(--split-hero-body-size, 17px) - 2px));
     margin-bottom: 28px;
   }
 
