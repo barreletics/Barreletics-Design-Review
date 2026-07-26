@@ -35,39 +35,46 @@
 
 ### Source of truth (HARD)
 
-**The repository is the Design System.** Every piece of custom code lives in the repo as source of truth. Shopify is **only the runtime** where sections are tested — never the master copy.
+**The repository is the Design System.** Every piece of custom code lives in the repo as source of truth. Shopify is **only the runtime** for visual QA — never the master copy.
 
 | Layer | Role |
 |-------|------|
 | **GitHub / `shopify-build/`** | **Master** — sections, snippets, assets, CSS, JS, documentation. Fully editable + version-controlled. |
-| **Disposable draft theme** | Temporary QA runtime only. May be deleted anytime. |
+| **Disposable draft theme** | Temporary visual-QA runtime only. May be deleted anytime. |
 | **Production theme** | Brian integrates from approved repository — not agent-owned. |
 
-**Do not** treat Theme Editor / remote theme as source of truth. **Do not** develop primarily in Shopify. Fixes discovered during QA are revised **in the repository first**, then re-pushed to a disposable draft if needed.
+**GitHub is NOT a review environment.** Andrew cannot approve sections from source/PR alone. Visual approval happens in Shopify (Theme Editor + storefront preview)—not from the repository.
+
+> I can't review a Shopify section from GitHub source files alone. Every completed section must be deployed to the Shopify development theme and accompanied by a preview URL. I will review the implementation visually in the Theme Editor and on the storefront (desktop + mobile), verify all settings and controls work correctly, then approve or request revisions. GitHub remains the source of truth for code, but visual approval happens in Shopify—not from the repository.
+
+**Do not** treat Theme Editor / remote theme as source of truth. **Do not** develop primarily in Shopify. Fixes discovered during QA are revised **in the repository first**, then re-deployed to a disposable draft if needed.
 
 ### QA workflow
 
 1. Build section in repository (`shopify-build/`)
 2. Commit it (GitHub master)
-3. QA it in a **disposable draft theme** (push **only** when Andrew names a theme ID in that message; ask if missing; never invent; never live)
-4. Revise code in the repository
-5. Repeat until approved / frozen in repo
-6. Brian pulls approved repository and integrates into production theme
+3. Deploy to Shopify **development / disposable draft** (push **only** when Andrew names a theme ID in that message; ask if missing; never invent; never live)
+4. Send **preview URL** + Theme Editor URL
+5. Andrew reviews visually: desktop + mobile, spacing, type, breakpoints, settings/schema, TE controls, image crop, performance
+6. Revisions in the repository → redeploy → repeat
+7. When approved: freeze in repo → next section
+8. Brian pulls approved repository and integrates into production theme
 
 ### Rules table
 
 | Rule | Detail |
 |------|--------|
 | Master | GitHub / **`shopify-build/`** = Design System source of truth |
+| Visual approval | Shopify draft **preview URL** + Theme Editor — not GitHub source/PR |
 | Handoff | Approved repo → **Brian** → production theme |
 | Disposable draft QA | Allowed **only** when Andrew names a theme ID in the current message; ask before any push if no ID |
 | Retired draft | `187143618851` — dead; do not use; new disposable ID must be explicit |
 | Live / production theme | Forbidden for agent push |
 | Remote ≠ master | Never treat Theme Editor or remote theme as source; pull learnings back into repo first |
 | Library doctrine | Final theme = **only** this approved production library. Replace legacy — no duplicate generations. |
-| Section cadence | One section → commit → disposable QA → revise in repo → approve → freeze → next |
+| Section cadence | One section → commit → deploy draft → preview URL → visual QA → revise in repo → freeze → next |
 
-**Explicit gate:** No production section code until this CONTRACT is acknowledged. After acknowledgment, only **`split-hero`** until that section is frozen.
+**Explicit gate:** No production section code until this CONTRACT is acknowledged. After acknowledgment, only **`split-hero`** until that section is frozen via visual QA.
 
 ---
 
@@ -229,7 +236,7 @@ Legend: **KEEP** · **REBUILD** · **MERGE→X** · **DELETE**
 | # | Section | Gate |
 |---|---------|------|
 | 0 | **This CONTRACT acknowledged** | Required before any production code |
-| **1** | **`split-hero`** | Rebuild/rename from `home-split-hero` to DS standards → QA → Andrew approve → **freeze** |
+| **1** | **`split-hero`** | Rebuild/rename from `home-split-hero` to DS standards → deploy disposable draft → preview URL → visual QA → Andrew approve → **freeze** |
 | 2 | `hero-fullbleed` | Only after `split-hero` frozen |
 | 3 | `collection-split` | Then `sole-cards` as companion (can follow immediately after, still one-at-a-time) |
 | 4 | `fifty-fifty` | First surgical port |
@@ -243,7 +250,7 @@ Legend: **KEEP** · **REBUILD** · **MERGE→X** · **DELETE**
 | 12 | Delete legacy heroes + monoliths after replacements frozen | H3 / C6 |
 | — | `campaign-stage` | **Deferred** (C2) |
 
-**Hard rule after contract acknowledge:** only `split-hero` until frozen. No parallel section builds. No Shopify.
+**Hard rule after contract acknowledge:** only `split-hero` until frozen. No parallel section builds. Shopify deploy only with Andrew-named disposable draft ID + preview URL for visual approval.
 
 ---
 

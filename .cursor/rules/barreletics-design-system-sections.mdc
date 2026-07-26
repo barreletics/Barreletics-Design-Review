@@ -1,11 +1,15 @@
 ---
-description: HARD — Barreletics Design System section library; GitHub master; contract-gated; one section at a time
+description: HARD — Barreletics Design System section library; GitHub master; visual approval via Shopify preview
 alwaysApply: true
 ---
 
 # Barreletics Design System — section library (HARD)
 
-**The repository is the Design System.** GitHub / `shopify-build/` = master. Shopify = disposable QA runtime only. Brian integrates production from the approved repo.
+**The repository is the Design System.** GitHub / `shopify-build/` = master. Shopify = disposable QA runtime for **visual approval**. Brian integrates production from the approved repo.
+
+**GitHub is NOT a review environment.** Implementation/code review alone is insufficient. Every completed section must be deployed to a disposable draft with a **preview URL** before Andrew can approve.
+
+> I can't review a Shopify section from GitHub source files alone. Every completed section must be deployed to the Shopify development theme and accompanied by a preview URL. I will review the implementation visually in the Theme Editor and on the storefront (desktop + mobile), verify all settings and controls work correctly, then approve or request revisions. GitHub remains the source of truth for code, but visual approval happens in Shopify—not from the repository.
 
 ## Contract (authority)
 
@@ -17,10 +21,12 @@ alwaysApply: true
 
 1. Build section in repository  
 2. Commit (GitHub master)  
-3. QA in disposable draft — push **only** when Andrew names a theme ID in that message  
-4. Revise in repository (never Theme Editor as master)  
-5. Approve → freeze in repo → next  
-6. Brian pulls approved repo → production  
+3. Deploy to disposable draft — push **only** when Andrew names a theme ID in that message  
+4. Send **preview URL** + Theme Editor URL  
+5. Andrew reviews visually (desktop + mobile, spacing, type, breakpoints, settings/schema, TE controls, image crop, performance)  
+6. Revise in repository (never Theme Editor as master) → redeploy → repeat  
+7. Approve → freeze in repo → next  
+8. Brian pulls approved repo → production  
 
 See `.cursor/rules/shopify-draft-theme-only.mdc`.
 
@@ -44,6 +50,7 @@ See `.cursor/rules/shopify-draft-theme-only.mdc`.
 1. No production section code until CONTRACT acknowledged  
 2. **First after contract:** `split-hero` only until frozen  
 3. One section at a time thereafter  
+4. No freeze without visual QA on a Shopify draft preview  
 
 ## Architecture (every major component)
 
@@ -61,9 +68,10 @@ See `.cursor/rules/shopify-draft-theme-only.mdc`.
 - Multiple new sections in one pass  
 - Developing in Shopify as primary source  
 - Treating Theme Editor / remote theme as master  
+- Approving / freezing from GitHub source or PR alone  
 - Homepage-only Liquid/CSS; sibling hard dependencies  
 - Building past `split-hero` before it is frozen  
 
 ## Shopify
 
-Disposable draft QA only with explicit theme ID in-message. `187143618851` retired. Never live/production.
+Disposable draft QA only with explicit theme ID in-message. `187143618851` retired. Never live/production. Ask Andrew for a disposable draft ID before any push.

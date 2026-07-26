@@ -1,5 +1,5 @@
 ---
-description: HARD — GitHub/shopify-build is Design System master; Shopify is disposable QA runtime only
+description: HARD — GitHub/shopify-build is Design System master; visual approval only via Shopify draft preview
 alwaysApply: true
 ---
 
@@ -9,16 +9,22 @@ alwaysApply: true
 
 **The repository is the Design System.** GitHub / **`shopify-build/`** owns sections, snippets, assets, CSS, JS, and docs.
 
-Shopify is **only the runtime** for testing — never the master. Do **not** develop primarily in Theme Editor. Do **not** treat a remote theme as source of truth. Any fix found in QA → revise in **repo first**, then re-push to draft if needed.
+Shopify is **only the runtime** for visual QA — never the master. Do **not** develop primarily in Theme Editor. Do **not** treat a remote theme as source of truth. Any fix found in QA → revise in **repo first**, then re-deploy to draft if needed.
+
+**GitHub is NOT a review environment.** Andrew cannot approve sections from source/PR alone. Visual approval = Shopify preview (Theme Editor + storefront).
+
+> I can't review a Shopify section from GitHub source files alone. Every completed section must be deployed to the Shopify development theme and accompanied by a preview URL. I will review the implementation visually in the Theme Editor and on the storefront (desktop + mobile), verify all settings and controls work correctly, then approve or request revisions. GitHub remains the source of truth for code, but visual approval happens in Shopify—not from the repository.
 
 ## Workflow
 
-1. Build in repository  
+1. Build section in repository  
 2. Commit (GitHub master)  
-3. QA push to a **disposable draft** — **only** when Andrew names a theme ID in that same message (ask if missing; never invent)  
-4. Revise in repository  
-5. Repeat until approved  
-6. **Brian** pulls approved repo → production theme  
+3. Deploy to Shopify **development / disposable draft** — **only** when Andrew names a theme ID in that same message (ask if missing; never invent)  
+4. Send **preview URL** + Theme Editor URL for visual review  
+5. Andrew reviews visually: desktop + mobile, spacing, type, breakpoints, settings/schema, TE controls, image crop, performance  
+6. Revisions in repository → redeploy → repeat  
+7. When approved: **freeze in repo**, then next section  
+8. **Brian** pulls approved repo → production theme  
 
 Draft themes are temporary and may be deleted anytime.
 

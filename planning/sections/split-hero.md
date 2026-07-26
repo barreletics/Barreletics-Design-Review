@@ -1,6 +1,8 @@
 # Split hero
 
-**Status:** In review — **not frozen**  
+**Status:** Awaits visual QA — **not frozen**  
+**Blocker:** Need Andrew to paste a **new disposable draft theme ID** → deploy → return preview URL + Theme Editor URL  
+**Note:** Implementation / GitHub code review alone is **insufficient**. Visual approval = Shopify preview (desktop + mobile, TE controls, schema, crop, performance).  
 **Filename:** `shopify-build/sections/split-hero.liquid`  
 **CSS:** `shopify-build/assets/split-hero.css` (loaded in the section)  
 **Authority mock:** `docs/Barreletics Home - Definitive-WORKING.html` (hero ~812–825; CSS ~82–132; mobile ~646–654)  
@@ -50,7 +52,8 @@ Reusable 50/50 first-viewport hero: media | copy on desktop; image first, center
 | Tag URL | No Liquid fallback to `#knock-socks` | Page anchors are merchant/TE concerns, not hardcoded structure |
 | Reverse layout | Desktop-only modifier | Justified for Collection/SEO reuse; mobile keeps LCP image-first |
 | Legacy `hero` / `hero-alt` | Kept for now | H3: delete only after freeze approved |
-| Next sections | Blocked | Gate until Andrew freezes `split-hero` |
+| Next sections | Blocked | Gate until Andrew freezes `split-hero` after visual QA on draft preview |
+| Approval path | Shopify preview | Deploy disposable draft + preview URL; not approve from GitHub alone |
 
 ---
 
