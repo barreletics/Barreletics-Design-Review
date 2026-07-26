@@ -11,7 +11,7 @@
 | 0b | Repo backup `backups/m4-pre-phase1-2026-07-26/` + git commit | **done** |
 | 0c | Pull draft theme into backup before first push | **done** → `backups/.../draft-theme-pull/` |
 | 1 | Shell: tokens, layout, header/footer + push to draft only | **done** (live untouched) |
-| 1b | Heroes | **paused for owner review** — `home-split-hero` only shipped; fullbleed + collection-split **not started** |
+| 1b | Heroes / section library | **paused — NOT FROZEN** — doctrine: one section → QA → Andrew approve → freeze → next. `home-split-hero` = reference only; fullbleed + collection-split **blocked** until freeze. Audit → `planning/m4-home-split-hero-ds-audit.md` |
 | AUDIT | Shell audit report | **done** → `planning/m4-shell-audit-report.md` |
 | 2.0 | Post–layout-swap functional QA | **PASS** → `planning/m4-phase-2.0-qa-report.md` — restorations pushed; section build unblocked |
 | 2a | KEEP/DROP (handoff) | **done** (pre-approved) |

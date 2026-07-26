@@ -1,0 +1,45 @@
+---
+description: HARD — Barreletics Design System section library workflow; one section at a time; home-split-hero is reference
+alwaysApply: true
+---
+
+# Barreletics Design System — section library (HARD)
+
+We are building a **reusable Shopify section library**, not a homepage. Homepage is only the first template that assembles **approved** sections later.
+
+## Workflow (non-negotiable)
+
+1. Build **ONE** section
+2. QA that section
+3. Review/refine until Andrew approves
+4. **Freeze** its architecture
+5. Only then begin the next section
+
+- **Reference implementation:** `shopify-build/sections/home-split-hero.liquid` (+ `assets/heroes.css`)
+- **Frozen only after explicit Andrew architecture + code approval**
+- **Blocked until freeze:** `hero-fullbleed`, `collection-split-hero`, and every other new marketing section
+- Do **not** assemble a homepage deliverable ahead of approved sections
+- Optimize for world-class reusable design system, **not** speed
+
+## Architecture (every major component)
+
+| Requirement | Rule |
+|-------------|------|
+| File | Own `sections/*.liquid` |
+| Schema | Complete Shopify schema + `presets` (Theme Editor addable) |
+| Editor | Independently draggable / removable / reusable |
+| Shared code | `snippets/` + shared assets only |
+| Coupling | No section depends on another section |
+| Scope | No page-specific or monolithic architecture |
+
+## Anti-patterns (reject)
+
+- Building multiple new sections in one pass
+- Homepage-only Liquid/CSS that cannot live on another template
+- Hard dependencies on sibling sections or fixed page order
+- Monolithic “page” sections that own multiple compositions
+- Starting next section before the current one is frozen
+
+## Draft theme safety
+
+Shopify push/pull/dev only: theme **`187143618851`** with `--nodelete`. Prefer local/code audit over push.
