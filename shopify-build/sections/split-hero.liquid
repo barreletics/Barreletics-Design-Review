@@ -123,9 +123,22 @@
             class: 'split-hero__img'
         }}
       {%- else -%}
-        <div class="split-hero__placeholder" role="img" aria-label="{{ image_alt | default: 'Hero lifestyle image' | escape }}">
-          {{ image_alt | default: 'Add hero image in Theme Editor' }}
-        </div>
+        {%- comment -%} WORKING mock fallback until Theme Editor image is set {%- endcomment -%}
+        <img
+          class="split-hero__img"
+          src="https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=1600"
+          srcset="https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=600 600w,
+                  https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=900 900w,
+                  https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=1200 1200w,
+                  https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=1600 1600w"
+          sizes="(max-width: 768px) 100vw, 50vw"
+          alt="{{ image_alt | default: 'Barreletics Performance Skins — grip that holds in every studio workout' | escape }}"
+          width="1600"
+          height="1600"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+        >
       {%- endif -%}
     {%- endif -%}
   </div>
