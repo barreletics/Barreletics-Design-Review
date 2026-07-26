@@ -36,14 +36,13 @@
   assign title_size_mobile = section.settings.title_size_mobile | default: 44
 -%}
 
-{%- unless heading_font.system? -%}
-  {{ heading_font | font_face: font_display: 'swap' }}
-{%- endunless -%}
-{%- unless body_font.system? -%}
-  {{ body_font | font_face: font_display: 'swap' }}
-{%- endunless -%}
-
 {%- style -%}
+  {%- unless heading_font.system? -%}
+    {{ heading_font | font_face: font_display: 'swap' }}
+  {%- endunless -%}
+  {%- unless body_font.system? -%}
+    {{ body_font | font_face: font_display: 'swap' }}
+  {%- endunless -%}
   #split-hero-{{ section.id }} {
     --split-hero-heading-font: {{ heading_font.family }}, {{ heading_font.fallback_families }};
     --split-hero-body-font: {{ body_font.family }}, {{ body_font.fallback_families }};
