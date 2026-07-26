@@ -4,6 +4,8 @@
 **Status:** **AWAITING ANDREW APPROVAL** — no section builds until this doc is approved  
 **Sources:** `shopify-build/sections/*.liquid` · `planning/m4-production-handoff.txt` · `planning/m4-shell-audit-report.md` · `planning/m4-theme-master-directive-alignment.md` · `.cursor/rules/barreletics-design-system-sections.mdc` · Home/Collection/SEO/PDP entry docs · live donor (read-only)
 
+> **Delivery reset (2026-07-26):** Draft theme abandoned (`187143618851` retired). Deliverable = production-ready sections in **`shopify-build/`** handed to Brian via GitHub. **No agent Shopify push.** Homepage / Theme Editor assembly is Brian’s (or later) job after repo approval.
+
 ---
 
 ## 1. Reset statement
@@ -12,14 +14,14 @@
 
 | Fact | Implication |
 |------|-------------|
-| Deliverable is the **Barreletics section library**, not the homepage | Homepage is only the first template assembled *after* approved sections exist |
+| Deliverable is the **Barreletics section library**, not the homepage | Homepage is only the first template assembled *after* approved sections exist (Brian / later — not agents on a draft theme) |
 | One production-quality section per **capability** | No parallel generations of heroes, no forever-legacy duplicates |
-| Workflow | Inventory → Andrew approves final library → build **one** section → QA → approve → freeze → next |
+| Workflow | Inventory → Andrew approves final library → build **one** section in repo → QA → approve → freeze in repo → next |
 | Reference WIP | `home-split-hero` exists and was audited; it is **not frozen** |
 | Blocked until freeze | `hero-fullbleed`, `collection-split-hero`, and every other new marketing section |
-| Shopify | Draft `187143618851` only — **no theme push** during architecture |
+| Shopify | Draft abandoned — **no agent theme push/pull/dev** unless Andrew names a **new** theme ID in-message |
 
-**Do not build, push, or wire pages until Andrew checks the decision list in §6.**
+**Do not build or wire pages until Andrew checks the decision list in §6.**
 
 ---
 

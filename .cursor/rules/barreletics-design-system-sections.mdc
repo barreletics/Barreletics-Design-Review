@@ -5,14 +5,20 @@ alwaysApply: true
 
 # Barreletics Design System — section library (HARD)
 
-We are building a **reusable Shopify section library**, not a homepage. Homepage is only the first template that assembles **approved** sections later.
+We are building a **reusable Shopify section library**, not a homepage. Homepage is only the first template that assembles **approved** sections later — by Brian (or later), not by agents on a draft theme.
+
+## Delivery vehicle
+
+- **Repo only:** production-ready sections in `shopify-build/` from locked HTML mocks
+- Handoff to Brian via GitHub after Andrew approves / freezes in repo
+- **No agent Shopify push** by default (see `shopify-draft-theme-only.mdc`)
 
 ## Workflow (non-negotiable)
 
-1. Build **ONE** section
-2. QA that section
+1. Build **ONE** section in `shopify-build/`
+2. QA that section (local / code audit)
 3. Review/refine until Andrew approves
-4. **Freeze** its architecture
+4. **Freeze** its architecture **in the repo**
 5. Only then begin the next section
 
 - **Reference implementation:** `shopify-build/sections/home-split-hero.liquid` (+ `assets/heroes.css`)
@@ -39,7 +45,8 @@ We are building a **reusable Shopify section library**, not a homepage. Homepage
 - Hard dependencies on sibling sections or fixed page order
 - Monolithic “page” sections that own multiple compositions
 - Starting next section before the current one is frozen
+- Assembling pages on a Shopify draft theme instead of freezing sections in repo
 
-## Draft theme safety
+## Shopify
 
-Shopify push/pull/dev only: theme **`187143618851`** with `--nodelete`. Prefer local/code audit over push.
+No theme push/pull/dev by default. Draft `187143618851` retired. Only if Andrew names a **new** theme ID in-message.

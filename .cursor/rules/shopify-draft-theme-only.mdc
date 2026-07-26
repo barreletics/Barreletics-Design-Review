@@ -1,27 +1,33 @@
 ---
-description: HARD RULE — only edit Shopify draft theme 187143618851; never live or other backups
+description: HARD RULE — no Shopify theme mutations by default; repo shopify-build/ is the deliverable
 alwaysApply: true
 ---
 
 # Shopify theme safety (HARD — non-negotiable)
 
-## Only allowed Shopify theme target
-- Store: `barreletics`
-- **ONLY** theme ID: `187143618851`
-- Editor: https://admin.shopify.com/store/barreletics/themes/187143618851/editor
+## Default: no Shopify theme mutations
 
-All `shopify theme push`, `pull`, `dev`, `delete`, publish, rename, or Theme Editor API changes MUST use this ID (or fail closed and ask).
+Agents **MUST NOT** run `shopify theme push`, `pull`, `dev`, `delete`, publish, rename, or Theme Editor API changes against **any** theme unless Andrew **explicitly names a new theme ID in that same message**.
 
-## Forbidden without explicit owner approval in the current message
+## Retired / dead draft
+
+- Theme ID **`187143618851`** is **retired / deleted** — do **not** use it.
+- Fail closed. Never guess a replacement draft ID. Never “just push to the store.”
+
+## Forbidden without explicit in-message approval
+
 - The **live / published** theme (any ID that is Current)
-- Any **other** Theme library copy, backup, duplicate, or “backcopy” of live
-- Local donor folder used as a push target: `/Users/andrewnehra/barreletics-theme-live-apr2026` (read-only reference only)
+- Any Theme library copy, backup, duplicate, or “backcopy”
+- Local donor folder as a push target: `/Users/andrewnehra/barreletics-theme-live-apr2026` (read-only reference only)
 - Publishing any theme
-- Pushing without `--theme 187143618851` (or equivalent explicit draft ID flag)
+- Any Shopify CLI theme command without a **new** theme ID supplied by Andrew in the current message
 
 ## If ambiguous
-STOP and ask. Never guess which theme is live. Never “just push to the store.” Never use a second draft/backup “to be safe.”
 
-## Local code
-- `shopify-build/` and this repo may be edited freely.
-- Live theme on disk is **reference only** — do not push from it unless Andrew explicitly names draft `187143618851` as the destination in that same request.
+STOP and ask. Never invent a draft ID. Never use a second draft/backup “to be safe.”
+
+## Primary deliverable
+
+- Production-ready sections live in the repo: **`shopify-build/`**
+- Built from locked HTML mocks; handed to Brian via GitHub
+- Homepage / Theme Editor assembly is **Brian’s (or later) job** after sections are approved in repo — not assembled on a draft theme by agents
