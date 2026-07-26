@@ -1,0 +1,25 @@
+{% comment %}
+  Tidio — AI Chat Support Widget
+  Placement: Before </body> via theme.liquid
+  Configuration: Theme Settings → Tracking & Integrations → Tidio Widget Key
+
+  Loads Tidio chat widget for AI-powered support.
+  Knowledge base content defined in planning/m4b-tidio-knowledge-base.md.
+  Leave Widget Key blank in Theme Settings to disable.
+{% endcomment %}
+
+{% if settings.tidio_widget_key != blank %}
+<!-- Tidio Chat -->
+<script src="//code.tidio.co/{{ settings.tidio_widget_key }}.js" async></script>
+{% if customer %}
+<script>
+document.addEventListener('tidioChat-ready', function() {
+  window.tidioChatApi.setContactProperties({
+    distinct_id: {{ customer.id | json }},
+    email: {{ customer.email | json }},
+    name: {{ customer.name | json }}
+  });
+});
+</script>
+{% endif %}
+{% endif %}
