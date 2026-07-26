@@ -11,7 +11,9 @@
 | 0b | Repo backup `backups/m4-pre-phase1-2026-07-26/` + git commit | **done** |
 | 0c | Pull draft theme into backup before first push | **done** → `backups/.../draft-theme-pull/` |
 | 1 | Shell: tokens, layout, header/footer + push to draft only | **done** (live untouched) |
-| 1b | Heroes (fullbleed / home-split / collection-split) | **next** |
+| 1b | Heroes | **paused for owner review** — `home-split-hero` only shipped; fullbleed + collection-split **not started** |
+| AUDIT | Shell audit report | **done** → `planning/m4-shell-audit-report.md` |
+| 2.0 | Post–layout-swap functional QA | **PASS** → `planning/m4-phase-2.0-qa-report.md` — restorations pushed; section build unblocked |
 | 2a | KEEP/DROP (handoff) | **done** (pre-approved) |
 | 2b | fifty-fifty → visual-mosaic → variant-grid | pending |
 | 2c | Wire Home → Collection → SEO → PDP | pending |

@@ -1,0 +1,192 @@
+{% comment %}
+  Home split hero — 50/50 media | copy
+  Authority: docs/Barreletics Home - Definitive-WORKING.html
+  Type: BZ-020 (H1 clamp 40–64 / 400 · rust CTA 700)
+  CSS: assets/heroes.css
+{% endcomment %}
+
+{%- liquid
+  assign trust_text = section.settings.trust_text
+  assign trust_url = section.settings.trust_url
+  assign title = section.settings.title
+  assign body = section.settings.body
+  assign cta_text = section.settings.cta_text
+  assign cta_url = section.settings.cta_url
+  assign tag_text = section.settings.tag_text
+  assign tag_url = section.settings.tag_url
+  assign image = section.settings.image
+  assign image_alt = section.settings.image_alt
+  if image_alt == blank and image != blank
+    assign image_alt = image.alt | default: title
+  endif
+-%}
+
+<section
+  class="home-split-hero"
+  id="home-split-hero-{{ section.id }}"
+  aria-label="{{ section.settings.aria_label | default: 'Hero' | escape }}"
+  {{ section.shopify_attributes }}
+>
+  <div class="home-split-hero__image">
+    {%- if image != blank -%}
+      {{
+        image
+        | image_url: width: 1600
+        | image_tag:
+          widths: '600, 900, 1200, 1600',
+          sizes: '(max-width: 768px) 100vw, 50vw',
+          alt: image_alt,
+          loading: 'eager',
+          fetchpriority: 'high',
+          decoding: 'async'
+      }}
+    {%- else -%}
+      <div class="home-split-hero__image-placeholder" role="img" aria-label="{{ image_alt | default: 'Hero lifestyle image' | escape }}">
+        {{ image_alt | default: 'Add hero image in Theme Editor' }}
+      </div>
+    {%- endif -%}
+  </div>
+
+  <div class="home-split-hero__copy">
+    {%- if section.settings.show_trust and trust_text != blank -%}
+      <p class="home-split-hero__trust">
+        {%- if section.settings.show_stars -%}
+          <span class="home-split-hero__stars" aria-hidden="true">★★★★★</span>
+        {%- endif -%}
+        {%- if trust_url != blank -%}
+          <a href="{{ trust_url }}">{{ trust_text }}</a>
+        {%- else -%}
+          <span>{{ trust_text }}</span>
+        {%- endif -%}
+      </p>
+    {%- endif -%}
+
+    {%- if title != blank -%}
+      <h1 class="home-split-hero__title">{{ title }}</h1>
+    {%- endif -%}
+
+    {%- if body != blank -%}
+      <p class="home-split-hero__body">{{ body }}</p>
+    {%- endif -%}
+
+    {%- if cta_text != blank -%}
+      <div class="home-split-hero__ctas">
+        <a
+          href="{{ cta_url | default: routes.all_products_collection_url }}"
+          class="home-split-hero__cta"
+        >
+          {{ cta_text }}
+        </a>
+      </div>
+    {%- endif -%}
+
+    {%- if tag_text != blank -%}
+      <a
+        class="home-split-hero__tag"
+        href="{{ tag_url | default: '#knock-socks' }}"
+      >
+        {{ tag_text }}
+      </a>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Home split hero",
+  "tag": "section",
+  "class": "section-home-split-hero",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Copy"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trust",
+      "label": "Show trust line",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_stars",
+      "label": "Show star rating",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "trust_text",
+      "label": "Trust line",
+      "default": "Trusted by 1,000's of instructors & studios"
+    },
+    {
+      "type": "url",
+      "id": "trust_url",
+      "label": "Trust line link",
+      "info": "Optional. Home WORKING links to #reviews."
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Headline",
+      "default": "The Pilates Sock Era is Over"
+    },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Body",
+      "default": "Outperforms barre socks, Pilates socks, and yoga socks — combined."
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Primary CTA",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "Primary CTA link",
+      "info": "Defaults to all products if blank."
+    },
+    {
+      "type": "text",
+      "id": "tag_text",
+      "label": "Tag link text",
+      "default": "#letusknockyoursocksoff"
+    },
+    {
+      "type": "url",
+      "id": "tag_url",
+      "label": "Tag link",
+      "info": "Optional. Mock uses #knock-socks."
+    },
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Hero image"
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image alt text",
+      "default": "Barreletics Performance Skins — grip that holds in every studio workout"
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Section aria-label",
+      "default": "Hero"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Home split hero"
+    }
+  ]
+}
+{% endschema %}
