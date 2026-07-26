@@ -1,6 +1,6 @@
 /**
- * Split hero — 50/50 media | copy
- * Typography/colors driven by section CSS variables from Theme Editor.
+ * Split hero — match Home WORKING (Definitive-WORKING.html)
+ * TE overrides via CSS variables when set; defaults = locked mock.
  */
 
 .split-hero {
@@ -15,7 +15,7 @@
   position: relative;
   overflow: hidden;
   min-height: 500px;
-  background: var(--color-warm-cream, #f5f2ec);
+  background: #f5f2ec;
 }
 
 .split-hero__media .split-hero__img,
@@ -40,10 +40,11 @@
   padding: 40px;
   text-align: center;
   font-size: 14px;
-  color: var(--text-muted, #8a8a8a);
+  color: #8a8a8a;
   background: linear-gradient(135deg, #f5f2ec 0%, #ece8e0 50%, #e5e0d6 100%);
 }
 
+/* WORKING: padding 72×64 · max-width 560 · flex-start */
 .split-hero__copy {
   background: var(--split-hero-bg, #fff);
   display: flex;
@@ -51,8 +52,7 @@
   align-items: flex-start;
   justify-content: center;
   padding: 72px 64px;
-  width: 100%;
-  max-width: none;
+  max-width: 560px;
   box-sizing: border-box;
 }
 
@@ -78,20 +78,21 @@
   text-decoration: underline;
 }
 
-.split-hero__trust-text p,
-.split-hero__trust-link p {
+.split-hero__trust-text p {
   margin: 0;
   display: inline;
 }
 
+/* WORKING mock: rust stars #c45c3f (not production gold) */
 .split-hero__stars {
-  color: var(--split-hero-star-color, var(--accent-stars, #d4af37));
+  color: var(--split-hero-star-color, #c45c3f);
   font-size: 14px;
   letter-spacing: 0.1em;
   line-height: 1;
   flex-shrink: 0;
 }
 
+/* BZ-020 / WORKING opening title */
 .split-hero__title {
   font-family: var(--split-hero-heading-font, 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif);
   font-size: clamp(40px, 6vw, var(--split-hero-title-size, 64px));
@@ -100,9 +101,9 @@
   color: var(--split-hero-text, #1c1916);
   margin: 0 0 20px;
   letter-spacing: -0.03em;
-  max-width: 18ch;
 }
 
+/* WORKING: 17px / 28ch */
 .split-hero__body {
   font-family: var(--split-hero-body-font, inherit);
   font-size: var(--split-hero-body-size, 17px);
@@ -110,7 +111,7 @@
   color: var(--split-hero-body-color, #4a4a4a);
   line-height: 1.45;
   margin: 0 0 32px;
-  max-width: 36ch;
+  max-width: 28ch;
 }
 
 .split-hero__body p {
@@ -149,14 +150,14 @@
 }
 
 .split-hero__cta:hover {
-  background: var(--color-charcoal, #1c1916);
-  border-color: var(--color-charcoal, #1c1916);
+  background: #1c1916;
+  border-color: #1c1916;
   color: #fff;
   text-decoration: none;
 }
 
 .split-hero__cta:focus-visible {
-  outline: 2px solid var(--color-charcoal, #1c1916);
+  outline: 2px solid #1c1916;
   outline-offset: 3px;
 }
 
@@ -170,12 +171,12 @@
 }
 
 a.split-hero__tag:hover {
-  color: var(--split-hero-cta-bg, #c45c3f);
+  color: #c45c3f;
   text-decoration: none;
 }
 
 a.split-hero__tag:focus-visible {
-  outline: 2px solid var(--split-hero-cta-bg, #c45c3f);
+  outline: 2px solid #c45c3f;
   outline-offset: 3px;
 }
 
@@ -189,6 +190,7 @@ a.split-hero__tag:focus-visible {
   }
 }
 
+/* WORKING mobile */
 @media (max-width: 768px) {
   .split-hero {
     grid-template-columns: 1fr;
@@ -212,6 +214,7 @@ a.split-hero__tag:focus-visible {
     padding: 40px 24px 48px;
     align-items: center;
     text-align: center;
+    max-width: none;
   }
 
   .split-hero__trust {
@@ -220,14 +223,13 @@ a.split-hero__tag:focus-visible {
   }
 
   .split-hero__title {
-    font-size: clamp(34px, 9vw, var(--split-hero-title-size-mobile, 40px));
+    font-size: clamp(34px, 9vw, var(--split-hero-title-size-mobile, 44px));
     margin-bottom: 16px;
-    max-width: none;
   }
 
   .split-hero__body {
     max-width: 34ch;
-    font-size: max(15px, calc(var(--split-hero-body-size, 17px) - 2px));
+    font-size: 15px;
     margin-bottom: 28px;
   }
 
