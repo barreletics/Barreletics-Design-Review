@@ -22,13 +22,33 @@ a { color: var(--text-primary); text-decoration: none; }
 a:hover { text-decoration: underline; }
 button { font-family: inherit; cursor: pointer; }
 ul, ol { list-style: none; }
-h1, h2, h3, h4, h5, h6 { font-weight: var(--weight-bold); line-height: var(--leading-heading); }
+h1, h2, h3, h4, h5, h6 { font-weight: var(--type-section-weight); line-height: var(--leading-heading); }
 
-/* --- Typography Scale --- */
-.h1, h1 { font-size: var(--text-6xl); line-height: var(--leading-tight); letter-spacing: var(--tracking-tight); }
-.h2, h2 { font-size: var(--text-5xl); line-height: var(--leading-snug); letter-spacing: var(--tracking-tight); }
-.h3, h3 { font-size: var(--text-4xl); line-height: var(--leading-heading); }
-.h4, h4 { font-size: var(--text-2xl); line-height: var(--leading-heading); }
+/* --- Typography Scale (BZ-020) --- */
+.type-opening,
+.h1--opening {
+  font-size: var(--type-opening-h1);
+  font-weight: var(--type-opening-weight);
+  line-height: var(--type-opening-leading);
+  letter-spacing: var(--type-opening-tracking);
+}
+@media (max-width: 768px) {
+  .type-opening,
+  .h1--opening { font-size: var(--type-opening-h1-mobile); }
+}
+.type-section,
+.h2--section {
+  font-size: var(--type-section);
+  font-weight: var(--type-section-weight);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-tight);
+}
+.h1, h1 { font-size: var(--type-opening-h1); font-weight: var(--type-opening-weight); line-height: var(--type-opening-leading); letter-spacing: var(--type-opening-tracking); }
+.h2, h2 { font-size: var(--type-section); font-weight: var(--type-section-weight); line-height: var(--leading-snug); letter-spacing: var(--tracking-tight); }
+.h3, h3 { font-size: var(--text-4xl); line-height: var(--leading-heading); font-weight: var(--type-section-weight); }
+.h4, h4 { font-size: var(--text-2xl); line-height: var(--leading-heading); font-weight: var(--type-section-weight); }
+.btn,
+.cta { font-weight: var(--type-cta-weight); text-transform: uppercase; }
 .body-lg { font-size: var(--text-md); line-height: var(--leading-relaxed); color: var(--text-body); }
 .body { font-size: var(--text-base); line-height: var(--leading-relaxed); color: var(--text-body); }
 .body-sm { font-size: 14px; line-height: var(--leading-relaxed); color: var(--text-body); }

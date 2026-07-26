@@ -1,0 +1,90 @@
+{% comment %}
+  Announcement strip — Theme Editor blocks + settings.
+  Presentation CSS/JS: assets/chrome.css + chrome.js
+{% endcomment %}
+
+{% if section.settings.enabled %}
+  {% assign slides = section.blocks %}
+  {% if slides.size > 0 %}
+    <div
+      class="announcement-strip"
+      data-announcement-strip
+      data-rotation-ms="{{ section.settings.rotation_speed | times: 1000 }}"
+      role="region"
+      aria-label="Promotional messages"
+      {{ section.shopify_attributes }}
+    >
+      <div class="announcement-strip__inner">
+        {% for block in slides %}
+          <div
+            class="announcement-strip__slide{% if forloop.first %} is-active{% endif %}"
+            data-slide-index="{{ forloop.index0 }}"
+            {{ block.shopify_attributes }}
+          >
+            {% if block.settings.link_url != blank %}
+              <a href="{{ block.settings.link_url }}" class="announcement-strip__link">
+                {{ block.settings.text }}
+              </a>
+            {% else %}
+              <span>{{ block.settings.text }}</span>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+{% endif %}
+
+{% schema %}
+{
+  "name": "Announcement strip",
+  "class": "announcement-strip-section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Show announcement strip",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "rotation_speed",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "Rotation speed",
+      "default": 4
+    }
+  ],
+  "blocks": [
+    {
+      "type": "message",
+      "name": "Message",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Free Shipping Over $150"
+        },
+        {
+          "type": "url",
+          "id": "link_url",
+          "label": "Optional link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement strip",
+      "blocks": [
+        { "type": "message", "settings": { "text": "Buy 2, Save 15% — Code SAVE15" } },
+        { "type": "message", "settings": { "text": "Free Shipping Over $150" } },
+        { "type": "message", "settings": { "text": "30-Day Returns · Made in USA" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

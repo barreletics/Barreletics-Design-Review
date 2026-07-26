@@ -105,9 +105,10 @@
   {%- comment -%} Fonts {%- endcomment -%}
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-  {%- comment -%} Design Tokens + Base CSS (critical) {%- endcomment -%}
+  {%- comment -%} Design Tokens + Base + Chrome CSS (critical) {%- endcomment -%}
   {{ 'design-tokens.css' | asset_url | stylesheet_tag }}
   {{ 'barreletics-base.css' | asset_url | stylesheet_tag }}
+  {{ 'chrome.css' | asset_url | stylesheet_tag }}
 
   {%- comment -%} Organization Schema (all pages) {%- endcomment -%}
   <script type="application/ld+json">
@@ -151,31 +152,20 @@
 
   <a href="#main-content" class="skip-link">Skip to content</a>
 
-  {%- comment -%} Announcement Strip {%- endcomment -%}
-  {% render 'announcement-strip' %}
+  {% sections 'header-group' %}
 
-  {%- comment -%} Header / Navigation {%- endcomment -%}
-  {% render 'header-nav' %}
-
-  {%- comment -%} Main Content {%- endcomment -%}
   <main id="main-content" role="main" tabindex="-1">
     {{ content_for_layout }}
   </main>
 
-  {%- comment -%} Footer {%- endcomment -%}
-  {% render 'footer' %}
+  {% sections 'footer-group' %}
 
-  {%- comment -%} Cart Drawer (D-024) {%- endcomment -%}
   {% render 'cart-drawer' %}
-
-  {%- comment -%} Analytics Events (enhanced ecommerce) {%- endcomment -%}
   {% render 'analytics-events' %}
-
-  {%- comment -%} Help Scout Beacon {%- endcomment -%}
   {% render 'helpscout-beacon' %}
-
-  {%- comment -%} Tidio AI Chat {%- endcomment -%}
   {% render 'tidio-widget' %}
+
+  <script src="{{ 'chrome.js' | asset_url }}" defer></script>
 
   {%- comment -%} Skip link styles {%- endcomment -%}
   <style>
