@@ -1,51 +1,64 @@
 ---
-description: HARD — Barreletics Design System section library workflow; one section at a time; home-split-hero is reference
+description: HARD — Barreletics Design System section library; contract-gated; one section at a time
 alwaysApply: true
 ---
 
 # Barreletics Design System — section library (HARD)
 
-We are building a **reusable Shopify section library**, not a homepage. Homepage is only the first template that assembles **approved** sections later — by Brian (or later), not by agents on a draft theme.
+Reusable Shopify **section library**, not a homepage. Brian (or later) assembles templates after sections freeze in repo.
 
-## Delivery vehicle
+## Contract (authority)
 
-- **Repo only:** production-ready sections in `shopify-build/` from locked HTML mocks
-- Handoff to Brian via GitHub after Andrew approves / freezes in repo
-- **No agent Shopify push** by default (see `shopify-draft-theme-only.mdc`)
+- **Frozen inventory:** `planning/m4-section-library-CONTRACT.md` (ARCHITECTURE APPROVED 2026-07-26)
+- Proposal history only: `planning/m4-section-library-architecture.md` (superseded)
+- Final theme = **only** the approved production library — replace legacy; no duplicate generations
 
-## Workflow (non-negotiable)
+## Delivery
 
-1. Build **ONE** section in `shopify-build/`
-2. QA that section (local / code audit)
-3. Review/refine until Andrew approves
-4. **Freeze** its architecture **in the repo**
-5. Only then begin the next section
+- Repo only: `shopify-build/` from locked HTML mocks → GitHub → Brian
+- **No agent Shopify push** by default (`shopify-draft-theme-only.mdc`)
 
-- **Reference implementation:** `shopify-build/sections/home-split-hero.liquid` (+ `assets/heroes.css`)
-- **Frozen only after explicit Andrew architecture + code approval**
-- **Blocked until freeze:** `hero-fullbleed`, `collection-split-hero`, and every other new marketing section
-- Do **not** assemble a homepage deliverable ahead of approved sections
-- Optimize for world-class reusable design system, **not** speed
+## Locked decisions (abbrev)
+
+| Rule | Detail |
+|------|--------|
+| Heroes | **No artificial hero cap** — build distinct capabilities only (`split-hero`, `hero-fullbleed`, `collection-split`, …) |
+| Naming | `home-split-hero` → **`split-hero`**; collection entry → **`collection-split`** |
+| Companions | **`sole-cards`** = own reusable section (not permanently coupled to `collection-split`) |
+| Statement | **`statement-band`** standalone; full-bleed commit/lifestyle = separate sections |
+| PDP | **`pdp-features` kept** — do not merge into `fifty-fifty` |
+| Reviews | One **`reviews`** section |
+| GEO | Inside **`studio-trust`** |
+| Newsletter | Footer **and** standalone `newsletter` |
+| Campaign | `campaign-stage` **deferred** |
+| variant-grid | KEEP logic non-negotiable |
+
+## Workflow
+
+1. Acknowledge CONTRACT before production code  
+2. Build **ONE** section → QA → Andrew approve → freeze in repo → next  
+3. **First after contract:** `split-hero` only (rebuild/rename from `home-split-hero`) until frozen  
+4. Blocked until that freeze: every other new/rebuild marketing section  
 
 ## Architecture (every major component)
 
 | Requirement | Rule |
 |-------------|------|
 | File | Own `sections/*.liquid` |
-| Schema | Complete Shopify schema + `presets` (Theme Editor addable) |
+| Schema | Complete + `presets` |
 | Editor | Independently draggable / removable / reusable |
-| Shared code | `snippets/` + shared assets only |
-| Coupling | No section depends on another section |
-| Scope | No page-specific or monolithic architecture |
+| Shared | `snippets/` + shared assets only |
+| Coupling | No section depends on another |
+| Scope | No monolithic `page-*` long-term |
 
-## Anti-patterns (reject)
+## Anti-patterns
 
-- Building multiple new sections in one pass
-- Homepage-only Liquid/CSS that cannot live on another template
-- Hard dependencies on sibling sections or fixed page order
-- Monolithic “page” sections that own multiple compositions
-- Starting next section before the current one is frozen
-- Assembling pages on a Shopify draft theme instead of freezing sections in repo
+- Multiple new sections in one pass  
+- Homepage-only Liquid/CSS  
+- Sibling-section hard dependencies  
+- Monolithic page sections  
+- Building past `split-hero` before it is frozen  
+- Assembling pages on Shopify instead of freezing in repo  
 
 ## Shopify
 

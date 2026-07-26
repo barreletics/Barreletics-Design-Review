@@ -1,7 +1,9 @@
 # M4 Section Library Architecture — Inventory + Proposed Final Library
 
+> **SUPERSEDED / LOCKED (2026-07-26):** Architecture decisions are frozen in **`planning/m4-section-library-CONTRACT.md`**. Use the CONTRACT for the final library, classifications, and build order. This file is historical inventory + proposal only.
+
 **Date:** 2026-07-26  
-**Status:** **AWAITING ANDREW APPROVAL** — no section builds until this doc is approved  
+**Status:** **SUPERSEDED** — see CONTRACT (ARCHITECTURE APPROVED)  
 **Sources:** `shopify-build/sections/*.liquid` · `planning/m4-production-handoff.txt` · `planning/m4-shell-audit-report.md` · `planning/m4-theme-master-directive-alignment.md` · `.cursor/rules/barreletics-design-system-sections.mdc` · Home/Collection/SEO/PDP entry docs · live donor (read-only)
 
 > **Delivery reset (2026-07-26):** Draft theme abandoned (`187143618851` retired). Deliverable = production-ready sections in **`shopify-build/`** handed to Brian via GitHub. **No agent Shopify push.** Homepage / Theme Editor assembly is Brian’s (or later) job after repo approval.

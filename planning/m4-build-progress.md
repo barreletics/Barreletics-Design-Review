@@ -5,16 +5,24 @@
 **Retired draft ID:** `187143618851` (dead — do not use)  
 **Live theme:** still forbidden  
 **2a:** Pre-approved per handoff KEEP/DROP  
-**Tracker updated:** 2026-07-26 (Andrew reset — repo-only operating model)
+**Tracker updated:** 2026-07-26 (architecture APPROVED; contract freeze)
 
-## ARCHITECTURE PAUSE
+## ARCHITECTURE APPROVED
 
-**No section builds until `planning/m4-section-library-architecture.md` is approved.**
+**Contract:** `planning/m4-section-library-CONTRACT.md` (frozen 2026-07-26)
+
+| Gate | Status |
+|------|--------|
+| Architecture decisions (H1–X3) | **APPROVED** |
+| Final inventory CONTRACT | **written** — acknowledge before production code |
+| Next production work | **`split-hero` only** (rebuild/rename from `home-split-hero`) after contract acknowledge |
+| Shopify | **none** |
 
 - Deliverable = **section library in repo**, not homepage assembly on Shopify  
-- Inventory + proposed final library written; awaiting Andrew decisions (§6 checklist)  
-- `home-split-hero` remains reference WIP — **not frozen**  
-- Blocked: `hero-fullbleed`, `collection-split-hero`, ports, page wiring, any Shopify theme mutations for section work
+- Proposal doc superseded: `planning/m4-section-library-architecture.md`  
+- `home-split-hero` remains reference WIP — **not frozen**; becomes `split-hero` as first freeze target  
+- Blocked until `split-hero` frozen: every other new/rebuild marketing section  
+- No parallel builds; one section at a time
 
 | ID | Item | Status |
 |----|------|--------|
@@ -22,14 +30,15 @@
 | 0b | Repo backup `backups/m4-pre-phase1-2026-07-26/` + git commit | **done** |
 | 0c | Pull draft theme into backup before first push | **done** → `backups/.../draft-theme-pull/` (historical) |
 | 1 | Shell: tokens, layout, header/footer in `shopify-build/` | **done** (live untouched; draft path abandoned) |
-| ARCH | Section library architecture inventory | **awaiting approval** → `planning/m4-section-library-architecture.md` |
-| 1b | Heroes / section library | **ARCHITECTURE PAUSE** — no builds until ARCH approved |
+| ARCH | Section library architecture | **APPROVED** → CONTRACT |
+| CONTRACT | Final section inventory contract | **done** → `planning/m4-section-library-CONTRACT.md` |
+| 1b | Heroes / section library | **next = `split-hero` only** after contract acknowledge; no Shopify |
 | AUDIT | Shell audit report | **done** → `planning/m4-shell-audit-report.md` |
 | 2.0 | Post–layout-swap functional QA | **PASS** → `planning/m4-phase-2.0-qa-report.md` (historical draft QA) |
 | 2a | KEEP/DROP (handoff) | **done** (pre-approved) |
-| 2b | fifty-fifty → visual-mosaic → variant-grid | **blocked** (architecture) |
-| 2c | Wire Home → Collection → SEO → PDP | **blocked** (architecture); assembly = Brian after repo freeze |
-| 3 | Help / FAQ / Journal + thin pages | **blocked** (architecture) |
+| 2b | fifty-fifty → visual-mosaic → variant-grid | **blocked** until `split-hero` frozen |
+| 2c | Wire Home → Collection → SEO → PDP | **blocked**; assembly = Brian after repo freeze |
+| 3 | Help / FAQ / Journal + thin pages | **blocked** |
 | 4 | Lighthouse / a11y / metafields | pending |
 | HANDOFF | Repo → Brian via GitHub | **operating model** |
 | PUBLISH | Owner only | **blocked** |

@@ -1,0 +1,244 @@
+# M4 Section Library CONTRACT — Frozen Architecture
+
+**Status:** ARCHITECTURE APPROVED  
+**Date:** 2026-07-26  
+**Approved by:** Andrew  
+**Authority:** This file is the frozen contract for the Barreletics Design System theme section library.  
+**Supersedes:** `planning/m4-section-library-architecture.md` (proposal — kept for history; decisions locked here)
+
+---
+
+## 1. Status + Andrew decisions (verbatim lock)
+
+| ID | Decision | Verdict |
+|----|----------|---------|
+| **H1** | Rename `home-split-hero` → `split-hero` | **YES** |
+| **H2** | Artificially limit hero count (e.g. three max)? | **NO** — do not artificially limit. Build capabilities. Additional hero types only if genuinely different capability. |
+| **H3** | Delete legacy `hero` + `hero-alt` after replacements approved/frozen | **YES** |
+| **H4** | Collection sole cards | **(B)** — `sole-cards` = own reusable companion section; not permanently coupled to `collection-split` |
+| **C1** | `statement-band` | **Standalone reusable section** (first-class). Full-bleed commit/lifestyle = separate capability (`fullbleed-statement` / `lifestyle-break`) if mocks require — do **not** fold `statement-band` into something else. |
+| **C2** | `campaign-stage` in v1 | **DEFER** |
+| **C3** | GEO | **YES** — GEO lives in `studio-trust` |
+| **C4** | Newsletter | **BOTH** — in footer **and** standalone `newsletter` section |
+| **C5** | Content vs marketing entry | `page-head` for informational/content; `hero-fullbleed` for marketing |
+| **C6** | Monolithic `page-*` | **YES** — delete after decompose into library sections |
+| **P1** | Reviews | **YES** — one `reviews` section |
+| **P2** | `pdp-features` | **NO** — keep separate; do **not** merge into `fifty-fifty` |
+| **P3** | `variant-grid` KEEP logic | **YES** — non-negotiable (handoff list) |
+| **X1** | Freeze architecture | **YES** |
+| **X2** | One section at a time | **YES** |
+| **X3** | No further implementation until architecture approved; final inventory contract required before more production code | **YES** |
+
+---
+
+## 2. Operating model
+
+| Rule | Detail |
+|------|--------|
+| Deliverable | Production-ready sections in **`shopify-build/`** |
+| Handoff | GitHub → **Brian** (Theme Editor / homepage assembly) |
+| Shopify CLI | **No agent push / pull / dev** unless Andrew names a **new** theme ID in-message |
+| Retired draft | `187143618851` — dead; do not use |
+| Live theme | Forbidden |
+| Library doctrine | Final theme = **only** this approved production library. Replace the legacy set — do not add generations on top. No duplicate heroes, experiments, or obsolete sections in the shipped theme. |
+| Workflow | One section → QA → Andrew approve → freeze in repo → next |
+
+**Explicit gate:** No production section code until this CONTRACT is acknowledged. After acknowledgment, only **`split-hero`** until that section is frozen.
+
+---
+
+## 3. FINAL PRODUCTION SECTION LIBRARY
+
+Approved filenames for the theme. One purpose each. **v1** = build for the OS set. **Deferred** = not in v1.
+
+Rename notes: current repo file → final name where different.
+
+### Chrome (v1) — 3
+
+| Filename | Purpose | Rename / notes |
+|----------|---------|----------------|
+| `announcement-strip` | Top promo / trust messages | — |
+| `header` | Global nav, logo, account, cart, mobile drawer | — |
+| `footer` | Global footer menus + newsletter form (C4) | — |
+
+### Heroes & page entry (v1) — 4
+
+No artificial hero cap (H2). Ship distinct capabilities only.
+
+| Filename | Purpose | Rename / notes |
+|----------|---------|----------------|
+| `split-hero` | 50/50 copy \| media first-viewport hero | **from** `home-split-hero` (H1) |
+| `hero-fullbleed` | Edge-to-edge marketing hero; `alignment: start \| center` | New (not in repo yet) |
+| `collection-split` | Collection intro split; `media_fill: inset \| column` | **from** `collection-hero` path (was proposed as `collection-split-hero`; final name **`collection-split`**) |
+| `page-head` | Informational/content page title entry (Help, FAQ, thin pages) | New — C5; not a marketing hero |
+
+### Companions (v1) — 1
+
+| Filename | Purpose | Rename / notes |
+|----------|---------|----------------|
+| `sole-cards` | Open/closed sole card pair — reusable companion | New extract from `collection-hero` (H4 B); not permanently coupled to `collection-split` |
+
+### Commerce (v1) — 7
+
+| Filename | Purpose | Rename / notes |
+|----------|---------|----------------|
+| `variant-grid` | Product/color grid + Quick Add + tabs — KEEP logic non-negotiable (P3) | Rebuild stub |
+| `pdp-buy-box` | PDP gallery + variants + ATC | Rebuild |
+| `pdp-sticky-atc` | Sticky add-to-cart bar | Rebuild |
+| `main-cart` | Cart page | Rebuild |
+| `recommendations` | Related products | Keep / polish |
+| `recently-viewed` | Recently viewed products | Keep / polish |
+| `search-results` | Search results grid | Keep / polish |
+
+### Content (v1) — 17
+
+| Filename | Purpose | Rename / notes |
+|----------|---------|----------------|
+| `fifty-fifty` | Mid-page media \| copy split | Rebuild from `br-media-text-split` |
+| `visual-mosaic` | Multi-tile mosaic (mid-page, not a page hero) | New — from `br-multi-box-hero` / Home WORKING |
+| `disciplines` | Discipline name strip | Rebuild |
+| `statement-band` | Large typographic statement band | Rebuild — first-class (C1); not a setting on another section |
+| `fullbleed-statement` | Full-bleed commit / lifestyle typography plane | New — separate from `statement-band` (C1) |
+| `lifestyle-break` | Mid-page full-bleed video (~90vh) | New — SEO Never Loses |
+| `value-strip` | Horizontal value / trust checklist | Rebuild |
+| `sock-math` | Cost / “One pair. Done.” math | **from** `pdp-sock-math` |
+| `comparison` | Sole / grip comparison content (open vs closed, grip tables) | New — maps `page-compare` + `page-grip-comparison` mocks; **not** sock-math |
+| `problem-section` | Problem / chair-pose beat | New — Home WORKING |
+| `pdp-features` | PDP feature grid | Rebuild — **kept separate** (P2); do not merge into `fifty-fifty` |
+| `faq` | Accordion FAQ (blocks) | New — absorbs `collection-faq` + `page-faq` |
+| `newsletter` | Standalone email capture | Keep — C4 both with footer |
+| `contact-cta` | “Still have questions?” CTA | Keep |
+| `help-hub-grid` | Help hub link grid | New — Help v3 |
+| `journal-index` | Journal / blog listing | **from** `blog-listing` |
+| `article-content` | Single article body | Keep |
+
+### Proof (v1) — 4
+
+| Filename | Purpose | Rename / notes |
+|----------|---------|----------------|
+| `reviews` | Quote-led reviews; settings for PDP aggregate when needed | Merges `social-proof` + `pdp-reviews` (P1) |
+| `ig-section` | Instagram / studio UGC grid | **from** `home-ugc` |
+| `guarantee` | Guarantee / risk-reversal band | **from** `guarantee-band` |
+| `studio-trust` | Studio / instructor trust; **includes GEO** (C3) | New — absorbs `geo-section` |
+
+### Deferred (not v1)
+
+| Filename | Why deferred |
+|----------|--------------|
+| `campaign-stage` | **C2 DEFER** — Coperni / collab runway later |
+| `featured-products` | Andrew example name — **no distinct locked mock**; product listing = `variant-grid` / `recommendations`. Do not invent. |
+| `featured-collections` | Andrew example name — **no distinct locked mock** in Home/Collection/SEO spines. Do not invent. |
+
+### Section groups (not counted as library sections)
+
+| File | Role |
+|------|------|
+| `header-group.json` | Announcement + header |
+| `footer-group.json` | Footer (+ newsletter in footer) |
+
+### Final v1 count
+
+**36** approved production sections (3 chrome + 4 entry + 1 companion + 7 commerce + 17 content + 4 proof).  
+Deferred: 3 names (`campaign-stage`, `featured-products`, `featured-collections`).
+
+---
+
+## 4. EXISTING REPO CLASSIFICATION
+
+Every current `shopify-build/sections/*.liquid` → disposition for the final theme.  
+Legend: **KEEP** · **REBUILD** · **MERGE→X** · **DELETE**
+
+| Current file | Disposition | Notes |
+|--------------|-------------|-------|
+| `announcement-strip.liquid` | **KEEP** | Chrome; polish vs WORKING only |
+| `header.liquid` | **KEEP** | Chrome; Shopify menus |
+| `footer.liquid` | **KEEP** | Chrome; newsletter remains (C4) |
+| `home-split-hero.liquid` | **REBUILD** → `split-hero` | First build target after contract acknowledge; H1 rename |
+| `hero.liquid` | **MERGE→split-hero** then **DELETE** | Legacy prototype; H3 delete after freeze |
+| `hero-alt.liquid` | **DELETE** | Duplicate; H3 after replacements frozen |
+| `collection-hero.liquid` | **REBUILD** → `collection-split` + extract `sole-cards` | Sole cards become companion (H4 B) |
+| `fifty-fifty.liquid` | **REBUILD** | Port `br-media-text-split`; preserve schema IDs |
+| `variant-grid.liquid` | **REBUILD** | KEEP logic non-negotiable (P3) |
+| `disciplines.liquid` | **REBUILD** | Align Home WORKING |
+| `statement-band.liquid` | **REBUILD** | Standalone first-class (C1) |
+| `value-strip.liquid` | **REBUILD** | Collection / SEO |
+| `guarantee-band.liquid` | **REBUILD** → `guarantee` | Rename |
+| `home-ugc.liquid` | **REBUILD** → `ig-section` | Rename for reuse |
+| `social-proof.liquid` | **MERGE→reviews** | One reviews section (P1) |
+| `contact-cta.liquid` | **KEEP** | Thin utility |
+| `newsletter.liquid` | **KEEP** | Standalone + footer (C4) |
+| `collection-faq.liquid` | **MERGE→faq** | One FAQ capability |
+| `geo-section.liquid` | **MERGE→studio-trust** | GEO in studio-trust (C3) |
+| `pdp-buy-box.liquid` | **REBUILD** | Core commerce |
+| `pdp-sticky-atc.liquid` | **REBUILD** | Companion to buy box |
+| `pdp-features.liquid` | **REBUILD** | Keep separate (P2); not merge into fifty-fifty |
+| `pdp-reviews.liquid` | **MERGE→reviews** | One reviews section (P1) |
+| `pdp-sock-math.liquid` | **REBUILD** → `sock-math` | Drop `pdp-` prefix |
+| `main-cart.liquid` | **REBUILD** | Cart template |
+| `recommendations.liquid` | **KEEP** | Thin commerce utility |
+| `recently-viewed.liquid` | **KEEP** | Thin commerce utility |
+| `search-results.liquid` | **KEEP** | Template section |
+| `blog-listing.liquid` | **REBUILD** → `journal-index` | Journal v5 |
+| `article-content.liquid` | **KEEP** | Article template |
+| `page-about.liquid` | **DELETE** after decompose | C6 — compose from library |
+| `page-ambassador.liquid` | **DELETE** after decompose | C6 |
+| `page-compare.liquid` | **DELETE** after decompose | Content → `comparison` + library |
+| `page-contact.liquid` | **DELETE** after decompose | `page-head` + form modules |
+| `page-faq.liquid` | **MERGE→faq** then **DELETE** | Capability is `faq` |
+| `page-grip-comparison.liquid` | **DELETE** after decompose | Content → `comparison` |
+| `page-partners.liquid` | **DELETE** after decompose | C6 |
+| `page-returns.liquid` | **DELETE** after decompose | C6 |
+| `page-shipping.liquid` | **DELETE** after decompose | C6 |
+| `page-size-guide.liquid` | **DELETE** after decompose | C6 |
+| `page-studio-program.liquid` | **DELETE** after decompose | C6 |
+| `page-technology.liquid` | **DELETE** after decompose | C6 |
+| `page-warranty.liquid` | **DELETE** after decompose | C6 |
+| `page-wholesale.liquid` | **DELETE** after decompose | C6 |
+
+**Missing from repo (approved; build when reach order):**  
+`hero-fullbleed`, `collection-split` (as final name), `sole-cards`, `visual-mosaic`, `fullbleed-statement`, `lifestyle-break`, `problem-section`, `comparison`, `faq`, `page-head`, `help-hub-grid`, `studio-trust`, `reviews` (as final merged file), `campaign-stage` (**deferred**).
+
+---
+
+## 5. Build order (one at a time)
+
+| # | Section | Gate |
+|---|---------|------|
+| 0 | **This CONTRACT acknowledged** | Required before any production code |
+| **1** | **`split-hero`** | Rebuild/rename from `home-split-hero` to DS standards → QA → Andrew approve → **freeze** |
+| 2 | `hero-fullbleed` | Only after `split-hero` frozen |
+| 3 | `collection-split` | Then `sole-cards` as companion (can follow immediately after, still one-at-a-time) |
+| 4 | `fifty-fifty` | First surgical port |
+| 5 | `visual-mosaic` | Second port |
+| 6 | `variant-grid` | Largest KEEP-logic job |
+| 7 | Marketing spine: `disciplines` → `statement-band` → `fullbleed-statement` → `value-strip` → `sock-math` → `comparison` → `problem-section` → `lifestyle-break` | One at a time |
+| 8 | Proof: `reviews` → `ig-section` → `guarantee` → `studio-trust` | One at a time |
+| 9 | `faq` · `newsletter` polish · `contact-cta` · `page-head` · `help-hub-grid` · `journal-index` | One at a time |
+| 10 | `pdp-buy-box` → `pdp-sticky-atc` → `pdp-features` | One at a time |
+| 11 | Template assembly | **Brian** (or later) — not agents on Shopify |
+| 12 | Delete legacy heroes + monoliths after replacements frozen | H3 / C6 |
+| — | `campaign-stage` | **Deferred** (C2) |
+
+**Hard rule after contract acknowledge:** only `split-hero` until frozen. No parallel section builds. No Shopify.
+
+---
+
+## 6. Explicit production-code gate
+
+1. **No production section code** until this CONTRACT is acknowledged.  
+2. After acknowledgment: **only `split-hero`** (rebuild/rename from `home-split-hero`) until frozen.  
+3. No Shopify CLI theme mutations.  
+4. Final theme ships **only** the approved library in §3 — legacy duplicates deleted after replacements are frozen.
+
+---
+
+## Approval stamp
+
+| Field | Value |
+|-------|-------|
+| Status | **ARCHITECTURE APPROVED** |
+| Date | **2026-07-26** |
+| Approved by | **Andrew** |
+| Contract file | `planning/m4-section-library-CONTRACT.md` |
+| First build target | **`split-hero`** (after contract acknowledge) |
+| v1 library count | **36** sections |
