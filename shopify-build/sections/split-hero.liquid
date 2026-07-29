@@ -1,6 +1,6 @@
 {% comment %}
   Split hero — 50/50 media | copy
-  Authority: Home WORKING layout + DS tokens (star gold default = production)
+  Authority: Home WORKING · type via design-tokens.css (no local font overrides)
   CSS: assets/split-hero.css
 {% endcomment %}
 
@@ -20,7 +20,6 @@
   assign tag_url = section.settings.tag_url
   assign trust_text = section.settings.trust_text
   assign trust_url = section.settings.trust_url
-  assign star_color = section.settings.star_color | default: '#c45c3f'
   assign heading_level = section.settings.heading_level | default: 'h1'
   if heading_level != 'h1' and heading_level != 'h2' and heading_level != 'h3'
     assign heading_level = 'h1'
@@ -29,34 +28,7 @@
     assign image_alt = image.alt | default: title
   endif
   assign reverse_layout = section.settings.reverse_layout
-  assign heading_font = section.settings.heading_font
-  assign body_font = section.settings.body_font
-  assign title_size = section.settings.title_size | default: 64
-  assign body_size = section.settings.body_size | default: 17
-  assign title_size_mobile = section.settings.title_size_mobile | default: 44
 -%}
-
-{%- style -%}
-  {%- unless heading_font.system? -%}
-    {{ heading_font | font_face: font_display: 'swap' }}
-  {%- endunless -%}
-  {%- unless body_font.system? -%}
-    {{ body_font | font_face: font_display: 'swap' }}
-  {%- endunless -%}
-  #split-hero-{{ section.id }} {
-    --split-hero-heading-font: {{ heading_font.family }}, {{ heading_font.fallback_families }};
-    --split-hero-body-font: {{ body_font.family }}, {{ body_font.fallback_families }};
-    --split-hero-title-size: {{ title_size }}px;
-    --split-hero-title-size-mobile: {{ title_size_mobile }}px;
-    --split-hero-body-size: {{ body_size }}px;
-    --split-hero-star-color: {{ star_color }};
-    --split-hero-bg: {{ section.settings.bg_color | default: '#ffffff' }};
-    --split-hero-text: {{ section.settings.text_color | default: '#1c1916' }};
-    --split-hero-body-color: {{ section.settings.body_color | default: '#4a4a4a' }};
-    --split-hero-cta-bg: {{ section.settings.cta_bg_color | default: '#c45c3f' }};
-    --split-hero-cta-text: {{ section.settings.cta_text_color | default: '#ffffff' }};
-  }
-{%- endstyle -%}
 
 <div
   class="split-hero{% if reverse_layout %} split-hero--reverse{% endif %}"
@@ -261,14 +233,8 @@
       "type": "checkbox",
       "id": "show_stars",
       "label": "Show stars",
-      "default": true
-    },
-    {
-      "type": "color",
-      "id": "star_color",
-      "label": "Star color",
-      "default": "#c45c3f",
-      "info": "Home WORKING / finalized mocks use rust. Change only if Design System promotes another value."
+      "default": true,
+      "info": "Color from design token --accent-stars-marketing (rust)."
     },
     {
       "type": "richtext",
@@ -333,87 +299,11 @@
     },
     {
       "type": "header",
-      "content": "Typography"
-    },
-    {
-      "type": "font_picker",
-      "id": "heading_font",
-      "label": "Heading font",
-      "default": "roboto_n4"
-    },
-    {
-      "type": "font_picker",
-      "id": "body_font",
-      "label": "Body font",
-      "default": "roboto_n4"
-    },
-    {
-      "type": "range",
-      "id": "title_size",
-      "label": "Headline size (desktop)",
-      "min": 32,
-      "max": 72,
-      "step": 2,
-      "unit": "px",
-      "default": 64
-    },
-    {
-      "type": "range",
-      "id": "title_size_mobile",
-      "label": "Headline size (mobile)",
-      "min": 28,
-      "max": 48,
-      "step": 1,
-      "unit": "px",
-      "default": 44
-    },
-    {
-      "type": "range",
-      "id": "body_size",
-      "label": "Body size",
-      "min": 14,
-      "max": 22,
-      "step": 1,
-      "unit": "px",
-      "default": 17
-    },
-    {
-      "type": "header",
-      "content": "Colors"
-    },
-    {
-      "type": "color",
-      "id": "bg_color",
-      "label": "Copy background",
-      "default": "#ffffff"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Headline color",
-      "default": "#1c1916"
-    },
-    {
-      "type": "color",
-      "id": "body_color",
-      "label": "Body / trust color",
-      "default": "#4a4a4a"
-    },
-    {
-      "type": "color",
-      "id": "cta_bg_color",
-      "label": "CTA background",
-      "default": "#c45c3f"
-    },
-    {
-      "type": "color",
-      "id": "cta_text_color",
-      "label": "CTA text",
-      "default": "#ffffff"
-    },
-    {
-      "type": "header",
       "content": "Accessibility"
+    },
+    {
+      "type": "paragraph",
+      "content": "Typography (size, weight, tracking) is controlled by the global design system — not per-section Theme Editor overrides."
     },
     {
       "type": "text",

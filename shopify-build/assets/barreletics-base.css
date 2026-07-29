@@ -9,9 +9,9 @@
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body {
   font-family: var(--font-family);
-  font-size: var(--text-base);
-  font-weight: var(--weight-regular);
-  line-height: var(--leading-relaxed);
+  font-size: var(--type-body-size-sm);
+  font-weight: var(--type-body-weight);
+  line-height: var(--type-body-leading);
   color: var(--text-primary);
   background: var(--bg-primary);
   -webkit-font-smoothing: antialiased;
@@ -22,46 +22,74 @@ a { color: var(--text-primary); text-decoration: none; }
 a:hover { text-decoration: underline; }
 button { font-family: inherit; cursor: pointer; }
 ul, ol { list-style: none; }
-h1, h2, h3, h4, h5, h6 { font-weight: var(--type-section-weight); line-height: var(--leading-heading); }
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-family);
+  font-weight: var(--type-section-weight);
+  line-height: var(--type-section-leading);
+}
 
-/* --- Typography Scale (BZ-020) --- */
+/* --- Typography roles (BZ-020) --- */
 .type-opening,
 .h1--opening {
-  font-size: var(--type-opening-h1);
+  font-size: var(--type-opening-size);
   font-weight: var(--type-opening-weight);
   line-height: var(--type-opening-leading);
   letter-spacing: var(--type-opening-tracking);
 }
 @media (max-width: 768px) {
   .type-opening,
-  .h1--opening { font-size: var(--type-opening-h1-mobile); }
+  .h1--opening { font-size: var(--type-opening-size-mobile); }
 }
 .type-section,
 .h2--section {
-  font-size: var(--type-section);
+  font-size: var(--type-section-size);
   font-weight: var(--type-section-weight);
-  line-height: var(--leading-snug);
-  letter-spacing: var(--tracking-tight);
+  line-height: var(--type-section-leading);
+  letter-spacing: var(--type-section-tracking);
 }
-.h1, h1 { font-size: var(--type-opening-h1); font-weight: var(--type-opening-weight); line-height: var(--type-opening-leading); letter-spacing: var(--type-opening-tracking); }
-.h2, h2 { font-size: var(--type-section); font-weight: var(--type-section-weight); line-height: var(--leading-snug); letter-spacing: var(--tracking-tight); }
-.h3, h3 { font-size: var(--text-4xl); line-height: var(--leading-heading); font-weight: var(--type-section-weight); }
-.h4, h4 { font-size: var(--text-2xl); line-height: var(--leading-heading); font-weight: var(--type-section-weight); }
-.btn,
-.cta { font-weight: var(--type-cta-weight); text-transform: uppercase; }
-.body-lg { font-size: var(--text-md); line-height: var(--leading-relaxed); color: var(--text-body); }
-.body { font-size: var(--text-base); line-height: var(--leading-relaxed); color: var(--text-body); }
-.body-sm { font-size: 14px; line-height: var(--leading-relaxed); color: var(--text-body); }
-
+.type-lede {
+  font-size: var(--type-lede-size);
+  font-weight: var(--type-lede-weight);
+  line-height: var(--type-lede-leading);
+  color: var(--text-body);
+}
+.type-label,
 .eyebrow {
-  font-size: var(--text-sm);
-  font-weight: var(--weight-bold);
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
   text-transform: uppercase;
-  letter-spacing: var(--tracking-widest);
+  letter-spacing: var(--type-label-tracking);
   color: var(--text-muted);
 }
 .eyebrow--accent { color: var(--accent-primary); }
 .eyebrow--manifesto { letter-spacing: var(--tracking-manifesto); }
+
+.h1, h1 {
+  font-size: var(--type-opening-size);
+  font-weight: var(--type-opening-weight);
+  line-height: var(--type-opening-leading);
+  letter-spacing: var(--type-opening-tracking);
+}
+.h2, h2 {
+  font-size: var(--type-section-size);
+  font-weight: var(--type-section-weight);
+  line-height: var(--type-section-leading);
+  letter-spacing: var(--type-section-tracking);
+}
+.h3, h3 {
+  font-size: var(--type-h3-size);
+  font-weight: var(--type-h3-weight);
+  line-height: var(--type-h3-leading);
+  letter-spacing: var(--type-h3-tracking);
+}
+.h4, h4 {
+  font-size: var(--text-2xl);
+  line-height: var(--leading-heading);
+  font-weight: var(--type-section-weight);
+}
+.body-lg { font-size: var(--type-body-size); line-height: var(--type-body-leading); color: var(--text-body); font-weight: var(--type-body-weight); }
+.body { font-size: var(--type-body-size-sm); line-height: var(--type-body-leading); color: var(--text-body); font-weight: var(--type-body-weight); }
+.body-sm { font-size: 14px; line-height: var(--type-body-leading); color: var(--text-body); font-weight: var(--type-body-weight); }
 
 /* --- Buttons --- */
 .btn {
@@ -69,10 +97,11 @@ h1, h2, h3, h4, h5, h6 { font-weight: var(--type-section-weight); line-height: v
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 16px 32px;
-  font-size: 13px;
-  font-weight: var(--weight-bold);
-  letter-spacing: var(--tracking-wider);
+  min-height: 48px;
+  padding: 16px 36px;
+  font-size: var(--type-cta-size);
+  font-weight: var(--type-cta-weight);
+  letter-spacing: var(--type-cta-tracking);
   text-transform: uppercase;
   border: none;
   border-radius: var(--radius-button);
@@ -87,6 +116,17 @@ h1, h2, h3, h4, h5, h6 { font-weight: var(--type-section-weight); line-height: v
   color: var(--color-white);
 }
 .btn--primary:hover { background: var(--accent-primary); }
+
+.btn--brand {
+  background: var(--accent-primary);
+  color: var(--color-white);
+  border: 1px solid var(--accent-primary);
+}
+.btn--brand:hover {
+  background: var(--color-charcoal);
+  border-color: var(--color-charcoal);
+  color: var(--color-white);
+}
 
 .btn--secondary {
   background: transparent;

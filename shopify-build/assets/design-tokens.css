@@ -1,7 +1,7 @@
 /* =============================================================================
-   BARRELETICS DESIGN TOKENS — v49 Canonical
-   Source: planning/03-design-system.md + Design System Skill (locked)
-   Decision Log: D-001 through D-007 govern these values
+   BARRELETICS DESIGN TOKENS — Type & Space OS
+   Authority: Home WORKING · Collection v18 · SEO v36 · BZ-020 / BZ-024
+   Premium restraint: Roboto 400 display · 500 quiet UI · 700 CTAs only
    ============================================================================= */
 
 :root {
@@ -29,24 +29,90 @@
   --bg-dark: var(--color-charcoal);
   --border-default: var(--color-warm-border);
   --accent-primary: var(--color-rust);
+  /* Review widgets (Judge.me etc.) */
   --accent-stars: var(--color-gold);
+  /* Marketing trust stars in heroes (WORKING / Collection / SEO mocks) */
+  --accent-stars-marketing: var(--color-rust);
 
-  /* --- Typography --- */
+  /* --- Typography family --- */
   --font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
-  /* Font weights */
+  /* Weights — calm brand: 400 display, 500 quiet UI, 700 CTAs only */
   --weight-light: 300;
   --weight-regular: 400;
   --weight-medium: 500;
   --weight-semibold: 600;
   --weight-bold: 700;
 
-  /* Font sizes */
+  /* --- Type roles (use these — avoid one-off px in sections) --- */
+  /* Opening H1 — hero / first viewport */
+  --type-opening-size: clamp(40px, 6vw, 64px);
+  --type-opening-size-mobile: clamp(34px, 9vw, 44px);
+  --type-opening-weight: 400;
+  --type-opening-leading: 1.08;
+  --type-opening-tracking: -0.03em;
+
+  /* Section H2 — mid-page statements */
+  --type-section-size: clamp(28px, 3.5vw, 40px);
+  --type-section-weight: 400;
+  --type-section-leading: 1.15;
+  --type-section-tracking: -0.028em;
+
+  /* H3 */
+  --type-h3-size: clamp(22px, 2.5vw, 28px);
+  --type-h3-weight: 400;
+  --type-h3-leading: 1.2;
+  --type-h3-tracking: -0.02em;
+
+  /* Hero / promo lede (WORKING hero body) */
+  --type-lede-size: 17px;
+  --type-lede-size-mobile: 15px;
+  --type-lede-weight: 400;
+  --type-lede-leading: 1.45;
+
+  /* Body copy */
+  --type-body-size: 16px;
+  --type-body-size-sm: 15px;
+  --type-body-weight: 400;
+  --type-body-leading: 1.6;
+
+  /* Labels / eyebrows */
+  --type-label-size: 11px;
+  --type-label-weight: 700;
+  --type-label-tracking: 0.12em;
+
+  /* Navigation */
+  --type-nav-size: 11px;
+  --type-nav-weight: 500;
+  --type-nav-tracking: 0.12em;
+  --type-brand-size: 14px;
+  --type-brand-weight: 700;
+  --type-brand-tracking: 0.16em;
+
+  /* CTA */
+  --type-cta-size: 12px;
+  --type-cta-weight: 700;
+  --type-cta-tracking: 0.1em;
+
+  /* Trust / caption / tag */
+  --type-trust-size: 13px;
+  --type-trust-weight: 400;
+  --type-caption-size: 13px;
+  --type-caption-weight: 500;
+  --type-caption-tracking: 0.02em;
+
+  /* Announcement */
+  --type-announce-size: 12px;
+  --type-announce-weight: 600;
+  --type-announce-tracking: 0.06em;
+
+  /* Legacy aliases (existing sections) */
+  --font-body: var(--font-family);
   --text-xs: 10px;
-  --text-sm: 11px;
-  --text-base: 15px;
-  --text-md: 16px;
+  --text-sm: var(--type-label-size);
+  --text-base: var(--type-body-size-sm);
+  --text-md: var(--type-body-size);
   --text-lg: 18px;
   --text-xl: 21px;
   --text-2xl: 28px;
@@ -56,14 +122,12 @@
   --text-6xl: 44px;
   --text-7xl: 48px;
   --text-8xl: 52px;
-
-  /* BZ-020 locked type (do not reopen) */
-  --type-opening-h1: clamp(40px, 6vw, 64px);
-  --type-opening-h1-mobile: clamp(34px, 9vw, 44px);
+  --type-opening-h1: var(--type-opening-size);
+  --type-opening-h1-mobile: var(--type-opening-size-mobile);
   --type-opening-weight: 400;
   --type-opening-leading: 1.08;
   --type-opening-tracking: -0.03em;
-  --type-section: clamp(28px, 4vw, 40px);
+  --type-section: var(--type-section-size);
   --type-section-weight: 400;
   --type-cta-weight: 700;
 
@@ -76,16 +140,19 @@
   --leading-loose: 1.7;
 
   /* Letter spacing */
-  --tracking-tight: -0.02em;
+  --tracking-tight: -0.028em;
+  --tracking-tighter: -0.03em;
   --tracking-normal: 0;
   --tracking-wide: 0.04em;
   --tracking-wider: 0.06em;
   --tracking-widest: 0.08em;
-  --tracking-eyebrow: 0.08em;
+  --tracking-eyebrow: 0.12em;
+  --tracking-nav: 0.12em;
+  --tracking-cta: 0.1em;
   --tracking-manifesto: 0.18em;
-  --tracking-brand: 0.14em;
+  --tracking-brand: 0.16em;
 
-  /* --- Spacing --- */
+  /* --- Spacing scale --- */
   --space-0: 0;
   --space-1: 4px;
   --space-2: 8px;
@@ -104,11 +171,26 @@
   --space-15: 88px;
   --space-16: 96px;
 
+  /* Stack rhythm (eyebrow → title → body → CTA → trust/tag) */
+  --stack-trust-to-title: 28px;
+  --stack-title-to-body: 20px;
+  --stack-body-to-cta: 32px;
+  --stack-cta-to-meta: 28px;
+
   /* Section padding */
   --section-padding-y: 64px;
   --section-padding-x: 40px;
   --section-padding-y-mobile: 48px;
   --section-padding-x-mobile: 16px;
+
+  /* Hero copy column (WORKING) */
+  --hero-copy-max: 560px;
+  --hero-copy-pad-y: 72px;
+  --hero-copy-pad-x: 64px;
+  --hero-copy-pad-y-mobile: 40px;
+  --hero-copy-pad-x-mobile: 24px;
+  --hero-body-measure: 28ch;
+  --hero-min-height: 75vh;
 
   /* --- Layout --- */
   --max-width: 1200px;
@@ -119,9 +201,9 @@
   --grid-gap-sm: 20px;
   --grid-gap-lg: 40px;
 
-  /* --- Border Radius (D-003, D-006) --- */
+  /* --- Radius --- */
   --radius-badge: 3px;
-  --radius-button: 6px;
+  --radius-button: 4px;
   --radius-card-sm: 6px;
   --radius-gallery: 8px;
   --radius-card: 12px;
@@ -139,7 +221,7 @@
   --transition-slow: 0.4s ease;
   --transition-ticker: 0.32s ease;
 
-  /* --- Z-index Scale --- */
+  /* --- Z-index --- */
   --z-base: 0;
   --z-dropdown: 10;
   --z-sticky: 20;
@@ -148,16 +230,8 @@
   --z-nav: 50;
   --z-modal: 60;
   --z-toast: 70;
-
-  /* --- Breakpoints (reference only — use @media) --- */
-  /* --bp-sm: 480px; */
-  /* --bp-md: 768px; */
-  /* --bp-lg: 1024px; */
-  /* --bp-xl: 1200px; */
-  /* --bp-2xl: 1400px; */
 }
 
-/* Dark section overrides */
 [data-theme="dark"] {
   --text-primary: var(--color-white);
   --text-body: rgba(255, 255, 255, 0.85);
