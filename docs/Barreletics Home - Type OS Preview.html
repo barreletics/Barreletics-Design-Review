@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Barreletics Home — TYPE OS PREVIEW (Hold Display / 4 tiers)</title>
+  <meta name="description" content="Static preview of the Barreletics 4-tier type OS: Hold Display, Hold Mark, homepage rhythm. Not the frozen WORKING mock. Not Shopify.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* =============================================================================
+       INLINED — design-tokens.css (Type & Space OS, 2026-07-29)
+       Authority: planning/m4-type-hierarchy.md
+       ============================================================================= */
+    :root {
+      --color-charcoal: #1c1916;
+      --color-rust: #c45c3f;
+      --color-gold: #d4af37;
+      --color-body: #4a4a4a;
+      --color-muted: #8a8a8a;
+      --color-warm-muted: #6b645a;
+      --color-warm-border: #d6cfc0;
+      --color-warm-cream: #f5f2ec;
+      --color-light-bg: #f9f9f9;
+      --color-white: #ffffff;
+      --color-coral: #e8927c;
+
+      --text-primary: var(--color-charcoal);
+      --text-body: var(--color-body);
+      --text-muted: var(--color-muted);
+      --text-warm-muted: var(--color-warm-muted);
+      --bg-primary: var(--color-white);
+      --bg-alternate: var(--color-warm-cream);
+      --bg-card: var(--color-light-bg);
+      --bg-dark: var(--color-charcoal);
+      --border-default: var(--color-warm-border);
+      --accent-primary: var(--color-rust);
+      --accent-stars: var(--color-gold);
+      --accent-stars-marketing: var(--color-rust);
+
+      --font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+      --weight-regular: 400;
+      --weight-medium: 500;
+      --weight-bold: 700;
+
+      /* Tier 1 — Hero */
+      --type-hero-size: clamp(44px, 6vw, 68px);
+      --type-hero-size-mobile: clamp(34px, 8.5vw, 44px);
+      --type-hero-weight: 400;
+      --type-hero-leading: 1.05;
+      --type-hero-tracking: -0.035em;
+      --type-hero-margin: 0 0 var(--stack-title-to-body);
+
+      /* Tier 2 — Campaign / Hold Display */
+      --type-campaign-size: clamp(40px, 5.2vw, 56px);
+      --type-campaign-size-mobile: clamp(32px, 7.5vw, 40px);
+      --type-campaign-weight: 400;
+      --type-campaign-leading: 1.04;
+      --type-campaign-tracking: -0.042em;
+      --type-campaign-margin: 0 0 var(--stack-campaign-after-title);
+      --type-campaign-measure: 16ch;
+      --type-campaign-measure-wide: 22ch;
+      --type-campaign-rule-width: 2.75rem;
+      --type-campaign-rule-height: 2px;
+      --type-campaign-rule-color: var(--accent-primary);
+      --type-campaign-rule-gap: 1.25rem;
+
+      /* Tier 3 — Section */
+      --type-section-size: clamp(24px, 2.6vw, 32px);
+      --type-section-size-mobile: clamp(22px, 5.5vw, 28px);
+      --type-section-weight: 400;
+      --type-section-leading: 1.18;
+      --type-section-tracking: -0.02em;
+      --type-section-margin: 0 0 var(--stack-section-after-title);
+
+      --type-h3-size: clamp(18px, 2vw, 22px);
+      --type-h3-weight: 400;
+      --type-h3-leading: 1.25;
+      --type-h3-tracking: -0.015em;
+
+      /* Tier 4 — Body / lede / labels */
+      --type-lede-size: 17px;
+      --type-lede-size-mobile: 16px;
+      --type-lede-weight: 400;
+      --type-lede-leading: 1.55;
+      --type-body-size: 16px;
+      --type-body-size-sm: 15px;
+      --type-body-weight: 400;
+      --type-body-leading: 1.65;
+      --type-label-size: 11px;
+      --type-label-weight: 500;
+      --type-label-tracking: 0.14em;
+      --type-nav-size: 11px;
+      --type-nav-weight: 500;
+      --type-nav-tracking: 0.14em;
+      --type-brand-size: 14px;
+      --type-brand-weight: 700;
+      --type-brand-tracking: 0.16em;
+      --type-cta-size: 12px;
+      --type-cta-weight: 700;
+      --type-cta-tracking: 0.12em;
+      --type-trust-size: 13px;
+      --type-trust-weight: 400;
+      --type-caption-size: 13px;
+
+      --align-hero: left;
+      --align-campaign: left;
+      --align-editorial: left;
+      --align-band: center;
+
+      --space-4: 16px;
+      --space-6: 24px;
+      --space-8: 32px;
+      --space-9: 40px;
+      --space-10: 48px;
+      --space-12: 64px;
+
+      --stack-trust-to-title: 32px;
+      --stack-title-to-body: 24px;
+      --stack-body-to-cta: 36px;
+      --stack-cta-to-meta: 32px;
+      --stack-eyebrow-to-title: 16px;
+      --stack-section-after-title: 16px;
+      --stack-campaign-after-title: 28px;
+      --stack-campaign-eyebrow: 20px;
+      --stack-campaign-to-body: 28px;
+      --stack-campaign-to-cta: 40px;
+
+      --section-padding-y: 72px;
+      --section-padding-x: 40px;
+      --section-padding-y-mobile: 56px;
+      --section-padding-x-mobile: 20px;
+      --section-padding-y-campaign: 96px;
+      --section-padding-y-campaign-mobile: 72px;
+
+      --hero-copy-max: 560px;
+      --hero-copy-pad-y: 80px;
+      --hero-copy-pad-x: 64px;
+      --hero-copy-pad-y-mobile: 48px;
+      --hero-copy-pad-x-mobile: 24px;
+      --hero-body-measure: 30ch;
+      --hero-min-height: 78vh;
+
+      --max-width: 1200px;
+      --max-width-hero: 1400px;
+      --max-width-copy: 540px;
+      --radius-button: 4px;
+      --radius-card: 12px;
+      --transition-fast: 0.2s ease;
+    }
+
+    /* =============================================================================
+       INLINED — type utilities (barreletics-base.css)
+       ============================================================================= */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: var(--font-family);
+      font-size: var(--type-body-size-sm);
+      font-weight: var(--type-body-weight);
+      line-height: var(--type-body-leading);
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+    }
+    img { display: block; max-width: 100%; height: auto; }
+    a { color: var(--text-primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    button { font-family: inherit; cursor: pointer; }
+    ul { list-style: none; }
+
+    .align-hero { text-align: var(--align-hero); }
+    .align-campaign { text-align: var(--align-campaign); }
+    .align-editorial { text-align: var(--align-editorial); }
+    .align-band { text-align: var(--align-band); }
+
+    .type-hero {
+      font-size: var(--type-hero-size);
+      font-weight: var(--type-hero-weight);
+      line-height: var(--type-hero-leading);
+      letter-spacing: var(--type-hero-tracking);
+      margin: var(--type-hero-margin);
+    }
+    @media (max-width: 768px) {
+      .type-hero { font-size: var(--type-hero-size-mobile); }
+    }
+
+    .type-campaign {
+      font-size: var(--type-campaign-size);
+      font-weight: var(--type-campaign-weight);
+      line-height: var(--type-campaign-leading);
+      letter-spacing: var(--type-campaign-tracking);
+      margin: var(--type-campaign-margin);
+      color: var(--text-primary);
+    }
+    .type-campaign--narrow { max-width: var(--type-campaign-measure); }
+    .type-campaign--wide { max-width: var(--type-campaign-measure-wide); }
+    .type-campaign--mark::after {
+      content: "";
+      display: block;
+      width: var(--type-campaign-rule-width);
+      height: var(--type-campaign-rule-height);
+      background: var(--type-campaign-rule-color);
+      margin-top: var(--type-campaign-rule-gap);
+    }
+    .align-band .type-campaign--mark::after,
+    .type-campaign--mark.align-band::after {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .section--dark .type-campaign--mark::after,
+    .statement-band .type-campaign--mark::after,
+    .guarantee-band .type-campaign--mark::after {
+      background: rgba(255, 255, 255, 0.85);
+    }
+    @media (max-width: 768px) {
+      .type-campaign { font-size: var(--type-campaign-size-mobile); }
+    }
+
+    .type-section {
+      font-size: var(--type-section-size);
+      font-weight: var(--type-section-weight);
+      line-height: var(--type-section-leading);
+      letter-spacing: var(--type-section-tracking);
+      margin: var(--type-section-margin);
+      color: var(--text-primary);
+    }
+    @media (max-width: 768px) {
+      .type-section { font-size: var(--type-section-size-mobile); }
+    }
+
+    .type-lede {
+      font-size: var(--type-lede-size);
+      font-weight: var(--type-lede-weight);
+      line-height: var(--type-lede-leading);
+      color: var(--text-body);
+    }
+    .type-body {
+      font-size: var(--type-body-size);
+      font-weight: var(--type-body-weight);
+      line-height: var(--type-body-leading);
+      color: var(--text-body);
+    }
+    .type-label, .eyebrow {
+      font-size: var(--type-label-size);
+      font-weight: var(--type-label-weight);
+      text-transform: uppercase;
+      letter-spacing: var(--type-label-tracking);
+      color: var(--text-muted);
+    }
+    .eyebrow--accent { color: var(--accent-primary); }
+
+    .section--campaign {
+      padding-top: var(--section-padding-y-campaign);
+      padding-bottom: var(--section-padding-y-campaign);
+    }
+    @media (max-width: 768px) {
+      .section--campaign {
+        padding-top: var(--section-padding-y-campaign-mobile);
+        padding-bottom: var(--section-padding-y-campaign-mobile);
+      }
+      .type-lede { font-size: var(--type-lede-size-mobile); }
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      padding: 16px 40px;
+      font-size: var(--type-cta-size);
+      font-weight: var(--type-cta-weight);
+      letter-spacing: var(--type-cta-tracking);
+      text-transform: uppercase;
+      border: none;
+      border-radius: var(--radius-button);
+      text-decoration: none;
+      transition: background var(--transition-fast);
+      white-space: nowrap;
+    }
+    .btn:hover { text-decoration: none; }
+    .btn--brand { background: var(--accent-primary); color: var(--color-white); }
+    .btn--brand:hover { background: var(--color-charcoal); }
+    .btn--primary { background: var(--color-charcoal); color: var(--color-white); }
+    .btn--primary:hover { background: var(--accent-primary); }
+    .btn--ghost {
+      background: transparent;
+      color: var(--color-white);
+      border: 1px solid rgba(255,255,255,0.55);
+    }
+
+    /* =============================================================================
+       Preview chrome + homepage section shells
+       ============================================================================= */
+    .preview-banner {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: #1c1916;
+      color: #fff;
+      padding: 14px 20px;
+      border-bottom: 3px solid var(--color-rust);
+    }
+    .preview-banner__inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 28px;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+    .preview-banner__tag {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--color-rust);
+    }
+    .preview-banner__title {
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      margin-top: 4px;
+    }
+    .preview-banner__note {
+      font-size: 12px;
+      color: rgba(255,255,255,0.7);
+      max-width: 42ch;
+      line-height: 1.45;
+    }
+
+    .tier-key {
+      background: var(--bg-alternate);
+      border-bottom: 1px solid var(--border-default);
+      padding: 28px var(--section-padding-x);
+    }
+    .tier-key__inner { max-width: var(--max-width); margin: 0 auto; }
+    .tier-key__label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent-primary);
+      margin-bottom: 16px;
+    }
+    .tier-key__grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+    @media (max-width: 900px) {
+      .tier-key__grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 560px) {
+      .tier-key__grid { grid-template-columns: 1fr; }
+    }
+    .tier-card {
+      background: #fff;
+      border: 1px solid var(--border-default);
+      padding: 16px 18px 20px;
+    }
+    .tier-card__badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: var(--color-rust);
+      color: #fff;
+      padding: 3px 8px;
+      border-radius: 3px;
+      margin-bottom: 12px;
+    }
+    .tier-card__meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 10px;
+      line-height: 1.45;
+    }
+    .tier-card--t2 .type-campaign { margin-bottom: 0; }
+    .tier-card--t2 .type-campaign--mark { margin-bottom: 0; }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent-primary);
+      background: rgba(196, 92, 63, 0.08);
+      border: 1px solid rgba(196, 92, 63, 0.25);
+      padding: 4px 8px;
+      border-radius: 3px;
+      margin-bottom: 14px;
+    }
+    .chip--dark {
+      color: rgba(255,255,255,0.9);
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.2);
+    }
+
+    /* Nav (quiet UI) */
+    .site-nav {
+      background: #fff;
+      border-bottom: 1px solid var(--border-default);
+      padding: 0 var(--section-padding-x);
+    }
+    .site-nav__inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+    }
+    .site-nav__brand {
+      font-size: var(--type-brand-size);
+      font-weight: var(--type-brand-weight);
+      letter-spacing: var(--type-brand-tracking);
+      text-transform: uppercase;
+    }
+    .site-nav__links { display: flex; gap: 28px; }
+    .site-nav__links a {
+      font-size: var(--type-nav-size);
+      font-weight: var(--type-nav-weight);
+      letter-spacing: var(--type-nav-tracking);
+      text-transform: uppercase;
+      color: var(--text-body);
+      text-decoration: none;
+    }
+    @media (max-width: 700px) {
+      .site-nav__links { display: none; }
+    }
+
+    /* Split hero */
+    .split-hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: var(--hero-min-height);
+      background: var(--bg-primary);
+    }
+    .split-hero__media {
+      position: relative;
+      overflow: hidden;
+      min-height: 420px;
+      background: linear-gradient(135deg, #f5f2ec 0%, #ece8e0 50%, #e5e0d6 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: 14px;
+      padding: 40px;
+      text-align: center;
+    }
+    .split-hero__copy {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      padding: var(--hero-copy-pad-y) var(--hero-copy-pad-x);
+      max-width: var(--hero-copy-max);
+    }
+    .split-hero__trust {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 var(--stack-trust-to-title);
+      font-size: var(--type-trust-size);
+      color: var(--text-body);
+    }
+    .split-hero__stars { color: var(--accent-stars-marketing); letter-spacing: 0.1em; }
+    .split-hero__body {
+      font-size: var(--type-lede-size);
+      line-height: var(--type-lede-leading);
+      color: var(--text-body);
+      margin: 0 0 var(--stack-body-to-cta);
+      max-width: var(--hero-body-measure);
+    }
+    .split-hero__tag {
+      margin-top: var(--stack-cta-to-meta);
+      font-size: var(--type-caption-size);
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+    @media (max-width: 900px) {
+      .split-hero { grid-template-columns: 1fr; }
+      .split-hero__copy {
+        align-items: center;
+        text-align: center;
+        padding: var(--hero-copy-pad-y-mobile) var(--hero-copy-pad-x-mobile);
+        max-width: none;
+      }
+      .split-hero__body { max-width: 36ch; }
+      .split-hero__media { min-height: 280px; order: -1; }
+    }
+
+    /* Fifty-fifty */
+    .ff {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      padding: var(--section-padding-y) var(--section-padding-x);
+    }
+    .ff--cream { background: var(--bg-alternate); }
+    .ff--rev .ff__media { order: 2; }
+    .ff__media {
+      min-height: 320px;
+      background: linear-gradient(160deg, #ebe6dc, #d9d2c4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: 13px;
+      padding: 24px;
+      text-align: center;
+    }
+    .ff__copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 48px 56px;
+      max-width: 560px;
+    }
+    .ff__copy .eyebrow { margin-bottom: var(--stack-campaign-eyebrow); }
+    .ff__copy .type-section + .type-body,
+    .ff__copy .type-campaign + .type-body { margin-top: 0; }
+    .ff__copy .type-body { margin-bottom: var(--stack-campaign-to-cta); max-width: 38ch; }
+    @media (max-width: 900px) {
+      .ff { grid-template-columns: 1fr; padding: var(--section-padding-y-mobile) var(--section-padding-x-mobile); }
+      .ff--rev .ff__media { order: 0; }
+      .ff__copy { padding: 36px 8px 8px; max-width: none; }
+    }
+
+    /* Strips / bands */
+    .disciplines {
+      padding: 28px var(--section-padding-x);
+      border-top: 1px solid var(--border-default);
+      border-bottom: 1px solid var(--border-default);
+      text-align: center;
+    }
+    .disciplines__line {
+      font-size: var(--type-label-size);
+      font-weight: var(--type-label-weight);
+      letter-spacing: var(--type-label-tracking);
+      text-transform: uppercase;
+      color: var(--text-warm-muted);
+    }
+    .disciplines__sep { margin: 0 10px; color: #9a9182; }
+
+    .value-strip {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px 28px;
+      padding: 20px var(--section-padding-x) 36px;
+      background: #fff;
+    }
+    .value-strip__item {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-warm-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .value-strip__item span { color: var(--accent-primary); font-weight: 700; }
+
+    .commerce {
+      padding: var(--section-padding-y) var(--section-padding-x);
+      background: #fff;
+      text-align: center;
+    }
+    .commerce__inner { max-width: 720px; margin: 0 auto; }
+    .commerce .eyebrow { margin-bottom: var(--stack-eyebrow-to-title); display: block; }
+    .commerce .type-body { margin: 0 auto 28px; max-width: 42ch; }
+    .commerce__grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      max-width: var(--max-width);
+      margin: 36px auto 0;
+      text-align: left;
+    }
+    .commerce__card {
+      background: var(--bg-card);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+    }
+    .commerce__swatch {
+      height: 140px;
+      background: linear-gradient(145deg, #ddd6c8, #cfc6b6);
+    }
+    .commerce__card p {
+      padding: 14px 14px 18px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    @media (max-width: 800px) {
+      .commerce__grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    .statement-band {
+      background: var(--color-charcoal);
+      color: #fff;
+      padding: var(--section-padding-y-campaign) var(--section-padding-x);
+      text-align: center;
+    }
+    .statement-band .type-campaign { color: #fff; }
+    .statement-band__sub {
+      font-size: var(--type-lede-size);
+      color: rgba(255,255,255,0.85);
+      margin: 0 0 16px;
+    }
+    .statement-band__meta {
+      font-size: 13px;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 32px;
+    }
+
+    .social-proof {
+      padding: var(--section-padding-y) var(--section-padding-x);
+      background: var(--bg-alternate);
+    }
+    .social-proof__head { max-width: var(--max-width); margin: 0 auto 32px; }
+    .social-proof__head .eyebrow { display: block; margin-bottom: 12px; }
+    .social-proof__grid {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .review-card {
+      background: #fff;
+      border-radius: var(--radius-card);
+      padding: 24px;
+    }
+    .review-card__stars { color: var(--color-gold); margin-bottom: 12px; letter-spacing: 0.08em; }
+    .review-card__body { font-size: 15px; line-height: 1.6; color: var(--text-body); margin-bottom: 16px; }
+    .review-card__author { font-size: 13px; font-weight: 500; }
+    .review-card__loc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    @media (max-width: 800px) {
+      .social-proof__grid { grid-template-columns: 1fr; }
+    }
+
+    .ugc {
+      padding: var(--section-padding-y) var(--section-padding-x);
+      text-align: center;
+      background: #fff;
+    }
+    .ugc .eyebrow { display: block; margin-bottom: 12px; }
+    .ugc .type-body { margin: 0 auto 28px; max-width: 36ch; }
+    .ugc__grid {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+    }
+    .ugc__tile {
+      aspect-ratio: 1;
+      background: linear-gradient(160deg, #e8e2d6, #d4cbb8);
+      border-radius: 4px;
+    }
+    @media (max-width: 700px) {
+      .ugc__grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    .guarantee-band {
+      background: var(--color-charcoal);
+      color: #fff;
+      padding: var(--section-padding-y-campaign) var(--section-padding-x);
+      text-align: center;
+    }
+    .guarantee-band .eyebrow { color: rgba(255,255,255,0.55); display: block; margin-bottom: 16px; }
+    .guarantee-band .type-campaign { color: #fff; }
+    .guarantee-band .type-body {
+      color: rgba(255,255,255,0.8);
+      max-width: 48ch;
+      margin: 0 auto 28px;
+    }
+    .guarantee-band__points {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px 24px;
+      margin-bottom: 32px;
+    }
+    .guarantee-band__points li {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: rgba(255,255,255,0.75);
+    }
+
+    .geo {
+      padding: var(--section-padding-y) var(--section-padding-x);
+      background: var(--bg-alternate);
+    }
+    .geo__inner { max-width: 760px; margin: 0 auto; }
+    .geo h3 {
+      font-size: var(--type-h3-size);
+      font-weight: var(--type-h3-weight);
+      line-height: var(--type-h3-leading);
+      letter-spacing: var(--type-h3-tracking);
+      margin-bottom: 20px;
+    }
+    .geo details {
+      border-top: 1px solid var(--border-default);
+      padding: 14px 0;
+    }
+    .geo summary {
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      list-style: none;
+    }
+    .geo details p {
+      margin-top: 10px;
+      font-size: 14px;
+      color: var(--text-body);
+      line-height: 1.6;
+    }
+
+    .newsletter {
+      padding: var(--section-padding-y) var(--section-padding-x);
+      text-align: center;
+      background: #fff;
+      border-top: 1px solid var(--border-default);
+    }
+    .newsletter .eyebrow { display: block; margin-bottom: 12px; }
+    .newsletter .type-body { margin: 0 auto 24px; max-width: 40ch; }
+    .newsletter__form {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .newsletter__form input {
+      flex: 1 1 220px;
+      min-height: 52px;
+      padding: 0 16px;
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-button);
+      font-family: inherit;
+      font-size: 15px;
+    }
+
+    .footer-note {
+      padding: 28px var(--section-padding-x) 48px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      background: var(--bg-alternate);
+      border-top: 1px solid var(--border-default);
+    }
+
+    @media (max-width: 768px) {
+      .tier-key, .site-nav, .disciplines, .value-strip,
+      .commerce, .statement-band, .social-proof, .ugc,
+      .guarantee-band, .geo, .newsletter {
+        padding-left: var(--section-padding-x-mobile);
+        padding-right: var(--section-padding-x-mobile);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CLEAR LABEL: this is NOT the frozen Home WORKING mock -->
+  <aside class="preview-banner" role="note" aria-label="Type OS Preview banner">
+    <div class="preview-banner__inner">
+      <div>
+        <div class="preview-banner__tag">TYPE OS PREVIEW · Not Shopify · Not WORKING mock</div>
+        <div class="preview-banner__title">Hold Display · 4-tier typography · homepage rhythm</div>
+      </div>
+      <p class="preview-banner__note">
+        Tokens from <code>design-tokens.css</code> + utilities from <code>barreletics-base.css</code>.
+        Review Tier 1/2/3/4, Hold Mark, and left vs center alignment. Static HTML only.
+      </p>
+    </div>
+  </aside>
+
+  <!-- Spec key — makes tiers obvious at a glance -->
+  <section class="tier-key" aria-label="Four-tier type key">
+    <div class="tier-key__inner">
+      <p class="tier-key__label">Four-tier type OS — live specimens</p>
+      <div class="tier-key__grid">
+        <div class="tier-card">
+          <span class="tier-card__badge">Tier 1 · Hero</span>
+          <p class="type-hero" style="margin:0">The Pilates Sock Era is Over</p>
+          <p class="tier-card__meta">clamp(44–68) · 400 · lh 1.05 · −0.035em<br>Align: left (center on mobile)</p>
+        </div>
+        <div class="tier-card tier-card--t2">
+          <span class="tier-card__badge">Tier 2 · Hold Display</span>
+          <p class="type-campaign type-campaign--mark" style="margin:0">Yoga Socks Are Useless.</p>
+          <p class="tier-card__meta">clamp(40–56) · 400 · lh 1.04 · −0.042em<br>Hold Mark = short rust rule</p>
+        </div>
+        <div class="tier-card">
+          <span class="tier-card__badge">Tier 3 · Section</span>
+          <p class="type-section" style="margin:0">Shop All Styles &amp; Colors</p>
+          <p class="tier-card__meta">clamp(24–32) · 400 · lh 1.18 · −0.02em<br>Quieter supporting titles</p>
+        </div>
+        <div class="tier-card">
+          <span class="tier-card__badge">Tier 4 · Body</span>
+          <p class="type-lede" style="margin:0 0 8px">Lede 17px / 1.55 — opening support.</p>
+          <p class="type-body" style="margin:0 0 8px">Body 16px / 1.65 — paragraph copy.</p>
+          <p class="type-label" style="margin:0">Label · 11px / 500 / 0.14em</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="site-nav" aria-label="Preview nav">
+    <div class="site-nav__inner">
+      <div class="site-nav__brand">Barreletics</div>
+      <div class="site-nav__links">
+        <a href="#variants">Shop</a>
+        <a href="#grip">Technology</a>
+        <a href="#reviews">Reviews</a>
+        <a href="#newsletter">Journal</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 1. split-hero — Tier 1 / align-hero -->
+  <section class="split-hero" aria-label="Hero">
+    <div class="split-hero__copy align-hero">
+      <span class="chip">Tier 1 · Hero · align-hero (L → C mobile)</span>
+      <div class="split-hero__trust">
+        <span class="split-hero__stars" aria-hidden="true">★★★★★</span>
+        <span>Trusted by 1,000's of instructors &amp; studios</span>
+      </div>
+      <h1 class="type-hero">The Pilates Sock Era is Over</h1>
+      <p class="split-hero__body">Outperforms barre socks, Pilates socks, and yoga socks — combined.</p>
+      <a class="btn btn--brand" href="#variants">Shop Now</a>
+      <p class="split-hero__tag">#letusknockyoursocksoff</p>
+    </div>
+    <div class="split-hero__media">Hero media placeholder<br>(lifestyle / product)</div>
+  </section>
+
+  <!-- 2. fifty-fifty problem — Tier 2 + Hold Mark / editorial L -->
+  <section class="ff section--campaign" id="problem" aria-label="Problem">
+    <div class="ff__media">Editorial media</div>
+    <div class="ff__copy align-editorial">
+      <span class="chip">Tier 2 · Hold Display + Hold Mark · align-editorial (L)</span>
+      <p class="eyebrow eyebrow--accent">Tired Of Slipping in Your Yoga Socks?</p>
+      <h2 class="type-campaign type-campaign--mark">Yoga Socks Are Useless.</h2>
+      <p class="type-body">Silicone dots wear off. Fabric absorbs sweat. You buy another pair every few months. That cycle is over — full-contact molded grip you rinse and reuse.</p>
+      <a class="btn btn--primary" href="#variants">Shop the difference</a>
+    </div>
+  </section>
+
+  <!-- 3. disciplines — Tier 4 labels -->
+  <section class="disciplines" aria-label="Disciplines">
+    <span class="chip">Tier 4 · Labels · band</span>
+    <p class="disciplines__line">
+      Barre<span class="disciplines__sep">·</span>Pilates<span class="disciplines__sep">·</span>Reformer<span class="disciplines__sep">·</span>Lagree<span class="disciplines__sep">·</span>Yoga
+    </p>
+  </section>
+
+  <!-- 4. value-strip — Tier 4 -->
+  <section class="value-strip" aria-label="Value strip">
+    <div class="value-strip__item"><span>✓</span> 360° grip</div>
+    <div class="value-strip__item"><span>✓</span> Feels like a second skin</div>
+    <div class="value-strip__item"><span>✓</span> Never loses grip</div>
+    <div class="value-strip__item"><span>✓</span> Free shipping over $150</div>
+    <div class="value-strip__item"><span>✓</span> Made in USA</div>
+  </section>
+
+  <!-- 5. variant-grid — Tier 3 / align-band -->
+  <section class="commerce" id="variants" aria-label="Shop styles">
+    <div class="commerce__inner align-band">
+      <span class="chip">Tier 3 · Section · align-band (center)</span>
+      <p class="eyebrow">Two Versions. One Performance.</p>
+      <h2 class="type-section">Shop All Styles &amp; Colors</h2>
+      <p class="type-body">One patented grip. Closed Sole or Open Sole — choose the build that fits your practice. $74.</p>
+      <a class="btn btn--brand" href="#">Shop all</a>
+    </div>
+    <div class="commerce__grid">
+      <div class="commerce__card"><div class="commerce__swatch"></div><p>Closed Sole · Black</p></div>
+      <div class="commerce__card"><div class="commerce__swatch" style="background:linear-gradient(145deg,#e8d4cc,#d4b8ae)"></div><p>Closed Sole · Dusty Rose</p></div>
+      <div class="commerce__card"><div class="commerce__swatch" style="background:linear-gradient(145deg,#d4dce8,#b8c4d4)"></div><p>Open Sole · Slate</p></div>
+      <div class="commerce__card"><div class="commerce__swatch" style="background:linear-gradient(145deg,#e8e8e4,#cfcfc8)"></div><p>Open Sole · Bone</p></div>
+    </div>
+  </section>
+
+  <!-- 6. fifty-fifty grip — Tier 2 + Hold Mark -->
+  <section class="ff ff--cream ff--rev section--campaign" id="grip" aria-label="Grip">
+    <div class="ff__media">Grip demo media</div>
+    <div class="ff__copy align-editorial">
+      <span class="chip">Tier 2 · Hold Display + Hold Mark · align-editorial (L)</span>
+      <p class="eyebrow eyebrow--accent">Never Loses Shape. Never Loses Grip.</p>
+      <h2 class="type-campaign type-campaign--mark type-campaign--wide">Upgrade Your Grip. Upgrade Your Workout.</h2>
+      <p class="type-body">Full-contact molded grip — not printed, not glued. The patented surface holds through every hold, every transition — after 100 classes, and after 1,000.</p>
+      <a class="btn btn--primary" href="#variants">Shop now</a>
+    </div>
+  </section>
+
+  <!-- 7. fifty-fifty Coperni — Tier 3 (supporting, not a moment) -->
+  <section class="ff" id="coperni" aria-label="Coperni">
+    <div class="ff__media">Coperni runway / product</div>
+    <div class="ff__copy align-editorial">
+      <span class="chip">Tier 3 · Section · align-editorial (L) — not a campaign moment</span>
+      <p class="eyebrow">Seasonal Collaboration</p>
+      <h2 class="type-section">Barreletics × Coperni</h2>
+      <p class="type-body">Built for the body in motion — introduced on the Coperni runway, Spring–Summer 2026. One run. One collaboration.</p>
+      <a class="btn btn--primary" href="#">Shop the collab</a>
+    </div>
+  </section>
+
+  <!-- 8. statement-band — Tier 2 + Hold Mark / align-band -->
+  <section class="statement-band section--campaign" aria-label="Statement">
+    <span class="chip chip--dark">Tier 2 · Hold Display + light Hold Mark · align-band (center)</span>
+    <h2 class="type-campaign type-campaign--mark align-band">Studio Workouts and Footwear Will Never Be the Same</h2>
+    <p class="statement-band__sub">You Commit to the Class. Commit to the Gear.</p>
+    <p class="statement-band__meta">Trusted by 1,000's of instructors across barre, Pilates, and reformer studios.</p>
+    <a class="btn btn--ghost" href="#variants">Shop Performance Skins</a>
+  </section>
+
+  <!-- 9. social-proof — Tier 3 / left header -->
+  <section class="social-proof" id="reviews" aria-label="Reviews">
+    <div class="social-proof__head align-editorial">
+      <span class="chip">Tier 3 · Section · left header</span>
+      <p class="eyebrow">Real Results</p>
+      <h2 class="type-section">Real people. Real results.</h2>
+    </div>
+    <div class="social-proof__grid">
+      <article class="review-card">
+        <div class="review-card__stars">★★★★★</div>
+        <p class="review-card__body">I looked at these for over a year thinking 'Way too expensive.' I can't tell you how much I spent on Pilates socks that got ruined in no time. Game changer.</p>
+        <p class="review-card__author">Gwen M.</p>
+        <p class="review-card__loc">Queens · Instructor</p>
+      </article>
+      <article class="review-card">
+        <div class="review-card__stars">★★★★★</div>
+        <p class="review-card__body">I refuse to wear anything else. I am 70 years old and able to accomplish advanced moves on the Cadillac. Your foot has to be gripping without fail.</p>
+        <p class="review-card__author">Dvorah S.</p>
+        <p class="review-card__loc">Fairfield · Pilates 5x/week</p>
+      </article>
+      <article class="review-card">
+        <div class="review-card__stars">★★★★★</div>
+        <p class="review-card__body">Secure on the carriage through the entire footwork series. No more adjusting between sets. Feels like it was engineered for the reformer specifically.</p>
+        <p class="review-card__author">Lauren T.</p>
+        <p class="review-card__loc">Los Angeles · Reformer</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- 10. fifty-fifty sock-math — Tier 2 + Hold Mark -->
+  <section class="ff section--campaign" id="sock-math" aria-label="Sock math">
+    <div class="ff__media">Value / sock math visual</div>
+    <div class="ff__copy align-editorial">
+      <span class="chip">Tier 2 · Hold Display + Hold Mark · align-editorial (L)</span>
+      <p class="eyebrow eyebrow--accent">One Pair. No More Socks.</p>
+      <h2 class="type-campaign type-campaign--mark type-campaign--narrow">One Pair. Done.</h2>
+      <p class="type-body">The cost of two classes — for every class after. No more buying new socks every couple of months. One purchase. Done.</p>
+      <a class="btn btn--brand" href="#variants">Shop now — $74</a>
+    </div>
+  </section>
+
+  <!-- 11. home-ugc — Tier 3 / align-band -->
+  <section class="ugc" aria-label="UGC">
+    <span class="chip">Tier 3 · Section · align-band (center)</span>
+    <p class="eyebrow">Follow the Movement</p>
+    <h2 class="type-section">@barreletics</h2>
+    <p class="type-body">Real practitioners. Real studios. Real grip.</p>
+    <div class="ugc__grid" aria-hidden="true">
+      <div class="ugc__tile"></div>
+      <div class="ugc__tile"></div>
+      <div class="ugc__tile"></div>
+      <div class="ugc__tile"></div>
+      <div class="ugc__tile"></div>
+      <div class="ugc__tile"></div>
+    </div>
+  </section>
+
+  <!-- 12. guarantee-band — Tier 2 + light Hold Mark / align-band -->
+  <section class="guarantee-band section--campaign" aria-label="Guarantee">
+    <span class="chip chip--dark">Tier 2 · Hold Display + light Hold Mark · align-band (center)</span>
+    <p class="eyebrow">The guarantee</p>
+    <h2 class="type-campaign type-campaign--mark align-band">Zero risk. All grip.</h2>
+    <p class="type-body">Shop with confidence — 30-day returns on items in new, sellable condition. 90-day warranty against manufacturing defects. Free shipping on orders over $150.</p>
+    <ul class="guarantee-band__points">
+      <li>Free shipping over $150</li>
+      <li>30-day returns</li>
+      <li>90-day warranty</li>
+      <li>Made in USA</li>
+    </ul>
+    <a class="btn btn--ghost" href="#variants">Shop Grippy Shoes</a>
+  </section>
+
+  <!-- 13. geo — Tier 4 / H3 supporting -->
+  <section class="geo" aria-label="GEO">
+    <div class="geo__inner">
+      <span class="chip">Tier 4 / H3 · supporting accordion</span>
+      <h3>Trusted across the country</h3>
+      <details open>
+        <summary>Barreletics in Florida — Miami, Tampa, Orlando studios</summary>
+        <p class="type-body">From South Beach reformer studios to Tampa barre classes, Florida instructors trust Barreletics for grip that holds through heated sessions.</p>
+      </details>
+      <details>
+        <summary>Barreletics in Texas — Dallas, Houston, Austin studios</summary>
+        <p class="type-body">Texas studios from Dallas to Austin choose Barreletics for reformer footwork and Lagree sessions.</p>
+      </details>
+      <details>
+        <summary>Barreletics in California — LA, San Francisco, San Diego studios</summary>
+        <p class="type-body">From West Hollywood Pilates studios to San Francisco barre classes, Barreletics deliver 360° grip session after session.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- 14. newsletter — Tier 3 / align-band -->
+  <section class="newsletter" id="newsletter" aria-label="Newsletter">
+    <span class="chip">Tier 3 · Section · align-band (center)</span>
+    <p class="eyebrow">Join the list</p>
+    <h2 class="type-section">10% off your first pair.</h2>
+    <p class="type-body">New drops, studio stories, care tips. Once or twice a quarter — never spam.</p>
+    <form class="newsletter__form" action="#" onsubmit="return false;">
+      <input type="email" placeholder="Email address" aria-label="Email address">
+      <button class="btn btn--brand" type="submit">Get 10% off</button>
+    </form>
+  </section>
+
+  <footer class="footer-note">
+    TYPE OS PREVIEW — static HTML for htmlpreview.github.io · branch <code>finish-home-collections</code><br>
+    Source of truth: <code>shopify-build/assets/design-tokens.css</code> · <code>planning/m4-type-hierarchy.md</code><br>
+    This is not <code>Barreletics Home - Definitive-WORKING.html</code> and not a Shopify theme preview.
+  </footer>
+
+</body>
+</html>
