@@ -38,8 +38,7 @@
   --font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
-  /* Weights — calm brand: 400 display, 500 quiet UI, 700 CTAs only
-     Exception: campaign Hold Display may use 500 for mid-page presence */
+  /* Weights — calm brand: hero 500 · campaign/section 400 · UI 500 · CTAs 700 */
   --weight-light: 300;
   --weight-regular: 400;
   --weight-medium: 500;
@@ -47,16 +46,18 @@
   --weight-bold: 700;
 
   /* =========================================================================
-     FOUR-TIER TYPE OS
-     Tier 1 Hero → Tier 2 Campaign (signature) → Tier 3 Section → Tier 4 Body
+     FOUR-TIER TYPE OS + CASING LAW
+     T1 Hero (sentence / brand line) → T2 Campaign ALL CAPS → T3 Section
+     sentence case → T4 Body sentence · Eyebrows small uppercase only
+     See: planning/m4-type-hierarchy.md
      ========================================================================= */
 
-  /* --- Tier 1 — Hero (`--type-hero`) — page-opening only --- */
-  --type-hero-size: clamp(44px, 6vw, 68px);
-  --type-hero-size-mobile: clamp(34px, 8.5vw, 44px);
-  --type-hero-weight: 400;
-  --type-hero-leading: 1.05;
-  --type-hero-tracking: -0.035em;
+  /* --- Tier 1 — Hero (`--type-hero`) — page-opening only; strongest presence --- */
+  --type-hero-size: clamp(48px, 6.8vw, 76px);
+  --type-hero-size-mobile: clamp(36px, 9vw, 48px);
+  --type-hero-weight: 500;
+  --type-hero-leading: 1.02;
+  --type-hero-tracking: -0.032em;
   --type-hero-margin: 0 0 var(--stack-title-to-body);
 
   /* Legacy aliases → hero */
@@ -66,30 +67,30 @@
   --type-opening-leading: var(--type-hero-leading);
   --type-opening-tracking: var(--type-hero-tracking);
 
-  /* --- Tier 2 — Campaign (`--type-campaign`) — Hold Display signature ---
-     Signature: oversized Roboto, ultra-tight tracking, short rust “Hold Mark”
-     underline, generous breath, optional narrow measure. Not a generic H2. */
-  --type-campaign-size: clamp(40px, 5.2vw, 56px);
-  --type-campaign-size-mobile: clamp(32px, 7.5vw, 40px);
+  /* --- Tier 2 — Campaign (`--type-campaign`) — Hold Display · ALL CAPS only ---
+     Secondary to hero. Caps tracking is open (not tight lowercase display).
+     Hold Mark + campaign breath. Not a generic H2. */
+  --type-campaign-size: clamp(32px, 4.2vw, 46px);
+  --type-campaign-size-mobile: clamp(26px, 6.5vw, 34px);
   --type-campaign-weight: 400;
-  --type-campaign-leading: 1.04;
-  --type-campaign-tracking: -0.042em;
+  --type-campaign-leading: 1.08;
+  --type-campaign-tracking: 0.04em;
   --type-campaign-margin: 0 0 var(--stack-campaign-after-title);
-  --type-campaign-measure: 16ch; /* narrow punch lines */
-  --type-campaign-measure-wide: 22ch;
+  --type-campaign-measure: 14ch; /* narrow punch lines (ALL CAPS) */
+  --type-campaign-measure-wide: 28ch;
   /* Hold Mark — short rust rule under campaign titles */
   --type-campaign-rule-width: 2.75rem;
   --type-campaign-rule-height: 2px;
   --type-campaign-rule-color: var(--accent-primary);
-  --type-campaign-rule-gap: 1.25rem; /* space from title baseline to rule */
+  --type-campaign-rule-gap: 1.5rem; /* space from title baseline to rule */
 
-  /* --- Tier 3 — Section heading (`--type-section`) — supporting titles ---
-     Clearly quieter than campaign so mid-page moments read as moments. */
-  --type-section-size: clamp(24px, 2.6vw, 32px);
-  --type-section-size-mobile: clamp(22px, 5.5vw, 28px);
+  /* --- Tier 3 — Section heading (`--type-section`) — editorial / supporting ---
+     Sentence case. Clearly quieter than campaign (size + weight + tracking). */
+  --type-section-size: clamp(22px, 2.4vw, 28px);
+  --type-section-size-mobile: clamp(20px, 5vw, 24px);
   --type-section-weight: 400;
-  --type-section-leading: 1.18;
-  --type-section-tracking: -0.02em;
+  --type-section-leading: 1.28;
+  --type-section-tracking: -0.01em;
   --type-section-margin: 0 0 var(--stack-section-after-title);
 
   /* H3 — card / nested */
@@ -205,36 +206,36 @@
   --space-15: 88px;
   --space-16: 96px;
 
-  /* Stack rhythm — default */
-  --stack-trust-to-title: 32px;
-  --stack-title-to-body: 24px;
+  /* Stack rhythm — default (quiet editorial) */
+  --stack-trust-to-title: 36px;
+  --stack-title-to-body: 28px;
   --stack-body-to-cta: 36px;
   --stack-cta-to-meta: 32px;
-  --stack-eyebrow-to-title: 16px;
-  --stack-section-after-title: 16px;
+  --stack-eyebrow-to-title: 14px;
+  --stack-section-after-title: 14px;
 
-  /* Campaign rhythm — more breath around moments */
-  --stack-campaign-after-title: 28px;
-  --stack-campaign-eyebrow: 20px;
-  --stack-campaign-to-body: 28px;
-  --stack-campaign-to-cta: 40px;
+  /* Campaign rhythm — more breath around major moments */
+  --stack-campaign-after-title: 32px;
+  --stack-campaign-eyebrow: 24px;
+  --stack-campaign-to-body: 32px;
+  --stack-campaign-to-cta: 48px;
 
-  /* Section padding — default vs campaign breath */
-  --section-padding-y: 72px;
+  /* Section padding — editorial quieter; campaign breathes more */
+  --section-padding-y: 64px;
   --section-padding-x: 40px;
-  --section-padding-y-mobile: 56px;
+  --section-padding-y-mobile: 48px;
   --section-padding-x-mobile: 20px;
-  --section-padding-y-campaign: 96px;
-  --section-padding-y-campaign-mobile: 72px;
+  --section-padding-y-campaign: 112px;
+  --section-padding-y-campaign-mobile: 80px;
 
   /* Hero copy column */
   --hero-copy-max: 560px;
-  --hero-copy-pad-y: 80px;
+  --hero-copy-pad-y: 88px;
   --hero-copy-pad-x: 64px;
-  --hero-copy-pad-y-mobile: 48px;
+  --hero-copy-pad-y-mobile: 52px;
   --hero-copy-pad-x-mobile: 24px;
   --hero-body-measure: 30ch;
-  --hero-min-height: 78vh;
+  --hero-min-height: 80vh;
 
   /* --- Layout --- */
   --max-width: 1200px;
