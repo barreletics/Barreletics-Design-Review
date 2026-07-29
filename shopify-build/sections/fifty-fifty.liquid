@@ -1,12 +1,18 @@
 {% comment %}
   Reusable 50/50 Split Section (Video/Image + Copy)
-  Source: Approved Home + PDP prototypes
-  Used 3× on Home, 2× on PDP, 1× on Collection
+  Type tiers: heading_tier = campaign (Hold Display) | section
 {% endcomment %}
+
+{% assign heading_tier = section.settings.heading_tier | default: 'campaign' %}
+{% if heading_tier == 'section' %}
+  {% assign title_classes = 'split-text__title type-section' %}
+{% else %}
+  {% assign title_classes = 'split-text__title type-campaign type-campaign--mark type-campaign--wide' %}
+{% endif %}
 
 <section
   {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | handleize }}"{% endif %}
-  class="split-section{% if section.settings.reverse %} split-section--reverse{% endif %}"
+  class="split-section{% if section.settings.reverse %} split-section--reverse{% endif %}{% if heading_tier == 'campaign' %} split-section--campaign{% endif %}"
   style="background: {{ section.settings.bg_color | default: '#fff' }};"
   aria-label="{{ section.settings.title | strip_html | truncate: 60 }}"
 >
@@ -35,12 +41,12 @@
     {% endif %}
   </div>
 
-  <div class="split-text" style="background: {{ section.settings.bg_color | default: '#fff' }};">
+  <div class="split-text align-editorial" style="background: {{ section.settings.bg_color | default: '#fff' }};">
     {% if section.settings.eyebrow != blank %}
-      <p class="split-text__eyebrow">{{ section.settings.eyebrow }}</p>
+      <p class="split-text__eyebrow type-label eyebrow--accent">{{ section.settings.eyebrow }}</p>
     {% endif %}
-    <h2 class="split-text__title">{{ section.settings.title }}</h2>
-    <p class="split-text__body">{{ section.settings.body }}</p>
+    <h2 class="{{ title_classes }}">{{ section.settings.title }}</h2>
+    <p class="split-text__body type-body">{{ section.settings.body }}</p>
     {% if section.settings.cta_text != blank %}
       <a href="{{ section.settings.cta_url }}" class="btn btn--primary split-cta">{{ section.settings.cta_text }}</a>
     {% endif %}
@@ -52,6 +58,10 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     min-height: 580px;
+  }
+
+  .split-section--campaign {
+    min-height: 640px;
   }
 
   .split-section--reverse .split-media {
@@ -128,7 +138,13 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: flex-start;
     padding: var(--space-14) var(--space-12);
+    text-align: var(--align-editorial);
+  }
+
+  .split-section--campaign .split-text {
+    padding: var(--space-16) var(--space-12);
   }
 
   .split-text__eyebrow {
@@ -137,16 +153,20 @@
     letter-spacing: var(--type-label-tracking);
     color: var(--accent-primary);
     font-weight: var(--type-label-weight);
-    margin: 0 0 var(--stack-eyebrow-to-title);
+    margin: 0 0 var(--stack-campaign-eyebrow);
   }
 
-  .split-text__title {
-    font-size: var(--type-section-size);
-    font-weight: var(--type-section-weight);
-    line-height: var(--type-section-leading);
-    color: var(--text-primary);
-    margin: var(--type-section-margin);
-    letter-spacing: var(--type-section-tracking);
+  .split-section:not(.split-section--campaign) .split-text__eyebrow {
+    margin-bottom: var(--stack-eyebrow-to-title);
+  }
+
+  /* Tier wiring — utilities supply scale; section keeps layout margins */
+  .split-text__title.type-campaign {
+    margin: 0 0 var(--stack-campaign-after-title);
+  }
+
+  .split-text__title.type-section {
+    margin: 0 0 var(--stack-section-after-title);
   }
 
   .split-text__body {
@@ -158,12 +178,17 @@
     max-width: 36ch;
   }
 
+  .split-section--campaign .split-text__body {
+    margin-bottom: var(--stack-campaign-to-cta);
+  }
+
   .split-cta {
     width: fit-content;
   }
 
   @media (max-width: 768px) {
-    .split-section {
+    .split-section,
+    .split-section--campaign {
       grid-template-columns: 1fr;
       min-height: auto;
     }
@@ -180,12 +205,14 @@
       min-height: 320px;
     }
 
-    .split-text {
+    .split-text,
+    .split-section--campaign .split-text {
       padding: var(--section-padding-y-mobile) var(--section-padding-x-mobile);
     }
 
-    .split-text__title {
-      font-size: 28px;
+    .split-section--campaign .split-text {
+      padding-top: var(--section-padding-y-campaign-mobile);
+      padding-bottom: var(--section-padding-y-campaign-mobile);
     }
   }
 </style>
@@ -197,6 +224,17 @@
     { "type": "text", "id": "anchor_id", "label": "Anchor ID (optional)", "info": "e.g. problem for #problem links" },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
     { "type": "text", "id": "title", "label": "Title", "default": "Upgrade Your Grip. Upgrade Your Workout." },
+    {
+      "type": "select",
+      "id": "heading_tier",
+      "label": "Heading tier",
+      "info": "Campaign = Hold Display moment. Section = quieter supporting title.",
+      "options": [
+        { "value": "campaign", "label": "Campaign (Tier 2 — Hold Display)" },
+        { "value": "section", "label": "Section (Tier 3)" }
+      ],
+      "default": "campaign"
+    },
     { "type": "textarea", "id": "body", "label": "Body", "default": "Full-contact molded grip — not printed, not glued. The patented surface holds through every hold, every transition." },
     { "type": "text", "id": "cta_text", "label": "CTA text", "default": "Shop now" },
     { "type": "url", "id": "cta_url", "label": "CTA link" },

@@ -6,11 +6,11 @@
 <section class="home-ugc" aria-label="From Instagram">
   <div class="home-ugc__inner">
     {% if section.settings.eyebrow != blank %}
-      <p class="home-ugc__eyebrow">{{ section.settings.eyebrow }}</p>
+      <p class="home-ugc__eyebrow type-label">{{ section.settings.eyebrow }}</p>
     {% endif %}
-    <h2 class="home-ugc__title">{{ section.settings.title }}</h2>
+    <h2 class="home-ugc__title type-section">{{ section.settings.title }}</h2>
     {% if section.settings.body != blank %}
-      <p class="home-ugc__body">{{ section.settings.body }}</p>
+      <p class="home-ugc__body type-body">{{ section.settings.body }}</p>
     {% endif %}
 
     <div class="home-ugc__grid">
@@ -54,29 +54,18 @@
   .home-ugc__inner {
     max-width: 1100px;
     margin: 0 auto;
-    text-align: center;
+    text-align: var(--align-band);
   }
   .home-ugc__eyebrow {
-    margin: 0 0 8px;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #8a8a8a;
+    margin: 0 0 var(--stack-eyebrow-to-title);
+    color: var(--text-muted);
   }
   .home-ugc__title {
-    margin: 0 0 12px;
-    font-size: 32px;
-    font-weight: 700;
-    color: #1c1916;
-    letter-spacing: -0.02em;
+    margin: 0 0 var(--stack-section-after-title);
   }
   .home-ugc__body {
     margin: 0 auto 32px;
     max-width: 48ch;
-    font-size: 15px;
-    line-height: 1.6;
-    color: #4a4a4a;
   }
   .home-ugc__grid {
     display: grid;
@@ -113,9 +102,6 @@
   @media (max-width: 768px) {
     .home-ugc {
       padding: 48px 16px;
-    }
-    .home-ugc__title {
-      font-size: 28px;
     }
     .home-ugc__grid {
       grid-template-columns: repeat(2, 1fr);

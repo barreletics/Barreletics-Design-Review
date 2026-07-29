@@ -2,14 +2,14 @@
   Guarantee / trust band — Home (July 17 parity)
 {% endcomment %}
 
-<section class="guarantee-band" aria-label="Guarantee">
+<section class="guarantee-band section--campaign align-band" aria-label="Guarantee">
   <div class="guarantee-band__inner">
     {% if section.settings.eyebrow != blank %}
-      <p class="guarantee-band__eyebrow">{{ section.settings.eyebrow }}</p>
+      <p class="guarantee-band__eyebrow type-label">{{ section.settings.eyebrow }}</p>
     {% endif %}
-    <h2 class="guarantee-band__title">{{ section.settings.title }}</h2>
+    <h2 class="guarantee-band__title type-campaign type-campaign--mark">{{ section.settings.title }}</h2>
     {% if section.settings.body != blank %}
-      <p class="guarantee-band__body">{{ section.settings.body }}</p>
+      <p class="guarantee-band__body type-body">{{ section.settings.body }}</p>
     {% endif %}
     <ul class="guarantee-band__list" role="list">
       {% for block in section.blocks %}
@@ -27,33 +27,30 @@
 
 <style>
   .guarantee-band {
-    padding: var(--space-13, 64px) var(--section-padding-x, 40px);
-    background: #1c1916;
+    padding: var(--section-padding-y-campaign) var(--section-padding-x);
+    background: var(--bg-dark);
     color: #fff;
-    text-align: center;
+    text-align: var(--align-band);
   }
   .guarantee-band__inner {
     max-width: 720px;
     margin: 0 auto;
   }
   .guarantee-band__eyebrow {
-    margin: 0 0 8px;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #e8927c;
+    margin: 0 0 var(--stack-campaign-eyebrow);
+    color: rgba(255, 255, 255, 0.55);
   }
   .guarantee-band__title {
-    margin: 0 0 16px;
-    font-size: 32px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
+    margin: 0 auto var(--stack-campaign-after-title);
+    color: #fff;
+    max-width: var(--type-campaign-measure);
+  }
+  .guarantee-band__title.type-campaign--mark::after {
+    margin-left: auto;
+    margin-right: auto;
   }
   .guarantee-band__body {
-    margin: 0 auto 28px;
-    font-size: 15px;
-    line-height: 1.65;
+    margin: 0 auto var(--stack-campaign-to-cta);
     color: rgba(255, 255, 255, 0.82);
     max-width: 48ch;
   }
@@ -86,10 +83,7 @@
   }
   @media (max-width: 768px) {
     .guarantee-band {
-      padding: 48px 16px;
-    }
-    .guarantee-band__title {
-      font-size: 28px;
+      padding: var(--section-padding-y-campaign-mobile) var(--section-padding-x-mobile);
     }
   }
 </style>

@@ -8,7 +8,10 @@
   <div class="reviews-inner">
     <header class="reviews-header">
       <div class="reviews-header__left">
-        <p class="reviews-header__eyebrow">{{ section.settings.eyebrow }}</p>
+        <p class="reviews-header__eyebrow type-label">{{ section.settings.eyebrow }}</p>
+        {% if section.settings.title != blank %}
+          <h2 class="reviews-header__title type-section">{{ section.settings.title }}</h2>
+        {% endif %}
         <div class="reviews-header__rating">
           <span class="reviews-header__stars" aria-hidden="true">★★★★★</span>
           <span class="reviews-header__score">
@@ -52,12 +55,12 @@
   }
 
   .reviews-header__eyebrow {
-    font-size: var(--type-label-size);
-    text-transform: uppercase;
-    letter-spacing: var(--type-label-tracking);
-    color: var(--text-muted);
-    font-weight: var(--type-label-weight);
     margin: 0 0 var(--stack-eyebrow-to-title);
+    color: var(--text-muted);
+  }
+
+  .reviews-header__title {
+    margin: 0 0 var(--stack-section-after-title);
   }
 
   .reviews-header__rating {
@@ -118,6 +121,7 @@
   "name": "Social Proof",
   "settings": [
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Real Results" },
+    { "type": "text", "id": "title", "label": "Section title (Tier 3)", "default": "Real people. Real results." },
     { "type": "text", "id": "rating", "label": "Rating", "default": "4.9" },
     { "type": "text", "id": "review_count", "label": "Review count", "default": "294" },
     { "type": "url", "id": "all_reviews_url", "label": "All reviews link" }

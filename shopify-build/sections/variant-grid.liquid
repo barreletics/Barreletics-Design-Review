@@ -6,13 +6,13 @@
 
 <section class="variants-section" id="variants" aria-label="Shop all styles">
   <div class="variants-inner">
-    <header class="variants-head">
+    <header class="variants-head align-band">
       {% if section.settings.eyebrow != blank %}
-        <p class="variants-head__eyebrow">{{ section.settings.eyebrow }}</p>
+        <p class="variants-head__eyebrow type-label eyebrow--accent">{{ section.settings.eyebrow }}</p>
       {% endif %}
-      <h2 class="variants-head__title">{{ section.settings.title }}</h2>
+      <h2 class="variants-head__title type-section">{{ section.settings.title }}</h2>
       {% if section.settings.body != blank %}
-        <p class="variants-head__body">{{ section.settings.body }}</p>
+        <p class="variants-head__body type-body">{{ section.settings.body }}</p>
       {% endif %}
     </header>
 
@@ -64,34 +64,21 @@
   }
 
   .variants-head {
-    text-align: center;
+    text-align: var(--align-band);
     margin-bottom: var(--space-9);
   }
 
   .variants-head__eyebrow {
-    font-size: var(--type-label-size);
-    text-transform: uppercase;
-    letter-spacing: var(--type-label-tracking);
-    color: var(--accent-primary);
-    font-weight: var(--type-label-weight);
     margin: 0 0 var(--stack-eyebrow-to-title);
+    color: var(--accent-primary);
   }
 
   .variants-head__title {
-    font-size: var(--type-section-size);
-    font-weight: var(--type-section-weight);
-    line-height: var(--type-section-leading);
-    color: var(--text-primary);
-    margin: var(--type-section-margin);
-    letter-spacing: var(--type-section-tracking);
+    margin: 0 0 var(--stack-section-after-title);
   }
 
   .variants-head__body {
-    font-size: var(--type-body-size);
-    font-weight: var(--type-body-weight);
-    color: var(--text-body);
     max-width: 48ch;
-    line-height: var(--type-body-leading);
     margin: 0 auto;
   }
 
@@ -203,10 +190,6 @@
   @media (max-width: 768px) {
     .variants-section {
       padding: var(--section-padding-y-mobile) var(--section-padding-x-mobile);
-    }
-
-    .variants-head__title {
-      font-size: var(--text-3xl);
     }
 
     .variants-toolbar {

@@ -6,10 +6,10 @@
 <section class="newsletter-section" aria-label="Newsletter signup">
   <div class="newsletter-inner">
     {% if section.settings.eyebrow != blank %}
-      <p class="newsletter-eyebrow">{{ section.settings.eyebrow }}</p>
+      <p class="newsletter-eyebrow type-label">{{ section.settings.eyebrow }}</p>
     {% endif %}
-    <h2 class="newsletter-title">{{ section.settings.title }}</h2>
-    <p class="newsletter-body">{{ section.settings.body }}</p>
+    <h2 class="newsletter-title type-section">{{ section.settings.title }}</h2>
+    <p class="newsletter-body type-body">{{ section.settings.body }}</p>
 
     <form class="newsletter-form" action="/contact#contact_form" method="post" accept-charset="UTF-8">
       <input type="hidden" name="form_type" value="customer">
@@ -42,29 +42,19 @@
   .newsletter-inner {
     max-width: var(--max-width-copy);
     margin: 0 auto;
-    text-align: center;
+    text-align: var(--align-band);
   }
 
   .newsletter-eyebrow {
-    font-size: var(--text-sm);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-widest);
+    margin: 0 0 var(--stack-eyebrow-to-title);
     color: var(--text-muted);
-    font-weight: var(--weight-bold);
-    margin: 0 0 var(--space-3);
   }
 
   .newsletter-title {
-    font-size: var(--text-4xl);
-    font-weight: var(--weight-medium);
-    color: var(--text-primary);
-    margin: 0 0 var(--space-2);
+    margin: 0 0 var(--stack-section-after-title);
   }
 
   .newsletter-body {
-    font-size: var(--text-base);
-    color: var(--text-body);
-    line-height: var(--leading-relaxed);
     margin: 0;
   }
 

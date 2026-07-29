@@ -28,18 +28,70 @@ h1, h2, h3, h4, h5, h6 {
   line-height: var(--type-section-leading);
 }
 
-/* --- Typography roles (BZ-020) --- */
+/* --- Alignment roles --- */
+.align-hero { text-align: var(--align-hero); }
+.align-campaign { text-align: var(--align-campaign); }
+.align-editorial { text-align: var(--align-editorial); }
+.align-band { text-align: var(--align-band); }
+
+/* --- Typography roles — 4-tier OS --- */
+
+/* Tier 1 — Hero */
+.type-hero,
 .type-opening,
 .h1--opening {
-  font-size: var(--type-opening-size);
-  font-weight: var(--type-opening-weight);
-  line-height: var(--type-opening-leading);
-  letter-spacing: var(--type-opening-tracking);
+  font-size: var(--type-hero-size);
+  font-weight: var(--type-hero-weight);
+  line-height: var(--type-hero-leading);
+  letter-spacing: var(--type-hero-tracking);
+  margin: var(--type-hero-margin);
 }
 @media (max-width: 768px) {
+  .type-hero,
   .type-opening,
-  .h1--opening { font-size: var(--type-opening-size-mobile); }
+  .h1--opening { font-size: var(--type-hero-size-mobile); }
 }
+
+/* Tier 2 — Campaign (Hold Display signature) */
+.type-campaign {
+  font-size: var(--type-campaign-size);
+  font-weight: var(--type-campaign-weight);
+  line-height: var(--type-campaign-leading);
+  letter-spacing: var(--type-campaign-tracking);
+  margin: var(--type-campaign-margin);
+  color: var(--text-primary);
+}
+.type-campaign--narrow {
+  max-width: var(--type-campaign-measure);
+}
+.type-campaign--wide {
+  max-width: var(--type-campaign-measure-wide);
+}
+/* Hold Mark — short rust rule (signature) */
+.type-campaign--mark::after {
+  content: "";
+  display: block;
+  width: var(--type-campaign-rule-width);
+  height: var(--type-campaign-rule-height);
+  background: var(--type-campaign-rule-color);
+  margin-top: var(--type-campaign-rule-gap);
+}
+.align-band .type-campaign--mark::after,
+.type-campaign--mark.align-band::after {
+  margin-left: auto;
+  margin-right: auto;
+}
+/* On dark / inverted surfaces, Hold Mark goes light */
+.section--dark .type-campaign--mark::after,
+.statement-band .type-campaign--mark::after,
+.guarantee-band .type-campaign--mark::after {
+  background: rgba(255, 255, 255, 0.85);
+}
+@media (max-width: 768px) {
+  .type-campaign { font-size: var(--type-campaign-size-mobile); }
+}
+
+/* Tier 3 — Section */
 .type-section,
 .h2--section {
   font-size: var(--type-section-size);
@@ -47,11 +99,24 @@ h1, h2, h3, h4, h5, h6 {
   line-height: var(--type-section-leading);
   letter-spacing: var(--type-section-tracking);
   margin: var(--type-section-margin);
+  color: var(--text-primary);
 }
+@media (max-width: 768px) {
+  .type-section,
+  .h2--section { font-size: var(--type-section-size-mobile); }
+}
+
+/* Tier 4 — Body / lede / labels */
 .type-lede {
   font-size: var(--type-lede-size);
   font-weight: var(--type-lede-weight);
   line-height: var(--type-lede-leading);
+  color: var(--text-body);
+}
+.type-body {
+  font-size: var(--type-body-size);
+  font-weight: var(--type-body-weight);
+  line-height: var(--type-body-leading);
   color: var(--text-body);
 }
 .type-label,
@@ -65,11 +130,23 @@ h1, h2, h3, h4, h5, h6 {
 .eyebrow--accent { color: var(--accent-primary); }
 .eyebrow--manifesto { letter-spacing: var(--tracking-manifesto); }
 
+/* Section breath utility for campaign moments */
+.section--campaign {
+  padding-top: var(--section-padding-y-campaign);
+  padding-bottom: var(--section-padding-y-campaign);
+}
+@media (max-width: 768px) {
+  .section--campaign {
+    padding-top: var(--section-padding-y-campaign-mobile);
+    padding-bottom: var(--section-padding-y-campaign-mobile);
+  }
+}
+
 .h1, h1 {
-  font-size: var(--type-opening-size);
-  font-weight: var(--type-opening-weight);
-  line-height: var(--type-opening-leading);
-  letter-spacing: var(--type-opening-tracking);
+  font-size: var(--type-hero-size);
+  font-weight: var(--type-hero-weight);
+  line-height: var(--type-hero-leading);
+  letter-spacing: var(--type-hero-tracking);
 }
 .h2, h2 {
   font-size: var(--type-section-size);
@@ -237,9 +314,9 @@ h1, h2, h3, h4, h5, h6 {
     --section-padding-y: 48px;
     --section-padding-x: 16px;
   }
-  .h1, h1 { font-size: var(--text-3xl); }
-  .h2, h2 { font-size: var(--text-3xl); }
-  .h3, h3 { font-size: var(--text-2xl); }
+  .h1, h1 { font-size: var(--type-hero-size-mobile); }
+  .h2, h2 { font-size: var(--type-section-size-mobile); }
+  .h3, h3 { font-size: var(--type-h3-size); }
   .grid--2, .grid--3, .grid--4 { grid-template-columns: 1fr; }
 }
 
