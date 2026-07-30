@@ -67,17 +67,28 @@ No third text tier (merge points into paragraph or drop one).
 
 ---
 
-## Homepage register map
+## Homepage H2 Display vs Standard audit (2026-07-29)
 
-| Section | Register | Example |
-|---------|----------|---------|
-| `split-hero` | Hero | *The Pilates Sock Era is Over* |
-| `fifty-fifty` problem / grip / sock-math | **H2 Display** | *Yoga socks are useless.* |
-| `fifty-fifty` Coperni | **H2 Standard** | *Barreletics × Coperni* |
-| `variant-grid` | **H2 Standard** | *Shop all styles & colors* |
-| `social-proof` | **H2 Standard** | *Real people. Real results.* |
-| `statement-band` / `guarantee-band` | Statement | dark-band tier 1 |
-| `home-ugc` / `newsletter` | **H2 Standard** | *@barreletics* · *10% off…* |
+**Rule:** Display = brand/emotion/moment · Standard = shop/navigate/utility. Ambiguous → Standard for shop/utility, Display for brand emotion.
+
+| Section | Title | Register | Why |
+|---------|-------|----------|-----|
+| `split-hero` | The Pilates Sock Era is Over | **Hero** | Page-opening H1 only |
+| `fifty-fifty` problem | Yoga socks are useless. | **Display** | Problem / brand punch |
+| `disciplines` | Grip that holds where it matters most | **Label** | Intentional band label (not H2) |
+| `value-strip` | — | — | No section title |
+| `variant-grid` | Shop all styles & colors | **Standard** | Shop wayfinding |
+| `fifty-fifty` grip | Upgrade your grip. Upgrade your workout. | **Display** | Brand grip moment |
+| `fifty-fifty` Coperni | Barreletics × Coperni | **Standard** | Named campaign module / navigate |
+| `statement-band` | Studio workouts and footwear will never be the same. | **Statement** | Dark-band tier 1 (not H2) |
+| `social-proof` | Real people. Real results. | **Standard** | Reviews framing / wayfinding |
+| `fifty-fifty` sock-math | One pair. Done. | **Display** | Obsession / brand close |
+| `home-ugc` | @barreletics | **Standard** | Functional UGC section label |
+| `guarantee-band` | Zero risk. All grip. | **Statement** | Dark-band tier 1 (not H2) |
+| `geo-section` | Trusted across the country | **Supporting** | Accordion label (eyebrow/H3, not H2) |
+| `newsletter` | 10% off your first pair. | **Standard** | Utility signup framing |
+
+Wiring: `fifty-fifty` uses TE `heading_register` (`display` \| `standard`) → `.h2-display` / `.h2-standard`. Fixed sections hardcode the class. `.em` only on hero / Display / statement — never Standard.
 
 ---
 
