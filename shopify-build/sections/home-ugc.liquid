@@ -55,13 +55,16 @@
 </section>
 
 <style>
+  /* Home WORKING .ig-section */
   .home-ugc {
-    padding: var(--space-13, 64px) var(--section-padding-x, 40px);
+    padding: 96px 0 72px;
     background: #fff;
+    overflow: hidden;
   }
   .home-ugc__inner {
-    max-width: 1100px;
+    max-width: 1200px;
     margin: 0 auto;
+    padding: 0 40px;
     text-align: left;
   }
   .home-ugc__eyebrow {
@@ -69,50 +72,81 @@
     color: var(--type-label-color);
   }
   .home-ugc__title {
-    margin: 0 0 var(--gap-b);
+    font-size: clamp(28px, 3.5vw, 40px) !important;
+    font-weight: 400 !important;
+    letter-spacing: -0.028em !important;
+    line-height: 1.15 !important;
+    margin: 0 0 12px;
+    color: #1c1916;
   }
   .home-ugc__body {
-    margin: 0 0 32px;
-    max-width: 48ch;
+    font-size: 15px;
+    color: #6b645a;
+    margin: 0;
+    font-weight: 400;
+    max-width: none;
   }
   .home-ugc__grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    margin-bottom: 28px;
+    gap: 4px;
+    margin: 32px 0 28px;
+    border-radius: 8px;
+    overflow: hidden;
   }
   .home-ugc__cell {
     display: block;
     aspect-ratio: 1;
     overflow: hidden;
-    border-radius: 8px;
-    background: #f5f2ec;
+    border-radius: 0;
+    background: #f0ede8;
+    position: relative;
   }
   .home-ugc__cell img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
+    transition: transform 0.4s ease;
   }
+  .home-ugc__cell:hover img { transform: scale(1.04); }
+  .home-ugc__cell::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(28,25,22,0);
+    transition: background 0.3s;
+  }
+  .home-ugc__cell:hover::after { background: rgba(28,25,22,0.18); }
   .home-ugc__placeholder {
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #f5f2ec 0%, #e8e2d6 100%);
+    background: #f0ede8;
   }
   .home-ugc__cta {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
     font-size: 13px;
     font-weight: 600;
     color: #1c1916;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
     text-decoration: none;
     border-bottom: 1px solid #1c1916;
     padding-bottom: 2px;
   }
+  @media (max-width: 900px) {
+    .home-ugc__grid { grid-template-columns: repeat(3, 1fr); }
+  }
   @media (max-width: 768px) {
-    .home-ugc {
-      padding: 48px 16px;
-    }
+    .home-ugc { padding: 48px 16px; }
+    .home-ugc__inner { padding: 0; }
     .home-ugc__grid {
       grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+      margin: 24px 0 22px;
+      border-radius: 4px;
     }
   }
 </style>
