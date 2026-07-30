@@ -9,6 +9,7 @@
 {%- liquid
   assign media_type = section.settings.media_type | default: 'image'
   assign image = section.settings.image
+  assign image_url = section.settings.image_url
   assign video = section.settings.video
   assign video_url = section.settings.video_url
   assign image_alt = section.settings.image_alt
@@ -26,6 +27,9 @@
   endif
   if image_alt == blank and image != blank
     assign image_alt = image.alt | default: title
+  endif
+  if image_url == blank
+    assign image_url = 'https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=2400'
   endif
   assign reverse_layout = section.settings.reverse_layout
 -%}
@@ -83,33 +87,38 @@
       {%- if image != blank -%}
         {{
           image
-          | image_url: width: 1600
+          | image_url: width: 2400
           | image_tag:
-            widths: '600, 900, 1200, 1600',
-            sizes: '(max-width: 768px) 100vw, 50vw',
+            widths: '800, 1200, 1600, 2000, 2400',
+            sizes: '(max-width: 768px) 100vw, 62vw',
             alt: image_alt,
             loading: 'eager',
             fetchpriority: 'high',
             decoding: 'async',
             class: 'split-hero__img'
         }}
-      {%- else -%}
-        {%- comment -%} WORKING mock fallback until Theme Editor image is set {%- endcomment -%}
+      {%- elsif image_url != blank -%}
+        {%- comment -%} Live pink-shorts hero (stefrunning) via URL — large media-dominant treatment {%- endcomment -%}
         <img
           class="split-hero__img"
-          src="https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=1600"
-          srcset="https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=600 600w,
-                  https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=900 900w,
+          src="{{ image_url | escape }}"
+          srcset="https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=800 800w,
                   https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=1200 1200w,
-                  https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=1600 1600w"
-          sizes="(max-width: 768px) 100vw, 50vw"
+                  https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=1600 1600w,
+                  https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=2000 2000w,
+                  https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=2400 2400w"
+          sizes="(max-width: 768px) 100vw, 62vw"
           alt="{{ image_alt | default: 'Barreletics Performance Skins — grip that holds in every studio workout' | escape }}"
-          width="1600"
-          height="1600"
+          width="2400"
+          height="2750"
           loading="eager"
           fetchpriority="high"
           decoding="async"
         >
+      {%- else -%}
+        <div class="split-hero__placeholder" role="img" aria-label="Add hero image in Theme Editor">
+          Add pink-shorts hero image in Theme Editor
+        </div>
       {%- endif -%}
     {%- endif -%}
   </div>
@@ -186,6 +195,13 @@
       "id": "image",
       "label": "Image / video poster",
       "info": "Used for image mode, or as poster when using an external video URL."
+    },
+    {
+      "type": "text",
+      "id": "image_url",
+      "label": "Image URL fallback",
+      "default": "https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=2400",
+      "info": "Live pink-shorts hero. Used when no image picker asset is set."
     },
     {
       "type": "text",
