@@ -14,15 +14,20 @@
         {% if section.settings.title != blank %}
           <h2 class="reviews-header__title h2-standard">{{ section.settings.title }}</h2>
         {% endif %}
-        <div class="reviews-header__rating">
-          <span class="reviews-header__stars" aria-hidden="true">★★★★★</span>
-          <span class="reviews-header__score">
-            <strong>{{ section.settings.rating }}</strong> out of 5 · {{ section.settings.review_count }} reviews
-          </span>
-        </div>
+        {% if section.settings.body != blank %}
+          <p class="reviews-header__body type-body">{{ section.settings.body }}</p>
+        {% endif %}
+        {% if section.settings.show_aggregate and section.settings.rating != blank %}
+          <div class="reviews-header__rating">
+            <span class="reviews-header__stars" aria-hidden="true">★★★★★</span>
+            <span class="reviews-header__score">
+              <strong>{{ section.settings.rating }}</strong> out of 5 · {{ section.settings.review_count }} reviews
+            </span>
+          </div>
+        {% endif %}
       </div>
       {% if section.settings.all_reviews_url != blank %}
-        <a href="{{ section.settings.all_reviews_url }}" class="reviews-header__link">Read all reviews →</a>
+        <a href="{{ section.settings.all_reviews_url }}" class="reviews-header__link">{{ section.settings.all_reviews_label | default: 'More stories →' }}</a>
       {% endif %}
     </header>
 
@@ -68,6 +73,12 @@
   .reviews-header__title {
     margin: 0 0 var(--gap-b);
     text-align: left;
+  }
+
+  .reviews-header__body {
+    margin: 0 0 var(--gap-b, 20px);
+    max-width: 40ch;
+    color: #4a4a4a;
   }
 
   .reviews-header__rating {
@@ -129,9 +140,12 @@
   "settings": [
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "info": "Leave blank when it restates the H2 (e.g. Real results)." },
     { "type": "text", "id": "title", "label": "Section title", "default": "Real people. Real results." },
+    { "type": "text", "id": "body", "label": "Support", "default": "See the difference. Feel the grip." },
+    { "type": "checkbox", "id": "show_aggregate", "label": "Show aggregate rating", "default": false, "info": "Home WORKING hides aggregate counts." },
     { "type": "text", "id": "rating", "label": "Rating", "default": "4.9" },
     { "type": "text", "id": "review_count", "label": "Review count", "default": "294" },
-    { "type": "url", "id": "all_reviews_url", "label": "All reviews link" }
+    { "type": "url", "id": "all_reviews_url", "label": "All reviews link" },
+    { "type": "text", "id": "all_reviews_label", "label": "All reviews label", "default": "More stories →" }
   ],
   "blocks": [
     {

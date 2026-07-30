@@ -1,0 +1,235 @@
+{% comment %}
+  Visual mosaic — Home WORKING 2b. Multi-tile lifestyle grid under hero.
+{% endcomment %}
+
+<section class="visual-mosaic" aria-label="{{ section.settings.aria_label | default: 'Studio proof' | escape }}">
+  <div class="visual-mosaic__grid">
+    {% for block in section.blocks %}
+      {% liquid
+        assign tile_class = 'vm-tile'
+        if block.settings.size == 'hero'
+          assign tile_class = tile_class | append: ' vm-tile--hero'
+        else
+          assign tile_class = tile_class | append: ' vm-tile--sm'
+        endif
+        assign tile_href = block.settings.link | default: section.settings.default_link | default: '#variants'
+      %}
+      <a class="{{ tile_class }}" href="{{ tile_href }}" {{ block.shopify_attributes }}>
+        {% if block.settings.video_url != blank %}
+          <video autoplay muted loop playsinline webkit-playsinline preload="metadata"{% if block.settings.poster_url != blank %} poster="{{ block.settings.poster_url | escape }}"{% endif %}>
+            <source src="{{ block.settings.video_url | escape }}" type="video/mp4">
+          </video>
+        {% elsif block.settings.image != blank %}
+          <img
+            src="{{ block.settings.image | image_url: width: 1200 }}"
+            alt="{{ block.settings.alt | escape }}"
+            loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+            width="800"
+            height="800"
+          >
+        {% elsif block.settings.image_url != blank %}
+          <img
+            src="{{ block.settings.image_url | escape }}"
+            alt="{{ block.settings.alt | escape }}"
+            loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+            width="800"
+            height="800"
+          >
+        {% else %}
+          <span class="vm-tile__placeholder" aria-hidden="true"></span>
+        {% endif %}
+        <span class="vm-tile__shade"></span>
+        <div class="vm-tile__content">
+          {% if block.settings.title != blank %}
+            <span class="vm-tile__title">{{ block.settings.title }}</span>
+          {% endif %}
+          {% if block.settings.cta_text != blank %}
+            <span class="vm-tile__cta">{{ block.settings.cta_text }}</span>
+          {% endif %}
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+</section>
+
+<style>
+  .visual-mosaic { padding: 16px 16px 8px; background: #fff; }
+  .visual-mosaic__grid {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    grid-template-rows: 268px 268px;
+    gap: 12px;
+  }
+  .vm-tile {
+    position: relative;
+    overflow: hidden;
+    border-radius: 4px;
+    display: block;
+    text-decoration: none;
+    color: #fff;
+    min-height: 200px;
+    background: #e8e2d8;
+  }
+  .vm-tile--hero { grid-row: 1 / span 2; }
+  .vm-tile img,
+  .vm-tile video,
+  .vm-tile__placeholder {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    position: absolute;
+    inset: 0;
+    transition: transform 0.45s ease;
+  }
+  .vm-tile__placeholder {
+    background: linear-gradient(135deg, #c9c5b8, #e9d3cb);
+  }
+  .vm-tile:hover img,
+  .vm-tile:hover video { transform: scale(1.04); }
+  .vm-tile__shade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(28,25,22,0.05) 30%, rgba(28,25,22,0.72) 100%);
+    z-index: 1;
+  }
+  .vm-tile__content {
+    position: absolute;
+    left: 24px;
+    bottom: 24px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: min(340px, calc(100% - 48px));
+  }
+  .vm-tile__title {
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 1.15;
+    margin: 0 0 14px;
+    letter-spacing: -0.028em;
+  }
+  .vm-tile__cta {
+    display: inline-block;
+    padding: 11px 18px;
+    border: 1px solid #fff;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: rgba(28,25,22,0.35);
+  }
+  .vm-tile--sm .vm-tile__content { left: 18px; bottom: 18px; max-width: none; }
+  .vm-tile--sm .vm-tile__title { font-size: 20px; font-weight: 400; margin: 0; }
+  @media (max-width: 900px) {
+    .visual-mosaic__grid {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: none;
+    }
+    .vm-tile--hero {
+      grid-column: 1 / -1;
+      grid-row: auto;
+      min-height: 280px;
+    }
+    .vm-tile--sm { min-height: 180px; }
+  }
+  @media (max-width: 560px) {
+    .visual-mosaic { padding: 12px 12px 4px; }
+    .visual-mosaic__grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .vm-tile__title { font-size: 22px; margin-bottom: 10px; }
+    .vm-tile--sm .vm-tile__title { font-size: 16px; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Visual mosaic",
+  "settings": [
+    { "type": "text", "id": "aria_label", "label": "Aria label", "default": "Studio proof" },
+    { "type": "url", "id": "default_link", "label": "Default tile link" }
+  ],
+  "blocks": [
+    {
+      "type": "tile",
+      "name": "Tile",
+      "settings": [
+        {
+          "type": "select",
+          "id": "size",
+          "label": "Size",
+          "options": [
+            { "value": "hero", "label": "Large (spans 2 rows)" },
+            { "value": "sm", "label": "Small" }
+          ],
+          "default": "sm"
+        },
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "image_url", "label": "Image URL fallback", "info": "Used when no image picker asset is set" },
+        { "type": "text", "id": "video_url", "label": "Video URL (mp4)" },
+        { "type": "text", "id": "poster_url", "label": "Video poster URL" },
+        { "type": "text", "id": "alt", "label": "Alt text", "default": "Barreletics in studio" },
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "text", "id": "cta_text", "label": "CTA text (large tiles)" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Visual mosaic",
+      "blocks": [
+        {
+          "type": "tile",
+          "settings": {
+            "size": "hero",
+            "image_url": "https://barreletics.com/cdn/shop/files/Square_Pink.png?v=1764627088&width=1200",
+            "alt": "Performance Skins in studio",
+            "title": "Secure in every hold",
+            "cta_text": "Shop Now"
+          }
+        },
+        {
+          "type": "tile",
+          "settings": {
+            "size": "sm",
+            "image_url": "https://barreletics.com/cdn/shop/files/IMG_2917.jpg?v=1741040637&width=2000",
+            "alt": "Stability in class",
+            "title": "Stability"
+          }
+        },
+        {
+          "type": "tile",
+          "settings": {
+            "size": "sm",
+            "video_url": "https://barreletics.com/cdn/shop/videos/c/vp/75bddc3407e341c1aab81ca4f2dc8d66/75bddc3407e341c1aab81ca4f2dc8d66.HD-720p-4.5Mbps.mp4",
+            "poster_url": "https://barreletics.com/cdn/shop/files/Multi_Image.jpg?v=1768346625&width=900",
+            "title": "Balance"
+          }
+        },
+        {
+          "type": "tile",
+          "settings": {
+            "size": "sm",
+            "image_url": "https://barreletics.com/cdn/shop/products/barreletixxjumpingtogether.jpg?v=1619360969&width=900",
+            "alt": "Durability",
+            "title": "Durability"
+          }
+        },
+        {
+          "type": "tile",
+          "settings": {
+            "size": "sm",
+            "image_url": "https://barreletics.com/cdn/shop/products/Yellow_Image-Blue_Shoe_1200x1200_59ef7b79-1661-4c2f-a2da-c6b9211e2c42.jpg?v=1678412911&width=900",
+            "alt": "Breathability",
+            "title": "Breathability"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

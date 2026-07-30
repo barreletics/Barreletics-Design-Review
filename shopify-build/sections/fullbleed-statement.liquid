@@ -1,0 +1,121 @@
+{% comment %}
+  Full-bleed statement — Home WORKING §9. Lifestyle image + commit line.
+  Separate from statement-band (cream solo slogan).
+{% endcomment %}
+
+<section class="fullbleed-statement" aria-label="{{ section.settings.title | escape }}">
+  <div class="fullbleed-statement__bg">
+    {% if section.settings.image != blank %}
+      <img
+        src="{{ section.settings.image | image_url: width: 2000 }}"
+        alt="{{ section.settings.image_alt | escape }}"
+        loading="lazy"
+        width="2000"
+        height="1200"
+      >
+    {% elsif section.settings.image_url != blank %}
+      <img
+        src="{{ section.settings.image_url | escape }}"
+        alt="{{ section.settings.image_alt | escape }}"
+        loading="lazy"
+        width="2000"
+        height="1200"
+      >
+    {% endif %}
+  </div>
+  <div class="fullbleed-statement__content">
+    <p class="fullbleed-statement__line type-statement">{{ section.settings.title }}</p>
+    {% if section.settings.cta_text != blank %}
+      <a class="fullbleed-statement__cta" href="{{ section.settings.cta_url | default: '#variants' }}">
+        {{ section.settings.cta_text }}
+      </a>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  .fullbleed-statement {
+    position: relative;
+    width: 100%;
+    min-height: 64vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1c1916;
+  }
+  .fullbleed-statement__bg { position: absolute; inset: 0; }
+  .fullbleed-statement__bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .fullbleed-statement__bg::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(28, 25, 22, 0.55);
+  }
+  .fullbleed-statement__content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 80px 40px;
+    max-width: 720px;
+  }
+  .fullbleed-statement__line {
+    color: #fff;
+    text-shadow: 0 2px 24px rgba(0, 0, 0, 0.3);
+    margin: 0 0 var(--gap-b, 20px);
+  }
+  .fullbleed-statement__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 16px 36px;
+    background: #fff;
+    color: #1c1916;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-radius: 4px;
+    text-decoration: none;
+    border: 1px solid #fff;
+  }
+  .fullbleed-statement__cta:hover {
+    background: transparent;
+    color: #fff;
+  }
+  @media (max-width: 768px) {
+    .fullbleed-statement { min-height: 52vh; }
+    .fullbleed-statement__content { padding: 56px 16px; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Fullbleed statement",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Statement",
+      "default": "You commit to the class. Commit to the gear."
+    },
+    { "type": "image_picker", "id": "image", "label": "Background image" },
+    {
+      "type": "text",
+      "id": "image_url",
+      "label": "Background image URL fallback",
+      "default": "https://barreletics.com/cdn/shop/files/IMG_2917.jpg?v=1741040637&width=2000"
+    },
+    { "type": "text", "id": "image_alt", "label": "Image alt", "default": "" },
+    { "type": "text", "id": "cta_text", "label": "CTA text", "default": "Shop Now" },
+    { "type": "url", "id": "cta_url", "label": "CTA link" }
+  ],
+  "presets": [{ "name": "Fullbleed statement" }]
+}
+{% endschema %}

@@ -31,6 +31,14 @@
               width="280"
               height="280"
             >
+          {% elsif block.settings.image_url != blank %}
+            <img
+              src="{{ block.settings.image_url | escape }}"
+              alt="{{ block.settings.alt | escape }}"
+              loading="lazy"
+              width="280"
+              height="280"
+            >
           {% else %}
             <div class="home-ugc__placeholder" aria-hidden="true"></div>
           {% endif %}
@@ -125,6 +133,7 @@
       "name": "UGC tile",
       "settings": [
         { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "image_url", "label": "Image URL fallback" },
         { "type": "text", "id": "alt", "label": "Alt text", "default": "Barreletics in studio" },
         { "type": "url", "id": "link", "label": "Link (optional)" }
       ]

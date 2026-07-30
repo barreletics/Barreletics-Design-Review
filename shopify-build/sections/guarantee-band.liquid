@@ -1,90 +1,122 @@
 {% comment %}
-  Guarantee / trust band — dark band max 2 tiers (statement + support)
+  Guarantee — white 4-column trust grid (Home WORKING 14).
 {% endcomment %}
 
-<section class="guarantee-band section--campaign align-band" aria-label="Guarantee">
-  <div class="guarantee-band__inner">
+<section class="guarantee-section" aria-label="Guarantee">
+  <div class="guarantee-head">
     {% if section.settings.eyebrow != blank %}
-      <p class="guarantee-band__eyebrow type-label">{{ section.settings.eyebrow }}</p>
+      <p class="guarantee-head__eyebrow type-label">{{ section.settings.eyebrow }}</p>
     {% endif %}
-    <h2 class="guarantee-band__title type-statement">{{ section.settings.title }}</h2>
+    <h2 class="guarantee-head__title type-statement">{{ section.settings.title }}</h2>
     {% if section.settings.body != blank %}
-      <p class="guarantee-band__body">{{ section.settings.body }}</p>
-    {% endif %}
-    {% if section.blocks.size > 0 %}
-      <ul class="guarantee-band__list" role="list">
-        {% for block in section.blocks %}
-          <li {{ block.shopify_attributes }}>{{ block.settings.text }}</li>
-        {% endfor %}
-      </ul>
-    {% endif %}
-    {% if section.settings.cta_text != blank %}
-      {% assign g_href = section.settings.cta_url | default: '/collections/grippy-shoes' %}
-      <a class="btn btn--primary guarantee-band__cta" href="{{ g_href }}">
-        {{ section.settings.cta_text }}
-      </a>
+      <p class="guarantee-head__sub">{{ section.settings.body }}</p>
     {% endif %}
   </div>
+  {% if section.blocks.size > 0 %}
+    <div class="guarantee-inner">
+      {% for block in section.blocks %}
+        <div class="guarantee-item" {{ block.shopify_attributes }}>
+          <h4>{{ block.settings.title | default: block.settings.text }}</h4>
+          {% if block.settings.detail != blank %}
+            <p>{{ block.settings.detail }}</p>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+  {% if section.settings.cta_text != blank %}
+    <div class="guarantee-cta-wrap">
+      <a class="guarantee-cta" href="{{ section.settings.cta_url | default: '#variants' }}">
+        {{ section.settings.cta_text }}
+      </a>
+    </div>
+  {% endif %}
 </section>
 
 <style>
-  .guarantee-band {
-    padding: var(--section-padding-y-campaign) var(--section-padding-x);
-    background: var(--bg-dark);
-    color: #fff;
-    text-align: var(--align-band);
-  }
-  .guarantee-band__inner {
-    max-width: 720px;
-    margin: 0 auto;
-  }
-  .guarantee-band__eyebrow {
-    margin: 0 0 var(--gap-a);
-    color: var(--type-dark-support-color);
-  }
-  .guarantee-band__title {
-    margin: 0 auto var(--gap-b);
-    color: #ffffff;
-    max-width: var(--type-section-measure);
-  }
-  /* Dark band tier 2 — body + points share one support style */
-  .guarantee-band__body,
-  .guarantee-band__list li {
-    font-size: var(--type-dark-support-size);
-    font-weight: var(--type-dark-support-weight);
-    line-height: var(--type-body-leading);
-    color: var(--type-dark-support-color);
-  }
-  .guarantee-band__body {
-    margin: 0 auto var(--gap-b);
-    max-width: 48ch;
-  }
-  .guarantee-band__list {
-    list-style: none;
-    margin: 0 0 28px;
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 12px 24px;
-  }
-  .guarantee-band__cta {
-    display: inline-block;
+  .guarantee-section {
+    padding: 64px 40px 48px;
     background: #fff;
+    border-top: 1px solid #d6cfc0;
+  }
+  .guarantee-head {
+    max-width: 700px;
+    margin: 0 auto 40px;
+    text-align: center;
+  }
+  .guarantee-head__eyebrow {
+    margin: 0 0 12px;
+    color: #9a9182;
+  }
+  .guarantee-head__title {
     color: #1c1916;
+    margin: 0 0 var(--gap-b, 20px);
+  }
+  .guarantee-head__sub {
+    font-size: 15px;
+    color: #4a4a4a;
+    line-height: 1.55;
+    margin: 0;
+  }
+  .guarantee-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+  .guarantee-item {
+    padding: 20px 24px;
+    border-right: 1px solid #d6cfc0;
+    text-align: center;
+  }
+  .guarantee-item:last-child { border-right: none; }
+  .guarantee-item h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1c1916;
+    margin: 0 0 6px;
+  }
+  .guarantee-item p {
+    font-size: 13px;
+    color: #6b645a;
+    line-height: 1.4;
+    margin: 0;
+  }
+  .guarantee-cta-wrap {
+    text-align: center;
+    margin-top: 32px;
+  }
+  .guarantee-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
     padding: 14px 28px;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: 600;
-  }
-  .guarantee-band__cta:hover {
-    background: #c45c3f;
+    background: #1c1916;
     color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 4px;
   }
-  @media (max-width: 768px) {
-    .guarantee-band {
-      padding: var(--section-padding-y-campaign-mobile) var(--section-padding-x-mobile);
+  .guarantee-cta:hover { background: #c45c3f; }
+  @media (max-width: 900px) {
+    .guarantee-inner { grid-template-columns: 1fr 1fr; }
+    .guarantee-item:nth-child(2) { border-right: none; }
+    .guarantee-item:nth-child(1),
+    .guarantee-item:nth-child(2) { border-bottom: 1px solid #d6cfc0; }
+  }
+  @media (max-width: 560px) {
+    .guarantee-section { padding: 40px 16px 28px; }
+    .guarantee-inner { grid-template-columns: 1fr; }
+    .guarantee-item {
+      border-right: none;
+      border-bottom: 1px solid #d6cfc0;
     }
+    .guarantee-item:last-child { border-bottom: none; }
   }
 </style>
 
@@ -92,15 +124,15 @@
 {
   "name": "Guarantee Band",
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "info": "Leave blank on dark bands — max two text tiers." },
-    { "type": "text", "id": "title", "label": "Title", "default": "Zero risk. All grip.", "info": "Dark-band tier 1 — statement size/weight." },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "text", "id": "title", "label": "Title", "default": "Zero risk. All grip." },
     {
       "type": "textarea",
       "id": "body",
-      "label": "Body",
-      "default": "30-day returns on items in new, sellable condition. 90-day warranty against manufacturing defects. Free shipping on orders over $150."
+      "label": "Support",
+      "default": "Returns, warranty, and shipping that match the gear."
     },
-    { "type": "text", "id": "cta_text", "label": "CTA text", "default": "Shop Grippy Shoes" },
+    { "type": "text", "id": "cta_text", "label": "CTA text", "info": "Leave blank to hide CTA (Home mock has none)." },
     { "type": "url", "id": "cta_url", "label": "CTA URL" }
   ],
   "blocks": [
@@ -108,7 +140,9 @@
       "type": "point",
       "name": "Point",
       "settings": [
-        { "type": "text", "id": "text", "label": "Text", "default": "30-day returns" }
+        { "type": "text", "id": "title", "label": "Title", "default": "Free Shipping" },
+        { "type": "text", "id": "detail", "label": "Detail", "default": "On orders over $150" },
+        { "type": "text", "id": "text", "label": "Legacy text (fallback title)" }
       ]
     }
   ],
@@ -116,10 +150,10 @@
     {
       "name": "Guarantee Band",
       "blocks": [
-        { "type": "point", "settings": { "text": "30-day returns" } },
-        { "type": "point", "settings": { "text": "90-day warranty" } },
-        { "type": "point", "settings": { "text": "Made in USA" } },
-        { "type": "point", "settings": { "text": "Free shipping over $150" } }
+        { "type": "point", "settings": { "title": "Free Shipping", "detail": "On orders over $150" } },
+        { "type": "point", "settings": { "title": "30-Day Returns", "detail": "New, sellable condition" } },
+        { "type": "point", "settings": { "title": "90-Day Warranty", "detail": "Manufacturing defects" } },
+        { "type": "point", "settings": { "title": "Made in USA", "detail": "No latex, no silicone" } }
       ]
     }
   ]

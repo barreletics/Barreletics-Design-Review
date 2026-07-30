@@ -1,82 +1,82 @@
 {% comment %}
-  Full-bleed statement band — dark band max 2 tiers (statement + support)
+  Statement band — cream solo slogan (Home WORKING 6b).
+  Full-bleed lifestyle commit lives in fullbleed-statement.
 {% endcomment %}
 
-<section class="statement-band section--campaign align-band" aria-label="{{ section.settings.title | escape }}">
+<section
+  {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | handleize }}"{% endif %}
+  class="statement-band align-band"
+  aria-label="{{ section.settings.title | escape }}"
+>
   <div class="statement-band__inner">
     {% if section.settings.eyebrow != blank %}
       <p class="statement-band__eyebrow type-label">{{ section.settings.eyebrow }}</p>
     {% endif %}
-    <p class="statement-band__title type-statement type-section--wide">{{ section.settings.title }}</p>
-    {% if section.settings.subhead != blank or section.settings.meta != blank %}
-      <p class="statement-band__support">
-        {% if section.settings.subhead != blank %}{{ section.settings.subhead }}{% endif %}
-        {% if section.settings.subhead != blank and section.settings.meta != blank %} {% endif %}
-        {% if section.settings.meta != blank %}{{ section.settings.meta }}{% endif %}
-      </p>
+    <p class="statement-band__line type-statement">{{ section.settings.title }}</p>
+    {% if section.settings.subhead != blank %}
+      <p class="statement-band__sub">{{ section.settings.subhead }}</p>
     {% endif %}
     {% if section.settings.cta_text != blank %}
-      {% assign sb_href = section.settings.cta_url | default: '/collections/grippy-shoes' %}
-      <a class="statement-band__cta" href="{{ sb_href }}">{{ section.settings.cta_text }}</a>
+      <a class="statement-band__cta" href="{{ section.settings.cta_url | default: '#variants' }}">
+        {{ section.settings.cta_text }}
+      </a>
     {% endif %}
   </div>
 </section>
 
 <style>
   .statement-band {
-    position: relative;
-    padding: var(--section-padding-y-campaign) var(--section-padding-x);
-    background:
-      linear-gradient(135deg, rgba(28, 25, 22, 0.72), rgba(28, 25, 22, 0.45)),
-      #6b645a;
-    color: #fff;
-    text-align: var(--align-band);
+    padding: 96px 40px;
+    background: #f5f2ec;
+    text-align: center;
+    border-top: 1px solid #e8e2d8;
+    border-bottom: 1px solid #e8e2d8;
+    color: #1c1916;
   }
   .statement-band__inner {
     max-width: 820px;
     margin: 0 auto;
   }
   .statement-band__eyebrow {
-    margin: 0 0 var(--gap-a);
-    color: var(--type-dark-support-color);
+    margin: 0 0 var(--gap-a, 16px);
+    color: #6b645a;
   }
-  .statement-band__title {
-    margin: 0 auto var(--gap-b);
-    color: #ffffff;
-    max-width: var(--type-section-measure-wide);
+  .statement-band__line {
+    margin: 0 auto var(--gap-b, 20px);
+    color: #1c1916;
+    max-width: var(--type-section-measure-wide, 28ch);
   }
-  /* Dark band tier 2 only — no third text tier */
-  .statement-band__support {
-    margin: 0 auto var(--gap-c);
-    font-size: var(--type-dark-support-size);
-    font-weight: var(--type-dark-support-weight);
-    line-height: var(--type-body-leading);
-    color: var(--type-dark-support-color);
-    max-width: 42ch;
+  .statement-band__sub {
+    font-size: 16px;
+    font-weight: 400;
+    color: #4a4a4a;
+    line-height: 1.45;
+    margin: 0 auto 28px;
+    max-width: 36ch;
   }
   .statement-band__cta {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 52px;
-    padding: 16px 40px;
-    background: #fff;
-    color: #1c1916;
-    font-size: var(--type-cta-size);
-    font-weight: var(--type-cta-weight);
-    letter-spacing: var(--type-cta-tracking);
+    min-height: 48px;
+    padding: 14px 28px;
+    background: #1c1916;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     text-decoration: none;
-    border-radius: var(--radius-button);
+    border-radius: 4px;
+    border: 1px solid #1c1916;
   }
   .statement-band__cta:hover {
     background: #c45c3f;
+    border-color: #c45c3f;
     color: #fff;
   }
   @media (max-width: 768px) {
-    .statement-band {
-      padding: var(--section-padding-y-campaign-mobile) var(--section-padding-x-mobile);
-    }
+    .statement-band { padding: 64px 16px; }
   }
 </style>
 
@@ -84,28 +84,21 @@
 {
   "name": "Statement band",
   "settings": [
+    { "type": "text", "id": "anchor_id", "label": "Anchor ID", "default": "knock-socks" },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "info": "Leave blank unless distinct from the statement." },
     {
       "type": "text",
       "id": "title",
       "label": "Statement",
-      "default": "Studio workouts and footwear will never be the same.",
-      "info": "Dark-band tier 1 — statement size/weight; one step below section H2."
+      "default": "Let us knock your socks off"
     },
     {
       "type": "text",
       "id": "subhead",
       "label": "Support",
-      "default": "You commit to the class. Commit to the gear."
+      "default": "Safely push harder in every studio move."
     },
-    {
-      "type": "text",
-      "id": "meta",
-      "label": "Support (merged)",
-      "default": "Trusted by 1,000's of instructors across barre, Pilates, and reformer studios.",
-      "info": "Merged into the single dark-band support tier (same style as Support)."
-    },
-    { "type": "text", "id": "cta_text", "label": "CTA text", "default": "Shop Performance Skins" },
+    { "type": "text", "id": "cta_text", "label": "CTA text", "default": "Shop Now" },
     { "type": "url", "id": "cta_url", "label": "CTA link" }
   ],
   "presets": [{ "name": "Statement band" }]

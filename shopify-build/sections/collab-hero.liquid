@@ -1,0 +1,318 @@
+{% comment %}
+  Collab hero — Home WORKING Coperni module (stage + 4-tile grid).
+  Simplified from live br-collab-hero; exact-to-mock composition.
+{% endcomment %}
+
+{% unless section.settings.enabled == false %}
+<section
+  id="{{ section.settings.anchor_id | default: 'coperni' | handleize }}"
+  class="collab-hero"
+  aria-label="{{ section.settings.aria_label | escape }}"
+>
+  <div class="collab-hero__stage">
+    {% if section.settings.video_url != blank %}
+      <video
+        class="collab-hero__video"
+        autoplay
+        muted
+        loop
+        playsinline
+        webkit-playsinline
+        preload="metadata"
+        {% if section.settings.poster_url != blank %}poster="{{ section.settings.poster_url | escape }}"{% endif %}
+      >
+        <source src="{{ section.settings.video_url | escape }}" type="video/mp4">
+      </video>
+    {% elsif section.settings.image != blank %}
+      <img
+        class="collab-hero__video"
+        src="{{ section.settings.image | image_url: width: 2000 }}"
+        alt=""
+        loading="lazy"
+      >
+    {% elsif section.settings.poster_url != blank %}
+      <img class="collab-hero__video" src="{{ section.settings.poster_url | escape }}" alt="" loading="lazy">
+    {% endif %}
+    <div class="collab-hero__overlay">
+      {% if section.settings.eyebrow != blank %}
+        <p class="collab-hero__eye">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+      <h2 class="collab-hero__title">{{ section.settings.title }}</h2>
+      {% if section.settings.body != blank %}
+        <p class="collab-hero__body">{{ section.settings.body }}</p>
+      {% endif %}
+      {% if section.settings.cta_text != blank %}
+        <a class="collab-hero__cta" href="{{ section.settings.cta_url }}">{{ section.settings.cta_text }}</a>
+      {% endif %}
+      {% if section.settings.meta != blank %}
+        <p class="collab-hero__meta">{{ section.settings.meta }}</p>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if section.blocks.size > 0 %}
+    <div class="collab-hero__grid" role="region" aria-label="Featured campaign products">
+      {% for block in section.blocks %}
+        {% if block.settings.link != blank %}
+          <a class="collab-hero__tile" href="{{ block.settings.link }}" {{ block.shopify_attributes }}>
+        {% else %}
+          <div class="collab-hero__tile" {{ block.shopify_attributes }}>
+        {% endif %}
+          {% if block.settings.image != blank %}
+            <img src="{{ block.settings.image | image_url: width: 1200 }}" alt="{{ block.settings.alt | escape }}" loading="lazy">
+          {% elsif block.settings.image_url != blank %}
+            <img src="{{ block.settings.image_url | escape }}" alt="{{ block.settings.alt | escape }}" loading="lazy">
+          {% endif %}
+          {% if block.settings.tile_title != blank or block.settings.tile_body != blank %}
+            <div class="collab-hero__tile-copy">
+              {% if block.settings.tile_eyebrow != blank %}
+                <p class="collab-hero__tile-eye">{{ block.settings.tile_eyebrow }}</p>
+              {% endif %}
+              {% if block.settings.tile_title != blank %}
+                <p class="collab-hero__tile-title">{{ block.settings.tile_title }}</p>
+              {% endif %}
+              {% if block.settings.tile_body != blank %}
+                <p class="collab-hero__tile-body">{{ block.settings.tile_body }}</p>
+              {% endif %}
+            </div>
+          {% endif %}
+        {% if block.settings.link != blank %}
+          </a>
+        {% else %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+</section>
+{% endunless %}
+
+<style>
+  .collab-hero { background: #fff; }
+  .collab-hero__stage {
+    position: relative;
+    min-height: min(78vh, 720px);
+    overflow: hidden;
+    background: #1c1916;
+  }
+  .collab-hero__video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .collab-hero__overlay {
+    position: relative;
+    z-index: 2;
+    min-height: min(78vh, 720px);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    padding: 48px 40px 56px;
+    max-width: 640px;
+    color: #fff;
+    background: linear-gradient(90deg, rgba(28,25,22,0.72) 0%, rgba(28,25,22,0.28) 70%, transparent 100%);
+    pointer-events: none;
+  }
+  .collab-hero__overlay > * { pointer-events: auto; }
+  .collab-hero__eye {
+    font-family: 'Syne', 'Roboto', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin: 0 0 16px;
+  }
+  .collab-hero__title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 400;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    margin: 0 0 16px;
+    color: #fff;
+  }
+  .collab-hero__title em,
+  .collab-hero__title strong {
+    font-weight: 400;
+    font-style: italic;
+  }
+  .collab-hero__body {
+    font-size: 16px;
+    line-height: 1.55;
+    color: rgba(255,255,255,0.88);
+    margin: 0 0 24px;
+    max-width: 42ch;
+  }
+  .collab-hero__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 14px 28px;
+    background: #fff;
+    color: #1c1916;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 4px;
+    margin-bottom: 14px;
+  }
+  .collab-hero__cta:hover { background: #c45c3f; color: #fff; }
+  .collab-hero__meta {
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+    margin: 0;
+  }
+  .collab-hero__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+  .collab-hero__tile {
+    position: relative;
+    display: block;
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: #f5f2ec;
+    text-decoration: none;
+    color: inherit;
+  }
+  .collab-hero__tile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .collab-hero__tile-copy {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px 18px;
+    background: linear-gradient(180deg, rgba(28,25,22,0.1) 20%, rgba(28,25,22,0.78) 100%);
+    color: #fff;
+  }
+  .collab-hero__tile-eye {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin: 0 0 8px;
+  }
+  .collab-hero__tile-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.2;
+    margin: 0 0 8px;
+  }
+  .collab-hero__tile-body {
+    font-size: 13px;
+    line-height: 1.45;
+    margin: 0;
+    color: rgba(255,255,255,0.85);
+  }
+  @media (max-width: 900px) {
+    .collab-hero__grid { grid-template-columns: 1fr 1fr; }
+    .collab-hero__overlay { padding: 32px 20px 40px; max-width: none; }
+  }
+  @media (max-width: 560px) {
+    .collab-hero__stage,
+    .collab-hero__overlay { min-height: 70vh; }
+  }
+</style>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Syne:wght@400;700&display=swap" rel="stylesheet">
+
+{% schema %}
+{
+  "name": "Collab hero",
+  "settings": [
+    { "type": "checkbox", "id": "enabled", "label": "Enabled", "default": true },
+    { "type": "text", "id": "anchor_id", "label": "Anchor ID", "default": "coperni" },
+    { "type": "text", "id": "aria_label", "label": "Aria label", "default": "Coperni x Barreletics Collaboration campaign" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Limited Edition × Paris 2026" },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "Title HTML",
+      "default": "<strong>Barreletics × Coperni</strong><br>Built for the body in motion."
+    },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Body",
+      "default": "A Pilates shoe designed for comfort, grounding, and athletic poise — introduced on the Coperni runway, Spring–Summer 2026."
+    },
+    { "type": "text", "id": "cta_text", "label": "CTA text", "default": "See the collaboration" },
+    { "type": "url", "id": "cta_url", "label": "CTA link" },
+    { "type": "text", "id": "meta", "label": "Meta line", "default": "Closed Sole · Special Release · One Run" },
+    { "type": "text", "id": "video_url", "label": "Hero video URL", "default": "https://barreletics.com/cdn/shop/videos/c/vp/a91000a89fb04c70935becea5180b69e/a91000a89fb04c70935becea5180b69e.HD-1080p-7.2Mbps-43057645.mp4" },
+    { "type": "text", "id": "poster_url", "label": "Poster URL", "default": "https://barreletics.com/cdn/shop/files/yellow_tone_mix.png?width=2000" },
+    { "type": "image_picker", "id": "image", "label": "Fallback image" }
+  ],
+  "blocks": [
+    {
+      "type": "tile",
+      "name": "Grid tile",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "image_url", "label": "Image URL fallback" },
+        { "type": "text", "id": "alt", "label": "Alt text" },
+        { "type": "url", "id": "link", "label": "Link" },
+        { "type": "text", "id": "tile_eyebrow", "label": "Overlay eyebrow" },
+        { "type": "text", "id": "tile_title", "label": "Overlay title" },
+        { "type": "textarea", "id": "tile_body", "label": "Overlay body" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collab hero",
+      "blocks": [
+        {
+          "type": "tile",
+          "settings": {
+            "image_url": "https://barreletics.com/cdn/shop/files/Copreni_Final_More_grey.png?v=1774119812&width=1200",
+            "alt": "Barreletics × Coperni Closed Sole"
+          }
+        },
+        {
+          "type": "tile",
+          "settings": {
+            "image_url": "https://barreletics.com/cdn/shop/files/Screenshot_2026-03-20_at_6.53.30_PM.png?width=1200",
+            "alt": "Coperni runway detail"
+          }
+        },
+        {
+          "type": "tile",
+          "settings": {
+            "image_url": "https://barreletics.com/cdn/shop/files/Screenshot_2026-03-21_at_3.04.37_PM.png?width=1200",
+            "alt": "Coperni collaboration look"
+          }
+        },
+        {
+          "type": "tile",
+          "settings": {
+            "image_url": "https://barreletics.com/cdn/shop/files/yellow_tone_mix.png?width=2000",
+            "tile_eyebrow": "Limited Edition × Paris SS26",
+            "tile_title": "Where the runway meets real movement.",
+            "tile_body": "Developed for the Coperni Spring–Summer 2026 collection in Paris — a Pilates shoe built for stability, grip, and athletic poise."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

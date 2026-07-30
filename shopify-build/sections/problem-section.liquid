@@ -1,0 +1,154 @@
+{% comment %}
+  Problem section — Home WORKING 12b. Cream text-only beat (not 50/50).
+{% endcomment %}
+
+<section class="problem-section" id="{{ section.settings.anchor_id | default: 'problem' | handleize }}" aria-label="{{ section.settings.title | escape }}">
+  <div class="problem-shell">
+    <div class="problem-inner">
+      <div>
+        <h2 class="problem-title h2-display">{{ section.settings.title }}</h2>
+        {% if section.settings.body != blank %}
+          <p class="problem-body">{{ section.settings.body }}</p>
+        {% endif %}
+      </div>
+      <div>
+        {% if section.blocks.size > 0 %}
+          <ul class="problem-list">
+            {% for block in section.blocks %}
+              <li {{ block.shopify_attributes }}>
+                <span class="problem-list__x" aria-hidden="true">×</span>
+                <span>{{ block.settings.text }}</span>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+        {% if section.settings.cta_text != blank %}
+          <div class="problem-resolve">
+            <a class="problem-resolve__cta" href="{{ section.settings.cta_url | default: '#variants' }}">
+              {{ section.settings.cta_text }}
+            </a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .problem-section {
+    padding: 72px 40px;
+    background: #f5f2ec;
+  }
+  .problem-shell {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .problem-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+  .problem-title {
+    margin: 0 0 var(--gap-b, 20px);
+  }
+  .problem-body {
+    font-size: var(--type-body-size, 17px);
+    color: #4a4a4a;
+    line-height: var(--type-body-leading, 1.6);
+    margin: 0;
+    max-width: 38ch;
+  }
+  .problem-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .problem-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 0;
+    border-top: 1px solid #d6cfc0;
+    font-size: 15px;
+    color: #4a4a4a;
+    line-height: 1.45;
+  }
+  .problem-list li:last-child { border-bottom: 1px solid #d6cfc0; }
+  .problem-list__x {
+    color: #c45c3f;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .problem-resolve {
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid #d6cfc0;
+  }
+  .problem-resolve__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 14px 28px;
+    background: #c45c3f;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 4px;
+    border: 1px solid #c45c3f;
+  }
+  @media (max-width: 768px) {
+    .problem-section { padding: 48px 16px; }
+    .problem-inner {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Problem section",
+  "settings": [
+    { "type": "text", "id": "anchor_id", "label": "Anchor ID", "default": "problem" },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Never slip in Chair Pose"
+    },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Body",
+      "default": "Never slip again in side plank or flat back chair. Try that in a barre grip sock."
+    },
+    { "type": "text", "id": "cta_text", "label": "CTA text", "default": "Shop Now" },
+    { "type": "url", "id": "cta_url", "label": "CTA link" }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Pain point",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Text", "default": "Grip socks that peel, stretch out, and quit" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Problem section",
+      "blocks": [
+        { "type": "item", "settings": { "text": "Flat back chair & water ski — resetting mid-set" } },
+        { "type": "item", "settings": { "text": "Reformer footwork — adjusting between sets" } },
+        { "type": "item", "settings": { "text": "Deep lunges on barre, reformer & Megaformer" } },
+        { "type": "item", "settings": { "text": "Grip socks that peel, stretch out, and quit" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

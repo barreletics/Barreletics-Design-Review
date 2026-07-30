@@ -1,6 +1,6 @@
 {% comment %}
   Reusable 50/50 Split Section (Video/Image + Copy)
-  Headings: .h2-display (brand) or .h2-standard (wayfinding) — Type OS v2
+  Headings: .h2-display (brand) or .h2-standard (wayfinding) — Type OS
 {% endcomment %}
 {% liquid
   assign heading_register = section.settings.heading_register | default: 'display'
@@ -9,29 +9,49 @@
   else
     assign heading_class = 'h2-standard'
   endif
+  assign media_fit = section.settings.media_fit | default: 'cover'
+  assign cta_href = section.settings.cta_url | default: '#variants'
 %}
 
 <section
   {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | handleize }}"{% endif %}
-  class="split-section{% if section.settings.reverse %} split-section--reverse{% endif %}"
+  class="split-section{% if section.settings.reverse %} split-section--reverse{% endif %}{% if media_fit == 'contain' %} split-section--contain{% endif %}"
   style="background: {{ section.settings.bg_color | default: '#fff' }};"
-  aria-label="{{ section.settings.title | strip_html | truncate: 60 }}"
+  aria-label="{{ section.settings.title | strip_html | truncate: 60 | escape }}"
 >
-  <div class="split-media">
+  <div class="split-media"{% if media_fit == 'contain' %} style="background: {{ section.settings.media_bg | default: '#f9f9f9' }};"{% endif %}>
     {% if section.settings.video_url != blank %}
-      <div class="split-video-placeholder" aria-label="Video content">
-        <span class="split-video-placeholder__play" aria-hidden="true">▶</span>
-        {% if section.settings.video_caption != blank %}
-          <span class="split-video-placeholder__label">{{ section.settings.video_caption }}</span>
+      <video
+        class="split-media__video"
+        autoplay
+        muted
+        loop
+        playsinline
+        webkit-playsinline
+        preload="metadata"
+        {% if section.settings.image != blank %}
+          poster="{{ section.settings.image | image_url: width: 1200 }}"
+        {% elsif section.settings.poster_url != blank %}
+          poster="{{ section.settings.poster_url | escape }}"
         {% endif %}
-      </div>
+      >
+        <source src="{{ section.settings.video_url | escape }}" type="video/mp4">
+      </video>
     {% elsif section.settings.image != blank %}
       <img
+        class="split-media__img"
         src="{{ section.settings.image | image_url: width: 1200 }}"
         srcset="{{ section.settings.image | image_url: width: 600 }} 600w,
                 {{ section.settings.image | image_url: width: 900 }} 900w,
                 {{ section.settings.image | image_url: width: 1200 }} 1200w"
         sizes="(max-width: 768px) 100vw, 50vw"
+        alt="{{ section.settings.image_alt | escape }}"
+        loading="lazy"
+      >
+    {% elsif section.settings.image_url != blank %}
+      <img
+        class="split-media__img"
+        src="{{ section.settings.image_url | escape }}"
         alt="{{ section.settings.image_alt | escape }}"
         loading="lazy"
       >
@@ -46,10 +66,12 @@
     {% if section.settings.eyebrow != blank %}
       <p class="split-text__eyebrow type-label eyebrow--accent">{{ section.settings.eyebrow }}</p>
     {% endif %}
-    <h2 class="split-text__title {{ heading_class }}">{{ section.settings.title }}</h2>
-    <p class="split-text__body type-body">{{ section.settings.body }}</p>
+    <h2 class="split-text__title {{ heading_class }}">{{ section.settings.title | newline_to_br }}</h2>
+    {% if section.settings.body != blank %}
+      <p class="split-text__body type-body">{{ section.settings.body }}</p>
+    {% endif %}
     {% if section.settings.cta_text != blank %}
-      <a href="{{ section.settings.cta_url }}" class="btn btn--primary split-cta">{{ section.settings.cta_text }}</a>
+      <a href="{{ cta_href }}" class="btn btn--primary split-cta">{{ section.settings.cta_text }}</a>
     {% endif %}
   </div>
 </section>
@@ -58,24 +80,17 @@
   .split-section {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    min-height: 580px;
+    min-height: 640px;
   }
-
-  .split-section--reverse .split-media {
-    order: 2;
-  }
-
-  .split-section--reverse .split-text {
-    order: 1;
-  }
-
+  .split-section--reverse .split-media { order: 2; }
+  .split-section--reverse .split-text { order: 1; }
   .split-media {
     position: relative;
     overflow: hidden;
     min-height: 480px;
   }
-
-  .split-media img {
+  .split-media__img,
+  .split-media__video {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -83,7 +98,20 @@
     position: absolute;
     inset: 0;
   }
-
+  .split-section--contain .split-media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .split-section--contain .split-media__img {
+    position: relative;
+    inset: auto;
+    width: 72%;
+    max-width: 420px;
+    height: auto;
+    object-fit: contain;
+    padding: 48px 24px;
+  }
   .split-media__placeholder {
     width: 100%;
     height: 100%;
@@ -93,100 +121,49 @@
     align-items: center;
     justify-content: center;
     font-size: 13px;
-    color: var(--text-muted);
-    padding: var(--space-8);
+    color: var(--text-muted, #8a8a8a);
+    padding: var(--space-8, 32px);
     text-align: center;
   }
-
-  .split-video-placeholder {
-    width: 100%;
-    height: 100%;
-    min-height: 480px;
-    background: #2d2926;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-  }
-
-  .split-video-placeholder__play {
-    font-size: 48px;
-    color: rgba(255, 255, 255, 0.7);
-    width: 80px;
-    height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid rgba(255, 255, 255, 0.4);
-    border-radius: 50%;
-  }
-
-  .split-video-placeholder__label {
-    position: absolute;
-    bottom: 24px;
-    left: 24px;
-    right: 24px;
-    font-size: 12px;
-    color: rgba(255, 255, 255, 0.45);
-    text-align: center;
-  }
-
   .split-text {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    padding: var(--space-14) var(--space-12);
-    text-align: var(--align-editorial);
+    padding: var(--space-14, 72px) var(--space-12, 48px);
+    text-align: var(--align-editorial, left);
   }
-
   .split-text__eyebrow {
-    font-size: var(--type-label-size);
+    font-size: var(--type-label-size, 11px);
     text-transform: uppercase;
-    letter-spacing: var(--type-label-tracking);
-    color: var(--type-label-color);
-    font-weight: var(--type-label-weight);
-    margin: 0 0 var(--gap-a);
+    letter-spacing: var(--type-label-tracking, 0.08em);
+    color: var(--type-label-color, #6b645a);
+    font-weight: var(--type-label-weight, 600);
+    margin: 0 0 var(--gap-a, 16px);
   }
-
   .split-text__title.h2-display,
   .split-text__title.h2-standard {
-    margin: 0 0 var(--gap-b);
+    margin: 0 0 var(--gap-b, 20px);
   }
-
   .split-text__body {
-    font-size: var(--type-body-size);
-    font-weight: var(--type-body-weight);
-    color: var(--text-body);
-    line-height: var(--type-body-leading);
-    margin: 0 0 var(--gap-c);
+    font-size: var(--type-body-size, 17px);
+    font-weight: var(--type-body-weight, 400);
+    color: var(--text-body, #4a4a4a);
+    line-height: var(--type-body-leading, 1.6);
+    margin: 0 0 var(--gap-c, 32px);
     max-width: 36ch;
   }
-
-  .split-cta {
-    width: fit-content;
-  }
-
+  .split-cta { width: fit-content; }
   @media (max-width: 768px) {
     .split-section {
       grid-template-columns: 1fr;
       min-height: auto;
     }
-
-    .split-section--reverse .split-media {
-      order: 0;
-    }
-
-    .split-section--reverse .split-text {
-      order: 0;
-    }
-
-    .split-media {
-      min-height: 320px;
-    }
-
+    .split-section--reverse .split-media,
+    .split-section--reverse .split-text { order: 0; }
+    .split-media { min-height: 320px; }
     .split-text {
-      padding: var(--section-padding-y-mobile) var(--section-padding-x-mobile);
+      padding: var(--section-padding-y-mobile, 48px) var(--section-padding-x-mobile, 16px);
     }
   }
 </style>
@@ -195,7 +172,7 @@
 {
   "name": "50/50 Split",
   "settings": [
-    { "type": "text", "id": "anchor_id", "label": "Anchor ID (optional)", "info": "e.g. problem for #problem links" },
+    { "type": "text", "id": "anchor_id", "label": "Anchor ID (optional)" },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
     {
       "type": "select",
@@ -205,17 +182,40 @@
         { "value": "display", "label": "Display — brand statement" },
         { "value": "standard", "label": "Standard — wayfinding" }
       ],
-      "default": "display",
-      "info": "Type OS v2: Display = brand/emotion; Standard = shop/wayfinding. Default matches brand preset title."
+      "default": "display"
     },
-    { "type": "text", "id": "title", "label": "Title", "default": "Upgrade your grip. Upgrade your workout.", "info": "Sentence case. Pair with Heading register." },
-    { "type": "textarea", "id": "body", "label": "Body", "default": "Full-contact molded grip — not printed, not glued. The patented surface holds through every hold, every transition." },
-    { "type": "text", "id": "cta_text", "label": "CTA text", "default": "Shop now" },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "Title",
+      "default": "Never loses shape.\nNever loses grip.",
+      "info": "Line breaks become <br>."
+    },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Body",
+      "default": "Built to hold when it matters most—so you can push deeper, stay longer, and move with confidence."
+    },
+    { "type": "text", "id": "cta_text", "label": "CTA text", "default": "Shop Now" },
     { "type": "url", "id": "cta_url", "label": "CTA link" },
     { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "text", "id": "image_url", "label": "Image URL fallback" },
     { "type": "text", "id": "image_alt", "label": "Image alt text" },
-    { "type": "url", "id": "video_url", "label": "Video URL (shows play button placeholder)" },
-    { "type": "text", "id": "video_caption", "label": "Video caption" },
+    { "type": "text", "id": "video_url", "label": "Video URL (mp4)" },
+    { "type": "text", "id": "poster_url", "label": "Video poster URL" },
+    { "type": "text", "id": "video_caption", "label": "Video caption (unused — kept for compat)" },
+    {
+      "type": "select",
+      "id": "media_fit",
+      "label": "Media fit",
+      "options": [
+        { "value": "cover", "label": "Cover (lifestyle / video)" },
+        { "value": "contain", "label": "Contain (packshot)" }
+      ],
+      "default": "cover"
+    },
+    { "type": "color", "id": "media_bg", "label": "Media background (contain)", "default": "#f9f9f9" },
     { "type": "checkbox", "id": "reverse", "label": "Reverse layout (text left, media right)", "default": false },
     { "type": "color", "id": "bg_color", "label": "Background color", "default": "#ffffff" }
   ],

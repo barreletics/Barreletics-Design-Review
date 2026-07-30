@@ -1,100 +1,71 @@
 {% comment %}
-  Disciplines + Proof — Line-divider strip
-  Source: Approved Home + Collection prototypes
+  Disciplines — cream typographic band (Home WORKING).
 {% endcomment %}
 
-<section class="disciplines-proof" aria-label="Disciplines">
-  <div class="disciplines-proof__inner">
-    <p class="disciplines-proof__headline type-label eyebrow--accent">{{ section.settings.headline }}</p>
-    <div class="disciplines-proof__grid">
+<section class="discipline-film" aria-label="{{ section.settings.aria_label | default: 'Built for every studio discipline' | escape }}">
+  <div class="discipline-film__inner">
+    {% if section.settings.headline != blank %}
+      <p class="discipline-film__line">{{ section.settings.headline | newline_to_br }}</p>
+    {% endif %}
+    <div class="discipline-film__moves">
       {% for block in section.blocks %}
-        <div class="dp-item{% if block.settings.secondary %} dp-item--secondary{% endif %}" {{ block.shopify_attributes }}>
-          <p class="dp-item__discipline">{{ block.settings.discipline }}</p>
-          <p class="dp-item__proof">{{ block.settings.proof }}</p>
-        </div>
+        {% unless forloop.first %}
+          <span aria-hidden="true"><em>·</em></span>
+        {% endunless %}
+        <span {{ block.shopify_attributes }}>{{ block.settings.discipline }}</span>
       {% endfor %}
     </div>
   </div>
 </section>
 
 <style>
-  .disciplines-proof {
-    padding: var(--space-10) var(--section-padding-x);
-    background: var(--bg-primary);
+  .discipline-film {
+    position: relative;
+    overflow: hidden;
+    background: #f5f2ec;
     border-top: 1px solid #e8e2d8;
     border-bottom: 1px solid #e8e2d8;
   }
-
-  .disciplines-proof__inner {
+  .discipline-film__inner {
+    width: 100%;
     max-width: 1100px;
     margin: 0 auto;
-  }
-
-  .disciplines-proof__headline {
-    text-align: var(--align-band);
-    margin: 0 0 var(--space-8);
-    color: var(--accent-primary);
-  }
-
-  .disciplines-proof__grid {
-    display: flex;
-  }
-
-  .dp-item {
-    flex: 1;
+    padding: 88px 40px 80px;
     text-align: center;
-    padding: 0 var(--space-5);
-    border-right: 1px solid #e8e2d8;
   }
-
-  .dp-item:last-child {
-    border-right: none;
-  }
-
-  .dp-item--secondary {
-    opacity: 0.65;
-  }
-
-  .dp-item__discipline {
-    font-size: var(--type-label-size);
-    font-weight: var(--type-label-weight);
+  .discipline-film__line {
+    font-size: var(--type-label-size, 11px);
+    font-weight: var(--type-label-weight, 600);
+    letter-spacing: var(--type-label-tracking, 0.08em);
     text-transform: uppercase;
-    letter-spacing: var(--type-label-tracking);
-    color: var(--text-primary);
-    margin: 0 0 6px;
-  }
-
-  .dp-item__proof {
-    font-size: 13px;
-    color: var(--text-body);
+    color: #6b645a;
     line-height: 1.4;
-    margin: 0;
+    margin: 0 0 var(--gap-b, 20px);
   }
-
-  @media (max-width: 1024px) {
-    .disciplines-proof__grid {
-      flex-wrap: wrap;
-    }
+  .discipline-film__moves {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 8px;
+    align-items: center;
+    justify-content: center;
+    border-top: 1px solid #d6cfc0;
+    padding-top: 24px;
   }
-
+  .discipline-film__moves span {
+    font-size: clamp(12px, 1.3vw, 14px);
+    font-weight: 500;
+    color: #4a4a4a;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .discipline-film__moves span em {
+    font-style: normal;
+    color: #c45c3f;
+    margin: 0 14px;
+    font-weight: 400;
+  }
   @media (max-width: 768px) {
-    .disciplines-proof {
-      padding: var(--space-9) var(--section-padding-x-mobile);
-    }
-
-    .disciplines-proof__grid {
-      flex-direction: column;
-    }
-
-    .dp-item {
-      border-right: none;
-      border-bottom: 1px solid #e8e2d8;
-      padding: var(--space-4) 0;
-    }
-
-    .dp-item:last-child {
-      border-bottom: none;
-    }
+    .discipline-film__inner { padding: 56px 16px 48px; }
   }
 </style>
 
@@ -102,27 +73,33 @@
 {
   "name": "Disciplines",
   "settings": [
-    { "type": "text", "id": "headline", "label": "Headline", "default": "Grip that holds where it matters most", "info": "Rendered as small uppercase label" }
+    { "type": "text", "id": "aria_label", "label": "Aria label", "default": "Built for every studio discipline" },
+    {
+      "type": "textarea",
+      "id": "headline",
+      "label": "Headline",
+      "default": "Upgrade your grip.\nUpgrade your workout.",
+      "info": "Rendered as small uppercase label. Use a line break for two lines."
+    }
   ],
   "blocks": [
     {
       "type": "discipline",
       "name": "Discipline",
       "settings": [
-        { "type": "text", "id": "discipline", "label": "Discipline name", "default": "Barre" },
-        { "type": "text", "id": "proof", "label": "Proof statement", "default": "Never slip in flat back chair" },
-        { "type": "checkbox", "id": "secondary", "label": "Secondary (dimmed)", "default": false }
+        { "type": "text", "id": "discipline", "label": "Discipline name", "default": "Barre" }
       ]
     }
   ],
   "presets": [{
     "name": "Disciplines",
     "blocks": [
-      { "type": "discipline", "settings": { "discipline": "Barre", "proof": "Never slip in flat back chair" } },
-      { "type": "discipline", "settings": { "discipline": "Reformer", "proof": "Locked in through footwork series" } },
-      { "type": "discipline", "settings": { "discipline": "Lagree & Mega", "proof": "Grip through every Super Lunge" } },
-      { "type": "discipline", "settings": { "discipline": "Cadillac", "proof": "Secure on the push-through bar" } },
-      { "type": "discipline", "settings": { "discipline": "Yoga", "proof": "Grip through every flow", "secondary": true } }
+      { "type": "discipline", "settings": { "discipline": "Barre" } },
+      { "type": "discipline", "settings": { "discipline": "Reformer" } },
+      { "type": "discipline", "settings": { "discipline": "Megaformer" } },
+      { "type": "discipline", "settings": { "discipline": "Lagree" } },
+      { "type": "discipline", "settings": { "discipline": "Pilates" } },
+      { "type": "discipline", "settings": { "discipline": "Yoga" } }
     ]
   }]
 }
