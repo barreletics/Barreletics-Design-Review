@@ -33,12 +33,22 @@
     padding: 88px 40px 80px;
     text-align: center;
   }
-  /* H2 Display — brand grip slogan (not label / not hero) */
+  /* H2 Display — brand grip slogan (not label / not hero).
+     Font-size set locally so theme.css / label rules cannot shrink it. */
   .discipline-film__line.h2-display {
+    font-size: var(--type-h2-display-size, clamp(38px, 4.6vw, 52px)) !important;
+    font-weight: var(--type-h2-display-weight, 500);
+    line-height: var(--type-h2-display-leading, 1.10);
+    letter-spacing: var(--type-h2-display-tracking, -0.028em);
     color: #1c1916;
     text-transform: none;
     max-width: none;
     margin: 0 0 var(--gap-c, 32px);
+  }
+  @media (max-width: 768px) {
+    .discipline-film__line.h2-display {
+      font-size: var(--type-h2-display-size-mobile, clamp(32px, 7vw, 40px)) !important;
+    }
   }
   .discipline-film__moves {
     display: flex;
