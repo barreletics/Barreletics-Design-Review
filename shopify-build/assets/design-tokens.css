@@ -38,7 +38,7 @@
   --font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
-  /* Weights — calm brand: hero 500 · campaign/section 400 · UI 500 · CTAs 700 */
+  /* Weights — calm brand: hero 500 · section 400 · UI 500 · CTAs 700 */
   --weight-light: 300;
   --weight-regular: 400;
   --weight-medium: 500;
@@ -46,13 +46,13 @@
   --weight-bold: 700;
 
   /* =========================================================================
-     FOUR-TIER TYPE OS + CASING LAW
-     T1 Hero (sentence / brand line) → T2 Campaign ALL CAPS → T3 Section
-     sentence case → T4 Body sentence · Eyebrows small uppercase only
+     SIMPLIFIED TYPE OS — sentence case headings
+     Hero (strongest) → Section H2 (one consistent style) → Body + labels
+     Uppercase = labels / eyebrows / CTAs only — never H1/H2/statement
      See: planning/m4-type-hierarchy.md
      ========================================================================= */
 
-  /* --- Tier 1 — Hero (`--type-hero`) — page-opening only; strongest presence --- */
+  /* --- Hero (`--type-hero`) — page-opening only; strongest presence --- */
   --type-hero-size: clamp(48px, 6.8vw, 76px);
   --type-hero-size-mobile: clamp(36px, 9vw, 48px);
   --type-hero-weight: 500;
@@ -67,31 +67,30 @@
   --type-opening-leading: var(--type-hero-leading);
   --type-opening-tracking: var(--type-hero-tracking);
 
-  /* --- Tier 2 — Campaign (`--type-campaign`) — Hold Display · ALL CAPS only ---
-     Secondary to hero. Caps tracking is open (not tight lowercase display).
-     Hold Mark + campaign breath. Not a generic H2. */
-  --type-campaign-size: clamp(32px, 4.2vw, 46px);
-  --type-campaign-size-mobile: clamp(26px, 6.5vw, 34px);
-  --type-campaign-weight: 400;
-  --type-campaign-leading: 1.08;
-  --type-campaign-tracking: 0.04em;
-  --type-campaign-margin: 0 0 var(--stack-campaign-after-title);
-  --type-campaign-measure: 14ch; /* narrow punch lines (ALL CAPS) */
-  --type-campaign-measure-wide: 28ch;
-  /* Hold Mark — short rust rule under campaign titles */
-  --type-campaign-rule-width: 2.75rem;
-  --type-campaign-rule-height: 2px;
-  --type-campaign-rule-color: var(--accent-primary);
-  --type-campaign-rule-gap: 1.5rem; /* space from title baseline to rule */
-
-  /* --- Tier 3 — Section heading (`--type-section`) — editorial / supporting ---
-     Sentence case. Clearly quieter than campaign (size + weight + tracking). */
-  --type-section-size: clamp(22px, 2.4vw, 28px);
-  --type-section-size-mobile: clamp(20px, 5vw, 24px);
+  /* --- Section H2 (`--type-section`) — one consistent heading language ---
+     Sentence case. Same weight/tracking everywhere; vary by size + space only. */
+  --type-section-size: clamp(26px, 3vw, 34px);
+  --type-section-size-mobile: clamp(22px, 5.5vw, 28px);
   --type-section-weight: 400;
-  --type-section-leading: 1.28;
-  --type-section-tracking: -0.01em;
+  --type-section-leading: 1.2;
+  --type-section-tracking: -0.015em;
   --type-section-margin: 0 0 var(--stack-section-after-title);
+  --type-section-measure: 28ch;
+  --type-section-measure-wide: 36ch;
+
+  /* Statement-band only — slight size bump (same weight/tracking/casing) */
+  --type-statement-size: clamp(28px, 3.4vw, 38px);
+  --type-statement-size-mobile: clamp(24px, 6vw, 32px);
+
+  /* Legacy aliases — former "campaign" tier maps to section (no caps) */
+  --type-campaign-size: var(--type-section-size);
+  --type-campaign-size-mobile: var(--type-section-size-mobile);
+  --type-campaign-weight: var(--type-section-weight);
+  --type-campaign-leading: var(--type-section-leading);
+  --type-campaign-tracking: var(--type-section-tracking);
+  --type-campaign-margin: var(--type-section-margin);
+  --type-campaign-measure: var(--type-section-measure);
+  --type-campaign-measure-wide: var(--type-section-measure-wide);
 
   /* H3 — card / nested */
   --type-h3-size: clamp(18px, 2vw, 22px);
@@ -115,7 +114,7 @@
   --type-label-weight: 500;
   --type-label-tracking: 0.14em;
 
-  /* Navigation — quiet; never compete with Tier 1–2 */
+  /* Navigation — quiet; never compete with hero / section */
   --type-nav-size: 11px;
   --type-nav-weight: 500;
   --type-nav-tracking: 0.14em;
@@ -206,27 +205,27 @@
   --space-15: 88px;
   --space-16: 96px;
 
-  /* Stack rhythm — default (quiet editorial) */
+  /* Stack rhythm — calm, consistent */
   --stack-trust-to-title: 36px;
   --stack-title-to-body: 28px;
   --stack-body-to-cta: 36px;
   --stack-cta-to-meta: 32px;
-  --stack-eyebrow-to-title: 14px;
-  --stack-section-after-title: 14px;
+  --stack-eyebrow-to-title: 16px;
+  --stack-section-after-title: 20px;
 
-  /* Campaign rhythm — more breath around major moments */
-  --stack-campaign-after-title: 32px;
-  --stack-campaign-eyebrow: 24px;
-  --stack-campaign-to-body: 32px;
-  --stack-campaign-to-cta: 48px;
+  /* Statement / band rhythm — a little more breath (size + space, not casing) */
+  --stack-campaign-after-title: var(--stack-section-after-title);
+  --stack-campaign-eyebrow: 20px;
+  --stack-campaign-to-body: 28px;
+  --stack-campaign-to-cta: 40px;
 
-  /* Section padding — editorial quieter; campaign breathes more */
+  /* Section padding — bands get optional extra Y for calm presence */
   --section-padding-y: 64px;
   --section-padding-x: 40px;
   --section-padding-y-mobile: 48px;
   --section-padding-x-mobile: 20px;
-  --section-padding-y-campaign: 112px;
-  --section-padding-y-campaign-mobile: 80px;
+  --section-padding-y-campaign: 96px;
+  --section-padding-y-campaign-mobile: 72px;
 
   /* Hero copy column */
   --hero-copy-max: 560px;

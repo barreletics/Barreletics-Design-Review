@@ -34,9 +34,9 @@ h1, h2, h3, h4, h5, h6 {
 .align-editorial { text-align: var(--align-editorial); }
 .align-band { text-align: var(--align-band); }
 
-/* --- Typography roles — 4-tier OS --- */
+/* --- Typography roles — simplified OS (sentence case headings) --- */
 
-/* Tier 1 — Hero */
+/* Hero — strongest */
 .type-hero,
 .type-opening,
 .h1--opening {
@@ -45,6 +45,7 @@ h1, h2, h3, h4, h5, h6 {
   line-height: var(--type-hero-leading);
   letter-spacing: var(--type-hero-tracking);
   margin: var(--type-hero-margin);
+  text-transform: none;
 }
 @media (max-width: 768px) {
   .type-hero,
@@ -52,48 +53,9 @@ h1, h2, h3, h4, h5, h6 {
   .h1--opening { font-size: var(--type-hero-size-mobile); }
 }
 
-/* Tier 2 — Campaign (Hold Display · ALL CAPS only) */
-.type-campaign {
-  font-size: var(--type-campaign-size);
-  font-weight: var(--type-campaign-weight);
-  line-height: var(--type-campaign-leading);
-  letter-spacing: var(--type-campaign-tracking);
-  text-transform: uppercase;
-  margin: var(--type-campaign-margin);
-  color: var(--text-primary);
-}
-.type-campaign--narrow {
-  max-width: var(--type-campaign-measure);
-}
-.type-campaign--wide {
-  max-width: var(--type-campaign-measure-wide);
-}
-/* Hold Mark — short rust rule (signature) */
-.type-campaign--mark::after {
-  content: "";
-  display: block;
-  width: var(--type-campaign-rule-width);
-  height: var(--type-campaign-rule-height);
-  background: var(--type-campaign-rule-color);
-  margin-top: var(--type-campaign-rule-gap);
-}
-.align-band .type-campaign--mark::after,
-.type-campaign--mark.align-band::after {
-  margin-left: auto;
-  margin-right: auto;
-}
-/* On dark / inverted surfaces, Hold Mark goes light */
-.section--dark .type-campaign--mark::after,
-.statement-band .type-campaign--mark::after,
-.guarantee-band .type-campaign--mark::after {
-  background: rgba(255, 255, 255, 0.85);
-}
-@media (max-width: 768px) {
-  .type-campaign { font-size: var(--type-campaign-size-mobile); }
-}
-
-/* Tier 3 — Section */
+/* Section H2 — one consistent treatment (aliases former .type-campaign) */
 .type-section,
+.type-campaign,
 .h2--section {
   font-size: var(--type-section-size);
   font-weight: var(--type-section-weight);
@@ -101,10 +63,31 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: var(--type-section-tracking);
   margin: var(--type-section-margin);
   color: var(--text-primary);
+  text-transform: none;
+}
+.type-section--narrow,
+.type-campaign--narrow {
+  max-width: var(--type-section-measure);
+}
+.type-section--wide,
+.type-campaign--wide {
+  max-width: var(--type-section-measure-wide);
+}
+/* Statement-band only — slight size bump, same weight/tracking/casing */
+.type-statement {
+  font-size: var(--type-statement-size);
+  font-weight: var(--type-section-weight);
+  line-height: var(--type-section-leading);
+  letter-spacing: var(--type-section-tracking);
+  margin: var(--type-section-margin);
+  color: var(--text-primary);
+  text-transform: none;
 }
 @media (max-width: 768px) {
   .type-section,
+  .type-campaign,
   .h2--section { font-size: var(--type-section-size-mobile); }
+  .type-statement { font-size: var(--type-statement-size-mobile); }
 }
 
 /* Tier 4 — Body / lede / labels */
