@@ -228,7 +228,7 @@
 {
   "name": "50/50 Split",
   "settings": [
-    { "type": "text", "id": "anchor_id", "label": "Anchor ID (optional)" },
+    { "type": "header", "content": "Shared — Content" },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
     {
       "type": "select",
@@ -239,14 +239,14 @@
         { "value": "standard", "label": "Standard — wayfinding" }
       ],
       "default": "display",
-      "info": "Type family/size/weight come from the design system (Type OS), not per-section font pickers."
+      "info": "Type family/size/weight come from Type OS — not per-section font pickers."
     },
     {
       "type": "textarea",
       "id": "title",
-      "label": "Title",
+      "label": "Heading",
       "default": "Never loses shape.\nNever loses grip.",
-      "info": "Plain text. Line breaks become <br>. Not richtext — no bold/italic in editor."
+      "info": "Plain text. Line breaks become <br>. Not richtext."
     },
     {
       "type": "textarea",
@@ -254,9 +254,17 @@
       "label": "Body",
       "default": "Built to hold when it matters most—so you can push deeper, stay longer, and move with confidence."
     },
-    { "type": "text", "id": "cta_text", "label": "CTA text", "default": "Shop Now" },
+    { "type": "text", "id": "cta_text", "label": "CTA label", "default": "Shop Now" },
     { "type": "url", "id": "cta_url", "label": "CTA link" },
-    { "type": "header", "content": "Layout size" },
+
+    { "type": "header", "content": "Shared — Media" },
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "text", "id": "image_url", "label": "Image URL fallback" },
+    { "type": "text", "id": "image_alt", "label": "Image alt text" },
+    { "type": "text", "id": "video_url", "label": "Video URL (mp4)" },
+    { "type": "text", "id": "poster_url", "label": "Video poster URL" },
+
+    { "type": "header", "content": "Shared — Layout" },
     {
       "type": "range",
       "id": "min_height",
@@ -280,7 +288,7 @@
         { "value": "60-40", "label": "60 / 40" }
       ],
       "default": "50-50",
-      "info": "Desktop only. Reverse layout still keeps media vs text widths correct."
+      "info": "Desktop only. Reverse keeps media vs text widths correct."
     },
     {
       "type": "range",
@@ -292,13 +300,11 @@
       "unit": "px",
       "default": 320
     },
-    { "type": "header", "content": "Media" },
-    { "type": "image_picker", "id": "image", "label": "Image" },
-    { "type": "text", "id": "image_url", "label": "Image URL fallback" },
-    { "type": "text", "id": "image_alt", "label": "Image alt text" },
-    { "type": "text", "id": "video_url", "label": "Video URL (mp4)" },
-    { "type": "text", "id": "poster_url", "label": "Video poster URL" },
-    { "type": "text", "id": "video_caption", "label": "Video caption (unused — kept for compat)" },
+    { "type": "checkbox", "id": "reverse", "label": "Reverse layout (text left, media right)", "default": false },
+    { "type": "color", "id": "bg_color", "label": "Background color", "default": "#ffffff" },
+    { "type": "text", "id": "anchor_id", "label": "Anchor ID (optional)" },
+
+    { "type": "header", "content": "Section — Fifty-fifty — media fit" },
     {
       "type": "select",
       "id": "media_fit",
@@ -350,8 +356,7 @@
       "info": "Only when Media fit = Contain. WORKING mock uses ~72%."
     },
     { "type": "color", "id": "media_bg", "label": "Media background (contain)", "default": "#f9f9f9" },
-    { "type": "checkbox", "id": "reverse", "label": "Reverse layout (text left, media right)", "default": false },
-    { "type": "color", "id": "bg_color", "label": "Background color", "default": "#ffffff" }
+    { "type": "text", "id": "video_caption", "label": "Video caption (compat — unused)" }
   ],
   "presets": [{ "name": "50/50 Split" }]
 }

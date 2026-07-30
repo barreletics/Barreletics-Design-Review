@@ -135,8 +135,10 @@
             <button type="button" class="variants-size__btn is-active" data-size="M">M</button>
             <button type="button" class="variants-size__btn" data-size="L">L</button>
           </div>
-          <a href="{{ section.settings.size_chart_url | default: '/pages/size-chart' }}" class="variants-link">Size chart →</a>
-          <a href="{{ section.settings.compare_url | default: '/pages/compare-open-closed-sole' }}" class="variants-link">Compare →</a>
+          {% if section.settings.show_utility_links != false %}
+            <a href="{{ section.settings.size_chart_url | default: '/pages/size-chart' }}" class="variants-link">Size chart →</a>
+            <a href="{{ section.settings.compare_url | default: '/pages/compare-open-closed-sole' }}" class="variants-link">Compare →</a>
+          {% endif %}
         </div>
       </div>
     {% endunless %}
@@ -207,13 +209,14 @@
       {% endif %}
     {%- endif -%}
 
+    {%- assign see_all_label = section.settings.see_all_label | default: 'See all colors & styles' -%}
     {%- if see_all_mode == 'expand' -%}
       <div class="variants-see-all">
-        <button type="button" class="variants-see-all__btn" data-variants-see-all aria-expanded="false">See all colors &amp; styles</button>
+        <button type="button" class="variants-see-all__btn" data-variants-see-all data-see-all-label="{{ see_all_label | escape }}" aria-expanded="false">{{ see_all_label | escape }}</button>
       </div>
     {%- elsif see_all_mode == 'link' and section.settings.see_all_url != blank -%}
       <div class="variants-see-all">
-        <a href="{{ section.settings.see_all_url }}" class="variants-see-all__btn">See all colors &amp; styles</a>
+        <a href="{{ section.settings.see_all_url }}" class="variants-see-all__btn">{{ see_all_label | escape }}</a>
       </div>
     {%- endif -%}
   </div>
@@ -695,7 +698,8 @@
       }
       if (btn && mode === 'expand') {
         btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
-        btn.textContent = expanded ? 'Show fewer' : 'See all colors & styles';
+        var openLabel = btn.getAttribute('data-see-all-label') || 'See all colors & styles';
+        btn.textContent = expanded ? 'Show fewer' : openLabel;
       }
     }
 
@@ -753,12 +757,13 @@
 {
   "name": "Variant Grid",
   "settings": [
+    { "type": "header", "content": "Shared — Content" },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Two versions. One performance." },
-    { "type": "text", "id": "title", "label": "Title", "default": "Shop all colors & styles", "info": "Header chrome locked — keep title/body structure." },
+    { "type": "text", "id": "title", "label": "Heading", "default": "Shop all colors & styles", "info": "Header chrome locked — keep title/body structure." },
     { "type": "textarea", "id": "body", "label": "Body", "default": "Grip shoes for Barre, Pilates, Yoga—secure in every hold. No slipping. No resets." },
 
-    { "type": "header", "content": "Tabs — enable + product per tab" },
-    { "type": "paragraph", "content": "Each enabled tab needs a product. Cards = that product’s color×size variants (same KEEP model as the old All Variants section)." },
+    { "type": "header", "content": "Section — Variant grid — tabs" },
+    { "type": "paragraph", "content": "Each enabled tab needs a product. Cards = that product’s color×size variants (KEEP model). No image picker — media comes from product variants." },
     { "type": "checkbox", "id": "use_current_product", "label": "Use current product (PDP — no tabs)", "default": false },
 
     { "type": "checkbox", "id": "show_closed", "label": "Show Closed Sole tab", "default": true },
@@ -786,15 +791,19 @@
       { "value": "all", "label": "All" }
     ], "default": "closed" },
 
-    { "type": "header", "content": "Collapse / See all" },
+    { "type": "header", "content": "Section — Variant grid — see all" },
     { "type": "range", "id": "initial_rows", "min": 1, "max": 6, "step": 1, "default": 2, "label": "Initial rows visible" },
     { "type": "select", "id": "see_all", "label": "See all behavior", "options": [
       { "value": "expand", "label": "Expand on page" },
       { "value": "link", "label": "Link to URL" },
       { "value": "off", "label": "Show full grid" }
     ], "default": "expand" },
+    { "type": "text", "id": "see_all_label", "label": "See all label", "default": "See all colors & styles" },
     { "type": "url", "id": "see_all_url", "label": "See all link URL" },
     { "type": "range", "id": "max_variants", "min": 8, "max": 80, "step": 4, "default": 48, "label": "Max variants per tab" },
+
+    { "type": "header", "content": "Section — Variant grid — links" },
+    { "type": "checkbox", "id": "show_utility_links", "label": "Show size chart & compare links", "default": true },
     { "type": "url", "id": "size_chart_url", "label": "Size chart URL" },
     { "type": "url", "id": "compare_url", "label": "Compare URL" }
   ],

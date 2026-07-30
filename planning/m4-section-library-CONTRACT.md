@@ -263,6 +263,20 @@ Legend: **KEEP** · **REBUILD** · **MERGE→X** · **DELETE**
 
 ---
 
+## 7. Theme Editor control tiers (APPROVED 2026-07-30)
+
+**Full spec:** `planning/m4-te-controls.md`
+
+| Tier | Meaning |
+|------|---------|
+| **A — Marketing** | Copy + image/video + basic layout |
+| **B — Text band** | Copy + CTA only |
+| **C — Commerce** | Domain controls (variant tabs/products; PDP product-driven + TE extras) |
+
+**Schema order (every section):** `Shared — Content` → `Shared — Media` → `Shared — Layout` → `Section — …` (custom). Omit N/A blocks; no fake fields; **no font pickers** (Type OS). Detail upgrades: `fifty-fifty`, `variant-grid`, `pdp-buy-box`.
+
+---
+
 ## Approval stamp
 
 | Field | Value |

@@ -137,6 +137,10 @@ Mapped in `shopify-build/assets/design-tokens.css`. Utilities in `barreletics-ba
 
 Applied to **all** Shopify templates/sections (index, collection, product, page, cart, blog, search, etc.) and **authority** HTML mocks in `docs/`. Historical Definitives (SEO v11–v35, Collection ≤v17, etc.) remain priors — do not treat as type authority.
 
+## Theme Editor (HARD)
+
+Type OS owns family, size, weight, tracking. Sections must **not** add `font_picker` or per-section type sprawl. TE may expose heading *register* (display vs standard) where useful — not font families. Control tiers / schema headers: `planning/m4-te-controls.md`.
+
 ## Files
 
 - `shopify-build/assets/design-tokens.css` — tokens (master)
@@ -144,3 +148,4 @@ Applied to **all** Shopify templates/sections (index, collection, product, page,
 - All `shopify-build/sections/*.liquid` + `templates/*.json` (class/CSS wiring)
 - `docs/Barreletics Home - Type OS Preview.html` — review surface
 - Authority mocks: Home WORKING · Collection v18 · SEO v36 · PDP v16 · Journal v5 · Help v3 · Pattern-v2 · FAQ/Contact/Returns/Size/Track
+- `planning/m4-te-controls.md` — TE tiers (A/B/C) + Shared/Section schema order
