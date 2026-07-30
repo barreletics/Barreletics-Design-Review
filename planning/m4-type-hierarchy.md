@@ -18,7 +18,7 @@ The biggest type on the page must not be the heaviest. Weight densifies *small* 
 
 | Role | Weight | Size | Tracking / LH |
 |------|--------|------|---------------|
-| **Hero H1** | **700** | `clamp(50px, 6.4vw, 82px)` | −0.028em / 1.06 |
+| **Hero H1** | **700** | `clamp(50px, 6.4vw, 72px)` | −0.028em / 1.06 |
 | **H2 Display** (brand) | **500** | `clamp(38px, 4.6vw, 52px)` | −0.028em / 1.10 · measure 15ch |
 | **H2 Standard** (wayfinding) | **600** | `clamp(26px, 2.9vw, 32px)` | −0.012em / 1.22 |
 | **Statement** | **500** | `clamp(28px, 3vw, 36px)` | −0.022em |
@@ -103,7 +103,7 @@ Wiring: `fifty-fifty` uses TE `heading_register` (`display` \| `standard`) → `
 --fw-label:       600;
 --fw-emphasis:    700;
 
---fs-hero:        clamp(50px, 6.4vw, 82px);
+--fs-hero:        clamp(50px, 6.4vw, 72px);
 --fs-h2-display:  clamp(38px, 4.6vw, 52px);
 --fs-h2-standard: clamp(26px, 2.9vw, 32px);
 --fs-statement:   clamp(28px, 3vw, 36px);
