@@ -1,6 +1,7 @@
 {% comment %}
   Reusable 50/50 Split Section (Video/Image + Copy)
   Headings: .h2-display (brand) or .h2-standard (wayfinding) — Type OS
+  Layout size / media framing: Theme Editor → CSS variables (defaults match Home WORKING)
 {% endcomment %}
 {% liquid
   assign heading_register = section.settings.heading_register | default: 'display'
@@ -11,12 +12,48 @@
   endif
   assign media_fit = section.settings.media_fit | default: 'cover'
   assign cta_href = section.settings.cta_url | default: '#variants'
+
+  assign column_ratio = section.settings.column_ratio | default: '50-50'
+  case column_ratio
+    when '40-60'
+      assign media_fr = '2fr'
+      assign text_fr = '3fr'
+    when '45-55'
+      assign media_fr = '45fr'
+      assign text_fr = '55fr'
+    when '55-45'
+      assign media_fr = '55fr'
+      assign text_fr = '45fr'
+    when '60-40'
+      assign media_fr = '3fr'
+      assign text_fr = '2fr'
+    else
+      assign media_fr = '1fr'
+      assign text_fr = '1fr'
+  endcase
+
+  assign min_height = section.settings.min_height | default: 640
+  assign mobile_media_height = section.settings.mobile_media_height | default: 320
+  assign image_position = section.settings.image_position | default: 'center'
+  assign image_scale = section.settings.image_scale | default: 100
+  assign contain_width = section.settings.contain_width | default: 72
+
+  assign image_scale_ratio = image_scale | times: 1.0 | divided_by: 100.0
 %}
 
 <section
   {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | handleize }}"{% endif %}
   class="split-section{% if section.settings.reverse %} split-section--reverse{% endif %}{% if media_fit == 'contain' %} split-section--contain{% endif %}"
-  style="background: {{ section.settings.bg_color | default: '#fff' }};"
+  style="
+    --ff-min-height: {{ min_height }}px;
+    --ff-mobile-media-height: {{ mobile_media_height }}px;
+    --ff-media-fr: {{ media_fr }};
+    --ff-text-fr: {{ text_fr }};
+    --ff-object-position: {{ image_position }};
+    --ff-image-scale: {{ image_scale_ratio }};
+    --ff-contain-width: {{ contain_width }}%;
+    background: {{ section.settings.bg_color | default: '#fff' }};
+  "
   aria-label="{{ section.settings.title | strip_html | truncate: 60 | escape }}"
 >
   <div class="split-media"{% if media_fit == 'contain' %} style="background: {{ section.settings.media_bg | default: '#f9f9f9' }};"{% endif %}>
@@ -77,45 +114,54 @@
 </section>
 
 <style>
-  .split-section {
+  #shopify-section-{{ section.id }} .split-section {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    min-height: 640px;
+    grid-template-columns: var(--ff-media-fr, 1fr) var(--ff-text-fr, 1fr);
+    min-height: var(--ff-min-height, 640px);
   }
-  .split-section--reverse .split-media { order: 2; }
-  .split-section--reverse .split-text { order: 1; }
-  .split-media {
+  #shopify-section-{{ section.id }} .split-section--reverse {
+    grid-template-columns: var(--ff-text-fr, 1fr) var(--ff-media-fr, 1fr);
+  }
+  #shopify-section-{{ section.id }} .split-section--reverse .split-media { order: 2; }
+  #shopify-section-{{ section.id }} .split-section--reverse .split-text { order: 1; }
+  #shopify-section-{{ section.id }} .split-media {
     position: relative;
     overflow: hidden;
-    min-height: 480px;
+    min-height: calc(var(--ff-min-height, 640px) * 0.75);
   }
-  .split-media__img,
-  .split-media__video {
+  #shopify-section-{{ section.id }} .split-media__img,
+  #shopify-section-{{ section.id }} .split-media__video {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: var(--ff-object-position, center);
     display: block;
     position: absolute;
     inset: 0;
+    transform: scale(var(--ff-image-scale, 1));
+    transform-origin: var(--ff-object-position, center);
   }
-  .split-section--contain .split-media {
+  #shopify-section-{{ section.id }} .split-section--contain .split-media {
     display: flex;
     align-items: center;
     justify-content: center;
   }
-  .split-section--contain .split-media__img {
+  #shopify-section-{{ section.id }} .split-section--contain .split-media__img {
     position: relative;
     inset: auto;
-    width: 72%;
+    width: var(--ff-contain-width, 72%);
     max-width: 420px;
     height: auto;
     object-fit: contain;
+    object-position: var(--ff-object-position, center);
     padding: 48px 24px;
+    transform: scale(var(--ff-image-scale, 1));
+    transform-origin: center center;
   }
-  .split-media__placeholder {
+  #shopify-section-{{ section.id }} .split-media__placeholder {
     width: 100%;
     height: 100%;
-    min-height: 480px;
+    min-height: calc(var(--ff-min-height, 640px) * 0.75);
     background: linear-gradient(135deg, #c9c5b8, #e9d3cb);
     display: flex;
     align-items: center;
@@ -125,7 +171,7 @@
     padding: var(--space-8, 32px);
     text-align: center;
   }
-  .split-text {
+  #shopify-section-{{ section.id }} .split-text {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -133,7 +179,7 @@
     padding: 88px 64px;
     text-align: var(--align-editorial, left);
   }
-  .split-text__title {
+  #shopify-section-{{ section.id }} .split-text__title {
     font-size: clamp(28px, 3.2vw, 36px) !important;
     font-weight: 400 !important;
     line-height: 1.15 !important;
@@ -141,7 +187,7 @@
     max-width: none !important;
     margin: 0 0 20px;
   }
-  .split-text__eyebrow {
+  #shopify-section-{{ section.id }} .split-text__eyebrow {
     font-size: var(--type-label-size, 11px);
     text-transform: uppercase;
     letter-spacing: var(--type-label-tracking, 0.08em);
@@ -149,11 +195,11 @@
     font-weight: var(--type-label-weight, 600);
     margin: 0 0 var(--gap-a, 16px);
   }
-  .split-text__title.h2-display,
-  .split-text__title.h2-standard {
+  #shopify-section-{{ section.id }} .split-text__title.h2-display,
+  #shopify-section-{{ section.id }} .split-text__title.h2-standard {
     margin: 0 0 var(--gap-b, 20px);
   }
-  .split-text__body {
+  #shopify-section-{{ section.id }} .split-text__body {
     font-size: var(--type-body-size, 17px);
     font-weight: var(--type-body-weight, 400);
     color: var(--text-body, #4a4a4a);
@@ -161,16 +207,18 @@
     margin: 0 0 var(--gap-c, 32px);
     max-width: 36ch;
   }
-  .split-cta { width: fit-content; }
+  #shopify-section-{{ section.id }} .split-cta { width: fit-content; }
   @media (max-width: 768px) {
-    .split-section {
+    #shopify-section-{{ section.id }} .split-section {
       grid-template-columns: 1fr;
       min-height: auto;
     }
-    .split-section--reverse .split-media,
-    .split-section--reverse .split-text { order: 0; }
-    .split-media { min-height: 320px; }
-    .split-text {
+    #shopify-section-{{ section.id }} .split-section--reverse .split-media,
+    #shopify-section-{{ section.id }} .split-section--reverse .split-text { order: 0; }
+    #shopify-section-{{ section.id }} .split-media {
+      min-height: var(--ff-mobile-media-height, 320px);
+    }
+    #shopify-section-{{ section.id }} .split-text {
       padding: var(--section-padding-y-mobile, 48px) var(--section-padding-x-mobile, 16px);
     }
   }
@@ -190,14 +238,15 @@
         { "value": "display", "label": "Display — brand statement" },
         { "value": "standard", "label": "Standard — wayfinding" }
       ],
-      "default": "display"
+      "default": "display",
+      "info": "Type family/size/weight come from the design system (Type OS), not per-section font pickers."
     },
     {
       "type": "textarea",
       "id": "title",
       "label": "Title",
       "default": "Never loses shape.\nNever loses grip.",
-      "info": "Line breaks become <br>."
+      "info": "Plain text. Line breaks become <br>. Not richtext — no bold/italic in editor."
     },
     {
       "type": "textarea",
@@ -207,6 +256,43 @@
     },
     { "type": "text", "id": "cta_text", "label": "CTA text", "default": "Shop Now" },
     { "type": "url", "id": "cta_url", "label": "CTA link" },
+    { "type": "header", "content": "Layout size" },
+    {
+      "type": "range",
+      "id": "min_height",
+      "label": "Desktop min height",
+      "min": 400,
+      "max": 900,
+      "step": 20,
+      "unit": "px",
+      "default": 640,
+      "info": "Home WORKING default is 640px."
+    },
+    {
+      "type": "select",
+      "id": "column_ratio",
+      "label": "Column ratio (media / text)",
+      "options": [
+        { "value": "40-60", "label": "40 / 60" },
+        { "value": "45-55", "label": "45 / 55" },
+        { "value": "50-50", "label": "50 / 50" },
+        { "value": "55-45", "label": "55 / 45" },
+        { "value": "60-40", "label": "60 / 40" }
+      ],
+      "default": "50-50",
+      "info": "Desktop only. Reverse layout still keeps media vs text widths correct."
+    },
+    {
+      "type": "range",
+      "id": "mobile_media_height",
+      "label": "Mobile media height",
+      "min": 220,
+      "max": 520,
+      "step": 10,
+      "unit": "px",
+      "default": 320
+    },
+    { "type": "header", "content": "Media" },
     { "type": "image_picker", "id": "image", "label": "Image" },
     { "type": "text", "id": "image_url", "label": "Image URL fallback" },
     { "type": "text", "id": "image_alt", "label": "Image alt text" },
@@ -222,6 +308,46 @@
         { "value": "contain", "label": "Contain (packshot)" }
       ],
       "default": "cover"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image focal point",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "top", "label": "Top" },
+        { "value": "bottom", "label": "Bottom" },
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" },
+        { "value": "top left", "label": "Top left" },
+        { "value": "top right", "label": "Top right" },
+        { "value": "bottom left", "label": "Bottom left" },
+        { "value": "bottom right", "label": "Bottom right" }
+      ],
+      "default": "center",
+      "info": "object-position for cover crops (and contain alignment)."
+    },
+    {
+      "type": "range",
+      "id": "image_scale",
+      "label": "Image scale",
+      "min": 100,
+      "max": 150,
+      "step": 5,
+      "unit": "%",
+      "default": 100,
+      "info": "Zooms media inside the cell (cover crop / contain packshot)."
+    },
+    {
+      "type": "range",
+      "id": "contain_width",
+      "label": "Contain media width",
+      "min": 40,
+      "max": 100,
+      "step": 2,
+      "unit": "%",
+      "default": 72,
+      "info": "Only when Media fit = Contain. WORKING mock uses ~72%."
     },
     { "type": "color", "id": "media_bg", "label": "Media background (contain)", "default": "#f9f9f9" },
     { "type": "checkbox", "id": "reverse", "label": "Reverse layout (text left, media right)", "default": false },
