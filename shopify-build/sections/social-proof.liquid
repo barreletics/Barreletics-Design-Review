@@ -8,7 +8,9 @@
   <div class="reviews-inner">
     <header class="reviews-header">
       <div class="reviews-header__left">
-        <p class="reviews-header__eyebrow type-label">{{ section.settings.eyebrow }}</p>
+        {% if section.settings.eyebrow != blank %}
+          <p class="reviews-header__eyebrow type-label">{{ section.settings.eyebrow }}</p>
+        {% endif %}
         {% if section.settings.title != blank %}
           <h2 class="reviews-header__title type-section">{{ section.settings.title }}</h2>
         {% endif %}
@@ -54,13 +56,18 @@
     margin-bottom: var(--space-9);
   }
 
+  .reviews-header__left {
+    text-align: left;
+  }
+
   .reviews-header__eyebrow {
     margin: 0 0 var(--stack-eyebrow-to-title);
-    color: var(--text-muted);
+    color: var(--type-label-color);
   }
 
   .reviews-header__title {
     margin: 0 0 var(--stack-section-after-title);
+    text-align: left;
   }
 
   .reviews-header__rating {
@@ -120,8 +127,8 @@
 {
   "name": "Social Proof",
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Real results" },
-    { "type": "text", "id": "title", "label": "Section title (Tier 3 — sentence case)", "default": "Real people. Real results." },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "info": "Leave blank when it restates the H2 (e.g. Real results)." },
+    { "type": "text", "id": "title", "label": "Section title", "default": "Real people. Real results." },
     { "type": "text", "id": "rating", "label": "Rating", "default": "4.9" },
     { "type": "text", "id": "review_count", "label": "Review count", "default": "294" },
     { "type": "url", "id": "all_reviews_url", "label": "All reviews link" }

@@ -1,5 +1,5 @@
 {% comment %}
-  Guarantee / trust band — sentence-case section H2
+  Guarantee / trust band — dark band max 2 tiers (statement + support)
 {% endcomment %}
 
 <section class="guarantee-band section--campaign align-band" aria-label="Guarantee">
@@ -7,15 +7,17 @@
     {% if section.settings.eyebrow != blank %}
       <p class="guarantee-band__eyebrow type-label">{{ section.settings.eyebrow }}</p>
     {% endif %}
-    <h2 class="guarantee-band__title type-section">{{ section.settings.title }}</h2>
+    <h2 class="guarantee-band__title type-statement">{{ section.settings.title }}</h2>
     {% if section.settings.body != blank %}
-      <p class="guarantee-band__body type-body">{{ section.settings.body }}</p>
+      <p class="guarantee-band__body">{{ section.settings.body }}</p>
     {% endif %}
-    <ul class="guarantee-band__list" role="list">
-      {% for block in section.blocks %}
-        <li {{ block.shopify_attributes }}>{{ block.settings.text }}</li>
-      {% endfor %}
-    </ul>
+    {% if section.blocks.size > 0 %}
+      <ul class="guarantee-band__list" role="list">
+        {% for block in section.blocks %}
+          <li {{ block.shopify_attributes }}>{{ block.settings.text }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
     {% if section.settings.cta_text != blank %}
       {% assign g_href = section.settings.cta_url | default: '/collections/grippy-shoes' %}
       <a class="btn btn--primary guarantee-band__cta" href="{{ g_href }}">
@@ -38,16 +40,23 @@
   }
   .guarantee-band__eyebrow {
     margin: 0 0 var(--stack-campaign-eyebrow);
-    color: rgba(255, 255, 255, 0.55);
+    color: var(--type-dark-support-color);
   }
   .guarantee-band__title {
     margin: 0 auto var(--stack-campaign-after-title);
-    color: #fff;
+    color: #ffffff;
     max-width: var(--type-section-measure);
   }
+  /* Dark band tier 2 — body + points share one support style */
+  .guarantee-band__body,
+  .guarantee-band__list li {
+    font-size: var(--type-dark-support-size);
+    font-weight: var(--type-dark-support-weight);
+    line-height: var(--type-body-leading);
+    color: var(--type-dark-support-color);
+  }
   .guarantee-band__body {
-    margin: 0 auto var(--stack-campaign-to-cta);
-    color: rgba(255, 255, 255, 0.82);
+    margin: 0 auto var(--stack-campaign-to-body);
     max-width: 48ch;
   }
   .guarantee-band__list {
@@ -58,11 +67,6 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: 12px 24px;
-  }
-  .guarantee-band__list li {
-    font-size: 13px;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.9);
   }
   .guarantee-band__cta {
     display: inline-block;
@@ -88,8 +92,8 @@
 {
   "name": "Guarantee Band",
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The guarantee" },
-    { "type": "text", "id": "title", "label": "Title", "default": "Zero risk. All grip.", "info": "Sentence case — matches section H2." },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "info": "Leave blank on dark bands — max two text tiers." },
+    { "type": "text", "id": "title", "label": "Title", "default": "Zero risk. All grip.", "info": "Dark-band tier 1 — statement size/weight." },
     {
       "type": "textarea",
       "id": "body",

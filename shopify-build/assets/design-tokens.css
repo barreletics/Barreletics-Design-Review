@@ -38,26 +38,46 @@
   --font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
-  /* Weights — calm brand: hero 500 · section 400 · UI 500 · CTAs 700 */
+  /* Weights — ladder: hero 800 → H2 700 → statement 600 → body 400 */
   --weight-light: 300;
   --weight-regular: 400;
   --weight-medium: 500;
   --weight-semibold: 600;
   --weight-bold: 700;
+  --weight-extrabold: 800;
+
+  /* Brief aliases (map to --type-*) */
+  --fw-hero: 800;
+  --fw-h2: 700;
+  --fw-statement: 600;
+  --fw-body: 400;
+  --fs-hero: clamp(48px, 6vw, 76px);
+  --fs-h2: clamp(32px, 3.4vw, 40px);
+  --fs-statement: clamp(26px, 2.8vw, 32px);
+  --fs-lede: 17px;
+  --fs-body: 16px;
+  --fs-label: 11px;
+  --ls-hero: -0.02em;
+  --ls-h2: -0.01em;
+  --ls-label: 0.08em;
+  --lh-hero: 1.02;
+  --lh-h2: 1.2;
+  --lh-lede: 1.55;
+  --lh-body: 1.65;
 
   /* =========================================================================
-     SIMPLIFIED TYPE OS — sentence case headings
-     Hero (strongest) → Section H2 (one consistent style) → Body + labels
+     TYPE OS — weight ladder 800 → 700 → 600 → 400
+     Section H2 outranks statement (size + weight). Eyebrows 11/600/0.08em/#6b645a.
      Uppercase = labels / eyebrows / CTAs only — never H1/H2/statement
      See: planning/m4-type-hierarchy.md
      ========================================================================= */
 
   /* --- Hero (`--type-hero`) — page-opening only; strongest presence --- */
-  --type-hero-size: clamp(48px, 6.8vw, 76px);
+  --type-hero-size: var(--fs-hero);
   --type-hero-size-mobile: clamp(36px, 9vw, 48px);
-  --type-hero-weight: 500;
-  --type-hero-leading: 1.02;
-  --type-hero-tracking: -0.032em;
+  --type-hero-weight: var(--fw-hero);
+  --type-hero-leading: var(--lh-hero);
+  --type-hero-tracking: var(--ls-hero);
   --type-hero-margin: 0 0 var(--stack-title-to-body);
 
   /* Legacy aliases → hero */
@@ -67,20 +87,27 @@
   --type-opening-leading: var(--type-hero-leading);
   --type-opening-tracking: var(--type-hero-tracking);
 
-  /* --- Section H2 (`--type-section`) — one consistent heading language ---
-     Sentence case. Same weight/tracking everywhere; vary by size + space only. */
-  --type-section-size: clamp(26px, 3vw, 34px);
-  --type-section-size-mobile: clamp(22px, 5.5vw, 28px);
-  --type-section-weight: 400;
-  --type-section-leading: 1.2;
-  --type-section-tracking: -0.015em;
+  /* --- Section H2 (`--type-section`) — outranks statement bands --- */
+  --type-section-size: var(--fs-h2);
+  --type-section-size-mobile: clamp(28px, 5.5vw, 34px);
+  --type-section-weight: var(--fw-h2);
+  --type-section-leading: var(--lh-h2);
+  --type-section-tracking: var(--ls-h2);
   --type-section-margin: 0 0 var(--stack-section-after-title);
   --type-section-measure: 28ch;
   --type-section-measure-wide: 36ch;
 
-  /* Statement-band only — slight size bump (same weight/tracking/casing) */
-  --type-statement-size: clamp(28px, 3.4vw, 38px);
-  --type-statement-size-mobile: clamp(24px, 6vw, 32px);
+  /* Statement — one step below H2 (never heavier / never larger) */
+  --type-statement-size: var(--fs-statement);
+  --type-statement-size-mobile: clamp(22px, 5.5vw, 28px);
+  --type-statement-weight: var(--fw-statement);
+  --type-statement-leading: var(--lh-h2);
+  --type-statement-tracking: var(--ls-h2);
+
+  /* Dark-band support (tier 2) — contrast ≥4.5:1 on charcoal */
+  --type-dark-support-size: 16px;
+  --type-dark-support-weight: 400;
+  --type-dark-support-color: #d6d2cb;
 
   /* Legacy aliases — former "campaign" tier maps to section (no caps) */
   --type-campaign-size: var(--type-section-size);
@@ -92,27 +119,28 @@
   --type-campaign-measure: var(--type-section-measure);
   --type-campaign-measure-wide: var(--type-section-measure-wide);
 
-  /* H3 — card / nested */
+  /* H3 — card / nested (must stay lighter than H2) */
   --type-h3-size: clamp(18px, 2vw, 22px);
   --type-h3-weight: 400;
   --type-h3-leading: 1.25;
-  --type-h3-tracking: -0.015em;
+  --type-h3-tracking: -0.01em;
 
-  /* --- Tier 4 — Body / supporting --- */
-  --type-lede-size: 17px;
+  /* --- Body / supporting --- */
+  --type-lede-size: var(--fs-lede);
   --type-lede-size-mobile: 16px;
-  --type-lede-weight: 400;
-  --type-lede-leading: 1.55;
+  --type-lede-weight: var(--fw-body);
+  --type-lede-leading: var(--lh-lede);
 
-  --type-body-size: 16px;
+  --type-body-size: var(--fs-body);
   --type-body-size-sm: 15px;
-  --type-body-weight: 400;
-  --type-body-leading: 1.65;
+  --type-body-weight: var(--fw-body);
+  --type-body-leading: var(--lh-body);
 
-  /* Labels / eyebrows — quieter than before */
-  --type-label-size: 11px;
-  --type-label-weight: 500;
-  --type-label-tracking: 0.14em;
+  /* Labels / eyebrows — 11 / 600 / 0.08em / #6b645a */
+  --type-label-size: var(--fs-label);
+  --type-label-weight: 600;
+  --type-label-tracking: var(--ls-label);
+  --type-label-color: #6b645a;
 
   /* Navigation — quiet; never compete with hero / section */
   --type-nav-size: 11px;
@@ -140,9 +168,9 @@
   --type-announce-weight: 500;
   --type-announce-tracking: 0.08em;
 
-  /* Legacy aliases (existing sections) */
+  /* Legacy aliases (existing sections) — never below 11px */
   --font-body: var(--font-family);
-  --text-xs: 10px;
+  --text-xs: 11px;
   --text-sm: var(--type-label-size);
   --text-base: var(--type-body-size-sm);
   --text-md: var(--type-body-size);
@@ -174,7 +202,7 @@
   --tracking-wide: 0.04em;
   --tracking-wider: 0.06em;
   --tracking-widest: 0.08em;
-  --tracking-eyebrow: 0.12em;
+  --tracking-eyebrow: var(--ls-label);
   --tracking-nav: 0.12em;
   --tracking-cta: 0.1em;
   --tracking-manifesto: 0.18em;

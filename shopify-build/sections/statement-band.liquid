@@ -1,5 +1,5 @@
 {% comment %}
-  Full-bleed statement band — sentence-case .type-statement (slight size bump)
+  Full-bleed statement band — dark band max 2 tiers (statement + support)
 {% endcomment %}
 
 <section class="statement-band section--campaign align-band" aria-label="{{ section.settings.title | escape }}">
@@ -8,11 +8,12 @@
       <p class="statement-band__eyebrow type-label">{{ section.settings.eyebrow }}</p>
     {% endif %}
     <p class="statement-band__title type-statement type-section--wide">{{ section.settings.title }}</p>
-    {% if section.settings.subhead != blank %}
-      <p class="statement-band__sub type-lede">{{ section.settings.subhead }}</p>
-    {% endif %}
-    {% if section.settings.meta != blank %}
-      <p class="statement-band__meta type-body">{{ section.settings.meta }}</p>
+    {% if section.settings.subhead != blank or section.settings.meta != blank %}
+      <p class="statement-band__support">
+        {% if section.settings.subhead != blank %}{{ section.settings.subhead }}{% endif %}
+        {% if section.settings.subhead != blank and section.settings.meta != blank %} {% endif %}
+        {% if section.settings.meta != blank %}{{ section.settings.meta }}{% endif %}
+      </p>
     {% endif %}
     {% if section.settings.cta_text != blank %}
       {% assign sb_href = section.settings.cta_url | default: '/collections/grippy-shoes' %}
@@ -37,31 +38,20 @@
   }
   .statement-band__eyebrow {
     margin: 0 0 var(--stack-campaign-eyebrow);
-    font-size: var(--type-label-size);
-    font-weight: var(--type-label-weight);
-    letter-spacing: var(--type-label-tracking);
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.7);
+    color: var(--type-dark-support-color);
   }
   .statement-band__title {
     margin: 0 auto var(--stack-campaign-after-title);
-    color: #fff;
+    color: #ffffff;
     max-width: var(--type-section-measure-wide);
   }
-  .statement-band__sub {
-    margin: 0 auto 20px;
-    font-size: var(--type-lede-size);
-    font-weight: var(--type-lede-weight);
-    line-height: var(--type-lede-leading);
-    color: rgba(255, 255, 255, 0.92);
-    max-width: 36ch;
-  }
-  .statement-band__meta {
+  /* Dark band tier 2 only — no third text tier */
+  .statement-band__support {
     margin: 0 auto var(--stack-campaign-to-cta);
-    font-size: var(--type-body-size-sm);
-    font-weight: var(--type-body-weight);
+    font-size: var(--type-dark-support-size);
+    font-weight: var(--type-dark-support-weight);
     line-height: var(--type-body-leading);
-    color: rgba(255, 255, 255, 0.72);
+    color: var(--type-dark-support-color);
     max-width: 42ch;
   }
   .statement-band__cta {
@@ -94,25 +84,26 @@
 {
   "name": "Statement band",
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "info": "Leave blank unless distinct from the statement." },
     {
       "type": "text",
       "id": "title",
       "label": "Statement",
       "default": "Studio workouts and footwear will never be the same.",
-      "info": "Sentence case — slight size bump vs section H2."
+      "info": "Dark-band tier 1 — statement size/weight; one step below section H2."
     },
     {
       "type": "text",
       "id": "subhead",
-      "label": "Subhead",
+      "label": "Support",
       "default": "You commit to the class. Commit to the gear."
     },
     {
       "type": "text",
       "id": "meta",
-      "label": "Meta line",
-      "default": "Trusted by 1,000's of instructors across barre, Pilates, and reformer studios."
+      "label": "Support (merged)",
+      "default": "Trusted by 1,000's of instructors across barre, Pilates, and reformer studios.",
+      "info": "Merged into the single dark-band support tier (same style as Support)."
     },
     { "type": "text", "id": "cta_text", "label": "CTA text", "default": "Shop Performance Skins" },
     { "type": "url", "id": "cta_url", "label": "CTA link" }
