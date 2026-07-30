@@ -1,0 +1,25 @@
+{% comment %}
+  One tab panel: expand product variants into variant-card.
+  Params: product, sole_label, tab_key, max_variants, is_default
+{% endcomment %}
+{%- if product != blank -%}
+  <div
+    class="var-grid{% unless is_default %} is-grid-hidden{% endunless %}"
+    id="grid-{{ tab_key }}"
+    data-grid-tab="{{ tab_key }}"
+  >
+    {%- for variant in product.variants limit: max_variants -%}
+      {%- assign o1d = variant.option1 | downcase -%}
+      {%- assign o2d = variant.option2 | downcase -%}
+      {%- if o1d contains 'kid' or o2d contains 'kid' -%}
+        {%- continue -%}
+      {%- endif -%}
+      {% render 'variant-card',
+        product: product,
+        variant: variant,
+        sole_label: sole_label,
+        tab_key: tab_key
+      %}
+    {%- endfor -%}
+  </div>
+{%- endif -%}

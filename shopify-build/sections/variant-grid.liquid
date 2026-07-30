@@ -1,10 +1,104 @@
 {% comment %}
-  Variant Grid — Tabbed product grid (All/Closed/Open/One-Offs/Outdoor)
-  Source: Approved Home + Collection prototypes
-  Reused on Homepage and Collection pages
+  Variant Grid — streamlined (2026-07-30)
+
+  Capability kept from br-variants / all-variants:
+  - Choose which of Open / Closed / One-Offs / Outdoor tabs show
+  - Populate each tab from a product picker (variants → cards) — same model as live KEEP logic
+  - Size M/L filter, Compare + Size chart, 2-row + See all (VARIANTS-GRID.md)
+
+  Simplified vs old br-variants (~4.5k lines) and early stub:
+  - No Theme Editor junk (fonts, paddings, badge color sprawl)
+  - No product_4/product_5 dual one-off pickers — one One-Offs product
+  - No hardcoded all_products fallbacks that forced every tab on
+  - No tag-filter from a mega-collection
+  - One panel snippet + one card snippet; one lean JS (tabs / size / see-all)
+  - Header chrome locked (Andrew approved)
 {% endcomment %}
 
-<section class="variants-section" id="variants" aria-label="Shop all styles">
+{%- liquid
+  assign use_current = false
+  if product != blank and section.settings.use_current_product
+    assign use_current = true
+  endif
+
+  assign max_variants = section.settings.max_variants | default: 48
+  assign initial_rows = section.settings.initial_rows | default: 2
+  assign see_all_mode = section.settings.see_all | default: 'expand'
+  assign show_all_tab = section.settings.show_all_tab
+
+  if use_current
+    assign show_closed = true
+    assign show_open = false
+    assign show_oneoffs = false
+    assign show_outdoor = false
+    assign product_closed = product
+    assign product_open = nil
+    assign product_oneoffs = nil
+    assign product_outdoor = nil
+    assign show_all_tab = true
+    assign default_tab = 'all'
+  else
+    assign show_closed = section.settings.show_closed
+    assign show_open = section.settings.show_open
+    assign show_oneoffs = section.settings.show_oneoffs
+    assign show_outdoor = section.settings.show_outdoor
+    assign product_closed = section.settings.product_closed
+    assign product_open = section.settings.product_open
+    assign product_oneoffs = section.settings.product_oneoffs
+    assign product_outdoor = section.settings.product_outdoor
+
+    unless show_closed
+      assign product_closed = nil
+    endunless
+    unless show_open
+      assign product_open = nil
+    endunless
+    unless show_oneoffs
+      assign product_oneoffs = nil
+    endunless
+    unless show_outdoor
+      assign product_outdoor = nil
+    endunless
+
+    assign default_tab = section.settings.default_tab | default: 'closed'
+    if default_tab == 'closed' and product_closed == blank
+      assign default_tab = 'open'
+    endif
+    if default_tab == 'open' and product_open == blank
+      assign default_tab = 'oneoffs'
+    endif
+    if default_tab == 'oneoffs' and product_oneoffs == blank
+      assign default_tab = 'outdoor'
+    endif
+    if default_tab == 'outdoor' and product_outdoor == blank
+      if product_closed != blank
+        assign default_tab = 'closed'
+      elsif product_open != blank
+        assign default_tab = 'open'
+      elsif product_oneoffs != blank
+        assign default_tab = 'oneoffs'
+      elsif show_all_tab
+        assign default_tab = 'all'
+      endif
+    endif
+  endif
+
+  assign label_closed = section.settings.label_closed | default: 'Closed Sole'
+  assign label_open = section.settings.label_open | default: 'Open Sole'
+  assign label_oneoffs = section.settings.label_oneoffs | default: 'One-Offs'
+  assign label_outdoor = section.settings.label_outdoor | default: 'Outdoor'
+-%}
+
+<section
+  class="variants-section"
+  id="variants-{{ section.id }}"
+  aria-label="Shop all styles"
+  data-variants-collapse
+  data-initial-rows="{{ initial_rows }}"
+  data-see-all="{{ see_all_mode }}"
+  data-variants-expanded="false"
+  data-default-tab="{{ default_tab }}"
+>
   <div class="variants-inner">
     <header class="variants-head align-editorial">
       {% if section.settings.eyebrow != blank %}
@@ -16,64 +110,137 @@
       {% endif %}
     </header>
 
-    <div class="variants-toolbar">
-      <div class="variants-tabs" role="tablist">
-        {% if section.settings.show_all_tab %}
-          <button class="variants-tab is-active" role="tab" aria-selected="true" data-tab="all">All</button>
-        {% endif %}
-        <button class="variants-tab{% unless section.settings.show_all_tab %} is-active{% endunless %}" role="tab" aria-selected="{% unless section.settings.show_all_tab %}true{% else %}false{% endunless %}" data-tab="closed">Closed Sole</button>
-        <button class="variants-tab" role="tab" aria-selected="false" data-tab="open">Open Sole</button>
-        <button class="variants-tab" role="tab" aria-selected="false" data-tab="oneoffs">One-Offs</button>
-        <button class="variants-tab" role="tab" aria-selected="false" data-tab="outdoor">Outdoor</button>
-      </div>
-      <div class="variants-utils">
-        <div class="variants-size">
-          <span class="variants-size__label">Size</span>
-          <button class="variants-size__btn is-active" data-size="m">M</button>
-          <button class="variants-size__btn" data-size="l">L</button>
+    {% unless use_current %}
+      <div class="variants-toolbar">
+        <div class="variants-tabs" role="tablist">
+          {% if show_all_tab %}
+            <button type="button" class="variants-tab{% if default_tab == 'all' %} is-active{% endif %}" role="tab" aria-selected="{% if default_tab == 'all' %}true{% else %}false{% endif %}" data-tab="all">All</button>
+          {% endif %}
+          {% if product_closed != blank %}
+            <button type="button" class="variants-tab{% if default_tab == 'closed' %} is-active{% endif %}" role="tab" aria-selected="{% if default_tab == 'closed' %}true{% else %}false{% endif %}" data-tab="closed">{{ label_closed }}</button>
+          {% endif %}
+          {% if product_open != blank %}
+            <button type="button" class="variants-tab{% if default_tab == 'open' %} is-active{% endif %}" role="tab" aria-selected="{% if default_tab == 'open' %}true{% else %}false{% endif %}" data-tab="open">{{ label_open }}</button>
+          {% endif %}
+          {% if product_oneoffs != blank %}
+            <button type="button" class="variants-tab{% if default_tab == 'oneoffs' %} is-active{% endif %}" role="tab" aria-selected="{% if default_tab == 'oneoffs' %}true{% else %}false{% endif %}" data-tab="oneoffs">{{ label_oneoffs }}</button>
+          {% endif %}
+          {% if product_outdoor != blank %}
+            <button type="button" class="variants-tab{% if default_tab == 'outdoor' %} is-active{% endif %}" role="tab" aria-selected="{% if default_tab == 'outdoor' %}true{% else %}false{% endif %}" data-tab="outdoor">{{ label_outdoor }}</button>
+          {% endif %}
         </div>
-        <a href="/pages/size-chart" class="variants-link">Size chart →</a>
-        <a href="/pages/compare-open-closed-sole" class="variants-link">Compare →</a>
+        <div class="variants-utils">
+          <div class="variants-size" data-variants-size>
+            <span class="variants-size__label">Size</span>
+            <button type="button" class="variants-size__btn is-active" data-size="M">M</button>
+            <button type="button" class="variants-size__btn" data-size="L">L</button>
+          </div>
+          <a href="{{ section.settings.size_chart_url | default: '/pages/size-chart' }}" class="variants-link">Size chart →</a>
+          <a href="{{ section.settings.compare_url | default: '/pages/compare-open-closed-sole' }}" class="variants-link">Compare →</a>
+        </div>
       </div>
-    </div>
+    {% endunless %}
 
-    <div class="variants-grid" id="variants-grid">
-      {% assign collection_handle = section.settings.collection | default: 'grippy-shoes' %}
-      {% for product in collections[collection_handle].products limit: section.settings.products_per_page %}
-        {% render 'product-card', product: product %}
-      {% endfor %}
-    </div>
+    {%- if use_current and product_closed != blank -%}
+      {% render 'variant-grid-panel',
+        product: product_closed,
+        sole_label: '',
+        tab_key: 'all',
+        max_variants: max_variants,
+        is_default: true
+      %}
+    {%- else -%}
+      {%- liquid
+        assign def_all = false
+        if default_tab == 'all'
+          assign def_all = true
+        endif
+        assign def_closed = def_all
+        assign def_open = def_all
+        assign def_oneoffs = def_all
+        assign def_outdoor = def_all
+        if default_tab == 'closed'
+          assign def_closed = true
+        elsif default_tab == 'open'
+          assign def_open = true
+        elsif default_tab == 'oneoffs'
+          assign def_oneoffs = true
+        elsif default_tab == 'outdoor'
+          assign def_outdoor = true
+        endif
+      -%}
+      {% if product_closed != blank %}
+        {% render 'variant-grid-panel',
+          product: product_closed,
+          sole_label: 'Closed Sole',
+          tab_key: 'closed',
+          max_variants: max_variants,
+          is_default: def_closed
+        %}
+      {% endif %}
+      {% if product_open != blank %}
+        {% render 'variant-grid-panel',
+          product: product_open,
+          sole_label: 'Open Sole',
+          tab_key: 'open',
+          max_variants: max_variants,
+          is_default: def_open
+        %}
+      {% endif %}
+      {% if product_oneoffs != blank %}
+        {% render 'variant-grid-panel',
+          product: product_oneoffs,
+          sole_label: 'One-Off',
+          tab_key: 'oneoffs',
+          max_variants: max_variants,
+          is_default: def_oneoffs
+        %}
+      {% endif %}
+      {% if product_outdoor != blank %}
+        {% render 'variant-grid-panel',
+          product: product_outdoor,
+          sole_label: 'Outdoor',
+          tab_key: 'outdoor',
+          max_variants: max_variants,
+          is_default: def_outdoor
+        %}
+      {% endif %}
+    {%- endif -%}
 
-    {% if section.settings.view_all_url != blank %}
-      <div class="variants-footer">
-        <a href="{{ section.settings.view_all_url }}" class="btn btn--outline">View all colors →</a>
+    {%- if see_all_mode == 'expand' -%}
+      <div class="variants-see-all">
+        <button type="button" class="variants-see-all__btn" data-variants-see-all aria-expanded="false">See all colors &amp; styles</button>
       </div>
-    {% endif %}
+    {%- elsif see_all_mode == 'link' and section.settings.see_all_url != blank -%}
+      <div class="variants-see-all">
+        <a href="{{ section.settings.see_all_url }}" class="variants-see-all__btn">See all colors &amp; styles</a>
+      </div>
+    {%- endif -%}
   </div>
 </section>
 
 <style>
-  .variants-section {
+  #shopify-section-{{ section.id }} .variants-section {
     padding: var(--space-15) var(--section-padding-x);
     background: var(--bg-primary);
   }
 
-  .variants-inner {
+  #shopify-section-{{ section.id }} .variants-inner {
     max-width: var(--max-width);
     margin: 0 auto;
   }
 
-  .variants-head {
+  #shopify-section-{{ section.id }} .variants-head {
     text-align: left;
     margin-bottom: var(--space-9);
   }
 
-  .variants-head__eyebrow {
+  #shopify-section-{{ section.id }} .variants-head__eyebrow {
     margin: 0 0 var(--gap-a);
     color: var(--type-label-color);
   }
 
-  .variants-head__title {
+  #shopify-section-{{ section.id }} .variants-head__title {
     font-size: clamp(28px, 3.2vw, 36px) !important;
     font-weight: 400 !important;
     line-height: 1.15 !important;
@@ -81,12 +248,12 @@
     margin: 0 0 16px;
   }
 
-  .variants-head__body {
+  #shopify-section-{{ section.id }} .variants-head__body {
     max-width: 48ch;
     margin: 0;
   }
 
-  .variants-toolbar {
+  #shopify-section-{{ section.id }} .variants-toolbar {
     border-top: 1px solid var(--border-default);
     border-bottom: 1px solid var(--border-default);
     padding: 14px 0;
@@ -98,14 +265,14 @@
     margin-bottom: var(--space-9);
   }
 
-  .variants-tabs {
+  #shopify-section-{{ section.id }} .variants-tabs {
     display: flex;
     align-items: center;
     gap: var(--space-3);
     flex-wrap: wrap;
   }
 
-  .variants-tab {
+  #shopify-section-{{ section.id }} .variants-tab {
     padding: 10px 24px;
     font-size: 12px;
     font-weight: var(--weight-bold);
@@ -120,25 +287,25 @@
     transition: all var(--transition-fast);
   }
 
-  .variants-tab.is-active {
+  #shopify-section-{{ section.id }} .variants-tab.is-active {
     color: var(--color-white);
     background: var(--color-charcoal);
     border-color: var(--color-charcoal);
   }
 
-  .variants-utils {
+  #shopify-section-{{ section.id }} .variants-utils {
     display: flex;
     align-items: center;
     gap: var(--space-4);
   }
 
-  .variants-size {
+  #shopify-section-{{ section.id }} .variants-size {
     display: flex;
     align-items: center;
     gap: var(--space-2);
   }
 
-  .variants-size__label {
+  #shopify-section-{{ section.id }} .variants-size__label {
     font-size: 12px;
     font-weight: var(--type-label-weight);
     text-transform: uppercase;
@@ -146,7 +313,7 @@
     color: var(--text-primary);
   }
 
-  .variants-size__btn {
+  #shopify-section-{{ section.id }} .variants-size__btn {
     font-size: 12px;
     font-weight: var(--weight-bold);
     padding: 7px 14px;
@@ -160,12 +327,12 @@
     transition: all var(--transition-fast);
   }
 
-  .variants-size__btn.is-active {
+  #shopify-section-{{ section.id }} .variants-size__btn.is-active {
     color: var(--color-white);
     background: var(--color-charcoal);
   }
 
-  .variants-link {
+  #shopify-section-{{ section.id }} .variants-link {
     font-size: var(--text-sm);
     color: var(--text-muted);
     text-decoration: none;
@@ -173,72 +340,411 @@
     padding-bottom: 1px;
   }
 
-  .variants-grid {
+  #shopify-section-{{ section.id }} .var-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    column-gap: var(--grid-gap);
+    column-gap: 28px;
     row-gap: 56px;
   }
 
-  .variants-footer {
+  #shopify-section-{{ section.id }} .var-grid.is-grid-hidden {
+    display: none !important;
+  }
+
+  #shopify-section-{{ section.id }} .var-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #e8e2d8;
+    border-radius: 6px;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+    background: #fff;
+  }
+
+  #shopify-section-{{ section.id }} .var-card:hover {
+    box-shadow: 0 4px 16px rgba(28, 25, 22, 0.08);
+  }
+
+  #shopify-section-{{ section.id }} .var-card--sold-out {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  #shopify-section-{{ section.id }} .var-card__img {
+    width: 100%;
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: #f5f2ec;
+    position: relative;
+    display: block;
+  }
+
+  #shopify-section-{{ section.id }} .var-card__imglink {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  #shopify-section-{{ section.id }} .var-card__img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+  }
+
+  #shopify-section-{{ section.id }} .var-card__img:hover img {
+    transform: scale(1.04);
+  }
+
+  #shopify-section-{{ section.id }} .var-card__img--muted {
+    filter: grayscale(0.4);
+  }
+
+  #shopify-section-{{ section.id }} .var-card__placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    color: #8a8a8a;
+  }
+
+  #shopify-section-{{ section.id }} .var-card__badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 2px;
+    z-index: 1;
+  }
+
+  #shopify-section-{{ section.id }} .var-card__badge--le {
+    background: #458CD9;
+    color: #fff;
+  }
+
+  #shopify-section-{{ section.id }} .var-card__badge--soldout {
+    background: #1c1916;
+    color: #fff;
+  }
+
+  #shopify-section-{{ section.id }} .var-card__content {
+    padding: 18px;
     text-align: center;
-    margin-top: var(--space-9);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  #shopify-section-{{ section.id }} .var-card__name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1c1916;
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  #shopify-section-{{ section.id }} .var-card__name a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  #shopify-section-{{ section.id }} .var-card__name a:hover {
+    text-decoration: underline;
+  }
+
+  #shopify-section-{{ section.id }} .var-card__meta {
+    font-size: 12px;
+    color: #8a8a8a;
+    margin: 0;
+  }
+
+  #shopify-section-{{ section.id }} .var-card__price {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1c1916;
+    margin: 4px 0 0;
+  }
+
+  #shopify-section-{{ section.id }} .var-card__installment {
+    font-size: 12px;
+    color: #8a8a8a;
+    margin: 2px 0 0;
+  }
+
+  #shopify-section-{{ section.id }} .var-card__form {
+    width: 100%;
+    margin-top: 12px;
+  }
+
+  #shopify-section-{{ section.id }} .var-card__add {
+    margin-top: 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    background: #1c1916;
+    border: 1px solid #1c1916;
+    border-radius: 4px;
+    min-height: 44px;
+    padding: 12px 20px;
+    letter-spacing: 0.03em;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    width: 100%;
+    font-family: inherit;
+  }
+
+  #shopify-section-{{ section.id }} .var-card__add:hover {
+    background: #c45c3f;
+    border-color: #c45c3f;
+    color: #fff;
+  }
+
+  #shopify-section-{{ section.id }} .var-card__sold {
+    margin-top: 12px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #8a8a8a;
+  }
+
+  #shopify-section-{{ section.id }} .var-card.is-size-hidden,
+  #shopify-section-{{ section.id }} .var-card.is-variants-hidden {
+    display: none !important;
+  }
+
+  #shopify-section-{{ section.id }} .variants-see-all {
+    text-align: center;
+    margin: 36px 0 0;
+  }
+
+  #shopify-section-{{ section.id }} .variants-see-all__btn {
+    appearance: none;
+    background: none;
+    border: none;
+    border-bottom: 1px solid #1c1916;
+    padding: 0 0 2px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1c1916;
+    cursor: pointer;
+    font-family: inherit;
+    text-decoration: none;
+  }
+
+  #shopify-section-{{ section.id }} .variants-see-all__btn:hover {
+    color: #c45c3f;
+    border-bottom-color: #c45c3f;
+  }
+
+  #shopify-section-{{ section.id }} .variants-see-all[hidden] {
+    display: none !important;
   }
 
   @media (max-width: 1024px) {
-    .variants-grid {
+    #shopify-section-{{ section.id }} .var-grid {
       grid-template-columns: repeat(2, 1fr);
     }
   }
 
   @media (max-width: 768px) {
-    .variants-section {
+    #shopify-section-{{ section.id }} .variants-section {
       padding: var(--section-padding-y-mobile) var(--section-padding-x-mobile);
     }
 
-    .variants-toolbar {
-      flex-direction: column;
-      align-items: flex-start;
+    #shopify-section-{{ section.id }} .variants-head {
+      margin-bottom: 28px;
     }
 
-    .variants-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: var(--space-4);
-      column-gap: var(--space-3);
-      row-gap: var(--space-6);
+    #shopify-section-{{ section.id }} .variants-toolbar {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+      padding: 12px 0;
+    }
+
+    #shopify-section-{{ section.id }} .variants-tabs {
+      flex-wrap: nowrap;
+      gap: 8px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    #shopify-section-{{ section.id }} .variants-tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    #shopify-section-{{ section.id }} .variants-tab {
+      flex: 0 0 auto;
+      min-height: 44px;
+      white-space: nowrap;
+    }
+
+    #shopify-section-{{ section.id }} .variants-utils {
+      width: 100%;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    #shopify-section-{{ section.id }} .variants-size__btn {
+      min-width: 44px;
+      min-height: 44px;
+    }
+
+    #shopify-section-{{ section.id }} .var-grid {
+      grid-template-columns: repeat(2, 1fr) !important;
+      column-gap: 10px !important;
+      row-gap: 20px !important;
+    }
+
+    #shopify-section-{{ section.id }} .var-card__content {
+      padding: 14px 10px 16px;
+    }
+
+    #shopify-section-{{ section.id }} .var-card__name {
+      font-size: 15px;
+    }
+
+    #shopify-section-{{ section.id }} .var-card__price {
+      font-size: 15px;
+    }
+
+    #shopify-section-{{ section.id }} .var-card__add {
+      font-size: 12px;
+      padding: 12px 10px;
     }
   }
 </style>
 
 <script>
-  (function() {
-    var tablist = document.querySelector('.variants-tabs');
-    if (!tablist) return;
+  (function () {
+    var section = document.getElementById('variants-{{ section.id }}');
+    if (!section) return;
 
-    var tabs = tablist.querySelectorAll('[data-tab]');
-    var grid = document.getElementById('variants-grid');
-    if (!grid) return;
+    var activeSize = 'M';
+    var resizeT;
 
-    tabs.forEach(function(tab) {
-      tab.addEventListener('click', function() {
-        tabs.forEach(function(t) {
-          t.classList.remove('is-active');
-          t.setAttribute('aria-selected', 'false');
-        });
-        tab.classList.add('is-active');
-        tab.setAttribute('aria-selected', 'true');
+    function cols() {
+      return window.matchMedia('(max-width: 1024px)').matches ? 2 : 4;
+    }
 
-        var filter = tab.getAttribute('data-tab');
-        var cards = grid.querySelectorAll('.product-card');
-        cards.forEach(function(card) {
-          if (filter === 'all') {
-            card.style.display = '';
-          } else {
-            var tags = (card.getAttribute('data-tags') || '').toLowerCase();
-            card.style.display = tags.indexOf(filter) > -1 ? '' : 'none';
+    function limitFor() {
+      var rows = parseInt(section.getAttribute('data-initial-rows') || '2', 10) || 2;
+      return rows * cols();
+    }
+
+    function grids() {
+      return section.querySelectorAll('.var-grid');
+    }
+
+    function activeGrid() {
+      var list = grids();
+      for (var i = 0; i < list.length; i++) {
+        if (!list[i].classList.contains('is-grid-hidden')) return list[i];
+      }
+      return list[0] || null;
+    }
+
+    function cardsOf(grid) {
+      if (!grid) return [];
+      return Array.prototype.filter.call(grid.children, function (el) {
+        return el.classList && el.classList.contains('var-card') && !el.classList.contains('is-size-hidden');
+      });
+    }
+
+    function applySizeFilter() {
+      section.querySelectorAll('.var-card').forEach(function (card) {
+        var size = (card.getAttribute('data-br-size') || 'M').toUpperCase();
+        card.classList.toggle('is-size-hidden', size !== activeSize);
+      });
+    }
+
+    function applyCollapse() {
+      var mode = section.getAttribute('data-see-all') || 'expand';
+      var expanded = section.getAttribute('data-variants-expanded') === 'true' || mode === 'off';
+      var limit = limitFor();
+      var wrap = section.querySelector('.variants-see-all');
+      var btn = section.querySelector('[data-variants-see-all]');
+
+      grids().forEach(function (grid) {
+        var visibleIdx = 0;
+        Array.prototype.forEach.call(grid.children, function (card) {
+          if (!card.classList || !card.classList.contains('var-card')) return;
+          if (card.classList.contains('is-size-hidden')) {
+            card.classList.add('is-variants-hidden');
+            return;
           }
+          card.classList.toggle('is-variants-hidden', !(expanded || visibleIdx < limit));
+          visibleIdx++;
         });
       });
+
+      var total = cardsOf(activeGrid()).length;
+      var needs = mode !== 'off' && total > limit;
+      if (wrap) {
+        if (needs) wrap.removeAttribute('hidden');
+        else wrap.setAttribute('hidden', '');
+      }
+      if (btn && mode === 'expand') {
+        btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+        btn.textContent = expanded ? 'Show fewer' : 'See all colors & styles';
+      }
+    }
+
+    function switchTab(tab) {
+      section.setAttribute('data-variants-expanded', 'false');
+      grids().forEach(function (grid) {
+        var key = grid.getAttribute('data-grid-tab');
+        grid.classList.toggle('is-grid-hidden', !(tab === 'all' || key === tab));
+      });
+      section.querySelectorAll('.variants-tab').forEach(function (t) {
+        var on = t.getAttribute('data-tab') === tab;
+        t.classList.toggle('is-active', on);
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      applyCollapse();
+    }
+
+    section.querySelectorAll('.variants-tab').forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        switchTab(tab.getAttribute('data-tab'));
+      });
+    });
+
+    section.querySelectorAll('[data-size]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        activeSize = btn.getAttribute('data-size');
+        section.querySelectorAll('[data-size]').forEach(function (b) {
+          b.classList.toggle('is-active', b === btn);
+        });
+        section.setAttribute('data-variants-expanded', 'false');
+        applySizeFilter();
+        applyCollapse();
+      });
+    });
+
+    var seeBtn = section.querySelector('[data-variants-see-all]');
+    if (seeBtn && (section.getAttribute('data-see-all') || 'expand') === 'expand') {
+      seeBtn.addEventListener('click', function () {
+        var open = section.getAttribute('data-variants-expanded') === 'true';
+        section.setAttribute('data-variants-expanded', open ? 'false' : 'true');
+        applyCollapse();
+      });
+    }
+
+    applySizeFilter();
+    applyCollapse();
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeT);
+      resizeT = setTimeout(applyCollapse, 120);
     });
   })();
 </script>
@@ -248,12 +754,49 @@
   "name": "Variant Grid",
   "settings": [
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Two versions. One performance." },
-    { "type": "text", "id": "title", "label": "Title", "default": "Shop all styles & colors", "info": "Tier 3 — sentence case" },
-    { "type": "textarea", "id": "body", "label": "Body", "default": "One patented grip. Closed Sole or Open Sole — choose the build that fits your practice. $74." },
-    { "type": "collection", "id": "collection", "label": "Collection" },
-    { "type": "range", "id": "products_per_page", "min": 4, "max": 16, "step": 4, "default": 8, "label": "Products to show" },
+    { "type": "text", "id": "title", "label": "Title", "default": "Shop all colors & styles", "info": "Header chrome locked — keep title/body structure." },
+    { "type": "textarea", "id": "body", "label": "Body", "default": "Grip shoes for Barre, Pilates, Yoga—secure in every hold. No slipping. No resets." },
+
+    { "type": "header", "content": "Tabs — enable + product per tab" },
+    { "type": "paragraph", "content": "Each enabled tab needs a product. Cards = that product’s color×size variants (same KEEP model as the old All Variants section)." },
+    { "type": "checkbox", "id": "use_current_product", "label": "Use current product (PDP — no tabs)", "default": false },
+
+    { "type": "checkbox", "id": "show_closed", "label": "Show Closed Sole tab", "default": true },
+    { "type": "text", "id": "label_closed", "label": "Closed Sole tab label", "default": "Closed Sole" },
+    { "type": "product", "id": "product_closed", "label": "Closed Sole product" },
+
+    { "type": "checkbox", "id": "show_open", "label": "Show Open Sole tab", "default": true },
+    { "type": "text", "id": "label_open", "label": "Open Sole tab label", "default": "Open Sole" },
+    { "type": "product", "id": "product_open", "label": "Open Sole product" },
+
+    { "type": "checkbox", "id": "show_oneoffs", "label": "Show One-Offs tab", "default": true },
+    { "type": "text", "id": "label_oneoffs", "label": "One-Offs tab label", "default": "One-Offs" },
+    { "type": "product", "id": "product_oneoffs", "label": "One-Offs product" },
+
+    { "type": "checkbox", "id": "show_outdoor", "label": "Show Outdoor tab", "default": true },
+    { "type": "text", "id": "label_outdoor", "label": "Outdoor tab label", "default": "Outdoor" },
+    { "type": "product", "id": "product_outdoor", "label": "Outdoor product" },
+
     { "type": "checkbox", "id": "show_all_tab", "label": "Show 'All' tab", "default": false },
-    { "type": "url", "id": "view_all_url", "label": "View all link" }
+    { "type": "select", "id": "default_tab", "label": "Default tab", "options": [
+      { "value": "closed", "label": "Closed Sole" },
+      { "value": "open", "label": "Open Sole" },
+      { "value": "oneoffs", "label": "One-Offs" },
+      { "value": "outdoor", "label": "Outdoor" },
+      { "value": "all", "label": "All" }
+    ], "default": "closed" },
+
+    { "type": "header", "content": "Collapse / See all" },
+    { "type": "range", "id": "initial_rows", "min": 1, "max": 6, "step": 1, "default": 2, "label": "Initial rows visible" },
+    { "type": "select", "id": "see_all", "label": "See all behavior", "options": [
+      { "value": "expand", "label": "Expand on page" },
+      { "value": "link", "label": "Link to URL" },
+      { "value": "off", "label": "Show full grid" }
+    ], "default": "expand" },
+    { "type": "url", "id": "see_all_url", "label": "See all link URL" },
+    { "type": "range", "id": "max_variants", "min": 8, "max": 80, "step": 4, "default": 48, "label": "Max variants per tab" },
+    { "type": "url", "id": "size_chart_url", "label": "Size chart URL" },
+    { "type": "url", "id": "compare_url", "label": "Compare URL" }
   ],
   "presets": [{ "name": "Variant Grid" }]
 }

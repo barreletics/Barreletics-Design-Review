@@ -1,0 +1,171 @@
+{% comment %}
+  Variant Card — Home WORKING / Collection v18 chrome
+  One card per size×color variant. No sole-type image badges (VARIANTS-GRID.md).
+
+  {% render 'variant-card',
+    product: product,
+    variant: variant,
+    sole_label: 'Closed Sole',
+    tab_key: 'closed'
+  %}
+{% endcomment %}
+
+{%- liquid
+  assign vg_product = product
+  assign vg_variant = variant
+  assign vg_sole = sole_label | default: ''
+  assign vg_tab = tab_key | default: 'all'
+
+  assign opt_count = vg_product.options_with_values.size
+  assign opt0 = ''
+  assign opt1 = ''
+  if opt_count > 0
+    assign opt0 = vg_product.options_with_values[0].name | downcase
+  endif
+  if opt_count > 1
+    assign opt1 = vg_product.options_with_values[1].name | downcase
+  endif
+
+  assign color_name = ''
+  assign has_color_opt = false
+  if opt0 == 'color'
+    assign color_name = vg_variant.option1
+    assign has_color_opt = true
+  elsif opt1 == 'color'
+    assign color_name = vg_variant.option2
+    assign has_color_opt = true
+  endif
+
+  assign size_raw = ''
+  if opt0 == 'size'
+    assign size_raw = vg_variant.option1
+  elsif opt1 == 'size'
+    assign size_raw = vg_variant.option2
+  endif
+  assign size_short = size_raw | split: ' (' | first | strip
+  if size_short == blank
+    assign size_short = size_raw
+  endif
+
+  assign handle_down = vg_product.handle | downcase
+  if has_color_opt == false
+    if handle_down contains 'coperni'
+      assign color_name = 'Coperni'
+    else
+      assign color_name = vg_product.title | split: '—' | first | split: '–' | first | strip
+    endif
+  endif
+
+  assign display_name = color_name
+  if display_name == blank
+    assign display_name = vg_product.title
+  endif
+
+  assign size_tier = size_short | upcase | slice: 0
+  if size_tier != 'M' and size_tier != 'L'
+    assign size_down = size_short | downcase
+    if size_down contains 'medium' or size_down contains 'm ('
+      assign size_tier = 'M'
+    elsif size_down contains 'large' or size_down contains 'l ('
+      assign size_tier = 'L'
+    else
+      assign size_tier = 'M'
+    endif
+  endif
+
+  assign is_limited = false
+  assign le_me = vg_product.metafields.custom.limited_colors | default: vg_product.metafields.custom.limited_edition_colors
+  if le_me != blank and color_name != blank
+    assign le_raw = le_me.value | default: le_me | append: ''
+    assign color_clean = color_name | strip | downcase | handleize
+    assign le_list = le_raw | split: ','
+    for le_c in le_list
+      assign le_clean = le_c | strip | downcase | handleize
+      if le_clean != blank and le_clean == color_clean
+        assign is_limited = true
+        break
+      endif
+    endfor
+  endif
+  if handle_down contains 'coperni'
+    assign is_limited = true
+  endif
+
+  assign meta_line = vg_sole
+  if size_short != blank and vg_sole != blank
+    assign meta_line = vg_sole | append: ' · Size ' | append: size_tier
+  elsif size_short != blank
+    assign meta_line = 'Size ' | append: size_tier
+  endif
+  if is_limited and vg_sole == 'One-Off'
+    assign meta_line = 'One-Off · Limited Edition'
+  endif
+
+  assign installment = vg_variant.price | divided_by: 4.0
+  assign card_url = vg_product.url | append: '?variant=' | append: vg_variant.id
+  assign img = vg_variant.featured_image | default: vg_product.featured_image
+-%}
+
+<article
+  class="var-card{% unless vg_variant.available %} var-card--sold-out{% endunless %}"
+  data-tab="{{ vg_tab | escape }}"
+  data-br-size="{{ size_tier | escape }}"
+  data-variant-id="{{ vg_variant.id }}"
+>
+  {%- if vg_variant.available -%}
+    <a class="var-card__img var-card__imglink" href="{{ card_url }}">
+      {%- if img != blank -%}
+        <img
+          src="{{ img | image_url: width: 600 }}"
+          alt="{{ display_name | escape }}"
+          width="600"
+          height="600"
+          loading="lazy"
+        >
+      {%- else -%}
+        <span class="var-card__placeholder">{{ display_name | slice: 0 }}</span>
+      {%- endif -%}
+      {%- if is_limited -%}
+        <span class="var-card__badge var-card__badge--le">Limited Edition</span>
+      {%- endif -%}
+    </a>
+  {%- else -%}
+    <div class="var-card__img">
+      {%- if img != blank -%}
+        <img
+          src="{{ img | image_url: width: 600 }}"
+          alt="{{ display_name | escape }}"
+          width="600"
+          height="600"
+          loading="lazy"
+          class="var-card__img--muted"
+        >
+      {%- endif -%}
+      <span class="var-card__badge var-card__badge--soldout">Sold Out</span>
+    </div>
+  {%- endif -%}
+
+  <div class="var-card__content">
+    <p class="var-card__name">
+      {%- if vg_variant.available -%}
+        <a href="{{ card_url }}">{{ display_name }}</a>
+      {%- else -%}
+        {{ display_name }}
+      {%- endif -%}
+    </p>
+    {%- if meta_line != blank -%}
+      <p class="var-card__meta">{{ meta_line }}</p>
+    {%- endif -%}
+    <p class="var-card__price">{{ vg_variant.price | money_without_trailing_zeros }}</p>
+    <p class="var-card__installment">or 4 × {{ installment | money_without_trailing_zeros }}</p>
+    {%- if vg_variant.available -%}
+      <form method="post" action="/cart/add" class="var-card__form" data-variant-card-form>
+        <input type="hidden" name="id" value="{{ vg_variant.id }}">
+        <input type="hidden" name="quantity" value="1">
+        <button type="submit" class="var-card__add">Quick Add →</button>
+      </form>
+    {%- else -%}
+      <span class="var-card__sold">Sold Out</span>
+    {%- endif -%}
+  </div>
+</article>
