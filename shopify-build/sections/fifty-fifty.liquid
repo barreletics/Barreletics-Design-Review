@@ -35,7 +35,11 @@
   assign image_scale = section.settings.image_scale | default: 100
   assign contain_width = section.settings.contain_width | default: 72
   assign media_radius = section.settings.media_radius | default: 0
-  assign section_radius = section.settings.section_radius | default: 0
+  assign text_radius = section.settings.section_radius | default: 0
+  assign media_radius_outer = section.settings.media_radius_outer_only
+  assign column_gap = section.settings.column_gap | default: 0
+  assign side_padding = section.settings.side_padding | default: 64
+  assign vertical_padding = section.settings.vertical_padding | default: 88
 
   assign image_scale_ratio = image_scale | times: 1.0 | divided_by: 100.0
 
@@ -56,7 +60,7 @@
 
 <section
   {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | handleize }}"{% endif %}
-  class="split-section{% if section.settings.reverse %} split-section--reverse{% endif %}{% if media_fit == 'contain' %} split-section--contain{% endif %}"
+  class="split-section{% if section.settings.reverse %} split-section--reverse{% endif %}{% if media_fit == 'contain' %} split-section--contain{% endif %}{% if media_radius_outer %} split-section--media-outer-radius{% endif %}"
   style="
     --ff-min-height: {{ min_height }}px;
     --ff-mobile-media-height: {{ mobile_media_height }}px;
@@ -66,7 +70,10 @@
     --ff-image-scale: {{ image_scale_ratio }};
     --ff-contain-width: {{ contain_width }}%;
     --ff-media-radius: {{ media_radius }}px;
-    --ff-section-radius: {{ section_radius }}px;
+    --ff-text-radius: {{ text_radius }}px;
+    --ff-column-gap: {{ column_gap }}px;
+    --ff-side-padding: {{ side_padding }}px;
+    --ff-vertical-padding: {{ vertical_padding }}px;
     --ff-cta-bg: {{ cta_bg }};
     --ff-cta-border: {{ cta_border }};
     {% if title_size != 'default' %}--ff-title-size: {{ title_size }}px;{% endif %}
@@ -167,9 +174,8 @@
   #shopify-section-{{ section.id }} .split-section {
     display: grid;
     grid-template-columns: var(--ff-media-fr, 1fr) var(--ff-text-fr, 1fr);
+    gap: var(--ff-column-gap, 0);
     min-height: var(--ff-min-height, 640px);
-    border-radius: var(--ff-section-radius, 0);
-    overflow: hidden;
   }
   #shopify-section-{{ section.id }} .split-section--reverse {
     grid-template-columns: var(--ff-text-fr, 1fr) var(--ff-media-fr, 1fr);
@@ -180,10 +186,18 @@
     position: relative;
     overflow: hidden;
     min-height: calc(var(--ff-min-height, 640px) * 0.75);
-    border-top-left-radius: var(--ff-media-radius, 0);
+    border-radius: var(--ff-media-radius, 0);
+  }
+  /* Round media only on the outer edge (away from the text column) */
+  #shopify-section-{{ section.id }} .split-section--media-outer-radius .split-media {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  #shopify-section-{{ section.id }} .split-section--media-outer-radius.split-section--reverse .split-media {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
     border-top-right-radius: var(--ff-media-radius, 0);
     border-bottom-right-radius: var(--ff-media-radius, 0);
-    border-bottom-left-radius: var(--ff-media-radius, 0);
   }
   #shopify-section-{{ section.id }} .split-media__img,
   #shopify-section-{{ section.id }} .split-media__video {
@@ -232,7 +246,8 @@
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    padding: 88px 64px;
+    padding: var(--ff-vertical-padding, 88px) var(--ff-side-padding, 64px);
+    border-radius: var(--ff-text-radius, 0);
     text-align: var(--align-editorial, left);
   }
   #shopify-section-{{ section.id }} .split-text__title {
@@ -307,8 +322,16 @@
     #shopify-section-{{ section.id }} .split-media {
       min-height: var(--ff-mobile-media-height, 320px);
     }
+    #shopify-section-{{ section.id }} .split-section--media-outer-radius .split-media,
+    #shopify-section-{{ section.id }} .split-section--media-outer-radius.split-section--reverse .split-media {
+      border-radius: var(--ff-media-radius, 0);
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
     #shopify-section-{{ section.id }} .split-text {
-      padding: var(--section-padding-y-mobile, 48px) var(--section-padding-x-mobile, 16px);
+      padding:
+        min(var(--ff-vertical-padding, 88px), var(--section-padding-y-mobile, 48px))
+        min(var(--ff-side-padding, 64px), var(--section-padding-x-mobile, 16px));
     }
   }
 </style>
@@ -541,8 +564,8 @@
     {
       "type": "text",
       "id": "image_url",
-      "label": "Image URL fallback",
-      "info": "Used only when the Shopify image picker is empty and there is no video — for CDN/external stills. Leave blank if Shopify image is set, or if you are using video."
+      "label": "Image URL (optional fallback)",
+      "info": "Only used when the Shopify image picker is empty (and there is no video). Needed when: (1) you paste a CDN/external URL without uploading to Shopify Files, (2) theme defaults ship with mock CDN URLs, or (3) the picker is left blank. If both Shopify image and this URL are set, Shopify image wins. Leave blank if you always use the image picker."
     },
     { "type": "text", "id": "image_alt", "label": "Image alt text" },
 
@@ -582,6 +605,39 @@
     { "type": "checkbox", "id": "reverse", "label": "Reverse layout (text left, media right)", "default": false },
     {
       "type": "range",
+      "id": "column_gap",
+      "label": "Column gap (gutter)",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Space between the media and text columns. WORKING mock is flush (0)."
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Side padding",
+      "min": 16,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 64,
+      "info": "Horizontal padding inside the text/content panel. WORKING mock is 64px."
+    },
+    {
+      "type": "range",
+      "id": "vertical_padding",
+      "label": "Vertical padding",
+      "min": 32,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 88,
+      "info": "Top and bottom padding inside the text/content panel. WORKING mock is 88px."
+    },
+    {
+      "type": "range",
       "id": "media_radius",
       "label": "Media corner radius",
       "min": 0,
@@ -589,18 +645,25 @@
       "step": 2,
       "unit": "px",
       "default": 0,
-      "info": "One control — applies equally to all four corners of the media panel (left and right, top and bottom)."
+      "info": "Rounds the media panel only — independent of the text panel."
+    },
+    {
+      "type": "checkbox",
+      "id": "media_radius_outer_only",
+      "label": "Round media only on outer edge",
+      "default": false,
+      "info": "When on, only the outer corners of the media (away from the text column) are rounded. Off = all four media corners."
     },
     {
       "type": "range",
       "id": "section_radius",
-      "label": "Section corner radius",
+      "label": "Text panel corner radius",
       "min": 0,
       "max": 24,
       "step": 2,
       "unit": "px",
       "default": 0,
-      "info": "Applies equally to all four corners of the whole section frame."
+      "info": "Rounds the text/content panel only — independent of the media panel."
     },
     { "type": "color", "id": "bg_color", "label": "Background color", "default": "#ffffff" },
     {
@@ -612,8 +675,8 @@
     {
       "type": "text",
       "id": "aria_label",
-      "label": "Section aria-label",
-      "info": "Accessibility name for screen readers — not visible on the page. Leave blank to use the Heading."
+      "label": "Accessibility name (aria-label)",
+      "info": "Accessibility name for screen readers. Not shown on the page. Leave blank unless you need a special name — blank uses the Heading."
     },
 
     { "type": "header", "content": "Section — Fifty-fifty — media fit" },
