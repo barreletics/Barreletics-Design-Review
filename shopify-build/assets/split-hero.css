@@ -16,7 +16,10 @@
   overflow: hidden;
   min-height: var(--hero-min-height, 92vh);
   background: var(--bg-alternate);
-  border-radius: var(--sh-media-radius, 0);
+  border-top-left-radius: var(--sh-media-radius, 0);
+  border-top-right-radius: var(--sh-media-radius, 0);
+  border-bottom-right-radius: var(--sh-media-radius, 0);
+  border-bottom-left-radius: var(--sh-media-radius, 0);
 }
 
 .split-hero__media .split-hero__img,
@@ -63,7 +66,7 @@
   align-items: center;
   gap: var(--sh-trust-gap, 10px);
   flex-wrap: wrap;
-  margin: 0 0 var(--gap-a);
+  margin: 0 0 var(--sh-trust-below, var(--gap-a));
   font-size: var(--sh-trust-size, var(--type-trust-size));
   font-weight: var(--type-trust-weight);
   color: var(--text-body);
@@ -109,7 +112,7 @@
 .split-hero__body {
   font-family: var(--font-family);
   font-size: var(--sh-body-size, var(--type-lede-size));
-  font-weight: var(--type-lede-weight);
+  font-weight: var(--sh-body-weight, var(--type-lede-weight));
   line-height: var(--type-lede-leading);
   color: var(--text-body);
   margin: 0 0 var(--gap-c);
@@ -118,7 +121,7 @@
 
 .split-hero__body p {
   margin: 0 0 0.75em;
-  font-weight: var(--type-lede-weight);
+  font-weight: inherit;
 }
 
 .split-hero__body p:last-child {
@@ -139,17 +142,22 @@
   justify-content: center;
   min-height: 52px;
   padding: 16px 40px;
-  background: var(--accent-primary);
+  background: var(--sh-cta-bg, var(--accent-primary));
   color: var(--color-white);
   font-family: var(--font-family);
-  font-size: var(--type-cta-size);
+  font-size: var(--sh-cta-size, var(--type-cta-size));
   font-weight: var(--type-cta-weight);
   letter-spacing: var(--type-cta-tracking);
   text-transform: uppercase;
   border-radius: var(--radius-button);
   text-decoration: none;
   transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
-  border: 1px solid var(--accent-primary);
+  border: 1px solid var(--sh-cta-border, var(--sh-cta-bg, var(--accent-primary)));
+}
+
+.split-hero__cta--outline {
+  background: transparent;
+  color: var(--sh-cta-border, var(--accent-primary));
 }
 
 .split-hero__cta:hover {
@@ -157,6 +165,12 @@
   border-color: var(--color-charcoal);
   color: var(--color-white);
   text-decoration: none;
+}
+
+.split-hero__cta--outline:hover {
+  background: transparent;
+  color: var(--color-charcoal);
+  border-color: var(--color-charcoal);
 }
 
 .split-hero__cta:focus-visible {
@@ -218,7 +232,7 @@ a.split-hero__tag:focus-visible {
   }
 
   .split-hero__trust {
-    margin-bottom: 22px;
+    margin-bottom: var(--sh-trust-below, 22px);
     justify-content: center;
   }
 

@@ -1,6 +1,7 @@
 {% comment %}
   Split hero — 50/50 media | copy
   Authority: Home WORKING · type via design-tokens.css (no local font overrides)
+  Font family is brand Type OS — size/weight only; no font_picker.
   CSS: assets/split-hero.css
 {% endcomment %}
 
@@ -16,48 +17,82 @@
   assign title = section.settings.title
   assign body = section.settings.body
   assign cta_text = section.settings.cta_text
-  assign cta_url = section.settings.cta_url
   assign tag_text = section.settings.tag_text
-  assign tag_url = section.settings.tag_url
   assign trust_text = section.settings.trust_text
-  assign trust_url = section.settings.trust_url
+
   assign heading_level = section.settings.heading_level | default: 'h1'
-  if heading_level != 'h1' and heading_level != 'h2' and heading_level != 'h3'
+  if heading_level != 'h1' and heading_level != 'h2' and heading_level != 'h3' and heading_level != 'h4' and heading_level != 'h5' and heading_level != 'h6'
     assign heading_level = 'h1'
   endif
+
+  assign cta_target = section.settings.cta_link_target | default: 'custom'
+  if cta_target != blank and cta_target != 'custom'
+    assign cta_url = cta_target
+  else
+    assign cta_url = section.settings.cta_url
+  endif
+
+  assign trust_target = section.settings.trust_link_target | default: 'custom'
+  if trust_target != blank and trust_target != 'custom'
+    assign trust_url = trust_target
+  else
+    assign trust_url = section.settings.trust_url
+  endif
+
+  assign tag_target = section.settings.tag_link_target | default: 'custom'
+  if tag_target != blank and tag_target != 'custom'
+    assign tag_url = tag_target
+  else
+    assign tag_url = section.settings.tag_url
+  endif
+
   if image_alt == blank and image != blank
     assign image_alt = image.alt | default: title
   endif
-  if image_url == blank
-    assign image_url = 'https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=2400'
-  endif
+
   assign reverse_layout = section.settings.reverse_layout
   assign title_size = section.settings.title_size | default: 'default'
   assign body_size = section.settings.body_size | default: 'default'
   assign title_weight = section.settings.title_weight | default: 'default'
+  assign body_weight = section.settings.body_weight | default: 'default'
   assign star_color = section.settings.star_color | default: '#d4af37'
   assign star_size = section.settings.star_size | default: 14
   assign trust_text_size = section.settings.trust_text_size | default: 'default'
   assign trust_gap = section.settings.trust_gap | default: 10
+  assign trust_below = section.settings.trust_below | default: 16
   assign media_column_pct = section.settings.media_column_pct | default: 62
   assign media_radius = section.settings.media_radius | default: 0
+  assign cta_size = section.settings.cta_size | default: 'default'
+  assign cta_style = section.settings.cta_style | default: 'solid'
+  assign cta_bg = section.settings.cta_bg_color | default: '#c45c3f'
+  assign cta_border = section.settings.cta_border_color | default: cta_bg
+
+  assign region_label = section.settings.aria_label | strip
+  if region_label == blank
+    assign region_label = title
+  endif
 -%}
 
 <div
   class="split-hero{% if reverse_layout %} split-hero--reverse{% endif %}"
   id="split-hero-{{ section.id }}"
   role="region"
-  aria-label="{{ section.settings.aria_label | default: 'Hero' | escape }}"
+  {% if region_label != blank %}aria-label="{{ region_label | escape }}"{% endif %}
   style="
     --sh-media-pct: {{ media_column_pct }}%;
     --sh-media-radius: {{ media_radius }}px;
     --sh-star-color: {{ star_color }};
     --sh-star-size: {{ star_size }}px;
     --sh-trust-gap: {{ trust_gap }}px;
+    --sh-trust-below: {{ trust_below }}px;
+    --sh-cta-bg: {{ cta_bg }};
+    --sh-cta-border: {{ cta_border }};
     {% if trust_text_size != 'default' %}--sh-trust-size: {{ trust_text_size }}px;{% endif %}
     {% if title_size != 'default' %}--sh-title-size: {{ title_size }}px;{% endif %}
     {% if body_size != 'default' %}--sh-body-size: {{ body_size }}px;{% endif %}
     {% if title_weight != 'default' %}--sh-title-weight: {{ title_weight }};{% endif %}
+    {% if body_weight != 'default' %}--sh-body-weight: {{ body_weight }};{% endif %}
+    {% if cta_size != 'default' %}--sh-cta-size: {{ cta_size }}px;{% endif %}
   "
 >
   <div class="split-hero__media" data-media-type="{{ media_type }}">
@@ -118,16 +153,9 @@
             class: 'split-hero__img'
         }}
       {%- elsif image_url != blank -%}
-        {%- comment -%} Live pink-shorts hero (stefrunning) via URL — large media-dominant treatment {%- endcomment -%}
         <img
           class="split-hero__img"
           src="{{ image_url | escape }}"
-          srcset="https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=800 800w,
-                  https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=1200 1200w,
-                  https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=1600 1600w,
-                  https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=2000 2000w,
-                  https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=2400 2400w"
-          sizes="(max-width: 768px) 100vw, 62vw"
           alt="{{ image_alt | default: 'Barreletics Performance Skins — grip that holds in every studio workout' | escape }}"
           width="2400"
           height="2750"
@@ -164,7 +192,20 @@
     {%- endif -%}
 
     {%- if title != blank -%}
-      <{{ heading_level }} class="split-hero__title type-hero">{{ title | escape }}</{{ heading_level }}>
+      {% case heading_level %}
+        {% when 'h2' %}
+          <h2 class="split-hero__title type-hero">{{ title | escape }}</h2>
+        {% when 'h3' %}
+          <h3 class="split-hero__title type-hero">{{ title | escape }}</h3>
+        {% when 'h4' %}
+          <h4 class="split-hero__title type-hero">{{ title | escape }}</h4>
+        {% when 'h5' %}
+          <h5 class="split-hero__title type-hero">{{ title | escape }}</h5>
+        {% when 'h6' %}
+          <h6 class="split-hero__title type-hero">{{ title | escape }}</h6>
+        {% else %}
+          <h1 class="split-hero__title type-hero">{{ title | escape }}</h1>
+      {% endcase %}
     {%- endif -%}
 
     {%- if body != blank -%}
@@ -175,7 +216,7 @@
       <div class="split-hero__ctas">
         <a
           href="{{ cta_url | default: routes.all_products_collection_url }}"
-          class="split-hero__cta"
+          class="split-hero__cta{% if cta_style == 'outline' %} split-hero__cta--outline{% endif %}"
         >
           {{ cta_text | escape }}
         </a>
@@ -201,7 +242,8 @@
       "type": "text",
       "id": "title",
       "label": "Heading",
-      "default": "The Pilates Sock Era is Over"
+      "default": "The Pilates Sock Era is Over",
+      "info": "Family is brand Type OS — use Title size/weight to adjust. No font family picker."
     },
     {
       "type": "select",
@@ -210,9 +252,13 @@
       "options": [
         { "value": "h1", "label": "H1" },
         { "value": "h2", "label": "H2" },
-        { "value": "h3", "label": "H3" }
+        { "value": "h3", "label": "H3" },
+        { "value": "h4", "label": "H4" },
+        { "value": "h5", "label": "H5" },
+        { "value": "h6", "label": "H6" }
       ],
-      "default": "h1"
+      "default": "h1",
+      "info": "Outputs the real HTML tag (h1–h6) for SEO/accessibility. Visual size is Title size — not this control."
     },
     {
       "type": "select",
@@ -220,17 +266,30 @@
       "label": "Title size",
       "options": [
         { "value": "default", "label": "Default / Type OS" },
+        { "value": "12", "label": "12px" },
+        { "value": "13", "label": "13px" },
+        { "value": "14", "label": "14px" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" },
+        { "value": "18", "label": "18px" },
+        { "value": "20", "label": "20px" },
+        { "value": "22", "label": "22px" },
+        { "value": "24", "label": "24px" },
+        { "value": "26", "label": "26px" },
         { "value": "28", "label": "28px" },
+        { "value": "30", "label": "30px" },
         { "value": "32", "label": "32px" },
         { "value": "36", "label": "36px" },
         { "value": "40", "label": "40px" },
+        { "value": "44", "label": "44px" },
         { "value": "48", "label": "48px" },
         { "value": "56", "label": "56px" },
         { "value": "64", "label": "64px" },
         { "value": "72", "label": "72px" }
       ],
       "default": "default",
-      "info": "Default keeps Type OS hero size. Overrides size only — not font family."
+      "info": "Family is brand Type OS — size only. Default keeps Type OS hero size."
     },
     {
       "type": "select",
@@ -249,7 +308,8 @@
       "type": "richtext",
       "id": "body",
       "label": "Body",
-      "default": "<p>Outperforms barre socks, Pilates socks, and yoga socks — combined.</p>"
+      "default": "<p>Outperforms barre socks, Pilates socks, and yoga socks — combined.</p>",
+      "info": "Family is brand Type OS — use Body size/weight to adjust. No font family picker."
     },
     {
       "type": "select",
@@ -257,15 +317,39 @@
       "label": "Body size",
       "options": [
         { "value": "default", "label": "Default / Type OS" },
+        { "value": "12", "label": "12px" },
+        { "value": "13", "label": "13px" },
+        { "value": "14", "label": "14px" },
         { "value": "15", "label": "15px" },
         { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" },
         { "value": "18", "label": "18px" },
         { "value": "20", "label": "20px" },
+        { "value": "22", "label": "22px" },
         { "value": "24", "label": "24px" },
+        { "value": "26", "label": "26px" },
         { "value": "28", "label": "28px" },
+        { "value": "30", "label": "30px" },
         { "value": "32", "label": "32px" },
         { "value": "36", "label": "36px" },
-        { "value": "40", "label": "40px" }
+        { "value": "40", "label": "40px" },
+        { "value": "44", "label": "44px" },
+        { "value": "48", "label": "48px" },
+        { "value": "56", "label": "56px" }
+      ],
+      "default": "default",
+      "info": "Family is brand Type OS — size only."
+    },
+    {
+      "type": "select",
+      "id": "body_weight",
+      "label": "Body weight",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" },
+        { "value": "700", "label": "700" }
       ],
       "default": "default"
     },
@@ -276,25 +360,106 @@
       "default": "Shop Now"
     },
     {
-      "type": "url",
-      "id": "cta_url",
+      "type": "select",
+      "id": "cta_size",
+      "label": "CTA font size",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "11", "label": "11px" },
+        { "value": "12", "label": "12px" },
+        { "value": "13", "label": "13px" },
+        { "value": "14", "label": "14px" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "18", "label": "18px" },
+        { "value": "20", "label": "20px" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "select",
+      "id": "cta_style",
+      "label": "CTA style",
+      "options": [
+        { "value": "solid", "label": "Solid fill" },
+        { "value": "outline", "label": "Outline only" }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "color",
+      "id": "cta_bg_color",
+      "label": "CTA background color",
+      "default": "#c45c3f",
+      "info": "Used for solid fill. Outline style uses transparent fill + border color."
+    },
+    {
+      "type": "color",
+      "id": "cta_border_color",
+      "label": "CTA outline / border color",
+      "default": "#c45c3f"
+    },
+    {
+      "type": "select",
+      "id": "cta_link_target",
       "label": "CTA link",
-      "info": "Collection/product/page URL for navigation. Use #anchors (e.g. #variants, #knock-socks) only to jump to a same-page section Anchor ID. Blank → all-products collection."
+      "options": [
+        { "value": "custom", "label": "Custom URL…" },
+        { "value": "#variants", "label": "#variants — Shop styles" },
+        { "value": "#knock-socks", "label": "#knock-socks — Statement" },
+        { "value": "#reviews", "label": "#reviews" },
+        { "value": "#guarantee", "label": "#guarantee" },
+        { "value": "#never-loses-grip", "label": "#never-loses-grip" },
+        { "value": "#one-pair", "label": "#one-pair" },
+        { "value": "#coperni", "label": "#coperni — Collab" },
+        { "value": "#problem", "label": "#problem" }
+      ],
+      "default": "#variants",
+      "info": "Homepage section anchors jump on the same page. Choose Custom URL… for a full URL or any other #hash. Blank custom → all-products collection."
+    },
+    {
+      "type": "text",
+      "id": "cta_url",
+      "label": "Custom CTA URL",
+      "info": "Used when CTA link = Custom URL…. Full URL, relative path, or custom #hash."
     },
     {
       "type": "text",
       "id": "tag_text",
       "label": "Tag text",
-      "default": "#letusknockyoursocksoff"
+      "default": "#letusknockyoursocksoff",
+      "info": "Decorative line under the CTA (campaign hashtag look). Optional link below. This is NOT this section’s Anchor ID — it does not create #letusknockyoursocksoff on the page unless you set Tag link."
     },
     {
-      "type": "url",
-      "id": "tag_url",
+      "type": "select",
+      "id": "tag_link_target",
       "label": "Tag link",
-      "info": "Usually an #anchor to statement-band (e.g. #knock-socks)."
+      "options": [
+        { "value": "custom", "label": "Custom URL… / none" },
+        { "value": "#variants", "label": "#variants — Shop styles" },
+        { "value": "#knock-socks", "label": "#knock-socks — Statement" },
+        { "value": "#reviews", "label": "#reviews" },
+        { "value": "#guarantee", "label": "#guarantee" },
+        { "value": "#never-loses-grip", "label": "#never-loses-grip" },
+        { "value": "#one-pair", "label": "#one-pair" },
+        { "value": "#coperni", "label": "#coperni — Collab" },
+        { "value": "#problem", "label": "#problem" }
+      ],
+      "default": "#knock-socks",
+      "info": "Optional. Usually #knock-socks (statement-band). Custom URL… + empty field = plain text (no link)."
+    },
+    {
+      "type": "text",
+      "id": "tag_url",
+      "label": "Custom tag URL",
+      "info": "Used when Tag link = Custom URL… / none. Leave blank for non-linked tag text."
     },
 
     { "type": "header", "content": "Shared — Media" },
+    {
+      "type": "paragraph",
+      "content": "Pick media type first. Image mode: Shopify image → Image URL fallback. Video mode: Shopify video → Video URL (+ optional poster). Leave unused fields blank."
+    },
     {
       "type": "select",
       "id": "media_type",
@@ -315,20 +480,20 @@
       "type": "text",
       "id": "video_url",
       "label": "Video URL (mp4)",
-      "info": "External/CDN mp4 when not using Shopify Video. Ignored if Shopify video is set."
+      "info": "External/CDN mp4 when not using Shopify Video. Ignored if Shopify video is set. Leave blank in image mode."
     },
     {
       "type": "image_picker",
       "id": "image",
       "label": "Image / poster (Shopify)",
-      "info": "Still image for image mode, OR poster when using Video URL. Prefer this over URL fields when the asset is in Shopify."
+      "info": "Still image for image mode, OR poster when using Video URL. Prefer this over URL fields when the asset is in Shopify. Leave blank to use Image URL fallback."
     },
     {
       "type": "text",
       "id": "image_url",
       "label": "Image URL fallback",
       "default": "https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=2400",
-      "info": "Still image when no Shopify image is set and media type is Image. Not a video poster."
+      "info": "Used only when Shopify image picker is empty and media type is Image — for CDN/external stills. Leave blank if Shopify image is set."
     },
     {
       "type": "text",
@@ -363,7 +528,8 @@
       "max": 24,
       "step": 2,
       "unit": "px",
-      "default": 0
+      "default": 0,
+      "info": "One control — applies equally to all four corners of the media panel."
     },
     {
       "type": "checkbox",
@@ -421,13 +587,24 @@
     {
       "type": "range",
       "id": "trust_gap",
-      "label": "Trust row gap",
+      "label": "Trust row gap (stars ↔ text)",
       "min": 4,
       "max": 24,
       "step": 2,
       "unit": "px",
       "default": 10,
-      "info": "Space between stars and trust text."
+      "info": "Horizontal space between stars and trust text."
+    },
+    {
+      "type": "range",
+      "id": "trust_below",
+      "label": "Gap below trust row",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 16,
+      "info": "Space between the trust row and the heading — move the row up/down relative to the title."
     },
     {
       "type": "richtext",
@@ -436,22 +613,40 @@
       "default": "<p>Trusted by 1,000's of instructors & studios</p>"
     },
     {
-      "type": "url",
-      "id": "trust_url",
+      "type": "select",
+      "id": "trust_link_target",
       "label": "Trust link",
-      "info": "Optional. Wraps the trust text (e.g. #reviews)."
+      "options": [
+        { "value": "custom", "label": "Custom URL… / none" },
+        { "value": "#variants", "label": "#variants — Shop styles" },
+        { "value": "#knock-socks", "label": "#knock-socks — Statement" },
+        { "value": "#reviews", "label": "#reviews" },
+        { "value": "#guarantee", "label": "#guarantee" },
+        { "value": "#never-loses-grip", "label": "#never-loses-grip" },
+        { "value": "#one-pair", "label": "#one-pair" },
+        { "value": "#coperni", "label": "#coperni — Collab" },
+        { "value": "#problem", "label": "#problem" }
+      ],
+      "default": "#reviews",
+      "info": "Wraps trust text in a link. Custom URL… + empty field = plain text (no link)."
+    },
+    {
+      "type": "text",
+      "id": "trust_url",
+      "label": "Custom trust URL",
+      "info": "Used when Trust link = Custom URL… / none."
     },
 
     { "type": "header", "content": "Section — Split hero — accessibility" },
     {
       "type": "paragraph",
-      "content": "Typography defaults to Type OS. Size/weight selects above are optional overrides — no font family pickers."
+      "content": "Typography stays Type OS (family). Size/weight selects above are optional overrides — no font family pickers."
     },
     {
       "type": "text",
       "id": "aria_label",
       "label": "Section aria-label",
-      "default": "Hero"
+      "info": "Accessibility name for screen readers — not visible on the page. Leave blank to use the Heading."
     }
   ],
   "presets": [

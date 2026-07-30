@@ -2,7 +2,11 @@
   Guarantee — white 4-column trust grid (Home WORKING 14).
 {% endcomment %}
 
-<section class="guarantee-section" aria-label="Guarantee">
+<section
+  class="guarantee-section"
+  id="{{ section.settings.anchor_id | default: 'guarantee' | handleize }}"
+  aria-label="{{ section.settings.aria_label | default: 'Guarantee' | escape }}"
+>
   <div class="guarantee-head">
     {% if section.settings.eyebrow != blank %}
       <p class="guarantee-head__eyebrow type-label">{{ section.settings.eyebrow }}</p>
@@ -140,6 +144,20 @@
     { "type": "text", "id": "cta_text", "label": "CTA label", "info": "Leave blank to hide CTA (Home mock has none)." },
     { "type": "url", "id": "cta_url", "label": "CTA link" },
     { "type": "header", "content": "Section — Guarantee" },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor ID",
+      "default": "guarantee",
+      "info": "Same-page jump target (CTAs can use #guarantee)."
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Section aria-label",
+      "default": "Guarantee",
+      "info": "Accessibility name for screen readers — not visible on the page. Leave blank to use “Guarantee”."
+    },
     { "type": "paragraph", "content": "Guarantee points are blocks below." }
   ],
   "blocks": [

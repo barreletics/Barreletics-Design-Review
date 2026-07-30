@@ -2,6 +2,7 @@
   Reusable 50/50 Split Section (Video/Image + Copy)
   Headings: .h2-display (brand) or .h2-standard (wayfinding) — Type OS
   Layout / type overrides: Theme Editor → CSS variables (Default = Type OS)
+  Font family is brand Type OS — size/weight only; no font_picker.
 {% endcomment %}
 {% liquid
   assign heading_register = section.settings.heading_register | default: 'display'
@@ -10,8 +11,20 @@
   else
     assign heading_class = 'h2-standard'
   endif
+
+  assign heading_level = section.settings.heading_level | default: 'h2'
+  if heading_level != 'h1' and heading_level != 'h2' and heading_level != 'h3' and heading_level != 'h4' and heading_level != 'h5' and heading_level != 'h6'
+    assign heading_level = 'h2'
+  endif
+
   assign media_fit = section.settings.media_fit | default: 'cover'
-  assign cta_href = section.settings.cta_url
+
+  assign cta_target = section.settings.cta_link_target | default: 'custom'
+  if cta_target != blank and cta_target != 'custom'
+    assign cta_href = cta_target
+  else
+    assign cta_href = section.settings.cta_url
+  endif
 
   assign media_pct = section.settings.media_column_pct | default: 50
   assign text_pct = 100 | minus: media_pct
@@ -30,6 +43,15 @@
   assign body_size = section.settings.body_size | default: 'default'
   assign title_weight = section.settings.title_weight | default: 'default'
   assign body_weight = section.settings.body_weight | default: 'default'
+  assign cta_size = section.settings.cta_size | default: 'default'
+  assign cta_style = section.settings.cta_style | default: 'solid'
+  assign cta_bg = section.settings.cta_bg_color | default: '#1c1916'
+  assign cta_border = section.settings.cta_border_color | default: cta_bg
+
+  assign region_label = section.settings.aria_label | strip
+  if region_label == blank
+    assign region_label = section.settings.title | strip_html | truncate: 60
+  endif
 %}
 
 <section
@@ -45,13 +67,16 @@
     --ff-contain-width: {{ contain_width }}%;
     --ff-media-radius: {{ media_radius }}px;
     --ff-section-radius: {{ section_radius }}px;
+    --ff-cta-bg: {{ cta_bg }};
+    --ff-cta-border: {{ cta_border }};
     {% if title_size != 'default' %}--ff-title-size: {{ title_size }}px;{% endif %}
     {% if body_size != 'default' %}--ff-body-size: {{ body_size }}px;{% endif %}
     {% if title_weight != 'default' %}--ff-title-weight: {{ title_weight }};{% endif %}
     {% if body_weight != 'default' %}--ff-body-weight: {{ body_weight }};{% endif %}
+    {% if cta_size != 'default' %}--ff-cta-size: {{ cta_size }}px;{% endif %}
     background: {{ section.settings.bg_color | default: '#fff' }};
   "
-  aria-label="{{ section.settings.title | strip_html | truncate: 60 | escape }}"
+  {% if region_label != blank %}aria-label="{{ region_label | escape }}"{% endif %}
 >
   <div class="split-media"{% if media_fit == 'contain' %} style="background: {{ section.settings.media_bg | default: '#f9f9f9' }};"{% endif %}>
     {% if section.settings.video != blank %}
@@ -112,14 +137,28 @@
     {% if section.settings.eyebrow != blank %}
       <p class="split-text__eyebrow type-label eyebrow--accent">{{ section.settings.eyebrow }}</p>
     {% endif %}
-    <h2 class="split-text__title {{ heading_class }}">{{ section.settings.title | newline_to_br }}</h2>
+    {% case heading_level %}
+      {% when 'h1' %}
+        <h1 class="split-text__title {{ heading_class }}">{{ section.settings.title | newline_to_br }}</h1>
+      {% when 'h3' %}
+        <h3 class="split-text__title {{ heading_class }}">{{ section.settings.title | newline_to_br }}</h3>
+      {% when 'h4' %}
+        <h4 class="split-text__title {{ heading_class }}">{{ section.settings.title | newline_to_br }}</h4>
+      {% when 'h5' %}
+        <h5 class="split-text__title {{ heading_class }}">{{ section.settings.title | newline_to_br }}</h5>
+      {% when 'h6' %}
+        <h6 class="split-text__title {{ heading_class }}">{{ section.settings.title | newline_to_br }}</h6>
+      {% else %}
+        <h2 class="split-text__title {{ heading_class }}">{{ section.settings.title | newline_to_br }}</h2>
+    {% endcase %}
     {% if section.settings.body != blank %}
       <p class="split-text__body type-body">{{ section.settings.body }}</p>
     {% endif %}
-    {% if section.settings.cta_text != blank and cta_href != blank %}
-      <a href="{{ cta_href }}" class="btn btn--primary split-cta">{{ section.settings.cta_text }}</a>
-    {% elsif section.settings.cta_text != blank %}
-      <a href="{{ routes.all_products_collection_url }}" class="btn btn--primary split-cta">{{ section.settings.cta_text }}</a>
+    {% if section.settings.cta_text != blank %}
+      <a
+        href="{{ cta_href | default: routes.all_products_collection_url }}"
+        class="btn split-cta{% if cta_style == 'outline' %} split-cta--outline{% else %} btn--primary{% endif %}"
+      >{{ section.settings.cta_text }}</a>
     {% endif %}
   </div>
 </section>
@@ -141,7 +180,10 @@
     position: relative;
     overflow: hidden;
     min-height: calc(var(--ff-min-height, 640px) * 0.75);
-    border-radius: var(--ff-media-radius, 0);
+    border-top-left-radius: var(--ff-media-radius, 0);
+    border-top-right-radius: var(--ff-media-radius, 0);
+    border-bottom-right-radius: var(--ff-media-radius, 0);
+    border-bottom-left-radius: var(--ff-media-radius, 0);
   }
   #shopify-section-{{ section.id }} .split-media__img,
   #shopify-section-{{ section.id }} .split-media__video {
@@ -194,6 +236,7 @@
     text-align: var(--align-editorial, left);
   }
   #shopify-section-{{ section.id }} .split-text__title {
+    font-family: var(--font-family, 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif);
     font-size: var(--ff-title-size, clamp(28px, 3.2vw, 36px)) !important;
     font-weight: var(--ff-title-weight, 400) !important;
     line-height: 1.15 !important;
@@ -214,6 +257,7 @@
     margin: 0 0 var(--gap-b, 20px);
   }
   #shopify-section-{{ section.id }} .split-text__body {
+    font-family: var(--font-family, 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif);
     font-size: var(--ff-body-size, var(--type-body-size, 17px));
     font-weight: var(--ff-body-weight, var(--type-body-weight, 400));
     color: var(--text-body, #4a4a4a);
@@ -221,7 +265,38 @@
     margin: 0 0 var(--gap-c, 32px);
     max-width: 36ch;
   }
-  #shopify-section-{{ section.id }} .split-cta { width: fit-content; }
+  #shopify-section-{{ section.id }} .split-cta {
+    width: fit-content;
+    font-size: var(--ff-cta-size, 12px);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 4px;
+    min-height: 48px;
+    padding: 14px 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--ff-cta-bg, #1c1916);
+    border: 1px solid var(--ff-cta-border, var(--ff-cta-bg, #1c1916));
+    color: #fff;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+  #shopify-section-{{ section.id }} .split-cta--outline {
+    background: transparent;
+    color: var(--ff-cta-border, #1c1916);
+  }
+  #shopify-section-{{ section.id }} .split-cta:hover {
+    background: #c45c3f;
+    border-color: #c45c3f;
+    color: #fff;
+  }
+  #shopify-section-{{ section.id }} .split-cta--outline:hover {
+    background: transparent;
+    color: #c45c3f;
+    border-color: #c45c3f;
+  }
   @media (max-width: 768px) {
     #shopify-section-{{ section.id }} .split-section {
       grid-template-columns: 1fr;
@@ -253,14 +328,29 @@
         { "value": "standard", "label": "Standard — wayfinding" }
       ],
       "default": "display",
-      "info": "Type family stays Type OS. Size/weight below are optional overrides only."
+      "info": "Family is brand Type OS — use Title size/weight to adjust. No font family picker."
     },
     {
       "type": "textarea",
       "id": "title",
       "label": "Heading",
       "default": "Never loses shape.\nNever loses grip.",
-      "info": "Plain text. Line breaks become <br>. Not richtext."
+      "info": "Plain text. Line breaks become <br>. Not richtext. Family is brand Type OS — use Title size/weight to adjust."
+    },
+    {
+      "type": "select",
+      "id": "heading_level",
+      "label": "Heading level",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "h4", "label": "H4" },
+        { "value": "h5", "label": "H5" },
+        { "value": "h6", "label": "H6" }
+      ],
+      "default": "h2",
+      "info": "Outputs the real HTML tag (h1–h6) for SEO/accessibility. Visual size is Title size — not this control."
     },
     {
       "type": "select",
@@ -268,18 +358,28 @@
       "label": "Title size",
       "options": [
         { "value": "default", "label": "Default / Type OS" },
+        { "value": "12", "label": "12px" },
+        { "value": "13", "label": "13px" },
+        { "value": "14", "label": "14px" },
         { "value": "15", "label": "15px" },
         { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" },
         { "value": "18", "label": "18px" },
         { "value": "20", "label": "20px" },
+        { "value": "22", "label": "22px" },
         { "value": "24", "label": "24px" },
+        { "value": "26", "label": "26px" },
         { "value": "28", "label": "28px" },
+        { "value": "30", "label": "30px" },
         { "value": "32", "label": "32px" },
         { "value": "36", "label": "36px" },
-        { "value": "40", "label": "40px" }
+        { "value": "40", "label": "40px" },
+        { "value": "44", "label": "44px" },
+        { "value": "48", "label": "48px" },
+        { "value": "56", "label": "56px" }
       ],
       "default": "default",
-      "info": "Default keeps Type OS. Overrides size only — not font family."
+      "info": "Family is brand Type OS — size only. Default keeps Type OS."
     },
     {
       "type": "select",
@@ -298,7 +398,8 @@
       "type": "textarea",
       "id": "body",
       "label": "Body",
-      "default": "Built to hold when it matters most—so you can push deeper, stay longer, and move with confidence."
+      "default": "Built to hold when it matters most—so you can push deeper, stay longer, and move with confidence.",
+      "info": "Family is brand Type OS — use Body size/weight to adjust. No font family picker."
     },
     {
       "type": "select",
@@ -306,18 +407,28 @@
       "label": "Body size",
       "options": [
         { "value": "default", "label": "Default / Type OS" },
+        { "value": "12", "label": "12px" },
+        { "value": "13", "label": "13px" },
+        { "value": "14", "label": "14px" },
         { "value": "15", "label": "15px" },
         { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" },
         { "value": "18", "label": "18px" },
         { "value": "20", "label": "20px" },
+        { "value": "22", "label": "22px" },
         { "value": "24", "label": "24px" },
+        { "value": "26", "label": "26px" },
         { "value": "28", "label": "28px" },
+        { "value": "30", "label": "30px" },
         { "value": "32", "label": "32px" },
         { "value": "36", "label": "36px" },
-        { "value": "40", "label": "40px" }
+        { "value": "40", "label": "40px" },
+        { "value": "44", "label": "44px" },
+        { "value": "48", "label": "48px" },
+        { "value": "56", "label": "56px" }
       ],
       "default": "default",
-      "info": "Default keeps Type OS body size."
+      "info": "Family is brand Type OS — size only. Default keeps Type OS body size."
     },
     {
       "type": "select",
@@ -334,13 +445,75 @@
     },
     { "type": "text", "id": "cta_text", "label": "CTA label", "default": "Shop Now" },
     {
-      "type": "url",
-      "id": "cta_url",
+      "type": "select",
+      "id": "cta_size",
+      "label": "CTA font size",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "11", "label": "11px" },
+        { "value": "12", "label": "12px" },
+        { "value": "13", "label": "13px" },
+        { "value": "14", "label": "14px" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "18", "label": "18px" },
+        { "value": "20", "label": "20px" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "select",
+      "id": "cta_style",
+      "label": "CTA style",
+      "options": [
+        { "value": "solid", "label": "Solid fill" },
+        { "value": "outline", "label": "Outline only" }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "color",
+      "id": "cta_bg_color",
+      "label": "CTA background color",
+      "default": "#1c1916",
+      "info": "Used for solid fill. Ignored visually when style is Outline only (border still applies)."
+    },
+    {
+      "type": "color",
+      "id": "cta_border_color",
+      "label": "CTA outline / border color",
+      "default": "#1c1916"
+    },
+    {
+      "type": "select",
+      "id": "cta_link_target",
       "label": "CTA link",
-      "info": "Use a collection/product/page URL for navigation. Use #anchors (e.g. #variants or #knock-socks) only to jump to a section on the same page that has that Anchor ID. Blank → all-products collection."
+      "options": [
+        { "value": "custom", "label": "Custom URL…" },
+        { "value": "#variants", "label": "#variants — Shop styles" },
+        { "value": "#knock-socks", "label": "#knock-socks — Statement" },
+        { "value": "#reviews", "label": "#reviews" },
+        { "value": "#guarantee", "label": "#guarantee" },
+        { "value": "#never-loses-grip", "label": "#never-loses-grip" },
+        { "value": "#one-pair", "label": "#one-pair" },
+        { "value": "#coperni", "label": "#coperni — Collab" },
+        { "value": "#problem", "label": "#problem" }
+      ],
+      "default": "custom",
+      "info": "Homepage section anchors jump on the same page. Choose Custom URL… for a full URL, collection/product/page, or any other #hash. Blank custom → all-products collection."
+    },
+    {
+      "type": "text",
+      "id": "cta_url",
+      "label": "Custom CTA URL",
+      "info": "Used when CTA link = Custom URL…. Full URL, relative path, or custom #hash. Shopify’s URL picker often drops hash-only links — this text field keeps them."
     },
 
     { "type": "header", "content": "Shared — Media" },
+    {
+      "type": "paragraph",
+      "content": "Pick ONE media path. Priority: Shopify video → Video URL → Shopify image → Image URL fallback. Leave unused fields blank."
+    },
     {
       "type": "video",
       "id": "video",
@@ -351,25 +524,25 @@
       "type": "text",
       "id": "video_url",
       "label": "Video URL (mp4)",
-      "info": "External/CDN mp4 when you are not using Shopify Video above. Ignored if Shopify video is set."
+      "info": "External/CDN mp4 when you are not using Shopify Video above. Ignored if Shopify video is set. Leave blank if using Shopify video or a still image."
     },
     {
       "type": "image_picker",
       "id": "image",
       "label": "Image / poster (Shopify)",
-      "info": "Still image for image mode, OR poster frame when using Video URL. Prefer this over URL fields when the asset is in Shopify."
+      "info": "Still image for image mode, OR poster frame when using Video URL. Prefer this over URL fields when the asset is in Shopify. Leave blank to use Image URL fallback (or poster URL for video)."
     },
     {
       "type": "text",
       "id": "poster_url",
       "label": "Poster URL fallback",
-      "info": "Poster for Video URL only when Image / poster (Shopify) is empty. Not used for still-image mode."
+      "info": "Poster for Video URL only when Image / poster (Shopify) is empty. Not used for still-image mode. Leave blank if Shopify image/poster is set."
     },
     {
       "type": "text",
       "id": "image_url",
       "label": "Image URL fallback",
-      "info": "Still image when no Shopify image is set and there is no video. Do not use this as a video poster — use Poster URL fallback."
+      "info": "Used only when the Shopify image picker is empty and there is no video — for CDN/external stills. Leave blank if Shopify image is set, or if you are using video."
     },
     { "type": "text", "id": "image_alt", "label": "Image alt text" },
 
@@ -415,7 +588,8 @@
       "max": 24,
       "step": 2,
       "unit": "px",
-      "default": 0
+      "default": 0,
+      "info": "One control — applies equally to all four corners of the media panel (left and right, top and bottom)."
     },
     {
       "type": "range",
@@ -425,14 +599,21 @@
       "max": 24,
       "step": 2,
       "unit": "px",
-      "default": 0
+      "default": 0,
+      "info": "Applies equally to all four corners of the whole section frame."
     },
     { "type": "color", "id": "bg_color", "label": "Background color", "default": "#ffffff" },
     {
       "type": "text",
       "id": "anchor_id",
       "label": "Anchor ID (optional)",
-      "info": "Enables same-page jumps via #this-id from a CTA link elsewhere."
+      "info": "This section’s own ID for same-page jumps (e.g. never-loses-grip → #never-loses-grip). Not the same as CTA link."
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Section aria-label",
+      "info": "Accessibility name for screen readers — not visible on the page. Leave blank to use the Heading."
     },
 
     { "type": "header", "content": "Section — Fifty-fifty — media fit" },

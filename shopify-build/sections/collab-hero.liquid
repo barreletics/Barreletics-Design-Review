@@ -8,6 +8,16 @@
   assign body_size = section.settings.body_size | default: 'default'
   assign title_weight = section.settings.title_weight | default: 'default'
   assign media_radius = section.settings.media_radius | default: 0
+  assign cta_target = section.settings.cta_link_target | default: 'custom'
+  if cta_target != blank and cta_target != 'custom'
+    assign cta_href = cta_target
+  else
+    assign cta_href = section.settings.cta_url
+  endif
+  assign region_label = section.settings.aria_label | strip
+  if region_label == blank
+    assign region_label = section.settings.title | strip_html | truncate: 60
+  endif
 %}
 {% unless section.settings.enabled == false %}
 <section
@@ -19,7 +29,7 @@
     {% if body_size != 'default' %}--ch-body-size: {{ body_size }}px;{% endif %}
     {% if title_weight != 'default' %}--ch-title-weight: {{ title_weight }};{% endif %}
   "
-  aria-label="{{ section.settings.aria_label | escape }}"
+  {% if region_label != blank %}aria-label="{{ region_label | escape }}"{% endif %}
 >
   <div class="collab-hero__stage">
     {% if section.settings.video != blank %}
@@ -70,7 +80,7 @@
         <p class="collab-hero__body">{{ section.settings.body }}</p>
       {% endif %}
       {% if section.settings.cta_text != blank %}
-        <a class="collab-hero__cta" href="{{ section.settings.cta_url | default: routes.all_products_collection_url }}">{{ section.settings.cta_text }}</a>
+        <a class="collab-hero__cta" href="{{ cta_href | default: routes.all_products_collection_url }}">{{ section.settings.cta_text }}</a>
       {% endif %}
       {% if section.settings.meta != blank %}
         <p class="collab-hero__meta">{{ section.settings.meta }}</p>
@@ -286,7 +296,7 @@
       "id": "title",
       "label": "Heading",
       "default": "<strong>Barreletics × Coperni</strong><br>Built for the body in motion.",
-      "info": "HTML allowed for emphasis line breaks."
+      "info": "HTML allowed for emphasis line breaks. Family is brand Type OS (collab display may use campaign fonts in CSS) — use Title size/weight to adjust. No font family picker."
     },
     {
       "type": "select",
@@ -294,17 +304,31 @@
       "label": "Title size",
       "options": [
         { "value": "default", "label": "Default / Type OS" },
+        { "value": "12", "label": "12px" },
+        { "value": "13", "label": "13px" },
+        { "value": "14", "label": "14px" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" },
+        { "value": "18", "label": "18px" },
+        { "value": "20", "label": "20px" },
+        { "value": "22", "label": "22px" },
+        { "value": "24", "label": "24px" },
+        { "value": "26", "label": "26px" },
         { "value": "28", "label": "28px" },
+        { "value": "30", "label": "30px" },
         { "value": "32", "label": "32px" },
         { "value": "36", "label": "36px" },
         { "value": "40", "label": "40px" },
+        { "value": "44", "label": "44px" },
         { "value": "48", "label": "48px" },
         { "value": "56", "label": "56px" },
         { "value": "64", "label": "64px" },
         { "value": "72", "label": "72px" }
+
       ],
       "default": "default",
-      "info": "Default keeps collab display size. Overrides size only — not font family."
+      "info": "Family is brand Type OS — size only. Default keeps collab display size."
     },
     {
       "type": "select",
@@ -331,26 +355,60 @@
       "label": "Body size",
       "options": [
         { "value": "default", "label": "Default / Type OS" },
+        { "value": "12", "label": "12px" },
+        { "value": "13", "label": "13px" },
+        { "value": "14", "label": "14px" },
         { "value": "15", "label": "15px" },
         { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" },
         { "value": "18", "label": "18px" },
         { "value": "20", "label": "20px" },
+        { "value": "22", "label": "22px" },
         { "value": "24", "label": "24px" },
+        { "value": "26", "label": "26px" },
         { "value": "28", "label": "28px" },
+        { "value": "30", "label": "30px" },
         { "value": "32", "label": "32px" },
         { "value": "36", "label": "36px" },
-        { "value": "40", "label": "40px" }
+        { "value": "40", "label": "40px" },
+        { "value": "44", "label": "44px" },
+        { "value": "48", "label": "48px" },
+        { "value": "56", "label": "56px" }
+
       ],
       "default": "default"
     },
     { "type": "text", "id": "cta_text", "label": "CTA label", "default": "See the collaboration" },
     {
-      "type": "url",
-      "id": "cta_url",
+      "type": "select",
+      "id": "cta_link_target",
       "label": "CTA link",
-      "info": "Collection/product/page URL for navigation. Use #anchors only to jump to a same-page section Anchor ID."
+      "options": [
+        { "value": "custom", "label": "Custom URL…" },
+        { "value": "#variants", "label": "#variants — Shop styles" },
+        { "value": "#knock-socks", "label": "#knock-socks — Statement" },
+        { "value": "#reviews", "label": "#reviews" },
+        { "value": "#guarantee", "label": "#guarantee" },
+        { "value": "#never-loses-grip", "label": "#never-loses-grip" },
+        { "value": "#one-pair", "label": "#one-pair" },
+        { "value": "#coperni", "label": "#coperni — Collab" },
+        { "value": "#problem", "label": "#problem" }
+      ],
+      "default": "custom",
+      "info": "Homepage section anchors jump on the same page. Choose Custom URL… for a full URL (typical for PDP) or any other #hash."
+    },
+    {
+      "type": "text",
+      "id": "cta_url",
+      "label": "Custom CTA URL",
+      "default": "https://barreletics.com/products/barreletics-x-coperni-closed-sole",
+      "info": "Used when CTA link = Custom URL…."
     },
     { "type": "header", "content": "Shared — Media" },
+    {
+      "type": "paragraph",
+      "content": "Pick ONE media path. Priority: Shopify video → Video URL → Shopify image → Poster URL. Leave unused fields blank."
+    },
     {
       "type": "video",
       "id": "video",
@@ -362,20 +420,20 @@
       "id": "video_url",
       "label": "Video URL (mp4)",
       "default": "https://barreletics.com/cdn/shop/videos/c/vp/a91000a89fb04c70935becea5180b69e/a91000a89fb04c70935becea5180b69e.HD-1080p-7.2Mbps-43057645.mp4",
-      "info": "External/CDN mp4 when not using Shopify Video. Ignored if Shopify video is set."
+      "info": "External/CDN mp4 when not using Shopify Video. Ignored if Shopify video is set. Leave blank if using Shopify video."
     },
     {
       "type": "image_picker",
       "id": "image",
       "label": "Image / poster (Shopify)",
-      "info": "Still fallback, OR poster when using Video URL. Prefer this over URL fields when the asset is in Shopify."
+      "info": "Still fallback, OR poster when using Video URL. Prefer this over URL fields when the asset is in Shopify. Leave blank to use Poster URL fallback."
     },
     {
       "type": "text",
       "id": "poster_url",
       "label": "Poster URL fallback",
       "default": "https://barreletics.com/cdn/shop/files/yellow_tone_mix.png?width=2000",
-      "info": "Poster for Video URL only when Image / poster (Shopify) is empty."
+      "info": "Poster for Video URL only when Image / poster (Shopify) is empty. Leave blank if Shopify image is set."
     },
     { "type": "header", "content": "Shared — Layout" },
     {
@@ -386,13 +444,20 @@
       "max": 24,
       "step": 2,
       "unit": "px",
-      "default": 0
+      "default": 0,
+      "info": "One control — applies equally to all four corners of the stage."
     },
     { "type": "header", "content": "Section — Collab hero" },
     { "type": "checkbox", "id": "enabled", "label": "Enabled", "default": true },
     { "type": "text", "id": "meta", "label": "Meta line", "default": "Closed Sole · Special Release · One Run" },
     { "type": "text", "id": "anchor_id", "label": "Anchor ID", "default": "coperni" },
-    { "type": "text", "id": "aria_label", "label": "Aria label", "default": "Coperni x Barreletics Collaboration campaign" }
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Section aria-label",
+      "default": "Coperni x Barreletics Collaboration campaign",
+      "info": "Accessibility name for screen readers — not visible on the page. Leave blank to use the Heading."
+    }
   ],
   "blocks": [
     {

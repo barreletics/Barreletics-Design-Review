@@ -6,6 +6,16 @@
   assign title_size = section.settings.title_size | default: 'default'
   assign title_weight = section.settings.title_weight | default: 'default'
   assign media_radius = section.settings.media_radius | default: 0
+  assign cta_target = section.settings.cta_link_target | default: 'custom'
+  if cta_target != blank and cta_target != 'custom'
+    assign cta_href = cta_target
+  else
+    assign cta_href = section.settings.cta_url
+  endif
+  assign region_label = section.settings.aria_label | strip
+  if region_label == blank
+    assign region_label = section.settings.title
+  endif
 %}
 
 <section
@@ -15,7 +25,7 @@
     {% if title_size != 'default' %}--fb-title-size: {{ title_size }}px;{% endif %}
     {% if title_weight != 'default' %}--fb-title-weight: {{ title_weight }};{% endif %}
   "
-  aria-label="{{ section.settings.title | escape }}"
+  {% if region_label != blank %}aria-label="{{ region_label | escape }}"{% endif %}
 >
   <div class="fullbleed-statement__bg">
     {% if section.settings.image != blank %}
@@ -39,7 +49,7 @@
   <div class="fullbleed-statement__content">
     <p class="fullbleed-statement__line type-statement">{{ section.settings.title }}</p>
     {% if section.settings.cta_text != blank %}
-      <a class="fullbleed-statement__cta" href="{{ section.settings.cta_url | default: routes.all_products_collection_url }}">
+      <a class="fullbleed-statement__cta" href="{{ cta_href | default: routes.all_products_collection_url }}">
         {{ section.settings.cta_text }}
       </a>
     {% endif %}
@@ -122,7 +132,8 @@
       "type": "text",
       "id": "title",
       "label": "Heading",
-      "default": "You commit to the class. Commit to the gear."
+      "default": "You commit to the class. Commit to the gear.",
+      "info": "Family is brand Type OS — use Title size/weight to adjust. No font family picker."
     },
     {
       "type": "select",
@@ -130,18 +141,29 @@
       "label": "Title size",
       "options": [
         { "value": "default", "label": "Default / Type OS" },
+        { "value": "12", "label": "12px" },
+        { "value": "13", "label": "13px" },
+        { "value": "14", "label": "14px" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" },
+        { "value": "18", "label": "18px" },
+        { "value": "20", "label": "20px" },
+        { "value": "22", "label": "22px" },
         { "value": "24", "label": "24px" },
+        { "value": "26", "label": "26px" },
         { "value": "28", "label": "28px" },
+        { "value": "30", "label": "30px" },
         { "value": "32", "label": "32px" },
         { "value": "36", "label": "36px" },
         { "value": "40", "label": "40px" },
         { "value": "44", "label": "44px" },
         { "value": "48", "label": "48px" },
-        { "value": "52", "label": "52px" },
         { "value": "56", "label": "56px" }
+
       ],
       "default": "default",
-      "info": "Default keeps Type OS. Overrides size only — not font family."
+      "info": "Family is brand Type OS — size only. Default keeps Type OS."
     },
     {
       "type": "select",
@@ -158,24 +180,42 @@
     },
     { "type": "text", "id": "cta_text", "label": "CTA label", "default": "Shop Now" },
     {
-      "type": "url",
-      "id": "cta_url",
+      "type": "select",
+      "id": "cta_link_target",
       "label": "CTA link",
-      "info": "Collection/product/page URL for navigation. Use #anchors only to jump to a same-page section Anchor ID. Blank → all-products collection."
+      "options": [
+        { "value": "custom", "label": "Custom URL…" },
+        { "value": "#variants", "label": "#variants — Shop styles" },
+        { "value": "#knock-socks", "label": "#knock-socks — Statement" },
+        { "value": "#reviews", "label": "#reviews" },
+        { "value": "#guarantee", "label": "#guarantee" },
+        { "value": "#never-loses-grip", "label": "#never-loses-grip" },
+        { "value": "#one-pair", "label": "#one-pair" },
+        { "value": "#coperni", "label": "#coperni — Collab" },
+        { "value": "#problem", "label": "#problem" }
+      ],
+      "default": "custom",
+      "info": "Homepage section anchors jump on the same page. Choose Custom URL… for a full URL or any other #hash. Blank custom → all-products collection."
+    },
+    {
+      "type": "text",
+      "id": "cta_url",
+      "label": "Custom CTA URL",
+      "info": "Used when CTA link = Custom URL…."
     },
     { "type": "header", "content": "Shared — Media" },
     {
       "type": "image_picker",
       "id": "image",
       "label": "Background image (Shopify)",
-      "info": "Prefer Shopify Files when the asset is in the library."
+      "info": "Prefer Shopify Files when the asset is in the library. Leave blank to use Image URL fallback."
     },
     {
       "type": "text",
       "id": "image_url",
       "label": "Image URL fallback",
       "default": "https://barreletics.com/cdn/shop/files/IMG_2917.jpg?v=1741040637&width=2000",
-      "info": "Used only when Background image (Shopify) is empty."
+      "info": "Used only when Background image (Shopify) is empty — for CDN/external stills. Leave blank if Shopify image is set."
     },
     { "type": "text", "id": "image_alt", "label": "Image alt" },
     { "type": "header", "content": "Shared — Layout" },
@@ -187,7 +227,14 @@
       "max": 24,
       "step": 2,
       "unit": "px",
-      "default": 0
+      "default": 0,
+      "info": "One control — applies equally to all four corners."
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Section aria-label",
+      "info": "Accessibility name for screen readers — not visible on the page. Leave blank to use the Heading."
     }
   ],
   "presets": [{ "name": "Fullbleed statement" }]

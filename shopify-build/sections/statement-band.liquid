@@ -6,6 +6,16 @@
   assign title_size = section.settings.title_size | default: 'default'
   assign title_weight = section.settings.title_weight | default: 'default'
   assign body_size = section.settings.body_size | default: 'default'
+  assign cta_target = section.settings.cta_link_target | default: 'custom'
+  if cta_target != blank and cta_target != 'custom'
+    assign cta_href = cta_target
+  else
+    assign cta_href = section.settings.cta_url
+  endif
+  assign region_label = section.settings.aria_label | strip
+  if region_label == blank
+    assign region_label = section.settings.title
+  endif
 %}
 
 <section
@@ -16,7 +26,7 @@
     {% if title_weight != 'default' %}--sb-title-weight: {{ title_weight }};{% endif %}
     {% if body_size != 'default' %}--sb-body-size: {{ body_size }}px;{% endif %}
   "
-  aria-label="{{ section.settings.title | escape }}"
+  {% if region_label != blank %}aria-label="{{ region_label | escape }}"{% endif %}
 >
   <div class="statement-band__inner">
     {% if section.settings.eyebrow != blank %}
@@ -27,7 +37,7 @@
       <p class="statement-band__sub">{{ section.settings.subhead }}</p>
     {% endif %}
     {% if section.settings.cta_text != blank %}
-      <a class="statement-band__cta" href="{{ section.settings.cta_url | default: routes.all_products_collection_url }}">
+      <a class="statement-band__cta" href="{{ cta_href | default: routes.all_products_collection_url }}">
         {{ section.settings.cta_text }}
       </a>
     {% endif %}
@@ -109,7 +119,8 @@
       "type": "text",
       "id": "title",
       "label": "Heading",
-      "default": "Let us knock your socks off"
+      "default": "Let us knock your socks off",
+      "info": "Family is brand Type OS — use Title size/weight to adjust. No font family picker."
     },
     {
       "type": "select",
@@ -117,18 +128,29 @@
       "label": "Title size",
       "options": [
         { "value": "default", "label": "Default / Type OS" },
+        { "value": "12", "label": "12px" },
+        { "value": "13", "label": "13px" },
+        { "value": "14", "label": "14px" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" },
+        { "value": "18", "label": "18px" },
+        { "value": "20", "label": "20px" },
+        { "value": "22", "label": "22px" },
         { "value": "24", "label": "24px" },
+        { "value": "26", "label": "26px" },
         { "value": "28", "label": "28px" },
+        { "value": "30", "label": "30px" },
         { "value": "32", "label": "32px" },
         { "value": "36", "label": "36px" },
         { "value": "40", "label": "40px" },
         { "value": "44", "label": "44px" },
         { "value": "48", "label": "48px" },
-        { "value": "52", "label": "52px" },
         { "value": "56", "label": "56px" }
+
       ],
       "default": "default",
-      "info": "Independent size for this statement line (e.g. “Let us knock your socks off”). Default keeps Type OS."
+      "info": "Family is brand Type OS — size only. Independent size for this statement line. Default keeps Type OS."
     },
     {
       "type": "select",
@@ -147,7 +169,8 @@
       "type": "text",
       "id": "subhead",
       "label": "Body",
-      "default": "Safely push harder in every studio move."
+      "default": "Safely push harder in every studio move.",
+      "info": "Family is brand Type OS — use Body size to adjust. No font family picker."
     },
     {
       "type": "select",
@@ -155,24 +178,53 @@
       "label": "Body size",
       "options": [
         { "value": "default", "label": "Default / Type OS" },
+        { "value": "12", "label": "12px" },
+        { "value": "13", "label": "13px" },
+        { "value": "14", "label": "14px" },
         { "value": "15", "label": "15px" },
         { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" },
         { "value": "18", "label": "18px" },
         { "value": "20", "label": "20px" },
+        { "value": "22", "label": "22px" },
         { "value": "24", "label": "24px" },
+        { "value": "26", "label": "26px" },
         { "value": "28", "label": "28px" },
+        { "value": "30", "label": "30px" },
         { "value": "32", "label": "32px" },
         { "value": "36", "label": "36px" },
-        { "value": "40", "label": "40px" }
+        { "value": "40", "label": "40px" },
+        { "value": "44", "label": "44px" },
+        { "value": "48", "label": "48px" },
+        { "value": "56", "label": "56px" }
+
       ],
       "default": "default"
     },
     { "type": "text", "id": "cta_text", "label": "CTA label", "default": "Shop Now" },
     {
-      "type": "url",
-      "id": "cta_url",
+      "type": "select",
+      "id": "cta_link_target",
       "label": "CTA link",
-      "info": "Collection/product/page URL for navigation. Use #anchors only to jump to a same-page section Anchor ID. Blank → all-products collection."
+      "options": [
+        { "value": "custom", "label": "Custom URL…" },
+        { "value": "#variants", "label": "#variants — Shop styles" },
+        { "value": "#knock-socks", "label": "#knock-socks — Statement" },
+        { "value": "#reviews", "label": "#reviews" },
+        { "value": "#guarantee", "label": "#guarantee" },
+        { "value": "#never-loses-grip", "label": "#never-loses-grip" },
+        { "value": "#one-pair", "label": "#one-pair" },
+        { "value": "#coperni", "label": "#coperni — Collab" },
+        { "value": "#problem", "label": "#problem" }
+      ],
+      "default": "custom",
+      "info": "Homepage section anchors jump on the same page. Choose Custom URL… for a full URL or any other #hash. Blank custom → all-products collection."
+    },
+    {
+      "type": "text",
+      "id": "cta_url",
+      "label": "Custom CTA URL",
+      "info": "Used when CTA link = Custom URL…."
     },
     { "type": "header", "content": "Section — Statement band" },
     {
@@ -180,7 +232,13 @@
       "id": "anchor_id",
       "label": "Anchor ID",
       "default": "knock-socks",
-      "info": "Enables jumps like #knock-socks from hero tag / CTAs."
+      "info": "This section’s own ID for same-page jumps (e.g. #knock-socks from hero tag / CTAs)."
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Section aria-label",
+      "info": "Accessibility name for screen readers — not visible on the page. Leave blank to use the Heading."
     }
   ],
   "presets": [{ "name": "Statement band" }]

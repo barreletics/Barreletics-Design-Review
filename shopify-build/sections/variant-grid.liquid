@@ -90,11 +90,12 @@
   assign label_open = section.settings.label_open | default: 'Open Sole'
   assign label_oneoffs = section.settings.label_oneoffs | default: 'One-Offs'
   assign label_outdoor = section.settings.label_outdoor | default: 'Outdoor'
+  assign vg_anchor = section.settings.anchor_id | default: 'variants' | handleize
 -%}
 
 <section
   class="variants-section"
-  id="variants-{{ section.id }}"
+  id="{{ vg_anchor }}"
   aria-label="Shop all styles"
   data-variants-collapse
   data-initial-rows="{{ initial_rows }}"
@@ -638,7 +639,7 @@
 
 <script>
   (function () {
-    var section = document.getElementById('variants-{{ section.id }}');
+    var section = document.getElementById('{{ vg_anchor }}');
     if (!section) return;
 
     var activeSize = 'M';
@@ -768,25 +769,36 @@
   "settings": [
     { "type": "header", "content": "Shared — Content" },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Two versions. One performance." },
-    { "type": "text", "id": "title", "label": "Heading", "default": "Shop all colors & styles", "info": "Header chrome locked — keep title/body structure." },
+    { "type": "text", "id": "title", "label": "Heading", "default": "Shop all colors & styles", "info": "Family is brand Type OS — use Title size/weight to adjust. No font family picker. Header chrome locked — keep title/body structure." },
     {
       "type": "select",
       "id": "title_size",
       "label": "Title size",
       "options": [
         { "value": "default", "label": "Default / Type OS" },
+        { "value": "12", "label": "12px" },
+        { "value": "13", "label": "13px" },
+        { "value": "14", "label": "14px" },
         { "value": "15", "label": "15px" },
         { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" },
         { "value": "18", "label": "18px" },
         { "value": "20", "label": "20px" },
+        { "value": "22", "label": "22px" },
         { "value": "24", "label": "24px" },
+        { "value": "26", "label": "26px" },
         { "value": "28", "label": "28px" },
+        { "value": "30", "label": "30px" },
         { "value": "32", "label": "32px" },
         { "value": "36", "label": "36px" },
-        { "value": "40", "label": "40px" }
+        { "value": "40", "label": "40px" },
+        { "value": "44", "label": "44px" },
+        { "value": "48", "label": "48px" },
+        { "value": "56", "label": "56px" }
+
       ],
       "default": "default",
-      "info": "Default keeps Type OS. Overrides size only — not font family."
+      "info": "Family is brand Type OS — size only. Default keeps Type OS."
     },
     {
       "type": "select",
@@ -801,22 +813,33 @@
       ],
       "default": "default"
     },
-    { "type": "textarea", "id": "body", "label": "Body", "default": "Grip shoes for Barre, Pilates, Yoga—secure in every hold. No slipping. No resets." },
+    { "type": "textarea", "id": "body", "label": "Body", "default": "Grip shoes for Barre, Pilates, Yoga—secure in every hold. No slipping. No resets.", "info": "Family is brand Type OS — use Body size to adjust. No font family picker." },
     {
       "type": "select",
       "id": "body_size",
       "label": "Body size",
       "options": [
         { "value": "default", "label": "Default / Type OS" },
+        { "value": "12", "label": "12px" },
+        { "value": "13", "label": "13px" },
+        { "value": "14", "label": "14px" },
         { "value": "15", "label": "15px" },
         { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" },
         { "value": "18", "label": "18px" },
         { "value": "20", "label": "20px" },
+        { "value": "22", "label": "22px" },
         { "value": "24", "label": "24px" },
+        { "value": "26", "label": "26px" },
         { "value": "28", "label": "28px" },
+        { "value": "30", "label": "30px" },
         { "value": "32", "label": "32px" },
         { "value": "36", "label": "36px" },
-        { "value": "40", "label": "40px" }
+        { "value": "40", "label": "40px" },
+        { "value": "44", "label": "44px" },
+        { "value": "48", "label": "48px" },
+        { "value": "56", "label": "56px" }
+
       ],
       "default": "default"
     },
@@ -862,6 +885,13 @@
     { "type": "range", "id": "max_variants", "min": 8, "max": 80, "step": 4, "default": 48, "label": "Max variants per tab" },
 
     { "type": "header", "content": "Section — Variant grid — links" },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor ID",
+      "default": "variants",
+      "info": "Same-page jump target (homepage CTAs use #variants). Default: variants."
+    },
     { "type": "checkbox", "id": "show_utility_links", "label": "Show size chart & compare links", "default": true },
     { "type": "url", "id": "size_chart_url", "label": "Size chart URL" },
     { "type": "url", "id": "compare_url", "label": "Compare URL" }
