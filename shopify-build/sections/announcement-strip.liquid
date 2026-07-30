@@ -1,6 +1,6 @@
 {% comment %}
-  Announcement strip — Theme Editor blocks + settings.
-  Presentation CSS/JS: assets/chrome.css + chrome.js
+  Trust / announcement strip — Home WORKING cream bar.
+  All messages shown inline with separators (not a dark rotator).
 {% endcomment %}
 
 {% if section.settings.enabled %}
@@ -8,27 +8,24 @@
   {% if slides.size > 0 %}
     <div
       class="announcement-strip"
-      data-announcement-strip
-      data-rotation-ms="{{ section.settings.rotation_speed | times: 1000 }}"
       role="region"
       aria-label="Promotional messages"
       {{ section.shopify_attributes }}
     >
       <div class="announcement-strip__inner">
         {% for block in slides %}
-          <div
-            class="announcement-strip__slide{% if forloop.first %} is-active{% endif %}"
-            data-slide-index="{{ forloop.index0 }}"
-            {{ block.shopify_attributes }}
-          >
+          {% unless forloop.first %}
+            <span class="announcement-strip__sep" aria-hidden="true">·</span>
+          {% endunless %}
+          <span class="announcement-strip__item" {{ block.shopify_attributes }}>
             {% if block.settings.link_url != blank %}
               <a href="{{ block.settings.link_url }}" class="announcement-strip__link">
                 {{ block.settings.text }}
               </a>
             {% else %}
-              <span>{{ block.settings.text }}</span>
+              {{ block.settings.text }}
             {% endif %}
-          </div>
+          </span>
         {% endfor %}
       </div>
     </div>
@@ -53,8 +50,9 @@
       "max": 10,
       "step": 1,
       "unit": "s",
-      "label": "Rotation speed",
-      "default": 4
+      "label": "Rotation speed (unused — static strip)",
+      "default": 4,
+      "info": "Kept for schema compatibility. Strip shows all messages at once like the Home mock."
     }
   ],
   "blocks": [

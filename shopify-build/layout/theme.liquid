@@ -8,19 +8,19 @@
   <title>
     {%- case template.name -%}
       {%- when 'index' -%}
-        Barreletics — Performance Skins for Barre, Pilates & Reformer
+        {{ page_title }}{% unless page_title contains shop.name %} | {{ shop.name }}{% endunless %}
       {%- when 'product' -%}
-        {{ product.title }} | Barreletics
+        {{ product.title }} | {{ shop.name }}
       {%- when 'collection' -%}
-        {{ collection.title }} | Barreletics Grippy Shoes
+        {{ collection.title }} | {{ shop.name }}
       {%- when 'article' -%}
-        {{ article.title }} | Barreletics Journal
+        {{ article.title }} | {{ shop.name }}
       {%- when 'blog' -%}
-        {{ blog.title }} | Barreletics Journal
+        {{ blog.title }} | {{ shop.name }}
       {%- when 'page' -%}
-        {{ page.title }} | Barreletics
+        {{ page.title }} | {{ shop.name }}
       {%- else -%}
-        {{ page_title }} | Barreletics
+        {{ page_title }} | {{ shop.name }}
     {%- endcase -%}
   </title>
 
@@ -30,120 +30,53 @@
 
   <link rel="canonical" href="{{ canonical_url }}">
 
-  {%- comment -%} Open Graph Meta Tags {%- endcomment -%}
-  <meta property="og:site_name" content="Barreletics">
+  <meta property="og:site_name" content="{{ shop.name }}">
   <meta property="og:url" content="{{ canonical_url }}">
-
-  {%- case template.name -%}
-    {%- when 'product' -%}
-      <meta property="og:type" content="product">
-      <meta property="og:title" content="{{ product.title | escape }}">
-      <meta property="og:description" content="{{ product.description | strip_html | truncate: 200 | escape }}">
-      {%- if product.featured_image -%}
-        <meta property="og:image" content="https:{{ product.featured_image | image_url: width: 1200 }}">
-      {%- endif -%}
-      <meta property="og:price:amount" content="{{ product.price | money_without_currency }}">
-      <meta property="og:price:currency" content="{{ shop.currency }}">
-    {%- when 'article' -%}
-      <meta property="og:type" content="article">
-      <meta property="og:title" content="{{ article.title | escape }}">
-      <meta property="og:description" content="{{ article.excerpt_or_content | strip_html | truncate: 200 | escape }}">
-      {%- if article.image -%}
-        <meta property="og:image" content="https:{{ article.image | image_url: width: 1200 }}">
-      {%- endif -%}
-    {%- when 'collection' -%}
-      <meta property="og:type" content="website">
-      <meta property="og:title" content="{{ collection.title | escape }}">
-      <meta property="og:description" content="{{ collection.description | strip_html | truncate: 200 | escape }}">
-      {%- if collection.image -%}
-        <meta property="og:image" content="https:{{ collection.image | image_url: width: 1200 }}">
-      {%- endif -%}
-    {%- when 'blog' -%}
-      <meta property="og:type" content="blog">
-      <meta property="og:title" content="{{ blog.title | escape }}">
-      <meta property="og:description" content="{{ page_description | escape }}">
-    {%- else -%}
-      <meta property="og:type" content="website">
-      <meta property="og:title" content="{{ page_title | escape }}">
-      {%- if page_description -%}
-        <meta property="og:description" content="{{ page_description | escape }}">
-      {%- endif -%}
-  {%- endcase -%}
-
-  {%- comment -%} Fallback OG image {%- endcomment -%}
-  {%- unless template.name == 'product' or template.name == 'article' or template.name == 'collection' -%}
-    <meta property="og:image" content="{{ 'og-default.jpg' | asset_url }}">
-  {%- endunless -%}
-
-  {%- comment -%} Twitter Card {%- endcomment -%}
+  <meta property="og:title" content="{{ page_title | escape }}">
+  {%- if page_description -%}
+    <meta property="og:description" content="{{ page_description | escape }}">
+  {%- endif -%}
   <meta name="twitter:card" content="summary_large_image">
 
-  {%- comment -%} Preconnects {%- endcomment -%}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
-  <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
-  <link rel="preconnect" href="https://connect.facebook.net" crossorigin>
 
-  {%- comment -%} Google Search Console verification {%- endcomment -%}
-  {% if settings.search_console_verification != blank %}
-    <meta name="google-site-verification" content="{{ settings.search_console_verification }}">
-  {% endif %}
+  {%- comment -%}
+    Analytics / chat / pixels: prefer App embeds + content_for_header.
+    Do not render theme snippets that are missing or would double-fire (Tidio, Meta, etc.).
+  {%- endcomment -%}
 
-  {%- comment -%} Analytics — GA4 {%- endcomment -%}
-  {% render 'analytics-head' %}
-
-  {%- comment -%} Meta Pixel {%- endcomment -%}
-  {% render 'meta-pixel' %}
-
-  {%- comment -%} Pinterest Tag {%- endcomment -%}
-  {% render 'pinterest-tag' %}
-
-  {%- comment -%} Microsoft Clarity {%- endcomment -%}
-  {% render 'clarity' %}
-
-  {%- comment -%} Fonts {%- endcomment -%}
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-  {%- comment -%} Design Tokens + Base + Chrome CSS (critical) {%- endcomment -%}
   {{ 'design-tokens.css' | asset_url | stylesheet_tag }}
   {{ 'barreletics-base.css' | asset_url | stylesheet_tag }}
   {{ 'chrome.css' | asset_url | stylesheet_tag }}
 
-  {%- comment -%} Organization Schema (all pages) {%- endcomment -%}
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Organization",
-      "name": "Barreletics",
-      "url": "{{ shop.url }}",
-      "logo": "{{ 'logo.png' | asset_url }}"
+      "name": {{ shop.name | json }},
+      "url": {{ shop.url | json }}
     }
   </script>
 
-  {%- comment -%} WebSite + SearchAction Schema (homepage only) {%- endcomment -%}
   {%- if template.name == 'index' -%}
+    {%- capture website_search_target -%}{{ shop.url }}/search?q={%- raw -%}{search_term_string}{%- endraw -%}{%- endcapture -%}
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "WebSite",
-        "name": "Barreletics",
-        "url": "{{ shop.url }}",
+        "name": {{ shop.name | json }},
+        "url": {{ shop.url | json }},
         "potentialAction": {
           "@type": "SearchAction",
-          "target": "{{ shop.url }}/search?q={search_term_string}",
+          "target": {{ website_search_target | json }},
           "query-input": "required name=search_term_string"
         }
       }
     </script>
-  {%- endif -%}
-
-  {%- comment -%} Page-specific schema snippets {%- endcomment -%}
-  {%- if template.name == 'collection' -%}
-    {% render 'collection-schema' %}
-  {%- endif -%}
-  {%- if template.name == 'article' -%}
-    {% render 'article-schema' %}
   {%- endif -%}
 
   {{ content_for_header }}
@@ -154,6 +87,9 @@
 
   {% sections 'header-group' %}
 
+  {%- comment -%} Theme popups (newsletter / age) — file exists on draft; no Impulse chrome restore {%- endcomment -%}
+  {% sections 'popup-group' %}
+
   <main id="main-content" role="main" tabindex="-1">
     {{ content_for_layout }}
   </main>
@@ -161,13 +97,10 @@
   {% sections 'footer-group' %}
 
   {% render 'cart-drawer' %}
-  {% render 'analytics-events' %}
-  {% render 'helpscout-beacon' %}
-  {% render 'tidio-widget' %}
 
+  <script src="{{ 'cart.js' | asset_url }}" defer></script>
   <script src="{{ 'chrome.js' | asset_url }}" defer></script>
 
-  {%- comment -%} Skip link styles {%- endcomment -%}
   <style>
     .skip-link {
       position: absolute;
@@ -183,14 +116,14 @@
       text-decoration: none;
       transition: top 0.2s;
     }
-
-    .skip-link:focus {
-      top: 16px;
+    .skip-link:focus { top: 16px; }
+    .visually-hidden {
+      position: absolute !important;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0,0,0,0);
+      white-space: nowrap; border: 0;
     }
-  </style>
-
-  {%- comment -%} Reduced motion preference {%- endcomment -%}
-  <style>
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
