@@ -1,55 +1,58 @@
-# M4 Type Hierarchy — Type OS (weight ladder)
+# M4 Type Hierarchy — Type OS v2
 
 **Date:** 2026-07-29  
-**Status:** Andrew Type OS fix brief — law  
+**Status:** TYPE-OS-v2 law (supersedes v1 weight ladder)  
 **Family:** Roboto only (unchanged)  
 **Review surface:** `docs/Barreletics Home - Type OS Preview.html`
 
 ---
 
-## Weight ladder (HARD — highest priority)
+## Governing rule (HARD)
+
+**Weight falls as size rises.**  
+The biggest type on the page must not be the heaviest. Weight densifies *small* type; large type already has presence from scale.
+
+---
+
+## Roles
 
 | Role | Weight | Size | Tracking / LH |
 |------|--------|------|---------------|
-| **Hero H1** | **800** | `clamp(48px, 6vw, 76px)` | −0.02em / 1.02 |
-| **Section H2** | **700** | `clamp(32px, 3.4vw, 40px)` | −0.01em / 1.2 |
-| **Statement** | **600** | `clamp(26px, 2.8vw, 32px)` | −0.01em / 1.2 |
-| **Lede / body** | **400** | lede 17px · body 16px | lh 1.55 / 1.65 |
+| **Hero H1** | **700** | `clamp(50px, 6.4vw, 82px)` | −0.028em / 1.06 |
+| **H2 Display** (brand) | **500** | `clamp(38px, 4.6vw, 52px)` | −0.028em / 1.10 · measure 15ch |
+| **H2 Standard** (wayfinding) | **600** | `clamp(26px, 2.9vw, 32px)` | −0.012em / 1.22 |
+| **Statement** | **500** | `clamp(28px, 3vw, 36px)` | −0.022em |
+| **Lede / body** | **400** | lede 17px · body 16px | lh 1.60 / 1.72 |
+| **Label** | **600** | 11px | 0.08em |
 
-Ladder: **800 → 700 → 600 → 400**.  
-Section H2 always outranks statement (size + weight). No heading below an H2 may render heavier than that H2.
+Classes: `.type-hero` · `.h2-display` · `.h2-standard` · `.type-statement` · `.type-body` / `.type-lede` · `.type-label`  
+`.em` = `font-weight: 700` — one word per signature headline only (hero, H2 Display, statement). Never on H2 Standard.
+
+---
+
+## Cadence (HARD)
+
+Only three gaps between eyebrow → headline → body → CTA:
+
+```css
+--gap-a: 16px;   /* eyebrow  → headline */
+--gap-b: 20px;   /* headline → body/lede */
+--gap-c: 32px;   /* body     → CTA */
+```
+
+No per-section stack overrides.
 
 ---
 
 ## Casing law (HARD)
 
-| Role | Casing | Where |
-|------|--------|-------|
-| **Hero** | Sentence / brand line — not Title Case every word | `split-hero` only |
-| **Section / statement** | **Sentence case** | All section titles, bands, fifty-fifty |
-| **Eyebrows / labels** | **Small uppercase only** (`.type-label` / `.eyebrow`) | Above titles; strip labels |
-| **Body / lede** | Sentence case | Support copy |
-| **CTAs / nav** | Quiet uppercase UI (unchanged) | Buttons, chrome |
+| Role | Casing |
+|------|--------|
+| **Hero / H2 / statement** | Sentence / brand line |
+| **Eyebrows / labels** | Small uppercase only |
+| **CTAs / nav** | Quiet uppercase UI |
 
-**Banned:**
-- `text-transform: uppercase` on H1 / H2 / campaign / statement headlines
-- ALL CAPS display
-- Title Case stacks on every heading
-- Eyebrow that restates the H2 (e.g. “Real results” above “Real people. Real results.”)
-
----
-
-## Eyebrows
-
-```css
-font-size: 11px;
-font-weight: 600;
-letter-spacing: 0.08em;
-text-transform: uppercase;
-color: #6b645a;
-```
-
-No text under 11px.
+**Banned:** uppercase on H1/H2/statement · ALL CAPS display · Title Case stacks
 
 ---
 
@@ -57,77 +60,64 @@ No text under 11px.
 
 | Tier | Role | Spec |
 |------|------|------|
-| **1** | Statement | `clamp(26px, 2.8vw, 32px)` / **600** / `#ffffff` |
-| **2** | Support | **16px** / **400** / `#d6d2cb` (≥4.5:1 on charcoal) |
+| **1** | Statement | statement tokens / `#ffffff` |
+| **2** | Support | **16px** / **400** / `#d6d2cb` |
 
-Delete tier 3; merge into tier 2 if needed. CTAs are UI, not a text tier.
-
----
-
-## Alignment (no exceptions)
-
-| Surface | Align |
-|---------|-------|
-| Section headers (eyebrow + H2 + lede) | **Left** |
-| Full-bleed statement / dark bands | **Centered** |
+No third text tier (merge points into paragraph or drop one).
 
 ---
 
-## Token map
+## Homepage register map
+
+| Section | Register | Example |
+|---------|----------|---------|
+| `split-hero` | Hero | *The Pilates Sock Era is Over* |
+| `fifty-fifty` problem / grip / sock-math | **H2 Display** | *Yoga socks are useless.* |
+| `fifty-fifty` Coperni | **H2 Standard** | *Barreletics × Coperni* |
+| `variant-grid` | **H2 Standard** | *Shop all styles & colors* |
+| `social-proof` | **H2 Standard** | *Real people. Real results.* |
+| `statement-band` / `guarantee-band` | Statement | dark-band tier 1 |
+| `home-ugc` / `newsletter` | **H2 Standard** | *@barreletics* · *10% off…* |
+
+---
+
+## Final token set
 
 ```css
---fw-hero: 800;
---fw-h2: 700;
---fw-statement: 600;
---fw-body: 400;
---fs-hero: clamp(48px, 6vw, 76px);
---fs-h2: clamp(32px, 3.4vw, 40px);
---fs-statement: clamp(26px, 2.8vw, 32px);
---fs-lede: 17px;
---fs-body: 16px;
---fs-label: 11px;
---ls-hero: -0.02em;
---ls-h2: -0.01em;
---ls-label: 0.08em;
---lh-hero: 1.02;
---lh-h2: 1.2;
---lh-lede: 1.55;
---lh-body: 1.65;
+--fw-hero:        700;
+--fw-h2-display:  500;
+--fw-h2-standard: 600;
+--fw-statement:   500;
+--fw-body:        400;
+--fw-label:       600;
+--fw-emphasis:    700;
+
+--fs-hero:        clamp(50px, 6.4vw, 82px);
+--fs-h2-display:  clamp(38px, 4.6vw, 52px);
+--fs-h2-standard: clamp(26px, 2.9vw, 32px);
+--fs-statement:   clamp(28px, 3vw, 36px);
+--fs-lede:        17px;
+--fs-body:        16px;
+--fs-label:       11px;
+
+--ls-hero:        -0.028em;
+--ls-h2-display:  -0.028em;
+--ls-h2-standard: -0.012em;
+--ls-statement:   -0.022em;
+--ls-label:        0.08em;
+
+--lh-hero:        1.06;
+--lh-h2-display:  1.10;
+--lh-h2-standard: 1.22;
+--lh-lede:        1.60;
+--lh-body:        1.72;
+
+--gap-a: 16px;
+--gap-b: 20px;
+--gap-c: 32px;
 ```
 
-Mapped to `--type-hero-*`, `--type-section-*`, `--type-statement-*`, `--type-lede-*`, `--type-body-*`, `--type-label-*` in `design-tokens.css`.
-
-Utilities: `.type-hero`, `.type-section` (`.type-campaign` = alias), `.type-statement`, `.type-body`, `.type-lede`, `.type-label`.
-
----
-
-## Homepage mapping + casing examples
-
-| Section | Tier | Casing example |
-|---------|------|----------------|
-| `split-hero` | Hero | *The Pilates Sock Era is Over* |
-| `fifty-fifty` problem | Section | *Yoga socks are useless.* |
-| `fifty-fifty` grip | Section | *Upgrade your grip. Upgrade your workout.* |
-| `fifty-fifty` sock-math | Section | *One pair. Done.* |
-| `statement-band` | Statement (dark) | *Studio workouts and footwear will never be the same.* |
-| `guarantee-band` | Statement (dark) | *Zero risk. All grip.* |
-| `fifty-fifty` Coperni | Section | *Barreletics × Coperni* |
-| `variant-grid` | Section (left) | *Shop all styles & colors* |
-| `social-proof` | Section (left) — no redundant eyebrow | *Real people. Real results.* |
-| `home-ugc` | Section (left) | *@barreletics* |
-| `newsletter` | Section (left) | *10% off your first pair.* |
-| `disciplines` / `value-strip` | Labels | Small uppercase via `.type-label` |
-| `geo-section` | H3 | *Trusted across the country* |
-
----
-
-## Deliberate non-changes
-
-- No new section layouts / major HTML restructures
-- No color system overhaul beyond eyebrow + dark-band support colors
-- Sentence case headings; hero tracking −0.02em; body 16/1.65; lede 17/1.55
-- Roboto retained; Theme Editor remains QA runtime; repo owns tokens
-- Static review: `docs/Barreletics Home - Type OS Preview.html`
+Mapped in `shopify-build/assets/design-tokens.css`. Utilities in `barreletics-base.css`.
 
 ---
 

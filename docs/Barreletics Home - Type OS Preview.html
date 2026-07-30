@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Barreletics Home — TYPE OS PREVIEW (weight ladder)</title>
-  <meta name="description" content="Static preview of the Barreletics type OS: hero 800 · H2 700 · statement 600 · body 400. Sentence-case headings. Not WORKING mock.">
+  <title>Barreletics Home — TYPE OS PREVIEW v2 (elasticity &amp; weight inversion)</title>
+  <meta name="description" content="Static preview of Type OS v2: weight falls as size rises. H2 Display / H2 Standard. Sentence-case headings. Not WORKING mock.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -37,7 +37,7 @@
       --border-default: var(--color-warm-border);
       --accent-primary: var(--color-rust);
       --accent-stars: var(--color-gold);
-      --accent-stars-marketing: var(--color-rust);
+      --accent-stars-marketing: var(--color-gold);
 
       --font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
       --weight-regular: 400;
@@ -46,49 +46,78 @@
       --weight-bold: 700;
       --weight-extrabold: 800;
 
-      /* Brief aliases */
-      --fw-hero: 800;
-      --fw-h2: 700;
-      --fw-statement: 600;
+      /* Type OS v2 — Final token set */
+      --fw-hero: 700;
+      --fw-h2-display: 500;
+      --fw-h2-standard: 600;
+      --fw-statement: 500;
       --fw-body: 400;
-      --fs-hero: clamp(48px, 6vw, 76px);
-      --fs-h2: clamp(32px, 3.4vw, 40px);
-      --fs-statement: clamp(26px, 2.8vw, 32px);
+      --fw-label: 600;
+      --fw-emphasis: 700;
+
+      --fs-hero: clamp(50px, 6.4vw, 82px);
+      --fs-h2-display: clamp(38px, 4.6vw, 52px);
+      --fs-h2-standard: clamp(26px, 2.9vw, 32px);
+      --fs-statement: clamp(28px, 3vw, 36px);
       --fs-lede: 17px;
       --fs-body: 16px;
       --fs-label: 11px;
-      --ls-hero: -0.02em;
-      --ls-h2: -0.01em;
+
+      --ls-hero: -0.028em;
+      --ls-h2-display: -0.028em;
+      --ls-h2-standard: -0.012em;
+      --ls-statement: -0.022em;
       --ls-label: 0.08em;
-      --lh-hero: 1.02;
-      --lh-h2: 1.2;
-      --lh-lede: 1.55;
-      --lh-body: 1.65;
+
+      --lh-hero: 1.06;
+      --lh-h2-display: 1.10;
+      --lh-h2-standard: 1.22;
+      --lh-lede: 1.60;
+      --lh-body: 1.72;
+
+      --measure-h2-display: 15ch;
+      --gap-a: 16px;
+      --gap-b: 20px;
+      --gap-c: 32px;
+
+      --fw-h2: var(--fw-h2-standard);
+      --fs-h2: var(--fs-h2-standard);
+      --ls-h2: var(--ls-h2-standard);
+      --lh-h2: var(--lh-h2-standard);
 
       /* Hero */
       --type-hero-size: var(--fs-hero);
-      --type-hero-size-mobile: clamp(36px, 9vw, 48px);
+      --type-hero-size-mobile: clamp(38px, 9vw, 50px);
       --type-hero-weight: var(--fw-hero);
       --type-hero-leading: var(--lh-hero);
       --type-hero-tracking: var(--ls-hero);
-      --type-hero-margin: 0 0 var(--stack-title-to-body);
+      --type-hero-margin: 0 0 var(--gap-b);
 
-      /* Section H2 — outranks statement */
-      --type-section-size: var(--fs-h2);
-      --type-section-size-mobile: clamp(28px, 5.5vw, 34px);
-      --type-section-weight: var(--fw-h2);
-      --type-section-leading: var(--lh-h2);
-      --type-section-tracking: var(--ls-h2);
-      --type-section-margin: 0 0 var(--stack-section-after-title);
+      /* H2 Display */
+      --type-h2-display-size: var(--fs-h2-display);
+      --type-h2-display-size-mobile: clamp(32px, 7vw, 40px);
+      --type-h2-display-weight: var(--fw-h2-display);
+      --type-h2-display-leading: var(--lh-h2-display);
+      --type-h2-display-tracking: var(--ls-h2-display);
+      --type-h2-display-measure: var(--measure-h2-display);
+      --type-h2-display-margin: 0 0 var(--gap-b);
+
+      /* H2 Standard / legacy .type-section */
+      --type-section-size: var(--fs-h2-standard);
+      --type-section-size-mobile: clamp(24px, 5vw, 28px);
+      --type-section-weight: var(--fw-h2-standard);
+      --type-section-leading: var(--lh-h2-standard);
+      --type-section-tracking: var(--ls-h2-standard);
+      --type-section-margin: 0 0 var(--gap-b);
       --type-section-measure: 28ch;
       --type-section-measure-wide: 36ch;
 
-      /* Statement — one step below H2 */
+      /* Statement */
       --type-statement-size: var(--fs-statement);
-      --type-statement-size-mobile: clamp(22px, 5.5vw, 28px);
+      --type-statement-size-mobile: clamp(24px, 5.5vw, 30px);
       --type-statement-weight: var(--fw-statement);
-      --type-statement-leading: var(--lh-h2);
-      --type-statement-tracking: var(--ls-h2);
+      --type-statement-leading: var(--lh-h2-display);
+      --type-statement-tracking: var(--ls-statement);
 
       --type-dark-support-size: 16px;
       --type-dark-support-weight: 400;
@@ -105,7 +134,7 @@
       --type-campaign-measure-wide: var(--type-section-measure-wide);
 
       --type-h3-size: clamp(18px, 2vw, 22px);
-      --type-h3-weight: 400;
+      --type-h3-weight: 600;
       --type-h3-leading: 1.25;
       --type-h3-tracking: -0.01em;
 
@@ -115,15 +144,15 @@
       --type-lede-weight: var(--fw-body);
       --type-lede-leading: var(--lh-lede);
       --type-body-size: var(--fs-body);
-      --type-body-size-sm: 15px;
+      --type-body-size-sm: var(--fs-body);
       --type-body-weight: var(--fw-body);
       --type-body-leading: var(--lh-body);
       --type-label-size: var(--fs-label);
-      --type-label-weight: 600;
+      --type-label-weight: var(--fw-label);
       --type-label-tracking: var(--ls-label);
       --type-label-color: #6b645a;
       --type-nav-size: 11px;
-      --type-nav-weight: 500;
+      --type-nav-weight: 600;
       --type-nav-tracking: 0.14em;
       --type-brand-size: 14px;
       --type-brand-weight: 700;
@@ -134,6 +163,7 @@
       --type-trust-size: 13px;
       --type-trust-weight: 400;
       --type-caption-size: 13px;
+      --type-caption-weight: 600;
 
       --align-hero: left;
       --align-campaign: left;
@@ -147,16 +177,16 @@
       --space-10: 48px;
       --space-12: 64px;
 
-      --stack-trust-to-title: 36px;
-      --stack-title-to-body: 28px;
-      --stack-body-to-cta: 36px;
-      --stack-cta-to-meta: 32px;
-      --stack-eyebrow-to-title: 16px;
-      --stack-section-after-title: 20px;
-      --stack-campaign-after-title: var(--stack-section-after-title);
-      --stack-campaign-eyebrow: 20px;
-      --stack-campaign-to-body: 28px;
-      --stack-campaign-to-cta: 40px;
+      --stack-trust-to-title: var(--gap-a);
+      --stack-title-to-body: var(--gap-b);
+      --stack-body-to-cta: var(--gap-c);
+      --stack-cta-to-meta: var(--gap-c);
+      --stack-eyebrow-to-title: var(--gap-a);
+      --stack-section-after-title: var(--gap-b);
+      --stack-campaign-after-title: var(--gap-b);
+      --stack-campaign-eyebrow: var(--gap-a);
+      --stack-campaign-to-body: var(--gap-b);
+      --stack-campaign-to-cta: var(--gap-c);
 
       --section-padding-y: 64px;
       --section-padding-x: 40px;
@@ -188,7 +218,7 @@
     html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
     body {
       font-family: var(--font-family);
-      font-size: var(--type-body-size-sm);
+      font-size: var(--type-body-size);
       font-weight: var(--type-body-weight);
       line-height: var(--type-body-leading);
       color: var(--text-primary);
@@ -217,6 +247,17 @@
       .type-hero { font-size: var(--type-hero-size-mobile); }
     }
 
+    .h2-display {
+      font-size: var(--type-h2-display-size);
+      font-weight: var(--type-h2-display-weight);
+      line-height: var(--type-h2-display-leading);
+      letter-spacing: var(--type-h2-display-tracking);
+      max-width: var(--type-h2-display-measure);
+      margin: var(--type-h2-display-margin);
+      color: var(--text-primary);
+      text-transform: none;
+    }
+    .h2-standard,
     .type-section,
     .type-campaign {
       font-size: var(--type-section-size);
@@ -227,6 +268,7 @@
       color: var(--text-primary);
       text-transform: none;
     }
+    .em { font-weight: var(--fw-emphasis); }
     .type-section--narrow,
     .type-campaign--narrow { max-width: var(--type-section-measure); }
     .type-section--wide,
@@ -241,6 +283,8 @@
       text-transform: none;
     }
     @media (max-width: 768px) {
+      .h2-display { font-size: var(--type-h2-display-size-mobile); }
+      .h2-standard,
       .type-section,
       .type-campaign { font-size: var(--type-section-size-mobile); }
       .type-statement { font-size: var(--type-statement-size-mobile); }
@@ -395,7 +439,8 @@
       margin-top: 10px;
       line-height: 1.45;
     }
-    .tier-card--t2 .type-section { margin-bottom: 0; }
+    .tier-card--t2 .h2-display,
+    .tier-card--t2 .h2-standard { margin-bottom: 0; }
 
     .chip {
       display: inline-flex;
@@ -483,7 +528,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      margin: 0 0 var(--stack-trust-to-title);
+      margin: 0 0 var(--gap-a);
       font-size: var(--type-trust-size);
       color: var(--text-body);
     }
@@ -492,13 +537,13 @@
       font-size: var(--type-lede-size);
       line-height: var(--type-lede-leading);
       color: var(--text-body);
-      margin: 0 0 var(--stack-body-to-cta);
+      margin: 0 0 var(--gap-c);
       max-width: var(--hero-body-measure);
     }
     .split-hero__tag {
-      margin-top: var(--stack-cta-to-meta);
+      margin-top: var(--gap-c);
       font-size: var(--type-caption-size);
-      font-weight: 500;
+      font-weight: 600;
       letter-spacing: 0.02em;
     }
     @media (max-width: 900px) {
@@ -540,10 +585,10 @@
       padding: 48px 56px;
       max-width: 560px;
     }
-    .ff__copy .eyebrow { margin-bottom: var(--stack-campaign-eyebrow); }
-    .ff__copy .type-section + .type-body,
-    .ff__copy .type-section + .type-body { margin-top: 0; }
-    .ff__copy .type-body { margin-bottom: var(--stack-campaign-to-cta); max-width: 38ch; }
+    .ff__copy .eyebrow { margin-bottom: var(--gap-a); }
+    .ff__copy .h2-display + .type-body,
+    .ff__copy .h2-standard + .type-body { margin-top: 0; }
+    .ff__copy .type-body { margin-bottom: var(--gap-c); max-width: 38ch; }
     @media (max-width: 900px) {
       .ff { grid-template-columns: 1fr; padding: var(--section-padding-y-mobile) var(--section-padding-x-mobile); }
       .ff--rev .ff__media { order: 0; }
@@ -590,8 +635,8 @@
       text-align: left;
     }
     .commerce__inner { max-width: 720px; margin: 0; }
-    .commerce .eyebrow { margin-bottom: var(--stack-eyebrow-to-title); display: block; }
-    .commerce .type-body { margin: 0 0 28px; max-width: 42ch; }
+    .commerce .eyebrow { margin-bottom: var(--gap-a); display: block; }
+    .commerce .type-body { margin: 0 0 var(--gap-c); max-width: 42ch; }
     .commerce__grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -612,7 +657,7 @@
     .commerce__card p {
       padding: 14px 14px 18px;
       font-size: 14px;
-      font-weight: 500;
+      font-weight: 600;
     }
     @media (max-width: 800px) {
       .commerce__grid { grid-template-columns: 1fr 1fr; }
@@ -631,7 +676,7 @@
       font-weight: var(--type-dark-support-weight);
       line-height: var(--type-body-leading);
       color: var(--type-dark-support-color);
-      margin: 0 auto 32px;
+      margin: 0 auto var(--gap-c);
       max-width: 42ch;
     }
 
@@ -640,7 +685,7 @@
       background: var(--bg-alternate);
     }
     .social-proof__head { max-width: var(--max-width); margin: 0 auto 32px; }
-    .social-proof__head .eyebrow { display: block; margin-bottom: 12px; }
+    .social-proof__head .eyebrow { display: block; margin-bottom: var(--gap-a); }
     .social-proof__grid {
       max-width: var(--max-width);
       margin: 0 auto;
@@ -655,7 +700,7 @@
     }
     .review-card__stars { color: var(--color-gold); margin-bottom: 12px; letter-spacing: 0.08em; }
     .review-card__body { font-size: 15px; line-height: 1.6; color: var(--text-body); margin-bottom: 16px; }
-    .review-card__author { font-size: 13px; font-weight: 500; }
+    .review-card__author { font-size: 13px; font-weight: 600; }
     .review-card__loc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
     @media (max-width: 800px) {
       .social-proof__grid { grid-template-columns: 1fr; }
@@ -666,8 +711,8 @@
       text-align: left;
       background: #fff;
     }
-    .ugc .eyebrow { display: block; margin-bottom: 12px; }
-    .ugc .type-body { margin: 0 0 28px; max-width: 36ch; }
+    .ugc .eyebrow { display: block; margin-bottom: var(--gap-a); }
+    .ugc .type-body { margin: 0 0 var(--gap-c); max-width: 36ch; }
     .ugc__grid {
       max-width: var(--max-width);
       margin: 0 auto;
@@ -728,7 +773,7 @@
     }
     .geo summary {
       font-size: 14px;
-      font-weight: 500;
+      font-weight: 600;
       cursor: pointer;
       list-style: none;
     }
@@ -745,8 +790,8 @@
       background: #fff;
       border-top: 1px solid var(--border-default);
     }
-    .newsletter .eyebrow { display: block; margin-bottom: 12px; }
-    .newsletter .type-body { margin: 0 0 24px; max-width: 40ch; }
+    .newsletter .eyebrow { display: block; margin-bottom: var(--gap-a); }
+    .newsletter .type-body { margin: 0 0 var(--gap-c); max-width: 40ch; }
     .newsletter__form {
       display: flex;
       gap: 10px;
@@ -791,11 +836,10 @@
     <div class="preview-banner__inner">
       <div>
         <div class="preview-banner__tag">TYPE OS PREVIEW · Not Shopify · Not WORKING mock</div>
-        <div class="preview-banner__title">Weight ladder · 800 → 700 → 600 → 400 · H2 outranks statement</div>
+        <div class="preview-banner__title">Type OS v2 · weight falls as size rises · H2 Display 500 / H2 Standard 600</div>
       </div>
       <p class="preview-banner__note">
-        Tokens from <code>design-tokens.css</code> + utilities from <code>barreletics-base.css</code>.
-        Sentence-case headings · eyebrows 11/600/0.08em/#6b645a · dark bands max 2 tiers. Static HTML only.
+        Tokens from <code>design-tokens.css</code> (v2). Gaps <code>--gap-a/b/c</code> · dark bands max 2 tiers · <code>.em</code> once per signature headline. Static HTML only.
       </p>
     </div>
   </aside>
@@ -803,28 +847,29 @@
   <!-- Spec key — makes tiers obvious at a glance -->
   <section class="tier-key" aria-label="Type key">
     <div class="tier-key__inner">
-      <p class="tier-key__label">Type OS — weight ladder 800 → 700 → 600 → 400</p>
+      <p class="tier-key__label">Type OS v2 — weight falls as size rises</p>
       <div class="tier-key__grid">
         <div class="tier-card">
           <span class="tier-card__badge">Hero</span>
-          <p class="type-hero" style="margin:0">The Pilates Sock Era is Over</p>
-          <p class="tier-card__meta">clamp(48px, 6vw, 76px) · 800 · lh 1.02 · −0.02em<br>Strongest · brand / sentence line</p>
+          <p class="type-hero" style="margin:0">The Pilates Sock Era is <span class="em">Over</span></p>
+          <p class="tier-card__meta">clamp(50px, 6.4vw, 82px) · 700 · lh 1.06 · −0.028em<br>Largest · not heaviest · .em once</p>
         </div>
         <div class="tier-card tier-card--t2">
-          <span class="tier-card__badge">Section H2</span>
-          <p class="type-section" style="margin:0">Yoga socks are useless.</p>
-          <p class="tier-card__meta">clamp(32px, 3.4vw, 40px) · 700 · lh 1.2 · −0.01em<br>Outranks statement · sentence case</p>
+          <span class="tier-card__badge">H2 Display</span>
+          <p class="h2-display" style="margin:0">Yoga socks are <span class="em">useless</span>.</p>
+          <p class="tier-card__meta">clamp(38px, 4.6vw, 52px) · 500 · lh 1.1 · −0.028em · 15ch<br>Brand statements · grows + lightens</p>
         </div>
         <div class="tier-card">
-          <span class="tier-card__badge">Statement</span>
-          <p class="type-statement" style="margin:0">Studio workouts and footwear will never be the same.</p>
-          <p class="tier-card__meta">clamp(26px, 2.8vw, 32px) · 600 · one step below H2<br>Dark-band tier 1 · never heavier than H2</p>
+          <span class="tier-card__badge">H2 Standard</span>
+          <p class="h2-standard" style="margin:0">Shop all styles &amp; colors</p>
+          <p class="tier-card__meta">clamp(26px, 2.9vw, 32px) · 600 · lh 1.22 · −0.012em<br>Wayfinding · firm, smaller</p>
         </div>
         <div class="tier-card">
-          <span class="tier-card__badge">Body + label</span>
-          <p class="type-lede" style="margin:0 0 8px">Lede 17px / 400 / 1.55 — opening support.</p>
-          <p class="type-body" style="margin:0 0 8px">Body 16px / 400 / 1.65 — paragraph copy.</p>
-          <p class="type-label" style="margin:0">Eyebrow · 11 / 600 / 0.08em / #6b645a</p>
+          <span class="tier-card__badge">Statement / body</span>
+          <p class="type-statement" style="margin:0 0 8px">Studio workouts will never be the <span class="em">same</span>.</p>
+          <p class="type-lede" style="margin:0 0 8px">Lede 17 / 400 / 1.60</p>
+          <p class="type-body" style="margin:0 0 8px">Body 16 / 400 / 1.72</p>
+          <p class="type-label" style="margin:0">Label 11 / 600 / 0.08em</p>
         </div>
       </div>
     </div>
@@ -850,7 +895,7 @@
         <span class="split-hero__stars" aria-hidden="true">★★★★★</span>
         <span>Trusted by 1,000's of instructors &amp; studios</span>
       </div>
-      <h1 class="type-hero">The Pilates Sock Era is Over</h1>
+      <h1 class="type-hero">The Pilates Sock Era is <span class="em">Over</span></h1>
       <p class="split-hero__body">Outperforms barre socks, Pilates socks, and yoga socks — combined.</p>
       <a class="btn btn--brand" href="#variants">Shop Now</a>
       <p class="split-hero__tag">#letusknockyoursocksoff</p>
@@ -862,9 +907,9 @@
   <section class="ff" id="problem" aria-label="Problem">
     <div class="ff__media">Editorial media</div>
     <div class="ff__copy align-editorial">
-      <span class="chip">Section H2 · sentence case · align-editorial (L)</span>
+      <span class="chip">H2 Display · brand · align-editorial (L)</span>
       <p class="eyebrow eyebrow--accent">Tired of slipping in your yoga socks?</p>
-      <h2 class="type-section">Yoga socks are useless.</h2>
+      <h2 class="h2-display">Yoga socks are <span class="em">useless</span>.</h2>
       <p class="type-body">Silicone dots wear off. Fabric absorbs sweat. You buy another pair every few months. That cycle is over — full-contact molded grip you rinse and reuse.</p>
       <a class="btn btn--primary" href="#variants">Shop the difference</a>
     </div>
@@ -890,9 +935,9 @@
   <!-- 5. variant-grid — Section / left header -->
   <section class="commerce" id="variants" aria-label="Shop styles">
     <div class="commerce__inner align-editorial">
-      <span class="chip">Section H2 · left header</span>
+      <span class="chip">H2 Standard · wayfinding · left</span>
       <p class="eyebrow">Two versions. One performance.</p>
-      <h2 class="type-section">Shop all styles &amp; colors</h2>
+      <h2 class="h2-standard">Shop all styles &amp; colors</h2>
       <p class="type-body">One patented grip. Closed Sole or Open Sole — choose the build that fits your practice. $74.</p>
       <a class="btn btn--brand" href="#">Shop all</a>
     </div>
@@ -908,9 +953,9 @@
   <section class="ff ff--cream ff--rev" id="grip" aria-label="Grip">
     <div class="ff__media">Grip demo media</div>
     <div class="ff__copy align-editorial">
-      <span class="chip">Section H2 · sentence case · align-editorial (L)</span>
+      <span class="chip">H2 Display · brand · align-editorial (L)</span>
       <p class="eyebrow eyebrow--accent">Never loses shape. Never loses grip.</p>
-      <h2 class="type-section type-section--wide">Upgrade your grip. Upgrade your workout.</h2>
+      <h2 class="h2-display">Upgrade your <span class="em">grip</span>. Upgrade your workout.</h2>
       <p class="type-body">Full-contact molded grip — not printed, not glued. The patented surface holds through every hold, every transition — after 100 classes, and after 1,000.</p>
       <a class="btn btn--primary" href="#variants">Shop now</a>
     </div>
@@ -920,9 +965,9 @@
   <section class="ff" id="coperni" aria-label="Coperni">
     <div class="ff__media">Coperni runway / product</div>
     <div class="ff__copy align-editorial">
-      <span class="chip">Section H2 · sentence case · align-editorial (L)</span>
+      <span class="chip">H2 Standard · wayfinding · align-editorial (L)</span>
       <p class="eyebrow">Seasonal collaboration</p>
-      <h2 class="type-section">Barreletics × Coperni</h2>
+      <h2 class="h2-standard">Barreletics × Coperni</h2>
       <p class="type-body">Built for the body in motion — introduced on the Coperni runway, Spring–Summer 2026. One run. One collaboration.</p>
       <a class="btn btn--primary" href="#">Shop the collab</a>
     </div>
@@ -931,7 +976,7 @@
   <!-- 8. statement-band — dark band · 2 tiers · centered -->
   <section class="statement-band section--campaign" aria-label="Statement">
     <span class="chip chip--dark">Statement · 600 · dark band 2 tiers · centered</span>
-    <h2 class="type-statement align-band">Studio workouts and footwear will never be the same.</h2>
+    <h2 class="type-statement align-band">Studio workouts and footwear will never be the <span class="em">same</span>.</h2>
     <p class="statement-band__support">You commit to the class. Commit to the gear. Trusted by 1,000's of instructors across barre, Pilates, and reformer studios.</p>
     <a class="btn btn--ghost" href="#variants">Shop Performance Skins</a>
   </section>
@@ -939,8 +984,8 @@
   <!-- 9. social-proof — Section / left header · no redundant eyebrow -->
   <section class="social-proof" id="reviews" aria-label="Reviews">
     <div class="social-proof__head align-editorial">
-      <span class="chip">Section H2 · left header · no redundant eyebrow</span>
-      <h2 class="type-section">Real people. Real results.</h2>
+      <span class="chip">H2 Standard · wayfinding · left</span>
+      <h2 class="h2-standard">Real people. Real results.</h2>
     </div>
     <div class="social-proof__grid">
       <article class="review-card">
@@ -968,9 +1013,9 @@
   <section class="ff" id="sock-math" aria-label="Sock math">
     <div class="ff__media">Value / sock math visual</div>
     <div class="ff__copy align-editorial">
-      <span class="chip">Section H2 · sentence case · align-editorial (L)</span>
+      <span class="chip">H2 Display · brand · align-editorial (L)</span>
       <p class="eyebrow eyebrow--accent">One pair. No more socks.</p>
-      <h2 class="type-section type-section--narrow">One pair. Done.</h2>
+      <h2 class="h2-display">One pair. <span class="em">Done</span>.</h2>
       <p class="type-body">The cost of two classes — for every class after. No more buying new socks every couple of months. One purchase. Done.</p>
       <a class="btn btn--brand" href="#variants">Shop now — $74</a>
     </div>
@@ -978,9 +1023,9 @@
 
   <!-- 11. home-ugc — Section / left header -->
   <section class="ugc" aria-label="UGC">
-    <span class="chip">Section H2 · left header</span>
+    <span class="chip">H2 Standard · wayfinding · left</span>
     <p class="eyebrow">Follow the movement</p>
-    <h2 class="type-section">@barreletics</h2>
+    <h2 class="h2-standard">@barreletics</h2>
     <p class="type-body">Real practitioners. Real studios. Real grip.</p>
     <div class="ugc__grid" aria-hidden="true">
       <div class="ugc__tile"></div>
@@ -995,14 +1040,8 @@
   <!-- 12. guarantee-band — dark band · 2 tiers · centered -->
   <section class="guarantee-band section--campaign" aria-label="Guarantee">
     <span class="chip chip--dark">Statement · dark band 2 tiers · centered</span>
-    <h2 class="type-statement align-band">Zero risk. All grip.</h2>
-    <p class="type-body">Shop with confidence — 30-day returns on items in new, sellable condition. 90-day warranty against manufacturing defects. Free shipping on orders over $150.</p>
-    <ul class="guarantee-band__points">
-      <li>Free shipping over $150</li>
-      <li>30-day returns</li>
-      <li>90-day warranty</li>
-      <li>Made in USA</li>
-    </ul>
+    <h2 class="type-statement align-band">Zero risk. All <span class="em">grip</span>.</h2>
+    <p class="type-body">Shop with confidence — 30-day returns on items in new, sellable condition. 90-day warranty against manufacturing defects. Free shipping over $150. Made in USA.</p>
     <a class="btn btn--ghost" href="#variants">Shop Grippy Shoes</a>
   </section>
 
@@ -1028,9 +1067,9 @@
 
   <!-- 14. newsletter — Section / left header -->
   <section class="newsletter" id="newsletter" aria-label="Newsletter">
-    <span class="chip">Section H2 · left header</span>
+    <span class="chip">H2 Standard · wayfinding · left</span>
     <p class="eyebrow">Join the list</p>
-    <h2 class="type-section">10% off your first pair.</h2>
+    <h2 class="h2-standard">10% off your first pair.</h2>
     <p class="type-body">New drops, studio stories, care tips. Once or twice a quarter — never spam.</p>
     <form class="newsletter__form" action="#" onsubmit="return false;">
       <input type="email" placeholder="Email address" aria-label="Email address">
@@ -1039,8 +1078,8 @@
   </section>
 
   <footer class="footer-note">
-    TYPE OS PREVIEW — static HTML for htmlpreview.github.io · branch <code>finish-home-collections</code><br>
-    Weight ladder in <code>planning/m4-type-hierarchy.md</code> · tokens in <code>shopify-build/assets/design-tokens.css</code><br>
+    TYPE OS v2 PREVIEW — static HTML for htmlpreview.github.io · branch <code>finish-home-collections</code><br>
+    Spec in <code>planning/m4-type-hierarchy.md</code> · tokens in <code>shopify-build/assets/design-tokens.css</code><br>
     Not the WORKING mock.
   </footer>
 

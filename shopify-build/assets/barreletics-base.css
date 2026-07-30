@@ -9,7 +9,7 @@
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body {
   font-family: var(--font-family);
-  font-size: var(--type-body-size-sm);
+  font-size: var(--type-body-size);
   font-weight: var(--type-body-weight);
   line-height: var(--type-body-leading);
   color: var(--text-primary);
@@ -34,9 +34,9 @@ h1, h2, h3, h4, h5, h6 {
 .align-editorial { text-align: var(--align-editorial); }
 .align-band { text-align: var(--align-band); }
 
-/* --- Typography roles — simplified OS (sentence case headings) --- */
+/* --- Typography roles — Type OS v2 (sentence case headings) --- */
 
-/* Hero — strongest */
+/* Hero — largest; weight 700 (not heaviest) */
 .type-hero,
 .type-opening,
 .h1--opening {
@@ -53,7 +53,20 @@ h1, h2, h3, h4, h5, h6 {
   .h1--opening { font-size: var(--type-hero-size-mobile); }
 }
 
-/* Section H2 — one consistent treatment (aliases former .type-campaign) */
+/* H2 Display — brand statements (grows + lightens) */
+.h2-display {
+  font-size: var(--type-h2-display-size);
+  font-weight: var(--type-h2-display-weight);
+  line-height: var(--type-h2-display-leading);
+  letter-spacing: var(--type-h2-display-tracking);
+  max-width: var(--type-h2-display-measure);
+  margin: var(--type-h2-display-margin);
+  color: var(--text-primary);
+  text-transform: none;
+}
+
+/* H2 Standard — wayfinding (aliases former .type-section / .type-campaign) */
+.h2-standard,
 .type-section,
 .type-campaign,
 .h2--section {
@@ -73,7 +86,13 @@ h1, h2, h3, h4, h5, h6 {
 .type-campaign--wide {
   max-width: var(--type-section-measure-wide);
 }
-/* Statement — one step below H2 (size + weight) */
+
+/* Single-word emphasis — hero / H2 Display / statement only */
+.em {
+  font-weight: var(--fw-emphasis);
+}
+
+/* Statement — lightens with size */
 .type-statement {
   font-size: var(--type-statement-size);
   font-weight: var(--type-statement-weight);
@@ -84,6 +103,8 @@ h1, h2, h3, h4, h5, h6 {
   text-transform: none;
 }
 @media (max-width: 768px) {
+  .h2-display { font-size: var(--type-h2-display-size-mobile); }
+  .h2-standard,
   .type-section,
   .type-campaign,
   .h2--section { font-size: var(--type-section-size-mobile); }

@@ -1,7 +1,15 @@
 {% comment %}
   Reusable 50/50 Split Section (Video/Image + Copy)
-  Headings: sentence-case .type-section (unified H2)
+  Headings: .h2-display (brand) or .h2-standard (wayfinding) — Type OS v2
 {% endcomment %}
+{% liquid
+  assign heading_register = section.settings.heading_register | default: 'standard'
+  if heading_register == 'display'
+    assign heading_class = 'h2-display'
+  else
+    assign heading_class = 'h2-standard'
+  endif
+%}
 
 <section
   {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | handleize }}"{% endif %}
@@ -38,7 +46,7 @@
     {% if section.settings.eyebrow != blank %}
       <p class="split-text__eyebrow type-label eyebrow--accent">{{ section.settings.eyebrow }}</p>
     {% endif %}
-    <h2 class="split-text__title type-section">{{ section.settings.title }}</h2>
+    <h2 class="split-text__title {{ heading_class }}">{{ section.settings.title }}</h2>
     <p class="split-text__body type-body">{{ section.settings.body }}</p>
     {% if section.settings.cta_text != blank %}
       <a href="{{ section.settings.cta_url }}" class="btn btn--primary split-cta">{{ section.settings.cta_text }}</a>
@@ -138,11 +146,12 @@
     letter-spacing: var(--type-label-tracking);
     color: var(--type-label-color);
     font-weight: var(--type-label-weight);
-    margin: 0 0 var(--stack-eyebrow-to-title);
+    margin: 0 0 var(--gap-a);
   }
 
-  .split-text__title.type-section {
-    margin: 0 0 var(--stack-section-after-title);
+  .split-text__title.h2-display,
+  .split-text__title.h2-standard {
+    margin: 0 0 var(--gap-b);
   }
 
   .split-text__body {
@@ -150,7 +159,7 @@
     font-weight: var(--type-body-weight);
     color: var(--text-body);
     line-height: var(--type-body-leading);
-    margin: 0 0 var(--stack-body-to-cta);
+    margin: 0 0 var(--gap-c);
     max-width: 36ch;
   }
 
@@ -188,7 +197,18 @@
   "settings": [
     { "type": "text", "id": "anchor_id", "label": "Anchor ID (optional)", "info": "e.g. problem for #problem links" },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
-    { "type": "text", "id": "title", "label": "Title", "default": "Upgrade your grip. Upgrade your workout.", "info": "Sentence case — matches section H2." },
+    {
+      "type": "select",
+      "id": "heading_register",
+      "label": "Heading register",
+      "options": [
+        { "value": "display", "label": "Display — brand statement" },
+        { "value": "standard", "label": "Standard — wayfinding" }
+      ],
+      "default": "standard",
+      "info": "Type OS v2: display for brand lines; standard for wayfinding."
+    },
+    { "type": "text", "id": "title", "label": "Title", "default": "Upgrade your grip. Upgrade your workout.", "info": "Sentence case." },
     { "type": "textarea", "id": "body", "label": "Body", "default": "Full-contact molded grip — not printed, not glued. The patented surface holds through every hold, every transition." },
     { "type": "text", "id": "cta_text", "label": "CTA text", "default": "Shop now" },
     { "type": "url", "id": "cta_url", "label": "CTA link" },

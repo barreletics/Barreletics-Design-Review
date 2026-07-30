@@ -1,6 +1,6 @@
 /* =============================================================================
-   BARRELETICS DESIGN TOKENS — Type & Space OS
-   Authority: 4-tier hierarchy (2026-07-29) · Roboto · BZ-020 / BZ-024 craft
+   BARRELETICS DESIGN TOKENS — Type & Space OS v2
+   Authority: TYPE-OS-v2 (weight falls as size rises) · Roboto
    See: planning/m4-type-hierarchy.md
    ============================================================================= */
 
@@ -29,16 +29,15 @@
   --bg-dark: var(--color-charcoal);
   --border-default: var(--color-warm-border);
   --accent-primary: var(--color-rust);
-  /* Review widgets (Judge.me etc.) */
+  /* Stars — one accent everywhere (v2 carry-over) */
   --accent-stars: var(--color-gold);
-  /* Marketing trust stars in heroes (WORKING / Collection / SEO mocks) */
-  --accent-stars-marketing: var(--color-rust);
+  --accent-stars-marketing: var(--color-gold);
 
   /* --- Typography family --- */
   --font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
-  /* Weights — ladder: hero 800 → H2 700 → statement 600 → body 400 */
+  /* Weights — named scale (type roles use --fw-* below) */
   --weight-light: 300;
   --weight-regular: 400;
   --weight-medium: 500;
@@ -46,39 +45,61 @@
   --weight-bold: 700;
   --weight-extrabold: 800;
 
-  /* Brief aliases (map to --type-*) */
-  --fw-hero: 800;
-  --fw-h2: 700;
-  --fw-statement: 600;
-  --fw-body: 400;
-  --fs-hero: clamp(48px, 6vw, 76px);
-  --fs-h2: clamp(32px, 3.4vw, 40px);
-  --fs-statement: clamp(26px, 2.8vw, 32px);
-  --fs-lede: 17px;
-  --fs-body: 16px;
-  --fs-label: 11px;
-  --ls-hero: -0.02em;
-  --ls-h2: -0.01em;
-  --ls-label: 0.08em;
-  --lh-hero: 1.02;
-  --lh-h2: 1.2;
-  --lh-lede: 1.55;
-  --lh-body: 1.65;
-
   /* =========================================================================
-     TYPE OS — weight ladder 800 → 700 → 600 → 400
-     Section H2 outranks statement (size + weight). Eyebrows 11/600/0.08em/#6b645a.
-     Uppercase = labels / eyebrows / CTAs only — never H1/H2/statement
+     TYPE OS v2 — weight falls as size rises
+     H2 split: .h2-display (brand) / .h2-standard (wayfinding)
+     Cadence: --gap-a / --gap-b / --gap-c only
      See: planning/m4-type-hierarchy.md
      ========================================================================= */
 
-  /* --- Hero (`--type-hero`) — page-opening only; strongest presence --- */
+  --fw-hero: 700;
+  --fw-h2-display: 500;
+  --fw-h2-standard: 600;
+  --fw-statement: 500;
+  --fw-body: 400;
+  --fw-label: 600;
+  --fw-emphasis: 700;
+
+  --fs-hero: clamp(50px, 6.4vw, 82px);
+  --fs-h2-display: clamp(38px, 4.6vw, 52px);
+  --fs-h2-standard: clamp(26px, 2.9vw, 32px);
+  --fs-statement: clamp(28px, 3vw, 36px);
+  --fs-lede: 17px;
+  --fs-body: 16px;
+  --fs-label: 11px;
+
+  --ls-hero: -0.028em;
+  --ls-h2-display: -0.028em;
+  --ls-h2-standard: -0.012em;
+  --ls-statement: -0.022em;
+  --ls-label: 0.08em;
+
+  --lh-hero: 1.06;
+  --lh-h2-display: 1.10;
+  --lh-h2-standard: 1.22;
+  --lh-lede: 1.60;
+  --lh-body: 1.72;
+
+  --measure-h2-display: 15ch;
+
+  /* Cadence — eyebrow→headline / headline→body / body→CTA */
+  --gap-a: 16px;
+  --gap-b: 20px;
+  --gap-c: 32px;
+
+  /* Legacy brief aliases → standard H2 (wayfinding default) */
+  --fw-h2: var(--fw-h2-standard);
+  --fs-h2: var(--fs-h2-standard);
+  --ls-h2: var(--ls-h2-standard);
+  --lh-h2: var(--lh-h2-standard);
+
+  /* --- Hero (`--type-hero`) — page-opening only --- */
   --type-hero-size: var(--fs-hero);
-  --type-hero-size-mobile: clamp(36px, 9vw, 48px);
+  --type-hero-size-mobile: clamp(38px, 9vw, 50px);
   --type-hero-weight: var(--fw-hero);
   --type-hero-leading: var(--lh-hero);
   --type-hero-tracking: var(--ls-hero);
-  --type-hero-margin: 0 0 var(--stack-title-to-body);
+  --type-hero-margin: 0 0 var(--gap-b);
 
   /* Legacy aliases → hero */
   --type-opening-size: var(--type-hero-size);
@@ -87,29 +108,38 @@
   --type-opening-leading: var(--type-hero-leading);
   --type-opening-tracking: var(--type-hero-tracking);
 
-  /* --- Section H2 (`--type-section`) — outranks statement bands --- */
-  --type-section-size: var(--fs-h2);
-  --type-section-size-mobile: clamp(28px, 5.5vw, 34px);
-  --type-section-weight: var(--fw-h2);
-  --type-section-leading: var(--lh-h2);
-  --type-section-tracking: var(--ls-h2);
-  --type-section-margin: 0 0 var(--stack-section-after-title);
+  /* --- H2 Display — brand statements (.h2-display) --- */
+  --type-h2-display-size: var(--fs-h2-display);
+  --type-h2-display-size-mobile: clamp(32px, 7vw, 40px);
+  --type-h2-display-weight: var(--fw-h2-display);
+  --type-h2-display-leading: var(--lh-h2-display);
+  --type-h2-display-tracking: var(--ls-h2-display);
+  --type-h2-display-measure: var(--measure-h2-display);
+  --type-h2-display-margin: 0 0 var(--gap-b);
+
+  /* --- H2 Standard — wayfinding (.h2-standard / .type-section) --- */
+  --type-section-size: var(--fs-h2-standard);
+  --type-section-size-mobile: clamp(24px, 5vw, 28px);
+  --type-section-weight: var(--fw-h2-standard);
+  --type-section-leading: var(--lh-h2-standard);
+  --type-section-tracking: var(--ls-h2-standard);
+  --type-section-margin: 0 0 var(--gap-b);
   --type-section-measure: 28ch;
   --type-section-measure-wide: 36ch;
 
-  /* Statement — one step below H2 (never heavier / never larger) */
+  /* Statement — lightens with size */
   --type-statement-size: var(--fs-statement);
-  --type-statement-size-mobile: clamp(22px, 5.5vw, 28px);
+  --type-statement-size-mobile: clamp(24px, 5.5vw, 30px);
   --type-statement-weight: var(--fw-statement);
-  --type-statement-leading: var(--lh-h2);
-  --type-statement-tracking: var(--ls-h2);
+  --type-statement-leading: var(--lh-h2-display);
+  --type-statement-tracking: var(--ls-statement);
 
   /* Dark-band support (tier 2) — contrast ≥4.5:1 on charcoal */
   --type-dark-support-size: 16px;
   --type-dark-support-weight: 400;
   --type-dark-support-color: #d6d2cb;
 
-  /* Legacy aliases — former "campaign" tier maps to section (no caps) */
+  /* Legacy aliases — former "campaign" tier → H2 Standard */
   --type-campaign-size: var(--type-section-size);
   --type-campaign-size-mobile: var(--type-section-size-mobile);
   --type-campaign-weight: var(--type-section-weight);
@@ -119,9 +149,9 @@
   --type-campaign-measure: var(--type-section-measure);
   --type-campaign-measure-wide: var(--type-section-measure-wide);
 
-  /* H3 — card / nested (must stay lighter than H2) */
+  /* H3 — firm enough vs body (v2 carry-over) */
   --type-h3-size: clamp(18px, 2vw, 22px);
-  --type-h3-weight: 400;
+  --type-h3-weight: 600;
   --type-h3-leading: 1.25;
   --type-h3-tracking: -0.01em;
 
@@ -132,19 +162,19 @@
   --type-lede-leading: var(--lh-lede);
 
   --type-body-size: var(--fs-body);
-  --type-body-size-sm: 15px;
+  --type-body-size-sm: var(--fs-body);
   --type-body-weight: var(--fw-body);
   --type-body-leading: var(--lh-body);
 
   /* Labels / eyebrows — 11 / 600 / 0.08em / #6b645a */
   --type-label-size: var(--fs-label);
-  --type-label-weight: 600;
+  --type-label-weight: var(--fw-label);
   --type-label-tracking: var(--ls-label);
   --type-label-color: #6b645a;
 
-  /* Navigation — quiet; never compete with hero / section */
+  /* Navigation / small UI — 600 (v2: 500 reserved for display) */
   --type-nav-size: 11px;
-  --type-nav-weight: 500;
+  --type-nav-weight: 600;
   --type-nav-tracking: 0.14em;
   --type-nav-gap: 32px;
   --type-brand-size: 14px;
@@ -160,12 +190,12 @@
   --type-trust-size: 13px;
   --type-trust-weight: 400;
   --type-caption-size: 13px;
-  --type-caption-weight: 500;
+  --type-caption-weight: 600;
   --type-caption-tracking: 0.02em;
 
   /* Announcement */
   --type-announce-size: 12px;
-  --type-announce-weight: 500;
+  --type-announce-weight: 600;
   --type-announce-tracking: 0.08em;
 
   /* Legacy aliases (existing sections) — never below 11px */
@@ -233,19 +263,17 @@
   --space-15: 88px;
   --space-16: 96px;
 
-  /* Stack rhythm — calm, consistent */
-  --stack-trust-to-title: 36px;
-  --stack-title-to-body: 28px;
-  --stack-body-to-cta: 36px;
-  --stack-cta-to-meta: 32px;
-  --stack-eyebrow-to-title: 16px;
-  --stack-section-after-title: 20px;
-
-  /* Statement / band rhythm — a little more breath (size + space, not casing) */
-  --stack-campaign-after-title: var(--stack-section-after-title);
-  --stack-campaign-eyebrow: 20px;
-  --stack-campaign-to-body: 28px;
-  --stack-campaign-to-cta: 40px;
+  /* Stack aliases → three-gap cadence (v2). Prefer --gap-a/b/c in new CSS. */
+  --stack-trust-to-title: var(--gap-a);
+  --stack-title-to-body: var(--gap-b);
+  --stack-body-to-cta: var(--gap-c);
+  --stack-cta-to-meta: var(--gap-c);
+  --stack-eyebrow-to-title: var(--gap-a);
+  --stack-section-after-title: var(--gap-b);
+  --stack-campaign-after-title: var(--gap-b);
+  --stack-campaign-eyebrow: var(--gap-a);
+  --stack-campaign-to-body: var(--gap-b);
+  --stack-campaign-to-cta: var(--gap-c);
 
   /* Section padding — bands get optional extra Y for calm presence */
   --section-padding-y: 64px;
