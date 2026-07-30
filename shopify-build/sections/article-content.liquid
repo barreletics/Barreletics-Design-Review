@@ -11,7 +11,7 @@
       {% if article.tags.size > 0 %}
         <span class="article__category">{{ article.tags.first }}</span>
       {% endif %}
-      <h1 class="article__title">{{ article.title }}</h1>
+      <h1 class="article__title type-hero">{{ article.title }}</h1>
       <div class="article__meta">
         <span class="article__author">By {{ article.author }}</span>
         <time class="article__date" datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
@@ -152,12 +152,13 @@
   }
 
   .article__title {
-    font-size: var(--text-5xl);
-    font-weight: var(--weight-bold);
+    font-size: var(--type-hero-size);
+    font-weight: var(--type-hero-weight);
+    line-height: var(--type-hero-leading);
+    letter-spacing: var(--type-hero-tracking);
+    text-transform: none;
     color: var(--text-primary);
     margin: 0 0 var(--space-4);
-    letter-spacing: var(--tracking-tight);
-    line-height: var(--leading-heading);
   }
 
   .article__meta {

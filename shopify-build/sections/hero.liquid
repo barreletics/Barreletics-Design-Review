@@ -10,7 +10,7 @@
     {% if section.settings.eyebrow != blank %}
       <p class="hero__eyebrow">{{ section.settings.eyebrow }}</p>
     {% endif %}
-    <h1 class="hero__title">{{ section.settings.title }}</h1>
+    <h1 class="hero__title type-hero">{{ section.settings.title }}</h1>
     <p class="hero__body">{{ section.settings.body }}</p>
     {% assign hero_primary_url = section.settings.cta_primary_url | default: '/collections/grippy-shoes' %}
     {% assign hero_secondary_url = section.settings.cta_secondary_url | default: '#problem' %}
@@ -71,28 +71,30 @@
   }
 
   .hero__eyebrow {
-    font-size: var(--text-sm);
+    font-size: var(--type-label-size);
     text-transform: uppercase;
-    letter-spacing: var(--tracking-widest);
-    color: var(--accent-primary);
-    font-weight: var(--weight-bold);
-    margin: 0 0 var(--space-5);
+    letter-spacing: var(--type-label-tracking);
+    color: var(--type-label-color);
+    font-weight: var(--type-label-weight);
+    margin: 0 0 var(--gap-a);
   }
 
   .hero__title {
-    font-size: var(--text-7xl);
-    font-weight: var(--weight-bold);
-    line-height: var(--leading-tight);
+    font-size: var(--type-hero-size);
+    font-weight: var(--type-hero-weight);
+    line-height: var(--type-hero-leading);
+    letter-spacing: var(--type-hero-tracking);
+    text-transform: none;
     color: var(--text-primary);
-    margin: 0 0 var(--space-4);
-    letter-spacing: var(--tracking-tight);
+    margin: 0 0 var(--gap-b);
   }
 
   .hero__body {
-    font-size: var(--text-md);
+    font-size: var(--type-lede-size);
+    font-weight: var(--type-lede-weight);
     color: var(--text-body);
-    line-height: var(--leading-relaxed);
-    margin: 0 0 var(--space-7);
+    line-height: var(--type-lede-leading);
+    margin: 0 0 var(--gap-c);
     max-width: 38ch;
   }
 
@@ -153,7 +155,7 @@
     }
 
     .hero__title {
-      font-size: 34px;
+      font-size: var(--type-hero-size-mobile);
     }
 
     .hero__body {

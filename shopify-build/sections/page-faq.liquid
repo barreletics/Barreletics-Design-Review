@@ -8,7 +8,7 @@
 <section class="section section--cream" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
   <div class="section__inner section__inner--narrow">
     {% if section.settings.title != blank %}
-      <h1 class="page-faq__title">{{ section.settings.title }}</h1>
+      <h1 class="page-faq__title type-hero">{{ section.settings.title }}</h1>
     {% endif %}
     {% if section.settings.subtitle != blank %}
       <p class="page-faq__subtitle">{{ section.settings.subtitle }}</p>
@@ -21,7 +21,7 @@
   {% if block.type == 'category' %}
     <section class="section" id="faq-{{ block.settings.slug }}" {{ block.shopify_attributes }}>
       <div class="section__inner section__inner--narrow">
-        <h2 class="page-faq__category-title">{{ block.settings.category_title }}</h2>
+        <h2 class="page-faq__category-title h2-standard">{{ block.settings.category_title }}</h2>
       </div>
     </section>
   {% elsif block.type == 'faq_item' %}
@@ -53,7 +53,7 @@
 
       <section class="section{% cycle '', ' section--cream' %}" id="faq-category-{{ forloop.index }}">
         <div class="section__inner section__inner--narrow">
-          <h2 class="page-faq__category-heading">{{ block.settings.category }}</h2>
+          <h2 class="page-faq__category-heading h2-standard">{{ block.settings.category }}</h2>
           <div class="faq" data-faq-accordion>
             <div class="faq__inner">
               <div class="faq__list">
@@ -103,12 +103,14 @@
 
 <style>
   .page-faq__title {
-    font-size: var(--text-5xl);
-    font-weight: var(--weight-bold);
+    font-size: var(--type-hero-size);
+    font-weight: var(--type-hero-weight);
+    line-height: var(--type-hero-leading);
+    letter-spacing: var(--type-hero-tracking);
+    text-transform: none;
     color: var(--text-primary);
     text-align: center;
     margin: 0 0 var(--space-3);
-    letter-spacing: var(--tracking-tight);
   }
 
   .page-faq__subtitle {
@@ -120,11 +122,13 @@
   }
 
   .page-faq__category-heading {
-    font-size: var(--text-2xl);
-    font-weight: var(--weight-bold);
+    font-size: var(--type-section-size);
+    font-weight: var(--type-section-weight);
+    line-height: var(--type-section-leading);
+    letter-spacing: var(--type-section-tracking);
+    text-transform: none;
     color: var(--text-primary);
     margin: 0 0 var(--space-6);
-    letter-spacing: var(--tracking-tight);
   }
 
   .page-faq__category-heading::before {

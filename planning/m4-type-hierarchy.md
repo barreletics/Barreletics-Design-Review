@@ -1,9 +1,10 @@
-# M4 Type Hierarchy — Type OS v2
+# M4 Type Hierarchy — Type OS SETTLED
 
 **Date:** 2026-07-29  
-**Status:** TYPE-OS-v2 law (supersedes v1 weight ladder)  
+**Status:** **SETTLED** (TYPE-OS-v2 + Display/Standard audit + hero max **72**)  
 **Family:** Roboto only (unchanged)  
-**Review surface:** `docs/Barreletics Home - Type OS Preview.html`
+**Review surface:** `docs/Barreletics Home - Type OS Preview.html` (primary — not Shopify)  
+**Authority:** `shopify-build/assets/design-tokens.css`
 
 ---
 
@@ -132,9 +133,14 @@ Mapped in `shopify-build/assets/design-tokens.css`. Utilities in `barreletics-ba
 
 ---
 
+## Scope (sitewide)
+
+Applied to **all** Shopify templates/sections (index, collection, product, page, cart, blog, search, etc.) and **authority** HTML mocks in `docs/`. Historical Definitives (SEO v11–v35, Collection ≤v17, etc.) remain priors — do not treat as type authority.
+
 ## Files
 
-- `shopify-build/assets/design-tokens.css`
-- `shopify-build/assets/barreletics-base.css`
-- Homepage sections + `templates/index.json`
-- `docs/Barreletics Home - Type OS Preview.html`
+- `shopify-build/assets/design-tokens.css` — tokens (master)
+- `shopify-build/assets/barreletics-base.css` — utilities
+- All `shopify-build/sections/*.liquid` + `templates/*.json` (class/CSS wiring)
+- `docs/Barreletics Home - Type OS Preview.html` — review surface
+- Authority mocks: Home WORKING · Collection v18 · SEO v36 · PDP v16 · Journal v5 · Help v3 · Pattern-v2 · FAQ/Contact/Returns/Size/Track

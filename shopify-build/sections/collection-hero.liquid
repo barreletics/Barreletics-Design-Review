@@ -9,7 +9,7 @@
       <p class="coll-hero__eyebrow">{{ section.settings.eyebrow }}</p>
     {% endif %}
     {% comment %} Shop-first H1 (DP-04): prefer theme setting over Admin collection title {% endcomment %}
-    <h1 class="coll-hero__title">{{ section.settings.title | default: collection.title }}</h1>
+    <h1 class="coll-hero__title type-hero">{{ section.settings.title | default: collection.title }}</h1>
     {% if section.settings.body != blank %}
       <p class="coll-hero__body">{{ section.settings.body }}</p>
     {% elsif collection.description != blank %}
@@ -73,21 +73,22 @@
   }
 
   .coll-hero__eyebrow {
-    font-size: var(--text-sm);
+    font-size: var(--type-label-size);
+    font-weight: var(--type-label-weight);
+    letter-spacing: var(--type-label-tracking);
     text-transform: uppercase;
-    letter-spacing: var(--tracking-eyebrow);
     color: var(--accent-primary);
-    font-weight: var(--weight-bold);
-    margin: 0 0 var(--space-3);
+    margin: 0 0 var(--gap-a);
   }
 
   .coll-hero__title {
-    font-size: var(--text-7xl);
-    font-weight: var(--weight-bold);
-    line-height: var(--leading-tight);
+    font-size: var(--type-hero-size);
+    font-weight: var(--type-hero-weight);
+    line-height: var(--type-hero-leading);
+    letter-spacing: var(--type-hero-tracking);
+    text-transform: none;
     color: var(--text-primary);
-    margin: 0 0 var(--space-4);
-    letter-spacing: var(--tracking-tight);
+    margin: 0 0 var(--gap-b);
   }
 
   .coll-hero__body {
