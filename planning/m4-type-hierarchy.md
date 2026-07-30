@@ -76,10 +76,10 @@ No third text tier (merge points into paragraph or drop one).
 |---------|-------|----------|-----|
 | `split-hero` | The Pilates Sock Era is Over | **Hero** | Page-opening H1 only |
 | `fifty-fifty` problem | Yoga socks are useless. | **Display** | Problem / brand punch |
-| `disciplines` | Grip that holds where it matters most | **Label** | Intentional band label (not H2) |
+| `disciplines` | Upgrade your grip. Upgrade your workout. | **Display** | Brand grip slogan on cream band (`.h2-display`; not label/hero) |
 | `value-strip` | — | — | No section title |
 | `variant-grid` | Shop all styles & colors | **Standard** | Shop wayfinding |
-| `fifty-fifty` grip | Upgrade your grip. Upgrade your workout. | **Display** | Brand grip moment |
+| `fifty-fifty` grip | Never loses shape. Never loses grip. | **Display** | Brand grip moment |
 | `fifty-fifty` Coperni | Barreletics × Coperni | **Standard** | Named campaign module / navigate |
 | `statement-band` | Studio workouts and footwear will never be the same. | **Statement** | Dark-band tier 1 (not H2) |
 | `social-proof` | Real people. Real results. | **Standard** | Reviews framing / wayfinding |

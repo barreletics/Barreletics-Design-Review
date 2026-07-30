@@ -5,7 +5,7 @@
 <section class="discipline-film" aria-label="{{ section.settings.aria_label | default: 'Built for every studio discipline' | escape }}">
   <div class="discipline-film__inner">
     {% if section.settings.headline != blank %}
-      <p class="discipline-film__line">{{ section.settings.headline | newline_to_br }}</p>
+      <p class="discipline-film__line h2-display">{{ section.settings.headline | newline_to_br }}</p>
     {% endif %}
     <div class="discipline-film__moves">
       {% for block in section.blocks %}
@@ -33,14 +33,12 @@
     padding: 88px 40px 80px;
     text-align: center;
   }
-  .discipline-film__line {
-    font-size: var(--type-label-size, 11px);
-    font-weight: var(--type-label-weight, 600);
-    letter-spacing: var(--type-label-tracking, 0.08em);
-    text-transform: uppercase;
-    color: #6b645a;
-    line-height: 1.4;
-    margin: 0 0 var(--gap-b, 20px);
+  /* H2 Display — brand grip slogan (not label / not hero) */
+  .discipline-film__line.h2-display {
+    color: #1c1916;
+    text-transform: none;
+    max-width: none;
+    margin: 0 0 var(--gap-c, 32px);
   }
   .discipline-film__moves {
     display: flex;
@@ -79,7 +77,7 @@
       "id": "headline",
       "label": "Headline",
       "default": "Upgrade your grip.\nUpgrade your workout.",
-      "info": "Rendered as small uppercase label. Use a line break for two lines."
+      "info": "H2 Display (brand). Use a line break for two lines."
     }
   ],
   "blocks": [
