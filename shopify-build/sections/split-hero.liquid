@@ -32,6 +32,15 @@
     assign image_url = 'https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=2400'
   endif
   assign reverse_layout = section.settings.reverse_layout
+  assign title_size = section.settings.title_size | default: 'default'
+  assign body_size = section.settings.body_size | default: 'default'
+  assign title_weight = section.settings.title_weight | default: 'default'
+  assign star_color = section.settings.star_color | default: '#d4af37'
+  assign star_size = section.settings.star_size | default: 14
+  assign trust_text_size = section.settings.trust_text_size | default: 'default'
+  assign trust_gap = section.settings.trust_gap | default: 10
+  assign media_column_pct = section.settings.media_column_pct | default: 62
+  assign media_radius = section.settings.media_radius | default: 0
 -%}
 
 <div
@@ -39,6 +48,17 @@
   id="split-hero-{{ section.id }}"
   role="region"
   aria-label="{{ section.settings.aria_label | default: 'Hero' | escape }}"
+  style="
+    --sh-media-pct: {{ media_column_pct }}%;
+    --sh-media-radius: {{ media_radius }}px;
+    --sh-star-color: {{ star_color }};
+    --sh-star-size: {{ star_size }}px;
+    --sh-trust-gap: {{ trust_gap }}px;
+    {% if trust_text_size != 'default' %}--sh-trust-size: {{ trust_text_size }}px;{% endif %}
+    {% if title_size != 'default' %}--sh-title-size: {{ title_size }}px;{% endif %}
+    {% if body_size != 'default' %}--sh-body-size: {{ body_size }}px;{% endif %}
+    {% if title_weight != 'default' %}--sh-title-weight: {{ title_weight }};{% endif %}
+  "
 >
   <div class="split-hero__media" data-media-type="{{ media_type }}">
     {%- if media_type == 'video' -%}
@@ -195,10 +215,59 @@
       "default": "h1"
     },
     {
+      "type": "select",
+      "id": "title_size",
+      "label": "Title size",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "28", "label": "28px" },
+        { "value": "32", "label": "32px" },
+        { "value": "36", "label": "36px" },
+        { "value": "40", "label": "40px" },
+        { "value": "48", "label": "48px" },
+        { "value": "56", "label": "56px" },
+        { "value": "64", "label": "64px" },
+        { "value": "72", "label": "72px" }
+      ],
+      "default": "default",
+      "info": "Default keeps Type OS hero size. Overrides size only — not font family."
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" },
+        { "value": "700", "label": "700" }
+      ],
+      "default": "default"
+    },
+    {
       "type": "richtext",
       "id": "body",
       "label": "Body",
       "default": "<p>Outperforms barre socks, Pilates socks, and yoga socks — combined.</p>"
+    },
+    {
+      "type": "select",
+      "id": "body_size",
+      "label": "Body size",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "18", "label": "18px" },
+        { "value": "20", "label": "20px" },
+        { "value": "24", "label": "24px" },
+        { "value": "28", "label": "28px" },
+        { "value": "32", "label": "32px" },
+        { "value": "36", "label": "36px" },
+        { "value": "40", "label": "40px" }
+      ],
+      "default": "default"
     },
     {
       "type": "text",
@@ -209,7 +278,8 @@
     {
       "type": "url",
       "id": "cta_url",
-      "label": "CTA link"
+      "label": "CTA link",
+      "info": "Collection/product/page URL for navigation. Use #anchors (e.g. #variants, #knock-socks) only to jump to a same-page section Anchor ID. Blank → all-products collection."
     },
     {
       "type": "text",
@@ -220,7 +290,8 @@
     {
       "type": "url",
       "id": "tag_url",
-      "label": "Tag link"
+      "label": "Tag link",
+      "info": "Usually an #anchor to statement-band (e.g. #knock-socks)."
     },
 
     { "type": "header", "content": "Shared — Media" },
@@ -235,35 +306,35 @@
       "default": "image"
     },
     {
+      "type": "video",
+      "id": "video",
+      "label": "Shopify video",
+      "info": "Preferred when the file lives in Shopify Files. Use this OR Video URL — not both. Shopify video wins if both are set."
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "Video URL (mp4)",
+      "info": "External/CDN mp4 when not using Shopify Video. Ignored if Shopify video is set."
+    },
+    {
       "type": "image_picker",
       "id": "image",
-      "label": "Image / video poster",
-      "info": "Used for image mode, or as poster when using an external video URL."
+      "label": "Image / poster (Shopify)",
+      "info": "Still image for image mode, OR poster when using Video URL. Prefer this over URL fields when the asset is in Shopify."
     },
     {
       "type": "text",
       "id": "image_url",
       "label": "Image URL fallback",
       "default": "https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=2400",
-      "info": "Live pink-shorts hero. Used when no image picker asset is set."
+      "info": "Still image when no Shopify image is set and media type is Image. Not a video poster."
     },
     {
       "type": "text",
       "id": "image_alt",
       "label": "Image alt text",
       "default": "Barreletics Performance Skins — grip that holds in every studio workout"
-    },
-    {
-      "type": "video",
-      "id": "video",
-      "label": "Shopify video",
-      "info": "Preferred for video mode (hosted in Files)."
-    },
-    {
-      "type": "text",
-      "id": "video_url",
-      "label": "External video URL",
-      "info": "MP4/WebM URL if not using Shopify video. Poster uses the image above."
     },
     {
       "type": "checkbox",
@@ -273,6 +344,27 @@
     },
 
     { "type": "header", "content": "Shared — Layout" },
+    {
+      "type": "range",
+      "id": "media_column_pct",
+      "label": "Media column %",
+      "min": 35,
+      "max": 65,
+      "step": 1,
+      "unit": "%",
+      "default": 62,
+      "info": "Desktop only. Text = 100 − media %. Default 62 matches Home WORKING media-dominant hero."
+    },
+    {
+      "type": "range",
+      "id": "media_radius",
+      "label": "Media corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
     {
       "type": "checkbox",
       "id": "reverse_layout",
@@ -293,8 +385,49 @@
       "type": "checkbox",
       "id": "show_stars",
       "label": "Show stars",
-      "default": true,
-      "info": "Color from design token --accent-stars-marketing (rust)."
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Star color",
+      "default": "#d4af37"
+    },
+    {
+      "type": "range",
+      "id": "star_size",
+      "label": "Star size",
+      "min": 10,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "trust_text_size",
+      "label": "Trust text size",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "12", "label": "12px" },
+        { "value": "13", "label": "13px" },
+        { "value": "14", "label": "14px" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "18", "label": "18px" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "range",
+      "id": "trust_gap",
+      "label": "Trust row gap",
+      "min": 4,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 10,
+      "info": "Space between stars and trust text."
     },
     {
       "type": "richtext",
@@ -312,7 +445,7 @@
     { "type": "header", "content": "Section — Split hero — accessibility" },
     {
       "type": "paragraph",
-      "content": "Typography is controlled by Type OS — not per-section font pickers."
+      "content": "Typography defaults to Type OS. Size/weight selects above are optional overrides — no font family pickers."
     },
     {
       "type": "text",

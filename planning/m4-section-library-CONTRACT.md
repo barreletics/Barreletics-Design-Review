@@ -273,7 +273,9 @@ Legend: **KEEP** · **REBUILD** · **MERGE→X** · **DELETE**
 | **B — Text band** | Copy + CTA only |
 | **C — Commerce** | Domain controls (variant tabs/products; PDP product-driven + TE extras) |
 
-**Schema order (every section):** `Shared — Content` → `Shared — Media` → `Shared — Layout` → `Section — …` (custom). Omit N/A blocks; no fake fields; **no font pickers** (Type OS). Detail upgrades: `fifty-fifty`, `variant-grid`, `pdp-buy-box`.
+**Schema order (every section):** `Shared — Content` → `Shared — Media` → `Shared — Layout` → `Section — …` (custom). Omit N/A blocks; no fake fields; **no font pickers** (Type OS).
+
+**Shared patterns (see `m4-te-controls.md`):** type size/weight overrides (`Default / Type OS` + px list); media field meanings (Shopify video vs URL vs poster vs image fallback); media column % + corner radius; CTA URL vs `#anchor`; trust-row star color/size/gap on sections that show stars. Detail upgrades: `fifty-fifty`, `split-hero`, `statement-band`, `variant-grid`, `pdp-buy-box`.
 
 ---
 

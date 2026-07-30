@@ -1,7 +1,7 @@
 {% comment %}
   Reusable 50/50 Split Section (Video/Image + Copy)
   Headings: .h2-display (brand) or .h2-standard (wayfinding) — Type OS
-  Layout size / media framing: Theme Editor → CSS variables (defaults match Home WORKING)
+  Layout / type overrides: Theme Editor → CSS variables (Default = Type OS)
 {% endcomment %}
 {% liquid
   assign heading_register = section.settings.heading_register | default: 'display'
@@ -11,34 +11,25 @@
     assign heading_class = 'h2-standard'
   endif
   assign media_fit = section.settings.media_fit | default: 'cover'
-  assign cta_href = section.settings.cta_url | default: '#variants'
+  assign cta_href = section.settings.cta_url
 
-  assign column_ratio = section.settings.column_ratio | default: '50-50'
-  case column_ratio
-    when '40-60'
-      assign media_fr = '2fr'
-      assign text_fr = '3fr'
-    when '45-55'
-      assign media_fr = '45fr'
-      assign text_fr = '55fr'
-    when '55-45'
-      assign media_fr = '55fr'
-      assign text_fr = '45fr'
-    when '60-40'
-      assign media_fr = '3fr'
-      assign text_fr = '2fr'
-    else
-      assign media_fr = '1fr'
-      assign text_fr = '1fr'
-  endcase
+  assign media_pct = section.settings.media_column_pct | default: 50
+  assign text_pct = 100 | minus: media_pct
 
   assign min_height = section.settings.min_height | default: 640
   assign mobile_media_height = section.settings.mobile_media_height | default: 320
   assign image_position = section.settings.image_position | default: 'center'
   assign image_scale = section.settings.image_scale | default: 100
   assign contain_width = section.settings.contain_width | default: 72
+  assign media_radius = section.settings.media_radius | default: 0
+  assign section_radius = section.settings.section_radius | default: 0
 
   assign image_scale_ratio = image_scale | times: 1.0 | divided_by: 100.0
+
+  assign title_size = section.settings.title_size | default: 'default'
+  assign body_size = section.settings.body_size | default: 'default'
+  assign title_weight = section.settings.title_weight | default: 'default'
+  assign body_weight = section.settings.body_weight | default: 'default'
 %}
 
 <section
@@ -47,17 +38,35 @@
   style="
     --ff-min-height: {{ min_height }}px;
     --ff-mobile-media-height: {{ mobile_media_height }}px;
-    --ff-media-fr: {{ media_fr }};
-    --ff-text-fr: {{ text_fr }};
+    --ff-media-fr: {{ media_pct }}fr;
+    --ff-text-fr: {{ text_pct }}fr;
     --ff-object-position: {{ image_position }};
     --ff-image-scale: {{ image_scale_ratio }};
     --ff-contain-width: {{ contain_width }}%;
+    --ff-media-radius: {{ media_radius }}px;
+    --ff-section-radius: {{ section_radius }}px;
+    {% if title_size != 'default' %}--ff-title-size: {{ title_size }}px;{% endif %}
+    {% if body_size != 'default' %}--ff-body-size: {{ body_size }}px;{% endif %}
+    {% if title_weight != 'default' %}--ff-title-weight: {{ title_weight }};{% endif %}
+    {% if body_weight != 'default' %}--ff-body-weight: {{ body_weight }};{% endif %}
     background: {{ section.settings.bg_color | default: '#fff' }};
   "
   aria-label="{{ section.settings.title | strip_html | truncate: 60 | escape }}"
 >
   <div class="split-media"{% if media_fit == 'contain' %} style="background: {{ section.settings.media_bg | default: '#f9f9f9' }};"{% endif %}>
-    {% if section.settings.video_url != blank %}
+    {% if section.settings.video != blank %}
+      {{
+        section.settings.video
+        | video_tag:
+          image_size: '1200x',
+          autoplay: true,
+          loop: true,
+          muted: true,
+          controls: false,
+          playsinline: true,
+          class: 'split-media__video'
+      }}
+    {% elsif section.settings.video_url != blank %}
       <video
         class="split-media__video"
         autoplay
@@ -107,8 +116,10 @@
     {% if section.settings.body != blank %}
       <p class="split-text__body type-body">{{ section.settings.body }}</p>
     {% endif %}
-    {% if section.settings.cta_text != blank %}
+    {% if section.settings.cta_text != blank and cta_href != blank %}
       <a href="{{ cta_href }}" class="btn btn--primary split-cta">{{ section.settings.cta_text }}</a>
+    {% elsif section.settings.cta_text != blank %}
+      <a href="{{ routes.all_products_collection_url }}" class="btn btn--primary split-cta">{{ section.settings.cta_text }}</a>
     {% endif %}
   </div>
 </section>
@@ -118,6 +129,8 @@
     display: grid;
     grid-template-columns: var(--ff-media-fr, 1fr) var(--ff-text-fr, 1fr);
     min-height: var(--ff-min-height, 640px);
+    border-radius: var(--ff-section-radius, 0);
+    overflow: hidden;
   }
   #shopify-section-{{ section.id }} .split-section--reverse {
     grid-template-columns: var(--ff-text-fr, 1fr) var(--ff-media-fr, 1fr);
@@ -128,6 +141,7 @@
     position: relative;
     overflow: hidden;
     min-height: calc(var(--ff-min-height, 640px) * 0.75);
+    border-radius: var(--ff-media-radius, 0);
   }
   #shopify-section-{{ section.id }} .split-media__img,
   #shopify-section-{{ section.id }} .split-media__video {
@@ -180,8 +194,8 @@
     text-align: var(--align-editorial, left);
   }
   #shopify-section-{{ section.id }} .split-text__title {
-    font-size: clamp(28px, 3.2vw, 36px) !important;
-    font-weight: 400 !important;
+    font-size: var(--ff-title-size, clamp(28px, 3.2vw, 36px)) !important;
+    font-weight: var(--ff-title-weight, 400) !important;
     line-height: 1.15 !important;
     letter-spacing: -0.028em !important;
     max-width: none !important;
@@ -200,8 +214,8 @@
     margin: 0 0 var(--gap-b, 20px);
   }
   #shopify-section-{{ section.id }} .split-text__body {
-    font-size: var(--type-body-size, 17px);
-    font-weight: var(--type-body-weight, 400);
+    font-size: var(--ff-body-size, var(--type-body-size, 17px));
+    font-weight: var(--ff-body-weight, var(--type-body-weight, 400));
     color: var(--text-body, #4a4a4a);
     line-height: var(--type-body-leading, 1.6);
     margin: 0 0 var(--gap-c, 32px);
@@ -239,7 +253,7 @@
         { "value": "standard", "label": "Standard — wayfinding" }
       ],
       "default": "display",
-      "info": "Type family/size/weight come from Type OS — not per-section font pickers."
+      "info": "Type family stays Type OS. Size/weight below are optional overrides only."
     },
     {
       "type": "textarea",
@@ -249,20 +263,115 @@
       "info": "Plain text. Line breaks become <br>. Not richtext."
     },
     {
+      "type": "select",
+      "id": "title_size",
+      "label": "Title size",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "18", "label": "18px" },
+        { "value": "20", "label": "20px" },
+        { "value": "24", "label": "24px" },
+        { "value": "28", "label": "28px" },
+        { "value": "32", "label": "32px" },
+        { "value": "36", "label": "36px" },
+        { "value": "40", "label": "40px" }
+      ],
+      "default": "default",
+      "info": "Default keeps Type OS. Overrides size only — not font family."
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" },
+        { "value": "700", "label": "700" }
+      ],
+      "default": "default"
+    },
+    {
       "type": "textarea",
       "id": "body",
       "label": "Body",
       "default": "Built to hold when it matters most—so you can push deeper, stay longer, and move with confidence."
     },
+    {
+      "type": "select",
+      "id": "body_size",
+      "label": "Body size",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "18", "label": "18px" },
+        { "value": "20", "label": "20px" },
+        { "value": "24", "label": "24px" },
+        { "value": "28", "label": "28px" },
+        { "value": "32", "label": "32px" },
+        { "value": "36", "label": "36px" },
+        { "value": "40", "label": "40px" }
+      ],
+      "default": "default",
+      "info": "Default keeps Type OS body size."
+    },
+    {
+      "type": "select",
+      "id": "body_weight",
+      "label": "Body weight",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" },
+        { "value": "700", "label": "700" }
+      ],
+      "default": "default"
+    },
     { "type": "text", "id": "cta_text", "label": "CTA label", "default": "Shop Now" },
-    { "type": "url", "id": "cta_url", "label": "CTA link" },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "CTA link",
+      "info": "Use a collection/product/page URL for navigation. Use #anchors (e.g. #variants or #knock-socks) only to jump to a section on the same page that has that Anchor ID. Blank → all-products collection."
+    },
 
     { "type": "header", "content": "Shared — Media" },
-    { "type": "image_picker", "id": "image", "label": "Image" },
-    { "type": "text", "id": "image_url", "label": "Image URL fallback" },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Shopify video",
+      "info": "Preferred when the file lives in Shopify Files. Use this OR Video URL — not both. Shopify video wins if both are set."
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "Video URL (mp4)",
+      "info": "External/CDN mp4 when you are not using Shopify Video above. Ignored if Shopify video is set."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image / poster (Shopify)",
+      "info": "Still image for image mode, OR poster frame when using Video URL. Prefer this over URL fields when the asset is in Shopify."
+    },
+    {
+      "type": "text",
+      "id": "poster_url",
+      "label": "Poster URL fallback",
+      "info": "Poster for Video URL only when Image / poster (Shopify) is empty. Not used for still-image mode."
+    },
+    {
+      "type": "text",
+      "id": "image_url",
+      "label": "Image URL fallback",
+      "info": "Still image when no Shopify image is set and there is no video. Do not use this as a video poster — use Poster URL fallback."
+    },
     { "type": "text", "id": "image_alt", "label": "Image alt text" },
-    { "type": "text", "id": "video_url", "label": "Video URL (mp4)" },
-    { "type": "text", "id": "poster_url", "label": "Video poster URL" },
 
     { "type": "header", "content": "Shared — Layout" },
     {
@@ -277,18 +386,15 @@
       "info": "Home WORKING default is 640px."
     },
     {
-      "type": "select",
-      "id": "column_ratio",
-      "label": "Column ratio (media / text)",
-      "options": [
-        { "value": "40-60", "label": "40 / 60" },
-        { "value": "45-55", "label": "45 / 55" },
-        { "value": "50-50", "label": "50 / 50" },
-        { "value": "55-45", "label": "55 / 45" },
-        { "value": "60-40", "label": "60 / 40" }
-      ],
-      "default": "50-50",
-      "info": "Desktop only. Reverse keeps media vs text widths correct."
+      "type": "range",
+      "id": "media_column_pct",
+      "label": "Media column %",
+      "min": 35,
+      "max": 65,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "info": "Desktop only. Text column = 100 − media %. Default 50/50."
     },
     {
       "type": "range",
@@ -301,8 +407,33 @@
       "default": 320
     },
     { "type": "checkbox", "id": "reverse", "label": "Reverse layout (text left, media right)", "default": false },
+    {
+      "type": "range",
+      "id": "media_radius",
+      "label": "Media corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "section_radius",
+      "label": "Section corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
     { "type": "color", "id": "bg_color", "label": "Background color", "default": "#ffffff" },
-    { "type": "text", "id": "anchor_id", "label": "Anchor ID (optional)" },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor ID (optional)",
+      "info": "Enables same-page jumps via #this-id from a CTA link elsewhere."
+    },
 
     { "type": "header", "content": "Section — Fifty-fifty — media fit" },
     {

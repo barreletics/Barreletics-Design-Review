@@ -5,7 +5,7 @@
 
 .split-hero {
   display: grid;
-  grid-template-columns: 1.65fr 1fr;
+  grid-template-columns: minmax(0, var(--sh-media-pct, 62%)) minmax(0, calc(100% - var(--sh-media-pct, 62%)));
   min-height: var(--hero-min-height, 92vh);
   background: var(--bg-primary);
   font-family: var(--font-family);
@@ -16,6 +16,7 @@
   overflow: hidden;
   min-height: var(--hero-min-height, 92vh);
   background: var(--bg-alternate);
+  border-radius: var(--sh-media-radius, 0);
 }
 
 .split-hero__media .split-hero__img,
@@ -60,10 +61,10 @@
 .split-hero__trust {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--sh-trust-gap, 10px);
   flex-wrap: wrap;
   margin: 0 0 var(--gap-a);
-  font-size: var(--type-trust-size);
+  font-size: var(--sh-trust-size, var(--type-trust-size));
   font-weight: var(--type-trust-weight);
   color: var(--text-body);
   font-family: var(--font-family);
@@ -87,8 +88,8 @@
 }
 
 .split-hero__stars {
-  color: var(--accent-stars-marketing);
-  font-size: 14px;
+  color: var(--sh-star-color, var(--accent-stars-marketing));
+  font-size: var(--sh-star-size, 14px);
   letter-spacing: 0.1em;
   line-height: 1;
   flex-shrink: 0;
@@ -96,8 +97,8 @@
 
 .split-hero__title {
   font-family: var(--font-family);
-  font-size: var(--type-hero-size);
-  font-weight: var(--type-hero-weight);
+  font-size: var(--sh-title-size, var(--type-hero-size));
+  font-weight: var(--sh-title-weight, var(--type-hero-weight));
   line-height: var(--type-hero-leading);
   letter-spacing: var(--type-hero-tracking);
   color: var(--text-primary);
@@ -107,7 +108,7 @@
 
 .split-hero__body {
   font-family: var(--font-family);
-  font-size: var(--type-lede-size);
+  font-size: var(--sh-body-size, var(--type-lede-size));
   font-weight: var(--type-lede-weight);
   line-height: var(--type-lede-leading);
   color: var(--text-body);
@@ -183,6 +184,9 @@ a.split-hero__tag:focus-visible {
 }
 
 @media (min-width: 769px) {
+  .split-hero--reverse {
+    grid-template-columns: minmax(0, calc(100% - var(--sh-media-pct, 62%))) minmax(0, var(--sh-media-pct, 62%));
+  }
   .split-hero--reverse .split-hero__media { order: 2; }
   .split-hero--reverse .split-hero__copy { order: 1; }
 }
@@ -219,7 +223,7 @@ a.split-hero__tag:focus-visible {
   }
 
   .split-hero__title {
-    font-size: var(--type-hero-size-mobile);
+    font-size: var(--sh-title-size, var(--type-hero-size-mobile));
     margin-bottom: 16px;
     text-align: center;
   }

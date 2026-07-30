@@ -2,8 +2,21 @@
   Full-bleed statement — Home WORKING §9. Lifestyle image + commit line.
   Separate from statement-band (cream solo slogan).
 {% endcomment %}
+{% liquid
+  assign title_size = section.settings.title_size | default: 'default'
+  assign title_weight = section.settings.title_weight | default: 'default'
+  assign media_radius = section.settings.media_radius | default: 0
+%}
 
-<section class="fullbleed-statement" aria-label="{{ section.settings.title | escape }}">
+<section
+  class="fullbleed-statement"
+  style="
+    --fb-media-radius: {{ media_radius }}px;
+    {% if title_size != 'default' %}--fb-title-size: {{ title_size }}px;{% endif %}
+    {% if title_weight != 'default' %}--fb-title-weight: {{ title_weight }};{% endif %}
+  "
+  aria-label="{{ section.settings.title | escape }}"
+>
   <div class="fullbleed-statement__bg">
     {% if section.settings.image != blank %}
       <img
@@ -26,7 +39,7 @@
   <div class="fullbleed-statement__content">
     <p class="fullbleed-statement__line type-statement">{{ section.settings.title }}</p>
     {% if section.settings.cta_text != blank %}
-      <a class="fullbleed-statement__cta" href="{{ section.settings.cta_url | default: '#variants' }}">
+      <a class="fullbleed-statement__cta" href="{{ section.settings.cta_url | default: routes.all_products_collection_url }}">
         {{ section.settings.cta_text }}
       </a>
     {% endif %}
@@ -34,7 +47,7 @@
 </section>
 
 <style>
-  .fullbleed-statement {
+  #shopify-section-{{ section.id }} .fullbleed-statement {
     position: relative;
     width: 100%;
     min-height: 64vh;
@@ -43,37 +56,38 @@
     align-items: center;
     justify-content: center;
     background: #1c1916;
+    border-radius: var(--fb-media-radius, 0);
   }
-  .fullbleed-statement__bg { position: absolute; inset: 0; }
-  .fullbleed-statement__bg img {
+  #shopify-section-{{ section.id }} .fullbleed-statement__bg { position: absolute; inset: 0; }
+  #shopify-section-{{ section.id }} .fullbleed-statement__bg img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
   }
-  .fullbleed-statement__bg::after {
+  #shopify-section-{{ section.id }} .fullbleed-statement__bg::after {
     content: "";
     position: absolute;
     inset: 0;
     background: rgba(28, 25, 22, 0.55);
   }
-  .fullbleed-statement__content {
+  #shopify-section-{{ section.id }} .fullbleed-statement__content {
     position: relative;
     z-index: 1;
     text-align: center;
     padding: 80px 40px;
     max-width: 720px;
   }
-  .fullbleed-statement__line {
-    font-size: clamp(28px, 3.5vw, 40px) !important;
-    font-weight: 400 !important;
+  #shopify-section-{{ section.id }} .fullbleed-statement__line {
+    font-size: var(--fb-title-size, clamp(28px, 3.5vw, 40px)) !important;
+    font-weight: var(--fb-title-weight, 400) !important;
     letter-spacing: -0.03em !important;
     line-height: 1.12 !important;
     color: #fff;
     text-shadow: 0 2px 24px rgba(0, 0, 0, 0.3);
     margin: 0 0 32px;
   }
-  .fullbleed-statement__cta {
+  #shopify-section-{{ section.id }} .fullbleed-statement__cta {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -89,13 +103,13 @@
     text-decoration: none;
     border: 1px solid #fff;
   }
-  .fullbleed-statement__cta:hover {
+  #shopify-section-{{ section.id }} .fullbleed-statement__cta:hover {
     background: transparent;
     color: #fff;
   }
   @media (max-width: 768px) {
-    .fullbleed-statement { min-height: 52vh; }
-    .fullbleed-statement__content { padding: 56px 16px; }
+    #shopify-section-{{ section.id }} .fullbleed-statement { min-height: 52vh; }
+    #shopify-section-{{ section.id }} .fullbleed-statement__content { padding: 56px 16px; }
   }
 </style>
 
@@ -110,17 +124,71 @@
       "label": "Heading",
       "default": "You commit to the class. Commit to the gear."
     },
+    {
+      "type": "select",
+      "id": "title_size",
+      "label": "Title size",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "24", "label": "24px" },
+        { "value": "28", "label": "28px" },
+        { "value": "32", "label": "32px" },
+        { "value": "36", "label": "36px" },
+        { "value": "40", "label": "40px" },
+        { "value": "44", "label": "44px" },
+        { "value": "48", "label": "48px" },
+        { "value": "52", "label": "52px" },
+        { "value": "56", "label": "56px" }
+      ],
+      "default": "default",
+      "info": "Default keeps Type OS. Overrides size only — not font family."
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" },
+        { "value": "700", "label": "700" }
+      ],
+      "default": "default"
+    },
     { "type": "text", "id": "cta_text", "label": "CTA label", "default": "Shop Now" },
-    { "type": "url", "id": "cta_url", "label": "CTA link" },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "CTA link",
+      "info": "Collection/product/page URL for navigation. Use #anchors only to jump to a same-page section Anchor ID. Blank → all-products collection."
+    },
     { "type": "header", "content": "Shared — Media" },
-    { "type": "image_picker", "id": "image", "label": "Background image" },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image (Shopify)",
+      "info": "Prefer Shopify Files when the asset is in the library."
+    },
     {
       "type": "text",
       "id": "image_url",
-      "label": "Background image URL fallback",
-      "default": "https://barreletics.com/cdn/shop/files/IMG_2917.jpg?v=1741040637&width=2000"
+      "label": "Image URL fallback",
+      "default": "https://barreletics.com/cdn/shop/files/IMG_2917.jpg?v=1741040637&width=2000",
+      "info": "Used only when Background image (Shopify) is empty."
     },
-    { "type": "text", "id": "image_alt", "label": "Image alt" }
+    { "type": "text", "id": "image_alt", "label": "Image alt" },
+    { "type": "header", "content": "Shared — Layout" },
+    {
+      "type": "range",
+      "id": "media_radius",
+      "label": "Section corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    }
   ],
   "presets": [{ "name": "Fullbleed statement" }]
 }

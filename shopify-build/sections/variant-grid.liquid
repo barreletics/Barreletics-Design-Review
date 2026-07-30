@@ -25,6 +25,9 @@
   assign initial_rows = section.settings.initial_rows | default: 2
   assign see_all_mode = section.settings.see_all | default: 'expand'
   assign show_all_tab = section.settings.show_all_tab
+  assign title_size = section.settings.title_size | default: 'default'
+  assign body_size = section.settings.body_size | default: 'default'
+  assign title_weight = section.settings.title_weight | default: 'default'
 
   if use_current
     assign show_closed = true
@@ -98,6 +101,11 @@
   data-see-all="{{ see_all_mode }}"
   data-variants-expanded="false"
   data-default-tab="{{ default_tab }}"
+  style="
+    {% if title_size != 'default' %}--vg-title-size: {{ title_size }}px;{% endif %}
+    {% if body_size != 'default' %}--vg-body-size: {{ body_size }}px;{% endif %}
+    {% if title_weight != 'default' %}--vg-title-weight: {{ title_weight }};{% endif %}
+  "
 >
   <div class="variants-inner">
     <header class="variants-head align-editorial">
@@ -244,8 +252,8 @@
   }
 
   #shopify-section-{{ section.id }} .variants-head__title {
-    font-size: clamp(28px, 3.2vw, 36px) !important;
-    font-weight: 400 !important;
+    font-size: var(--vg-title-size, clamp(28px, 3.2vw, 36px)) !important;
+    font-weight: var(--vg-title-weight, 400) !important;
     line-height: 1.15 !important;
     letter-spacing: -0.028em !important;
     margin: 0 0 16px;
@@ -254,6 +262,7 @@
   #shopify-section-{{ section.id }} .variants-head__body {
     max-width: 48ch;
     margin: 0;
+    font-size: var(--vg-body-size, var(--type-body-size, 17px));
   }
 
   #shopify-section-{{ section.id }} .variants-toolbar {
@@ -760,7 +769,57 @@
     { "type": "header", "content": "Shared — Content" },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Two versions. One performance." },
     { "type": "text", "id": "title", "label": "Heading", "default": "Shop all colors & styles", "info": "Header chrome locked — keep title/body structure." },
+    {
+      "type": "select",
+      "id": "title_size",
+      "label": "Title size",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "18", "label": "18px" },
+        { "value": "20", "label": "20px" },
+        { "value": "24", "label": "24px" },
+        { "value": "28", "label": "28px" },
+        { "value": "32", "label": "32px" },
+        { "value": "36", "label": "36px" },
+        { "value": "40", "label": "40px" }
+      ],
+      "default": "default",
+      "info": "Default keeps Type OS. Overrides size only — not font family."
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" },
+        { "value": "700", "label": "700" }
+      ],
+      "default": "default"
+    },
     { "type": "textarea", "id": "body", "label": "Body", "default": "Grip shoes for Barre, Pilates, Yoga—secure in every hold. No slipping. No resets." },
+    {
+      "type": "select",
+      "id": "body_size",
+      "label": "Body size",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "18", "label": "18px" },
+        { "value": "20", "label": "20px" },
+        { "value": "24", "label": "24px" },
+        { "value": "28", "label": "28px" },
+        { "value": "32", "label": "32px" },
+        { "value": "36", "label": "36px" },
+        { "value": "40", "label": "40px" }
+      ],
+      "default": "default"
+    },
 
     { "type": "header", "content": "Section — Variant grid — tabs" },
     { "type": "paragraph", "content": "Each enabled tab needs a product. Cards = that product’s color×size variants (KEEP model). No image picker — media comes from product variants." },
