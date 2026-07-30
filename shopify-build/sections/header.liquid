@@ -5,7 +5,14 @@
 {% assign main_menu = section.settings.menu %}
 {% assign help_menu = section.settings.help_menu %}
 
-<header class="site-header" data-site-header role="banner" {{ section.shopify_attributes }}>
+{%- assign logo_height = section.settings.logo_height | default: 22 -%}
+<header
+  class="site-header"
+  data-site-header
+  role="banner"
+  style="--header-logo-height: {{ logo_height }}px;"
+  {{ section.shopify_attributes }}
+>
   <div class="site-header__inner">
     <button
       class="site-header__hamburger"
@@ -30,7 +37,8 @@
             alt: shop.name,
             loading: 'eager',
             widths: '136, 204, 272',
-            sizes: '68px'
+            sizes: '68px',
+            height: logo_height
         }}
       {% else %}
         {%- comment -%} Home WORKING authority: barreletics-logo.png @ 68×22 {%- endcomment -%}
@@ -39,7 +47,7 @@
           src="{{ 'barreletics-logo.png' | asset_url }}"
           alt="{{ shop.name | escape }}"
           width="68"
-          height="22"
+          height="{{ logo_height }}"
           decoding="async"
           loading="eager"
         >
@@ -143,7 +151,18 @@
       "type": "image_picker",
       "id": "logo",
       "label": "Logo image (optional)",
-      "info": "Defaults to barreletics-logo.png at mock size (22px tall). Override only if needed."
+      "info": "Defaults to barreletics-logo.png. Override only if needed."
+    },
+    {
+      "type": "range",
+      "id": "logo_height",
+      "label": "Logo height",
+      "min": 16,
+      "max": 40,
+      "step": 1,
+      "default": 22,
+      "unit": "px",
+      "info": "Display height. Width scales proportionally."
     },
     {
       "type": "link_list",
