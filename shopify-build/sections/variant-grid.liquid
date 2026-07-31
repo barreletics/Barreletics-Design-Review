@@ -15,9 +15,14 @@
   - Header chrome locked (Andrew approved)
 {% endcomment %}
 
+{%- comment -%}
+  PDP mode: only when Theme Editor toggle is on AND Liquid `product` exists
+  (product templates). Homepage / collection have no current product — toggle
+  is ignored so tabs + product pickers keep working.
+{%- endcomment -%}
 {%- liquid
   assign use_current = false
-  if product != blank and section.settings.use_current_product
+  if section.settings.use_current_product and product != blank and request.page_type == 'product'
     assign use_current = true
   endif
 
@@ -28,6 +33,7 @@
   assign title_size = section.settings.title_size | default: 'default'
   assign body_size = section.settings.body_size | default: 'default'
   assign title_weight = section.settings.title_weight | default: 'default'
+  assign card_messaging = section.settings.card_messaging | default: 'meta'
 
   if use_current
     assign show_closed = true
@@ -38,8 +44,21 @@
     assign product_open = nil
     assign product_oneoffs = nil
     assign product_outdoor = nil
-    assign show_all_tab = true
+    assign show_all_tab = false
     assign default_tab = 'all'
+
+    assign sole_for_current = ''
+    assign title_d = product.title | downcase
+    assign handle_d = product.handle | downcase
+    if title_d contains 'open sole' or handle_d contains 'open-sole' or handle_d contains 'studio-performance'
+      assign sole_for_current = 'Open Sole'
+    elsif title_d contains 'outdoor' or handle_d contains 'aquatic' or handle_d contains 'outdoor'
+      assign sole_for_current = 'Outdoor'
+    elsif title_d contains 'coperni' or handle_d contains 'coperni' or title_d contains 'one-off' or handle_d contains 'one-off'
+      assign sole_for_current = 'One-Off'
+    elsif title_d contains 'closed sole' or handle_d contains 'closed' or handle_d contains 'reformer' or handle_d contains 'legree'
+      assign sole_for_current = 'Closed Sole'
+    endif
   else
     assign show_closed = section.settings.show_closed
     assign show_open = section.settings.show_open
@@ -119,8 +138,8 @@
       {% endif %}
     </header>
 
-    {% unless use_current %}
-      <div class="variants-toolbar">
+    <div class="variants-toolbar{% if use_current %} variants-toolbar--pdp{% endif %}">
+      {% unless use_current %}
         <div class="variants-tabs" role="tablist">
           {% if show_all_tab %}
             <button type="button" class="variants-tab{% if default_tab == 'all' %} is-active{% endif %}" role="tab" aria-selected="{% if default_tab == 'all' %}true{% else %}false{% endif %}" data-tab="all">All</button>
@@ -138,27 +157,30 @@
             <button type="button" class="variants-tab{% if default_tab == 'outdoor' %} is-active{% endif %}" role="tab" aria-selected="{% if default_tab == 'outdoor' %}true{% else %}false{% endif %}" data-tab="outdoor">{{ label_outdoor }}</button>
           {% endif %}
         </div>
-        <div class="variants-utils">
-          <div class="variants-size" data-variants-size>
-            <span class="variants-size__label">Size</span>
-            <button type="button" class="variants-size__btn is-active" data-size="M">M</button>
-            <button type="button" class="variants-size__btn" data-size="L">L</button>
-          </div>
-          {% if section.settings.show_utility_links != false %}
-            <a href="{{ section.settings.size_chart_url | default: '/pages/size-chart' }}" class="variants-link">Size chart →</a>
-            <a href="{{ section.settings.compare_url | default: '/pages/compare-open-closed-sole' }}" class="variants-link">Compare →</a>
-          {% endif %}
+      {% else %}
+        <p class="variants-pdp-note">{{ product.title | escape }} — colors &amp; sizes</p>
+      {% endunless %}
+      <div class="variants-utils">
+        <div class="variants-size" data-variants-size>
+          <span class="variants-size__label">Size</span>
+          <button type="button" class="variants-size__btn is-active" data-size="M">M</button>
+          <button type="button" class="variants-size__btn" data-size="L">L</button>
         </div>
+        {% if section.settings.show_utility_links != false %}
+          <a href="{{ section.settings.size_chart_url | default: '/pages/size-chart' }}" class="variants-link">Size chart →</a>
+          <a href="{{ section.settings.compare_url | default: '/pages/compare-open-closed-sole' }}" class="variants-link">Compare →</a>
+        {% endif %}
       </div>
-    {% endunless %}
+    </div>
 
     {%- if use_current and product_closed != blank -%}
       {% render 'variant-grid-panel',
         product: product_closed,
-        sole_label: '',
+        sole_label: sole_for_current,
         tab_key: 'all',
         max_variants: max_variants,
-        is_default: true
+        is_default: true,
+        messaging_style: card_messaging
       %}
     {%- else -%}
       {%- liquid
@@ -186,7 +208,8 @@
           sole_label: 'Closed Sole',
           tab_key: 'closed',
           max_variants: max_variants,
-          is_default: def_closed
+          is_default: def_closed,
+          messaging_style: card_messaging
         %}
       {% endif %}
       {% if product_open != blank %}
@@ -195,7 +218,8 @@
           sole_label: 'Open Sole',
           tab_key: 'open',
           max_variants: max_variants,
-          is_default: def_open
+          is_default: def_open,
+          messaging_style: card_messaging
         %}
       {% endif %}
       {% if product_oneoffs != blank %}
@@ -204,7 +228,8 @@
           sole_label: 'One-Off',
           tab_key: 'oneoffs',
           max_variants: max_variants,
-          is_default: def_oneoffs
+          is_default: def_oneoffs,
+          messaging_style: card_messaging
         %}
       {% endif %}
       {% if product_outdoor != blank %}
@@ -213,7 +238,8 @@
           sole_label: 'Outdoor',
           tab_key: 'outdoor',
           max_variants: max_variants,
-          is_default: def_outdoor
+          is_default: def_outdoor,
+          messaging_style: card_messaging
         %}
       {% endif %}
     {%- endif -%}
@@ -447,6 +473,18 @@
     color: #fff;
   }
 
+  #shopify-section-{{ section.id }} .var-card__badge--sole {
+    top: auto;
+    bottom: 10px;
+    left: 10px;
+    background: rgba(28, 25, 22, 0.72);
+    color: #fff;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    padding: 4px 8px;
+  }
+
   #shopify-section-{{ section.id }} .var-card__content {
     padding: 18px;
     text-align: center;
@@ -454,6 +492,15 @@
     flex-direction: column;
     align-items: center;
     gap: 4px;
+  }
+
+  #shopify-section-{{ section.id }} .var-card__eyebrow {
+    margin: 0 0 2px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #c45c3f;
   }
 
   #shopify-section-{{ section.id }} .var-card__name {
@@ -477,6 +524,24 @@
     font-size: 12px;
     color: #8a8a8a;
     margin: 0;
+  }
+
+  #shopify-section-{{ section.id }} .var-card__meta--soft {
+    font-size: 11px;
+    color: #6b645a;
+  }
+
+  #shopify-section-{{ section.id }} .variants-pdp-note {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #8a8a8a;
+  }
+
+  #shopify-section-{{ section.id }} .variants-toolbar--pdp {
+    justify-content: space-between;
   }
 
   #shopify-section-{{ section.id }} .var-card__price {
@@ -846,7 +911,26 @@
 
     { "type": "header", "content": "Section — Variant grid — tabs" },
     { "type": "paragraph", "content": "Each enabled tab needs a product. Cards = that product’s color×size variants (KEEP model). No image picker — media comes from product variants." },
-    { "type": "checkbox", "id": "use_current_product", "label": "Use current product (PDP — no tabs)", "default": false },
+    {
+      "type": "checkbox",
+      "id": "use_current_product",
+      "label": "Use current product (PDP — no tabs)",
+      "default": false,
+      "info": "Only on Product pages: hides Open/Closed/One-Offs/Outdoor tabs and shows variants for the product you’re viewing. Homepage & collections: leave OFF and use tabs — this setting does nothing there (no current product)."
+    },
+    {
+      "type": "select",
+      "id": "card_messaging",
+      "label": "Card messaging style",
+      "options": [
+        { "value": "meta", "label": "A — Meta: Closed Sole · Size M" },
+        { "value": "badge", "label": "B — Badge pill on image" },
+        { "value": "eyebrow", "label": "C — Eyebrow + color name" },
+        { "value": "minimal", "label": "D — Minimal: color + soft sole" }
+      ],
+      "default": "meta",
+      "info": "Flip live on draft to compare. Gallery: docs/variant-card-messaging-gallery.html. Reply with Option letter to freeze."
+    },
 
     { "type": "checkbox", "id": "show_closed", "label": "Show Closed Sole tab", "default": true },
     { "type": "text", "id": "label_closed", "label": "Closed Sole tab label", "default": "Closed Sole" },

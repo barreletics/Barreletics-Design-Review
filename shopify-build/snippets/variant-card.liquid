@@ -1,12 +1,19 @@
 {% comment %}
   Variant Card — Home WORKING / Collection v18 chrome
-  One card per size×color variant. No sole-type image badges (VARIANTS-GRID.md).
+  One card per size×color variant.
+
+  messaging_style (TE):
+    meta    A — color title + “Closed Sole · Size M”
+    badge   B — sole pill on image + size meta
+    eyebrow C — sole eyebrow above color + size meta
+    minimal D — color title + sole in smaller meta
 
   {% render 'variant-card',
     product: product,
     variant: variant,
     sole_label: 'Closed Sole',
-    tab_key: 'closed'
+    tab_key: 'closed',
+    messaging_style: 'meta'
   %}
 {% endcomment %}
 
@@ -15,6 +22,10 @@
   assign vg_variant = variant
   assign vg_sole = sole_label | default: ''
   assign vg_tab = tab_key | default: 'all'
+  assign vg_msg = messaging_style | default: 'meta'
+  if vg_msg != 'meta' and vg_msg != 'badge' and vg_msg != 'eyebrow' and vg_msg != 'minimal'
+    assign vg_msg = 'meta'
+  endif
 
   assign opt_count = vg_product.options_with_values.size
   assign opt0 = ''
@@ -91,15 +102,45 @@
     assign is_limited = true
   endif
 
-  assign meta_line = vg_sole
-  if size_short != blank and vg_sole != blank
-    assign meta_line = vg_sole | append: ' · Size ' | append: size_tier
-  elsif size_short != blank
-    assign meta_line = 'Size ' | append: size_tier
-  endif
-  if is_limited and vg_sole == 'One-Off'
-    assign meta_line = 'One-Off · Limited Edition'
-  endif
+  assign meta_line = ''
+  assign show_sole_badge = false
+  assign show_sole_eyebrow = false
+
+  case vg_msg
+    when 'badge'
+      assign show_sole_badge = true
+      if size_short != blank
+        assign meta_line = 'Size ' | append: size_tier
+      endif
+      if is_limited and vg_sole == 'One-Off'
+        assign meta_line = 'Limited Edition'
+      endif
+    when 'eyebrow'
+      assign show_sole_eyebrow = true
+      if size_short != blank
+        assign meta_line = 'Size ' | append: size_tier
+      endif
+      if is_limited and vg_sole == 'One-Off'
+        assign meta_line = 'Limited Edition'
+      endif
+    when 'minimal'
+      if vg_sole != blank
+        assign meta_line = vg_sole
+      endif
+      if is_limited and vg_sole == 'One-Off'
+        assign meta_line = 'One-Off · Limited Edition'
+      endif
+    else
+      assign meta_line = vg_sole
+      if size_short != blank and vg_sole != blank
+        assign meta_line = vg_sole | append: ' · Size ' | append: size_tier
+      elsif size_short != blank
+        assign meta_line = 'Size ' | append: size_tier
+      endif
+      if is_limited and vg_sole == 'One-Off'
+        assign meta_line = 'One-Off · Limited Edition'
+      endif
+  endcase
 
   assign installment = vg_variant.price | divided_by: 4.0
   assign card_url = vg_product.url | append: '?variant=' | append: vg_variant.id
@@ -107,10 +148,11 @@
 -%}
 
 <article
-  class="var-card{% unless vg_variant.available %} var-card--sold-out{% endunless %}"
+  class="var-card var-card--msg-{{ vg_msg }}{% unless vg_variant.available %} var-card--sold-out{% endunless %}"
   data-tab="{{ vg_tab | escape }}"
   data-br-size="{{ size_tier | escape }}"
   data-variant-id="{{ vg_variant.id }}"
+  data-messaging="{{ vg_msg | escape }}"
 >
   {%- if vg_variant.available -%}
     <a class="var-card__img var-card__imglink" href="{{ card_url }}">
@@ -128,6 +170,9 @@
       {%- if is_limited -%}
         <span class="var-card__badge var-card__badge--le">Limited Edition</span>
       {%- endif -%}
+      {%- if show_sole_badge and vg_sole != blank -%}
+        <span class="var-card__badge var-card__badge--sole">{{ vg_sole }}</span>
+      {%- endif -%}
     </a>
   {%- else -%}
     <div class="var-card__img">
@@ -142,10 +187,16 @@
         >
       {%- endif -%}
       <span class="var-card__badge var-card__badge--soldout">Sold Out</span>
+      {%- if show_sole_badge and vg_sole != blank -%}
+        <span class="var-card__badge var-card__badge--sole">{{ vg_sole }}</span>
+      {%- endif -%}
     </div>
   {%- endif -%}
 
   <div class="var-card__content">
+    {%- if show_sole_eyebrow and vg_sole != blank -%}
+      <p class="var-card__eyebrow">{{ vg_sole }}</p>
+    {%- endif -%}
     <p class="var-card__name">
       {%- if vg_variant.available -%}
         <a href="{{ card_url }}">{{ display_name }}</a>
@@ -154,7 +205,7 @@
       {%- endif -%}
     </p>
     {%- if meta_line != blank -%}
-      <p class="var-card__meta">{{ meta_line }}</p>
+      <p class="var-card__meta{% if vg_msg == 'minimal' %} var-card__meta--soft{% endif %}">{{ meta_line }}</p>
     {%- endif -%}
     <p class="var-card__price">{{ vg_variant.price | money_without_trailing_zeros }}</p>
     <p class="var-card__installment">or 4 × {{ installment | money_without_trailing_zeros }}</p>

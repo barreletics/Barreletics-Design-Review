@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Barreletics — Variant card messaging gallery (pick a letter)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --charcoal: #1c1916;
+    --rust: #c45c3f;
+    --border: #d6cfc0;
+    --muted: #8a8a8a;
+    --body: #4a4a4a;
+    --warm: #6b645a;
+    --cream: #f5f2ec;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--charcoal);
+    background: #f0ebe3;
+    line-height: 1.45;
+  }
+  .page-head {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 24px 24px;
+  }
+  .page-head h1 {
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    margin: 0 0 12px;
+  }
+  .page-head .lede {
+    font-size: 16px;
+    color: var(--body);
+    max-width: 62ch;
+    margin: 0 0 20px;
+  }
+  .banner {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--rust);
+    padding: 14px 18px;
+    font-size: 14px;
+    margin: 0 0 16px;
+  }
+  .toc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 20px 0 0;
+  }
+  .toc a {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 12px;
+    background: #fff;
+    border: 1px solid var(--border);
+    color: var(--charcoal);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .toc a:hover { border-color: var(--charcoal); }
+  .option {
+    max-width: 1100px;
+    margin: 0 auto 48px;
+    padding: 0 24px;
+  }
+  .option-head {
+    background: #fff;
+    border: 1px solid var(--border);
+    padding: 18px 20px;
+    margin-bottom: 16px;
+  }
+  .option-head .letter {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin: 0 0 6px;
+  }
+  .option-head h2 {
+    margin: 0 0 8px;
+    font-size: 22px;
+    font-weight: 600;
+  }
+  .option-head p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--body);
+    max-width: 70ch;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  .var-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #e8e2d8;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .var-card__img {
+    width: 100%;
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: var(--cream);
+    position: relative;
+  }
+  .var-card__img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .var-card__badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 2px;
+    z-index: 1;
+  }
+  .var-card__badge--le { background: #458CD9; color: #fff; }
+  .var-card__badge--sole {
+    top: auto;
+    bottom: 10px;
+    left: 10px;
+    background: rgba(28, 25, 22, 0.72);
+    color: #fff;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    padding: 4px 8px;
+  }
+  .var-card__content {
+    padding: 18px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .var-card__eyebrow {
+    margin: 0 0 2px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--rust);
+  }
+  .var-card__name {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--charcoal);
+    margin: 0;
+    line-height: 1.3;
+  }
+  .var-card__meta {
+    font-size: 12px;
+    color: var(--muted);
+    margin: 0;
+  }
+  .var-card__meta--soft {
+    font-size: 11px;
+    color: var(--warm);
+  }
+  .var-card__price {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--charcoal);
+    margin: 4px 0 0;
+  }
+  .var-card__installment {
+    font-size: 12px;
+    color: var(--muted);
+    margin: 2px 0 0;
+  }
+  .var-card__add {
+    margin-top: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    background: var(--charcoal);
+    border: 1px solid var(--charcoal);
+    border-radius: 4px;
+    min-height: 44px;
+    padding: 12px 20px;
+    width: 100%;
+    font-family: inherit;
+  }
+  .foot {
+    max-width: 1100px;
+    margin: 0 auto 64px;
+    padding: 0 24px;
+    font-size: 14px;
+    color: var(--body);
+  }
+</style>
+</head>
+<body>
+  <header class="page-head">
+    <h1>Variant card messaging — pick a letter</h1>
+    <p class="lede">
+      Four ways to show Closed Sole / Open Sole on variant cards. Tabs stay as-is.
+      Live flip on draft: Theme Editor → Variant Grid → <strong>Card messaging style</strong>.
+      Reply with <strong>A / B / C / D</strong> to freeze into the production model.
+    </p>
+    <div class="banner">
+      Labels only — not a Shopify deploy surface. Prefer draft TE select with real products for final call.
+    </div>
+    <nav class="toc" aria-label="Options">
+      <a href="#opt-a">A · Meta</a>
+      <a href="#opt-b">B · Badge</a>
+      <a href="#opt-c">C · Eyebrow</a>
+      <a href="#opt-d">D · Minimal</a>
+    </nav>
+  </header>
+
+  <section class="option" id="opt-a">
+    <div class="option-head">
+      <p class="letter">Option A — default / WORKING</p>
+      <h2>Meta line: “Closed Sole · Size M”</h2>
+      <p>Color name as title. Sole type + size in muted meta under the name. Closest to current Home WORKING cards.</p>
+    </div>
+    <div class="grid">
+      <article class="var-card">
+        <div class="var-card__img">
+          <img src="https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=600" alt="Onyx">
+        </div>
+        <div class="var-card__content">
+          <p class="var-card__name">Onyx</p>
+          <p class="var-card__meta">Closed Sole · Size M</p>
+          <p class="var-card__price">$74</p>
+          <p class="var-card__installment">or 4 × $18.50</p>
+          <button type="button" class="var-card__add">Quick Add →</button>
+        </div>
+      </article>
+      <article class="var-card">
+        <div class="var-card__img">
+          <img src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=600" alt="Dusty Rose">
+        </div>
+        <div class="var-card__content">
+          <p class="var-card__name">Dusty Rose</p>
+          <p class="var-card__meta">Open Sole · Size M</p>
+          <p class="var-card__price">$74</p>
+          <p class="var-card__installment">or 4 × $18.50</p>
+          <button type="button" class="var-card__add">Quick Add →</button>
+        </div>
+      </article>
+      <article class="var-card">
+        <div class="var-card__img">
+          <img src="https://barreletics.com/cdn/shop/files/Copreni_Final_More_grey.png?v=1774119812&width=600" alt="Coperni">
+          <span class="var-card__badge var-card__badge--le">Limited Edition</span>
+        </div>
+        <div class="var-card__content">
+          <p class="var-card__name">Coperni</p>
+          <p class="var-card__meta">One-Off · Limited Edition</p>
+          <p class="var-card__price">$115</p>
+          <p class="var-card__installment">or 4 × $28.75</p>
+          <button type="button" class="var-card__add">Quick Add →</button>
+        </div>
+      </article>
+      <article class="var-card">
+        <div class="var-card__img">
+          <img src="https://barreletics.com/cdn/shop/files/A14_TopBottom_LightGrey-1000x1000_d30b6fcb-229e-4af9-8062-e1c4901df31e.jpg?v=1773920303&width=600" alt="Stone">
+        </div>
+        <div class="var-card__content">
+          <p class="var-card__name">Stone</p>
+          <p class="var-card__meta">Closed Sole · Size L</p>
+          <p class="var-card__price">$74</p>
+          <p class="var-card__installment">or 4 × $18.50</p>
+          <button type="button" class="var-card__add">Quick Add →</button>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="option" id="opt-b">
+    <div class="option-head">
+      <p class="letter">Option B</p>
+      <h2>Badge pill on image: “Closed Sole” / “Open Sole”</h2>
+      <p>Sole type as a small dark pill on the packshot (bottom-left). Size stays in meta. Restores the Collection-style image badge.</p>
+    </div>
+    <div class="grid">
+      <article class="var-card">
+        <div class="var-card__img">
+          <img src="https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=600" alt="Onyx">
+          <span class="var-card__badge var-card__badge--sole">Closed Sole</span>
+        </div>
+        <div class="var-card__content">
+          <p class="var-card__name">Onyx</p>
+          <p class="var-card__meta">Size M</p>
+          <p class="var-card__price">$74</p>
+          <p class="var-card__installment">or 4 × $18.50</p>
+          <button type="button" class="var-card__add">Quick Add →</button>
+        </div>
+      </article>
+      <article class="var-card">
+        <div class="var-card__img">
+          <img src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=600" alt="Dusty Rose">
+          <span class="var-card__badge var-card__badge--sole">Open Sole</span>
+        </div>
+        <div class="var-card__content">
+          <p class="var-card__name">Dusty Rose</p>
+          <p class="var-card__meta">Size M</p>
+          <p class="var-card__price">$74</p>
+          <p class="var-card__installment">or 4 × $18.50</p>
+          <button type="button" class="var-card__add">Quick Add →</button>
+        </div>
+      </article>
+      <article class="var-card">
+        <div class="var-card__img">
+          <img src="https://barreletics.com/cdn/shop/files/Copreni_Final_More_grey.png?v=1774119812&width=600" alt="Coperni">
+          <span class="var-card__badge var-card__badge--le">Limited Edition</span>
+          <span class="var-card__badge var-card__badge--sole">One-Off</span>
+        </div>
+        <div class="var-card__content">
+          <p class="var-card__name">Coperni</p>
+          <p class="var-card__meta">Limited Edition</p>
+          <p class="var-card__price">$115</p>
+          <p class="var-card__installment">or 4 × $28.75</p>
+          <button type="button" class="var-card__add">Quick Add →</button>
+        </div>
+      </article>
+      <article class="var-card">
+        <div class="var-card__img">
+          <img src="https://barreletics.com/cdn/shop/files/A14_TopBottom_LightGrey-1000x1000_d30b6fcb-229e-4af9-8062-e1c4901df31e.jpg?v=1773920303&width=600" alt="Stone">
+          <span class="var-card__badge var-card__badge--sole">Closed Sole</span>
+        </div>
+        <div class="var-card__content">
+          <p class="var-card__name">Stone</p>
+          <p class="var-card__meta">Size L</p>
+          <p class="var-card__price">$74</p>
+          <p class="var-card__installment">or 4 × $18.50</p>
+          <button type="button" class="var-card__add">Quick Add →</button>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="option" id="opt-c">
+    <div class="option-head">
+      <p class="letter">Option C</p>
+      <h2>Eyebrow badge + color name</h2>
+      <p>Rust uppercase sole label above the color title (Type OS label treatment). Size in meta. Strong sole signal without covering the image.</p>
+    </div>
+    <div class="grid">
+      <article class="var-card">
+        <div class="var-card__img">
+          <img src="https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=600" alt="Onyx">
+        </div>
+        <div class="var-card__content">
+          <p class="var-card__eyebrow">Closed Sole</p>
+          <p class="var-card__name">Onyx</p>
+          <p class="var-card__meta">Size M</p>
+          <p class="var-card__price">$74</p>
+          <p class="var-card__installment">or 4 × $18.50</p>
+          <button type="button" class="var-card__add">Quick Add →</button>
+        </div>
+      </article>
+      <article class="var-card">
+        <div class="var-card__img">
+          <img src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=600" alt="Dusty Rose">
+        </div>
+        <div class="var-card__content">
+          <p class="var-card__eyebrow">Open Sole</p>
+          <p class="var-card__name">Dusty Rose</p>
+          <p class="var-card__meta">Size M</p>
+          <p class="var-card__price">$74</p>
+          <p class="var-card__installment">or 4 × $18.50</p>
+          <button type="button" class="var-card__add">Quick Add →</button>
+        </div>
+      </article>
+      <article class="var-card">
+        <div class="var-card__img">
+          <img src="https://barreletics.com/cdn/shop/files/Copreni_Final_More_grey.png?v=1774119812&width=600" alt="Coperni">
+          <span class="var-card__badge var-card__badge--le">Limited Edition</span>
+        </div>
+        <div class="var-card__content">
+          <p class="var-card__eyebrow">One-Off</p>
+          <p class="var-card__name">Coperni</p>
+          <p class="var-card__meta">Limited Edition</p>
+          <p class="var-card__price">$115</p>
+          <p class="var-card__installment">or 4 × $28.75</p>
+          <button type="button" class="var-card__add">Quick Add →</button>
+        </div>
+      </article>
+      <article class="var-card">
+        <div class="var-card__img">
+          <img src="https://barreletics.com/cdn/shop/files/A14_TopBottom_LightGrey-1000x1000_d30b6fcb-229e-4af9-8062-e1c4901df31e.jpg?v=1773920303&width=600" alt="Stone">
+        </div>
+        <div class="var-card__content">
+          <p class="var-card__eyebrow">Closed Sole</p>
+          <p class="var-card__name">Stone</p>
+          <p class="var-card__meta">Size L</p>
+          <p class="var-card__price">$74</p>
+          <p class="var-card__installment">or 4 × $18.50</p>
+          <button type="button" class="var-card__add">Quick Add →</button>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="option" id="opt-d">
+    <div class="option-head">
+      <p class="letter">Option D</p>
+      <h2>Minimal — color name only, sole in softer meta</h2>
+      <p>Quietest card. Title = color. Sole type alone in smaller warm meta (no size line on the card — size filter still in the toolbar).</p>
+    </div>
+    <div class="grid">
+      <article class="var-card">
+        <div class="var-card__img">
+          <img src="https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=600" alt="Onyx">
+        </div>
+        <div class="var-card__content">
+          <p class="var-card__name">Onyx</p>
+          <p class="var-card__meta var-card__meta--soft">Closed Sole</p>
+          <p class="var-card__price">$74</p>
+          <p class="var-card__installment">or 4 × $18.50</p>
+          <button type="button" class="var-card__add">Quick Add →</button>
+        </div>
+      </article>
+      <article class="var-card">
+        <div class="var-card__img">
+          <img src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=600" alt="Dusty Rose">
+        </div>
+        <div class="var-card__content">
+          <p class="var-card__name">Dusty Rose</p>
+          <p class="var-card__meta var-card__meta--soft">Open Sole</p>
+          <p class="var-card__price">$74</p>
+          <p class="var-card__installment">or 4 × $18.50</p>
+          <button type="button" class="var-card__add">Quick Add →</button>
+        </div>
+      </article>
+      <article class="var-card">
+        <div class="var-card__img">
+          <img src="https://barreletics.com/cdn/shop/files/Copreni_Final_More_grey.png?v=1774119812&width=600" alt="Coperni">
+          <span class="var-card__badge var-card__badge--le">Limited Edition</span>
+        </div>
+        <div class="var-card__content">
+          <p class="var-card__name">Coperni</p>
+          <p class="var-card__meta var-card__meta--soft">One-Off · Limited Edition</p>
+          <p class="var-card__price">$115</p>
+          <p class="var-card__installment">or 4 × $28.75</p>
+          <button type="button" class="var-card__add">Quick Add →</button>
+        </div>
+      </article>
+      <article class="var-card">
+        <div class="var-card__img">
+          <img src="https://barreletics.com/cdn/shop/files/A14_TopBottom_LightGrey-1000x1000_d30b6fcb-229e-4af9-8062-e1c4901df31e.jpg?v=1773920303&width=600" alt="Stone">
+        </div>
+        <div class="var-card__content">
+          <p class="var-card__name">Stone</p>
+          <p class="var-card__meta var-card__meta--soft">Closed Sole</p>
+          <p class="var-card__price">$74</p>
+          <p class="var-card__installment">or 4 × $18.50</p>
+          <button type="button" class="var-card__add">Quick Add →</button>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <p class="foot">
+    TE path on draft <code>187144929571</code>: Homepage or Product → Variant Grid → Card messaging style → A / B / C / D.
+    Reply with the Option letter to freeze.
+  </p>
+</body>
+</html>
