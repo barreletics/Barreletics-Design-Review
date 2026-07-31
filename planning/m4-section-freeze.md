@@ -25,7 +25,7 @@
 | ID | Surface | Status | Fingerprint (lineage) | Locked composition | Files |
 |----|---------|--------|------------------------|--------------------|-------|
 | **Footer A+** | Sitewide footer (all pages unless page-specific exception) | **LOCKED / APPROVED / FROZEN** 2026-07-31 (Andrew: “footer is correct lock it in”) | `6fcba348bfdcc82abfcf7cd1fcfb93e3da4cffbe` (lock commit; composition lineage 19b8fe6 — no blurb · no checklist · no 10%) | Charcoal/black simplified **Join the list** (little text) · link columns → Made in USA (+ Connect) · **NO brand blurb** · **NO checkmark checklist** · **NO 10%** | `shopify-build/sections/footer.liquid`, `footer-group.json`, `assets/chrome.css` |
-| **PDP Definitive-v16** | Product template + buy-box | **LOCKED / APPROVED / FROZEN** 2026-07-31 (Andrew: “this PDP page is totally wrong… lock in the correct one”) | `46aad362c4ac07a688c2703bd4ba891d1c528b21` · mock `docs/Barreletics PDP - Definitive-v16.html` | See PDP locked stack below. Top = `pdp-buy-box`. `variant-grid` “Use current product” is **not** the buy box. Card messaging default **A (meta)**. | `templates/product.json`, `sections/pdp-buy-box.liquid`, PDP companion sections in that template |
+| **PDP** | Product template + buy-box | **CONTESTED / NOT FROZEN** 2026-07-31 — draft rewired toward July 17 + current sections; visual QA pending. Do not freeze. | Draft on `187144929571` — see `planning/PDP-WORKING-ENTRY.md` | Gallery A–H + Juicer A–C (`docs/juicer-section-options.html`). Prefer **A APPROVED July 17**. No freeze without letter. | `templates/product.json`, `sections/pdp-buy-box.liquid`, PDP companions |
 | **Type OS** | Typography system | **SETTLED** | See `planning/m4-type-hierarchy.md` | Family/size/weight/tracking; no per-section `font_picker` | Type tokens + TE policy |
 | **Home WORKING** | Homepage layout authority | **WORKING** (layout authority — not a free redesign surface) | Home WORKING mocks / draft match commits | Agents must not invent alternate homepage composition; match WORKING unless Andrew approves change in-message | `templates/index.json` + home sections |
 
@@ -55,30 +55,15 @@ Update the **Fingerprint** column with the freeze commit SHA after each freeze s
 
 ---
 
-## PDP Definitive-v16 — LOCKED detail
+## PDP — CONTESTED (do not freeze)
 
-- **Andrew letter (2026-07-31):** “you mean the pdp product displays at the top of page? btw this PDP page is totally wrong. Stop changing items and lock in the correct one please”
-- **Authority mock:** `docs/Barreletics PDP - Definitive-v16.html`
-- **Clarify:** TE toggle **Use current product** on `variant-grid` = lower All Variants color cards (tabs off). It is **not** the top gallery / buy box (`pdp-buy-box`).
-- **Locked stack (`templates/product.json` order):**
-  1. `pdp-buy-box`
-  2. `value-strip`
-  3. `pdp-features`
-  4. `fifty-fifty` — “The sock era is over.”
-  5. `variant-grid` — `use_current_product=true`, `card_messaging=meta` (A)
-  6. `fifty-fifty` — lifestyle quote (cream, reverse)
-  7. `fullbleed-statement` — “Built for the mat. Proven in every class.”
-  8. `pdp-sock-math`
-  9. `fifty-fifty` — “Commit to the gear”
-  10. `pdp-reviews`
-  11. `guarantee-band` — 30-day / 90-day / Built to Last
-  12. `home-ugc` — “The Yoga Sock Era Is Over”
-  13. `geo-section`
-  14. `newsletter`
-  15. `pdp-sticky-atc`
-- **Forbidden without Andrew letter in CURRENT message:** Impulse/`main-product` swap; inventing alternate PDP spines; silent card-messaging B/C/D as PDP default; restoring Decision Packet “Yoga Socks Are Useless” abbreviated stack over this freeze.
-- **Draft QA theme:** `187144929571` (M4 Visual QA) — never live.
+- **Andrew letter (2026-07-31):** “btw this PDP page is totally wrong. Stop changing items and lock in the correct one please” — agents wrongly treated Definitive-v16 as “the correct one.” He rejected it.
+- **Gallery (pick a letter):** `docs/pdp-version-gallery.html`
+- **Most likely authority (not frozen):** `Barreletics PDP - APPROVED July 17.html` — see `planning/05-pdp-architecture.md` + `specs/frozen/pdp.md` DP-02.
+- **On draft now:** Definitive-v16 stack (theme `187144929571`) — candidate for replacement after letter, not frozen.
+- **Clarify:** TE **Use current product** on `variant-grid` = lower All Variants only — not the buy box.
 - **Do not touch** frozen Footer A+ while working PDP.
+- **No freeze / no silent pick** until Andrew replies with a gallery letter.
 
 ---
 

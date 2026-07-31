@@ -2,27 +2,30 @@
 
 ## Template Composition
 
-**Authority mock:** `docs/Barreletics PDP - Definitive-v16.html`  
-**Frozen:** `planning/m4-section-freeze.md` — PDP template + buy-box  
+**Status:** CONTESTED / NOT FROZEN — draft rewired toward July 17 + current sections (2026-07-31). Visual QA pending.  
+**Gallery:** `docs/pdp-version-gallery.html` · Juicer options: `docs/juicer-section-options.html`  
+**Authority mock:** `docs/Barreletics PDP - APPROVED July 17.html` (`planning/05-pdp-architecture.md`, `specs/frozen/pdp.md` DP-02)  
+**Working entry:** `planning/PDP-WORKING-ENTRY.md`
 
-Defined in `templates/product.json`. Section order (v16 spine):
+Defined in `templates/product.json`. Section order (July 17 intent · current sections — not frozen):
 
 ```
-pdp-buy-box            ← Gallery + purchase module + product schema (TOP of PDP)
+pdp-buy-box            ← Gallery + purchase module (TOP of PDP) — tighten only
 value-strip            ← Trust strip
-pdp-features           ← "Built around one obsession: Grip." + disciplines
-fifty-fifty (video)    ← "The sock era is over." + video
-variant-grid           ← All colors/styles; PDP may use use_current_product=true
-                         (tabs off → that product’s color cards). Card messaging A (meta).
+pdp-features           ← "Built around one obsession: Grip." (circles OFF)
+disciplines            ← Home WORKING cream type band (not little circles)
+fifty-fifty (video)    ← "Yoga Socks Are Useless." + Shop now
+variant-grid           ← use_current_product + card messaging A (meta / grey chip)
 fifty-fifty (lifestyle)← Quote / cream reverse
-fullbleed-statement    ← "Built for the mat. Proven in every class."
-pdp-sock-math          ← Cost comparison: $74 vs socks/yr
-fifty-fifty (commit)   ← "You commit to the class. Commit to the gear."
+fullbleed-statement    ← "One pair. No more socks."
+pdp-sock-math          ← "One pair. Done."
+fifty-fifty (commit)   ← Commit to the gear
+problem-section        ← Simplified "Think outside the sock." + Shop now
 pdp-reviews            ← Quote-led reviews
 guarantee-band         ← 30-day / 90-day / Built to Last
-home-ugc               ← "The Yoga Sock Era Is Over" (@barreletics)
-geo-section            ← Studio GEO accordion (mock merges FAQ+GEO)
-newsletter             ← "10% off your first pair."
+home-ugc               ← Interim @barreletics (Juicer pick OPEN — A–C)
+geo-section            ← Studio GEO accordion
+newsletter             ← Join the list — NO 10%
 pdp-sticky-atc         ← Fixed bottom bar when buy box scrolls away
 ```
 

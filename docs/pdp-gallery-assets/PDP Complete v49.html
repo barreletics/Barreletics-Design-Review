@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Best Grippy Shoes for Barre, Pilates & Yoga — Barreletics</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { zoom: 0.85; font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif; color: #1c1916; background: #faf9f7; line-height: 1.5; }
+    a { color: #1c1916; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* HERO TOGGLE */
+    .hero-toggle { display: flex; gap: 8px; margin-bottom: 24px; }
+    .hero-toggle__btn { padding: 8px 16px; border: 1px solid #d6cfc0; background: #fff; cursor: pointer; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.2s; }
+    .hero-toggle__btn[data-active="true"] { background: #1c1916; color: #fff; border-color: #1c1916; }
+
+    .pdp-hero { display: none; grid-template-columns: 1fr 1fr; gap: 64px; max-width: 1400px; margin: 0 auto; padding: 64px 40px; align-items: flex-start; }
+    .pdp-hero[data-active="true"] { display: grid; }
+    .pdp-gallery { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 64px; }
+    .pdp-gallery__hero { aspect-ratio: 1; background: #f9f9f9; overflow: hidden; border-radius: 8px; }
+    .pdp-gallery__hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .pdp-buy { display: flex; flex-direction: column; gap: 24px; }
+    .pdp-buy__badge { display: inline-block; background: #c45c3f; color: #fff; padding: 4px 10px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; border-radius: 3px; }
+    .pdp-buy__stars { font-size: 16px; color: #d4af37; letter-spacing: 2px; }
+    .pdp-buy__name { font-size: 44px; font-weight: 700; line-height: 1.08; margin: 0; color: #1c1916; }
+    .pdp-buy__desc { font-size: 16px; color: #4a4a4a; margin: 0; line-height: 1.6; }
+    .pdp-buy__price-now { font-size: 36px; font-weight: 700; color: #1c1916; }
+    .pdp-buy__price-meta { font-size: 13px; color: #8a8a8a; }
+    .pdp-buy__cta { width: 100%; padding: 18px; background: #1c1916; color: #fff; font-size: 15px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border: none; border-radius: 4px; cursor: pointer; font-family: inherit; }
+    .pdp-buy__cta:hover { background: #c45c3f; }
+    .pdp-buy__swatches { display: flex; gap: 8px; flex-wrap: wrap; }
+    .pdp-buy__swatch { width: 23px; height: 23px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: all 0.2s; padding: 9px; box-sizing: content-box; background-clip: content-box; }
+    .pdp-buy__swatch:hover { border-color: #9a9182; }
+    .pdp-buy__swatch[aria-selected="true"] { border-color: #1c1916; outline: none; }
+
+    .pdp-section { max-width: 100%; padding: 64px 40px; }
+    .pdp-section__inner { max-width: 1200px; margin: 0 auto; }
+    .pdp-section__label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: #8a8a8a; font-weight: 700; margin-bottom: 16px; }
+    .pdp-section__title { font-size: 42px; font-weight: 700; line-height: 1.2; color: #1c1916; margin: 0 0 32px 0; }
+
+    .pdp-benefits { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 48px; }
+    .pdp-benefit__num { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: #c45c3f; font-weight: 700; }
+    .pdp-benefit__title { font-size: 20px; font-weight: 700; color: #1c1916; margin: 12px 0 0; }
+    .pdp-benefit__sub { font-size: 15px; color: #4a4a4a; line-height: 1.6; margin: 0; }
+
+    .pdp-variants__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .pdp-variants__grid img { transform: scale(1.05); transform-origin: center; }
+
+    .review-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-top: 48px; }
+    .review-card { background: #fff; border-radius: 12px; overflow: hidden; border: 1px solid #e6e6e6; }
+    .review-image { aspect-ratio: 1; background: #e0e0e0; overflow: hidden; }
+    .review-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .review-content { padding: 28px; }
+    .review-stars { font-size: 14px; color: #d4af37; margin-bottom: 12px; letter-spacing: 2px; }
+    .review-text { font-size: 15px; color: #4a4a4a; line-height: 1.7; margin: 0 0 16px 0; font-style: italic; }
+    .review-author { font-size: 13px; font-weight: 700; color: #1c1916; margin: 0; }
+
+    .pdp-motion-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-top: 48px; }
+    .pdp-motion__video { width: 100%; aspect-ratio: 1; background: #f9f9f9; display: flex; align-items: center; justify-content: center; color: #8a8a8a; font-size: 14px; border-radius: 8px; }
+    .pdp-motion__cap { font-size: 14px; color: #4a4a4a; line-height: 1.6; margin: 16px 0 0 0; font-weight: 500; }
+
+    .pdp-justifier { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; margin-top: 48px; }
+    .pdp-justifier__card { padding: 32px; background: #fff; border-radius: 12px; border-left: 5px solid #c45c3f; }
+    .pdp-justifier__tag { font-size: 11px; font-weight: 700; color: #c45c3f; text-transform: uppercase; letter-spacing: 0.08em; margin: 0 0 12px 0; }
+    .pdp-justifier__quote { font-size: 16px; line-height: 1.7; color: #4a4a4a; margin: 0 0 16px 0; }
+    .pdp-justifier__author { font-size: 13px; font-weight: 700; color: #1c1916; margin: 0; }
+
+    .pdp-faq { padding: 80px 40px; background: #f5f2ec; }
+    .pdp-faq__container { max-width: 760px; margin: 0 auto; }
+    .pdp-faq__item { border-top: 1px solid #d6cfc0; padding: 18px 0; }
+    .pdp-faq__trigger { cursor: pointer; font-size: 16px; font-weight: 500; color: #1c1916; display: flex; justify-content: space-between; align-items: center; width: 100%; background: none; border: none; padding: 0; }
+    .pdp-faq__body { margin-top: 12px; font-size: 14px; color: #6b645a; line-height: 1.6; display: none; }
+    .pdp-faq__body[data-open="true"] { display: block; }
+
+    .pdp-newsletter { padding: 56px 40px; background: #fff; border-top: 1px solid #e6e6e6; }
+    .pdp-newsletter__container { max-width: 600px; margin: 0 auto; text-align: center; }
+    .pdp-newsletter__title { font-size: 36px; font-weight: 500; margin: 0 0 12px; color: #1c1916; }
+    .pdp-newsletter__desc { font-size: 15px; color: #6b645a; margin: 0 0 24px; line-height: 1.6; }
+    .pdp-newsletter__form { display: flex; gap: 8px; margin-bottom: 12px; }
+    .pdp-newsletter__input { flex: 1; padding: 12px 16px; border: 1px solid #d6cfc0; background: #fff; font-size: 14px; color: #1c1916; border-radius: 4px; }
+    .pdp-newsletter__input::placeholder { color: #9a9182; }
+    .pdp-newsletter__button { padding: 12px 24px; background: #1c1916; color: #fff; border: none; font-size: 14px; font-weight: 600; cursor: pointer; letter-spacing: 0.05em; text-transform: uppercase; border-radius: 4px; }
+    .pdp-newsletter__button:hover { background: #c45c3f; }
+    .pdp-newsletter__fine { font-size: 11px; color: #9a9182; margin: 0; }
+
+    @media (max-width: 1024px) {
+      .pdp-benefits { grid-template-columns: repeat(2, 1fr); }
+      .pdp-motion-grid { grid-template-columns: repeat(2, 1fr); }
+      .pdp-variants__grid { grid-template-columns: repeat(2, 1fr); }
+      .review-grid { grid-template-columns: repeat(2, 1fr); }
+      .pdp-justifier { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .pdp-hero { grid-template-columns: 1fr; gap: 32px; padding: 32px 16px; }
+      .pdp-gallery { position: static; }
+      .pdp-buy__name { font-size: 32px; }
+      .pdp-variants__grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+      .pdp-benefits { grid-template-columns: 1fr; gap: 32px; }
+      .pdp-motion-grid { grid-template-columns: 1fr; }
+      .review-grid { grid-template-columns: 1fr; }
+      .pdp-section { padding: 48px 16px; }
+      .pdp-section__title { font-size: 32px; }
+    }
+  
+    .pdp-variants__card { transition: none; }
+    .pdp-variants__card:hover .card-img { transform: scale(1.03); }
+    .card-img { transition: transform 0.4s ease; }
+    .pdp-variants__card:hover .card-cta { letter-spacing: 0.06em; }
+
+  </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": "Best Grippy Shoes for Barre, Pilates & Yoga",
+  "description": "The premium grip system that replaces traditional grip socks—built for reformer, barre, Pilates and Megaformer.",
+  "brand": { "@type": "Brand", "name": "Barreletics" },
+  "offers": {
+    "@type": "Offer",
+    "price": "74.00",
+    "priceCurrency": "USD",
+    "availability": "https://schema.org/InStock"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "5",
+    "reviewCount": "1000"
+  }
+}
+</script>
+</head>
+<body>
+
+<!-- HERO -->
+<section style="background:#fff;">
+<section class="pdp-hero" style="display:grid;grid-template-columns:1fr 1fr;gap:64px;max-width:1400px;margin:0 auto;padding:64px 80px 64px 40px;align-items:flex-start;">
+
+  <!-- GALLERY -->
+  <div class="pdp-gallery">
+    <div class="pdp-gallery__hero">
+      <img id="v10-main-img" src="https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=800" alt="Studio Performance Skin — Onyx" />
+    </div>
+    <div style="display:flex;gap:6px;margin-top:8px;">
+      <button onclick="v10Thumb(this,'https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=400')" style="width:72px;height:72px;border:2px solid #1c1916;background:#f9f9f9;padding:0;cursor:pointer;overflow:hidden;flex-shrink:0;"><img class="card-img-el" src="https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=400" style="width:100%;height:100%;object-fit:cover;display:block;" alt="View 1" /></button>
+      <button onclick="v10Thumb(this,'https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=400')" style="width:72px;height:72px;border:1px solid #e6e6e6;background:#f9f9f9;padding:0;cursor:pointer;overflow:hidden;flex-shrink:0;"><img class="card-img-el" src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=400" style="width:100%;height:100%;object-fit:cover;display:block;" alt="View 2" /></button>
+      <button onclick="v10Thumb(this,'https://barreletics.com/cdn/shop/files/A14_TopBottom_LightGrey-1000x1000_d30b6fcb-229e-4af9-8062-e1c4901df31e.jpg?v=1773920300&width=400')" style="width:72px;height:72px;border:1px solid #e6e6e6;background:#f9f9f9;padding:0;cursor:pointer;overflow:hidden;flex-shrink:0;"><img class="card-img-el" src="https://barreletics.com/cdn/shop/files/A14_TopBottom_LightGrey-1000x1000_d30b6fcb-229e-4af9-8062-e1c4901df31e.jpg?v=1773920300&width=400" style="width:100%;height:100%;object-fit:cover;display:block;" alt="View 3" /></button>
+      <button onclick="v10Thumb(this,'https://barreletics.com/cdn/shop/files/Copreni_Final_More_grey.png?v=1774119812&width=400')" style="width:72px;height:72px;border:1px solid #e6e6e6;background:#f9f9f9;padding:0;cursor:pointer;overflow:hidden;flex-shrink:0;"><img class="card-img-el" src="https://barreletics.com/cdn/shop/files/Copreni_Final_More_grey.png?v=1774119812&width=400" style="width:100%;height:100%;object-fit:cover;display:block;" alt="View 4" /></button>
+    </div>
+  </div>
+
+  <!-- BUY PANEL -->
+  <div class="pdp-buy" style="gap:24px;">
+
+    <!-- Reviews -->
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span class="pdp-buy__stars" style="font-size:14px;letter-spacing:1px;">★★★★★</span>
+      <span style="font-size:13px;font-weight:400;color:#4a4a4a;">Trusted by 1000's of Instructors</span>
+      <span style="color:#d6cfc0;">·</span>
+      <a href="#reviews" style="font-size:12px;color:#8a8a8a;font-weight:400;">Reviews →</a>
+    </div>
+
+    <!-- Title block -->
+    <div>
+      <!-- H1 = Shopify product title + badge inline -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+        <h1 style="font-size:18px;letter-spacing:0;color:#2d2926;font-weight:600;margin:0;">Best Grippy Shoes for Barre, Pilates &amp; Yoga</h1>
+        <span class="pdp-buy__badge">Closed Sole</span>
+      </div>
+      <!-- Marketing headline -->
+      <p class="pdp-buy__name" style="margin:0;"><span style="font-weight:300;">Secure in every hold.</span><br/><span style="font-weight:700;">No sliding. No resets.</span></p>
+      <!-- Desc -->
+      <p class="pdp-buy__desc" style="margin-top:20px;max-width:40ch;line-height:1.65;font-weight:400;color:#5a5248;">The premium grip system that replaces traditional grip socks—built for reformer, barre, Pilates and Megaformer.</p>
+    </div>
+
+    <!-- Price -->
+    <div style="padding:16px 0;border-top:1px solid #e6e6e6;border-bottom:1px solid #e6e6e6;">
+      <span class="pdp-buy__price-now">$74</span>
+      <span style="font-size:13px;color:#8a8a8a;margin-left:8px;">or 4 payments · free shipping over $150</span>
+    </div>
+
+    <!-- Color -->
+    <div style="padding:16px 0;border-bottom:1px solid #e6e6e6;">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;">
+        <span style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;">Color · <span id="v10-color-name">Onyx</span></span>
+        <a href="#variants" style="font-size:12px;text-decoration:none;color:#8a8a8a;font-weight:400;">View all colors →</a>
+      </div>
+      <div class="pdp-buy__swatches" style="gap:6px;flex-wrap:wrap;row-gap:6px;">
+        <button class="pdp-buy__swatch" style="background:#050505;" aria-selected="true" aria-label="Onyx" onclick="v10Color(this,'Onyx','https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=800')"></button>
+        <button class="pdp-buy__swatch" style="background:#e9d3cb;" aria-label="Dusty Rose" onclick="v10Color(this,'Dusty Rose','https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=800')"></button>
+        <button class="pdp-buy__swatch" style="background:#c9c5b8;" aria-label="Stone" onclick="v10Color(this,'Stone','https://barreletics.com/cdn/shop/files/A14_TopBottom_LightGrey-1000x1000_d30b6fcb-229e-4af9-8062-e1c4901df31e.jpg?v=1773920300&width=800')"></button>
+        <button class="pdp-buy__swatch" style="background:#7b8c84;" aria-label="Sage" onclick="v10Color(this,'Sage','https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=800')"></button>
+        <button class="pdp-buy__swatch" style="background:#fff;border-color:#ccc;" aria-label="White" onclick="v10Color(this,'White','https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=800')"></button>
+        <button class="pdp-buy__swatch" style="background:#d4a78a;" aria-label="Terracotta" onclick="v10Color(this,'Terracotta','https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=800')"></button>
+        <button class="pdp-buy__swatch" style="background:#3d3530;" aria-label="Espresso" onclick="v10Color(this,'Espresso','https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=800')"></button>
+        <button class="pdp-buy__swatch" style="background:#b8c4c0;" aria-label="Mist" onclick="v10Color(this,'Mist','https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=800')"></button>
+        <button class="pdp-buy__swatch" style="background:#e8e0d0;" aria-label="Cream" onclick="v10Color(this,'Cream','https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=800')"></button>
+        <button class="pdp-buy__swatch" style="background:#8b7355;" aria-label="Mocha" onclick="v10Color(this,'Mocha','https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=800')"></button>
+        <button class="pdp-buy__swatch" style="background:#5c6b5e;" aria-label="Forest" onclick="v10Color(this,'Forest','https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=800')"></button>
+        <div style="position:relative;display:inline-flex;">
+          <button class="pdp-buy__swatch" style="background:#c8b99a;" aria-label="Coperni" onclick="v10Color(this,'Coperni','https://barreletics.com/cdn/shop/files/Copreni_Final_More_grey.png?v=1774119812&width=800')"></button>
+          <span style="position:absolute;top:-2px;right:-2px;background:#2563eb;color:#fff;font-size:8px;font-weight:700;padding:1px 4px;border-radius:2px;line-height:1.4;pointer-events:none;">LE</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Size -->
+    <div style="padding:16px 0;border-bottom:1px solid #e6e6e6;">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;">
+        <span style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;">Size</span>
+        <a href="#" style="font-size:12px;text-decoration:none;color:#1c1916;border-bottom:1px solid #1c1916;padding-bottom:1px;">Size Chart →</a>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;">
+        <button style="padding:14px;border:1px solid #e6e6e6;background:#faf9f7;text-align:center;cursor:pointer;font-size:14px;font-weight:600;border-radius:6px;font-family:inherit;" onclick="v10Size(this,'M')">M<span style="display:block;font-size:11px;color:#8a8a8a;font-weight:400;margin-top:4px;">Women 5–7.5 · Men 6–8</span></button>
+        <button style="padding:14px;border:2px solid #1c1916;background:#faf9f7;text-align:center;cursor:pointer;font-size:14px;font-weight:600;border-radius:6px;font-family:inherit;" onclick="v10Size(this,'L')">L<span style="display:block;font-size:11px;color:#8a8a8a;font-weight:400;margin-top:4px;">Women 8–10 · Men 8.5–11</span></button>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <button class="pdp-buy__cta">Add to cart · $74</button>
+
+    <!-- Trust -->
+    <div style="display:flex;gap:20px;flex-wrap:wrap;font-size:12px;color:#8a8a8a;padding:12px 0;border-top:1px solid #e6e6e6;">
+      <span><b style="color:#1c1916;">✓</b> Ships 1–2 days</span>
+      <span><b style="color:#1c1916;">✓</b> 30-day returns</span>
+      <span><b style="color:#1c1916;">✓</b> 90-day warranty</span>
+      <span><b style="color:#1c1916;">✓</b> Latex- &amp; silicone-free</span>
+    </div>
+
+    <!-- Accordion -->
+    <div style="border-top:1px solid #e6e6e6;">
+      <details style="border-bottom:1px solid #e6e6e6;">
+        <summary style="padding:14px 0;font-size:14px;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;">Description <span>+</span></summary>
+        <div style="padding:0 0 16px;font-size:14px;color:#4a4a4a;line-height:1.7;">
+          <p style="margin:0 0 10px;">The Studio Performance Skin Closed Sole is the premium grip system that replaced traditional studio socks for thousands of reformer, barre, Megaformer, and Pilates practitioners. Full-contact 360° grip across the entire underfoot — not patches, not gels — for consistent traction every transition, every class.</p>
+          <p style="margin:0;">Built from non-toxic, skin-safe materials with no latex and no silicone. Rinses clean in warm soapy water and air-dries in under an hour.</p>
+        </div>
+      </details>
+      <details style="border-bottom:1px solid #e6e6e6;">
+        <summary style="padding:14px 0;font-size:14px;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;">Care &amp; how to wear <span>+</span></summary>
+        <div style="padding:0 0 16px;font-size:14px;color:#4a4a4a;line-height:1.7;">
+          <p style="margin:0 0 10px;"><b>How to put on:</b> pull from the top of the foot — not the straps — to help extend their lifespan.</p>
+          <p style="margin:0;"><b>Cleaning:</b> warm soapy water, rinse well, air dry. No machine washing.</p>
+        </div>
+      </details>
+      <details style="border-bottom:1px solid #e6e6e6;">
+        <summary style="padding:14px 0;font-size:14px;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;">Shipping <span>+</span></summary>
+        <div style="padding:0 0 16px;font-size:14px;color:#4a4a4a;line-height:1.7;">Free shipping on orders over $75. Standard 3–5 days. Express 1–2 days at checkout.</div>
+      </details>
+      <details style="border-bottom:1px solid #e6e6e6;">
+        <summary style="padding:14px 0;font-size:14px;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;">30-day returns + 90-day warranty <span>+</span></summary>
+        <div style="padding:0 0 16px;font-size:14px;color:#4a4a4a;line-height:1.7;">30-day returns on items returned in new, unused condition. 90-day warranty covers grip-surface wear under normal use.</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<script>
+function v10Thumb(btn, src) {
+  document.querySelectorAll('.pdp-hero button[onclick^="v10Thumb"]').forEach(b => b.style.border = '1px solid #e6e6e6');
+  btn.style.border = '2px solid #1c1916';
+  document.getElementById('v10-main-img').src = src;
+}
+function v10Color(btn, name, src) {
+  document.querySelectorAll('.pdp-buy__swatch').forEach(s => s.removeAttribute('aria-selected'));
+  btn.setAttribute('aria-selected','true');
+  document.getElementById('v10-color-name').textContent = name;
+  document.getElementById('v10-main-img').src = src;
+}
+function v10Size(btn, name) {
+  document.querySelectorAll('[onclick^="v10Size"]').forEach(s => { s.style.border='1px solid #e6e6e6'; s.style.background='#faf9f7'; });
+  btn.style.border = '2px solid #1c1916';
+  btn.style.background = '#f9f9f9';
+  document.getElementById('v10-size-name').textContent = name;
+}
+</script>
+
+</section>
+
+<!-- BRAND SECTION -->
+<section style="padding:96px 40px 72px;background:#faf9f7;">
+  <div style="max-width:1200px;margin:0 auto;">
+
+    <div style="margin-bottom:40px;">
+      <p style="font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:#9a9182;font-weight:600;margin:0 0 16px;">Why Barreletics</p>
+      <h2 style="font-size:40px;font-weight:400;line-height:1.1;color:#1c1916;margin:0;max-width:18ch;">Built around<br>one obsession: <strong style="font-weight:700;font-size:48px;font-style:italic;color:#1c1916;">Grip.</strong></h2>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px 80px;">
+
+      <div style="border-top:1px solid #d6cfc0;padding-top:32px;">
+        <p style="font-size:26px;font-weight:700;color:#1c1916;margin:0 0 8px;line-height:1.2;">360° Grip</p>
+        <p style="font-size:16px;color:#6b6459;line-height:1.5;margin:0;">Every direction. Every movement.</p>
+      </div>
+
+      <div style="border-top:1px solid #d6cfc0;padding-top:32px;">
+        <p style="font-size:26px;font-weight:700;color:#1c1916;margin:0 0 8px;line-height:1.2;">Secure in Every Hold</p>
+        <p style="font-size:16px;color:#6b6459;line-height:1.5;margin:0;">No slipping. No resets.</p>
+      </div>
+
+      <div style="border-top:1px solid #d6cfc0;padding-top:32px;">
+        <p style="font-size:26px;font-weight:700;color:#1c1916;margin:0 0 8px;line-height:1.2;">Stay in the Flow</p>
+        <p style="font-size:16px;color:#6b6459;line-height:1.5;margin:0;">No adjusting. No distractions.</p>
+      </div>
+
+      <div style="border-top:1px solid #d6cfc0;padding-top:32px;">
+        <p style="font-size:26px;font-weight:700;color:#1c1916;margin:0 0 8px;line-height:1.2;">Built to Last</p>
+        <p style="font-size:16px;color:#6b6459;line-height:1.5;margin:0;">Class 1 to class 1,000.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
+<!-- VARIANTS -->
+<section class="pdp-section" id="variants" style="padding-top:48px;padding-bottom:96px;background:#fff;">
+  <div class="pdp-section__inner">
+
+    <div style="margin-bottom:40px;">
+      <p class="pdp-section__label">Shop all collections</p>
+      <h2 class="pdp-section__title" style="margin:0 0 20px 0;">Shop all colors & styles.</h2>
+      <p style="font-size:14px;color:#4a4a4a;max-width:48ch;line-height:1.5;">One patented grip. Open Sole or Closed Sole — choose the build that fits your practice. Two builds, your call.</p>
+    </div>
+
+    <div style="border-top:1px solid #e6e6e6;padding:13px 0;margin-top:36px;margin-bottom:52px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;border-bottom:1px solid #e6e6e6;">
+      <div style="display:flex;align-items:center;gap:24px;">
+        <button id="tab-closed" onclick="switchTab('closed')" style="padding:12px 28px;font-size:13px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#fff;background:#1c1916;border:1px solid #1c1916;cursor:pointer;font-family:inherit;">Closed Sole</button>
+        <button id="tab-open" onclick="switchTab('open')" style="padding:12px 28px;font-size:13px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#8a8a8a;background:#fff;border:1px solid #e6e6e6;cursor:pointer;font-family:inherit;">Open Sole</button>
+        <button disabled style="padding:12px 28px;font-size:13px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#ccc;background:#fff;border:1px solid #e6e6e6;cursor:default;font-family:inherit;" title="Coming Soon">Outdoor</button>
+        <button disabled style="padding:12px 28px;font-size:13px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#ccc;background:#fff;border:1px solid #e6e6e6;cursor:default;font-family:inherit;" title="Coming Soon">One-Off</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:#4a4a4a;">Size</span>
+          <button id="size-m" onclick="switchSize('m')" style="font-size:11px;font-weight:700;color:#fff;background:#1c1916;padding:4px 10px;border:none;cursor:pointer;font-family:inherit;">M</button>
+          <button id="size-l" onclick="switchSize('l')" style="font-size:11px;font-weight:700;color:#8a8a8a;background:#f0efec;padding:4px 10px;border:none;cursor:pointer;font-family:inherit;">L</button>
+        </div>
+        <a href="#" style="font-size:11px;color:#8a8a8a;text-decoration:none;border-bottom:1px solid #d0c8be;padding-bottom:1px;">Size Chart →</a>
+        <a href="#" style="font-size:11px;color:#1c1916;font-weight:500;text-decoration:none;border-bottom:1px solid #1c1916;padding-bottom:1px;">Compare Open vs Closed →</a>
+      </div>
+    </div>
+
+    <div id="grid-closed" style="display:grid;grid-template-columns:repeat(4,1fr);column-gap:28px;row-gap:60px;">
+      <div onmouseenter="this.querySelector('img').style.transform='scale(1.04)'" onmouseleave="this.querySelector('img').style.transform='scale(1)'" style="display:flex;flex-direction:column;">
+        <div style="aspect-ratio:1;overflow:hidden;background:#f5f2ec;margin-bottom:26px;position:relative;">
+          <img src="https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=600" alt="Black" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.45s ease;">
+          
+        </div>
+        <p style="font-size:24px;font-weight:700;color:#1c1916;margin:0 0 3px;line-height:1.1;">Black</p>
+        <p style="font-size:13px;color:#9a9182;margin:0 0 8px;font-weight:300;letter-spacing:0.01em;">Closed Sole</p>
+        <span style="display:inline-block;font-size:12px;font-weight:600;color:#6b6459;background:#ece9e3;padding:3px 8px;border-radius:20px;letter-spacing:0.04em;margin-bottom:10px;width:fit-content;">Size M (W 5.5–7.5)</span>
+        <p style="font-size:13px;font-weight:700;color:#1c1916;margin:0 0 12px;">$74</p>
+        <span style="font-size:15px;font-weight:600;color:#1c1916;cursor:pointer;border-bottom:1.5px solid #9a9182;padding-bottom:2px;letter-spacing:0.01em;">Quick Add →</span>
+      </div>
+      <div onmouseenter="this.querySelector('img').style.transform='scale(1.04)'" onmouseleave="this.querySelector('img').style.transform='scale(1)'" style="display:flex;flex-direction:column;">
+        <div style="aspect-ratio:1;overflow:hidden;background:#f5f2ec;margin-bottom:26px;position:relative;">
+          <img src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=600" alt="Dusty Rose" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.45s ease;">
+          
+        </div>
+        <p style="font-size:24px;font-weight:700;color:#1c1916;margin:0 0 3px;line-height:1.1;">Dusty Rose</p>
+        <p style="font-size:13px;color:#9a9182;margin:0 0 8px;font-weight:300;letter-spacing:0.01em;">Closed Sole</p>
+        <span style="display:inline-block;font-size:12px;font-weight:600;color:#6b6459;background:#ece9e3;padding:3px 8px;border-radius:20px;letter-spacing:0.04em;margin-bottom:10px;width:fit-content;">Size L (W 8–10)</span>
+        <p style="font-size:13px;font-weight:700;color:#1c1916;margin:0 0 12px;">$74</p>
+        <span style="font-size:15px;font-weight:600;color:#1c1916;cursor:pointer;border-bottom:1.5px solid #9a9182;padding-bottom:2px;letter-spacing:0.01em;">Quick Add →</span>
+      </div>
+      <div style="display:flex;flex-direction:column;">
+        <div style="aspect-ratio:1;overflow:hidden;background:#f5f2ec;margin-bottom:26px;position:relative;">
+          <img src="https://barreletics.com/cdn/shop/files/A14_TopBottom_LightGrey-1000x1000_d30b6fcb-229e-4af9-8062-e1c4901df31e.jpg?v=1773920300&width=600" alt="Stone" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.45s ease;">
+          
+        </div>
+        <p style="font-size:24px;font-weight:700;color:#1c1916;margin:0 0 3px;line-height:1.1;">Stone</p>
+        <p style="font-size:13px;color:#9a9182;margin:0 0 8px;font-weight:300;letter-spacing:0.01em;">Closed Sole</p>
+        <span style="display:inline-block;font-size:12px;font-weight:600;color:#6b6459;background:#ece9e3;padding:3px 8px;border-radius:20px;letter-spacing:0.04em;margin-bottom:10px;width:fit-content;">Size L (W 8–10)</span>
+        <p style="font-size:13px;font-weight:700;color:#1c1916;margin:0 0 12px;">$74</p>
+        <span style="font-size:13px;font-weight:500;color:#9a9182;cursor:pointer;border-bottom:1px solid #d0c8be;padding-bottom:2px;">Notify Me →</span>
+      </div>
+      <div onmouseenter="this.querySelector('img').style.transform='scale(1.04)'" onmouseleave="this.querySelector('img').style.transform='scale(1)'" style="display:flex;flex-direction:column;">
+        <div style="aspect-ratio:1;overflow:hidden;background:#f5f2ec;margin-bottom:26px;position:relative;">
+          <img src="https://barreletics.com/cdn/shop/files/Copreni_Final_More_grey.png?v=1774119812&width=600" alt="Coperni" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.45s ease;">
+          <span style="position:absolute;top:10px;left:10px;font-size:8px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;background:#c45c3f;color:#fff;padding:2px 9px;border-radius:1px;line-height:1.3;">Limited Edition</span>
+        </div>
+        <p style="font-size:24px;font-weight:700;color:#1c1916;margin:0 0 3px;line-height:1.1;">Coperni</p>
+        <p style="font-size:13px;color:#9a9182;margin:0 0 8px;font-weight:300;letter-spacing:0.01em;">Closed Sole · Limited Edition</p>
+        <span style="display:inline-block;font-size:12px;font-weight:600;color:#6b6459;background:#ece9e3;padding:3px 8px;border-radius:20px;letter-spacing:0.04em;margin-bottom:10px;width:fit-content;">Size M (W 5.5–7.5)</span>
+        <p style="font-size:13px;font-weight:700;color:#1c1916;margin:0 0 12px;">$115</p>
+        <span style="font-size:15px;font-weight:600;color:#1c1916;cursor:pointer;border-bottom:1.5px solid #9a9182;padding-bottom:2px;letter-spacing:0.01em;">Quick Add →</span>
+      </div>
+      <div onmouseenter="this.querySelector('img').style.transform='scale(1.04)'" onmouseleave="this.querySelector('img').style.transform='scale(1)'" style="display:flex;flex-direction:column;">
+        <div style="aspect-ratio:1;overflow:hidden;background:#f5f2ec;margin-bottom:26px;position:relative;">
+          <img src="https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=600" alt="Ebony" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.45s ease;">
+          
+        </div>
+        <p style="font-size:24px;font-weight:700;color:#1c1916;margin:0 0 3px;line-height:1.1;">Ebony</p>
+        <p style="font-size:13px;color:#9a9182;margin:0 0 8px;font-weight:300;letter-spacing:0.01em;">Closed Sole</p>
+        <span style="display:inline-block;font-size:12px;font-weight:600;color:#6b6459;background:#ece9e3;padding:3px 8px;border-radius:20px;letter-spacing:0.04em;margin-bottom:10px;width:fit-content;">Size M (W 5.5–7.5)</span>
+        <p style="font-size:13px;font-weight:700;color:#1c1916;margin:0 0 12px;">$74</p>
+        <span style="font-size:15px;font-weight:600;color:#1c1916;cursor:pointer;border-bottom:1.5px solid #9a9182;padding-bottom:2px;letter-spacing:0.01em;">Quick Add →</span>
+      </div>
+      <div onmouseenter="this.querySelector('img').style.transform='scale(1.04)'" onmouseleave="this.querySelector('img').style.transform='scale(1)'" style="display:flex;flex-direction:column;">
+        <div style="aspect-ratio:1;overflow:hidden;background:#f5f2ec;margin-bottom:26px;position:relative;">
+          <img src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=600" alt="Rust" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.45s ease;">
+          
+        </div>
+        <p style="font-size:24px;font-weight:700;color:#1c1916;margin:0 0 3px;line-height:1.1;">Rust</p>
+        <p style="font-size:13px;color:#9a9182;margin:0 0 8px;font-weight:300;letter-spacing:0.01em;">Closed Sole</p>
+        <span style="display:inline-block;font-size:12px;font-weight:600;color:#6b6459;background:#ece9e3;padding:3px 8px;border-radius:20px;letter-spacing:0.04em;margin-bottom:10px;width:fit-content;">Size L (W 8–10)</span>
+        <p style="font-size:13px;font-weight:700;color:#1c1916;margin:0 0 12px;">$74</p>
+        <span style="font-size:15px;font-weight:600;color:#1c1916;cursor:pointer;border-bottom:1.5px solid #9a9182;padding-bottom:2px;letter-spacing:0.01em;">Quick Add →</span>
+      </div>
+      <div style="display:flex;flex-direction:column;">
+        <div style="aspect-ratio:1;overflow:hidden;background:#f5f2ec;margin-bottom:26px;position:relative;">
+          <img src="https://barreletics.com/cdn/shop/files/A14_TopBottom_LightGrey-1000x1000_d30b6fcb-229e-4af9-8062-e1c4901df31e.jpg?v=1773920300&width=600" alt="Clay" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.45s ease;">
+          
+        </div>
+        <p style="font-size:24px;font-weight:700;color:#1c1916;margin:0 0 3px;line-height:1.1;">Clay</p>
+        <p style="font-size:13px;color:#9a9182;margin:0 0 8px;font-weight:300;letter-spacing:0.01em;">Closed Sole</p>
+        <span style="display:inline-block;font-size:12px;font-weight:600;color:#6b6459;background:#ece9e3;padding:3px 8px;border-radius:20px;letter-spacing:0.04em;margin-bottom:10px;width:fit-content;">Size M (W 5.5–7.5)</span>
+        <p style="font-size:13px;font-weight:700;color:#1c1916;margin:0 0 12px;">$74</p>
+        <span style="font-size:13px;font-weight:500;color:#9a9182;cursor:pointer;border-bottom:1px solid #d0c8be;padding-bottom:2px;">Notify Me →</span>
+      </div>
+      <div onmouseenter="this.querySelector('img').style.transform='scale(1.04)'" onmouseleave="this.querySelector('img').style.transform='scale(1)'" style="display:flex;flex-direction:column;">
+        <div style="aspect-ratio:1;overflow:hidden;background:#f5f2ec;margin-bottom:26px;position:relative;">
+          <img src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=600" alt="Sand" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.45s ease;">
+          
+        </div>
+        <p style="font-size:24px;font-weight:700;color:#1c1916;margin:0 0 3px;line-height:1.1;">Sand</p>
+        <p style="font-size:13px;color:#9a9182;margin:0 0 8px;font-weight:300;letter-spacing:0.01em;">Closed Sole</p>
+        <span style="display:inline-block;font-size:12px;font-weight:600;color:#6b6459;background:#ece9e3;padding:3px 8px;border-radius:20px;letter-spacing:0.04em;margin-bottom:10px;width:fit-content;">Size L (W 8–10)</span>
+        <p style="font-size:13px;font-weight:700;color:#1c1916;margin:0 0 12px;">$74</p>
+        <span style="font-size:15px;font-weight:600;color:#1c1916;cursor:pointer;border-bottom:1.5px solid #9a9182;padding-bottom:2px;letter-spacing:0.01em;">Quick Add →</span>
+      </div>
+    </div>
+    <div id="grid-open" style="display:none;grid-template-columns:repeat(4,1fr);column-gap:28px;row-gap:60px;">
+      <div onmouseenter="this.querySelector('img').style.transform='scale(1.04)'" onmouseleave="this.querySelector('img').style.transform='scale(1)'" style="display:flex;flex-direction:column;">
+        <div style="aspect-ratio:1;overflow:hidden;background:#f5f2ec;margin-bottom:26px;position:relative;">
+          <img src="https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=600" alt="Black" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.45s ease;">
+          
+        </div>
+        <p style="font-size:24px;font-weight:700;color:#1c1916;margin:0 0 3px;line-height:1.1;">Black</p>
+        <p style="font-size:13px;color:#9a9182;margin:0 0 8px;font-weight:300;letter-spacing:0.01em;">Open Sole</p>
+        <span style="display:inline-block;font-size:12px;font-weight:600;color:#6b6459;background:#ece9e3;padding:3px 8px;border-radius:20px;letter-spacing:0.04em;margin-bottom:10px;width:fit-content;">Size M (W 5.5–7.5)</span>
+        <p style="font-size:13px;font-weight:700;color:#1c1916;margin:0 0 12px;">$74</p>
+        <span style="font-size:15px;font-weight:600;color:#1c1916;cursor:pointer;border-bottom:1.5px solid #9a9182;padding-bottom:2px;letter-spacing:0.01em;">Quick Add →</span>
+      </div>
+      <div onmouseenter="this.querySelector('img').style.transform='scale(1.04)'" onmouseleave="this.querySelector('img').style.transform='scale(1)'" style="display:flex;flex-direction:column;">
+        <div style="aspect-ratio:1;overflow:hidden;background:#f5f2ec;margin-bottom:26px;position:relative;">
+          <img src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=600" alt="Dusty Rose" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.45s ease;">
+          
+        </div>
+        <p style="font-size:24px;font-weight:700;color:#1c1916;margin:0 0 3px;line-height:1.1;">Dusty Rose</p>
+        <p style="font-size:13px;color:#9a9182;margin:0 0 8px;font-weight:300;letter-spacing:0.01em;">Open Sole</p>
+        <span style="display:inline-block;font-size:12px;font-weight:600;color:#6b6459;background:#ece9e3;padding:3px 8px;border-radius:20px;letter-spacing:0.04em;margin-bottom:10px;width:fit-content;">Size L (W 8–10)</span>
+        <p style="font-size:13px;font-weight:700;color:#1c1916;margin:0 0 12px;">$74</p>
+        <span style="font-size:15px;font-weight:600;color:#1c1916;cursor:pointer;border-bottom:1.5px solid #9a9182;padding-bottom:2px;letter-spacing:0.01em;">Quick Add →</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+<script>
+function switchTab(tab) {
+  var closed = document.getElementById('grid-closed');
+  var open = document.getElementById('grid-open');
+  var tc = document.getElementById('tab-closed');
+  var to = document.getElementById('tab-open');
+  closed.style.display = tab === 'closed' ? 'grid' : 'none';
+  open.style.display = tab === 'open' ? 'grid' : 'none';
+  tc.style.color = tab === 'closed' ? '#1c1916' : '#7a7268';
+  tc.style.fontWeight = tab === 'closed' ? '700' : '500';
+  tc.style.borderBottom = tab === 'closed' ? '2px solid #1c1916' : '2px solid transparent';
+  to.style.color = tab === 'open' ? '#1c1916' : '#7a7268';
+  to.style.fontWeight = tab === 'open' ? '700' : '500';
+  to.style.borderBottom = tab === 'open' ? '2px solid #1c1916' : '2px solid transparent';
+}
+function switchSize(size) {
+  document.getElementById('size-m').style.background = size === 'm' ? '#1c1916' : '#f0efec';
+  document.getElementById('size-m').style.color = size === 'm' ? '#fff' : '#8a8a8a';
+  document.getElementById('size-l').style.background = size === 'l' ? '#1c1916' : '#f0efec';
+  document.getElementById('size-l').style.color = size === 'l' ? '#fff' : '#8a8a8a';
+}
+</script>
+
+
+
+<!-- REVIEWS WITH IMAGES -->
+<section class="pdp-section" style="background:#f9f9f9;" id="reviews">
+  <div class="pdp-section__inner">
+    <p class="pdp-section__label">Trusted by studios & instructors</p>
+    <h2 class="pdp-section__title">Real people. Real results.</h2>
+    <div class="review-grid">
+      <div class="review-card">
+        <div class="review-image" style="background:linear-gradient(135deg, #c45c3f 0%, #e9a89f 100%);"></div>
+        <div class="review-content">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">"I've tried everything. This is the only grip system that lasts through my entire class."</p>
+          <p class="review-author">Sarah M. · Barre Instructor, NYC</p>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="review-image" style="background:linear-gradient(135deg, #7b8c84 0%, #b8c9bf 100%);"></div>
+        <div class="review-content">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">"No slipping in chair pose. No adjusting mid-class. This is what I've been waiting for."</p>
+          <p class="review-author">Jessica R. · Studio Owner, LA</p>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="review-image" style="background:linear-gradient(135deg, #e9d3cb 0%, #f5e9e0 100%);"></div>
+        <div class="review-content">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">"Invested a year ago. Still gripping the same. This is the upgrade I didn't know I needed."</p>
+          <p class="review-author">Maya K. · Megaformer Lover, Chicago</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUE COMPARISON -->
+<section class="pdp-section" style="background:#f9f9f9;">
+  <div class="pdp-section__inner">
+    <h2 class="pdp-section__title">One pair replaces eight.</h2>
+    <p style="font-size:16px;color:#4a4a4a;margin:0 0 48px 0;line-height:1.6;max-width:60ch;">Grip socks wear out. Barreletics don't. Compare the value over a year in the studio.</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:40px;">
+      <div style="padding:32px;background:#fff;border-radius:12px;border:1px solid #e6e6e6;">
+        <p style="font-size:13px;text-transform:uppercase;letter-spacing:0.08em;color:#8a8a8a;font-weight:700;margin:0 0 12px 0;">Grip Socks</p>
+        <p style="font-size:32px;font-weight:700;margin:0 0 20px 0;">$240/yr</p>
+        <ul style="list-style:none;padding:0;margin:0;font-size:14px;color:#666;line-height:1.8;">
+          <li>✗ Replace every 8–12 weeks</li>
+          <li>✗ Inconsistent grip quality</li>
+          <li>✗ Landfill waste</li>
+          <li>✗ Comfort varies</li>
+        </ul>
+      </div>
+      <div style="padding:32px;background:#1c1916;border-radius:12px;color:#fff;">
+        <p style="font-size:13px;text-transform:uppercase;letter-spacing:0.08em;color:#d4af37;font-weight:700;margin:0 0 12px 0;">Barreletics</p>
+        <p style="font-size:32px;font-weight:700;margin:0 0 20px 0;color:#fff;">$74</p>
+        <ul style="list-style:none;padding:0;margin:0;font-size:14px;color:#e6e6e6;line-height:1.8;">
+          <li>✓ One pair, 1–4+ years</li>
+          <li>✓ Grip never degrades</li>
+          <li>✓ Zero waste</li>
+          <li>✓ Same feel, always</li>
+        </ul>
+      </div>
+      <div style="padding:32px;background:#fff;border-radius:12px;border:1px solid #e6e6e6;">
+        <p style="font-size:13px;text-transform:uppercase;letter-spacing:0.08em;color:#8a8a8a;font-weight:700;margin:0 0 12px 0;">Other Brands</p>
+        <p style="font-size:32px;font-weight:700;margin:0 0 20px 0;">$180+/yr</p>
+        <ul style="list-style:none;padding:0;margin:0;font-size:14px;color:#666;line-height:1.8;">
+          <li>✗ Frequent replacements</li>
+          <li>✗ Premium pricing</li>
+          <li>✗ Limited sizes</li>
+          <li>✗ Unproven durability</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MOTION -->
+<section class="pdp-section">
+  <div class="pdp-section__inner">
+    <p class="pdp-section__label">The shoe in motion</p>
+    <h2 class="pdp-section__title">See how it works.</h2>
+    <div class="pdp-motion-grid">
+      <figure>
+        <div class="pdp-motion__video">Play video</div>
+        <figcaption class="pdp-motion__cap"><b>Slip it on</b> Just like a second skin.</figcaption>
+      </figure>
+      <figure>
+        <div class="pdp-motion__video">Play video</div>
+        <figcaption class="pdp-motion__cap"><b>Grip in motion</b> Through every transition.</figcaption>
+      </figure>
+      <figure>
+        <div class="pdp-motion__video">Play video</div>
+        <figcaption class="pdp-motion__cap"><b>Rinse & go</b> Warm soapy water · ready for next class.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- JUSTIFIER FEED -->
+<section class="pdp-section" style="background:#f5f2ec;">
+  <div class="pdp-section__inner">
+    <p class="pdp-section__label">Why studios choose us</p>
+    <h2 class="pdp-section__title">Real feedback from the floor.</h2>
+    <div class="pdp-justifier">
+      <div class="pdp-justifier__card">
+        <p class="pdp-justifier__tag">Instructor Trust</p>
+        <p class="pdp-justifier__quote">"After 8 years of barre teaching, I've never seen my students slip in these. The consistency is insane."</p>
+        <p class="pdp-justifier__author">Jennifer T. — Master Instructor</p>
+      </div>
+      <div class="pdp-justifier__card">
+        <p class="pdp-justifier__tag">Studio Adoption</p>
+        <p class="pdp-justifier__quote">"We recommend Barreletics to all new members now. It cuts our slip-related safety concerns to zero."</p>
+        <p class="pdp-justifier__author">Brooklyn Barre Studio</p>
+      </div>
+      <div class="pdp-justifier__card">
+        <p class="pdp-justifier__tag">Durability</p>
+        <p class="pdp-justifier__quote">"After a year of daily use, zero degradation. This is a genuine upgrade from disposable socks."</p>
+        <p class="pdp-justifier__author">Marcus L. — Pilates Professional</p>
+      </div>
+      <div class="pdp-justifier__card">
+        <p class="pdp-justifier__tag">Customer Loyalty</p>
+        <p class="pdp-justifier__quote">"I've bought 3 pairs for different studios. It's the only grip product I'll recommend to friends."</p>
+        <p class="pdp-justifier__author">Amanda K. — Studio Hopper</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="pdp-faq">
+  <div class="pdp-section__inner" style="max-width:760px;">
+    <p class="pdp-section__label">Common questions</p>
+    <h2 class="pdp-section__title">Everything you need to know.</h2>
+    <div class="pdp-faq__container">
+      <div class="pdp-faq__item">
+        <button class="pdp-faq__trigger">What makes Barreletics different from grip socks? <span>▼</span></button>
+        <div class="pdp-faq__body">Grip socks have two failure points: the toe box and the heel. Barreletics wraps your foot like a second skin with 360° grip from heel to toe. No slipping, no adjusting.</div>
+      </div>
+      <div class="pdp-faq__item">
+        <button class="pdp-faq__trigger">Are Barreletics good for reformer Pilates? <span>▼</span></button>
+        <div class="pdp-faq__body">Yes — engineered specifically for reformer Pilates, barre, Lagree and Megaformer. 294 verified reviews from studio instructors.</div>
+      </div>
+      <div class="pdp-faq__item">
+        <button class="pdp-faq__trigger">How long do Barreletics last? <span>▼</span></button>
+        <div class="pdp-faq__body">Customers report 1–4+ years with no grip degradation, even with daily studio use. One pair replaces 8–12 pairs of grip socks.</div>
+      </div>
+      <div class="pdp-faq__item">
+        <button class="pdp-faq__trigger">How do you clean them? <span>▼</span></button>
+        <div class="pdp-faq__body">Warm soapy water, air dry. Never machine wash or bleach. Grip lasts indefinitely with proper care.</div>
+      </div>
+      <div class="pdp-faq__item">
+        <button class="pdp-faq__trigger">What size should I order? <span>▼</span></button>
+        <div class="pdp-faq__body">M (W 5.5–7.5) and L (W 8–11). For men up to 10.5, choose Large.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="pdp-newsletter">
+  <div class="pdp-newsletter__container">
+    <p class="pdp-section__label">Join the list</p>
+    <h2 class="pdp-newsletter__title">10% off your first pair.</h2>
+    <p class="pdp-newsletter__desc">New drops, studio stories, care tips. Once or twice a quarter.</p>
+    <form class="pdp-newsletter__form" onsubmit="event.preventDefault();">
+      <input class="pdp-newsletter__input" type="email" placeholder="Email address" required />
+      <button class="pdp-newsletter__button" type="submit">Get 10% off</button>
+    </form>
+    <p class="pdp-newsletter__fine">By subscribing you agree to receive marketing emails. Unsubscribe anytime.</p>
+  </div>
+</section>
+
+<script>
+  // Hero toggle
+  document.querySelectorAll('.hero-toggle__btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const version = this.dataset.version;
+      document.querySelectorAll('.pdp-hero').forEach(hero => hero.removeAttribute('data-active'));
+      document.querySelector(`[data-version="${version}"]`).setAttribute('data-active', 'true');
+      document.querySelectorAll('.hero-toggle__btn').forEach(b => b.removeAttribute('data-active'));
+      this.setAttribute('data-active', 'true');
+    });
+  });
+
+  // FAQ toggle
+  document.querySelectorAll('.pdp-faq__trigger').forEach(trigger => {
+    trigger.addEventListener('click', function() {
+      const body = this.nextElementSibling;
+      const isOpen = body.getAttribute('data-open') === 'true';
+      body.setAttribute('data-open', !isOpen);
+      this.textContent = this.textContent.replace(isOpen ? '▼' : '▲', isOpen ? '▲' : '▼');
+    });
+  });
+</script>
+
+</body>
+</html>
