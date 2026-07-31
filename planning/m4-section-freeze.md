@@ -24,7 +24,7 @@
 
 | ID | Surface | Status | Fingerprint (lineage) | Locked composition | Files |
 |----|---------|--------|------------------------|--------------------|-------|
-| **Footer A+** | Sitewide footer (all pages unless page-specific exception) | **APPROVED / SETTLED** 2026-07-31 | `19b8fe63cae73dacba402bb4324437e43ef4c062` (lineage `70561b5` → `a59ff4a` → no blurb → no checklist) | Black/charcoal simplified **Join the list** (headline + form; optional privacy; no marketing paragraph) · Shop/Learn/Support/Connect columns · Made in USA · Connect · **no brand blurb** · **no ✓ / value checklist** · **no 10%** | `shopify-build/sections/footer.liquid`, `footer-group.json`, `assets/chrome.css` |
+| **Footer A+** | Sitewide footer (all pages unless page-specific exception) | **LOCKED / APPROVED / FROZEN** 2026-07-31 (Andrew: “footer is correct lock it in”) | `19b8fe63cae73dacba402bb4324437e43ef4c062` (clean stack — no blurb · no checklist · no 10%; lock docs commit updates below) | Charcoal/black simplified **Join the list** (little text) · link columns → Made in USA (+ Connect) · **NO brand blurb** · **NO checkmark checklist** · **NO 10%** | `shopify-build/sections/footer.liquid`, `footer-group.json`, `assets/chrome.css` |
 | **Type OS** | Typography system | **SETTLED** | See `planning/m4-type-hierarchy.md` | Family/size/weight/tracking; no per-section `font_picker` | Type tokens + TE policy |
 | **Home WORKING** | Homepage layout authority | **WORKING** (layout authority — not a free redesign surface) | Home WORKING mocks / draft match commits | Agents must not invent alternate homepage composition; match WORKING unless Andrew approves change in-message | `templates/index.json` + home sections |
 
@@ -32,24 +32,32 @@ Update the **Fingerprint** column with the freeze commit SHA after each freeze s
 
 ---
 
-## Footer A+ — settled detail (CLEAN)
+## Footer A+ — LOCKED detail (CLEAN · law)
 
+- **Andrew letter (2026-07-31):** “footer is correct lock it in please update all documents and github. and the operating system please”
 - **Scope:** Default footer for all pages.
-- **Keep:** Dark newsletter band (“Join the list” — headline + form only) · four link columns (Shop / Learn / Support / Connect; WORKING link fallbacks if menus empty / flat) · Made in USA · copyright.
+- **Exact stack (law):**
+  1. Charcoal/black **Join the list** (simplified, little text — headline + form; optional privacy; empty marketing paragraph)
+  2. Link columns → Made in USA (+ Connect as in current good state)
+  3. **NO** brand blurb
+  4. **NO** checkmark / value checklist
+  5. **NO** 10%
+- **Composition lineage:** `19b8fe6` — if later commits re-add blurb/checklist, revert those parts only to match this clean stack.
+- **Draft QA theme:** `187144929571` (M4 Visual QA) — never live.
 - **Removed / forbidden without Andrew letter in CURRENT message:**
-  - Barreletics **brand blurb** (Andrew 2026-07-31: busy with sections above)
-  - **✓ value checklist** under Join the list (Andrew 2026-07-31: “yes go ahead” remove)
+  - Barreletics **brand blurb**
+  - **✓ value checklist** under Join the list
   - 10% first-order offer
   - Impulse/live dark footers; gallery options B–H as live replacements
 - **Do not restore blurb or checklist** because an older freeze note, commit (`56d1998`), or forked agent claimed otherwise — latest Andrew letter wins.
-- **Gallery:** `docs/footer-version-gallery.html` is historical comparison only — CLEAN A+ is the only deployable footer.
+- **Gallery:** `docs/footer-version-gallery.html` — CLEAN A+ is **APPROVED / current**; B–H historical only.
 
 ---
 
 ## How to add a freeze
 
 1. Visual QA on disposable draft (`187144929571` unless Andrew names another ID).
-2. Andrew says approve / freeze / settle (or equivalent letter).
+2. Andrew says approve / freeze / settle / lock (or equivalent letter).
 3. Add/update row in this registry + CONTRACT §8.
-4. Add `FROZEN` banner comment at top of the section Liquid if useful.
+4. Add `APPROVED / FROZEN` banner comment at top of the section Liquid if useful.
 5. Commit + push; deploy draft only if code changed and ID named.
