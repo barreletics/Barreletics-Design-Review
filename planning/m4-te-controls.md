@@ -1,8 +1,9 @@
 # M4 Theme Editor Controls — Tiers & Schema Organization
 
 **Status:** APPROVED 2026-07-30 (Andrew) · **Shared patterns + TE Q&A 2026-07-30**  
-**Authority companion:** `planning/m4-section-library-CONTRACT.md` §7  
-**Type:** Type OS owns typography — **no** per-section `font_picker` sprawl (`planning/m4-type-hierarchy.md`)
+**Authority companion:** `planning/m4-section-library-CONTRACT.md` §7 · freeze rules §8  
+**Type:** Type OS owns typography — **SETTLED** — **no** per-section `font_picker` sprawl (`planning/m4-type-hierarchy.md`)  
+**Freeze registry:** `planning/m4-section-freeze.md` — **Footer A+ APPROVED / SETTLED** (sitewide; no brand blurb). Do not change frozen section structure without Andrew letter in-message.
 
 ---
 

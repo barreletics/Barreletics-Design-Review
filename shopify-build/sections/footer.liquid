@@ -1,8 +1,9 @@
 {% comment %}
-  Site footer — Footer A+ (Andrew review)
-  Base: Home WORKING light (value checklist + link columns + Made in USA + Connect)
-  Adds: brand blurb (G/H voice) · black newsletter band · no 10% offer
-  Menus: Theme Editor link_list pickers only (no invented Navigation handles).
+  FROZEN — Footer A+ (APPROVED / SETTLED 2026-07-31 · Andrew)
+  Do NOT revert, redesign, or swap to Impulse/live/dark Phase 1 without
+  explicit Andrew approval in the CURRENT message. Registry: planning/m4-section-freeze.md
+  Composition: black "Join the list" (simplified) · value checklist · columns · Made in USA · Connect
+  No brand blurb. No 10% offer. Menus: TE link_list pickers only.
 {% endcomment %}
 
 {% assign menu_primary = section.settings.menu %}
@@ -53,30 +54,18 @@
   <div class="site-footer__body">
     <div class="site-footer__inner">
 
-      {% if section.settings.show_brand or section.blocks.size > 0 %}
-        <div class="footer-brand-row">
-          {% if section.settings.show_brand %}
-            <div class="footer-brand">
-              {% if section.settings.brand_heading != blank %}
-                <p class="footer-brand__name">{{ section.settings.brand_heading }}</p>
+      {% if section.blocks.size > 0 %}
+        <div class="footer-values">
+          <div class="fn-value">
+            {% for block in section.blocks %}
+              {% if block.type == 'value_item' and block.settings.text != blank %}
+                <div class="fn-value__item" {{ block.shopify_attributes }}>
+                  <span class="fn-value__check" aria-hidden="true">✓</span>
+                  <span class="fn-value__text">{{ block.settings.text }}</span>
+                </div>
               {% endif %}
-              {% if section.settings.brand_blurb != blank %}
-                <p class="footer-brand__blurb">{{ section.settings.brand_blurb }}</p>
-              {% endif %}
-            </div>
-          {% endif %}
-          {% if section.blocks.size > 0 %}
-            <div class="fn-value">
-              {% for block in section.blocks %}
-                {% if block.type == 'value_item' and block.settings.text != blank %}
-                  <div class="fn-value__item" {{ block.shopify_attributes }}>
-                    <span class="fn-value__check" aria-hidden="true">✓</span>
-                    <span class="fn-value__text">{{ block.settings.text }}</span>
-                  </div>
-                {% endif %}
-              {% endfor %}
-            </div>
-          {% endif %}
+            {% endfor %}
+          </div>
         </div>
       {% endif %}
 
@@ -171,7 +160,7 @@
               </div>
             {% endfor %}
           {% else %}
-            {%- comment -%} Flat primary menu — use Home WORKING 4-col fallback (not a thin Explore list) {%- endcomment -%}
+            {%- comment -%} Flat primary menu — Home WORKING 4-col fallback {%- endcomment -%}
             <div class="site-footer__col">
               <h6>{{ section.settings.shop_heading | default: 'Shop' }}</h6>
               <ul>
@@ -307,28 +296,6 @@
       "id": "newsletter_privacy",
       "label": "Newsletter privacy line",
       "default": "By subscribing you agree to receive marketing emails. Unsubscribe anytime."
-    },
-    {
-      "type": "header",
-      "content": "Brand"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_brand",
-      "label": "Show brand blurb",
-      "default": true
-    },
-    {
-      "type": "text",
-      "id": "brand_heading",
-      "label": "Brand heading",
-      "default": "Barreletics"
-    },
-    {
-      "type": "textarea",
-      "id": "brand_blurb",
-      "label": "Brand blurb",
-      "default": "The premium performance alternative to grip socks. Superior grip from heel to toe, on the floor and on your foot. Made in USA."
     },
     {
       "type": "header",

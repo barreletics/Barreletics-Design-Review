@@ -279,13 +279,33 @@ Legend: **KEEP** · **REBUILD** · **MERGE→X** · **DELETE**
 
 ---
 
+## 8. Section freeze — no drift / no revert (HARD · 2026-07-31)
+
+**Full registry:** `planning/m4-section-freeze.md`  
+**Cursor guardrail:** `.cursor/rules/section-freeze-no-drift.mdc`
+
+Once Andrew marks a section **APPROVED / SETTLED / FROZEN**, agents must not silently revert, redesign, or swap it.
+
+| Locked | Status | Notes |
+|--------|--------|-------|
+| **Footer A+** | **APPROVED / SETTLED** | Sitewide default footer. Charcoal simplified Join the list · values · columns · Made in USA · Connect. **No brand blurb. No 10%.** |
+| **Type OS** | **SETTLED** | `planning/m4-type-hierarchy.md` |
+| **Home WORKING** | Layout authority | Not a free redesign surface |
+
+**Forbidden without explicit Andrew approval in the CURRENT message:** git checkout of frozen section files from old commits; Impulse/live/dark Phase 1 swaps; gallery “picks” as deployable replacements; inventing alternate footers/heroes.
+
+**Allowed:** bugfixes and TE clarity that preserve locked composition; deploy only when Andrew names a disposable theme ID.
+
+---
+
 ## Approval stamp
 
 | Field | Value |
 |-------|-------|
-| Status | **ARCHITECTURE APPROVED** |
-| Date | **2026-07-26** |
+| Status | **ARCHITECTURE APPROVED** (+ freeze rules §8 · 2026-07-31) |
+| Date | **2026-07-26** (architecture) · **2026-07-31** (Footer A+ freeze) |
 | Approved by | **Andrew** |
 | Contract file | `planning/m4-section-library-CONTRACT.md` |
+| Freeze registry | `planning/m4-section-freeze.md` |
 | First build target | **`split-hero`** (after contract acknowledge) |
 | v1 library count | **36** sections |
