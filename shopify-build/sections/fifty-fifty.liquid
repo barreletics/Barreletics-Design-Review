@@ -49,7 +49,7 @@
   assign body_weight = section.settings.body_weight | default: 'default'
   assign cta_size = section.settings.cta_size | default: 'default'
   assign cta_style = section.settings.cta_style | default: 'solid'
-  assign cta_bg = section.settings.cta_bg_color | default: '#1c1916'
+  assign cta_bg = section.settings.cta_bg_color | default: '#c45c3f'
   assign cta_border = section.settings.cta_border_color | default: cta_bg
 
   assign region_label = section.settings.aria_label | strip
@@ -259,6 +259,13 @@
     max-width: none !important;
     margin: 0 0 20px;
   }
+  /* WORKING: display register uses H2 Display scale; standard keeps wayfinding */
+  #shopify-section-{{ section.id }} .split-text__title.h2-display {
+    font-size: var(--ff-title-size, var(--type-h2-display-size, clamp(28px, 3.5vw, 40px))) !important;
+  }
+  #shopify-section-{{ section.id }} .split-text__title.h2-standard {
+    font-size: var(--ff-title-size, var(--type-section-size, clamp(28px, 3.2vw, 36px))) !important;
+  }
   #shopify-section-{{ section.id }} .split-text__eyebrow {
     font-size: var(--type-label-size, 11px);
     text-transform: uppercase;
@@ -293,14 +300,14 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: var(--ff-cta-bg, #1c1916);
-    border: 1px solid var(--ff-cta-border, var(--ff-cta-bg, #1c1916));
+    background: var(--ff-cta-bg, #c45c3f);
+    border: 1px solid var(--ff-cta-border, var(--ff-cta-bg, #c45c3f));
     color: #fff;
     transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
   }
   #shopify-section-{{ section.id }} .split-cta--outline {
     background: transparent;
-    color: var(--ff-cta-border, #1c1916);
+    color: var(--ff-cta-border, #c45c3f);
   }
   #shopify-section-{{ section.id }} .split-cta:hover {
     background: #c45c3f;
@@ -498,14 +505,14 @@
       "type": "color",
       "id": "cta_bg_color",
       "label": "CTA background color",
-      "default": "#1c1916",
-      "info": "Used for solid fill. Ignored visually when style is Outline only (border still applies)."
+      "default": "#c45c3f",
+      "info": "WORKING default rust. Used for solid fill. Ignored visually when style is Outline only (border still applies)."
     },
     {
       "type": "color",
       "id": "cta_border_color",
       "label": "CTA outline / border color",
-      "default": "#1c1916"
+      "default": "#c45c3f"
     },
     {
       "type": "select",
