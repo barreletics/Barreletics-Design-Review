@@ -171,39 +171,90 @@
               </div>
             {% endfor %}
           {% else %}
+            {%- comment -%} Flat primary menu — use Home WORKING 4-col fallback (not a thin Explore list) {%- endcomment -%}
             <div class="site-footer__col">
-              {% if section.settings.menu_heading != blank %}
-                <h6>{{ section.settings.menu_heading }}</h6>
-              {% endif %}
+              <h6>{{ section.settings.shop_heading | default: 'Shop' }}</h6>
               <ul>
-                {% for link in menu_primary.links %}
-                  <li><a href="{{ link.url }}">{{ link.title }}</a></li>
-                {% endfor %}
+                <li><a href="/collections/closed-sole">Closed Sole</a></li>
+                <li><a href="/collections/open-sole">Open Sole</a></li>
+                <li><a href="/collections/all">All Colors</a></li>
+                <li><a href="/products/gift-card">Gift Cards</a></li>
+                <li><a href="/collections/all">Bundles</a></li>
               </ul>
             </div>
-            {% if section.settings.instagram_url != blank or section.settings.tiktok_url != blank or section.settings.facebook_url != blank or section.settings.pinterest_url != blank or section.settings.email_url != blank %}
-              <div class="site-footer__col">
-                <h6>{{ section.settings.connect_heading }}</h6>
-                <ul>
-                  {% if section.settings.instagram_url != blank %}
-                    <li><a href="{{ section.settings.instagram_url }}" target="_blank" rel="noopener noreferrer">Instagram</a></li>
-                  {% endif %}
-                  {% if section.settings.tiktok_url != blank %}
-                    <li><a href="{{ section.settings.tiktok_url }}" target="_blank" rel="noopener noreferrer">TikTok</a></li>
-                  {% endif %}
-                  {% if section.settings.facebook_url != blank %}
-                    <li><a href="{{ section.settings.facebook_url }}" target="_blank" rel="noopener noreferrer">Facebook</a></li>
-                  {% endif %}
-                  {% if section.settings.pinterest_url != blank %}
-                    <li><a href="{{ section.settings.pinterest_url }}" target="_blank" rel="noopener noreferrer">Pinterest</a></li>
-                  {% endif %}
-                  {% if section.settings.email_url != blank %}
-                    <li><a href="{{ section.settings.email_url }}">Email Us</a></li>
-                  {% endif %}
-                </ul>
-              </div>
-            {% endif %}
+            <div class="site-footer__col">
+              <h6>{{ section.settings.learn_heading | default: 'Learn' }}</h6>
+              <ul>
+                <li><a href="/pages/our-story">Our Story</a></li>
+                <li><a href="/pages/how-it-works">How It Works</a></li>
+                <li><a href="/blogs/news">Journal</a></li>
+                <li><a href="/pages/size-guide">Size Guide</a></li>
+                <li><a href="/pages/compare">Compare</a></li>
+              </ul>
+            </div>
+            <div class="site-footer__col">
+              <h6>{{ section.settings.support_heading | default: 'Support' }}</h6>
+              <ul>
+                <li><a href="/pages/faq">FAQ</a></li>
+                <li><a href="/pages/shipping-returns">Shipping &amp; Returns</a></li>
+                <li><a href="/pages/warranty">Warranty</a></li>
+                <li><a href="/pages/contact">Contact Us</a></li>
+                <li><a href="/apps/tracktor">Track Order</a></li>
+              </ul>
+            </div>
+            <div class="site-footer__col">
+              <h6>{{ section.settings.connect_heading | default: 'Connect' }}</h6>
+              <ul>
+                <li><a href="{{ section.settings.instagram_url | default: 'https://www.instagram.com/barreletics/' }}" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+                <li><a href="https://www.tiktok.com/@barreletics" target="_blank" rel="noopener noreferrer">TikTok</a></li>
+                <li><a href="https://www.facebook.com/barreletics" target="_blank" rel="noopener noreferrer">Facebook</a></li>
+                <li><a href="https://www.pinterest.com/barreletics" target="_blank" rel="noopener noreferrer">Pinterest</a></li>
+                <li><a href="{{ section.settings.email_url | default: '/pages/contact' }}">Email Us</a></li>
+              </ul>
+            </div>
           {% endif %}
+        {% else %}
+          {%- comment -%} No menus assigned — Home WORKING 4-col fallback {%- endcomment -%}
+          <div class="site-footer__col">
+            <h6>{{ section.settings.shop_heading | default: 'Shop' }}</h6>
+            <ul>
+              <li><a href="/collections/closed-sole">Closed Sole</a></li>
+              <li><a href="/collections/open-sole">Open Sole</a></li>
+              <li><a href="/collections/all">All Colors</a></li>
+              <li><a href="/products/gift-card">Gift Cards</a></li>
+              <li><a href="/collections/all">Bundles</a></li>
+            </ul>
+          </div>
+          <div class="site-footer__col">
+            <h6>{{ section.settings.learn_heading | default: 'Learn' }}</h6>
+            <ul>
+              <li><a href="/pages/our-story">Our Story</a></li>
+              <li><a href="/pages/how-it-works">How It Works</a></li>
+              <li><a href="/blogs/news">Journal</a></li>
+              <li><a href="/pages/size-guide">Size Guide</a></li>
+              <li><a href="/pages/compare">Compare</a></li>
+            </ul>
+          </div>
+          <div class="site-footer__col">
+            <h6>{{ section.settings.support_heading | default: 'Support' }}</h6>
+            <ul>
+              <li><a href="/pages/faq">FAQ</a></li>
+              <li><a href="/pages/shipping-returns">Shipping &amp; Returns</a></li>
+              <li><a href="/pages/warranty">Warranty</a></li>
+              <li><a href="/pages/contact">Contact Us</a></li>
+              <li><a href="/apps/tracktor">Track Order</a></li>
+            </ul>
+          </div>
+          <div class="site-footer__col">
+            <h6>{{ section.settings.connect_heading | default: 'Connect' }}</h6>
+            <ul>
+              <li><a href="{{ section.settings.instagram_url | default: 'https://www.instagram.com/barreletics/' }}" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+              <li><a href="https://www.tiktok.com/@barreletics" target="_blank" rel="noopener noreferrer">TikTok</a></li>
+              <li><a href="https://www.facebook.com/barreletics" target="_blank" rel="noopener noreferrer">Facebook</a></li>
+              <li><a href="https://www.pinterest.com/barreletics" target="_blank" rel="noopener noreferrer">Pinterest</a></li>
+              <li><a href="{{ section.settings.email_url | default: '/pages/contact' }}">Email Us</a></li>
+            </ul>
+          </div>
         {% endif %}
       </div>
 
