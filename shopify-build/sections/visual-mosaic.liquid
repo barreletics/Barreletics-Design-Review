@@ -1,27 +1,133 @@
 {% comment %}
   Visual mosaic — Home WORKING 2b. Multi-tile lifestyle grid under hero.
+  Blocks = tiles (add blocks to add squares / rows). Per-tile image or video.
 {% endcomment %}
 
-<section class="visual-mosaic" aria-label="{{ section.settings.aria_label | default: 'Studio proof' | escape }}">
+{%- liquid
+  assign vm_cols = section.settings.columns | default: 3
+  assign vm_gap = section.settings.grid_gap | default: 12
+  assign vm_row_h = section.settings.tile_height | default: 268
+  assign vm_radius = section.settings.corner_radius | default: 4
+  assign vm_pad = section.settings.section_padding | default: 16
+  assign vm_fit = section.settings.media_fit | default: 'cover'
+  assign vm_mob_cols = section.settings.mobile_columns | default: 2
+  assign vm_mob_h = section.settings.mobile_tile_height | default: 180
+  assign vm_hero_wide = section.settings.hero_column_wide
+  assign has_hero = false
+  for block in section.blocks
+    if block.settings.size == 'hero'
+      assign has_hero = true
+    endif
+  endfor
+  if has_hero and vm_hero_wide
+    assign vm_cols_css = '1.4fr'
+  else
+    assign vm_cols_css = '1fr'
+  endif
+  if vm_cols >= 2
+    assign vm_cols_css = vm_cols_css | append: ' 1fr'
+  endif
+  if vm_cols >= 3
+    assign vm_cols_css = vm_cols_css | append: ' 1fr'
+  endif
+  if vm_cols >= 4
+    assign vm_cols_css = vm_cols_css | append: ' 1fr'
+  endif
+  if vm_mob_cols == 1
+    assign vm_mob_cols_css = '1fr'
+  else
+    assign vm_mob_cols_css = '1fr 1fr'
+  endif
+  assign default_target = section.settings.default_link_target | default: '#variants'
+  if default_target != blank and default_target != 'custom'
+    assign default_href = default_target
+  else
+    assign default_href = section.settings.default_link_url | default: '#variants'
+  endif
+-%}
+
+<section
+  class="visual-mosaic"
+  id="visual-mosaic-{{ section.id }}"
+  aria-label="{{ section.settings.aria_label | default: 'Studio proof' | escape }}"
+  style="
+    --vm-cols-css: {{ vm_cols_css }};
+    --vm-mob-cols-css: {{ vm_mob_cols_css }};
+    --vm-gap: {{ vm_gap }}px;
+    --vm-row-h: {{ vm_row_h }}px;
+    --vm-radius: {{ vm_radius }}px;
+    --vm-pad: {{ vm_pad }}px;
+    --vm-fit: {{ vm_fit }};
+    --vm-mob-h: {{ vm_mob_h }}px;
+  "
+>
   <div class="visual-mosaic__grid">
     {% for block in section.blocks %}
       {% liquid
         assign tile_class = 'vm-tile'
-        if block.settings.size == 'hero'
+        assign size = block.settings.size | default: 'sm'
+        if size == 'hero'
           assign tile_class = tile_class | append: ' vm-tile--hero'
         else
           assign tile_class = tile_class | append: ' vm-tile--sm'
         endif
-        assign tile_href = block.settings.link | default: section.settings.default_link | default: '#variants'
+
+        assign link_target = block.settings.link_target | default: 'default'
+        if link_target == 'default'
+          assign tile_href = default_href
+        elsif link_target != blank and link_target != 'custom'
+          assign tile_href = link_target
+        else
+          assign tile_href = block.settings.link_url | default: default_href
+        endif
+
+        assign text_color = block.settings.text_color | default: 'white'
+        assign content_pos = block.settings.content_position | default: 'bottom-left'
+        assign media_pos = block.settings.media_position | default: 'center center'
+        assign col_span = block.settings.column_span | default: 1
       %}
-      <a class="{{ tile_class }}" href="{{ tile_href }}" {{ block.shopify_attributes }}>
-        {% if block.settings.video_url != blank %}
-          <video autoplay muted loop playsinline webkit-playsinline preload="metadata"{% if block.settings.poster_url != blank %} poster="{{ block.settings.poster_url | escape }}"{% endif %}>
+      <a
+        class="{{ tile_class }}"
+        href="{{ tile_href }}"
+        data-text-color="{{ text_color }}"
+        data-content-position="{{ content_pos }}"
+        style="--vm-media-pos: {{ media_pos }};{% if col_span > 1 %} --vm-col-span: {{ col_span }};{% endif %}"
+        {{ block.shopify_attributes }}
+      >
+        {% if block.settings.video != blank %}
+          {{
+            block.settings.video
+            | video_tag:
+              image_size: '1200x',
+              autoplay: true,
+              loop: true,
+              muted: true,
+              controls: false,
+              playsinline: true
+          }}
+        {% elsif block.settings.video_url != blank %}
+          <video
+            autoplay
+            muted
+            loop
+            playsinline
+            webkit-playsinline
+            preload="metadata"
+            {% if block.settings.image != blank %}
+              poster="{{ block.settings.image | image_url: width: 1200 }}"
+            {% elsif block.settings.poster_url != blank %}
+              poster="{{ block.settings.poster_url | escape }}"
+            {% endif %}
+          >
             <source src="{{ block.settings.video_url | escape }}" type="video/mp4">
           </video>
         {% elsif block.settings.image != blank %}
           <img
             src="{{ block.settings.image | image_url: width: 1200 }}"
+            srcset="{{ block.settings.image | image_url: width: 600 }} 600w,
+                    {{ block.settings.image | image_url: width: 900 }} 900w,
+                    {{ block.settings.image | image_url: width: 1200 }} 1200w"
+            sizes="(max-width: 900px) 50vw, 33vw"
             alt="{{ block.settings.alt | escape }}"
             loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
             width="800"
@@ -53,66 +159,108 @@
 </section>
 
 <style>
-  .visual-mosaic { padding: 16px 16px 8px; background: #fff; }
-  .visual-mosaic__grid {
+  #visual-mosaic-{{ section.id }}.visual-mosaic {
+    padding: var(--vm-pad) var(--vm-pad) calc(var(--vm-pad) / 2);
+    background: #fff;
+  }
+  #visual-mosaic-{{ section.id }} .visual-mosaic__grid {
     max-width: 1400px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1.4fr 1fr 1fr;
-    grid-template-rows: 268px 268px;
-    gap: 12px;
+    grid-template-columns: var(--vm-cols-css);
+    grid-auto-rows: var(--vm-row-h);
+    gap: var(--vm-gap);
   }
-  .vm-tile {
+  #visual-mosaic-{{ section.id }} .vm-tile {
     position: relative;
     overflow: hidden;
-    border-radius: 4px;
-    display: block;
+    border-radius: var(--vm-radius);
+    display: flex;
     text-decoration: none;
     color: #fff;
-    min-height: 200px;
+    min-height: 0;
     background: #e8e2d8;
+    grid-column: span var(--vm-col-span, 1);
   }
-  .vm-tile--hero { grid-row: 1 / span 2; }
-  .vm-tile img,
-  .vm-tile video,
-  .vm-tile__placeholder {
+  #visual-mosaic-{{ section.id }} .vm-tile--hero {
+    grid-row: span 2;
+  }
+  #visual-mosaic-{{ section.id }} .vm-tile[data-text-color="black"] {
+    color: #1c1916;
+  }
+  #visual-mosaic-{{ section.id }} .vm-tile[data-text-color="black"] .vm-tile__cta {
+    color: #1c1916;
+    border-color: #1c1916;
+    background: rgba(255, 255, 255, 0.55);
+  }
+  #visual-mosaic-{{ section.id }} .vm-tile[data-content-position="bottom-left"] {
+    align-items: flex-end;
+    justify-content: flex-start;
+  }
+  #visual-mosaic-{{ section.id }} .vm-tile[data-content-position="bottom-center"] {
+    align-items: flex-end;
+    justify-content: center;
+  }
+  #visual-mosaic-{{ section.id }} .vm-tile[data-content-position="center"] {
+    align-items: center;
+    justify-content: center;
+  }
+  #visual-mosaic-{{ section.id }} .vm-tile[data-content-position="top-left"] {
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+  #visual-mosaic-{{ section.id }} .vm-tile img,
+  #visual-mosaic-{{ section.id }} .vm-tile video,
+  #visual-mosaic-{{ section.id }} .vm-tile__placeholder {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: var(--vm-fit);
+    object-position: var(--vm-media-pos, center center);
     display: block;
     position: absolute;
     inset: 0;
     transition: transform 0.45s ease;
   }
-  .vm-tile__placeholder {
+  #visual-mosaic-{{ section.id }} .vm-tile__placeholder {
     background: linear-gradient(135deg, #c9c5b8, #e9d3cb);
   }
-  .vm-tile:hover img,
-  .vm-tile:hover video { transform: scale(1.04); }
-  .vm-tile__shade {
+  #visual-mosaic-{{ section.id }} .vm-tile:hover img,
+  #visual-mosaic-{{ section.id }} .vm-tile:hover video {
+    transform: scale(1.04);
+  }
+  #visual-mosaic-{{ section.id }} .vm-tile__shade {
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgba(28,25,22,0.05) 30%, rgba(28,25,22,0.72) 100%);
+    background: linear-gradient(180deg, rgba(28, 25, 22, 0.05) 30%, rgba(28, 25, 22, 0.72) 100%);
     z-index: 1;
+    pointer-events: none;
   }
-  .vm-tile__content {
-    position: absolute;
-    left: 24px;
-    bottom: 24px;
+  #visual-mosaic-{{ section.id }} .vm-tile[data-text-color="black"] .vm-tile__shade {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 30%, rgba(255, 255, 255, 0.55) 100%);
+  }
+  #visual-mosaic-{{ section.id }} .vm-tile__content {
+    position: relative;
     z-index: 2;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     max-width: min(340px, calc(100% - 48px));
+    margin: 24px;
+    pointer-events: none;
   }
-  .vm-tile__title {
+  #visual-mosaic-{{ section.id }} .vm-tile[data-content-position="bottom-center"] .vm-tile__content,
+  #visual-mosaic-{{ section.id }} .vm-tile[data-content-position="center"] .vm-tile__content {
+    align-items: center;
+    text-align: center;
+  }
+  #visual-mosaic-{{ section.id }} .vm-tile__title {
     font-size: 28px;
     font-weight: 400;
     line-height: 1.15;
     margin: 0 0 14px;
     letter-spacing: -0.028em;
   }
-  .vm-tile__cta {
+  #visual-mosaic-{{ section.id }} .vm-tile__cta {
     display: inline-block;
     padding: 11px 18px;
     border: 1px solid #fff;
@@ -121,38 +269,182 @@
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    background: rgba(28,25,22,0.35);
+    background: rgba(28, 25, 22, 0.35);
   }
-  .vm-tile--sm .vm-tile__content { left: 18px; bottom: 18px; max-width: none; }
-  .vm-tile--sm .vm-tile__title { font-size: 20px; font-weight: 400; margin: 0; }
+  #visual-mosaic-{{ section.id }} .vm-tile--sm .vm-tile__content {
+    margin: 18px;
+    max-width: none;
+  }
+  #visual-mosaic-{{ section.id }} .vm-tile--sm .vm-tile__title {
+    font-size: 20px;
+    font-weight: 400;
+    margin: 0;
+  }
   @media (max-width: 900px) {
-    .visual-mosaic__grid {
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: none;
+    #visual-mosaic-{{ section.id }} .visual-mosaic__grid {
+      grid-template-columns: var(--vm-mob-cols-css);
+      grid-auto-rows: var(--vm-mob-h);
     }
-    .vm-tile--hero {
+    #visual-mosaic-{{ section.id }} .vm-tile--hero {
       grid-column: 1 / -1;
-      grid-row: auto;
+      grid-row: span 1;
       min-height: 280px;
     }
-    .vm-tile--sm { min-height: 180px; }
+    #visual-mosaic-{{ section.id }} .vm-tile {
+      grid-column: span 1;
+    }
   }
   @media (max-width: 560px) {
-    .visual-mosaic { padding: 12px 12px 4px; }
-    .visual-mosaic__grid { grid-template-columns: 1fr 1fr; gap: 8px; }
-    .vm-tile__title { font-size: 22px; margin-bottom: 10px; }
-    .vm-tile--sm .vm-tile__title { font-size: 16px; }
+    #visual-mosaic-{{ section.id }}.visual-mosaic {
+      padding: 12px 12px 4px;
+    }
+    #visual-mosaic-{{ section.id }} .visual-mosaic__grid {
+      gap: 8px;
+    }
+    #visual-mosaic-{{ section.id }} .vm-tile__title {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+    #visual-mosaic-{{ section.id }} .vm-tile--sm .vm-tile__title {
+      font-size: 16px;
+    }
   }
 </style>
 
 {% schema %}
 {
   "name": "Visual mosaic",
+  "tag": "section",
+  "class": "section-visual-mosaic",
+  "max_blocks": 16,
   "settings": [
     { "type": "header", "content": "Shared — Content" },
-    { "type": "url", "id": "default_link", "label": "Default tile link" },
-    { "type": "header", "content": "Section — Visual mosaic" },
-    { "type": "text", "id": "aria_label", "label": "Aria label", "default": "Studio proof" }
+    {
+      "type": "select",
+      "id": "default_link_target",
+      "label": "Default tile link",
+      "options": [
+        { "value": "custom", "label": "Custom URL…" },
+        { "value": "#variants", "label": "#variants — Shop styles" },
+        { "value": "#knock-socks", "label": "#knock-socks — Statement" },
+        { "value": "#reviews", "label": "#reviews" },
+        { "value": "#guarantee", "label": "#guarantee" },
+        { "value": "#never-loses-grip", "label": "#never-loses-grip" },
+        { "value": "#one-pair", "label": "#one-pair" },
+        { "value": "#coperni", "label": "#coperni" },
+        { "value": "#problem", "label": "#problem" }
+      ],
+      "default": "#variants",
+      "info": "Used when a tile’s link is set to Default. Homepage anchors jump on the same page."
+    },
+    {
+      "type": "text",
+      "id": "default_link_url",
+      "label": "Custom default URL",
+      "info": "Used when Default tile link = Custom URL…. Full URL, relative path, or #hash."
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Aria label",
+      "default": "Studio proof",
+      "info": "Screen-reader name only — not visible on the page."
+    },
+
+    { "type": "header", "content": "Shared — Layout" },
+    {
+      "type": "paragraph",
+      "content": "Add Tile blocks to add squares. Rows fill automatically (tiles ÷ columns). Raise Columns or Tile height to reshape without code."
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns per row (desktop)",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3,
+      "info": "Home WORKING uses 3 (large tile + 2 small columns)."
+    },
+    {
+      "type": "range",
+      "id": "tile_height",
+      "label": "Tile / row height (desktop)",
+      "min": 160,
+      "max": 420,
+      "step": 4,
+      "unit": "px",
+      "default": 268,
+      "info": "Home WORKING default is 268px. Large tiles span 2 rows."
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "label": "Gap between tiles",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "corner_radius",
+      "label": "Tile corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "label": "Section padding",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "media_fit",
+      "label": "Media fit",
+      "options": [
+        { "value": "cover", "label": "Cover" },
+        { "value": "contain", "label": "Contain" }
+      ],
+      "default": "cover"
+    },
+
+    { "type": "header", "content": "Section — Mosaic / tiles" },
+    {
+      "type": "checkbox",
+      "id": "hero_column_wide",
+      "label": "Widen first column (WORKING look)",
+      "default": true,
+      "info": "Uses 1.4fr for column 1 when a Large tile is present — matches Home WORKING."
+    },
+    {
+      "type": "range",
+      "id": "mobile_columns",
+      "label": "Columns per row (mobile)",
+      "min": 1,
+      "max": 2,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "mobile_tile_height",
+      "label": "Tile height (mobile)",
+      "min": 120,
+      "max": 320,
+      "step": 4,
+      "unit": "px",
+      "default": 180
+    }
   ],
   "blocks": [
     {
@@ -161,24 +453,136 @@
       "settings": [
         { "type": "header", "content": "Shared — Content" },
         { "type": "text", "id": "title", "label": "Heading" },
-        { "type": "text", "id": "cta_text", "label": "CTA label (large tiles)" },
-        { "type": "url", "id": "link", "label": "CTA link" },
+        {
+          "type": "text",
+          "id": "cta_text",
+          "label": "CTA label",
+          "info": "Optional. Best on Large tiles (Home WORKING: Shop Now)."
+        },
+        {
+          "type": "select",
+          "id": "link_target",
+          "label": "Tile link",
+          "options": [
+            { "value": "default", "label": "Use section default" },
+            { "value": "custom", "label": "Custom URL…" },
+            { "value": "#variants", "label": "#variants — Shop styles" },
+            { "value": "#knock-socks", "label": "#knock-socks — Statement" },
+            { "value": "#reviews", "label": "#reviews" },
+            { "value": "#guarantee", "label": "#guarantee" },
+            { "value": "#never-loses-grip", "label": "#never-loses-grip" },
+            { "value": "#one-pair", "label": "#one-pair" },
+            { "value": "#coperni", "label": "#coperni" },
+            { "value": "#problem", "label": "#problem" }
+          ],
+          "default": "default"
+        },
+        {
+          "type": "text",
+          "id": "link_url",
+          "label": "Custom tile URL",
+          "info": "Used when Tile link = Custom URL…."
+        },
+
         { "type": "header", "content": "Shared — Media" },
-        { "type": "image_picker", "id": "image", "label": "Image" },
-        { "type": "text", "id": "image_url", "label": "Image URL fallback", "info": "Used when no image picker asset is set" },
-        { "type": "text", "id": "video_url", "label": "Video URL (mp4)" },
-        { "type": "text", "id": "poster_url", "label": "Video poster URL" },
-        { "type": "text", "id": "alt", "label": "Alt text", "default": "Barreletics in studio" },
-        { "type": "header", "content": "Section — Tile layout" },
+        {
+          "type": "paragraph",
+          "content": "Pick ONE media path per tile. Priority: Shopify video → Video URL → Shopify image → Image URL fallback. Leave unused fields blank."
+        },
+        {
+          "type": "video",
+          "id": "video",
+          "label": "Shopify video",
+          "info": "Preferred when the file lives in Shopify Files. Use this OR Video URL — not both. Shopify video wins if both are set."
+        },
+        {
+          "type": "text",
+          "id": "video_url",
+          "label": "Video URL (mp4)",
+          "info": "External/CDN mp4 when you are not using Shopify Video above. Ignored if Shopify video is set. Leave blank if using Shopify video or a still image."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image / poster (Shopify)",
+          "info": "Still image for image mode, OR poster frame when using Video URL. Prefer this over URL fields when the asset is in Shopify."
+        },
+        {
+          "type": "text",
+          "id": "poster_url",
+          "label": "Poster URL fallback",
+          "info": "Poster for Video URL only when Image / poster (Shopify) is empty. Not used for still-image mode."
+        },
+        {
+          "type": "text",
+          "id": "image_url",
+          "label": "Image URL (optional fallback)",
+          "info": "Only used when the Shopify image picker is empty and there is no video. Leave blank if you always use the image picker."
+        },
+        {
+          "type": "text",
+          "id": "alt",
+          "label": "Alt text",
+          "default": "Barreletics in studio"
+        },
+
+        { "type": "header", "content": "Section — Tile" },
         {
           "type": "select",
           "id": "size",
           "label": "Size",
           "options": [
             { "value": "hero", "label": "Large (spans 2 rows)" },
-            { "value": "sm", "label": "Small" }
+            { "value": "sm", "label": "Square (1 cell)" }
           ],
-          "default": "sm"
+          "default": "sm",
+          "info": "Large = featured box from the original multi-box section. Use one Large + four Squares for the Home WORKING mosaic."
+        },
+        {
+          "type": "range",
+          "id": "column_span",
+          "label": "Column span",
+          "min": 1,
+          "max": 2,
+          "step": 1,
+          "default": 1,
+          "info": "Desktop only. Span 2 columns for a wider square (like original featured width)."
+        },
+        {
+          "type": "select",
+          "id": "text_color",
+          "label": "Text color",
+          "options": [
+            { "value": "white", "label": "White" },
+            { "value": "black", "label": "Black" }
+          ],
+          "default": "white"
+        },
+        {
+          "type": "select",
+          "id": "content_position",
+          "label": "Text position",
+          "options": [
+            { "value": "bottom-left", "label": "Bottom left (WORKING)" },
+            { "value": "bottom-center", "label": "Bottom center" },
+            { "value": "center", "label": "Center" },
+            { "value": "top-left", "label": "Top left" }
+          ],
+          "default": "bottom-left"
+        },
+        {
+          "type": "select",
+          "id": "media_position",
+          "label": "Media focal point",
+          "options": [
+            { "value": "center center", "label": "Center" },
+            { "value": "center left", "label": "Left" },
+            { "value": "center right", "label": "Right" },
+            { "value": "top center", "label": "Top" },
+            { "value": "bottom center", "label": "Bottom" },
+            { "value": "50% 30%", "label": "Center (well above)" }
+          ],
+          "default": "center center"
         }
       ]
     }
