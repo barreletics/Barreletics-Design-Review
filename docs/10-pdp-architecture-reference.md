@@ -2,21 +2,31 @@
 
 ## Template Composition
 
-Defined in `templates/product.json`. Section order:
+**Authority mock:** `docs/Barreletics PDP - Definitive-v16.html`  
+**Frozen:** `planning/m4-section-freeze.md` — PDP template + buy-box  
+
+Defined in `templates/product.json`. Section order (v16 spine):
 
 ```
-pdp-buy-box          ← Gallery + purchase module + product schema
-value-strip          ← Trust/value proposition bar
-pdp-features         ← "Built around one obsession: Grip." + discipline icons
-fifty-fifty (video)  ← "Yoga Socks Are Useless." + video embed
-variant-grid         ← Cross-sell: "Shop all colors & styles." (8 products)
-fifty-fifty (lifestyle) ← Customer quote on cream bg, reversed layout
-pdp-sock-math        ← Cost comparison: $74 vs $144/yr
-pdp-reviews          ← Judge.me reviews (featured + community)
-geo-section          ← "Trusted by studios near you" Q&A accordion
-newsletter           ← "10% off your first pair." email signup
-pdp-sticky-atc       ← Fixed bottom bar (appears when buy box scrolls away)
+pdp-buy-box            ← Gallery + purchase module + product schema (TOP of PDP)
+value-strip            ← Trust strip
+pdp-features           ← "Built around one obsession: Grip." + disciplines
+fifty-fifty (video)    ← "The sock era is over." + video
+variant-grid           ← All colors/styles; PDP may use use_current_product=true
+                         (tabs off → that product’s color cards). Card messaging A (meta).
+fifty-fifty (lifestyle)← Quote / cream reverse
+fullbleed-statement    ← "Built for the mat. Proven in every class."
+pdp-sock-math          ← Cost comparison: $74 vs socks/yr
+fifty-fifty (commit)   ← "You commit to the class. Commit to the gear."
+pdp-reviews            ← Quote-led reviews
+guarantee-band         ← 30-day / 90-day / Built to Last
+home-ugc               ← "The Yoga Sock Era Is Over" (@barreletics)
+geo-section            ← Studio GEO accordion (mock merges FAQ+GEO)
+newsletter             ← "10% off your first pair."
+pdp-sticky-atc         ← Fixed bottom bar when buy box scrolls away
 ```
+
+**Not the buy box:** Theme Editor “Use current product” on `variant-grid` only affects the lower All Variants grid.
 
 ---
 

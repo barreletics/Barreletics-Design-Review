@@ -1,35 +1,40 @@
 # PDP Working Entry — Barreletics
 
-**Latest mock:** `Barreletics PDP - Definitive-v15.html`  
-**Priors (do not overwrite):** v14 · v13 · v12 · v11 · v10 · v9  
-**Updated:** 2026-07-23  
+**Latest mock / FROZEN authority:** `Barreletics PDP - Definitive-v16.html`  
+**Status:** **LOCKED / APPROVED / FROZEN** 2026-07-31  
+**Registry:** `planning/m4-section-freeze.md`  
+**Template:** `shopify-build/templates/product.json`  
+**Priors (do not overwrite):** v15 · v14 · v13 · v12 · v11 · v10 · v9  
 
-**v15:** Instagram continuous dual-run marquee (`.ig-marquee` / duplicated tracks) · IG title **The Yoga Sock Era Is Over** · keeps v14 reviews carousel + S/kits.
+**v16:** BZ-020 / Type OS calm · spine from v15 (IG + Yoga Sock Era) · reviews carousel · S/kits readiness in mock.
 
-**v14:** Quote-led reviews arrow carousel (SEO v11 pattern).
-
-**v12:** Quote-led reviews (Real people. Real results.) — no aggregate count · FAQ sock/discipline keywords · keeps Home disciplines + S + kits from v11/v10.
+**Clarify:** Theme Editor **Use current product** on `variant-grid` is the lower All Variants section — **not** the top `pdp-buy-box`.
 
 ---
 
-## v10 delta (vs v9)
+## Locked stack (product.json)
 
-| Change | Approach |
-|--------|----------|
-| **Size S readiness** | Buy box + variants toolbar show **S / M / L**. S is disabled + “Coming soon” (dashed / struck filter chip). Not sellable until SKUs ship. |
-| **Size chart / FAQ** | Dialog includes S placeholder row (~W 4–5 / M 5–6). FAQ size answer notes S is upcoming. |
-| **Hot kits** | Quiet “Complete the kit” under buy-box trust: Hot Pilates Kit · Hot Yoga Kit. |
-
-**Kit URLs (planned — verify when live):**  
-`https://barreletics.com/products/hot-pilates-kit` · `https://barreletics.com/products/hot-yoga-kit`  
-Shopify (2026-07-23): no Hot kit products yet. Home `#hot-kits` remains `data-enabled=false`.
-
-**Home / Collection size filters:** still M/L only on WORKING / Collection v6 — apply same disabled-S pattern on next versioned pass.
+1. `pdp-buy-box`  
+2. `value-strip`  
+3. `pdp-features`  
+4. `fifty-fifty` — The sock era is over.  
+5. `variant-grid` — use_current_product · card messaging **A (meta)**  
+6. `fifty-fifty` — lifestyle quote  
+7. `fullbleed-statement` — Built for the mat…  
+8. `pdp-sock-math`  
+9. `fifty-fifty` — Commit to the gear  
+10. `pdp-reviews`  
+11. `guarantee-band`  
+12. `home-ugc` — The Yoga Sock Era Is Over  
+13. `geo-section`  
+14. `newsletter`  
+15. `pdp-sticky-atc`  
 
 ---
 
 ## Preview
 
-`Barreletics PDP - Definitive-v15.html` (pages + `docs/`) · hub: `PREVIEW-HUB.html`
+`docs/Barreletics PDP - Definitive-v16.html` · hub: `PREVIEW-HUB.html`  
+Draft QA: theme `187144929571` — never live.
 
-**Next mock:** v16+ only — never overwrite v14/v15.
+**Next mock:** v17+ only — never overwrite v16 after freeze without Andrew letter.

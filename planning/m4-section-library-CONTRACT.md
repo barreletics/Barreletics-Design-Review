@@ -289,10 +289,11 @@ Once Andrew marks a section **APPROVED / SETTLED / FROZEN**, agents must not sil
 | Locked | Status | Notes |
 |--------|--------|-------|
 | **Footer A+** | **LOCKED / APPROVED / FROZEN** 2026-07-31 | Sitewide default footer. Charcoal/black simplified Join the list · columns → Made in USA (+ Connect). **NO brand blurb. NO checkmark checklist. NO 10%.** Lineage `19b8fe6`. |
+| **PDP Definitive-v16** | **LOCKED / APPROVED / FROZEN** 2026-07-31 | `templates/product.json` + `pdp-buy-box`. Authority: `docs/Barreletics PDP - Definitive-v16.html`. Top = buy-box; `variant-grid` use_current_product ≠ buy box. Card messaging A (meta). |
 | **Type OS** | **SETTLED** | `planning/m4-type-hierarchy.md` |
 | **Home WORKING** | Layout authority | Not a free redesign surface |
 
-**Forbidden without explicit Andrew approval in the CURRENT message:** git checkout of frozen section files from old commits; Impulse/live/dark Phase 1 swaps; gallery “picks” as deployable replacements; inventing alternate footers/heroes.
+**Forbidden without explicit Andrew approval in the CURRENT message:** git checkout of frozen section files from old commits; Impulse/live/dark Phase 1 swaps; gallery “picks” as deployable replacements; inventing alternate footers/heroes/PDP spines.
 
 **Allowed:** bugfixes and TE clarity that preserve locked composition; deploy only when Andrew names a disposable theme ID.
 
