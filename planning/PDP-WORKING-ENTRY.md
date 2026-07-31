@@ -1,51 +1,54 @@
 # PDP Working Entry — Barreletics
 
-**Status:** **CONTESTED / NOT FROZEN** 2026-07-31  
-**Action:** Rewired draft toward **APPROVED July 17** story + current `shopify-build` sections. Visual QA required — do not freeze until Andrew reviews.
+**Status:** Restored to **INDEX-LOCKED** authority — not frozen until Andrew visual-OKs the draft.  
+**Action:** Agents wrongly chased July 17 / mixed stacks. **`docs/index.html` tags PDP as `v16 · Locked`.** Draft rewired to that mock spine with **current** sections.
 
-**Gallery:** `docs/pdp-version-gallery.html`  
-**Authority mock:** `docs/Barreletics PDP - APPROVED July 17.html`  
-**Juicer pick (open):** `docs/juicer-section-options.html` (A–C)  
-**Priors:** `planning/05-pdp-architecture.md` · `specs/frozen/pdp.md` (DP-02)
+**Authority mock (INDEX):** `docs/Barreletics PDP - Definitive-v16.html`  
+**Shopify:** `shopify-build/templates/product.json` → theme `187144929571`  
+**Priors:** `specs/frozen/pdp.md` (architecture notes) · do not treat July 17 HTML as INDEX lock
 
-**Draft theme:** `187144929571` (M4 Visual QA)
+**Do not:** invent a third spine · restore 10% · use circle disciplines · swap frozen Footer A+ without letter
 
-**Do not:** freeze PDP · invent a third footer · restore 10% · re-freeze v16 circles disciplines
-
-**Clarify:** Theme Editor **Use current product** on `variant-grid` = lower All Variants — **not** top `pdp-buy-box`. Card messaging **A (meta / grey chip)**.
+**Clarify:** Variant grid on PDP v16 mock uses **Closed / Open / One-Offs / Outdoor tabs** (same as Home) — `use_current_product` **OFF**. Card messaging **A (meta / grey chip)**.
 
 ---
 
-## Draft stack now (July 17 intent · current sections)
+## Draft stack now (Definitive-v16 · current sections)
 
-1. `pdp-buy-box` — tighten only; micro-quotes kept  
+1. `pdp-buy-box`  
 2. `value-strip`  
-3. `pdp-features` — Built around one obsession: Grip. (**disciplines circles OFF**)  
-4. `disciplines` — Home WORKING cream typographic band (not circles)  
-5. `fifty-fifty` — **Yoga Socks Are Useless.** + Shop now  
-6. `variant-grid` — `use_current_product` + card messaging **A / meta**  
-7. `fifty-fifty` — lifestyle quote  
-8. `fullbleed-statement` — **One pair. No more socks.** (not v16 “Built for the mat…”)  
+3. `pdp-features` — Built around one obsession: Grip. (circles OFF)  
+4. `disciplines` — cream type band (Upgrade your grip…)  
+5. `fifty-fifty` — **The sock era is over.** + Shop now  
+6. `variant-grid` — tabs + products + card **A**  
+7. `fifty-fifty` — lifestyle quote (Sarah M.)  
+8. `fullbleed-statement` — **Built for the mat. Proven in every class.**  
 9. `pdp-sock-math` — **One pair. Done.**  
 10. `fifty-fifty` — Commit to the gear  
-11. `problem-section` — simplified **Think outside the sock.** + Shop now  
-12. `pdp-reviews`  
+11. `pdp-reviews`  
+12. `fifty-fifty` — By the numbers  
 13. `guarantee-band`  
-14. `home-ugc` — interim @barreletics (Juicer not frozen — pick A–C)  
-15. `geo-section`  
-16. `newsletter` — **no 10%**  
+14. `home-ugc` — **The Yoga Sock Era Is Over** / @barreletics (Juicer still open)  
+15. `collection-faq` — Everything you need to know  
+16. `newsletter` — Join the list (**no 10%**)  
 17. `pdp-sticky-atc`  
 
-**Footer:** Frozen Footer A+ (sitewide) — black Join the list · no blurb · no checklist · no 10%.  
-**OPEN later:** footer black vs white / newsletter band color; light checklist footer screenshot noted but **not** swapped without letter.
+Footer: frozen **A+** (sitewide)
 
 ---
 
-## Open decisions (Andrew)
+## Open
 
 | Item | Status |
 |------|--------|
-| Full PDP freeze | **OPEN** — review draft first |
-| Juicer / IG treatment | **OPEN** — `docs/juicer-section-options.html` A–C |
-| Footer / newsletter black vs white | **OPEN** — after page order; keep A+ for now |
-| Light checklist footer (“makes more sense”) | **OPEN** — do not swap frozen A+ without letter |
+| Full PDP freeze | After Andrew reviews draft vs v16 mock |
+| Juicer vs curated IG | Open |
+| Footer / newsletter black vs white | Open — after page OK |
+
+---
+
+## Links
+
+- Mock: htmlpreview of `Barreletics PDP - Definitive-v16.html`  
+- Draft: `https://barreletics.myshopify.com/products/studio-performance-skin-footwear?preview_theme_id=187144929571`  
+- Index: `docs/index.html` → Shop → PDP v16 · Locked  

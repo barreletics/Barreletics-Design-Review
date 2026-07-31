@@ -25,7 +25,7 @@
 | ID | Surface | Status | Fingerprint (lineage) | Locked composition | Files |
 |----|---------|--------|------------------------|--------------------|-------|
 | **Footer A+** | Sitewide footer (all pages unless page-specific exception) | **LOCKED / APPROVED / FROZEN** 2026-07-31 (Andrew: “footer is correct lock it in”) | `6fcba348bfdcc82abfcf7cd1fcfb93e3da4cffbe` (lock commit; composition lineage 19b8fe6 — no blurb · no checklist · no 10%) | Charcoal/black simplified **Join the list** (little text) · link columns → Made in USA (+ Connect) · **NO brand blurb** · **NO checkmark checklist** · **NO 10%** | `shopify-build/sections/footer.liquid`, `footer-group.json`, `assets/chrome.css` |
-| **PDP** | Product template + buy-box | **CONTESTED / NOT FROZEN** 2026-07-31 — draft rewired toward July 17 + current sections; visual QA pending. Do not freeze. | Draft on `187144929571` — see `planning/PDP-WORKING-ENTRY.md` | Gallery A–H + Juicer A–C (`docs/juicer-section-options.html`). Prefer **A APPROVED July 17**. No freeze without letter. | `templates/product.json`, `sections/pdp-buy-box.liquid`, PDP companions |
+| **PDP** | Product template + buy-box | **INDEX LOCK = Definitive-v16** — not frozen for visual QA. Agents must not swap to July 17 without Andrew letter. | Draft on `187144929571` — see `planning/PDP-WORKING-ENTRY.md` | Authority: `docs/Barreletics PDP - Definitive-v16.html` (`docs/index.html` tag **v16 · Locked**). Juicer still open. | `templates/product.json`, `sections/pdp-buy-box.liquid`, PDP companions |
 | **Type OS** | Typography system | **SETTLED** | See `planning/m4-type-hierarchy.md` | Family/size/weight/tracking; no per-section `font_picker` | Type tokens + TE policy |
 | **Home WORKING** | Homepage layout authority | **WORKING** (layout authority — not a free redesign surface) | Home WORKING mocks / draft match commits | Agents must not invent alternate homepage composition; match WORKING unless Andrew approves change in-message | `templates/index.json` + home sections |
 
@@ -55,15 +55,15 @@ Update the **Fingerprint** column with the freeze commit SHA after each freeze s
 
 ---
 
-## PDP — CONTESTED (do not freeze)
+## PDP — INDEX LOCK = Definitive-v16 (visual QA open)
 
-- **Andrew letter (2026-07-31):** “btw this PDP page is totally wrong. Stop changing items and lock in the correct one please” — agents wrongly treated Definitive-v16 as “the correct one.” He rejected it.
-- **Gallery (pick a letter):** `docs/pdp-version-gallery.html`
-- **Most likely authority (not frozen):** `Barreletics PDP - APPROVED July 17.html` — see `planning/05-pdp-architecture.md` + `specs/frozen/pdp.md` DP-02.
-- **On draft now:** Definitive-v16 stack (theme `187144929571`) — candidate for replacement after letter, not frozen.
-- **Clarify:** TE **Use current product** on `variant-grid` = lower All Variants only — not the buy box.
+- **Source of truth from INDEX:** `docs/index.html` → Shop → **PDP · v16 · Locked** → `docs/Barreletics PDP - Definitive-v16.html`
+- **2026-07-31 thrash:** Agents swapped to July 17 / mixed stacks; Andrew said completely wrong. Restore = **v16 mock spine + current section implementations**.
+- **On draft now:** v16-ordered `product.json` on theme `187144929571` — see `planning/PDP-WORKING-ENTRY.md`
+- **Clarify:** v16 mock uses **variant tabs** (Closed/Open/One-Offs/Outdoor) — `use_current_product` OFF on PDP for that match.
+- **Do not freeze** until Andrew visual-OKs draft vs v16 mock.
 - **Do not touch** frozen Footer A+ while working PDP.
-- **No freeze / no silent pick** until Andrew replies with a gallery letter.
+- July 17 HTML = prior/architecture note only — **not** the INDEX locked page.
 
 ---
 
