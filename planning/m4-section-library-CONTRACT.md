@@ -288,7 +288,7 @@ Once Andrew marks a section **APPROVED / SETTLED / FROZEN**, agents must not sil
 
 | Locked | Status | Notes |
 |--------|--------|-------|
-| **Footer A+** | **APPROVED / SETTLED** | Sitewide default footer. Charcoal simplified Join the list · values · columns · Made in USA · Connect. **No brand blurb. No 10%.** |
+| **Footer A+** | **APPROVED / SETTLED** | Sitewide default footer. Charcoal simplified Join the list · columns · Made in USA · Connect. **No brand blurb. No value checklist (removed Jul 31). No 10%.** |
 | **Type OS** | **SETTLED** | `planning/m4-type-hierarchy.md` |
 | **Home WORKING** | Layout authority | Not a free redesign surface |
 
