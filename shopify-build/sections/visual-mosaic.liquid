@@ -10,7 +10,7 @@
   assign vm_radius = section.settings.corner_radius | default: 4
   assign vm_pad = section.settings.section_padding | default: 16
   assign vm_fit = section.settings.media_fit | default: 'cover'
-  assign vm_mob_cols = section.settings.mobile_columns | default: 2
+  assign vm_mob_cols = section.settings.mobile_columns | default: '2' | plus: 0
   assign vm_mob_h = section.settings.mobile_tile_height | default: 180
   assign vm_hero_wide = section.settings.hero_column_wide
   assign has_hero = false
@@ -84,7 +84,7 @@
         assign text_color = block.settings.text_color | default: 'white'
         assign content_pos = block.settings.content_position | default: 'bottom-left'
         assign media_pos = block.settings.media_position | default: 'center center'
-        assign col_span = block.settings.column_span | default: 1
+        assign col_span = block.settings.column_span | default: '1' | plus: 0
       %}
       <a
         class="{{ tile_class }}"
@@ -427,13 +427,14 @@
       "info": "Uses 1.4fr for column 1 when a Large tile is present — matches Home WORKING."
     },
     {
-      "type": "range",
+      "type": "select",
       "id": "mobile_columns",
       "label": "Columns per row (mobile)",
-      "min": 1,
-      "max": 2,
-      "step": 1,
-      "default": 2
+      "options": [
+        { "value": "1", "label": "1 column (stack)" },
+        { "value": "2", "label": "2 columns" }
+      ],
+      "default": "2"
     },
     {
       "type": "range",
@@ -539,13 +540,14 @@
           "info": "Large = featured box from the original multi-box section. Use one Large + four Squares for the Home WORKING mosaic."
         },
         {
-          "type": "range",
+          "type": "select",
           "id": "column_span",
           "label": "Column span",
-          "min": 1,
-          "max": 2,
-          "step": 1,
-          "default": 1,
+          "options": [
+            { "value": "1", "label": "1 column" },
+            { "value": "2", "label": "2 columns" }
+          ],
+          "default": "1",
           "info": "Desktop only. Span 2 columns for a wider square (like original featured width)."
         },
         {
