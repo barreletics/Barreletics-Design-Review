@@ -322,18 +322,86 @@
   .announcement-strip { padding: 10px 16px; }
 }
 
-/* Footer — Home WORKING (light). Source: Definitive-WORKING.html */
+/* Footer — A+ (dark newsletter + light body). Base: WORKING light + G/H blurb */
 .site-footer {
   background: #fff;
-  border-top: 1px solid #d6cfc0;
-  padding: 64px 40px 40px;
+  border-top: none;
+  padding: 0;
   color: #1c1916;
+}
+.site-footer__body {
+  padding: 64px 40px 40px;
+  border-top: 1px solid #d6cfc0;
 }
 .site-footer__inner {
   max-width: 1200px;
   margin: 0 auto;
 }
-.footer-newsletter {
+
+/* Dark newsletter band (charcoal — design-system dark, not #000) */
+.footer-newsletter-band {
+  background: #1c1916;
+  color: #fff;
+  padding: 48px 40px;
+}
+.footer-newsletter-band__inner {
+  max-width: 640px;
+  margin: 0 auto;
+}
+.footer-newsletter-band .fn-signup h2 {
+  font-size: clamp(22px, 2.5vw, 28px);
+  font-weight: 400;
+  color: #fff;
+  margin: 0 0 12px;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+.footer-newsletter-band .fn-signup p {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.72);
+  margin: 0 0 20px;
+  line-height: 1.5;
+}
+.footer-newsletter-band .fn-form {
+  display: flex;
+  gap: 8px;
+}
+.footer-newsletter-band .fn-input {
+  flex: 1;
+  padding: 14px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: #fff;
+  font-size: 14px;
+  color: #1c1916;
+  border-radius: 4px;
+  font-family: inherit;
+}
+.footer-newsletter-band .fn-input::placeholder { color: #9a9182; }
+.footer-newsletter-band .fn-btn {
+  padding: 14px 24px;
+  background: #fff;
+  color: #1c1916;
+  border: none;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  transition: background 0.2s, color 0.2s;
+}
+.footer-newsletter-band .fn-btn:hover {
+  background: #c45c3f;
+  color: #fff;
+}
+.footer-newsletter-band .fn-legal {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 10px 0 0;
+}
+
+/* Brand + value checklist (light body) */
+.footer-brand-row {
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
   gap: 64px;
@@ -342,59 +410,25 @@
   border-bottom: 1px solid #d6cfc0;
   margin-bottom: 48px;
 }
-.fn-signup h2 {
-  font-size: clamp(22px, 2.5vw, 28px);
-  font-weight: 400;
-  color: #1c1916;
-  margin: 0 0 12px;
+.footer-brand__name {
+  font-size: 18px;
+  font-weight: 700;
   letter-spacing: -0.02em;
-  line-height: 1.15;
+  color: #1c1916;
+  margin: 0 0 14px;
 }
-.fn-signup p {
+.footer-brand__blurb {
   font-size: 15px;
   color: #4a4a4a;
-  margin: 0 0 20px;
-  line-height: 1.5;
-}
-.fn-form {
-  display: flex;
-  gap: 8px;
-}
-.fn-input {
-  flex: 1;
-  padding: 14px 16px;
-  border: 1px solid #d6cfc0;
-  background: #fff;
-  font-size: 14px;
-  color: #1c1916;
-  border-radius: 4px;
-  font-family: inherit;
-}
-.fn-input::placeholder { color: #9a9182; }
-.fn-btn {
-  padding: 14px 24px;
-  background: #1c1916;
-  color: #fff;
-  border: none;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  border-radius: 4px;
-  transition: background 0.2s;
-}
-.fn-btn:hover { background: #c45c3f; }
-.fn-legal {
-  font-size: 11px;
-  color: #8a8a8a;
-  margin: 10px 0 0;
+  margin: 0;
+  line-height: 1.55;
+  max-width: 36ch;
 }
 .fn-value {
   display: flex;
   flex-direction: column;
   gap: 14px;
-  padding-top: 8px;
+  padding-top: 4px;
 }
 .fn-value__item {
   display: flex;
@@ -454,10 +488,19 @@
 }
 @media (max-width: 1024px) {
   .site-footer__grid { grid-template-columns: repeat(2, 1fr); }
-  .footer-newsletter { grid-template-columns: 1fr; gap: 32px; }
+  .footer-brand-row { grid-template-columns: 1fr; gap: 32px; }
 }
 @media (max-width: 768px) {
-  .site-footer { padding: 40px 16px 28px; }
+  .footer-newsletter-band { padding: 40px 16px; }
+  .site-footer__body { padding: 40px 16px 28px; }
+  .footer-newsletter-band .fn-form {
+    flex-direction: column;
+  }
+  .footer-newsletter-band .fn-input,
+  .footer-newsletter-band .fn-btn {
+    width: 100%;
+    min-height: 48px;
+  }
   .site-footer__grid { grid-template-columns: 1fr; gap: 28px; }
   .site-footer__bottom {
     flex-direction: column;
