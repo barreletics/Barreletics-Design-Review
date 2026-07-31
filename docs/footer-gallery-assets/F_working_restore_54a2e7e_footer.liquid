@@ -1,0 +1,372 @@
+{% comment %}
+  Site footer — Home WORKING authority
+  Source: docs/Barreletics Home - Definitive-WORKING.html
+  Structure: newsletter band (signup + value list) → 4 link columns → copyright / Made in USA
+  Menus: Theme Editor link_list pickers only (no invented Navigation handles).
+{% endcomment %}
+
+{% assign menu_primary = section.settings.menu %}
+{% assign menu_shop = section.settings.menu_shop %}
+{% assign menu_learn = section.settings.menu_learn %}
+{% assign menu_support = section.settings.menu_support %}
+{% assign menu_connect = section.settings.menu_connect %}
+{% assign use_column_pickers = false %}
+{% if menu_shop != blank or menu_learn != blank or menu_support != blank or menu_connect != blank %}
+  {% assign use_column_pickers = true %}
+{% endif %}
+
+<footer class="site-footer" role="contentinfo" {{ section.shopify_attributes }}>
+  <div class="site-footer__inner">
+
+    {% if section.settings.show_newsletter %}
+      <div class="footer-newsletter">
+        <div class="fn-signup">
+          {% if section.settings.newsletter_heading != blank %}
+            <h2>{{ section.settings.newsletter_heading }}</h2>
+          {% endif %}
+          {% if section.settings.newsletter_text != blank %}
+            <p>{{ section.settings.newsletter_text }}</p>
+          {% endif %}
+          {% form 'customer', id: 'footer-newsletter' %}
+            <div class="fn-form">
+              <input
+                class="fn-input"
+                type="email"
+                name="contact[email]"
+                placeholder="Email address"
+                required
+                autocomplete="email"
+                aria-label="Email address"
+              >
+              <input type="hidden" name="contact[tags]" value="newsletter">
+              <button class="fn-btn" type="submit">{{ section.settings.newsletter_cta }}</button>
+            </div>
+            {% if section.settings.newsletter_privacy != blank %}
+              <p class="fn-legal">{{ section.settings.newsletter_privacy }}</p>
+            {% endif %}
+          {% endform %}
+        </div>
+        {% if section.blocks.size > 0 %}
+          <div class="fn-value">
+            {% for block in section.blocks %}
+              {% if block.type == 'value_item' and block.settings.text != blank %}
+                <div class="fn-value__item" {{ block.shopify_attributes }}>
+                  <span class="fn-value__check" aria-hidden="true">✓</span>
+                  <span class="fn-value__text">{{ block.settings.text }}</span>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="site-footer__grid">
+      {% if use_column_pickers %}
+        {% if menu_shop != blank %}
+          <div class="site-footer__col">
+            <h6>{{ section.settings.shop_heading }}</h6>
+            <ul>
+              {% for link in menu_shop.links %}
+                <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+        {% if menu_learn != blank %}
+          <div class="site-footer__col">
+            <h6>{{ section.settings.learn_heading }}</h6>
+            <ul>
+              {% for link in menu_learn.links %}
+                <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+        {% if menu_support != blank %}
+          <div class="site-footer__col">
+            <h6>{{ section.settings.support_heading }}</h6>
+            <ul>
+              {% for link in menu_support.links %}
+                <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+        {% if menu_connect != blank %}
+          <div class="site-footer__col">
+            <h6>{{ section.settings.connect_heading }}</h6>
+            <ul>
+              {% for link in menu_connect.links %}
+                <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% elsif section.settings.instagram_url != blank or section.settings.tiktok_url != blank or section.settings.facebook_url != blank or section.settings.pinterest_url != blank or section.settings.email_url != blank %}
+          <div class="site-footer__col">
+            <h6>{{ section.settings.connect_heading }}</h6>
+            <ul>
+              {% if section.settings.instagram_url != blank %}
+                <li><a href="{{ section.settings.instagram_url }}" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+              {% endif %}
+              {% if section.settings.tiktok_url != blank %}
+                <li><a href="{{ section.settings.tiktok_url }}" target="_blank" rel="noopener noreferrer">TikTok</a></li>
+              {% endif %}
+              {% if section.settings.facebook_url != blank %}
+                <li><a href="{{ section.settings.facebook_url }}" target="_blank" rel="noopener noreferrer">Facebook</a></li>
+              {% endif %}
+              {% if section.settings.pinterest_url != blank %}
+                <li><a href="{{ section.settings.pinterest_url }}" target="_blank" rel="noopener noreferrer">Pinterest</a></li>
+              {% endif %}
+              {% if section.settings.email_url != blank %}
+                <li><a href="{{ section.settings.email_url }}">Email Us</a></li>
+              {% endif %}
+            </ul>
+          </div>
+        {% endif %}
+
+      {% elsif menu_primary != blank %}
+        {% assign nested_columns = false %}
+        {% for link in menu_primary.links %}
+          {% if link.links != blank %}
+            {% assign nested_columns = true %}
+          {% endif %}
+        {% endfor %}
+
+        {% if nested_columns %}
+          {% for link in menu_primary.links %}
+            <div class="site-footer__col">
+              {% if link.links != blank %}
+                <h6>{{ link.title }}</h6>
+                <ul>
+                  {% for child in link.links %}
+                    <li><a href="{{ child.url }}">{{ child.title }}</a></li>
+                  {% endfor %}
+                </ul>
+              {% else %}
+                <h6>{{ link.title }}</h6>
+                <ul>
+                  <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                </ul>
+              {% endif %}
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="site-footer__col">
+            {% if section.settings.menu_heading != blank %}
+              <h6>{{ section.settings.menu_heading }}</h6>
+            {% endif %}
+            <ul>
+              {% for link in menu_primary.links %}
+                <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% if section.settings.instagram_url != blank or section.settings.tiktok_url != blank or section.settings.facebook_url != blank or section.settings.pinterest_url != blank or section.settings.email_url != blank %}
+            <div class="site-footer__col">
+              <h6>{{ section.settings.connect_heading }}</h6>
+              <ul>
+                {% if section.settings.instagram_url != blank %}
+                  <li><a href="{{ section.settings.instagram_url }}" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+                {% endif %}
+                {% if section.settings.tiktok_url != blank %}
+                  <li><a href="{{ section.settings.tiktok_url }}" target="_blank" rel="noopener noreferrer">TikTok</a></li>
+                {% endif %}
+                {% if section.settings.facebook_url != blank %}
+                  <li><a href="{{ section.settings.facebook_url }}" target="_blank" rel="noopener noreferrer">Facebook</a></li>
+                {% endif %}
+                {% if section.settings.pinterest_url != blank %}
+                  <li><a href="{{ section.settings.pinterest_url }}" target="_blank" rel="noopener noreferrer">Pinterest</a></li>
+                {% endif %}
+                {% if section.settings.email_url != blank %}
+                  <li><a href="{{ section.settings.email_url }}">Email Us</a></li>
+                {% endif %}
+              </ul>
+            </div>
+          {% endif %}
+        {% endif %}
+      {% endif %}
+    </div>
+
+    <div class="site-footer__bottom">
+      <span class="site-footer__copyright">
+        &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. All rights reserved.
+      </span>
+      {% if section.settings.usa_line != blank %}
+        <span class="site-footer__usa">{{ section.settings.usa_line }}</span>
+      {% endif %}
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "class": "footer-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Newsletter (WORKING)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_newsletter",
+      "label": "Show newsletter band",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "newsletter_heading",
+      "label": "Newsletter heading",
+      "default": "10% off your first pair"
+    },
+    {
+      "type": "textarea",
+      "id": "newsletter_text",
+      "label": "Newsletter text",
+      "default": "New drops and studio stories. Once or twice a quarter — never spam."
+    },
+    {
+      "type": "text",
+      "id": "newsletter_cta",
+      "label": "Newsletter CTA",
+      "default": "Subscribe"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_privacy",
+      "label": "Newsletter privacy line",
+      "default": "By subscribing you agree to receive marketing emails. Unsubscribe anytime."
+    },
+    {
+      "type": "header",
+      "content": "Menus"
+    },
+    {
+      "type": "paragraph",
+      "content": "WORKING columns: Shop · Learn · Support · Connect. Assign existing store menus in Theme Editor — no new Navigation handles. If column menus are empty, the primary footer menu is used (nested items become columns)."
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Primary footer menu (fallback)",
+      "info": "Used when column menus below are blank. Nested top-level items render as columns."
+    },
+    {
+      "type": "text",
+      "id": "menu_heading",
+      "label": "Heading for flat primary menu",
+      "default": "Explore"
+    },
+    {
+      "type": "text",
+      "id": "shop_heading",
+      "label": "Shop column heading",
+      "default": "Shop"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_shop",
+      "label": "Shop menu"
+    },
+    {
+      "type": "text",
+      "id": "learn_heading",
+      "label": "Learn column heading",
+      "default": "Learn"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_learn",
+      "label": "Learn menu"
+    },
+    {
+      "type": "text",
+      "id": "support_heading",
+      "label": "Support column heading",
+      "default": "Support"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_support",
+      "label": "Support menu"
+    },
+    {
+      "type": "text",
+      "id": "connect_heading",
+      "label": "Connect column heading",
+      "default": "Connect"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_connect",
+      "label": "Connect menu",
+      "info": "If blank, social URL fields below fill the Connect column."
+    },
+    {
+      "type": "header",
+      "content": "Connect links (when Connect menu empty)"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "url",
+      "id": "tiktok_url",
+      "label": "TikTok URL"
+    },
+    {
+      "type": "url",
+      "id": "facebook_url",
+      "label": "Facebook URL"
+    },
+    {
+      "type": "url",
+      "id": "pinterest_url",
+      "label": "Pinterest URL"
+    },
+    {
+      "type": "url",
+      "id": "email_url",
+      "label": "Email Us URL"
+    },
+    {
+      "type": "header",
+      "content": "Bottom"
+    },
+    {
+      "type": "text",
+      "id": "usa_line",
+      "label": "Right bottom line",
+      "default": "Made in USA"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "value_item",
+      "name": "Value line",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "10% off your first order"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer",
+      "blocks": [
+        { "type": "value_item", "settings": { "text": "10% off your first order" } },
+        { "type": "value_item", "settings": { "text": "Early access to new colorways and limited editions" } },
+        { "type": "value_item", "settings": { "text": "Studio partner discounts and events" } },
+        { "type": "value_item", "settings": { "text": "Care tips to extend the life of your performance skins" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
