@@ -24,7 +24,7 @@
 
 | ID | Surface | Status | Fingerprint (lineage) | Locked composition | Files |
 |----|---------|--------|------------------------|--------------------|-------|
-| **Footer A+** | Sitewide footer (all pages unless page-specific exception) | **APPROVED / SETTLED** 2026-07-31 | *(update to freeze commit SHA on ship)* · lineage `70561b5` → `a59ff4a` → no blurb → no checklist | Black/charcoal simplified **Join the list** (headline + form; optional privacy; no marketing paragraph) · Shop/Learn/Support/Connect columns · Made in USA · Connect · **no brand blurb** · **no ✓ / value checklist** · **no 10%** | `shopify-build/sections/footer.liquid`, `footer-group.json`, `assets/chrome.css` |
+| **Footer A+** | Sitewide footer (all pages unless page-specific exception) | **APPROVED / SETTLED** 2026-07-31 | `19b8fe63cae73dacba402bb4324437e43ef4c062` (lineage `70561b5` → `a59ff4a` → no blurb → no checklist) | Black/charcoal simplified **Join the list** (headline + form; optional privacy; no marketing paragraph) · Shop/Learn/Support/Connect columns · Made in USA · Connect · **no brand blurb** · **no ✓ / value checklist** · **no 10%** | `shopify-build/sections/footer.liquid`, `footer-group.json`, `assets/chrome.css` |
 | **Type OS** | Typography system | **SETTLED** | See `planning/m4-type-hierarchy.md` | Family/size/weight/tracking; no per-section `font_picker` | Type tokens + TE policy |
 | **Home WORKING** | Homepage layout authority | **WORKING** (layout authority — not a free redesign surface) | Home WORKING mocks / draft match commits | Agents must not invent alternate homepage composition; match WORKING unless Andrew approves change in-message | `templates/index.json` + home sections |
 
