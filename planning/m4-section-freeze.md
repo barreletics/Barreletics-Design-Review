@@ -24,7 +24,7 @@
 
 | ID | Surface | Status | Fingerprint (lineage) | Locked composition | Files |
 |----|---------|--------|------------------------|--------------------|-------|
-| **Footer A+** | Sitewide footer (all pages unless page-specific exception) | **LOCKED / APPROVED / FROZEN** 2026-07-31 (Andrew: “footer is correct lock it in”) | `19b8fe63cae73dacba402bb4324437e43ef4c062` (clean stack — no blurb · no checklist · no 10%; lock docs commit updates below) | Charcoal/black simplified **Join the list** (little text) · link columns → Made in USA (+ Connect) · **NO brand blurb** · **NO checkmark checklist** · **NO 10%** | `shopify-build/sections/footer.liquid`, `footer-group.json`, `assets/chrome.css` |
+| **Footer A+** | Sitewide footer (all pages unless page-specific exception) | **LOCKED / APPROVED / FROZEN** 2026-07-31 (Andrew: “footer is correct lock it in”) | `6fcba348bfdcc82abfcf7cd1fcfb93e3da4cffbe` (lock commit; composition lineage 19b8fe6 — no blurb · no checklist · no 10%) | Charcoal/black simplified **Join the list** (little text) · link columns → Made in USA (+ Connect) · **NO brand blurb** · **NO checkmark checklist** · **NO 10%** | `shopify-build/sections/footer.liquid`, `footer-group.json`, `assets/chrome.css` |
 | **Type OS** | Typography system | **SETTLED** | See `planning/m4-type-hierarchy.md` | Family/size/weight/tracking; no per-section `font_picker` | Type tokens + TE policy |
 | **Home WORKING** | Homepage layout authority | **WORKING** (layout authority — not a free redesign surface) | Home WORKING mocks / draft match commits | Agents must not invent alternate homepage composition; match WORKING unless Andrew approves change in-message | `templates/index.json` + home sections |
 
