@@ -41,10 +41,10 @@
           });
         });
       } else if (name === 'Size') {
-        state.options[position] = getActiveValue(container, '.pdp-buy__size-btn', 'data-size');
-        container.querySelectorAll('.pdp-buy__size-btn').forEach(function (btn) {
+        state.options[position] = getActiveValue(container, '.pdp-buy__size-btn:not(.is-soon)', 'data-size');
+        container.querySelectorAll('.pdp-buy__size-btn:not(.is-soon)').forEach(function (btn) {
           btn.addEventListener('click', function () {
-            selectOption(position, btn.getAttribute('data-size'), container, '.pdp-buy__size-btn', 'data-size');
+            selectOption(position, btn.getAttribute('data-size'), container, '.pdp-buy__size-btn:not(.is-soon)', 'data-size');
           });
         });
       }

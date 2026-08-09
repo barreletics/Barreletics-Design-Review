@@ -1,178 +1,186 @@
 {% comment %}
-  DEPRECATED (D-042 / R-01 / R-02) — Do not assign this template in Shopify Admin.
-  Canonical surface: /pages/partners#wholesale via page-partners.liquid
-  Standalone wholesale page is deprecated; keep file only for redirect/migration safety.
+  Page Wholesale Section
+  Heading, one paragraph, application form. Nothing else.
+
+  Used on: templates/page.wholesale.json  →  /pages/wholesale
+
+  ARCHITECTURE NOTE (2026-08-08)
+  D-042 previously consolidated Wholesale / Studio / Ambassador onto /pages/partners and deprecated
+  this file. Owner direction 2026-08-08 restores three dedicated program pages with their own intake
+  forms; /pages/partners remains the hub that routes to them. Recorded as D-048 in
+  planning/10-decision-log.md, superseding D-042. See planning/partner-programs.md.
+  Redirect map (planning/m4a-redirect-map.md): the /pages/wholesale → /pages/partners 301 is RETIRED
+  as of 2026-08-08 (D-048) and must not be created — it would make this page unreachable. If it was
+  already imported into Shopify Admin from an earlier CSV, delete it before launch (owner/Brian task).
+  /pages/wholesale-calculator → /pages/partners stays as-is; it correctly points at the hub.
+
+  ROUTING NOTE
+  Submissions post through Shopify's native {% form 'contact' %}, which always delivers to the store
+  Sender email and cannot carry a custom subject line. The hidden form_id token below is the value
+  the mail rule matches on to route applications away from the support inbox.
+
+  SHAPE NOTE (owner direction 2026-08-08 — "stop creating shit, make it straightforward like any
+  other brand")
+  This is the ordinary version every apparel brand ships: plain heading, one paragraph saying who it
+  is for and what happens after you submit, then the form. Eyebrow, hero CTA, benefit cards, FAQ
+  block, and the cross-page CTA were removed. Do not add sections back.
+
+  COPY NOTES
+  - No price list, minimum order quantity, or payment terms exist. Never imply a tier structure is
+    being withheld.
+  - No reassurance filler. "A person will read it", "we read every application", and the like assert
+    basic competence and were cut. A stated response time is a fact and stays.
+  - No tax content. Barreletics has never collected a resale certificate or tax ID (owner, 2026-08-08),
+    so the page must not describe a process that does not exist. Do not reintroduce it.
 {% endcomment %}
 
-{% comment %}
-  Page Wholesale Section (orphaned)
-  Professional/B2B inquiry form for studios and retailers.
-  Used on: page.wholesale.json — DEPRECATED
-{% endcomment %}
+{%- liquid
+  assign form_token = section.settings.form_token | default: 'BL-PARTNER-WHOLESALE'
+-%}
 
 <section class="section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
-  <div class="section__inner">
-    <div class="page-wholesale__layout">
-      <div class="page-wholesale__content">
-        {% if section.settings.eyebrow != blank %}
-          <p class="eyebrow eyebrow--accent">{{ section.settings.eyebrow }}</p>
-        {% endif %}
-        <h1 class="page-wholesale__title type-hero">{{ section.settings.title }}</h1>
-        <div class="page-wholesale__body">
-          {{ section.settings.body }}
-        </div>
-
-        {% if section.settings.show_benefits %}
-          <div class="page-wholesale__benefits">
-            {% for block in section.blocks %}
-              {% if block.type == 'benefit' %}
-                <div class="page-wholesale__benefit" {{ block.shopify_attributes }}>
-                  <h3 class="page-wholesale__benefit-title">{{ block.settings.title }}</h3>
-                  <p class="page-wholesale__benefit-text">{{ block.settings.description }}</p>
-                </div>
-              {% endif %}
-            {% endfor %}
-          </div>
-        {% endif %}
-      </div>
-
-      <div class="page-wholesale__form-col">
-        <div class="page-wholesale__form-card">
-          <h2 class="page-wholesale__form-title">{{ section.settings.form_heading }}</h2>
-
-          {% form 'contact' %}
-            {% if form.posted_successfully? %}
-              <div class="page-wholesale__success" role="alert">
-                <p>{{ section.settings.success_message }}</p>
-              </div>
-            {% endif %}
-
-            {% if form.errors %}
-              <div class="page-wholesale__errors" role="alert">
-                {{ form.errors | default_errors }}
-              </div>
-            {% endif %}
-
-            <input type="hidden" name="contact[subject]" value="Wholesale Inquiry">
-
-            <div class="page-wholesale__fields">
-              <div class="page-wholesale__field">
-                <label for="wholesale-studio" class="page-wholesale__label">Studio / Business Name</label>
-                <input type="text" id="wholesale-studio" name="contact[studio_name]" class="page-wholesale__input" required>
-              </div>
-
-              <div class="page-wholesale__field">
-                <label for="wholesale-name" class="page-wholesale__label">Contact Name</label>
-                <input type="text" id="wholesale-name" name="contact[name]" class="page-wholesale__input" required autocomplete="name">
-              </div>
-
-              <div class="page-wholesale__field">
-                <label for="wholesale-email" class="page-wholesale__label">Email</label>
-                <input type="email" id="wholesale-email" name="contact[email]" class="page-wholesale__input" required autocomplete="email">
-              </div>
-
-              <div class="page-wholesale__field">
-                <label for="wholesale-phone" class="page-wholesale__label">Phone (optional)</label>
-                <input type="tel" id="wholesale-phone" name="contact[phone]" class="page-wholesale__input" autocomplete="tel">
-              </div>
-
-              <div class="page-wholesale__field">
-                <label for="wholesale-volume" class="page-wholesale__label">Estimated Volume</label>
-                <select id="wholesale-volume" name="contact[volume]" class="page-wholesale__select">
-                  <option value="" disabled selected>Select quantity range</option>
-                  <option value="10-25">10-25 pairs</option>
-                  <option value="25-50">25-50 pairs</option>
-                  <option value="50-100">50-100 pairs</option>
-                  <option value="100+">100+ pairs</option>
-                </select>
-              </div>
-
-              <div class="page-wholesale__field">
-                <label for="wholesale-message" class="page-wholesale__label">Tell us about your studio</label>
-                <textarea id="wholesale-message" name="contact[body]" class="page-wholesale__textarea" rows="4"></textarea>
-              </div>
-
-              <div class="page-wholesale__field">
-                {% render 'button', label: section.settings.submit_text, type: 'submit', style: 'primary', size: 'lg', full: true %}
-              </div>
-            </div>
-          {% endform %}
-        </div>
-      </div>
+  <div class="section__inner section__inner--narrow">
+    <h1 class="page-wholesale__title type-hero">{{ section.settings.title }}</h1>
+    <div class="page-wholesale__body type-lede">
+      {{ section.settings.body }}
     </div>
   </div>
 </section>
 
+<section class="section section--cream" id="wholesale-apply">
+  <div class="section__inner section__inner--narrow">
+    {% form 'contact' %}
+      {% if form.posted_successfully? %}
+        <div class="page-wholesale__success" role="alert">
+          <p>{{ section.settings.success_message }}</p>
+        </div>
+      {% endif %}
+
+      {% if form.errors %}
+        <div class="page-wholesale__errors" role="alert">
+          {{ form.errors | default_errors }}
+        </div>
+      {% endif %}
+
+      <input type="hidden" name="contact[subject]" value="Wholesale Application">
+      <input type="hidden" name="contact[form_id]" value="{{ form_token }}">
+
+      <div class="page-wholesale__fields">
+        <div class="page-wholesale__field-row">
+          <div class="page-wholesale__field">
+            <label for="wholesale-business-name" class="page-wholesale__label">Business name</label>
+            <input type="text" id="wholesale-business-name" name="contact[business_name]" class="page-wholesale__input" required>
+          </div>
+          <div class="page-wholesale__field">
+            <label for="wholesale-type" class="page-wholesale__label">Business type</label>
+            <select id="wholesale-type" name="contact[business_type]" class="page-wholesale__select" required>
+              <option value="" disabled selected>Select one</option>
+              <option value="Studio - barre / Pilates / yoga">Studio — barre / Pilates / yoga</option>
+              <option value="Multi-location studio group or franchise">Multi-location studio group or franchise</option>
+              <option value="Fitness or activewear retailer">Fitness or activewear retailer</option>
+              <option value="Boutique">Boutique</option>
+              <option value="Gym or health club">Gym or health club</option>
+              <option value="Wellness center or physical therapy">Wellness center or physical therapy</option>
+              <option value="Hotel or resort">Hotel or resort</option>
+              <option value="Online-only retailer">Online-only retailer</option>
+              <option value="Distributor">Distributor</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="page-wholesale__field-row">
+          <div class="page-wholesale__field">
+            <label for="wholesale-website" class="page-wholesale__label">Website</label>
+            <input type="url" id="wholesale-website" name="contact[website]" class="page-wholesale__input" required placeholder="https://">
+          </div>
+          <div class="page-wholesale__field">
+            <label for="wholesale-ship-location" class="page-wholesale__label">City, state / country</label>
+            <input type="text" id="wholesale-ship-location" name="contact[location]" class="page-wholesale__input" required placeholder="Denver, CO">
+          </div>
+        </div>
+
+        <div class="page-wholesale__field-row">
+          <div class="page-wholesale__field">
+            <label for="wholesale-name" class="page-wholesale__label">Your name</label>
+            <input type="text" id="wholesale-name" name="contact[name]" class="page-wholesale__input" required autocomplete="name">
+          </div>
+          <div class="page-wholesale__field">
+            <label for="wholesale-email" class="page-wholesale__label">Email</label>
+            <input type="email" id="wholesale-email" name="contact[email]" class="page-wholesale__input" required autocomplete="email">
+          </div>
+        </div>
+
+        <div class="page-wholesale__field">
+          <label for="wholesale-message" class="page-wholesale__label">Message</label>
+          <textarea id="wholesale-message" name="contact[body]" class="page-wholesale__textarea" rows="5" required placeholder="Tell us about the business and what you'd want to carry."></textarea>
+          {%- comment -%}
+            Prompt mirrors the studio program page. "Expected first order" was removed because
+            "what you'd want to carry" already invites it.
+          {%- endcomment -%}
+        </div>
+
+        <div class="page-wholesale__field">
+          <label for="wholesale-consent" class="page-wholesale__consent">
+            <input type="checkbox" id="wholesale-consent" name="contact[terms_agreed]" value="Yes" required>
+            <span>{{ section.settings.consent_text }}</span>
+          </label>
+        </div>
+
+        <div class="page-wholesale__field">
+          {% render 'button', label: section.settings.submit_text, type: 'submit', style: 'primary', size: 'lg' %}
+        </div>
+      </div>
+    {% endform %}
+  </div>
+</section>
+
 <style>
-  .page-wholesale__layout {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-12);
-    align-items: start;
+  /* Nothing on this page links here, but the anchor is kept for inbound links and the
+     site header is sticky, so the form must not land behind it. */
+  #wholesale-apply {
+    scroll-margin-top: 96px;
+  }
+
+  /* Softer warm band, owner pick 2026-08-08 (variant B of the form-band comparison).
+     --bg-alternate #f5f2ec stepped down from white too hard; --bg-alternate-soft #faf8f6
+     halves the step and keeps the warmth. Set here, not as a Theme Editor setting, so the
+     old tone cannot come back on a fresh section add. */
+  #wholesale-apply.section--cream {
+    background: var(--bg-alternate-soft);
   }
 
   .page-wholesale__title {
-    font-size: var(--type-hero-size);
-    font-weight: var(--type-hero-weight);
-    line-height: var(--type-hero-leading);
-    letter-spacing: var(--type-hero-tracking);
     text-transform: none;
     color: var(--text-primary);
-    margin: 0 0 var(--space-5);
+    text-align: center;
+    margin: 0 0 var(--gap-b, 20px);
   }
 
   .page-wholesale__body {
-    font-size: var(--text-md);
-    color: var(--text-body);
-    line-height: var(--leading-loose);
-    margin-bottom: var(--space-8);
+    text-align: center;
+    margin: 0 auto;
+    max-width: var(--max-width-copy);
   }
 
   .page-wholesale__body p {
-    margin-bottom: var(--space-3);
+    margin: 0 0 var(--space-3);
   }
 
-  .page-wholesale__benefits {
-    display: grid;
-    gap: var(--space-5);
-  }
-
-  .page-wholesale__benefit {
-    padding: var(--space-5);
-    border-left: 3px solid var(--accent-primary);
-    background: var(--bg-alternate);
-    border-radius: 0 var(--radius-card-sm) var(--radius-card-sm) 0;
-  }
-
-  .page-wholesale__benefit-title {
-    font-size: var(--text-base);
-    font-weight: var(--weight-bold);
-    color: var(--text-primary);
-    margin: 0 0 var(--space-1);
-  }
-
-  .page-wholesale__benefit-text {
-    font-size: var(--text-base);
-    color: var(--text-body);
-    line-height: var(--leading-relaxed);
-    margin: 0;
-  }
-
-  .page-wholesale__form-card {
-    background: var(--bg-alternate);
-    border-radius: var(--radius-card);
-    padding: var(--space-8);
-  }
-
-  .page-wholesale__form-title {
-    font-size: var(--text-xl);
-    font-weight: var(--weight-bold);
-    color: var(--text-primary);
-    margin: 0 0 var(--space-6);
+  .page-wholesale__body p:last-child {
+    margin-bottom: 0;
   }
 
   .page-wholesale__fields {
     display: grid;
+    gap: var(--space-4);
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .page-wholesale__field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: var(--space-4);
   }
 
@@ -184,6 +192,7 @@
     text-transform: uppercase;
     letter-spacing: var(--tracking-wide);
     margin-bottom: var(--space-1);
+    padding: 0;
   }
 
   .page-wholesale__input,
@@ -209,9 +218,16 @@
     box-shadow: 0 0 0 1px var(--text-primary);
   }
 
+  .page-wholesale__input:focus-visible,
+  .page-wholesale__select:focus-visible,
+  .page-wholesale__textarea:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+  }
+
   .page-wholesale__textarea {
     resize: vertical;
-    min-height: 100px;
+    min-height: 120px;
   }
 
   .page-wholesale__select {
@@ -222,6 +238,25 @@
     padding-right: 36px;
   }
 
+  .page-wholesale__consent {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-start;
+    font-size: var(--type-trust-size);
+    color: var(--text-body);
+    line-height: var(--leading-relaxed);
+    min-height: 44px;
+    padding: var(--space-2) 0;
+  }
+
+  .page-wholesale__consent input {
+    margin-top: 3px;
+    flex: 0 0 auto;
+    width: 18px;
+    height: 18px;
+    accent-color: var(--accent-primary);
+  }
+
   .page-wholesale__success {
     padding: var(--space-4);
     background: var(--bg-alternate);
@@ -229,6 +264,7 @@
     border-radius: var(--radius-button);
     margin-bottom: var(--space-4);
     color: var(--text-primary);
+    text-align: center;
   }
 
   .page-wholesale__errors {
@@ -241,17 +277,8 @@
   }
 
   @media (max-width: 768px) {
-    .page-wholesale__layout {
+    .page-wholesale__field-row {
       grid-template-columns: 1fr;
-      gap: var(--space-8);
-    }
-
-    .page-wholesale__title {
-      font-size: var(--text-3xl);
-    }
-
-    .page-wholesale__form-card {
-      padding: var(--space-5);
     }
   }
 </style>
@@ -262,63 +289,41 @@
   "settings": [
     {
       "type": "text",
-      "id": "eyebrow",
-      "label": "Eyebrow",
-      "default": "Wholesale"
-    },
-    {
-      "type": "text",
       "id": "title",
       "label": "Title",
-      "default": "Partner With Barreletics"
+      "default": "Wholesale"
     },
     {
       "type": "richtext",
       "id": "body",
       "label": "Body text",
-      "default": "<p>Bring Performance Skins to your studio or retail space. We work with studios, fitness retailers, and wellness centers to offer volume pricing on our patented grippy shoes.</p>"
+      "default": "<p>Open to studios, multi-location groups, fitness and activewear retailers, boutiques, gyms, wellness centers, and resorts. We reply within 2\u20133 business days.</p>",
+      "info": "Who it is for, and the response time. Nothing else. No process-speak — a sentence like \"pricing and terms are worked out after we review your application\" describes a procedure without telling the reader anything and was cut. Only concrete numbers, timeframes, and requirements belong here."
     },
     {
-      "type": "checkbox",
-      "id": "show_benefits",
-      "label": "Show benefits",
-      "default": true
-    },
-    {
-      "type": "text",
-      "id": "form_heading",
-      "label": "Form heading",
-      "default": "Wholesale Inquiry"
+      "type": "textarea",
+      "id": "consent_text",
+      "label": "Consent checkbox text",
+      "default": "The information above is accurate, and I understand this is an application \u2014 not an approved account."
     },
     {
       "type": "text",
       "id": "submit_text",
       "label": "Submit button text",
-      "default": "Submit Inquiry"
+      "default": "Submit application"
+    },
+    {
+      "type": "textarea",
+      "id": "success_message",
+      "label": "Success message",
+      "default": "Application received. We reply within 2\u20133 business days."
     },
     {
       "type": "text",
-      "id": "success_message",
-      "label": "Success message",
-      "default": "Thank you for your interest. Our wholesale team will be in touch within 2-3 business days."
-    }
-  ],
-  "blocks": [
-    {
-      "type": "benefit",
-      "name": "Benefit",
-      "settings": [
-        {
-          "type": "text",
-          "id": "title",
-          "label": "Benefit title"
-        },
-        {
-          "type": "textarea",
-          "id": "description",
-          "label": "Benefit description"
-        }
-      ]
+      "id": "form_token",
+      "label": "Routing token",
+      "default": "BL-PARTNER-WHOLESALE",
+      "info": "Hidden value included in the submission email. The mail rule matches this string to route applications to the partner applications inbox. Do not change without updating the rule — see planning/partner-programs.md."
     }
   ],
   "presets": [

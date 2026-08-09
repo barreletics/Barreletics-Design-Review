@@ -1,88 +1,275 @@
 {% comment %}
-  Trust/Value Metrics Strip
-  Source: Approved Home + Collection prototypes
+  Trust / Value scan strip — v19 wording + optional Non-toxic
+  Desktop: full ·-separated line. Mobile: short line (hide show_on_mobile=false items).
 {% endcomment %}
 
-<section class="value-strip-section" aria-label="Value propositions">
-  <div class="value-strip">
-    {% for block in section.blocks %}
-      <div class="value-strip__item" {{ block.shopify_attributes }}>
-        {% if block.settings.icon != blank %}
-          <span class="value-strip__icon" aria-hidden="true">{{ block.settings.icon }}</span>
+<section
+  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} value-strip-section"
+  aria-label="{{ section.settings.aria_label | default: 'Value propositions' | escape }}"
+  style="{% render 'section-inset-vars' %}{% if section.settings.bg_color != blank %} background: {{ section.settings.bg_color }};{% endif %}"
+>
+  <div class="value-strip trust-strip__inner">
+    <span class="value-strip__full">
+      {% assign full_i = 0 %}
+      {% for block in section.blocks %}
+        {% if block.settings.text != blank %}
+          {% if full_i > 0 %}<span class="value-strip__sep" aria-hidden="true"> · </span>{% endif %}
+          <span class="value-strip__text" {{ block.shopify_attributes }}>{{ block.settings.text }}</span>
+          {% assign full_i = full_i | plus: 1 %}
         {% endif %}
-        <span class="value-strip__text">{{ block.settings.text }}</span>
-      </div>
-    {% endfor %}
+      {% endfor %}
+    </span>
+    <span class="value-strip__short">
+      {% assign short_i = 0 %}
+      {% for block in section.blocks %}
+        {% if block.settings.text != blank and block.settings.show_on_mobile != false %}
+          {% if short_i > 0 %}<span class="value-strip__sep" aria-hidden="true"> · </span>{% endif %}
+          <span class="value-strip__text">{{ block.settings.text }}</span>
+          {% assign short_i = short_i | plus: 1 %}
+        {% endif %}
+      {% endfor %}
+    </span>
   </div>
 </section>
 
 <style>
   .value-strip-section {
-    background: var(--bg-alternate);
-    border-top: 1px solid var(--border-default);
-    border-bottom: 1px solid var(--border-default);
-    padding: var(--space-7) var(--section-padding-x);
+    background: #f5f2ec;
+    border-top: 1px solid #d6cfc0;
+    border-bottom: 1px solid #d6cfc0;
+    /* Strip tier of the section rhythm: a scan line, not a section. --gap-a, not
+       --section-padding-y, so it stays welded under the buy box. */
+    padding: var(--gap-a, 16px) var(--section-padding-x, 40px);
   }
-
   .value-strip {
-    max-width: var(--max-width);
+    max-width: 1200px;
     margin: 0 auto;
-    display: flex;
-    justify-content: center;
-    gap: var(--space-8);
-    flex-wrap: wrap;
-  }
-
-  .value-strip__item {
+    text-align: center;
     font-size: 12px;
-    font-weight: var(--weight-semibold);
-    color: var(--text-warm-muted);
-    letter-spacing: 0.02em;
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6b645a;
+    line-height: 1.4;
+    white-space: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
   }
-
-  .value-strip__icon {
-    color: var(--accent-primary);
-    font-weight: var(--weight-bold);
-  }
-
+  .value-strip::-webkit-scrollbar { display: none; }
+  .value-strip__sep { color: #9a9182; margin: 0 2px; }
+  .value-strip__short { display: none; }
   @media (max-width: 768px) {
     .value-strip-section {
-      padding: var(--space-6) var(--section-padding-x-mobile);
+      padding: var(--gap-a, 16px) var(--section-padding-x-mobile, 16px);
     }
-
-    .value-strip {
-      gap: var(--space-4) var(--space-6);
-      justify-content: flex-start;
-    }
+    .value-strip { white-space: normal; }
+    .value-strip__full { display: none; }
+    .value-strip__short { display: inline; }
   }
 </style>
 
 {% schema %}
 {
   "name": "Value Strip",
-  "settings": [],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Shared — Content"
+    },
+    {
+      "type": "paragraph",
+      "content": "v19 scan strip. Desktop shows all items with · separators. Mobile uses items with Show on mobile ON (drop lower-priority labels if crowded)."
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Section aria-label",
+      "default": "Value propositions"
+    },
+    {
+      "type": "header",
+      "content": "Section — Value strip"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#f5f2ec"
+    },
+    {
+      "type": "header",
+      "content": "Shared — Section frame"
+    },
+    {
+      "type": "paragraph",
+      "content": "OUTER inset from the page edges (margin). Top and bottom are independent; left & right = one control. Custom mobile OFF = mobile uses the same inset as desktop. Defaults 0 = full bleed."
+    },
+    {
+      "type": "checkbox",
+      "id": "inset_custom_mobile",
+      "label": "Custom mobile inset",
+      "default": false,
+      "info": "OFF (default): ignore the mobile inset sliders — mobile uses desktop Inset top / bottom / left & right. ON: use the mobile inset sliders instead."
+    },
+    {
+      "type": "range",
+      "id": "inset_top",
+      "label": "Inset top",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom",
+      "label": "Inset bottom",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x",
+      "label": "Inset left & right",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Same value on both sides."
+    },
+    {
+      "type": "range",
+      "id": "inset_top_mobile",
+      "label": "Inset top — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom_mobile",
+      "label": "Inset bottom — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x_mobile",
+      "label": "Inset left & right — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_desktop",
+      "label": "Hide on desktop",
+      "default": false
+    }
+  ],
   "blocks": [
     {
       "type": "item",
       "name": "Value item",
       "settings": [
-        { "type": "text", "id": "icon", "label": "Icon", "default": "✓" },
-        { "type": "text", "id": "text", "label": "Text", "default": "360° locked grip" }
+        {
+          "type": "header",
+          "content": "Shared — Content"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Label",
+          "default": "Made in USA"
+        },
+        {
+          "type": "header",
+          "content": "Section — Item"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_on_mobile",
+          "label": "Show on mobile (short line)",
+          "default": true
+        }
       ]
     }
   ],
-  "presets": [{
-    "name": "Value Strip",
-    "blocks": [
-      { "type": "item", "settings": { "icon": "✓", "text": "360° locked grip" } },
-      { "type": "item", "settings": { "icon": "✓", "text": "Ships in 1–2 days" } },
-      { "type": "item", "settings": { "icon": "✓", "text": "Free shipping over $150" } },
-      { "type": "item", "settings": { "icon": "✓", "text": "No latex · No silicone" } },
-      { "type": "item", "settings": { "icon": "✓", "text": "Made in USA" } }
-    ]
-  }]
+  "presets": [
+    {
+      "name": "Value Strip",
+      "blocks": [
+        {
+          "type": "item",
+          "settings": {
+            "text": "Made in USA",
+            "show_on_mobile": true
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "text": "Complimentary shipping over $150",
+            "show_on_mobile": true
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "text": "30-day returns",
+            "show_on_mobile": true
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "text": "90-day warranty",
+            "show_on_mobile": false
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "text": "Non-toxic",
+            "show_on_mobile": true
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "text": "No latex",
+            "show_on_mobile": false
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "text": "No silicone",
+            "show_on_mobile": false
+          }
+        }
+      ]
+    }
+  ]
 }
 {% endschema %}

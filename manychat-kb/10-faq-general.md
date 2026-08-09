@@ -26,7 +26,9 @@ Just skip thick or full-toe socks — they reduce natural toe splay, which makes
 
 Built for studio training: Barre, Pilates, Lagree, Reformer, Megaformer, Yoga.
 
-Also great for: Weight lifting, outdoor volleyball, martial arts, barefoot running, boating, beach, pool decks, anywhere you'd go barefoot.
+Also great for: Weight lifting, outdoor volleyball, martial arts, barefoot running, boating, paddleboarding, outdoor yoga, beach, resortwear, anywhere you'd go barefoot.
+
+> **Never say:** pool, poolside, pool deck, water park, tidal pool, aqua barre, water aerobics. Pool positioning drives the wrong buyer and creates slip risk on wet tile. Use resortwear · paddleboarding · beach · outdoor yoga instead. Don't invent scenery (rocky coves, tidepools, shell-covered beaches) — beach covers it.
 
 ## "Do they really not slip?"
 

@@ -1,0 +1,523 @@
+{% comment %}
+  APPROVED / FROZEN — Juicer Instagram · LOCKED Jul 31 2026
+  Reusable library section — add or omit on any page via Theme Editor (not homepage-only).
+  Visual authority: docs/Barreletics PDP - Definitive-v18.html #instagram
+  Spec: specs/frozen/juicer.md · Registry: planning/m4-section-freeze.md
+
+  Composition: eyebrow / @barreletics / body · live Juicer feed · bigger feed ·
+  no max-height / no inner sidebar scroll (max_height default 0) ·
+  See more on-page · Follow on Instagram secondary.
+
+  Filename stays home-juicer (index.json type). Display name: Juicer Instagram.
+  TE owns density/pagination/CTA; Juicer.io owns columns/hip style/moderation.
+  Feed: https://www.juicer.io/embed/barreletics/embed-code.js
+{% endcomment %}
+
+{% liquid
+  assign feed_id = section.settings.feed_id | default: 'barreletics'
+  assign posts_per = section.settings.posts_per_page | default: 12
+  if posts_per < 1
+    assign posts_per = 12
+  endif
+  assign max_pages = section.settings.max_pages | default: 1
+  if max_pages < 1
+    assign max_pages = 1
+  endif
+  assign max_height = section.settings.max_height | default: 0
+  assign enable_see_more = section.settings.enable_see_more
+%}
+
+<section
+  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} home-juicer{% if enable_see_more %} home-juicer--see-more{% endif %}"
+  id="{{ section.settings.anchor_id | default: 'instagram' | handleize }}"
+  aria-label="{{ section.settings.title | default: 'Instagram' | escape }}"
+  data-juicer-root
+  data-feed-id="{{ feed_id | escape }}"
+  data-per="{{ posts_per }}"
+  data-pages="{{ max_pages }}"
+  data-see-more="{% if enable_see_more %}true{% else %}false{% endif %}"
+ style="{% render 'section-inset-vars' %}">
+  <div class="home-juicer__inner">
+    {% if section.settings.eyebrow != blank %}
+      <p class="home-juicer__eyebrow type-label">{{ section.settings.eyebrow }}</p>
+    {% endif %}
+    {% if section.settings.title != blank %}
+      <h2 class="home-juicer__title h2-standard">{{ section.settings.title }}</h2>
+    {% endif %}
+    {% if section.settings.body != blank %}
+      <p class="home-juicer__body type-body">{{ section.settings.body }}</p>
+    {% endif %}
+
+    <div
+      class="home-juicer__feed{% if max_height > 0 %} home-juicer__feed--clamped{% endif %}"
+      data-juicer-feed-wrap
+      {% if max_height > 0 %}style="max-height: {{ max_height }}px;"{% endif %}
+    >
+      <ul
+        class="juicer-feed"
+        data-feed-id="{{ feed_id | escape }}"
+        data-per="{{ posts_per }}"
+        data-pages="{{ max_pages }}"
+      ></ul>
+    </div>
+
+    {% if enable_see_more %}
+      <button
+        type="button"
+        class="home-juicer__see-more"
+        data-juicer-see-more
+        hidden
+      >See more</button>
+    {% endif %}
+
+    {% if section.settings.cta_text != blank and section.settings.profile_url != blank %}
+      <a
+        class="home-juicer__cta"
+        href="{{ section.settings.profile_url }}"
+        target="_blank"
+        rel="noopener noreferrer"
+      >{{ section.settings.cta_text }}</a>
+    {% endif %}
+  </div>
+</section>
+
+<script src="https://www.juicer.io/embed/{{ feed_id | escape }}/embed-code.js?per={{ posts_per }}&pages={{ max_pages }}" async defer></script>
+
+<script>
+(function () {
+  var root = document.getElementById({{ section.settings.anchor_id | default: 'instagram' | handleize | json }});
+  if (!root || root.getAttribute('data-see-more') !== 'true') return;
+
+  var feedId = root.getAttribute('data-feed-id') || 'barreletics';
+  var per = parseInt(root.getAttribute('data-per'), 10) || 12;
+  var pages = parseInt(root.getAttribute('data-pages'), 10) || 1;
+  var currentPages = pages;
+  var maxExpand = Math.max(pages + 8, 10);
+  var btn = root.querySelector('[data-juicer-see-more]');
+  var wrap = root.querySelector('[data-juicer-feed-wrap]');
+  if (!btn || !wrap) return;
+
+  function feedEl() {
+    return root.querySelector('.juicer-feed');
+  }
+
+  function postCount() {
+    var feed = feedEl();
+    if (!feed) return 0;
+    return feed.querySelectorAll('.j-post, .j-image, li.feed-item').length;
+  }
+
+  function nativeLoadMore() {
+    var feed = feedEl();
+    if (!feed) return null;
+    return (
+      feed.querySelector('.j-paginate, .juicer-button, button.j-paginate, a.j-paginate, .j-pagination a') ||
+      root.querySelector('.j-paginate, .juicer-button')
+    );
+  }
+
+  function revealSeeMore() {
+    /* Show when Juicer can paginate further, or when clamped height is hiding content */
+    var clamped = wrap.classList.contains('home-juicer__feed--clamped') && !wrap.classList.contains('is-expanded');
+    var canPage = currentPages < maxExpand;
+    var hasNative = !!nativeLoadMore();
+    if (canPage || clamped || hasNative) {
+      btn.hidden = false;
+    }
+  }
+
+  function hideSeeMore() {
+    btn.hidden = true;
+  }
+
+  function expandClamp() {
+    if (!wrap.classList.contains('home-juicer__feed--clamped')) return false;
+    if (wrap.classList.contains('is-expanded')) return false;
+    wrap.classList.add('is-expanded');
+    wrap.style.maxHeight = 'none';
+    return true;
+  }
+
+  function reinitFeed(nextPages) {
+    currentPages = nextPages;
+    var nextPer = per * nextPages;
+    /* Prefer Juicer.remove + initialize — stacking embed-code.js fights itself */
+    if (typeof window.Juicer !== 'undefined' && typeof window.Juicer.remove === 'function') {
+      try { window.Juicer.remove(); } catch (err) {}
+    }
+    wrap.querySelectorAll('.juicer-feed').forEach(function (el) {
+      el.remove();
+    });
+    var ul = document.createElement('ul');
+    ul.className = 'juicer-feed';
+    ul.setAttribute('data-feed-id', feedId);
+    ul.setAttribute('data-per', String(nextPer));
+    ul.setAttribute('data-pages', '1');
+    wrap.insertBefore(ul, wrap.firstChild);
+
+    if (typeof window.Juicer !== 'undefined' && typeof window.Juicer.initialize === 'function') {
+      try {
+        window.Juicer.initialize();
+        return;
+      } catch (err) {}
+    }
+
+    var s = document.createElement('script');
+    s.src =
+      'https://www.juicer.io/embed/' +
+      encodeURIComponent(feedId) +
+      '/embed-code.js?per=' +
+      encodeURIComponent(String(nextPer)) +
+      '&pages=1';
+    s.async = true;
+    document.body.appendChild(s);
+  }
+
+  btn.addEventListener('click', function () {
+    /* 1) Unclamp height first if used (PDP short viewport) */
+    if (expandClamp()) {
+      revealSeeMore();
+      return;
+    }
+
+    currentPages += 1;
+
+    /* 2) Prefer Juicer native Load More after raising page cap */
+    var feed = feedEl();
+    if (feed) feed.setAttribute('data-pages', String(currentPages));
+    var native = nativeLoadMore();
+    if (native) {
+      native.click();
+      if (currentPages >= maxExpand) hideSeeMore();
+      return;
+    }
+
+    /* 3) Reliable fallback: reload embed with higher per (keeps people on page) */
+    if (currentPages > maxExpand) {
+      hideSeeMore();
+      return;
+    }
+    reinitFeed(currentPages);
+    if (currentPages >= maxExpand) hideSeeMore();
+  });
+
+  document.addEventListener('juicer:feedLoaded', function () {
+    revealSeeMore();
+  });
+  document.addEventListener('juicer:feedPaginated', function () {
+    if (currentPages >= maxExpand && !nativeLoadMore()) hideSeeMore();
+    else revealSeeMore();
+  });
+
+  /* Fallback if events never fire */
+  var tries = 0;
+  var timer = setInterval(function () {
+    tries += 1;
+    if (postCount() > 0 || tries >= 40) {
+      clearInterval(timer);
+      revealSeeMore();
+    }
+  }, 250);
+})();
+</script>
+
+<style>
+  #shopify-section-{{ section.id }} .home-juicer {
+    padding: var(--section-padding-y, 64px) var(--section-padding-x, 40px);
+    background: {{ section.settings.bg_color | default: '#ffffff' }};
+  }
+  #shopify-section-{{ section.id }} .home-juicer__inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  #shopify-section-{{ section.id }} .home-juicer__eyebrow {
+    margin: 0 0 var(--gap-a, 16px);
+    color: var(--type-label-color, #6b645a);
+  }
+  #shopify-section-{{ section.id }} .home-juicer__title {
+    margin: 0 0 var(--gap-b, 20px);
+  }
+  #shopify-section-{{ section.id }} .home-juicer__body {
+    margin: 0 0 var(--gap-c, 32px);
+    color: var(--text-body, #4a4a4a);
+  }
+  #shopify-section-{{ section.id }} .home-juicer__feed {
+    margin: 0 0 var(--gap-c, 32px);
+    min-height: 560px;
+    overflow: visible;
+    max-height: none;
+  }
+  /* No sidebar / inner scroll — page scrolls only */
+  #shopify-section-{{ section.id }} .home-juicer .juicer-feed,
+  #shopify-section-{{ section.id }} .home-juicer .j-stacker,
+  #shopify-section-{{ section.id }} .home-juicer .j-stack {
+    overflow: visible !important;
+    max-height: none !important;
+  }
+  #shopify-section-{{ section.id }} .home-juicer .j-image img,
+  #shopify-section-{{ section.id }} .home-juicer .j-poster img,
+  #shopify-section-{{ section.id }} .home-juicer .feed-item img {
+    width: 100% !important;
+    min-height: 220px;
+    object-fit: cover;
+  }
+  @media (min-width: 900px) {
+    #shopify-section-{{ section.id }} .home-juicer .j-image img,
+    #shopify-section-{{ section.id }} .home-juicer .j-poster img,
+    #shopify-section-{{ section.id }} .home-juicer .feed-item img {
+      min-height: 280px;
+    }
+  }
+  #shopify-section-{{ section.id }} .home-juicer__feed--clamped {
+    overflow: hidden;
+    position: relative;
+  }
+  #shopify-section-{{ section.id }} .home-juicer__feed--clamped:not(.is-expanded)::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 72px;
+    background: linear-gradient(to bottom, transparent, {{ section.settings.bg_color | default: '#ffffff' }});
+    pointer-events: none;
+  }
+  #shopify-section-{{ section.id }} .home-juicer__feed--clamped.is-expanded {
+    max-height: none !important;
+    overflow: visible;
+  }
+  #shopify-section-{{ section.id }} .home-juicer__see-more {
+    display: inline-block;
+    margin: 0 0 var(--gap-b, 20px);
+    padding: 12px 28px;
+    border: 1px solid var(--text-primary, #1c1916);
+    background: transparent;
+    color: var(--text-primary, #1c1916);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  #shopify-section-{{ section.id }} .home-juicer__see-more[hidden] {
+    display: none !important;
+  }
+  #shopify-section-{{ section.id }} .home-juicer__see-more:hover {
+    border-color: var(--accent-primary, #c45c3f);
+    color: var(--accent-primary, #c45c3f);
+  }
+  /* Our See more owns pagination UX — hide Juicer’s native control */
+  #shopify-section-{{ section.id }} .home-juicer--see-more .j-paginate,
+  #shopify-section-{{ section.id }} .home-juicer--see-more .juicer-button,
+  #shopify-section-{{ section.id }} .home-juicer--see-more .j-pagination {
+    display: none !important;
+  }
+  #shopify-section-{{ section.id }} .home-juicer__cta {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--text-primary, #1c1916);
+  }
+  #shopify-section-{{ section.id }} .home-juicer__cta:hover {
+    color: var(--accent-primary, #c45c3f);
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .home-juicer {
+      padding: var(--section-padding-y-mobile, 48px) var(--section-padding-x-mobile, 16px);
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Juicer Instagram",
+  "tag": "section",
+  "class": "home-juicer-section",
+  "settings": [
+    { "type": "header", "content": "Shared — Content" },
+    {
+      "type": "paragraph",
+      "content": "Reusable on any page. Family is brand Type OS — no font family picker. Locked defaults: max height 0 (no clamp), 12 posts, 1 page, See more on."
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Follow the movement"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "@barreletics"
+    },
+    {
+      "type": "text",
+      "id": "body",
+      "label": "Body",
+      "default": "Real practitioners. Real studios. Real grip."
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA label",
+      "default": "Follow on Instagram →",
+      "info": "Quiet secondary link — not the main see-more control."
+    },
+    {
+      "type": "url",
+      "id": "profile_url",
+      "label": "CTA link"
+    },
+    { "type": "header", "content": "Section — Juicer feed" },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor ID",
+      "default": "instagram"
+    },
+    {
+      "type": "text",
+      "id": "feed_id",
+      "label": "Juicer feed ID",
+      "default": "barreletics",
+      "info": "Matches juicer.io/embed/{feed-id}/embed-code.js"
+    },
+    {
+      "type": "number",
+      "id": "posts_per_page",
+      "label": "Posts per page",
+      "default": 12,
+      "info": "Maps to Juicer data-per. Locked default 12."
+    },
+    {
+      "type": "number",
+      "id": "max_pages",
+      "label": "Max pages (initial)",
+      "default": 1,
+      "info": "Maps to Juicer data-pages. Locked default 1 — use See more for more on-page."
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_see_more",
+      "label": "Enable See more (on-page)",
+      "default": true,
+      "info": "Loads more posts in place. Follow on Instagram stays a secondary text link."
+    },
+    {
+      "type": "range",
+      "id": "max_height",
+      "label": "Feed max height (px)",
+      "min": 0,
+      "max": 1200,
+      "step": 20,
+      "unit": "px",
+      "default": 0,
+      "info": "Locked default 0 — no max-height / no inner sidebar scroll."
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    { "type": "header", "content": "Shared — Section frame" },
+    {
+      "type": "paragraph",
+      "content": "OUTER inset from the page edges (margin). Top and bottom are independent; left & right = one control. Custom mobile OFF = mobile uses the same inset as desktop. Defaults 0 = full bleed."
+    },
+    {
+      "type": "checkbox",
+      "id": "inset_custom_mobile",
+      "label": "Custom mobile inset",
+      "default": false,
+      "info": "OFF (default): ignore the mobile inset sliders — mobile uses desktop Inset top / bottom / left & right. ON: use the mobile inset sliders instead."
+    },
+    {
+      "type": "range",
+      "id": "inset_top",
+      "label": "Inset top",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom",
+      "label": "Inset bottom",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x",
+      "label": "Inset left & right",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Same value on both sides."
+    },
+    {
+      "type": "range",
+      "id": "inset_top_mobile",
+      "label": "Inset top — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom_mobile",
+      "label": "Inset bottom — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x_mobile",
+      "label": "Inset left & right — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_desktop",
+      "label": "Hide on desktop",
+      "default": false
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "Juicer Instagram"
+    }
+  ]
+}
+{% endschema %}

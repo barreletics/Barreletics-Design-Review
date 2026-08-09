@@ -45,6 +45,17 @@
   color: var(--text-primary);
 }
 
+/* Shopify wraps each header-group member in its own <div id="shopify-section-…">, and a
+   sticky child can only travel inside its parent's box. That wrapper is exactly header
+   height, so sticking the <header> alone gives it zero scroll room and it scrolls away.
+   `.header-section` comes from the header schema's "class" — stick the wrapper instead.
+   header.liquid scopes this back to static when the Sticky header setting is off. */
+.header-section {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+}
+
 .site-header {
   position: sticky;
   top: 0;
@@ -64,6 +75,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  /* Title-case nav at 18px is wider than the old 13px caps; without a floor the flex
+     children butt straight into each other at ~1200px ("Journal" touching "Help"). */
+  gap: 24px;
   min-height: 56px;
   height: auto;
   padding: 12px var(--section-padding-x);
@@ -104,8 +118,11 @@
 .site-header__nav-item > a {
   font-size: var(--header-nav-size, var(--type-nav-size));
   font-weight: var(--type-nav-weight);
-  text-transform: uppercase;
+  /* Production paints title case — the capitals were ours, not the menu titles. */
+  text-transform: none;
   letter-spacing: var(--type-nav-tracking);
+  line-height: 1.6;
+  white-space: nowrap;
   color: var(--header-text, var(--text-body));
   text-decoration: none;
   padding: 4px 0;
@@ -120,7 +137,10 @@
   border: 1px solid var(--border-default);
   border-radius: var(--radius-card-sm);
   padding: 12px 0;
-  min-width: 180px;
+  /* 180px wrapped "Shop All Grippy Shoes" onto two lines, which broke the row rhythm of
+     the dropdown. 220px clears the longest label in the approved menu. */
+  min-width: 220px;
+  max-width: calc(100vw - 32px);
   opacity: 0;
   pointer-events: none;
   transform: translateY(4px);
@@ -136,10 +156,10 @@
 .site-header__subnav li a {
   display: block;
   padding: 8px 20px;
-  font-size: var(--type-caption-size);
+  font-size: 15px;
   font-weight: var(--type-nav-weight);
   text-transform: none;
-  letter-spacing: 0;
+  letter-spacing: var(--type-nav-tracking);
   color: var(--text-body);
   text-decoration: none;
 }
@@ -150,11 +170,13 @@
 }
 .site-header__actions { display: flex; align-items: center; gap: 20px; }
 /* Home WORKING text actions (Help / Account / Cart) */
+/* Utility actions read as a quieter sibling of the nav, not a different type system:
+   same family/weight/case, one step down in size. */
 .site-header__action--text {
-  font-size: 11px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
+  font-size: 14px;
+  font-weight: var(--type-nav-weight);
+  text-transform: none;
+  letter-spacing: var(--type-nav-tracking);
   color: var(--header-text, #4a4a4a);
   text-decoration: none;
   min-width: 0;
@@ -163,11 +185,20 @@
   gap: 6px;
 }
 .site-header__action--text:hover { color: var(--text-primary, #1c1916); }
+/* Expandable affordance on Help — quieter than the label it follows. */
+.site-header__caret {
+  font-size: 0.8em;
+  line-height: 1;
+  opacity: 0.7;
+}
 .site-header__cart.site-header__action--text {
   position: relative;
   gap: 6px;
 }
-.site-header__cart-badge--inline {
+/* Doubled class for specificity: the base .site-header__cart-badge absolute rule is
+   declared further down the file, so an equal-specificity modifier would lose on order
+   and the count would sit on top of the "Cart" label. */
+.site-header__cart-badge.site-header__cart-badge--inline {
   position: static;
   top: auto;
   right: auto;
@@ -176,7 +207,7 @@
   min-width: 16px;
   padding: 0 5px;
   border-radius: 999px;
-  font-size: 10px;
+  font-size: 11px;
   line-height: 16px;
 }
 .site-header__help { position: relative; }
@@ -267,13 +298,19 @@
 }
 .mobile-menu__list { padding-top: 32px; }
 .mobile-menu__item { border-bottom: 1px solid var(--border-default); }
+/* The utility list draws its own top rule, so the last nav item's rule doubled it. */
+.mobile-menu__item:last-child { border-bottom: none; }
+/* Drawer follows the same nav type as desktop. Production's slide nav measures
+   22px / 400 / normal tracking / no transform; 18px suits our 300px panel. */
 .mobile-menu__item > a,
 .mobile-menu__toggle {
   display: block;
   width: 100%;
   padding: 16px 0;
-  font-size: 15px;
-  font-weight: var(--weight-semibold);
+  font-size: var(--type-nav-size);
+  font-weight: var(--type-nav-weight);
+  letter-spacing: normal;
+  line-height: 1.35;
   color: var(--text-primary);
   text-decoration: none;
   background: none;
@@ -290,7 +327,8 @@
   display: flex;
   align-items: center;
   padding: 10px 0;
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: var(--type-nav-weight);
   color: var(--text-body);
   min-height: 44px;
   text-decoration: none;
@@ -304,17 +342,25 @@
   display: flex;
   align-items: center;
   padding: 10px 0;
-  font-size: 13px;
+  font-size: 15px;
+  font-weight: var(--type-nav-weight);
   color: var(--text-muted);
   min-height: 44px;
   text-decoration: none;
 }
 .site-header__action--help { display: flex; }
 
-@media (max-width: 768px) {
+/* Logo + four title-case 18px nav labels + Help/Account/Cart need ~873px to sit in one
+   row; below that the header pushed the whole page into horizontal scroll. Collapsing to
+   the drawer at 900px keeps a margin over that measured floor without touching the
+   approved nav type. Measured by planning/nav-qa/audit.py. */
+@media (max-width: 900px) {
   .site-header__hamburger { display: flex; }
   .site-header__nav { display: none; }
   .site-header__action--help { display: none; }
+}
+
+@media (max-width: 768px) {
   .site-header__inner { padding: 10px 16px; }
   .site-header__logo-img {
     height: var(--header-logo-height-mobile, var(--header-logo-height, 22px));
@@ -322,82 +368,193 @@
   .announcement-strip { padding: 10px 16px; }
 }
 
-/* Footer — A+ LOCKED / FROZEN Jul 31 2026 (dark Join the list + columns; NO blurb · NO checklist · NO 10%) */
+/* Footer — match Home WORKING (Join the list · NO 10%) */
 .site-footer {
   background: #fff;
   border-top: none;
   padding: 0;
   color: #1c1916;
+  font-family: var(--font-family, 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif);
 }
 .site-footer__body {
   padding: 64px 40px 40px;
   border-top: 1px solid #d6cfc0;
+  background: #ffffff;
 }
 .site-footer__inner {
   max-width: 1200px;
   margin: 0 auto;
 }
 
-/* Dark newsletter band (charcoal — design-system dark, not #000) */
-.footer-newsletter-band {
-  background: #1c1916;
-  color: #fff;
+/* Trusted by — light cream or brand dark */
+.footer-studio-trust {
+  background: #f5f2ec;
+  text-align: center;
   padding: 48px 40px;
+  border-top: 1px solid #e8e2d8;
 }
-.footer-newsletter-band__inner {
-  max-width: 640px;
-  margin: 0 auto;
+.footer-studio-trust__line {
+  font-family: var(--font-family);
+  font-size: var(--ft-trust-title-size, var(--type-statement-size));
+  font-weight: var(--type-statement-weight);
+  color: var(--text-primary);
+  letter-spacing: var(--type-statement-tracking);
+  margin: 0 0 var(--gap-a);
+  line-height: var(--type-statement-leading);
 }
-.footer-newsletter-band .fn-signup h2 {
-  font-size: clamp(22px, 2.5vw, 28px);
-  font-weight: 400;
+.footer-studio-trust__sub {
+  font-size: var(--ft-trust-body-size, var(--type-body-size));
+  font-weight: var(--type-body-weight);
+  color: var(--text-warm-muted);
+  margin: 0;
+  line-height: var(--type-body-leading);
+}
+.footer-studio-trust--dark {
+  background: #1c1916;
+  border-top-color: #2a2622;
+}
+.footer-studio-trust--dark .footer-studio-trust__line { color: #fff; }
+.footer-studio-trust--dark .footer-studio-trust__sub { color: rgba(255, 255, 255, 0.72); }
+
+/* Join the list — light or brand dark (independent of columns) */
+.site-footer .footer-newsletter {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 64px;
+  align-items: start;
+  margin: 0 -40px 48px;
+  padding: 48px 40px;
+  border-bottom: 1px solid rgba(28, 25, 22, 0.12);
+  background: #ffffff;
+}
+.site-footer .fn-signup__title,
+.site-footer .fn-signup h2 {
+  font-size: var(--ft-join-title-size, var(--type-section-size)) !important;
+  font-weight: var(--type-section-weight) !important;
+  color: var(--text-primary);
+  margin: 0 0 var(--gap-a) !important;
+  letter-spacing: var(--type-section-tracking) !important;
+  line-height: var(--type-section-leading) !important;
+  max-width: none !important;
+  text-transform: none;
+}
+.site-footer .fn-signup p {
+  font-size: var(--ft-join-body-size, var(--type-body-size));
+  font-weight: var(--type-body-weight);
+  color: var(--text-body);
+  margin: 0 0 var(--gap-b);
+  line-height: var(--type-body-leading);
+}
+@media (max-width: 768px) {
+  .site-footer .footer-newsletter {
+    margin: 0 -16px 40px;
+    padding: 40px 16px;
+  }
+}
+
+.site-footer .footer-newsletter--dark {
+  background: #1c1916;
+  border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+.site-footer .footer-newsletter--dark .fn-signup__title,
+.site-footer .footer-newsletter--dark .fn-signup h2 { color: #fff !important; }
+.site-footer .footer-newsletter--dark .fn-signup p { color: rgba(255, 255, 255, 0.72); }
+.site-footer .footer-newsletter--dark .fn-input {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.22);
   color: #fff;
-  margin: 0 0 20px;
-  letter-spacing: -0.02em;
-  line-height: 1.15;
 }
-.footer-newsletter-band .fn-signup p {
-  font-size: 15px;
-  color: rgba(255, 255, 255, 0.72);
-  margin: 0 0 20px;
-  line-height: 1.5;
+.site-footer .footer-newsletter--dark .fn-input::placeholder { color: rgba(255, 255, 255, 0.45); }
+.site-footer .footer-newsletter--dark .fn-btn {
+  background: #fff;
+  color: #1c1916;
 }
-.footer-newsletter-band .fn-form {
+.site-footer .footer-newsletter--dark .fn-btn:hover {
+  background: #c45c3f;
+  color: #fff;
+}
+.site-footer .footer-newsletter--dark .fn-legal { color: rgba(255, 255, 255, 0.45); }
+.site-footer .footer-newsletter--dark .fn-check-text { color: rgba(255, 255, 255, 0.85); }
+/* Dark: checks match text — no rust */
+.site-footer .footer-newsletter--dark .fn-check { color: rgba(255, 255, 255, 0.85); }
+
+.site-footer__body--dark {
+  background: #1c1916;
+  border-top-color: #2a2622;
+  color: #fff;
+}
+.site-footer__body--dark .site-footer__col h6 { color: #fff; }
+.site-footer__body--dark .site-footer__col a { color: rgba(255, 255, 255, 0.65); }
+.site-footer__body--dark .site-footer__col a:hover { color: #fff; }
+.site-footer__body--dark .site-footer__bottom { border-top-color: rgba(255, 255, 255, 0.12); }
+.site-footer__body--dark .site-footer__copyright,
+.site-footer__body--dark .site-footer__usa { color: rgba(255, 255, 255, 0.45); }
+.site-footer .fn-form {
   display: flex;
   gap: 8px;
 }
-.footer-newsletter-band .fn-input {
+.site-footer .fn-input {
   flex: 1;
   padding: 14px 16px;
-  border: 1px solid rgba(255, 255, 255, 0.28);
+  border: 1px solid #d6cfc0;
   background: #fff;
   font-size: 14px;
   color: #1c1916;
   border-radius: 4px;
   font-family: inherit;
 }
-.footer-newsletter-band .fn-input::placeholder { color: #9a9182; }
-.footer-newsletter-band .fn-btn {
-  padding: 14px 24px;
-  background: #fff;
-  color: #1c1916;
+.site-footer .fn-input::placeholder { color: #9a9182; }
+.site-footer .fn-btn {
+  min-height: var(--type-cta-min-height);
+  padding: var(--type-cta-pad-y) var(--type-cta-pad-x);
+  background: #1c1916;
+  color: #fff;
   border: none;
-  font-size: 12px;
-  font-weight: 700;
+  font-size: var(--type-cta-size);
+  font-weight: var(--type-cta-weight);
+  line-height: var(--type-cta-leading, 1);
   cursor: pointer;
-  letter-spacing: 0.05em;
+  letter-spacing: var(--type-cta-tracking);
   text-transform: uppercase;
   border-radius: 4px;
-  transition: background 0.2s, color 0.2s;
+  transition: background 0.2s;
+  font-family: inherit;
 }
-.footer-newsletter-band .fn-btn:hover {
+.site-footer .fn-btn:hover {
   background: #c45c3f;
   color: #fff;
 }
-.footer-newsletter-band .fn-legal {
+.site-footer .fn-legal {
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.5);
+  color: #8a8a8a;
   margin: 10px 0 0;
+}
+.site-footer .fn-checks {
+  list-style: none;
+  margin: 0;
+  padding: 8px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.site-footer .fn-checks li {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 0;
+}
+.site-footer .fn-check {
+  flex: 0 0 auto;
+  color: #c45c3f;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.site-footer .fn-check-text {
+  font-size: 14px;
+  font-weight: 400;
+  color: #4a4a4a;
+  line-height: 1.5;
 }
 
 .site-footer__grid {
@@ -443,15 +600,19 @@
 }
 @media (max-width: 1024px) {
   .site-footer__grid { grid-template-columns: repeat(2, 1fr); }
+  .site-footer .footer-newsletter {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
 }
 @media (max-width: 768px) {
-  .footer-newsletter-band { padding: 40px 16px; }
+  .footer-studio-trust { padding: 36px 16px; }
   .site-footer__body { padding: 40px 16px 28px; }
-  .footer-newsletter-band .fn-form {
+  .site-footer .fn-form {
     flex-direction: column;
   }
-  .footer-newsletter-band .fn-input,
-  .footer-newsletter-band .fn-btn {
+  .site-footer .fn-input,
+  .site-footer .fn-btn {
     width: 100%;
     min-height: 48px;
   }

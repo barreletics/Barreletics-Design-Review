@@ -187,11 +187,12 @@ h1, h2, h3, h4, h5, h6 {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: 52px;
-  padding: 16px 40px;
+  min-height: var(--type-cta-min-height);
+  padding: var(--type-cta-pad-y) var(--type-cta-pad-x);
   font-size: var(--type-cta-size);
   font-weight: var(--type-cta-weight);
   letter-spacing: var(--type-cta-tracking);
+  line-height: var(--type-cta-leading, 1);
   text-transform: uppercase;
   border: none;
   border-radius: var(--radius-button);
@@ -341,3 +342,51 @@ h1, h2, h3, h4, h5, h6 {
     scroll-behavior: auto !important;
   }
 }
+
+/* =============================================================================
+   Media fill — opt-in for tile / card cells (NOT heroes or packshots)
+   Parent needs position + overflow hidden + defined size (aspect-ratio or height).
+   ============================================================================= */
+/* Shared — Section frame (outer inset + visibility). Defaults 0 / visible = sticky.
+   Uses MARGIN (not padding) so section content padding never overrides insets.
+   !important beats section ID rules that set margin/padding on the same root. */
+.section-frame {
+  box-sizing: border-box;
+  margin-top: var(--section-inset-top, 0px) !important;
+  margin-right: var(--section-inset-right, 0px) !important;
+  margin-bottom: var(--section-inset-bottom, 0px) !important;
+  margin-left: var(--section-inset-left, 0px) !important;
+}
+@media (max-width: 768px) {
+  .section-frame {
+    margin-top: var(--section-inset-top-m, var(--section-inset-top, 0px)) !important;
+    margin-right: var(--section-inset-right-m, var(--section-inset-right, 0px)) !important;
+    margin-bottom: var(--section-inset-bottom-m, var(--section-inset-bottom, 0px)) !important;
+    margin-left: var(--section-inset-left-m, var(--section-inset-left, 0px)) !important;
+  }
+  .section-frame--hide-mobile {
+    display: none !important;
+  }
+}
+@media (min-width: 769px) {
+  .section-frame--hide-desktop {
+    display: none !important;
+  }
+}
+
+.media-fill {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+}
+.media-fill--contain {
+  object-fit: contain;
+}
+.media-fill--top { object-position: center top; }
+.media-fill--bottom { object-position: center bottom; }
+.media-fill--left { object-position: left center; }
+.media-fill--right { object-position: right center; }

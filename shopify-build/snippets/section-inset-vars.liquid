@@ -1,0 +1,28 @@
+{%- comment -%}
+  Shared — Section frame CSS variables (additive).
+  Controls: inset top · inset bottom · inset X (left+right linked).
+  Defaults: 0 · custom mobile OFF (match desktop) · no visual change.
+  Pair with class "section-frame" on the section root.
+  Fallback: legacy inset_left / inset_right if inset_x unset (older TE saves).
+{%- endcomment -%}
+{%- liquid
+  assign inset_top = section.settings.inset_top | default: 0
+  assign inset_bottom = section.settings.inset_bottom | default: 0
+  assign inset_x = section.settings.inset_x
+  if inset_x == blank
+    assign inset_x = section.settings.inset_left | default: section.settings.inset_right | default: 0
+  endif
+  if section.settings.inset_custom_mobile
+    assign inset_top_m = section.settings.inset_top_mobile | default: 0
+    assign inset_bottom_m = section.settings.inset_bottom_mobile | default: 0
+    assign inset_x_m = section.settings.inset_x_mobile
+    if inset_x_m == blank
+      assign inset_x_m = section.settings.inset_left_mobile | default: section.settings.inset_right_mobile | default: 0
+    endif
+  else
+    assign inset_top_m = inset_top
+    assign inset_bottom_m = inset_bottom
+    assign inset_x_m = inset_x
+  endif
+-%}
+--section-inset-top: {{ inset_top }}px; --section-inset-right: {{ inset_x }}px; --section-inset-bottom: {{ inset_bottom }}px; --section-inset-left: {{ inset_x }}px; --section-inset-top-m: {{ inset_top_m }}px; --section-inset-right-m: {{ inset_x_m }}px; --section-inset-bottom-m: {{ inset_bottom_m }}px; --section-inset-left-m: {{ inset_x_m }}px;

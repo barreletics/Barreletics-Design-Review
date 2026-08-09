@@ -32,6 +32,11 @@
   assign min_height = section.settings.min_height | default: 640
   assign mobile_media_height = section.settings.mobile_media_height | default: 320
   assign image_position = section.settings.image_position | default: 'center'
+  if image_position == 'custom'
+    assign focal_x = section.settings.focal_x | default: 50
+    assign focal_y = section.settings.focal_y | default: 50
+    assign image_position = focal_x | append: '% ' | append: focal_y | append: '%'
+  endif
   assign image_scale = section.settings.image_scale | default: 100
   assign contain_width = section.settings.contain_width | default: 72
   assign media_radius = section.settings.media_radius | default: 0
@@ -50,18 +55,33 @@
   assign cta_size = section.settings.cta_size | default: 'default'
   assign cta_style = section.settings.cta_style | default: 'solid'
   assign cta_bg = section.settings.cta_bg_color | default: '#c45c3f'
+  assign cta_text_color = section.settings.cta_text_color | default: '#ffffff'
   assign cta_border = section.settings.cta_border_color | default: cta_bg
 
   assign region_label = section.settings.aria_label | strip
   if region_label == blank
     assign region_label = section.settings.title | strip_html | truncate: 60
   endif
+
+  assign content_style = section.settings.content_style | default: 'standard'
+  assign quote_italic = section.settings.quote_italic
+  if quote_italic == nil
+    assign quote_italic = true
+  endif
+  assign quote_star_color = section.settings.quote_star_color | default: '#d4af37'
+  assign quote_author_case = section.settings.quote_author_case | default: 'uppercase'
+  assign stat_bar_color = section.settings.stat_bar_color | default: '#c45c3f'
 %}
+{% if content_style == 'quote' %}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+{% endif %}
 
 <section
   {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | handleize }}"{% endif %}
-  class="split-section{% if section.settings.reverse %} split-section--reverse{% endif %}{% if media_fit == 'contain' %} split-section--contain{% endif %}{% if media_radius_outer %} split-section--media-outer-radius{% endif %}"
-  style="
+  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} split-section{% if section.settings.reverse %} split-section--reverse{% endif %}{% if media_fit == 'contain' %} split-section--contain{% endif %}{% if media_radius_outer %} split-section--media-outer-radius{% endif %}"
+  style="{% render 'section-inset-vars' %} 
     --ff-min-height: {{ min_height }}px;
     --ff-mobile-media-height: {{ mobile_media_height }}px;
     --ff-media-fr: {{ media_pct }}fr;
@@ -76,11 +96,15 @@
     --ff-vertical-padding: {{ vertical_padding }}px;
     --ff-cta-bg: {{ cta_bg }};
     --ff-cta-border: {{ cta_border }};
+    --ff-cta-text: {{ cta_text_color }};
+    --ff-quote-star: {{ quote_star_color }};
+    --ff-quote-style: {% if quote_italic %}italic{% else %}normal{% endif %};
+    --ff-stat-bar: {{ stat_bar_color }};
     {% if title_size != 'default' %}--ff-title-size: {{ title_size }}px;{% endif %}
     {% if body_size != 'default' %}--ff-body-size: {{ body_size }}px;{% endif %}
     {% if title_weight != 'default' %}--ff-title-weight: {{ title_weight }};{% endif %}
     {% if body_weight != 'default' %}--ff-body-weight: {{ body_weight }};{% endif %}
-    {% if cta_size != 'default' %}--ff-cta-size: {{ cta_size }}px;{% endif %}
+    {% if cta_size != 'default' and cta_size != blank %}--ff-cta-size: {{ cta_size }}px;{% endif %}
     background: {{ section.settings.bg_color | default: '#fff' }};
   "
   {% if region_label != blank %}aria-label="{{ region_label | escape }}"{% endif %}
@@ -140,42 +164,127 @@
     {% endif %}
   </div>
 
-  <div class="split-text align-editorial" style="background: {{ section.settings.bg_color | default: '#fff' }};">
-    {% if section.settings.eyebrow != blank %}
-      <p class="split-text__eyebrow type-label eyebrow--accent">{{ section.settings.eyebrow }}</p>
-    {% endif %}
-    {% case heading_level %}
-      {% when 'h1' %}
-        <h1 class="split-text__title {{ heading_class }}">{{ section.settings.title | newline_to_br }}</h1>
-      {% when 'h3' %}
-        <h3 class="split-text__title {{ heading_class }}">{{ section.settings.title | newline_to_br }}</h3>
-      {% when 'h4' %}
-        <h4 class="split-text__title {{ heading_class }}">{{ section.settings.title | newline_to_br }}</h4>
-      {% when 'h5' %}
-        <h5 class="split-text__title {{ heading_class }}">{{ section.settings.title | newline_to_br }}</h5>
-      {% when 'h6' %}
-        <h6 class="split-text__title {{ heading_class }}">{{ section.settings.title | newline_to_br }}</h6>
-      {% else %}
-        <h2 class="split-text__title {{ heading_class }}">{{ section.settings.title | newline_to_br }}</h2>
-    {% endcase %}
-    {% if section.settings.body != blank %}
-      <p class="split-text__body type-body">{{ section.settings.body }}</p>
-    {% endif %}
-    {% if section.settings.cta_text != blank %}
-      <a
-        href="{{ cta_href | default: routes.all_products_collection_url }}"
-        class="btn split-cta{% if cta_style == 'outline' %} split-cta--outline{% else %} btn--primary{% endif %}"
-      >{{ section.settings.cta_text }}</a>
+  <div class="split-text align-editorial{% if content_style == 'quote' %} split-text--quote{% endif %}{% if content_style == 'stats' %} split-text--stats{% endif %}{% if content_style == 'statement' %} split-text--statement{% endif %}" style="background: {{ section.settings.bg_color | default: '#fff' }};">
+    {% if content_style == 'quote' %}
+      {% if section.settings.show_quote_stars != false %}
+        <div class="split-quote__stars" aria-hidden="true">★★★★★</div>
+      {% endif %}
+      {% if section.settings.title != blank %}
+        <p class="split-quote__text">“{{ section.settings.title | strip | remove: '"' | remove: '“' | remove: '”' }}”</p>
+      {% endif %}
+      {% if section.settings.quote_author != blank %}
+        <p class="split-quote__author{% if quote_author_case == 'sentence' %} split-quote__author--sentence{% endif %}">{{ section.settings.quote_author }}</p>
+      {% elsif section.settings.body != blank %}
+        <p class="split-quote__author{% if quote_author_case == 'sentence' %} split-quote__author--sentence{% endif %}">{{ section.settings.body }}</p>
+      {% endif %}
+      {% if section.settings.quote_meta != blank %}
+        <p class="split-quote__meta">{{ section.settings.quote_meta }}</p>
+      {% endif %}
+      {% if section.settings.cta_text != blank %}
+        <a
+          href="{{ cta_href | default: '#reviews' }}"
+          class="btn split-cta split-cta--after-stack{% if cta_style == 'outline' %} split-cta--outline{% else %} btn--primary{% endif %}"
+        >{{ section.settings.cta_text }}</a>
+      {% endif %}
+    {% elsif content_style == 'stats' %}
+      {% if section.settings.eyebrow != blank %}
+        <p class="split-text__eyebrow type-label">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+      <div class="split-stats">
+        {% assign has_stat_blocks = false %}
+        {% for block in section.blocks %}
+          {% if block.type == 'stat' %}
+            {% assign has_stat_blocks = true %}
+            <div class="split-stat" {{ block.shopify_attributes }}>
+              <p class="split-stat__value{% if block.settings.emphasis %} split-stat__value--line{% endif %}">{{ block.settings.value }}</p>
+              {% if block.settings.label != blank %}
+                <p class="split-stat__label">{{ block.settings.label }}</p>
+              {% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+        {% unless has_stat_blocks %}
+          {% if section.settings.stat_1_value != blank %}
+            <div class="split-stat">
+              <p class="split-stat__value">{{ section.settings.stat_1_value }}</p>
+              {% if section.settings.stat_1_label != blank %}<p class="split-stat__label">{{ section.settings.stat_1_label }}</p>{% endif %}
+            </div>
+          {% endif %}
+          {% if section.settings.stat_2_value != blank %}
+            <div class="split-stat">
+              <p class="split-stat__value">{{ section.settings.stat_2_value }}</p>
+              {% if section.settings.stat_2_label != blank %}<p class="split-stat__label">{{ section.settings.stat_2_label }}</p>{% endif %}
+            </div>
+          {% endif %}
+          {% if section.settings.stat_3_value != blank %}
+            <div class="split-stat">
+              <p class="split-stat__value{% if section.settings.stat_3_emphasis %} split-stat__value--line{% endif %}">{{ section.settings.stat_3_value }}</p>
+              {% if section.settings.stat_3_label != blank %}<p class="split-stat__label">{{ section.settings.stat_3_label }}</p>{% endif %}
+            </div>
+          {% endif %}
+        {% endunless %}
+      </div>
+      {% if section.settings.cta_text != blank %}
+        <a
+          href="{{ cta_href | default: routes.all_products_collection_url }}"
+          class="btn split-cta split-cta--after-stack{% if cta_style == 'outline' %} split-cta--outline{% else %} btn--primary{% endif %}"
+        >{{ section.settings.cta_text }}</a>
+      {% endif %}
+    {% else %}
+      {% comment %}standard + statement — heading + quiet body; statement uses Type OS expression sizing{% endcomment %}
+      {% if section.settings.eyebrow != blank %}
+        <p class="split-text__eyebrow type-label{% unless content_style == 'statement' %} eyebrow--accent{% endunless %}">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+      {% if section.settings.title != blank %}
+        {% liquid
+          if content_style == 'statement'
+            assign title_class = 'split-text__title type-statement'
+          else
+            assign title_class = 'split-text__title ' | append: heading_class
+          endif
+        %}
+        {% case heading_level %}
+          {% when 'h1' %}
+            <h1 class="{{ title_class }}">{{ section.settings.title | newline_to_br }}</h1>
+          {% when 'h3' %}
+            <h3 class="{{ title_class }}">{{ section.settings.title | newline_to_br }}</h3>
+          {% when 'h4' %}
+            <h4 class="{{ title_class }}">{{ section.settings.title | newline_to_br }}</h4>
+          {% when 'h5' %}
+            <h5 class="{{ title_class }}">{{ section.settings.title | newline_to_br }}</h5>
+          {% when 'h6' %}
+            <h6 class="{{ title_class }}">{{ section.settings.title | newline_to_br }}</h6>
+          {% else %}
+            <h2 class="{{ title_class }}">{{ section.settings.title | newline_to_br }}</h2>
+        {% endcase %}
+      {% endif %}
+      {% if section.settings.body != blank %}
+        <p class="split-text__body type-body{% if content_style == 'statement' %} split-text__body--quiet{% endif %}">{{ section.settings.body }}</p>
+      {% endif %}
+      {% if section.settings.cta_text != blank %}
+        <a
+          href="{{ cta_href | default: routes.all_products_collection_url }}"
+          class="btn split-cta{% if cta_style == 'outline' %} split-cta--outline{% else %} btn--primary{% endif %}"
+        >{{ section.settings.cta_text }}</a>
+      {% endif %}
     {% endif %}
   </div>
 </section>
 
 <style>
+  /* Section rhythm band (2026-08-08). A fifty-fifty is a composed section, not a
+     full-bleed statement, so it must never butt its neighbour at 0 — the media
+     column ran edge to edge and welded itself to the next breather. The band
+     lives on the section box, so the media still fills its own column top to
+     bottom (full-bleed media law below is untouched). The text column subtracts
+     the band so "vertical padding" keeps meaning distance from the section edge. */
   #shopify-section-{{ section.id }} .split-section {
     display: grid;
     grid-template-columns: var(--ff-media-fr, 1fr) var(--ff-text-fr, 1fr);
     gap: var(--ff-column-gap, 0);
     min-height: var(--ff-min-height, 640px);
+    padding-block: var(--ff-band, var(--section-padding-y, 64px));
+    box-sizing: content-box;
   }
   #shopify-section-{{ section.id }} .split-section--reverse {
     grid-template-columns: var(--ff-text-fr, 1fr) var(--ff-media-fr, 1fr);
@@ -210,6 +319,22 @@
     inset: 0;
     transform: scale(var(--ff-image-scale, 1));
     transform-origin: var(--ff-object-position, center);
+  }
+  /* Full-bleed media law (Andrew 2026-08-08): outside "contain" mode the image
+     owns its whole column — edge to edge, top to bottom. No inset container,
+     no padding, no margin. Stated explicitly so it cannot drift back. */
+  #shopify-section-{{ section.id }} .split-section:not(.split-section--contain) .split-media {
+    padding: 0;
+    margin: 0;
+  }
+  #shopify-section-{{ section.id }} .split-section:not(.split-section--contain) .split-media__img,
+  #shopify-section-{{ section.id }} .split-section:not(.split-section--contain) .split-media__video {
+    padding: 0;
+    margin: 0;
+    max-width: none;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
   #shopify-section-{{ section.id }} .split-section--contain .split-media {
     display: flex;
@@ -246,25 +371,42 @@
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    padding: var(--ff-vertical-padding, 88px) var(--ff-side-padding, 64px);
+    padding:
+      max(0px, calc(var(--ff-vertical-padding, 88px) - var(--ff-band, var(--section-padding-y, 64px))))
+      var(--ff-side-padding, 64px);
     border-radius: var(--ff-text-radius, 0);
     text-align: var(--align-editorial, left);
   }
   #shopify-section-{{ section.id }} .split-text__title {
     font-family: var(--font-family, 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif);
-    font-size: var(--ff-title-size, clamp(28px, 3.2vw, 36px)) !important;
-    font-weight: var(--ff-title-weight, 400) !important;
-    line-height: 1.15 !important;
-    letter-spacing: -0.028em !important;
     max-width: none !important;
-    margin: 0 0 20px;
+    margin: 0 0 var(--gap-b, 20px);
+    text-transform: none;
   }
-  /* WORKING: display register uses H2 Display scale; standard keeps wayfinding */
+  /* Type OS — H2 Display / Standard (SETTLED tokens; TE size override optional) */
   #shopify-section-{{ section.id }} .split-text__title.h2-display {
-    font-size: var(--ff-title-size, var(--type-h2-display-size, clamp(28px, 3.5vw, 40px))) !important;
+    font-size: var(--ff-title-size, var(--type-h2-display-size));
+    font-weight: var(--ff-title-weight, var(--type-h2-display-weight));
+    line-height: var(--type-h2-display-leading);
+    letter-spacing: var(--type-h2-display-tracking);
   }
   #shopify-section-{{ section.id }} .split-text__title.h2-standard {
-    font-size: var(--ff-title-size, var(--type-section-size, clamp(28px, 3.2vw, 36px))) !important;
+    font-size: var(--ff-title-size, var(--type-section-size));
+    font-weight: var(--ff-title-weight, var(--type-section-weight));
+    line-height: var(--type-section-leading);
+    letter-spacing: var(--type-section-tracking);
+  }
+  #shopify-section-{{ section.id }} .split-text__title.type-statement {
+    font-size: var(--ff-title-size, var(--type-statement-size));
+    font-weight: var(--ff-title-weight, var(--type-statement-weight));
+    line-height: var(--type-statement-leading);
+    letter-spacing: var(--type-statement-tracking);
+    max-width: 18ch;
+  }
+  #shopify-section-{{ section.id }} .split-text__body--quiet {
+    color: #6b645a;
+    font-size: var(--ff-body-size, 16px);
+    max-width: 32ch;
   }
   #shopify-section-{{ section.id }} .split-text__eyebrow {
     font-size: var(--type-label-size, 11px);
@@ -289,40 +431,38 @@
   }
   #shopify-section-{{ section.id }} .split-cta {
     width: fit-content;
-    font-size: var(--ff-cta-size, 12px);
-    font-weight: 700;
-    letter-spacing: 0.1em;
+    font-size: var(--ff-cta-size, var(--type-cta-size));
+    font-weight: var(--type-cta-weight);
+    letter-spacing: var(--type-cta-tracking, 0.12em);
+    line-height: var(--type-cta-leading, 1);
     text-transform: uppercase;
     text-decoration: none;
     border-radius: 4px;
-    min-height: 48px;
-    padding: 14px 28px;
+    min-height: var(--type-cta-min-height);
+    padding: var(--type-cta-pad-y) var(--type-cta-pad-x);
     display: inline-flex;
     align-items: center;
     justify-content: center;
     background: var(--ff-cta-bg, #c45c3f);
     border: 1px solid var(--ff-cta-border, var(--ff-cta-bg, #c45c3f));
-    color: #fff;
-    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    color: var(--ff-cta-text, #fff);
+    transition: opacity 0.15s ease;
   }
   #shopify-section-{{ section.id }} .split-cta--outline {
     background: transparent;
-    color: var(--ff-cta-border, #c45c3f);
+    color: var(--ff-cta-text, var(--ff-cta-border, #c45c3f));
   }
   #shopify-section-{{ section.id }} .split-cta:hover {
-    background: #c45c3f;
-    border-color: #c45c3f;
-    color: #fff;
+    opacity: 0.92;
   }
   #shopify-section-{{ section.id }} .split-cta--outline:hover {
-    background: transparent;
-    color: #c45c3f;
-    border-color: #c45c3f;
+    opacity: 0.85;
   }
   @media (max-width: 768px) {
     #shopify-section-{{ section.id }} .split-section {
       grid-template-columns: 1fr;
       min-height: auto;
+      padding-block: var(--ff-band-mobile, var(--section-padding-y-mobile, 48px));
     }
     #shopify-section-{{ section.id }} .split-section--reverse .split-media,
     #shopify-section-{{ section.id }} .split-section--reverse .split-text { order: 0; }
@@ -337,9 +477,97 @@
     }
     #shopify-section-{{ section.id }} .split-text {
       padding:
-        min(var(--ff-vertical-padding, 88px), var(--section-padding-y-mobile, 48px))
+        max(0px, calc(
+          min(var(--ff-vertical-padding, 88px), var(--section-padding-y-mobile, 48px))
+          - var(--ff-band-mobile, var(--section-padding-y-mobile, 48px))))
         min(var(--ff-side-padding, 64px), var(--section-padding-x-mobile, 16px));
     }
+  }
+
+  /* Quote composition — Cormorant ~28px default; Title size/weight scale quote */
+  #shopify-section-{{ section.id }} .split-quote__stars {
+    color: var(--ff-quote-star, #d4af37);
+    font-size: 15px;
+    letter-spacing: 0.22em;
+    margin-bottom: 18px;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .split-quote__text {
+    font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    font-size: var(--ff-title-size, 28px);
+    font-style: var(--ff-quote-style, italic);
+    font-weight: var(--ff-title-weight, 400);
+    color: #1c1916;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+    margin: 0 0 24px;
+    max-width: 34ch;
+  }
+  #shopify-section-{{ section.id }} .split-quote__author {
+    font-family: var(--font-family, 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif);
+    font-size: 12px;
+    font-weight: 600;
+    color: #1c1916;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin: 0 0 8px;
+    line-height: 1.35;
+  }
+  #shopify-section-{{ section.id }} .split-quote__author--sentence {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    text-transform: none;
+  }
+  #shopify-section-{{ section.id }} .split-quote__meta {
+    font-family: var(--font-family, 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif);
+    font-size: 14px;
+    font-weight: 400;
+    color: #6b645a;
+    letter-spacing: 0.01em;
+    line-height: 1.5;
+    margin: 0;
+    max-width: 36ch;
+  }
+  #shopify-section-{{ section.id }} .split-text--quote .split-quote__author:last-child,
+  #shopify-section-{{ section.id }} .split-text--quote .split-quote__meta:last-of-type {
+    margin-bottom: 0;
+  }
+  #shopify-section-{{ section.id }} .split-cta--after-stack {
+    margin-top: 32px;
+  }
+
+  /* Stats composition — rust bar color TE; prefer Stat blocks */
+  #shopify-section-{{ section.id }} .split-text--stats .split-text__eyebrow {
+    margin: 0 0 32px;
+    color: #6b645a;
+  }
+  #shopify-section-{{ section.id }} .split-stats {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 28px;
+    margin-bottom: 0;
+  }
+  #shopify-section-{{ section.id }} .split-stat {
+    border-left: 3px solid var(--ff-stat-bar, #c45c3f);
+    padding-left: 20px;
+  }
+  #shopify-section-{{ section.id }} .split-stat__value {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1c1916;
+    margin: 0;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .split-stat__value--line {
+    font-size: 22px;
+    line-height: 1.2;
+  }
+  #shopify-section-{{ section.id }} .split-stat__label {
+    font-size: 14px;
+    color: #4a4a4a;
+    margin: 6px 0 0;
+    line-height: 1.4;
   }
 </style>
 
@@ -347,80 +575,319 @@
 {
   "name": "50/50 Split",
   "settings": [
-    { "type": "header", "content": "Shared — Content" },
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    {
+      "type": "header",
+      "content": "Shared \u2014 Content"
+    },
+    {
+      "type": "select",
+      "id": "content_style",
+      "label": "Content style",
+      "options": [
+        {
+          "value": "standard",
+          "label": "Standard \u2014 heading + body + CTA"
+        },
+        {
+          "value": "statement",
+          "label": "Statement \u2014 big slogan + quiet sub"
+        },
+        {
+          "value": "quote",
+          "label": "Quote \u2014 stars + italic + author"
+        },
+        {
+          "value": "stats",
+          "label": "Stats \u2014 rust-bar metrics"
+        }
+      ],
+      "default": "standard",
+      "info": "Pick a recipe. Quote + Stats controls appear immediately below. Standard/Statement use Heading + Body + CTA as usual."
+    },
+    {
+      "type": "header",
+      "content": "Quote"
+    },
+    {
+      "type": "paragraph",
+      "content": "Only when Content style = Quote. Put the quote in Heading. Title size/weight scale it."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quote_stars",
+      "label": "Show quote stars",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "quote_star_color",
+      "label": "Star color",
+      "default": "#d4af37"
+    },
+    {
+      "type": "checkbox",
+      "id": "quote_italic",
+      "label": "Italic quote",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "quote_author",
+      "label": "Author name",
+      "info": "Falls back to Body if blank."
+    },
+    {
+      "type": "select",
+      "id": "quote_author_case",
+      "label": "Author style",
+      "options": [
+        { "value": "uppercase", "label": "Uppercase" },
+        { "value": "sentence", "label": "Sentence case" }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "text",
+      "id": "quote_meta",
+      "label": "Short description / role",
+      "info": "e.g. Barre Instructor \u00b7 New York, NY"
+    },
+    {
+      "type": "header",
+      "content": "Stats"
+    },
+    {
+      "type": "paragraph",
+      "content": "Only when Content style = Stats. Prefer Stat blocks at the bottom; fallbacks below if none."
+    },
+    {
+      "type": "color",
+      "id": "stat_bar_color",
+      "label": "Rust bar color",
+      "default": "#c45c3f",
+      "info": "Left accent on each metric."
+    },
+    {
+      "type": "text",
+      "id": "stat_1_value",
+      "label": "Fallback \u2014 Stat 1 value",
+      "info": "e.g. 360\u00b0 \u2014 ignored when Stat blocks exist"
+    },
+    {
+      "type": "text",
+      "id": "stat_1_label",
+      "label": "Fallback \u2014 Stat 1 label"
+    },
+    {
+      "type": "text",
+      "id": "stat_2_value",
+      "label": "Fallback \u2014 Stat 2 value"
+    },
+    {
+      "type": "text",
+      "id": "stat_2_label",
+      "label": "Fallback \u2014 Stat 2 label"
+    },
+    {
+      "type": "text",
+      "id": "stat_3_value",
+      "label": "Fallback \u2014 Stat 3 value"
+    },
+    {
+      "type": "text",
+      "id": "stat_3_label",
+      "label": "Fallback \u2014 Stat 3 label"
+    },
+    {
+      "type": "checkbox",
+      "id": "stat_3_emphasis",
+      "label": "Fallback Stat 3 as longer line (smaller type)",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
     {
       "type": "select",
       "id": "heading_register",
       "label": "Heading register",
       "options": [
-        { "value": "display", "label": "Display — brand statement" },
-        { "value": "standard", "label": "Standard — wayfinding" }
+        {
+          "value": "display",
+          "label": "Display \u2014 brand statement"
+        },
+        {
+          "value": "standard",
+          "label": "Standard \u2014 wayfinding"
+        }
       ],
       "default": "display",
-      "info": "Family is brand Type OS — use Title size/weight to adjust. No font family picker."
+      "info": "Family is brand Type OS \u2014 use Title size/weight to adjust. No font family picker."
     },
     {
       "type": "textarea",
       "id": "title",
       "label": "Heading",
       "default": "Never loses shape.\nNever loses grip.",
-      "info": "Plain text. Line breaks become <br>. Not richtext. Family is brand Type OS — use Title size/weight to adjust."
+      "info": "Plain text. Line breaks become <br>. Quote style: use this field for the quote (no heading tag)."
     },
     {
       "type": "select",
       "id": "heading_level",
       "label": "Heading level",
       "options": [
-        { "value": "h1", "label": "H1" },
-        { "value": "h2", "label": "H2" },
-        { "value": "h3", "label": "H3" },
-        { "value": "h4", "label": "H4" },
-        { "value": "h5", "label": "H5" },
-        { "value": "h6", "label": "H6" }
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        }
       ],
       "default": "h2",
-      "info": "Outputs the real HTML tag (h1–h6) for SEO/accessibility. Visual size is Title size — not this control."
+      "info": "Outputs the real HTML tag (h1\u2013h6) for SEO/accessibility. Visual size is Title size \u2014 not this control."
     },
     {
       "type": "select",
       "id": "title_size",
       "label": "Title size",
       "options": [
-        { "value": "default", "label": "Default / Type OS" },
-        { "value": "12", "label": "12px" },
-        { "value": "13", "label": "13px" },
-        { "value": "14", "label": "14px" },
-        { "value": "15", "label": "15px" },
-        { "value": "16", "label": "16px" },
-        { "value": "17", "label": "17px" },
-        { "value": "18", "label": "18px" },
-        { "value": "20", "label": "20px" },
-        { "value": "22", "label": "22px" },
-        { "value": "24", "label": "24px" },
-        { "value": "26", "label": "26px" },
-        { "value": "28", "label": "28px" },
-        { "value": "30", "label": "30px" },
-        { "value": "32", "label": "32px" },
-        { "value": "36", "label": "36px" },
-        { "value": "40", "label": "40px" },
-        { "value": "44", "label": "44px" },
-        { "value": "48", "label": "48px" },
-        { "value": "56", "label": "56px" }
+        {
+          "value": "default",
+          "label": "Default / Type OS"
+        },
+        {
+          "value": "12",
+          "label": "12px"
+        },
+        {
+          "value": "13",
+          "label": "13px"
+        },
+        {
+          "value": "14",
+          "label": "14px"
+        },
+        {
+          "value": "15",
+          "label": "15px"
+        },
+        {
+          "value": "16",
+          "label": "16px"
+        },
+        {
+          "value": "17",
+          "label": "17px"
+        },
+        {
+          "value": "18",
+          "label": "18px"
+        },
+        {
+          "value": "20",
+          "label": "20px"
+        },
+        {
+          "value": "22",
+          "label": "22px"
+        },
+        {
+          "value": "24",
+          "label": "24px"
+        },
+        {
+          "value": "26",
+          "label": "26px"
+        },
+        {
+          "value": "28",
+          "label": "28px"
+        },
+        {
+          "value": "30",
+          "label": "30px"
+        },
+        {
+          "value": "32",
+          "label": "32px"
+        },
+        {
+          "value": "36",
+          "label": "36px"
+        },
+        {
+          "value": "38",
+          "label": "38px"
+        },
+        {
+          "value": "40",
+          "label": "40px"
+        },
+        {
+          "value": "42",
+          "label": "42px"
+        },
+        {
+          "value": "44",
+          "label": "44px"
+        },
+        {
+          "value": "48",
+          "label": "48px"
+        },
+        {
+          "value": "56",
+          "label": "56px"
+        }
       ],
       "default": "default",
-      "info": "Family is brand Type OS — size only. Default keeps Type OS."
+      "info": "Family is brand Type OS \u2014 size only. Default keeps Type OS."
     },
     {
       "type": "select",
       "id": "title_weight",
       "label": "Title weight",
       "options": [
-        { "value": "default", "label": "Default" },
-        { "value": "400", "label": "400" },
-        { "value": "500", "label": "500" },
-        { "value": "600", "label": "600" },
-        { "value": "700", "label": "700" }
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "400",
+          "label": "400"
+        },
+        {
+          "value": "500",
+          "label": "500"
+        },
+        {
+          "value": "600",
+          "label": "600"
+        },
+        {
+          "value": "700",
+          "label": "700"
+        }
       ],
       "default": "default"
     },
@@ -428,76 +895,199 @@
       "type": "textarea",
       "id": "body",
       "label": "Body",
-      "default": "Built to hold when it matters most—so you can push deeper, stay longer, and move with confidence.",
-      "info": "Family is brand Type OS — use Body size/weight to adjust. No font family picker."
+      "default": "Built to hold when it matters most\u2014so you can push deeper, stay longer, and move with confidence.",
+      "info": "Family is brand Type OS \u2014 use Body size/weight to adjust. No font family picker."
     },
     {
       "type": "select",
       "id": "body_size",
       "label": "Body size",
       "options": [
-        { "value": "default", "label": "Default / Type OS" },
-        { "value": "12", "label": "12px" },
-        { "value": "13", "label": "13px" },
-        { "value": "14", "label": "14px" },
-        { "value": "15", "label": "15px" },
-        { "value": "16", "label": "16px" },
-        { "value": "17", "label": "17px" },
-        { "value": "18", "label": "18px" },
-        { "value": "20", "label": "20px" },
-        { "value": "22", "label": "22px" },
-        { "value": "24", "label": "24px" },
-        { "value": "26", "label": "26px" },
-        { "value": "28", "label": "28px" },
-        { "value": "30", "label": "30px" },
-        { "value": "32", "label": "32px" },
-        { "value": "36", "label": "36px" },
-        { "value": "40", "label": "40px" },
-        { "value": "44", "label": "44px" },
-        { "value": "48", "label": "48px" },
-        { "value": "56", "label": "56px" }
+        {
+          "value": "default",
+          "label": "Default / Type OS"
+        },
+        {
+          "value": "12",
+          "label": "12px"
+        },
+        {
+          "value": "13",
+          "label": "13px"
+        },
+        {
+          "value": "14",
+          "label": "14px"
+        },
+        {
+          "value": "15",
+          "label": "15px"
+        },
+        {
+          "value": "16",
+          "label": "16px"
+        },
+        {
+          "value": "17",
+          "label": "17px"
+        },
+        {
+          "value": "18",
+          "label": "18px"
+        },
+        {
+          "value": "20",
+          "label": "20px"
+        },
+        {
+          "value": "22",
+          "label": "22px"
+        },
+        {
+          "value": "24",
+          "label": "24px"
+        },
+        {
+          "value": "26",
+          "label": "26px"
+        },
+        {
+          "value": "28",
+          "label": "28px"
+        },
+        {
+          "value": "30",
+          "label": "30px"
+        },
+        {
+          "value": "32",
+          "label": "32px"
+        },
+        {
+          "value": "36",
+          "label": "36px"
+        },
+        {
+          "value": "38",
+          "label": "38px"
+        },
+        {
+          "value": "40",
+          "label": "40px"
+        },
+        {
+          "value": "42",
+          "label": "42px"
+        },
+        {
+          "value": "44",
+          "label": "44px"
+        },
+        {
+          "value": "48",
+          "label": "48px"
+        },
+        {
+          "value": "56",
+          "label": "56px"
+        }
       ],
       "default": "default",
-      "info": "Family is brand Type OS — size only. Default keeps Type OS body size."
+      "info": "Family is brand Type OS \u2014 size only. Default keeps Type OS body size."
     },
     {
       "type": "select",
       "id": "body_weight",
       "label": "Body weight",
       "options": [
-        { "value": "default", "label": "Default" },
-        { "value": "400", "label": "400" },
-        { "value": "500", "label": "500" },
-        { "value": "600", "label": "600" },
-        { "value": "700", "label": "700" }
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "400",
+          "label": "400"
+        },
+        {
+          "value": "500",
+          "label": "500"
+        },
+        {
+          "value": "600",
+          "label": "600"
+        },
+        {
+          "value": "700",
+          "label": "700"
+        }
       ],
       "default": "default"
     },
-    { "type": "text", "id": "cta_text", "label": "CTA label", "default": "Shop Now" },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA label",
+      "default": "Shop Now",
+      "info": "Leave blank to hide the button. Quote and Stats use the same button chrome as Standard (style / colors below)."
+    },
     {
       "type": "select",
       "id": "cta_size",
       "label": "CTA font size",
       "options": [
-        { "value": "default", "label": "Default / Type OS" },
-        { "value": "11", "label": "11px" },
-        { "value": "12", "label": "12px" },
-        { "value": "13", "label": "13px" },
-        { "value": "14", "label": "14px" },
-        { "value": "15", "label": "15px" },
-        { "value": "16", "label": "16px" },
-        { "value": "18", "label": "18px" },
-        { "value": "20", "label": "20px" }
+        {
+          "value": "default",
+          "label": "Default / Type OS"
+        },
+        {
+          "value": "11",
+          "label": "11px"
+        },
+        {
+          "value": "12",
+          "label": "12px"
+        },
+        {
+          "value": "13",
+          "label": "13px"
+        },
+        {
+          "value": "14",
+          "label": "14px"
+        },
+        {
+          "value": "15",
+          "label": "15px"
+        },
+        {
+          "value": "16",
+          "label": "16px"
+        },
+        {
+          "value": "18",
+          "label": "18px"
+        },
+        {
+          "value": "20",
+          "label": "20px"
+        }
       ],
-      "default": "default"
+      "default": "default",
+      "info": "Default uses Type OS CTA (15px / 500). Override only if needed."
     },
     {
       "type": "select",
       "id": "cta_style",
       "label": "CTA style",
       "options": [
-        { "value": "solid", "label": "Solid fill" },
-        { "value": "outline", "label": "Outline only" }
+        {
+          "value": "solid",
+          "label": "Solid fill"
+        },
+        {
+          "value": "outline",
+          "label": "Outline only"
+        }
       ],
       "default": "solid"
     },
@@ -515,40 +1105,80 @@
       "default": "#c45c3f"
     },
     {
+      "type": "color",
+      "id": "cta_text_color",
+      "label": "CTA label color",
+      "default": "#ffffff",
+      "info": "Solid fill: usually white. Outline or light fill: charcoal/black. Dark fill + light label, or light fill + dark label."
+    },
+    {
       "type": "select",
       "id": "cta_link_target",
       "label": "CTA link",
       "options": [
-        { "value": "custom", "label": "Custom URL…" },
-        { "value": "#variants", "label": "#variants — Shop styles" },
-        { "value": "#knock-socks", "label": "#knock-socks — Statement" },
-        { "value": "#reviews", "label": "#reviews" },
-        { "value": "#guarantee", "label": "#guarantee" },
-        { "value": "#never-loses-grip", "label": "#never-loses-grip" },
-        { "value": "#one-pair", "label": "#one-pair" },
-        { "value": "#coperni", "label": "#coperni — Collab" },
-        { "value": "#problem", "label": "#problem" }
+        {
+          "value": "custom",
+          "label": "Custom URL\u2026"
+        },
+        {
+          "value": "#buy",
+          "label": "#buy \u2014 Buy box"
+        },
+        {
+          "value": "#variants",
+          "label": "#variants \u2014 Shop styles"
+        },
+        {
+          "value": "#knock-socks",
+          "label": "#knock-socks \u2014 Statement"
+        },
+        {
+          "value": "#reviews",
+          "label": "#reviews"
+        },
+        {
+          "value": "#guarantee",
+          "label": "#guarantee"
+        },
+        {
+          "value": "#never-loses-grip",
+          "label": "#never-loses-grip"
+        },
+        {
+          "value": "#one-pair",
+          "label": "#one-pair"
+        },
+        {
+          "value": "#coperni",
+          "label": "#coperni \u2014 Collab"
+        },
+        {
+          "value": "#problem",
+          "label": "#problem"
+        }
       ],
       "default": "custom",
-      "info": "Homepage section anchors jump on the same page. Choose Custom URL… for a full URL, collection/product/page, or any other #hash. Blank custom → all-products collection."
+      "info": "Homepage section anchors jump on the same page. Choose Custom URL\u2026 for a full URL, collection/product/page, or any other #hash. Blank custom \u2192 all-products collection."
     },
     {
       "type": "text",
       "id": "cta_url",
       "label": "Custom CTA URL",
-      "info": "Used when CTA link = Custom URL…. Full URL, relative path, or custom #hash. Shopify’s URL picker often drops hash-only links — this text field keeps them."
+      "info": "Used when CTA link = Custom URL\u2026. Full URL, relative path, or custom #hash. Shopify\u2019s URL picker often drops hash-only links \u2014 this text field keeps them."
     },
-
-    { "type": "header", "content": "Shared — Media" },
+    {
+      "type": "header",
+      "content": "Shared \u2014 Media"
+    },
     {
       "type": "paragraph",
-      "content": "Pick ONE media path. Priority: Shopify video → Video URL → Shopify image → Image URL fallback. Leave unused fields blank."
+      "content": "Pick ONE media path. Priority: Shopify video \u2192 Video URL \u2192 Shopify image \u2192 Image URL fallback. Leave unused fields blank."
     },
     {
       "type": "video",
       "id": "video",
       "label": "Shopify video",
-      "info": "Preferred when the file lives in Shopify Files. Use this OR Video URL — not both. Shopify video wins if both are set."
+      "info": "Preferred when the file lives in Shopify Files. Use this OR Video URL \u2014 not both. Shopify video wins if both are set."
     },
     {
       "type": "text",
@@ -574,9 +1204,15 @@
       "label": "Image URL (optional fallback)",
       "info": "Only used when the Shopify image picker is empty (and there is no video). Needed when: (1) you paste a CDN/external URL without uploading to Shopify Files, (2) theme defaults ship with mock CDN URLs, or (3) the picker is left blank. If both Shopify image and this URL are set, Shopify image wins. Leave blank if you always use the image picker."
     },
-    { "type": "text", "id": "image_alt", "label": "Image alt text" },
-
-    { "type": "header", "content": "Shared — Layout" },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image alt text"
+    },
+    {
+      "type": "header",
+      "content": "Shared \u2014 Layout"
+    },
     {
       "type": "range",
       "id": "min_height",
@@ -597,7 +1233,7 @@
       "step": 1,
       "unit": "%",
       "default": 50,
-      "info": "Desktop only. Text column = 100 − media %. Default 50/50."
+      "info": "Desktop only. Text column = 100 \u2212 media %. Default 50/50."
     },
     {
       "type": "range",
@@ -609,39 +1245,44 @@
       "unit": "px",
       "default": 320
     },
-    { "type": "checkbox", "id": "reverse", "label": "Reverse layout (text left, media right)", "default": false },
+    {
+      "type": "checkbox",
+      "id": "reverse",
+      "label": "Reverse layout (text left, media right)",
+      "default": false
+    },
     {
       "type": "range",
       "id": "column_gap",
-      "label": "Column gap (gutter)",
+      "label": "Gap between media & text",
       "min": 0,
       "max": 64,
       "step": 4,
       "unit": "px",
       "default": 0,
-      "info": "Space between the media and text columns. WORKING mock is flush (0)."
+      "info": "Middle gutter. Raise with panel radius + text panel background to see rounded corners. WORKING default is flush (0)."
     },
     {
       "type": "range",
       "id": "side_padding",
-      "label": "Side padding",
+      "label": "Text panel \u2014 left & right pad",
       "min": 16,
       "max": 96,
       "step": 4,
       "unit": "px",
       "default": 64,
-      "info": "Horizontal padding inside the text/content panel. WORKING mock is 64px."
+      "info": "Inner horizontal padding in the text column. Same on both sides. WORKING default 64px."
     },
     {
       "type": "range",
       "id": "vertical_padding",
-      "label": "Vertical padding",
+      "label": "Text panel \u2014 top & bottom pad",
       "min": 32,
       "max": 120,
       "step": 4,
       "unit": "px",
       "default": 88,
-      "info": "Top and bottom padding inside the text/content panel. WORKING mock is 88px."
+      "info": "Inner vertical padding in the text column. WORKING default 88px."
     },
     {
       "type": "range",
@@ -652,7 +1293,7 @@
       "step": 2,
       "unit": "px",
       "default": 0,
-      "info": "Rounds the media panel only — independent of the text panel."
+      "info": "Rounds the media panel only \u2014 independent of the text panel."
     },
     {
       "type": "checkbox",
@@ -670,30 +1311,44 @@
       "step": 2,
       "unit": "px",
       "default": 0,
-      "info": "Rounds the text/content panel only — independent of the media panel."
+      "info": "Rounds the text panel. Pair with Gap + Text panel background so corners read clearly."
     },
-    { "type": "color", "id": "bg_color", "label": "Background color", "default": "#ffffff" },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Text panel background",
+      "default": "#ffffff",
+      "info": "Shades the text column so radius + middle gap are visible. Use white/cream/soft gray as needed."
+    },
     {
       "type": "text",
       "id": "anchor_id",
       "label": "Anchor ID (optional)",
-      "info": "This section’s own ID for same-page jumps (e.g. never-loses-grip → #never-loses-grip). Not the same as CTA link."
+      "info": "This section\u2019s own ID for same-page jumps (e.g. never-loses-grip \u2192 #never-loses-grip). Not the same as CTA link."
     },
     {
       "type": "text",
       "id": "aria_label",
       "label": "Accessibility name (aria-label)",
-      "info": "Accessibility name for screen readers. Not shown on the page. Leave blank unless you need a special name — blank uses the Heading."
+      "info": "Accessibility name for screen readers. Not shown on the page. Leave blank unless you need a special name \u2014 blank uses the Heading."
     },
-
-    { "type": "header", "content": "Section — Fifty-fifty — media fit" },
+    {
+      "type": "header",
+      "content": "Media fit"
+    },
     {
       "type": "select",
       "id": "media_fit",
       "label": "Media fit",
       "options": [
-        { "value": "cover", "label": "Cover (lifestyle / video)" },
-        { "value": "contain", "label": "Contain (packshot)" }
+        {
+          "value": "cover",
+          "label": "Cover (lifestyle / video)"
+        },
+        {
+          "value": "contain",
+          "label": "Contain (packshot)"
+        }
       ],
       "default": "cover"
     },
@@ -702,18 +1357,71 @@
       "id": "image_position",
       "label": "Image focal point",
       "options": [
-        { "value": "center", "label": "Center" },
-        { "value": "top", "label": "Top" },
-        { "value": "bottom", "label": "Bottom" },
-        { "value": "left", "label": "Left" },
-        { "value": "right", "label": "Right" },
-        { "value": "top left", "label": "Top left" },
-        { "value": "top right", "label": "Top right" },
-        { "value": "bottom left", "label": "Bottom left" },
-        { "value": "bottom right", "label": "Bottom right" }
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        },
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        },
+        {
+          "value": "top left",
+          "label": "Top left"
+        },
+        {
+          "value": "top right",
+          "label": "Top right"
+        },
+        {
+          "value": "bottom left",
+          "label": "Bottom left"
+        },
+        {
+          "value": "bottom right",
+          "label": "Bottom right"
+        },
+        {
+          "value": "custom",
+          "label": "Custom (use the sliders below)"
+        }
       ],
       "default": "center",
-      "info": "object-position for cover crops (and contain alignment)."
+      "info": "object-position for cover crops (and contain alignment). The nine presets snap to the edges; pick Custom when a packshot needs a few percent of nudge to stop the crop clipping it."
+    },
+    {
+      "type": "range",
+      "id": "focal_x",
+      "label": "Custom focal point — horizontal",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "info": "Only when Image focal point = Custom. 0 = show the left edge, 100 = show the right edge."
+    },
+    {
+      "type": "range",
+      "id": "focal_y",
+      "label": "Custom focal point — vertical",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "info": "Only when Image focal point = Custom. 0 = keep the top of the photo, 100 = keep the bottom. Lower this when a cover crop is eating the top of a packshot."
     },
     {
       "type": "range",
@@ -737,9 +1445,138 @@
       "default": 72,
       "info": "Only when Media fit = Contain. WORKING mock uses ~72%."
     },
-    { "type": "color", "id": "media_bg", "label": "Media background (contain)", "default": "#f9f9f9" },
-    { "type": "text", "id": "video_caption", "label": "Video caption (compat — unused)" }
+    {
+      "type": "color",
+      "id": "media_bg",
+      "label": "Media background (contain)",
+      "default": "#f9f9f9"
+    },
+    {
+      "type": "text",
+      "id": "video_caption",
+      "label": "Video caption (compat \u2014 unused)"
+    },
+    {
+      "type": "header",
+      "content": "Section frame"
+    },
+    {
+      "type": "paragraph",
+      "content": "OUTER inset from the page edges. Top/bottom independent; left & right = one control. Custom mobile OFF = mobile matches desktop. Defaults 0 = full bleed."
+    },
+    {
+      "type": "checkbox",
+      "id": "inset_custom_mobile",
+      "label": "Custom mobile inset",
+      "default": false,
+      "info": "OFF (default): ignore the mobile inset sliders \u2014 mobile uses desktop Inset top / bottom / left & right. ON: use the mobile inset sliders instead."
+    },
+    {
+      "type": "range",
+      "id": "inset_top",
+      "label": "Inset top",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom",
+      "label": "Inset bottom",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x",
+      "label": "Inset left & right",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Same value on both sides."
+    },
+    {
+      "type": "range",
+      "id": "inset_top_mobile",
+      "label": "Inset top \u2014 mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom_mobile",
+      "label": "Inset bottom \u2014 mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x_mobile",
+      "label": "Inset left & right \u2014 mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_desktop",
+      "label": "Hide on desktop",
+      "default": false
+    }
   ],
-  "presets": [{ "name": "50/50 Split" }]
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat",
+      "settings": [
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Value",
+          "default": "360\u00b0"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "grip surface"
+        },
+        {
+          "type": "checkbox",
+          "id": "emphasis",
+          "label": "Longer line (smaller type)",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "50/50 Split"
+    }
+  ]
 }
 {% endschema %}

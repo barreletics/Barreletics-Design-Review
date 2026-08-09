@@ -58,7 +58,7 @@
 | 13 | Instagram | From the studio | @barreletics · static grid or Juicer | **Built → refine** (Juicer optional) |
 | 14 | Guarantee | Zero risk. All grip. | Shipping / 30-day / 90-day / Made in USA | **Built** |
 | 15 | Studio trust | Trusted by 1,000's of instructors & studios. | Dig into deep lunges… | **Built** (GEO accordion retired unless Brian re-locks) |
-| 16 | Footer + newsletter | 10% off your first pair | — | **Built → light update** |
+| 16 | Footer + newsletter | Join the list (NO 10% — offer retired) | — | **Built → light update** |
 
 ---
 

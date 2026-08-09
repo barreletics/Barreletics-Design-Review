@@ -1,17 +1,33 @@
 {% comment %}
-  Full-bleed statement — Home WORKING §9. Lifestyle image + commit line.
+  Full-bleed statement / stage — lifestyle image or video + optional copy.
+  Multi-use: PDP commit line, tall stage heroes, image-only media bands.
   Separate from statement-band (cream solo slogan).
 {% endcomment %}
 {% liquid
   assign title_size = section.settings.title_size | default: 'default'
   assign title_weight = section.settings.title_weight | default: 'default'
+  assign body_size = section.settings.body_size | default: 'default'
+  assign body_weight = section.settings.body_weight | default: 'default'
   assign media_radius = section.settings.media_radius | default: 0
+  assign show_text = section.settings.show_text
+  if show_text == nil
+    assign show_text = true
+  endif
+  assign height_desktop = section.settings.height_desktop | default: '64'
+  assign height_mobile = section.settings.height_mobile | default: '52'
+  assign overlay_opacity = section.settings.overlay_opacity | default: 55
+  assign overlay_alpha = overlay_opacity | times: 0.01
+
   assign cta_target = section.settings.cta_link_target | default: 'custom'
   if cta_target != blank and cta_target != 'custom'
     assign cta_href = cta_target
   else
     assign cta_href = section.settings.cta_url
   endif
+  assign cta_style = section.settings.cta_style | default: 'solid'
+  assign cta_bg = section.settings.cta_bg_color | default: '#ffffff'
+  assign cta_border = section.settings.cta_border_color | default: cta_bg
+  assign cta_text_color = section.settings.cta_text_color | default: '#1c1916'
   assign region_label = section.settings.aria_label | strip
   if region_label == blank
     assign region_label = section.settings.title
@@ -19,16 +35,53 @@
 %}
 
 <section
-  class="fullbleed-statement"
-  style="
+  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} fullbleed-statement{% unless show_text %} fullbleed-statement--media-only{% endunless %}"
+  style="{% render 'section-inset-vars' %} 
     --fb-media-radius: {{ media_radius }}px;
+    --fb-height-desktop: {{ height_desktop }}vh;
+    --fb-height-mobile: {{ height_mobile }}vh;
+    --fb-overlay: rgba(28, 25, 22, {{ overlay_alpha }});
+    --fb-cta-bg: {{ cta_bg }};
+    --fb-cta-border: {{ cta_border }};
+    --fb-cta-text: {{ cta_text_color }};
     {% if title_size != 'default' %}--fb-title-size: {{ title_size }}px;{% endif %}
     {% if title_weight != 'default' %}--fb-title-weight: {{ title_weight }};{% endif %}
+    {% if body_size != 'default' %}--fb-body-size: {{ body_size }}px;{% endif %}
+    {% if body_weight != 'default' %}--fb-body-weight: {{ body_weight }};{% endif %}
   "
   {% if region_label != blank %}aria-label="{{ region_label | escape }}"{% endif %}
 >
   <div class="fullbleed-statement__bg">
-    {% if section.settings.image != blank %}
+    {% if section.settings.video != blank %}
+      {{
+        section.settings.video
+        | video_tag:
+          image_size: '2000x',
+          autoplay: true,
+          loop: true,
+          muted: true,
+          controls: false,
+          playsinline: true,
+          class: 'fullbleed-statement__video'
+      }}
+    {% elsif section.settings.video_url != blank %}
+      <video
+        class="fullbleed-statement__video"
+        autoplay
+        muted
+        loop
+        playsinline
+        webkit-playsinline
+        preload="metadata"
+        {% if section.settings.image != blank %}
+          poster="{{ section.settings.image | image_url: width: 2000 }}"
+        {% elsif section.settings.poster_url != blank %}
+          poster="{{ section.settings.poster_url | escape }}"
+        {% endif %}
+      >
+        <source src="{{ section.settings.video_url | escape }}" type="video/mp4">
+      </video>
+    {% elsif section.settings.image != blank %}
       <img
         src="{{ section.settings.image | image_url: width: 2000 }}"
         alt="{{ section.settings.image_alt | escape }}"
@@ -46,21 +99,31 @@
       >
     {% endif %}
   </div>
-  <div class="fullbleed-statement__content">
-    <p class="fullbleed-statement__line type-statement">{{ section.settings.title }}</p>
-    {% if section.settings.cta_text != blank %}
-      <a class="fullbleed-statement__cta" href="{{ cta_href | default: routes.all_products_collection_url }}">
-        {{ section.settings.cta_text }}
-      </a>
-    {% endif %}
-  </div>
+  {% if show_text %}
+    <div class="fullbleed-statement__content">
+      {% if section.settings.eyebrow != blank %}
+        <p class="fullbleed-statement__eyebrow type-label">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+      {% if section.settings.title != blank %}
+        <p class="fullbleed-statement__line type-statement">{{ section.settings.title }}</p>
+      {% endif %}
+      {% if section.settings.body != blank %}
+        <p class="fullbleed-statement__sub">{{ section.settings.body }}</p>
+      {% endif %}
+      {% if section.settings.cta_text != blank %}
+        <a class="fullbleed-statement__cta{% if cta_style == 'outline' %} fullbleed-statement__cta--outline{% endif %}" href="{{ cta_href | default: routes.all_products_collection_url }}">
+          {{ section.settings.cta_text }}
+        </a>
+      {% endif %}
+    </div>
+  {% endif %}
 </section>
 
 <style>
   #shopify-section-{{ section.id }} .fullbleed-statement {
     position: relative;
     width: 100%;
-    min-height: 64vh;
+    min-height: var(--fb-height-desktop, 64vh);
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -69,17 +132,26 @@
     border-radius: var(--fb-media-radius, 0);
   }
   #shopify-section-{{ section.id }} .fullbleed-statement__bg { position: absolute; inset: 0; }
-  #shopify-section-{{ section.id }} .fullbleed-statement__bg img {
+  #shopify-section-{{ section.id }} .fullbleed-statement__bg img,
+  #shopify-section-{{ section.id }} .fullbleed-statement__video {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
   }
+  #shopify-section-{{ section.id }} .fullbleed-statement__video {
+    position: absolute;
+    inset: 0;
+  }
   #shopify-section-{{ section.id }} .fullbleed-statement__bg::after {
     content: "";
     position: absolute;
     inset: 0;
-    background: rgba(28, 25, 22, 0.55);
+    background: var(--fb-overlay, rgba(28, 25, 22, 0.55));
+    pointer-events: none;
+  }
+  #shopify-section-{{ section.id }} .fullbleed-statement--media-only .fullbleed-statement__bg::after {
+    background: transparent;
   }
   #shopify-section-{{ section.id }} .fullbleed-statement__content {
     position: relative;
@@ -88,37 +160,54 @@
     padding: 80px 40px;
     max-width: 720px;
   }
+  #shopify-section-{{ section.id }} .fullbleed-statement__eyebrow {
+    color: rgba(255, 255, 255, 0.72);
+    margin: 0 0 var(--gap-a, 16px);
+  }
   #shopify-section-{{ section.id }} .fullbleed-statement__line {
-    font-size: var(--fb-title-size, clamp(28px, 3.5vw, 40px)) !important;
-    font-weight: var(--fb-title-weight, 400) !important;
-    letter-spacing: -0.03em !important;
-    line-height: 1.12 !important;
+    font-size: var(--fb-title-size, var(--type-statement-size));
+    font-weight: var(--fb-title-weight, var(--type-statement-weight));
+    letter-spacing: var(--type-statement-tracking);
+    line-height: var(--type-statement-leading);
     color: #fff;
     text-shadow: 0 2px 24px rgba(0, 0, 0, 0.3);
-    margin: 0 0 32px;
+    margin: 0 0 var(--gap-c);
+  }
+  #shopify-section-{{ section.id }} .fullbleed-statement__sub {
+    font-size: var(--fb-body-size, 16px);
+    font-weight: var(--fb-body-weight, 400);
+    line-height: 1.55;
+    color: rgba(255, 255, 255, 0.88);
+    margin: -12px auto var(--gap-c, 32px);
+    max-width: 42ch;
   }
   #shopify-section-{{ section.id }} .fullbleed-statement__cta {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 48px;
-    padding: 16px 36px;
-    background: #fff;
-    color: #1c1916;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
+    min-height: var(--type-cta-min-height);
+    padding: var(--type-cta-pad-y) var(--type-cta-pad-x);
+    background: var(--fb-cta-bg, #fff);
+    color: var(--fb-cta-text, #1c1916);
+    font-size: var(--type-cta-size);
+    font-weight: var(--type-cta-weight);
+    letter-spacing: var(--type-cta-tracking);
+    line-height: var(--type-cta-leading, 1);
     text-transform: uppercase;
     border-radius: 4px;
     text-decoration: none;
-    border: 1px solid #fff;
+    border: 1px solid var(--fb-cta-border, var(--fb-cta-bg, #fff));
+    transition: opacity 0.15s ease;
+  }
+  #shopify-section-{{ section.id }} .fullbleed-statement__cta--outline {
+    background: transparent;
+    color: var(--fb-cta-text, var(--fb-cta-border, #fff));
   }
   #shopify-section-{{ section.id }} .fullbleed-statement__cta:hover {
-    background: transparent;
-    color: #fff;
+    opacity: 0.92;
   }
   @media (max-width: 768px) {
-    #shopify-section-{{ section.id }} .fullbleed-statement { min-height: 52vh; }
+    #shopify-section-{{ section.id }} .fullbleed-statement { min-height: var(--fb-height-mobile, 52vh); }
     #shopify-section-{{ section.id }} .fullbleed-statement__content { padding: 56px 16px; }
   }
 </style>
@@ -128,6 +217,19 @@
   "name": "Fullbleed statement",
   "settings": [
     { "type": "header", "content": "Shared — Content" },
+    {
+      "type": "checkbox",
+      "id": "show_text",
+      "label": "Show text overlay",
+      "default": true,
+      "info": "Off = image/video-only stage (no eyebrow, title, sub, or CTA)."
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "info": "Optional. Leave blank to hide."
+    },
     {
       "type": "text",
       "id": "title",
@@ -160,7 +262,6 @@
         { "value": "44", "label": "44px" },
         { "value": "48", "label": "48px" },
         { "value": "56", "label": "56px" }
-
       ],
       "default": "default",
       "info": "Family is brand Type OS — size only. Default keeps Type OS."
@@ -178,7 +279,85 @@
       ],
       "default": "default"
     },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Sub / body",
+      "info": "Optional quiet line under the heading. Leave blank to hide."
+    },
+    {
+      "type": "select",
+      "id": "body_size",
+      "label": "Body size",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "12", "label": "12px" },
+        { "value": "13", "label": "13px" },
+        { "value": "14", "label": "14px" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" },
+        { "value": "18", "label": "18px" },
+        { "value": "20", "label": "20px" },
+        { "value": "22", "label": "22px" },
+        { "value": "24", "label": "24px" },
+        { "value": "26", "label": "26px" },
+        { "value": "28", "label": "28px" },
+        { "value": "30", "label": "30px" },
+        { "value": "32", "label": "32px" },
+        { "value": "36", "label": "36px" },
+        { "value": "40", "label": "40px" },
+        { "value": "44", "label": "44px" },
+        { "value": "48", "label": "48px" },
+        { "value": "56", "label": "56px" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "select",
+      "id": "body_weight",
+      "label": "Body weight",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" },
+        { "value": "700", "label": "700" }
+      ],
+      "default": "default"
+    },
     { "type": "text", "id": "cta_text", "label": "CTA label", "default": "Shop Now" },
+    
+    {
+      "type": "select",
+      "id": "cta_style",
+      "label": "CTA style",
+      "options": [
+        { "value": "solid", "label": "Solid fill" },
+        { "value": "outline", "label": "Outline only" }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "color",
+      "id": "cta_bg_color",
+      "label": "CTA background color",
+      "default": "#ffffff",
+      "info": "Used for solid fill. Outline style uses transparent fill + border color."
+    },
+    {
+      "type": "color",
+      "id": "cta_border_color",
+      "label": "CTA outline / border color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "cta_text_color",
+      "label": "CTA label color",
+      "default": "#1c1916",
+      "info": "Solid fill: usually white. Outline or light fill: charcoal/black."
+    },
     {
       "type": "select",
       "id": "cta_link_target",
@@ -203,22 +382,85 @@
       "label": "Custom CTA URL",
       "info": "Used when CTA link = Custom URL…."
     },
+
     { "type": "header", "content": "Shared — Media" },
+    {
+      "type": "paragraph",
+      "content": "Pick ONE media path. Priority: Shopify video → Video URL → Shopify image → Image URL fallback. Leave unused fields blank."
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Shopify video",
+      "info": "Preferred when the file lives in Shopify Files. Use this OR Video URL — not both."
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "Video URL (mp4)",
+      "info": "External/CDN mp4 when not using Shopify Video. Ignored if Shopify video is set."
+    },
     {
       "type": "image_picker",
       "id": "image",
-      "label": "Background image (Shopify)",
-      "info": "Prefer Shopify Files when the asset is in the library. Leave blank to use Image URL fallback."
+      "label": "Background image / poster (Shopify)",
+      "info": "Still image, OR poster when using Video URL. Prefer Shopify Files."
+    },
+    {
+      "type": "text",
+      "id": "poster_url",
+      "label": "Poster URL fallback",
+      "info": "Poster for Video URL only when Image / poster (Shopify) is empty."
     },
     {
       "type": "text",
       "id": "image_url",
       "label": "Image URL fallback",
       "default": "https://barreletics.com/cdn/shop/files/IMG_2917.jpg?v=1741040637&width=2000",
-      "info": "Used only when Background image (Shopify) is empty — for CDN/external stills. Leave blank if Shopify image is set."
+      "info": "Used only when Background image (Shopify) is empty and there is no video."
     },
     { "type": "text", "id": "image_alt", "label": "Image alt" },
+
     { "type": "header", "content": "Shared — Layout" },
+    {
+      "type": "select",
+      "id": "height_desktop",
+      "label": "Desktop height",
+      "options": [
+        { "value": "64", "label": "64vh — default stage" },
+        { "value": "70", "label": "70vh" },
+        { "value": "80", "label": "80vh" },
+        { "value": "90", "label": "90vh" },
+        { "value": "100", "label": "100vh — full viewport" }
+      ],
+      "default": "64",
+      "info": "Existing PDP/Home instances keep 64vh unless you change this."
+    },
+    {
+      "type": "select",
+      "id": "height_mobile",
+      "label": "Mobile height",
+      "options": [
+        { "value": "52", "label": "52vh — default" },
+        { "value": "60", "label": "60vh" },
+        { "value": "70", "label": "70vh" },
+        { "value": "80", "label": "80vh" },
+        { "value": "90", "label": "90vh" },
+        { "value": "100", "label": "100vh — full viewport" }
+      ],
+      "default": "52"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Scrim opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 55,
+      "info": "Dark overlay behind text. Ignored in image-only mode."
+    },
     {
       "type": "range",
       "id": "media_radius",
@@ -235,8 +477,96 @@
       "id": "aria_label",
       "label": "Section aria-label",
       "info": "Accessibility name for screen readers — not visible on the page. Leave blank to use the Heading."
+    },
+    { "type": "header", "content": "Shared — Section frame" },
+    {
+      "type": "paragraph",
+      "content": "OUTER inset from the page edges (margin). Top and bottom are independent; left & right = one control. Custom mobile OFF = mobile uses the same inset as desktop. Defaults 0 = full bleed."
+    },
+    {
+      "type": "checkbox",
+      "id": "inset_custom_mobile",
+      "label": "Custom mobile inset",
+      "default": false,
+      "info": "OFF (default): ignore the mobile inset sliders — mobile uses desktop Inset top / bottom / left & right. ON: use the mobile inset sliders instead."
+    },
+    {
+      "type": "range",
+      "id": "inset_top",
+      "label": "Inset top",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom",
+      "label": "Inset bottom",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x",
+      "label": "Inset left & right",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Same value on both sides."
+    },
+    {
+      "type": "range",
+      "id": "inset_top_mobile",
+      "label": "Inset top — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom_mobile",
+      "label": "Inset bottom — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x_mobile",
+      "label": "Inset left & right — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_desktop",
+      "label": "Hide on desktop",
+      "default": false
     }
   ],
+
   "presets": [{ "name": "Fullbleed statement" }]
 }
 {% endschema %}

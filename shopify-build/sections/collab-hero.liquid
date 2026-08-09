@@ -1,6 +1,6 @@
 {% comment %}
-  Collab hero — Home WORKING Coperni module (stage + 4-tile grid).
-  Simplified from live br-collab-hero; exact-to-mock composition.
+  Collab hero — Coperni / campaign module.
+  Layout TE: stage_grid (live runway) | editorial (DS section row).
 {% endcomment %}
 
 {% liquid
@@ -8,12 +8,46 @@
   assign body_size = section.settings.body_size | default: 'default'
   assign title_weight = section.settings.title_weight | default: 'default'
   assign media_radius = section.settings.media_radius | default: 0
+  assign tile_radius = section.settings.tile_radius | default: 0
+  assign height_desktop = section.settings.height_desktop | default: '105'
+  assign height_mobile = section.settings.height_mobile | default: '78'
+  assign layout = section.settings.layout | default: 'stage_grid'
+  assign tile_grid = section.settings.tile_grid | default: 'row'
+  assign tile_size = section.settings.tile_size | default: 100
+  assign tile_gap = section.settings.tile_gap | default: 0
+  assign tile_focus = section.settings.tile_focus | default: 'center'
+  assign tile_fit = section.settings.tile_fit | default: 'contain'
+  # Size ≤100% = inset grid width. Size >100% = full-width row, taller tiles (no side crop).
+  if tile_size > 100
+    assign grid_width = 100
+    assign tile_height_scale = tile_size
+  else
+    assign grid_width = tile_size
+    assign tile_height_scale = 100
+  endif
+  assign media_fill_class = 'media-fill'
+  if tile_fit == 'contain'
+    assign media_fill_class = media_fill_class | append: ' media-fill--contain'
+  endif
+  if tile_focus == 'top'
+    assign media_fill_class = media_fill_class | append: ' media-fill--top'
+  elsif tile_focus == 'bottom'
+    assign media_fill_class = media_fill_class | append: ' media-fill--bottom'
+  elsif tile_focus == 'left'
+    assign media_fill_class = media_fill_class | append: ' media-fill--left'
+  elsif tile_focus == 'right'
+    assign media_fill_class = media_fill_class | append: ' media-fill--right'
+  endif
   assign cta_target = section.settings.cta_link_target | default: 'custom'
   if cta_target != blank and cta_target != 'custom'
     assign cta_href = cta_target
   else
     assign cta_href = section.settings.cta_url
   endif
+  assign cta_style = section.settings.cta_style | default: 'solid'
+  assign cta_bg = section.settings.cta_bg_color | default: '#ffffff'
+  assign cta_border = section.settings.cta_border_color | default: cta_bg
+  assign cta_text_color = section.settings.cta_text_color | default: '#1c1916'
   assign region_label = section.settings.aria_label | strip
   if region_label == blank
     assign region_label = section.settings.title | strip_html | truncate: 60
@@ -22,74 +56,139 @@
 {% unless section.settings.enabled == false %}
 <section
   id="{{ section.settings.anchor_id | default: 'coperni' | handleize }}"
-  class="collab-hero"
+  class="collab-hero collab-hero--{{ layout }} section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %}"
   style="
+    {% render 'section-inset-vars' %}
     --ch-media-radius: {{ media_radius }}px;
+    --ch-tile-radius: {{ tile_radius }}px;
+    --ch-height-desktop: {{ height_desktop }}vh;
+    --ch-height-mobile: {{ height_mobile }}vh;
+    --ch-grid-width: {{ grid_width }};
+    --ch-tile-height-scale: {{ tile_height_scale }};
+    --ch-tile-gap: {{ tile_gap }}px;
+    --ch-cta-bg: {{ cta_bg }};
+    --ch-cta-border: {{ cta_border }};
+    --ch-cta-text: {{ cta_text_color }};
     {% if title_size != 'default' %}--ch-title-size: {{ title_size }}px;{% endif %}
     {% if body_size != 'default' %}--ch-body-size: {{ body_size }}px;{% endif %}
     {% if title_weight != 'default' %}--ch-title-weight: {{ title_weight }};{% endif %}
   "
   {% if region_label != blank %}aria-label="{{ region_label | escape }}"{% endif %}
 >
-  <div class="collab-hero__stage">
-    {% if section.settings.video != blank %}
-      {{
-        section.settings.video
-        | video_tag:
-          image_size: '2000x',
-          autoplay: true,
-          loop: true,
-          muted: true,
-          controls: false,
-          playsinline: true,
-          class: 'collab-hero__video'
-      }}
-    {% elsif section.settings.video_url != blank %}
-      <video
-        class="collab-hero__video"
-        autoplay
-        muted
-        loop
-        playsinline
-        webkit-playsinline
-        preload="metadata"
-        {% if section.settings.image != blank %}
-          poster="{{ section.settings.image | image_url: width: 2000 }}"
+  {% if layout == 'editorial' %}
+    <div class="collab-hero__editorial">
+      <div class="collab-hero__editorial-media">
+        {% if section.settings.video != blank %}
+          {{
+            section.settings.video
+            | video_tag:
+              image_size: '2000x',
+              autoplay: true,
+              loop: true,
+              muted: true,
+              controls: false,
+              playsinline: true,
+              class: 'collab-hero__video'
+          }}
+        {% elsif section.settings.video_url != blank %}
+          <video
+            class="collab-hero__video"
+            autoplay
+            muted
+            loop
+            playsinline
+            webkit-playsinline
+            preload="metadata"
+            {% if section.settings.image != blank %}
+              poster="{{ section.settings.image | image_url: width: 2000 }}"
+            {% elsif section.settings.poster_url != blank %}
+              poster="{{ section.settings.poster_url | escape }}"
+            {% endif %}
+          >
+            <source src="{{ section.settings.video_url | escape }}" type="video/mp4">
+          </video>
+        {% elsif section.settings.image != blank %}
+          <img class="collab-hero__video" src="{{ section.settings.image | image_url: width: 2000 }}" alt="" loading="lazy">
         {% elsif section.settings.poster_url != blank %}
-          poster="{{ section.settings.poster_url | escape }}"
+          <img class="collab-hero__video" src="{{ section.settings.poster_url | escape }}" alt="" loading="lazy">
         {% endif %}
-      >
-        <source src="{{ section.settings.video_url | escape }}" type="video/mp4">
-      </video>
-    {% elsif section.settings.image != blank %}
-      <img
-        class="collab-hero__video"
-        src="{{ section.settings.image | image_url: width: 2000 }}"
-        alt=""
-        loading="lazy"
-      >
-    {% elsif section.settings.poster_url != blank %}
-      <img class="collab-hero__video" src="{{ section.settings.poster_url | escape }}" alt="" loading="lazy">
-    {% endif %}
-    <div class="collab-hero__overlay">
-      {% if section.settings.eyebrow != blank %}
-        <p class="collab-hero__eye">{{ section.settings.eyebrow }}</p>
-      {% endif %}
-      <h2 class="collab-hero__title">{{ section.settings.title }}</h2>
-      {% if section.settings.body != blank %}
-        <p class="collab-hero__body">{{ section.settings.body }}</p>
-      {% endif %}
-      {% if section.settings.cta_text != blank %}
-        <a class="collab-hero__cta" href="{{ cta_href | default: routes.all_products_collection_url }}">{{ section.settings.cta_text }}</a>
-      {% endif %}
-      {% if section.settings.meta != blank %}
-        <p class="collab-hero__meta">{{ section.settings.meta }}</p>
-      {% endif %}
+      </div>
+      <div class="collab-hero__editorial-copy">
+        {% if section.settings.eyebrow != blank %}
+          <p class="collab-hero__eye">{{ section.settings.eyebrow }}</p>
+        {% endif %}
+        <h2 class="collab-hero__title">{{ section.settings.title }}</h2>
+        {% if section.settings.body != blank %}
+          <p class="collab-hero__body">{{ section.settings.body }}</p>
+        {% endif %}
+        {% if section.settings.cta_text != blank %}
+          <a class="collab-hero__cta{% if cta_style == 'outline' %} collab-hero__cta--outline{% endif %}" href="{{ cta_href | default: routes.all_products_collection_url }}">{{ section.settings.cta_text }}</a>
+        {% endif %}
+        {% if section.settings.meta != blank %}
+          <p class="collab-hero__meta">{{ section.settings.meta }}</p>
+        {% endif %}
+      </div>
     </div>
-  </div>
+  {% else %}
+    <div class="collab-hero__stage">
+      {% if section.settings.video != blank %}
+        {{
+          section.settings.video
+          | video_tag:
+            image_size: '2000x',
+            autoplay: true,
+            loop: true,
+            muted: true,
+            controls: false,
+            playsinline: true,
+            class: 'collab-hero__video'
+        }}
+      {% elsif section.settings.video_url != blank %}
+        <video
+          class="collab-hero__video"
+          autoplay
+          muted
+          loop
+          playsinline
+          webkit-playsinline
+          preload="metadata"
+          {% if section.settings.image != blank %}
+            poster="{{ section.settings.image | image_url: width: 2000 }}"
+          {% elsif section.settings.poster_url != blank %}
+            poster="{{ section.settings.poster_url | escape }}"
+          {% endif %}
+        >
+          <source src="{{ section.settings.video_url | escape }}" type="video/mp4">
+        </video>
+      {% elsif section.settings.image != blank %}
+        <img class="collab-hero__video" src="{{ section.settings.image | image_url: width: 2000 }}" alt="" loading="lazy">
+      {% elsif section.settings.poster_url != blank %}
+        <img class="collab-hero__video" src="{{ section.settings.poster_url | escape }}" alt="" loading="lazy">
+      {% endif %}
+      <div class="collab-hero__overlay">
+        {% if section.settings.eyebrow != blank %}
+          <p class="collab-hero__eye">{{ section.settings.eyebrow }}</p>
+        {% endif %}
+        <h2 class="collab-hero__title">{{ section.settings.title }}</h2>
+        {% if section.settings.body != blank %}
+          <p class="collab-hero__body">{{ section.settings.body }}</p>
+        {% endif %}
+        {% if section.settings.cta_text != blank %}
+          <a class="collab-hero__cta{% if cta_style == 'outline' %} collab-hero__cta--outline{% endif %}" href="{{ cta_href | default: routes.all_products_collection_url }}">{{ section.settings.cta_text }}</a>
+        {% endif %}
+        {% if section.settings.meta != blank %}
+          <p class="collab-hero__meta">{{ section.settings.meta }}</p>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
 
   {% if section.blocks.size > 0 %}
-    <div class="collab-hero__grid" role="region" aria-label="Featured campaign products">
+    <div
+      class="collab-hero__grid collab-hero__grid--{{ tile_grid }}"
+      role="region"
+      aria-label="Featured campaign products"
+    >
       {% for block in section.blocks %}
         {% if block.settings.link != blank %}
           <a class="collab-hero__tile" href="{{ block.settings.link }}" {{ block.shopify_attributes }}>
@@ -97,11 +196,21 @@
           <div class="collab-hero__tile" {{ block.shopify_attributes }}>
         {% endif %}
           {% if block.settings.image != blank %}
-            <img src="{{ block.settings.image | image_url: width: 1200 }}" alt="{{ block.settings.alt | escape }}" loading="lazy">
+            <img
+              class="{{ media_fill_class }}"
+              src="{{ block.settings.image | image_url: width: 1200 }}"
+              alt="{{ block.settings.alt | escape }}"
+              loading="lazy"
+            >
           {% elsif block.settings.image_url != blank %}
-            <img src="{{ block.settings.image_url | escape }}" alt="{{ block.settings.alt | escape }}" loading="lazy">
+            <img
+              class="{{ media_fill_class }}"
+              src="{{ block.settings.image_url | escape }}"
+              alt="{{ block.settings.alt | escape }}"
+              loading="lazy"
+            >
           {% endif %}
-          {% if block.settings.tile_title != blank or block.settings.tile_body != blank %}
+          {% if block.settings.tile_title != blank or block.settings.tile_body != blank or block.settings.tile_eyebrow != blank %}
             <div class="collab-hero__tile-copy">
               {% if block.settings.tile_eyebrow != blank %}
                 <p class="collab-hero__tile-eye">{{ block.settings.tile_eyebrow }}</p>
@@ -126,12 +235,14 @@
 {% endunless %}
 
 <style>
-  .collab-hero { background: #fff; }
+  .collab-hero {
+    background: #fff;
+  }
   .collab-hero__stage {
     position: relative;
     width: 100%;
-    height: 105vh;
-    min-height: 640px;
+    height: var(--ch-height-desktop, 105vh);
+    min-height: 0;
     overflow: hidden;
     background: #1c1916;
     border-radius: var(--ch-media-radius, 0);
@@ -146,6 +257,60 @@
     transform: scale(1.22);
     transform-origin: center center;
     display: block;
+  }
+  /* Editorial — quieter DS section row (media + copy, then tile row) */
+  .collab-hero--editorial {
+    padding: 0 0 0;
+    border-top: 1px solid #ebe7e0;
+    border-bottom: 1px solid #ebe7e0;
+  }
+  .collab-hero__editorial {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    min-height: 560px;
+    align-items: stretch;
+  }
+  .collab-hero__editorial-media {
+    position: relative;
+    min-height: 480px;
+    overflow: hidden;
+    background: #1c1916;
+    border-radius: var(--ch-media-radius, 0);
+  }
+  .collab-hero--editorial .collab-hero__video {
+    transform: scale(1.06);
+  }
+  .collab-hero__editorial-copy {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 56px 48px;
+    background: #fff;
+    color: #1c1916;
+  }
+  .collab-hero--editorial .collab-hero__eye {
+    color: #6b645a;
+  }
+  .collab-hero--editorial .collab-hero__title {
+    color: #1c1916;
+    max-width: 16ch;
+  }
+  .collab-hero--editorial .collab-hero__body {
+    color: #4a4a4a;
+  }
+  .collab-hero--editorial .collab-hero__meta {
+    color: #8a8a8a;
+  }
+  .collab-hero--editorial .collab-hero__grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px 64px;
+    gap: 12px;
+    box-sizing: border-box;
+  }
+  .collab-hero--editorial .collab-hero__tile {
+    border-radius: var(--ch-tile-radius, 0);
   }
   .collab-hero__overlay {
     position: absolute;
@@ -199,19 +364,26 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 48px;
-    padding: 14px 28px;
-    background: #fff;
-    color: #1c1916;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
+    min-height: var(--type-cta-min-height);
+    padding: var(--type-cta-pad-y) var(--type-cta-pad-x);
+    background: var(--ch-cta-bg, #fff);
+    color: var(--ch-cta-text, #1c1916);
+    font-size: var(--type-cta-size);
+    font-weight: var(--type-cta-weight);
+    letter-spacing: var(--type-cta-tracking);
+    line-height: var(--type-cta-leading, 1);
     text-transform: uppercase;
     text-decoration: none;
     border-radius: 4px;
+    border: 1px solid var(--ch-cta-border, var(--ch-cta-bg, #fff));
     margin-bottom: 14px;
+    transition: opacity 0.15s ease;
   }
-  .collab-hero__cta:hover { background: #c45c3f; color: #fff; }
+  .collab-hero__cta--outline {
+    background: transparent;
+    color: var(--ch-cta-text, var(--ch-cta-border, #fff));
+  }
+  .collab-hero__cta:hover { opacity: 0.92; }
   .collab-hero__meta {
     font-size: 12px;
     letter-spacing: 0.06em;
@@ -221,34 +393,49 @@
   }
   .collab-hero__grid {
     display: grid;
+    gap: var(--ch-tile-gap, 0px);
+    width: calc(var(--ch-grid-width, 100) * 1%);
+    max-width: 100%;
+    margin-inline: auto;
+    box-sizing: border-box;
+  }
+  /* Single row — original 4-across */
+  .collab-hero__grid--row {
     grid-template-columns: repeat(4, 1fr);
-    gap: 0;
+  }
+  /* 2×2 — larger squares */
+  .collab-hero__grid--2x2 {
+    grid-template-columns: repeat(2, 1fr);
   }
   .collab-hero__tile {
     position: relative;
     display: block;
-    aspect-ratio: 1;
+    /* 100% = square; >100% grows height so enlarge doesn’t crop sides */
+    aspect-ratio: 1 / calc(var(--ch-tile-height-scale, 100) / 100);
     overflow: hidden;
     background: #f5f2ec;
     text-decoration: none;
     color: inherit;
+    min-width: 0;
+    border-radius: var(--ch-tile-radius, 0);
   }
-  .collab-hero__tile img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
+  /* Images: .media-fill / .media-fill--contain in barreletics-base.css */
   .collab-hero__tile-copy {
     position: absolute;
     inset: 0;
+    z-index: 1;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     padding: 20px 18px;
     background: linear-gradient(180deg, rgba(28,25,22,0.1) 20%, rgba(28,25,22,0.78) 100%);
     color: #fff;
+    box-sizing: border-box;
+    overflow: hidden;
+    pointer-events: none;
   }
+  .collab-hero__tile-copy a,
+  .collab-hero__tile-copy { pointer-events: auto; }
   .collab-hero__tile-eye {
     font-size: 10px;
     font-weight: 700;
@@ -268,16 +455,48 @@
     line-height: 1.45;
     margin: 0;
     color: rgba(255,255,255,0.85);
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+  }
+  /* 4-across: denser overlay so copy fits the cell */
+  .collab-hero__grid--row .collab-hero__tile-copy {
+    padding: 12px 10px;
+  }
+  .collab-hero__grid--row .collab-hero__tile-eye {
+    font-size: 9px;
+    margin: 0 0 4px;
+  }
+  .collab-hero__grid--row .collab-hero__tile-title {
+    font-size: clamp(14px, 1.6vw, 18px);
+    margin: 0 0 4px;
+  }
+  .collab-hero__grid--row .collab-hero__tile-body {
+    font-size: 11px;
+    line-height: 1.35;
+    -webkit-line-clamp: 2;
   }
   @media (max-width: 900px) {
-    .collab-hero__grid { grid-template-columns: 1fr 1fr; }
+    .collab-hero__grid--row { grid-template-columns: 1fr 1fr; }
     .collab-hero__overlay { padding: 32px 20px 40px; }
     .collab-hero__title { max-width: none; }
+    .collab-hero__editorial { grid-template-columns: 1fr; min-height: 0; }
+    .collab-hero__editorial-media { min-height: 360px; }
+    .collab-hero__editorial-copy { padding: 40px 24px; }
+    .collab-hero--editorial .collab-hero__grid { padding: 0 16px 48px; }
   }
   @media (max-width: 768px) {
-    .collab-hero__stage { height: 78vh; min-height: 480px; }
+    .collab-hero__stage {
+      height: var(--ch-height-mobile, 78vh);
+      min-height: 0;
+    }
     .collab-hero__video { transform: scale(1.1); }
-    .collab-hero__grid { grid-template-columns: 1fr; padding: 24px 16px 40px; gap: 12px; }
+    .collab-hero__grid--row,
+    .collab-hero__grid--2x2 {
+      grid-template-columns: 1fr 1fr;
+    }
+    .collab-hero--editorial .collab-hero__grid { gap: 10px; padding: 0 16px 40px; }
   }
 </style>
 
@@ -379,6 +598,37 @@
       "default": "default"
     },
     { "type": "text", "id": "cta_text", "label": "CTA label", "default": "See the collaboration" },
+    
+    {
+      "type": "select",
+      "id": "cta_style",
+      "label": "CTA style",
+      "options": [
+        { "value": "solid", "label": "Solid fill" },
+        { "value": "outline", "label": "Outline only" }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "color",
+      "id": "cta_bg_color",
+      "label": "CTA background color",
+      "default": "#ffffff",
+      "info": "Used for solid fill. Outline style uses transparent fill + border color."
+    },
+    {
+      "type": "color",
+      "id": "cta_border_color",
+      "label": "CTA outline / border color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "cta_text_color",
+      "label": "CTA label color",
+      "default": "#1c1916",
+      "info": "Solid fill: usually white. Outline or light fill: charcoal/black."
+    },
     {
       "type": "select",
       "id": "cta_link_target",
@@ -437,6 +687,192 @@
     },
     { "type": "header", "content": "Shared — Layout" },
     {
+      "type": "select",
+      "id": "layout",
+      "label": "Hero layout",
+      "options": [
+        { "value": "stage_grid", "label": "Runway stage (default — keep)" },
+        { "value": "editorial", "label": "Editorial (optional)" }
+      ],
+      "default": "stage_grid",
+      "info": "Keep Runway stage for the main Coperni hero. Tile row below is separate."
+    },
+    { "type": "header", "content": "Shared — Section frame" },
+    {
+      "type": "paragraph",
+      "content": "Stage size + OUTER inset from the page edges (margin). Top/bottom independent; left & right = one control. Custom mobile OFF = mobile matches desktop. Defaults keep the current look."
+    },
+    {
+      "type": "select",
+      "id": "height_desktop",
+      "label": "Size — desktop (stage height)",
+      "options": [
+        { "value": "70", "label": "70vh" },
+        { "value": "80", "label": "80vh" },
+        { "value": "90", "label": "90vh" },
+        { "value": "100", "label": "100vh" },
+        { "value": "105", "label": "105vh — default" },
+        { "value": "110", "label": "110vh" },
+        { "value": "120", "label": "120vh" }
+      ],
+      "default": "105"
+    },
+    {
+      "type": "select",
+      "id": "height_mobile",
+      "label": "Size — mobile (stage height)",
+      "options": [
+        { "value": "60", "label": "60vh" },
+        { "value": "70", "label": "70vh" },
+        { "value": "78", "label": "78vh — default" },
+        { "value": "85", "label": "85vh" },
+        { "value": "90", "label": "90vh" },
+        { "value": "100", "label": "100vh" }
+      ],
+      "default": "78",
+      "info": "Sticky default matches current mobile runway. No need to change unless intended."
+    },
+    {
+      "type": "checkbox",
+      "id": "inset_custom_mobile",
+      "label": "Custom mobile inset",
+      "default": false,
+      "info": "OFF (default): ignore the mobile inset sliders — mobile uses desktop Inset top / bottom / left & right. ON: use the mobile inset sliders instead."
+    },
+    {
+      "type": "range",
+      "id": "inset_top",
+      "label": "Inset top",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom",
+      "label": "Inset bottom",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x",
+      "label": "Inset left & right",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Same value on both sides."
+    },
+    {
+      "type": "range",
+      "id": "inset_top_mobile",
+      "label": "Inset top — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom_mobile",
+      "label": "Inset bottom — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x_mobile",
+      "label": "Inset left & right — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_desktop",
+      "label": "Hide on desktop",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "tile_grid",
+      "label": "Tile row layout",
+      "options": [
+        { "value": "row", "label": "Single row — 4 across (original)" },
+        { "value": "2x2", "label": "2 × 2 — larger squares" }
+      ],
+      "default": "row",
+      "info": "Always under the Coperni hero. Toggle between original one-row and larger 2×2 squares."
+    },
+    {
+      "type": "range",
+      "id": "tile_size",
+      "label": "Tile box size",
+      "min": 80,
+      "max": 140,
+      "step": 5,
+      "unit": "%",
+      "default": 100,
+      "info": "Below 100% insets the row. Above 100% makes tiles taller (no side crop)."
+    },
+    {
+      "type": "select",
+      "id": "tile_fit",
+      "label": "Tile image fit",
+      "options": [
+        { "value": "contain", "label": "Contain — full image, no crop" },
+        { "value": "cover", "label": "Cover — fill cell (may crop)" }
+      ],
+      "default": "contain",
+      "info": "Contain keeps the whole photo. Cover fills the box edge-to-edge."
+    },
+    {
+      "type": "select",
+      "id": "tile_focus",
+      "label": "Tile image focus",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "top", "label": "Top" },
+        { "value": "bottom", "label": "Bottom" },
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center",
+      "info": "Focus point when fit is Cover (also nudges Contain alignment)."
+    },
+    {
+      "type": "range",
+      "id": "tile_gap",
+      "label": "Tile gap",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 0,
+      "info": "Space between tile boxes."
+    },
+    {
       "type": "range",
       "id": "media_radius",
       "label": "Stage corner radius",
@@ -445,7 +881,18 @@
       "step": 2,
       "unit": "px",
       "default": 0,
-      "info": "One control — applies equally to all four corners of the stage."
+      "info": "Runway / hero media only — all four corners."
+    },
+    {
+      "type": "range",
+      "id": "tile_radius",
+      "label": "Tile corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 0,
+      "info": "Secondary square tiles under the hero — all four corners."
     },
     { "type": "header", "content": "Section — Collab hero" },
     { "type": "checkbox", "id": "enabled", "label": "Enabled", "default": true },

@@ -1,11 +1,27 @@
 {% comment %}
-  Guarantee — white 4-column trust grid (Home WORKING 14).
+  Guarantee — white trust grid (Home WORKING 14).
+  Columns follow block count (max 4) so 3-up PDP compositions stay centered.
 {% endcomment %}
 
+{% assign guarantee_cols = section.blocks.size %}
+{% if guarantee_cols > 4 %}
+  {% assign guarantee_cols = 4 %}
+{% endif %}
+{% if guarantee_cols < 1 %}
+  {% assign guarantee_cols = 1 %}
+{% endif %}
+{%- liquid
+  assign cta_style = section.settings.cta_style | default: 'solid'
+  assign cta_bg = section.settings.cta_bg_color | default: '#1c1916'
+  assign cta_border = section.settings.cta_border_color | default: cta_bg
+  assign cta_text_color = section.settings.cta_text_color | default: '#ffffff'
+-%}
+
 <section
-  class="guarantee-section"
+  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} guarantee-section"
   id="{{ section.settings.anchor_id | default: 'guarantee' | handleize }}"
   aria-label="{{ section.settings.aria_label | default: 'Guarantee' | escape }}"
+  style="{% render 'section-inset-vars' %} --guarantee-cols: {{ guarantee_cols }}; --gu-cta-bg: {{ cta_bg }}; --gu-cta-border: {{ cta_border }}; --gu-cta-text: {{ cta_text_color }};"
 >
   <div class="guarantee-head">
     {% if section.settings.eyebrow != blank %}
@@ -30,7 +46,7 @@
   {% endif %}
   {% if section.settings.cta_text != blank %}
     <div class="guarantee-cta-wrap">
-      <a class="guarantee-cta" href="{{ section.settings.cta_url | default: '#variants' }}">
+      <a class="guarantee-cta{% if cta_style == 'outline' %} guarantee-cta--outline{% endif %}" href="{{ section.settings.cta_url | default: '#variants' }}">
         {{ section.settings.cta_text }}
       </a>
     </div>
@@ -38,93 +54,111 @@
 </section>
 
 <style>
-  .guarantee-section {
-    padding: 64px 40px 48px;
+  #shopify-section-{{ section.id }} .guarantee-section {
+    padding: var(--section-padding-y, 64px) var(--section-padding-x, 40px);
     background: #fff;
     border-top: 1px solid #d6cfc0;
+    text-align: center;
   }
-  .guarantee-head {
+  #shopify-section-{{ section.id }} .guarantee-head {
     max-width: 700px;
     margin: 0 auto 40px;
     text-align: center;
   }
-  .guarantee-head__eyebrow {
+  #shopify-section-{{ section.id }} .guarantee-head__eyebrow {
     margin: 0 0 12px;
     color: #9a9182;
+    text-align: center;
   }
-  .guarantee-head__title {
-    font-size: clamp(26px, 3vw, 34px) !important;
-    font-weight: 400 !important;
-    letter-spacing: -0.028em !important;
-    line-height: 1.15 !important;
-    color: #1c1916;
-    margin: 0 0 16px;
+  #shopify-section-{{ section.id }} .guarantee-head__title {
+    color: var(--text-primary);
+    margin: 0 0 var(--gap-b);
+    text-align: center;
   }
-  .guarantee-head__sub {
-    font-size: 15px;
-    color: #4a4a4a;
-    line-height: 1.55;
-    margin: 0;
+  #shopify-section-{{ section.id }} .guarantee-head__sub {
+    font-size: var(--type-body-size);
+    font-weight: var(--type-body-weight);
+    color: var(--text-body);
+    line-height: var(--type-body-leading);
+    margin: 0 auto;
+    text-align: center;
   }
-  .guarantee-inner {
+  #shopify-section-{{ section.id }} .guarantee-inner {
     max-width: 1100px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(var(--guarantee-cols, 4), minmax(0, 1fr));
     gap: 0;
+    justify-content: center;
+    text-align: center;
   }
-  .guarantee-item {
+  #shopify-section-{{ section.id }} .guarantee-item {
     padding: 20px 24px;
     border-right: 1px solid #d6cfc0;
     text-align: center;
   }
-  .guarantee-item:last-child { border-right: none; }
-  .guarantee-item h4 {
+  #shopify-section-{{ section.id }} .guarantee-item:last-child { border-right: none; }
+  #shopify-section-{{ section.id }} .guarantee-item h4 {
     font-size: 14px;
     font-weight: 700;
     color: #1c1916;
     margin: 0 0 6px;
+    text-align: center;
   }
-  .guarantee-item p {
+  #shopify-section-{{ section.id }} .guarantee-item p {
     font-size: 13px;
     color: #6b645a;
     line-height: 1.4;
-    margin: 0;
+    margin: 0 auto;
+    text-align: center;
   }
-  .guarantee-cta-wrap {
+  #shopify-section-{{ section.id }} .guarantee-cta-wrap {
     text-align: center;
     margin-top: 32px;
   }
-  .guarantee-cta {
+  #shopify-section-{{ section.id }} .guarantee-cta {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 48px;
-    padding: 14px 28px;
-    background: #1c1916;
-    color: #fff;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
+    min-height: var(--type-cta-min-height);
+    padding: var(--type-cta-pad-y) var(--type-cta-pad-x);
+    background: var(--gu-cta-bg, #1c1916);
+    color: var(--gu-cta-text, #fff);
+    font-size: var(--type-cta-size);
+    font-weight: var(--type-cta-weight);
+    letter-spacing: var(--type-cta-tracking);
+    line-height: var(--type-cta-leading, 1);
     text-transform: uppercase;
     text-decoration: none;
     border-radius: 4px;
+    border: 1px solid var(--gu-cta-border, var(--gu-cta-bg, #1c1916));
+    transition: opacity 0.15s ease;
   }
-  .guarantee-cta:hover { background: #c45c3f; }
+  #shopify-section-{{ section.id }} .guarantee-cta--outline {
+    background: transparent;
+    color: var(--gu-cta-text, var(--gu-cta-border, #1c1916));
+  }
+  #shopify-section-{{ section.id }} .guarantee-cta:hover { opacity: 0.92; }
   @media (max-width: 900px) {
-    .guarantee-inner { grid-template-columns: 1fr 1fr; }
-    .guarantee-item:nth-child(2) { border-right: none; }
-    .guarantee-item:nth-child(1),
-    .guarantee-item:nth-child(2) { border-bottom: 1px solid #d6cfc0; }
+    #shopify-section-{{ section.id }} .guarantee-inner {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    #shopify-section-{{ section.id }} .guarantee-item:nth-child(2n) { border-right: none; }
+    #shopify-section-{{ section.id }} .guarantee-item:nth-child(n+3) {
+      border-top: 1px solid #d6cfc0;
+    }
   }
   @media (max-width: 560px) {
-    .guarantee-section { padding: 40px 16px 28px; }
-    .guarantee-inner { grid-template-columns: 1fr; }
-    .guarantee-item {
+    #shopify-section-{{ section.id }} .guarantee-section {
+      padding: var(--section-padding-y-mobile, 48px) var(--section-padding-x-mobile, 16px);
+    }
+    #shopify-section-{{ section.id }} .guarantee-inner { grid-template-columns: 1fr; }
+    #shopify-section-{{ section.id }} .guarantee-item {
       border-right: none;
       border-bottom: 1px solid #d6cfc0;
+      border-top: none;
     }
-    .guarantee-item:last-child { border-bottom: none; }
+    #shopify-section-{{ section.id }} .guarantee-item:last-child { border-bottom: none; }
   }
 </style>
 
@@ -132,18 +166,73 @@
 {
   "name": "Guarantee Band",
   "settings": [
-    { "type": "header", "content": "Shared — Content" },
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
-    { "type": "text", "id": "title", "label": "Heading", "default": "Zero risk. All grip." },
+    {
+      "type": "header",
+      "content": "Shared — Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Zero risk. All grip."
+    },
     {
       "type": "textarea",
       "id": "body",
       "label": "Body",
       "default": "Returns, warranty, and shipping that match the gear."
     },
-    { "type": "text", "id": "cta_text", "label": "CTA label", "info": "Leave blank to hide CTA (Home mock has none)." },
-    { "type": "url", "id": "cta_url", "label": "CTA link" },
-    { "type": "header", "content": "Section — Guarantee" },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA label",
+      "info": "Leave blank to hide CTA (Home mock has none)."
+    },
+    
+    {
+      "type": "select",
+      "id": "cta_style",
+      "label": "CTA style",
+      "options": [
+        { "value": "solid", "label": "Solid fill" },
+        { "value": "outline", "label": "Outline only" }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "color",
+      "id": "cta_bg_color",
+      "label": "CTA background color",
+      "default": "#1c1916",
+      "info": "Used for solid fill. Outline style uses transparent fill + border color."
+    },
+    {
+      "type": "color",
+      "id": "cta_border_color",
+      "label": "CTA outline / border color",
+      "default": "#1c1916"
+    },
+    {
+      "type": "color",
+      "id": "cta_text_color",
+      "label": "CTA label color",
+      "default": "#ffffff",
+      "info": "Solid fill: usually white. Outline or light fill: charcoal/black."
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "CTA link"
+    },
+    {
+      "type": "header",
+      "content": "Section — Guarantee"
+    },
     {
       "type": "text",
       "id": "anchor_id",
@@ -158,16 +247,123 @@
       "default": "Guarantee",
       "info": "Accessibility name for screen readers — not visible on the page. Leave blank to use “Guarantee”."
     },
-    { "type": "paragraph", "content": "Guarantee points are blocks below." }
+    {
+      "type": "paragraph",
+      "content": "Guarantee points are blocks below."
+    },
+    {
+      "type": "header",
+      "content": "Shared — Section frame"
+    },
+    {
+      "type": "paragraph",
+      "content": "OUTER inset from the page edges (margin). Top and bottom are independent; left & right = one control. Custom mobile OFF = mobile uses the same inset as desktop. Defaults 0 = full bleed."
+    },
+    {
+      "type": "checkbox",
+      "id": "inset_custom_mobile",
+      "label": "Custom mobile inset",
+      "default": false,
+      "info": "OFF (default): ignore the mobile inset sliders — mobile uses desktop Inset top / bottom / left & right. ON: use the mobile inset sliders instead."
+    },
+    {
+      "type": "range",
+      "id": "inset_top",
+      "label": "Inset top",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom",
+      "label": "Inset bottom",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x",
+      "label": "Inset left & right",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Same value on both sides."
+    },
+    {
+      "type": "range",
+      "id": "inset_top_mobile",
+      "label": "Inset top — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom_mobile",
+      "label": "Inset bottom — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x_mobile",
+      "label": "Inset left & right — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_desktop",
+      "label": "Hide on desktop",
+      "default": false
+    }
   ],
   "blocks": [
     {
       "type": "point",
       "name": "Point",
       "settings": [
-        { "type": "text", "id": "title", "label": "Title", "default": "Free Shipping" },
-        { "type": "text", "id": "detail", "label": "Detail", "default": "On orders over $150" },
-        { "type": "text", "id": "text", "label": "Legacy text (fallback title)" }
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Free Shipping"
+        },
+        {
+          "type": "text",
+          "id": "detail",
+          "label": "Detail",
+          "default": "On orders over $150"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Legacy text (fallback title)"
+        }
       ]
     }
   ],
@@ -175,10 +371,34 @@
     {
       "name": "Guarantee Band",
       "blocks": [
-        { "type": "point", "settings": { "title": "Free Shipping", "detail": "On orders over $150" } },
-        { "type": "point", "settings": { "title": "30-Day Returns", "detail": "New, sellable condition" } },
-        { "type": "point", "settings": { "title": "90-Day Warranty", "detail": "Manufacturing defects" } },
-        { "type": "point", "settings": { "title": "Made in USA", "detail": "No latex, no silicone" } }
+        {
+          "type": "point",
+          "settings": {
+            "title": "Free Shipping",
+            "detail": "On orders over $150"
+          }
+        },
+        {
+          "type": "point",
+          "settings": {
+            "title": "30-Day Returns",
+            "detail": "New, sellable condition"
+          }
+        },
+        {
+          "type": "point",
+          "settings": {
+            "title": "90-Day Warranty",
+            "detail": "Manufacturing defects"
+          }
+        },
+        {
+          "type": "point",
+          "settings": {
+            "title": "Made in USA",
+            "detail": "No latex, no silicone"
+          }
+        }
       ]
     }
   ]

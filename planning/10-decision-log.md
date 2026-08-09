@@ -6,7 +6,7 @@ version: 1.0
 status: 🔒 Locked
 approved_by: Owner / Architect
 approval_date: 2026-07-18
-last_modified: 2026-07-18
+last_modified: 2026-08-08
 depends_on: [01, 02, 03, 04, 05, 06, 07, 08, 09]
 supersedes: [ADR-01 through ADR-07]
 ---
@@ -443,8 +443,10 @@ All ADRs from the prior planning phase (ADR-01 through ADR-07) are resolved per 
 
 ---
 
-### D-042: Partner Programs Consolidated Into Single Page
+### D-042: Partner Programs Consolidated Into Single Page — SUPERSEDED 2026-08-08 (see D-048)
 **Decided:** 2026-07-18 | **Severity:** High
+
+**Status:** Superseded by **D-048** (Owner direction 2026-08-08). Original text preserved below as history — do not implement. Three dedicated partner pages plus a `/pages/partners` routing hub is the current state.
 
 **Decision:** Three separate partner pages (Wholesale, Studio Program, Ambassador) consolidated into a single `/pages/partners` page with three sections and a unified inquiry form. Individual page templates (`page.wholesale.json`, `page.studio-program.json`, `page.ambassador.json`) are superseded. Wholesale/Studio/Ambassador terms (pricing, minimums, commission structures) remain internal — never displayed publicly. Ambassador section is architected with a clear integration point for a future affiliate platform. No affiliate/commission functionality built.
 
@@ -538,6 +540,62 @@ All ADRs from the prior planning phase (ADR-01 through ADR-07) are resolved per 
 **Impact:** M4C status changed to 🔒 Locked. M4D (Launch) authorized to begin. Dashboard updated.
 
 **Status:** Approved
+
+---
+
+### D-048: Three Dedicated Partner Pages Plus a Routing Hub — supersedes D-042
+**Decided:** 2026-08-08 | **Severity:** High
+
+**Decision:** Wholesale, Studio Program, and Ambassador each get a dedicated page with its own intake form: `/pages/wholesale`, `/pages/studio-program`, `/pages/ambassador`. `/pages/partners` is retained as a routing hub — three cards linking to the program pages, plus a general-inquiry fallback form. This reverses D-042's consolidation onto a single page. Program terms (commission %, discounts, thresholds) remain Theme Editor settings and internal pricing is never displayed publicly, unchanged from D-042.
+
+**Rationale:** The three audiences ask genuinely different qualification questions — a studio needs class volume and location, a wholesale buyer needs order volume and resale terms, an ambassador needs audience and content channels. One merged form cannot serve all three without either asking every applicant irrelevant questions or collecting too little to qualify anyone. Owner direction 2026-08-08 governs; D-042's maintenance-burden rationale is outweighed by intake quality.
+
+**Impact:** `templates/page.ambassador.json`, `page.studio-program.json`, `page.wholesale.json`, and `page.partners.json` built and mobile-QA'd (see `planning/partner-programs.md` §5, QA output in `planning/partner-pages-qa/`). The three folding 301s (`/pages/wholesale`, `/pages/ambassador`, `/pages/studio-program` → `/pages/partners`) are **retired** in `planning/m4a-redirect-map.md` — they would have made the new pages unreachable. `planning/page-inventory-decisions.md` Part 2 updated from FOLD to CREATE for the three program templates.
+
+**Downstream doc sweep — COMPLETE 2026-08-08.** The files listed here as "still stale and owned by other agents" have since been updated forward, each cross-referencing D-048 and preserving the D-042 wording as struck history: `planning/m4a-content-inventory.md` (page rows, owner-approval row, forms inventory — the "Partner inquiry (unified)" row is now four rows), `planning/m4a-navigation-config.md` (handle map + Admin note 6), `docs/03-section-library.md` (`page-partners.liquid` entry), `specs/frozen/{wholesale,ambassador,studio}.md` (R-01/R-02 HOLD marked superseded, not deleted), `specs/frozen/navigation.md` (authority re-cited to D-048; the "Partners not in primary nav" call itself is unchanged), `specs/implementation-maps/{wholesale,ambassador,studio}.md` (were titled "deprecated standalone"), `planning/m4-section-library-CONTRACT.md` (DELETE-after-decompose rows annotated as a future refactor, not deprecation), `PROJECT_DASHBOARD.md`, `planning/partner-programs.md` (§4.5 item 7 + architecture note), and `planning/m4b-helpscout-alignment.md` §7 (saved reply now links the three program pages).
+
+Deliberately unchanged: the `/pages/become-an-affiliate` and `/pages/wholesale-calculator` → `/pages/partners` 301s (correct — they point at the hub); `specs/frozen/homepage.md` / `collections.md` references to "D-042 partners page" (those concern holding Free People / Coperni collab sprawl, a different sense of "partner"); D-044's M4A gate record above (historical); `backups/**` and `planning/archive/**` snapshots.
+
+**Status:** Approved — Owner letter 2026-08-08
+
+---
+
+### D-049: The Refined v19 PDP Spine Serves Closed Sole; Open Sole Moves to Its Own Template
+**Decided:** 2026-08-08 | **Severity:** High
+
+**Decision:** `shopify-build/templates/product.json` — the refined, locked v19 spine — now serves the **Closed Sole** product (`best-reformer-pilates-legree-workout-shoes`). **Open Sole** (`studio-performance-skin-footwear`) moves to a new variant template, `shopify-build/templates/product.open-sole.json`, created by renaming the day-old `product.closed-sole.json` and rewriting its copy from Closed Sole to Open Sole. `product.closed-sole.json` no longer exists. `product.outdoor.json` is untouched. The buy-box lede **"Secure in every hold. / No sliding. No resets."** is now the title line on **both** sole pages.
+
+**Rationale:** Owner direction 2026-08-08: *"no make the existing pdp page the closed sole and change the open sole. we probably want to keep secure in every hold on both for the title?"* Closed Sole is the higher-inventory, higher-colorway SKU and the one the refined page's photography and reformer/Lagree GEO copy already suited. The shared lede is approved inventory (Problem/Solution) and reads correctly for either coverage style, so nothing sole-specific is claimed in the headline.
+
+**Scope guard — this is a product-identity change, not a spine change.** All 17 sections in `product.json` and their order are byte-verified unchanged against the pre-edit capture: `pdp-buy-box` → `value-strip` → `pdp-features` → `disciplines` → `fifty-fifty-sock-era` → `variant-grid` → `fifty-fifty-lifestyle` → `fullbleed-statement` → `pdp-sock-math` → `fullbleed-lifestyle` → `fifty-fifty-commit` → `social-proof` → `fifty-fifty-numbers` → `guarantee-band` → `home-juicer` → `collection-faq` → `pdp-sticky-atc`. Only four fields changed in `product.json`: the sole badge label, the badge colour, and two FAQ answers that named a sole using the discipline split retired by P-003.
+
+**Impact:** `product.json` SHA-256 moves from `00a209a5abf9bf9c258d7cb422cb055f7d95da7a0f11f7f7cb0294afa0b847a5` to `9097409f46f4ef7e80a675b50d1072ca072e2a70ff2854fe97c78eee0b9e5b2b` — authorised by this letter. Registries updated forward, prior wording preserved as dated history: `planning/m4-section-freeze.md`, `planning/PDP-WORKING-ENTRY.md`, `planning/pdp-variants-qa/README.md`. QA harness `planning/pdp-variants-qa/build.py` re-pointed and previews relabelled. `.cursor/rules/pdp-hub-lock.mdc` still describes `product.json` as the PDP spine, which remains true — it names no product, so it needs no edit; flagged for the owner rather than changed.
+
+**Admin follow-up (not a repo change):** theme template assignment is per-product in Shopify Admin → Product → Online store → Theme template. Open Sole must be set to `product.open-sole`; Closed Sole stays on **Default product**. The old `product.closed-sole` template name is gone.
+
+**Copy sourcing:** every replacement line traces to the approved slogan inventory (`barreletics-brand-copy` / `barreletics-slogan-engine`), the P-003 sole letter (`manychat-kb/02-open-vs-closed-sole.md`), `docs/09-PRODUCT-KNOWLEDGE.md` Product 2, or the locked v19 spine. Nothing was invented. Per-line source tables live in `planning/pdp-variants-qa/README.md`.
+
+**Status:** Approved — Owner direction 2026-08-08
+
+---
+
+### D-050: Sole Description Language Fixed as HARD Copy Law — "Fully Enclosed" Banned
+**Decided:** 2026-08-08 | **Severity:** High
+
+**Decision:** The Closed Sole is described as **"Heel and foot fully covered."** and nothing else. The phrases **"fully enclosed," "fully-enclosed," "enclosed heel," "sleek, fully enclosed feel,"** and any construction calling the Closed Sole *enclosed* are banned from all customer-facing copy. The sanctioned wording, from the P-003 letter, is the only approved way to describe the sole difference:
+
+- **Closed Sole:** "Heel and foot fully covered."
+- **Open Sole:** "Heel exposed, mid-foot breathing hole. More grounded, barefoot feel. Natural toe splay."
+- **Both:** "Both perform identically — same grip, same stability."
+- **Choosing:** "Choice is preference and feel only."
+
+This entry also re-asserts the **discipline split retired 2026-08-02 under P-003**: never write "Open = barre/yoga, Closed = reformer/Lagree/Megaformer" or any variant assigning a discipline to a sole. Both soles perform identically across all disciplines.
+
+**Rationale:** Owner direction 2026-08-08, the third correction on the same phrase in one day — *"quit saying fully enclosed heel - dont make shit up"* → *"quit fucking saying fully enclosed this is not how we describe it. Fucking make a rule and stop drifting."* The phrase kept reappearing because it was embedded in the approved knowledge base and re-copied by every new agent. This is how the brand describes its own product; drifting invents product claims the Owner has not approved. Cross-references **P-003** (approved sole wording, `manychat-kb/02-open-vs-closed-sole.md`) and **P-013** (`docs/10-DECISIONS.md`, "fully enclosed" retired).
+
+**Impact:** New rule `.cursor/rules/sole-description-language.mdc` (alwaysApply) establishes the ban, the approved wording, the discipline-split prohibition, scope, and exceptions. Cross-referenced from `.cursor/rules/anti-revert-fail-closed.mdc` and `.cursor/rules/section-freeze-no-drift.mdc`. The `barreletics-brand-copy` skill — which auto-invokes on all Barreletics copy work — carries the ban in its anti-patterns list. Scope covers PDP/collection/page templates, section Liquid **and their schema defaults**, mocks in `docs/`, `planning/`, `specs/`, `manychat-kb/`, email, ads, and the ManyChat KB. `docs/09-PRODUCT-KNOWLEDGE.md` and `manychat-kb/02-open-vs-closed-sole.md` are named as the SOURCE documents that must never carry banned phrasing. `backups/**`, `archive/**`, and `planning/archive/**` are frozen snapshots and are excluded.
+
+**Status:** Approved — Owner letter 2026-08-08
 
 ---
 

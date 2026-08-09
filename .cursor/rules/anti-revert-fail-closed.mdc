@@ -1,0 +1,98 @@
+---
+description: "HARD FAIL-CLOSED: NEVER git restore / silent revert / fix-drift rollback. CURRENT MESSAGE WINS. Abused: home-juicer, proof-numbers, Instagram, footer, PDP. MUST auto-invoke barreletics-anti-revert skill."
+alwaysApply: true
+---
+
+# Anti-revert / no-drift — FAIL CLOSED (HARD)
+
+**STOP. READ THIS BEFORE ANY EDIT TO `shopify-build/` OR FREEZE DOCS.**
+
+**Skill (AUTO-INVOKE — not optional):** `barreletics-anti-revert`  
+Paths: `.cursor/skills/barreletics-anti-revert/SKILL.md` · `~/.cursor/skills/barreletics-anti-revert/SKILL.md`  
+**Hooks (mechanical):** `.cursor/hooks.json` → `sessionStart` injects this law; `beforeShellExecution` **denies** `git restore` / path `checkout` / `git show >` on guarded files unless Andrew said **`restore X`** and agent sets `ALLOW_BARRELETICS_RESTORE=1`.
+
+**Companion:** `.cursor/rules/section-freeze-no-drift.mdc`  
+**Registry:** `planning/m4-section-freeze.md`  
+**Copy law (sole wording):** `.cursor/rules/sole-description-language.mdc` — "fully enclosed" is banned; the discipline split is retired. Fixing either is a **fix-forward** edit, never a restore.
+
+**Before editing guarded surfaces:** read the skill, run the ANTI-REVERT GATE checklist in that skill, state 1–3 lines of fix-forward intent. If the thought is “roll back / match older freeze / undo prior agent” → **STOP and ASK**.
+
+## ALWAYS-ON — recently abused surfaces (do not “fix”)
+
+Agents keep silently rolling these back. Treat as **radioactive** without Andrew’s **“restore X”** in the **CURRENT** message:
+
+- `shopify-build/sections/home-juicer.liquid` · Instagram / Juicer feed
+- `shopify-build/sections/proof-numbers.liquid` · numbers / stats section
+- `shopify-build/sections/value-strip.liquid` · under-ATC / trust strip / badges
+- `shopify-build/sections/footer.liquid` · footer-group · Join the list
+- `shopify-build/sections/pdp-buy-box.liquid`
+- `shopify-build/templates/index.json` · `shopify-build/templates/product.json`
+
+**Wrong feed / wrong numbers / “drift” ≠ permission to restore an older commit.** Fix forward or **ASK**.
+
+## Supreme law (non-negotiable)
+
+**If a freeze doc and Andrew’s CURRENT message conflict → CURRENT MESSAGE WINS.**  
+Update the freeze registry **forward** to match his ask.  
+**NEVER** restore an older freeze / older commit over his ask.  
+Freeze status alone is **NOT** permission to revert.
+
+## HARD — NEVER without Andrew saying **“restore X”** in the CURRENT message
+
+1. **NEVER** `git restore`, `git checkout`, `git show … > file`, or any overwrite that replaces working-tree content from an older commit on:
+   - `shopify-build/sections/**`
+   - `shopify-build/templates/**`
+   - especially: `proof-numbers`, `home-juicer`, Instagram/juicer, footer, `pdp-buy-box`, `index.json`, `product.json`
+2. **NEVER** “fix drift” by rolling back to an older freeze row or older commit
+3. **NEVER** silent revert of Instagram / Juicer / `proof-numbers` / `value-strip` / under-ATC / badges / trust strip
+4. **NEVER** silent revert of frozen/approved sections, templates, or locked docs “to be safe”
+5. **NEVER** restore older footer / PDP / home compositions from freeze docs, galleries, or prior agents
+6. **NEVER** replace INDEX-locked mocks (`docs/index.html` → Locked) with older variants **in place**
+7. **NEVER** reintroduce stripped copy (e.g. **10% off**) after it was removed in the current thread
+8. **NEVER** overwrite an Andrew-pasted htmlpreview / hub authority URL without new **`LOCK THIS` + URL** in the **current** message
+
+Exact restore phrase required: **“restore X”** (or equivalent clear restore letter) in the **CURRENT** message.  
+If unsure whether something was “wrong” → **STOP and ASK**. **Do not restore.**
+
+## Hub / locked mocks — NEVER OVERWRITE (HARD)
+
+1. **PDP LOCK (2026-08-01):** Current = **`Definitive-v19.html`** + current `templates/product.json` on theme **`187144929571`**. Prior fingerprint = **`Definitive-v16.html` @ `691f03b`**. Full rule: `.cursor/rules/pdp-hub-lock.mdc`.
+2. **Never overwrite** locked v16 or v19 HTML in place. **Never** re-apply Type OS hero-72 to the v16 buy-box lede.
+3. **New versions only** for experiments (`Definitive-v20.html`, etc.).
+4. **Never flip** hub PDP off v19 without **`LOCK THIS` + new URL** in the **current** message. Do not thrash `product.json` spine without letter.
+5. Keep Locked cards on the hub when adding priors — do **not** remove the Locked card.
+6. **July 17 PDP is Archive only.** TypeOS-236a001 is Prior history only.
+
+## Before editing guarded surfaces
+
+Guarded: footer, juicer/Instagram, proof-numbers, value-strip / under-ATC / badges, `pdp-buy-box`, `templates/product.json` spine, `templates/index.json` order, **any file listed in** `planning/m4-section-freeze.md`, hub Locked mock files under `docs/`.
+
+Agent MUST:
+
+1. **Read** `planning/m4-section-freeze.md`
+2. **State** what will change (1–3 lines) before editing
+3. **Never** restore a prior composition unless Andrew says **“restore X”**
+4. For mock updates: create a **new** version file — do not edit Locked prior mocks
+
+If unsure → **STOP and ask.** Do not “fix drift” by rolling back.
+
+## Parallel agents
+
+**One writer per surface per turn.** Do not reclaim another agent’s freeze, section file, or template order.  
+If conflict → stop; **current message + working tree latest intent** win over older freeze text. Do not “reconcile” by restoring older files.
+
+## Examples
+
+```
+❌ BAD: git restore shopify-build/sections/home-juicer.liquid
+❌ BAD: git restore shopify-build/sections/proof-numbers.liquid  # “numbers looked wrong”
+❌ BAD: git checkout HEAD -- shopify-build/templates/index.json
+❌ BAD: overwrite docs/Barreletics PDP - Definitive-v16.html
+❌ BAD: flip hub PDP from v19 → July 17 because freeze still said July 17
+❌ BAD: strip Complete the kit / Coming soon to match July 17
+❌ BAD: “fix drift” by copying an older freeze composition over current work
+✅ GOOD: STOP and ASK when Instagram/numbers look wrong
+✅ GOOD: Andrew says “restore X” → then restore only X
+✅ GOOD: Andrew says LOCK THIS + new URL → then update hub authority
+✅ GOOD: Andrew says “light Join the list + checks” → implement + update freeze FORWARD
+```

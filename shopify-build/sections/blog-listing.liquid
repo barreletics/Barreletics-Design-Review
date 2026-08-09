@@ -1,9 +1,66 @@
 {% comment %}
-  Blog Listing Section
-  Displays articles in a responsive grid with featured image, title, excerpt,
-  author, date, and category tag. Includes pagination.
+  Blog Listing Section (Journal index)
+  Masthead → topic filter → featured article → responsive article grid → pagination.
+  Matches docs/Barreletics Journal - Definitive-v6.html.
   Used on: blog.json
 {% endcomment %}
+
+{%- liquid
+  assign has_featured = false
+  assign featured_id = 0
+
+  if section.settings.show_featured and blog.articles.size > 0
+    if section.settings.featured_article != blank
+      assign featured = section.settings.featured_article
+    else
+      assign featured = blog.articles.first
+    endif
+
+    if featured != blank
+      assign has_featured = true
+      assign featured_id = featured.id
+    endif
+  endif
+
+  if has_featured
+    assign f_dek = featured.excerpt | strip_html | strip_newlines | strip
+    if f_dek == blank
+      assign f_dek = featured.content | strip_html | strip_newlines | truncatewords: 30
+    endif
+
+    # No read-time metafield exists on articles (article-content.liquid renders none),
+    # so derive it from the body at 200 wpm and round up — never below 1 min.
+    assign f_words = featured.content | strip_html | strip_newlines | split: ' ' | size
+    assign f_read = f_words | divided_by: 200.0 | ceil
+    if f_read < 1
+      assign f_read = 1
+    endif
+
+    assign meta_bits = ''
+    if featured.tags.size > 0
+      assign meta_bits = meta_bits | append: featured.tags.first | append: '|'
+    endif
+    if section.settings.featured_label != blank
+      assign meta_bits = meta_bits | append: section.settings.featured_label | append: '|'
+    endif
+    if section.settings.show_read_time
+      assign meta_bits = meta_bits | append: f_read | append: ' min|'
+    endif
+    assign f_meta = meta_bits | split: '|' | join: ' · '
+  endif
+
+  # The featured article is pulled out of the grid below, so the grid can end up empty
+  # on a one-article blog.
+  assign grid_count = blog.articles.size
+  if has_featured
+    for a in blog.articles
+      if a.id == featured_id
+        assign grid_count = grid_count | minus: 1
+        break
+      endif
+    endfor
+  endif
+-%}
 
 <section class="section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
   <div class="section__inner">
@@ -19,10 +76,67 @@
       </div>
     {% endif %}
 
-    {% if blog.articles.size > 0 %}
+    {% if section.settings.show_topics and blog.all_tags.size > 0 %}
+      <nav class="journal-topics" aria-label="Topics">
+        <a
+          href="{{ blog.url }}"
+          class="journal-topics__link{% if current_tags.size == 0 %} is-active{% endif %}"
+          {% if current_tags.size == 0 %}aria-current="page"{% endif %}
+        >{{ section.settings.topics_all_label }}</a>
+        {% for tag in blog.all_tags limit: section.settings.max_topics %}
+          <a
+            href="{{ blog.url }}/tagged/{{ tag | handle }}"
+            class="journal-topics__link{% if current_tags contains tag %} is-active{% endif %}"
+            {% if current_tags contains tag %}aria-current="page"{% endif %}
+          >{{ tag }}</a>
+        {% endfor %}
+      </nav>
+    {% endif %}
+
+    {% if has_featured %}
+      <article class="journal-feature">
+        <a class="journal-feature__media" href="{{ featured.url }}" aria-label="Read {{ featured.title | escape }}" tabindex="-1">
+          {% if featured.image %}
+            <img
+              src="{{ featured.image | image_url: width: 1200 }}"
+              srcset="{{ featured.image | image_url: width: 600 }} 600w,
+                      {{ featured.image | image_url: width: 900 }} 900w,
+                      {{ featured.image | image_url: width: 1200 }} 1200w"
+              sizes="(max-width: 1024px) 100vw, 55vw"
+              alt="{{ featured.image.alt | escape }}"
+              width="1200"
+              height="900"
+              loading="eager"
+              class="journal-feature__image"
+            >
+          {% else %}
+            <div class="journal-feature__placeholder"></div>
+          {% endif %}
+        </a>
+        <div class="journal-feature__copy">
+          {% if f_meta != blank %}
+            <p class="journal-feature__meta">{{ f_meta }}</p>
+          {% endif %}
+          <h2 class="journal-feature__title type-statement">
+            <a href="{{ featured.url }}">{{ featured.title }}</a>
+          </h2>
+          {% if f_dek != blank %}
+            <p class="journal-feature__dek">{{ f_dek }}</p>
+          {% endif %}
+          {% if section.settings.featured_cta_label != blank %}
+            <a href="{{ featured.url }}" class="btn btn--primary journal-feature__cta">
+              {{ section.settings.featured_cta_label }}
+            </a>
+          {% endif %}
+        </div>
+      </article>
+    {% endif %}
+
+    {% if grid_count > 0 %}
       <div class="blog-listing__grid">
         {% paginate blog.articles by section.settings.articles_per_page %}
           {% for article in blog.articles %}
+            {% if article.id == featured_id %}{% continue %}{% endif %}
             <article class="blog-card">
               <a href="{{ article.url }}" class="blog-card__link" aria-label="Read {{ article.title }}">
                 <div class="blog-card__image-wrap">
@@ -34,6 +148,8 @@
                               {{ article.image | image_url: width: 720 }} 720w"
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       alt="{{ article.image.alt | escape }}"
+                      width="720"
+                      height="450"
                       loading="lazy"
                       class="blog-card__image"
                     >
@@ -77,8 +193,8 @@
           {% endif %}
         {% endpaginate %}
       </div>
-    {% else %}
-      <p class="blog-listing__empty">No articles yet. Check back soon.</p>
+    {% elsif blog.articles.size == 0 %}
+      <p class="blog-listing__empty">{{ section.settings.empty_text }}</p>
     {% endif %}
   </div>
 </section>
@@ -89,21 +205,127 @@
     margin-bottom: var(--space-10);
   }
 
+  .blog-listing__header .eyebrow {
+    margin: 0 0 var(--gap-a);
+  }
+
+  /* Size/weight/tracking come from .type-hero — cadence only here */
   .blog-listing__title {
-    font-size: var(--type-hero-size);
-    font-weight: var(--type-hero-weight);
-    line-height: var(--type-hero-leading);
-    letter-spacing: var(--type-hero-tracking);
-    text-transform: none;
     color: var(--text-primary);
-    margin: 0 0 var(--space-2);
+    margin: 0 0 var(--gap-b);
   }
 
   .blog-listing__subtitle {
-    font-size: var(--text-md);
+    font-size: var(--type-lede-size);
+    font-weight: var(--type-lede-weight);
+    line-height: var(--type-lede-leading);
     color: var(--text-body);
     margin: 0;
-    line-height: var(--leading-relaxed);
+  }
+
+  /* --- Topic filter — Journal v6: centred label row above a hairline rule --- */
+  .journal-topics {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-2) var(--space-5);
+    margin: 0 0 var(--space-11);
+    padding-bottom: var(--space-7);
+    border-bottom: 1px solid var(--border-default);
+  }
+
+  .journal-topics__link {
+    font-size: var(--type-label-size);
+    font-weight: var(--type-label-weight);
+    letter-spacing: var(--type-label-tracking);
+    text-transform: uppercase;
+    color: var(--type-label-color);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .journal-topics__link:hover,
+  .journal-topics__link.is-active {
+    color: var(--text-primary);
+  }
+
+  .journal-topics__link.is-active {
+    border-bottom: 1px solid var(--text-primary);
+    padding-bottom: 2px;
+  }
+
+  /* --- Featured article — image left, copy right --- */
+  .journal-feature {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: var(--space-10);
+    align-items: center;
+    margin-bottom: var(--space-13);
+  }
+
+  .journal-feature__media {
+    position: relative;
+    display: block;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: var(--radius-button);
+    background: var(--bg-alternate);
+  }
+
+  .journal-feature__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-slow);
+  }
+
+  .journal-feature:hover .journal-feature__image {
+    transform: scale(1.03);
+  }
+
+  .journal-feature__placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--bg-alternate), var(--border-default));
+  }
+
+  .journal-feature__meta {
+    font-size: var(--type-label-size);
+    font-weight: var(--type-label-weight);
+    letter-spacing: var(--type-label-tracking);
+    text-transform: uppercase;
+    color: var(--accent-primary);
+    margin: 0 0 var(--gap-a);
+  }
+
+  /* Size/weight/tracking come from .type-statement — cadence only here */
+  .journal-feature__title {
+    margin: 0 0 var(--gap-a);
+  }
+
+  .journal-feature__title a {
+    color: inherit;
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .journal-feature__title a:hover {
+    color: var(--accent-primary);
+  }
+
+  .journal-feature__dek {
+    font-size: var(--type-body-size);
+    font-weight: var(--type-body-weight);
+    line-height: var(--type-body-leading);
+    color: var(--text-body);
+    max-width: 36ch;
+    margin: 0 0 var(--gap-c);
+  }
+
+  .journal-feature__cta {
+    text-decoration: none;
   }
 
   .blog-listing__grid {
@@ -159,10 +381,10 @@
     position: absolute;
     top: var(--space-3);
     left: var(--space-3);
-    font-size: var(--text-xs);
-    font-weight: var(--weight-bold);
+    font-size: var(--type-label-size);
+    font-weight: var(--type-label-weight);
     text-transform: uppercase;
-    letter-spacing: var(--tracking-wide);
+    letter-spacing: var(--type-label-tracking);
     background: var(--bg-primary);
     color: var(--text-primary);
     padding: 4px 8px;
@@ -173,32 +395,35 @@
     padding: var(--space-5);
   }
 
+  /* Card titles take the H3 role — H2 Standard is reserved for section wayfinding */
   .blog-card__title {
-    font-size: var(--type-section-size);
-    font-weight: var(--type-section-weight);
-    line-height: var(--type-section-leading);
-    letter-spacing: var(--type-section-tracking);
+    font-size: var(--type-h3-size);
+    font-weight: var(--type-h3-weight);
+    line-height: var(--type-h3-leading);
+    letter-spacing: var(--type-h3-tracking);
     text-transform: none;
     color: var(--text-primary);
     margin: 0 0 var(--space-2);
   }
 
   .blog-card__excerpt {
-    font-size: var(--text-base);
+    font-size: var(--type-body-size);
+    font-weight: var(--type-body-weight);
     color: var(--text-body);
-    line-height: var(--leading-relaxed);
+    line-height: var(--type-body-leading);
     margin: 0 0 var(--space-3);
   }
 
   .blog-card__meta {
     display: flex;
     gap: var(--space-3);
-    font-size: var(--text-sm);
+    font-size: var(--type-trust-size);
+    font-weight: var(--type-trust-weight);
     color: var(--text-muted);
   }
 
   .blog-card__author {
-    font-weight: var(--weight-medium);
+    font-weight: var(--type-caption-weight);
   }
 
   .blog-listing__pagination {
@@ -211,13 +436,16 @@
   }
 
   .blog-listing__page-info {
-    font-size: var(--text-sm);
+    font-size: var(--type-trust-size);
+    font-weight: var(--type-trust-weight);
     color: var(--text-muted);
   }
 
   .blog-listing__empty {
     text-align: center;
-    font-size: var(--text-md);
+    font-size: var(--type-body-size);
+    font-weight: var(--type-body-weight);
+    line-height: var(--type-body-leading);
     color: var(--text-muted);
     padding: var(--space-12) 0;
   }
@@ -226,16 +454,33 @@
     .blog-listing__grid {
       grid-template-columns: repeat(2, 1fr);
     }
+
+    .journal-feature {
+      grid-template-columns: 1fr;
+      gap: var(--space-7);
+    }
   }
 
   @media (max-width: 768px) {
-    .blog-listing__title {
-      font-size: var(--text-3xl);
-    }
-
     .blog-listing__grid {
       grid-template-columns: 1fr;
       gap: var(--grid-gap-sm);
+    }
+
+    .journal-topics {
+      gap: var(--space-2) var(--space-4);
+      margin-bottom: var(--space-9);
+    }
+
+    /* Filter links are 11px labels — give them a 44px tap target on touch */
+    .journal-topics__link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
+
+    .journal-feature {
+      margin-bottom: var(--space-10);
     }
   }
 </style>
@@ -244,6 +489,10 @@
 {
   "name": "Blog Listing",
   "settings": [
+    {
+      "type": "header",
+      "content": "Masthead"
+    },
     {
       "type": "text",
       "id": "eyebrow",
@@ -262,6 +511,82 @@
       "label": "Subtitle",
       "default": "Studio tips, product insights, and performance stories."
     },
+
+    {
+      "type": "header",
+      "content": "Topic filter"
+    },
+    {
+      "type": "paragraph",
+      "content": "Built from the tags on this blog's articles. Hides itself when the blog has no tags."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_topics",
+      "label": "Show topic filter",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "topics_all_label",
+      "label": "\"All\" label",
+      "default": "All"
+    },
+    {
+      "type": "range",
+      "id": "max_topics",
+      "label": "Maximum topics shown",
+      "min": 4,
+      "max": 20,
+      "step": 1,
+      "default": 12
+    },
+
+    {
+      "type": "header",
+      "content": "Featured article"
+    },
+    {
+      "type": "paragraph",
+      "content": "Large image-left card under the masthead. Defaults to the most recent article on this blog. The featured article is removed from the grid below so it never appears twice."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_featured",
+      "label": "Show featured article",
+      "default": true
+    },
+    {
+      "type": "article",
+      "id": "featured_article",
+      "label": "Featured article",
+      "info": "Leave empty to use the most recent article."
+    },
+    {
+      "type": "text",
+      "id": "featured_label",
+      "label": "Featured label",
+      "default": "Featured",
+      "info": "Middle item of the meta line: tag · label · read time."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_read_time",
+      "label": "Show read time",
+      "default": true,
+      "info": "Estimated from the article body at 200 words per minute."
+    },
+    {
+      "type": "text",
+      "id": "featured_cta_label",
+      "label": "Button label",
+      "default": "Read the guide"
+    },
+
+    {
+      "type": "header",
+      "content": "Article grid"
+    },
     {
       "type": "range",
       "id": "articles_per_page",
@@ -270,6 +595,12 @@
       "max": 12,
       "step": 3,
       "default": 9
+    },
+    {
+      "type": "text",
+      "id": "empty_text",
+      "label": "Empty state text",
+      "default": "No articles yet. Check back soon."
     }
   ],
   "presets": [

@@ -12,6 +12,10 @@
   else
     assign cta_href = section.settings.cta_url
   endif
+  assign cta_style = section.settings.cta_style | default: 'solid'
+  assign cta_bg = section.settings.cta_bg_color | default: '#1c1916'
+  assign cta_border = section.settings.cta_border_color | default: cta_bg
+  assign cta_text_color = section.settings.cta_text_color | default: '#ffffff'
   assign region_label = section.settings.aria_label | strip
   if region_label == blank
     assign region_label = section.settings.title
@@ -20,8 +24,11 @@
 
 <section
   {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | handleize }}"{% endif %}
-  class="statement-band align-band"
-  style="
+  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} statement-band align-band"
+  style="{% render 'section-inset-vars' %} 
+    --sb-cta-bg: {{ cta_bg }};
+    --sb-cta-border: {{ cta_border }};
+    --sb-cta-text: {{ cta_text_color }};
     {% if title_size != 'default' %}--sb-title-size: {{ title_size }}px;{% endif %}
     {% if title_weight != 'default' %}--sb-title-weight: {{ title_weight }};{% endif %}
     {% if body_size != 'default' %}--sb-body-size: {{ body_size }}px;{% endif %}
@@ -37,7 +44,7 @@
       <p class="statement-band__sub">{{ section.settings.subhead }}</p>
     {% endif %}
     {% if section.settings.cta_text != blank %}
-      <a class="statement-band__cta" href="{{ cta_href | default: routes.all_products_collection_url }}">
+      <a class="statement-band__cta{% if cta_style == 'outline' %} statement-band__cta--outline{% endif %}" href="{{ cta_href | default: routes.all_products_collection_url }}">
         {{ section.settings.cta_text }}
       </a>
     {% endif %}
@@ -62,47 +69,51 @@
     color: #6b645a;
   }
   #shopify-section-{{ section.id }} .statement-band__line {
-    font-size: var(--sb-title-size, clamp(32px, 4.5vw, 48px)) !important;
-    font-weight: var(--sb-title-weight, 400) !important;
-    letter-spacing: -0.03em !important;
-    line-height: 1.12 !important;
-    margin: 0 auto 12px;
-    color: #1c1916;
+    font-size: var(--sb-title-size, var(--type-statement-size));
+    font-weight: var(--sb-title-weight, var(--type-statement-weight));
+    letter-spacing: var(--type-statement-tracking);
+    line-height: var(--type-statement-leading);
+    margin: 0 auto var(--gap-a);
+    color: var(--text-primary);
     max-width: none;
   }
   @media (max-width: 768px) {
     #shopify-section-{{ section.id }} .statement-band__line {
-      font-size: var(--sb-title-size, clamp(28px, 7vw, 36px)) !important;
+      font-size: var(--sb-title-size, var(--type-statement-size-mobile));
     }
   }
   #shopify-section-{{ section.id }} .statement-band__sub {
-    font-size: var(--sb-body-size, 16px);
-    font-weight: 400;
-    color: #4a4a4a;
-    line-height: 1.45;
-    margin: 0 auto 28px;
+    font-size: var(--sb-body-size, var(--type-body-size));
+    font-weight: var(--type-body-weight);
+    color: var(--text-body);
+    line-height: var(--type-body-leading);
+    margin: 0 auto var(--gap-c);
     max-width: 36ch;
   }
   #shopify-section-{{ section.id }} .statement-band__cta {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 48px;
-    padding: 14px 28px;
-    background: #1c1916;
-    color: #fff;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
+    min-height: var(--type-cta-min-height);
+    padding: var(--type-cta-pad-y) var(--type-cta-pad-x);
+    background: var(--sb-cta-bg, #1c1916);
+    color: var(--sb-cta-text, #fff);
+    font-size: var(--type-cta-size);
+    font-weight: var(--type-cta-weight);
+    letter-spacing: var(--type-cta-tracking);
+    line-height: var(--type-cta-leading, 1);
     text-transform: uppercase;
     text-decoration: none;
     border-radius: 4px;
-    border: 1px solid #1c1916;
+    border: 1px solid var(--sb-cta-border, var(--sb-cta-bg, #1c1916));
+    transition: opacity 0.15s ease;
+  }
+  #shopify-section-{{ section.id }} .statement-band__cta--outline {
+    background: transparent;
+    color: var(--sb-cta-text, var(--sb-cta-border, #1c1916));
   }
   #shopify-section-{{ section.id }} .statement-band__cta:hover {
-    background: #c45c3f;
-    border-color: #c45c3f;
-    color: #fff;
+    opacity: 0.92;
   }
   @media (max-width: 768px) {
     #shopify-section-{{ section.id }} .statement-band { padding: 56px 20px; }
@@ -202,6 +213,37 @@
       "default": "default"
     },
     { "type": "text", "id": "cta_text", "label": "CTA label", "default": "Shop Now" },
+    
+    {
+      "type": "select",
+      "id": "cta_style",
+      "label": "CTA style",
+      "options": [
+        { "value": "solid", "label": "Solid fill" },
+        { "value": "outline", "label": "Outline only" }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "color",
+      "id": "cta_bg_color",
+      "label": "CTA background color",
+      "default": "#1c1916",
+      "info": "Used for solid fill. Outline style uses transparent fill + border color."
+    },
+    {
+      "type": "color",
+      "id": "cta_border_color",
+      "label": "CTA outline / border color",
+      "default": "#1c1916"
+    },
+    {
+      "type": "color",
+      "id": "cta_text_color",
+      "label": "CTA label color",
+      "default": "#ffffff",
+      "info": "Solid fill: usually white. Outline or light fill: charcoal/black."
+    },
     {
       "type": "select",
       "id": "cta_link_target",
@@ -239,8 +281,96 @@
       "id": "aria_label",
       "label": "Section aria-label",
       "info": "Accessibility name for screen readers — not visible on the page. Leave blank to use the Heading."
+    },
+    { "type": "header", "content": "Shared — Section frame" },
+    {
+      "type": "paragraph",
+      "content": "OUTER inset from the page edges (margin). Top and bottom are independent; left & right = one control. Custom mobile OFF = mobile uses the same inset as desktop. Defaults 0 = full bleed."
+    },
+    {
+      "type": "checkbox",
+      "id": "inset_custom_mobile",
+      "label": "Custom mobile inset",
+      "default": false,
+      "info": "OFF (default): ignore the mobile inset sliders — mobile uses desktop Inset top / bottom / left & right. ON: use the mobile inset sliders instead."
+    },
+    {
+      "type": "range",
+      "id": "inset_top",
+      "label": "Inset top",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom",
+      "label": "Inset bottom",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x",
+      "label": "Inset left & right",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Same value on both sides."
+    },
+    {
+      "type": "range",
+      "id": "inset_top_mobile",
+      "label": "Inset top — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom_mobile",
+      "label": "Inset bottom — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x_mobile",
+      "label": "Inset left & right — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_desktop",
+      "label": "Hide on desktop",
+      "default": false
     }
   ],
+
   "presets": [{ "name": "Statement band" }]
 }
 {% endschema %}

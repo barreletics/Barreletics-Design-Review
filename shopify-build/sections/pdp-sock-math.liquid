@@ -1,299 +1,202 @@
 {% comment %}
-  Sock Math Comparison Section
-  Source: Approved PDP July 17 — Visual comparison (Option C + Brand Coral)
+  Sock Math — COMPACT (Definitive-v18 / v19 mid-page)
+  Quote + 2-col comparison. Not July 17 Option C giant $74 vs $144 header.
 {% endcomment %}
 
-<section class="sock-math" aria-label="Cost comparison">
+{% liquid
+  assign title_size = section.settings.title_size | default: 'default'
+  assign title_weight = section.settings.title_weight | default: 'default'
+  assign body_size = section.settings.body_size | default: 'default'
+  assign cta_target = section.settings.cta_link_target | default: 'custom'
+  if cta_target != blank and cta_target != 'custom'
+    assign cta_href = cta_target
+  else
+    assign cta_href = section.settings.cta_url | default: '#variants'
+  endif
+%}
+
+<section
+  class="sock-math sock-math--compact"
+  aria-label="{{ section.settings.aria_label | default: 'Cost comparison' | escape }}"
+  style="{% if title_size != 'default' %}--sm-title-size: {{ title_size }}px;{% endif %}{% if title_weight != 'default' %}--sm-title-weight: {{ title_weight }};{% endif %}{% if body_size != 'default' %}--sm-body-size: {{ body_size }}px;{% endif %}"
+>
   <div class="sock-math__header">
-    <h2 class="sock-math__headline h2-display">{{ section.settings.headline }}</h2>
+    <h2 class="sock-math__headline">{{ section.settings.headline }}</h2>
+  </div>
+  {% if section.settings.subheadline != blank %}
     <p class="sock-math__sub">{{ section.settings.subheadline }}</p>
-  </div>
+  {% endif %}
 
-  <div class="sock-math__price-compare">
-    <span class="sock-math__ours">{{ section.settings.our_price }}</span>
-    <span class="sock-math__vs">vs</span>
-    <span class="sock-math__theirs">{{ section.settings.their_price }}</span>
-    <span class="sock-math__per">/yr</span>
-  </div>
+  <div class="sock-math__inner">
+    {% if section.settings.quote != blank %}
+      <blockquote class="sock-math__quote">
+        <p>“{{ section.settings.quote | strip | remove: '"' | remove: '“' | remove: '”' }}”</p>
+        {% if section.settings.quote_cite != blank %}
+          <cite>— {{ section.settings.quote_cite }}</cite>
+        {% endif %}
+      </blockquote>
+    {% endif %}
 
-  <p class="sock-math__savings">{{ section.settings.savings_line }}</p>
-
-  <div class="sock-math__grid">
-    <div class="sock-math__col sock-math__col--theirs">
-      <p class="sock-math__col-label">Recurring cost</p>
-      <p class="sock-math__col-brand">Grip Socks</p>
-      <p class="sock-math__col-price">$112–144<span>/yr</span></p>
-      <p class="sock-math__col-detail">6–8 pairs × $14–18 each</p>
-      <ul class="sock-math__list sock-math__list--theirs">
-        <li><span class="sock-math__x">✗</span><div><p>Buy again every 6 weeks</p><p class="sock-math__list-sub">Grip wears out, elastic stretches</p></div></li>
-        <li><span class="sock-math__x">✗</span><div><p>Grip fades with every wash</p><p class="sock-math__list-sub">Silicone dots peel and flatten</p></div></li>
-        <li><span class="sock-math__x">✗</span><div><p>Slip in lunges and planks</p><p class="sock-math__list-sub">Partial coverage, no lateral support</p></div></li>
-      </ul>
-    </div>
-
-    <div class="sock-math__col sock-math__col--ours">
-      <span class="sock-math__one-time">One-time</span>
-      <p class="sock-math__col-brand sock-math__col-brand--bold">Barreletics</p>
-      <p class="sock-math__col-price sock-math__col-price--bold">$74<span> once</span></p>
-      <p class="sock-math__col-savings">Save $70+ every year</p>
-      <ul class="sock-math__list sock-math__list--ours">
-        <li><span class="sock-math__check">✓</span><div><p>Still gripping after 1,000+ classes</p><p class="sock-math__list-sub">Injection-molded grip won't peel or flake like silicone dots</p></div></li>
-        <li><span class="sock-math__check">✓</span><div><p>Wipe clean with a damp cloth</p><p class="sock-math__list-sub">No washing machine, no grip loss</p></div></li>
-        <li><span class="sock-math__check">✓</span><div><p>360° grip on every surface</p><p class="sock-math__list-sub">Reformer, mat, barre — locked in</p></div></li>
-      </ul>
+    <div class="sock-math__grid">
+      <div class="sock-math__col sock-math__col--theirs">
+        <p class="sock-math__col-brand">{{ section.settings.theirs_label | default: 'Grip Socks' }}</p>
+        <p class="sock-math__col-price">{{ section.settings.their_price | default: '$112–144' }}<span>/yr</span></p>
+        <ul class="sock-math__list">
+          <li><span class="sock-math__x" aria-hidden="true">✗</span>{{ section.settings.theirs_1 | default: 'Replace every 6–8 weeks' }}</li>
+          <li><span class="sock-math__x" aria-hidden="true">✗</span>{{ section.settings.theirs_2 | default: 'Grip degrades with washing' }}</li>
+          <li><span class="sock-math__x" aria-hidden="true">✗</span>{{ section.settings.theirs_3 | default: '6–8 pairs per year minimum' }}</li>
+        </ul>
+      </div>
+      <div class="sock-math__col sock-math__col--ours">
+        <p class="sock-math__col-brand sock-math__col-brand--accent">{{ section.settings.ours_label | default: 'Barreletics' }}</p>
+        <p class="sock-math__col-price sock-math__col-price--bold">{{ section.settings.our_price | default: '$74' }}<span> once</span></p>
+        <ul class="sock-math__list">
+          <li><span class="sock-math__check" aria-hidden="true">✓</span>{{ section.settings.ours_1 | default: '18+ month lifespan' }}</li>
+          <li><span class="sock-math__check" aria-hidden="true">✓</span>{{ section.settings.ours_2 | default: 'Grip never degrades' }}</li>
+          <li><span class="sock-math__check" aria-hidden="true">✓</span>{{ section.settings.ours_3 | default: 'One pair, every class' }}</li>
+        </ul>
+      </div>
     </div>
   </div>
 
-  <div class="sock-math__cta-wrap">
-    <a href="{{ section.settings.cta_url | default: '#variants' }}" class="btn btn--primary">{{ section.settings.cta_text }}</a>
-  </div>
+  {% if section.settings.cta_text != blank %}
+    <div class="sock-math__cta-wrap">
+      <a href="{{ cta_href }}" class="btn btn--primary">{{ section.settings.cta_text }}</a>
+    </div>
+  {% endif %}
 </section>
 
 <style>
-  .sock-math {
-    background: var(--bg-alternate);
-    padding: var(--space-14) var(--section-padding-x);
+  .sock-math--compact {
+    background: #f5f2ec;
+    padding: 0 0 var(--section-padding-y);
   }
-
   .sock-math__header {
     text-align: center;
-    padding-bottom: var(--space-9);
+    padding: var(--section-padding-y) 40px 32px;
   }
-
   .sock-math__headline {
-    font-size: var(--type-h2-display-size);
-    font-weight: var(--type-h2-display-weight);
-    line-height: var(--type-h2-display-leading);
-    letter-spacing: var(--type-h2-display-tracking);
-    text-transform: none;
-    color: var(--text-primary);
+    font-size: var(--sm-title-size, clamp(36px, 5vw, 52px));
+    font-weight: var(--sm-title-weight, 400);
+    color: #1c1916;
     margin: 0;
+    letter-spacing: -0.028em;
+    line-height: 1.1;
   }
-
   .sock-math__sub {
-    font-size: var(--text-lg);
-    font-weight: var(--weight-medium);
-    color: var(--text-body);
-    margin: var(--space-4) 0 0;
-  }
-
-  .sock-math__price-compare {
     text-align: center;
-    padding: var(--space-9) 0 0;
-    display: flex;
-    align-items: baseline;
-    justify-content: center;
-    gap: var(--space-2);
+    padding: 0 40px;
+    font-size: var(--sm-body-size, 16px);
+    font-weight: 400;
+    color: #4a4a4a;
+    margin: 0;
+    line-height: 1.5;
   }
-
-  .sock-math__ours {
-    font-size: 56px;
-    font-weight: var(--fw-emphasis);
-    color: var(--text-primary);
-    letter-spacing: -0.03em;
-    line-height: 1;
+  .sock-math__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 48px 40px 0;
   }
-
-  .sock-math__vs {
-    font-size: 20px;
-    font-weight: var(--weight-light);
-    color: #aaa;
+  .sock-math__quote {
+    max-width: 600px;
+    margin: 0 auto 40px;
+    text-align: center;
+    border: none;
+    padding: 0;
   }
-
-  .sock-math__theirs {
-    font-size: 56px;
-    font-weight: var(--weight-light);
-    color: #bbb;
-    letter-spacing: -0.03em;
-    line-height: 1;
-    text-decoration: line-through;
-    text-decoration-color: var(--accent-primary);
-  }
-
-  .sock-math__per {
+  .sock-math__quote p {
     font-size: 16px;
-    font-weight: var(--weight-light);
-    color: #aaa;
+    font-style: italic;
+    color: #4a4a4a;
+    line-height: 1.6;
+    margin: 0 0 8px;
   }
-
-  .sock-math__savings {
-    text-align: center;
-    font-size: 14px;
-    color: var(--text-primary);
-    font-weight: var(--weight-bold);
-    margin: var(--space-2) 0 0;
-    letter-spacing: 0.02em;
+  .sock-math__quote cite {
+    font-size: 12px;
+    font-style: normal;
+    color: #8a8a8a;
+    font-weight: 600;
   }
-
   .sock-math__grid {
-    max-width: 1100px;
-    margin: var(--space-9) auto 0;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0;
-    border-radius: var(--radius-card);
+    border: 1px solid #d6cfc0;
+    border-radius: 8px;
     overflow: hidden;
   }
-
   .sock-math__col {
-    padding: var(--space-10) var(--space-9);
-    background: var(--bg-primary);
+    padding: 40px;
   }
-
+  .sock-math__col--theirs {
+    border-right: 1px solid #d6cfc0;
+    background: transparent;
+  }
   .sock-math__col--ours {
-    border-left: 3px solid var(--accent-primary);
-    box-shadow: var(--shadow-md);
+    background: #fff;
   }
-
-  .sock-math__col-label {
-    font-size: var(--text-sm);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-widest);
-    color: #aaa;
-    margin: 0 0 4px;
-  }
-
   .sock-math__col-brand {
-    font-size: 12px;
+    font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: var(--tracking-eyebrow);
-    color: var(--text-muted);
-    font-weight: var(--weight-medium);
-    margin: 0 0 var(--space-5);
+    letter-spacing: 0.08em;
+    color: #8a8a8a;
+    font-weight: 700;
+    margin: 0 0 16px;
   }
-
-  .sock-math__col-brand--bold {
-    color: var(--text-primary);
-    font-weight: var(--fw-hero);
+  .sock-math__col-brand--accent {
+    color: #c45c3f;
   }
-
-  .sock-math__one-time {
-    display: inline-block;
-    font-size: var(--text-xs);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-eyebrow);
-    font-weight: var(--weight-bold);
-    color: var(--accent-primary);
-    background: rgba(200, 90, 56, 0.08);
-    padding: 4px 10px;
-    border-radius: var(--radius-badge);
-    margin: 0 0 var(--space-3);
-  }
-
   .sock-math__col-price {
-    font-size: 42px;
-    font-weight: var(--weight-light);
-    color: #aaa;
-    margin: 0 0 var(--space-2);
-    letter-spacing: var(--tracking-tight);
+    font-size: 36px;
+    font-weight: 700;
+    color: #1c1916;
+    margin: 0 0 24px;
+    letter-spacing: -0.02em;
+    line-height: 1;
   }
-
   .sock-math__col-price span {
     font-size: 14px;
-    font-weight: var(--weight-light);
+    font-weight: 400;
+    color: #8a8a8a;
   }
-
-  .sock-math__col-price--bold {
-    font-weight: var(--fw-hero);
-    color: var(--text-primary);
-  }
-
-  .sock-math__col-price--bold span {
-    font-weight: var(--weight-regular);
-    color: var(--text-muted);
-  }
-
-  .sock-math__col-detail {
-    font-size: 13px;
-    color: #bbb;
-    margin: 0 0 var(--space-8);
-  }
-
-  .sock-math__col-savings {
-    font-size: 13px;
-    color: var(--accent-primary);
-    font-weight: var(--weight-semibold);
-    margin: 0 0 var(--space-8);
-  }
-
   .sock-math__list {
     list-style: none;
     padding: 0;
     margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
+    font-size: 14px;
+    color: #4a4a4a;
+    line-height: 2;
   }
-
   .sock-math__list li {
     display: flex;
     align-items: flex-start;
-    gap: var(--space-3);
+    gap: 8px;
   }
-
-  .sock-math__list li p {
-    margin: 0;
-    font-size: 14px;
-  }
-
-  .sock-math__list--theirs li p {
-    color: var(--text-muted);
-  }
-
-  .sock-math__list--ours li p {
-    font-weight: var(--weight-bold);
-    color: var(--text-primary);
-  }
-
-  .sock-math__list-sub {
-    font-size: 12px !important;
-    font-weight: var(--weight-regular) !important;
-    color: var(--text-body) !important;
-    margin-top: 2px !important;
-  }
-
-  .sock-math__list--theirs .sock-math__list-sub {
-    color: #bbb !important;
-  }
-
   .sock-math__x {
-    font-size: 18px;
-    color: #ccc;
-    font-weight: var(--weight-light);
+    color: #8a8a8a;
     flex-shrink: 0;
-    line-height: 1;
   }
-
   .sock-math__check {
-    font-size: 18px;
-    color: var(--text-primary);
-    font-weight: var(--fw-hero);
+    color: #1c1916;
+    font-weight: 700;
     flex-shrink: 0;
-    line-height: 1;
   }
-
+  .sock-math__col--theirs .sock-math__list {
+    color: #8a8a8a;
+  }
   .sock-math__cta-wrap {
     text-align: center;
-    margin-top: var(--space-8);
+    margin-top: 40px;
+    padding: 0 40px;
   }
-
   @media (max-width: 768px) {
-    .sock-math {
-      padding: var(--section-padding-y-mobile) var(--section-padding-x-mobile);
-    }
-
-    .sock-math__headline {
-      font-size: var(--text-7xl);
-    }
-
-    .sock-math__ours,
-    .sock-math__theirs {
-      font-size: 40px;
-    }
-
-    .sock-math__grid {
-      grid-template-columns: 1fr;
-    }
+    .sock-math--compact { padding: 0 0 var(--section-padding-y-mobile); }
+    .sock-math__header { padding: var(--section-padding-y-mobile) 16px 24px; }
+    .sock-math__sub { padding: 0 16px; }
+    .sock-math__inner { padding: 32px 16px 0; }
+    .sock-math__grid { grid-template-columns: 1fr; }
+    .sock-math__col--theirs { border-right: none; border-bottom: 1px solid #d6cfc0; }
+    .sock-math__col { padding: 28px 24px; }
   }
 </style>
 
@@ -301,13 +204,106 @@
 {
   "name": "Sock Math",
   "settings": [
-    { "type": "text", "id": "headline", "label": "Headline", "default": "One pair. Done." },
-    { "type": "text", "id": "subheadline", "label": "Subheadline", "default": "Your practice. Your pace. Months to years of the same grip." },
-    { "type": "text", "id": "our_price", "label": "Our price display", "default": "$74" },
-    { "type": "text", "id": "their_price", "label": "Their price display", "default": "$144" },
-    { "type": "text", "id": "savings_line", "label": "Savings line", "default": "Save $70+ in year one. Every year after that — it's free grip." },
-    { "type": "text", "id": "cta_text", "label": "CTA text", "default": "Shop Barreletics →" },
-    { "type": "url", "id": "cta_url", "label": "CTA link" }
+    { "type": "header", "content": "Shared — Content" },
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "Heading",
+      "default": "One pair. Done.",
+      "info": "Family is brand Type OS — use Title size/weight to adjust. No font family picker."
+    },
+    {
+      "type": "select",
+      "id": "title_size",
+      "label": "Title size",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "32", "label": "32px" },
+        { "value": "36", "label": "36px" },
+        { "value": "40", "label": "40px" },
+        { "value": "44", "label": "44px" },
+        { "value": "48", "label": "48px" },
+        { "value": "52", "label": "52px" },
+        { "value": "56", "label": "56px" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" },
+        { "value": "700", "label": "700" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "text",
+      "id": "subheadline",
+      "label": "Body",
+      "default": "Smarter than grip socks. Your practice. Your pace. Months to years of the same grip."
+    },
+    {
+      "type": "select",
+      "id": "body_size",
+      "label": "Body size",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "14", "label": "14px" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" },
+        { "value": "18", "label": "18px" }
+      ],
+      "default": "default"
+    },
+    { "type": "text", "id": "cta_text", "label": "CTA label", "info": "Leave blank to hide (v18 compact has no CTA)." },
+    {
+      "type": "select",
+      "id": "cta_link_target",
+      "label": "CTA link",
+      "options": [
+        { "value": "custom", "label": "Custom URL…" },
+        { "value": "#variants", "label": "#variants — Shop styles" },
+        { "value": "#reviews", "label": "#reviews" },
+        { "value": "#guarantee", "label": "#guarantee" }
+      ],
+      "default": "#variants"
+    },
+    { "type": "text", "id": "cta_url", "label": "Custom CTA URL" },
+    { "type": "header", "content": "Section — Sock math — compact" },
+    {
+      "type": "textarea",
+      "id": "quote",
+      "label": "Quote",
+      "default": "Grip socks ARE useless compared to these shoes. They even help me with my balance!"
+    },
+    {
+      "type": "text",
+      "id": "quote_cite",
+      "label": "Quote cite",
+      "default": "Myrna C., Pilates"
+    },
+    { "type": "text", "id": "theirs_label", "label": "Their column label", "default": "Grip Socks" },
+    { "type": "text", "id": "their_price", "label": "Their price", "default": "$112–144" },
+    { "type": "text", "id": "theirs_1", "label": "Their point 1", "default": "Replace every 6–8 weeks" },
+    { "type": "text", "id": "theirs_2", "label": "Their point 2", "default": "Grip degrades with washing" },
+    { "type": "text", "id": "theirs_3", "label": "Their point 3", "default": "6–8 pairs per year minimum" },
+    { "type": "text", "id": "ours_label", "label": "Our column label", "default": "Barreletics" },
+    { "type": "text", "id": "our_price", "label": "Our price", "default": "$74" },
+    { "type": "text", "id": "ours_1", "label": "Our point 1", "default": "18+ month lifespan" },
+    { "type": "text", "id": "ours_2", "label": "Our point 2", "default": "Grip never degrades" },
+    { "type": "text", "id": "ours_3", "label": "Our point 3", "default": "One pair, every class" },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Section aria-label",
+      "default": "Cost comparison"
+    }
   ],
   "presets": [{ "name": "Sock Math" }]
 }

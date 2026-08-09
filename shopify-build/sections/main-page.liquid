@@ -1,0 +1,269 @@
+{% comment %}
+  Page Content Section
+
+  Renders the Shopify page's own title and body content ({{ page.content }}) inside the
+  design system frame. This is the section that lets Admin-authored page bodies survive:
+  third-party app embeds pasted into a page body (e.g. the ReturnZap <return-zap> web
+  component on /pages/returns-portal) only exist in page.content, never in a theme file.
+  A template that hardcodes its own copy silently deletes them.
+
+  Used on: page.json (default), page.returns.json, page.shipping-retruns.json,
+  page.start-a-retrun.json, page.returns-portal.json, page.free-people.json,
+  page.judgeme_all_reviews.json
+{% endcomment %}
+
+{%- liquid
+  assign width_class = 'section__inner--narrow'
+  if section.settings.content_width == 'wide'
+    assign width_class = ''
+  elsif section.settings.content_width == 'full'
+    assign width_class = 'section__inner--wide'
+  endif
+-%}
+
+<section
+  class="section section-frame page-content{% if section.settings.background == 'cream' %} section--cream{% endif %}"
+  style="{% render 'section-inset-vars' %}"
+  {{ section.shopify_attributes }}
+>
+  <div class="section__inner {{ width_class }}">
+    {%- if section.settings.show_header -%}
+      <header class="page-content__head">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="eyebrow eyebrow--accent">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        <h1 class="page-content__title">{{ page.title | default: section.settings.fallback_title }}</h1>
+        {%- if section.settings.subtitle != blank -%}
+          <p class="page-content__subtitle">{{ section.settings.subtitle }}</p>
+        {%- endif -%}
+      </header>
+    {%- endif -%}
+
+    <div class="page-content__body">
+      {{ page.content }}
+    </div>
+  </div>
+</section>
+
+<style>
+  .page-content__head {
+    text-align: center;
+    margin: 0 0 var(--space-8);
+  }
+
+  .page-content__title {
+    font-size: var(--type-hero-size);
+    font-weight: var(--type-hero-weight);
+    line-height: var(--type-hero-leading);
+    letter-spacing: var(--type-hero-tracking);
+    text-transform: none;
+    color: var(--text-primary);
+    margin: 0;
+  }
+
+  .page-content__subtitle {
+    font-size: var(--text-md);
+    color: var(--text-body);
+    line-height: var(--leading-relaxed);
+    margin: var(--space-3) 0 0;
+  }
+
+  .page-content__body {
+    font-size: var(--text-md);
+    color: var(--text-body);
+    line-height: var(--leading-loose);
+  }
+
+  /* Page bodies are hand-authored in Admin and arrive with their own markup and, on the
+     legacy pages, their own inline styles. Style only what the editor emits bare — do not
+     reach into nested elements, or a pasted layout gets overridden. */
+  .page-content__body > p,
+  .page-content__body > ul,
+  .page-content__body > ol,
+  .page-content__body > table {
+    margin: 0 0 var(--space-4);
+  }
+
+  .page-content__body > h2 {
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    letter-spacing: var(--tracking-tight);
+    margin: var(--space-8) 0 var(--space-4);
+  }
+
+  .page-content__body > h3 {
+    font-size: var(--text-lg);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    margin: var(--space-6) 0 var(--space-3);
+  }
+
+  .page-content__body a {
+    color: var(--text-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .page-content__body a:hover {
+    color: var(--color-rust);
+  }
+
+  /* Admin-authored bodies are inline text links ~16-18px tall. Grow the hit region to 44px
+     with a transparent overlay so nothing moves visually and pasted inline styles survive. */
+  .page-content__body a {
+    position: relative;
+  }
+
+  .page-content__body a::after {
+    content: '';
+    position: absolute;
+    inset: -14px -10px;
+  }
+
+  .page-content__body img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .page-content__body > *:last-child {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 768px) {
+    .page-content__title {
+      font-size: var(--text-3xl);
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Page content",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Renders this page's title and body content from Shopify Admin. Keep this section on any page whose body holds app embeds or hand-authored HTML."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_header",
+      "label": "Show page title",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow (optional)"
+    },
+    {
+      "type": "text",
+      "id": "fallback_title",
+      "label": "Fallback title",
+      "info": "Used only when the page has no title (e.g. Theme Editor preview).",
+      "default": "Page"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle (optional)"
+    },
+    {
+      "type": "select",
+      "id": "content_width",
+      "label": "Content width",
+      "options": [
+        { "value": "narrow", "label": "Narrow (760px) — editorial reading width" },
+        { "value": "wide", "label": "Wide (1200px)" },
+        { "value": "full", "label": "Full (1400px)" }
+      ],
+      "default": "narrow"
+    },
+    {
+      "type": "select",
+      "id": "background",
+      "label": "Background",
+      "options": [
+        { "value": "white", "label": "White" },
+        { "value": "cream", "label": "Warm cream" }
+      ],
+      "default": "white"
+    },
+    {
+      "type": "header",
+      "content": "Section frame"
+    },
+    {
+      "type": "checkbox",
+      "id": "inset_custom_mobile",
+      "label": "Custom mobile insets",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "inset_top",
+      "label": "Inset top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom",
+      "label": "Inset bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x",
+      "label": "Inset left + right",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_top_mobile",
+      "label": "Inset top (mobile)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom_mobile",
+      "label": "Inset bottom (mobile)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x_mobile",
+      "label": "Inset left + right (mobile)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Page content"
+    }
+  ]
+}
+{% endschema %}

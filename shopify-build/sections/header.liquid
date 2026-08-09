@@ -10,7 +10,9 @@
 {%- assign sticky_header = section.settings.sticky_header -%}
 {%- if sticky_header == nil -%}{%- assign sticky_header = true -%}{%- endif -%}
 {%- assign nav_link_size = section.settings.nav_link_size | default: 'default' -%}
-{%- assign nav_gap = section.settings.nav_gap | default: 32 -%}
+{%- assign nav_gap = section.settings.nav_gap | default: 30 -%}
+{%- comment -%} /pages/help 404s on this store; FAQ is the real support page. {%- endcomment -%}
+{%- assign help_fallback_url = '/pages/faq' -%}
 {%- assign show_help = section.settings.show_help -%}
 {%- if show_help == nil -%}{%- assign show_help = true -%}{%- endif -%}
 {%- assign show_account = section.settings.show_account -%}
@@ -22,6 +24,11 @@
 {%- assign header_bg = section.settings.header_bg | default: '#ffffff' -%}
 {%- assign header_text = section.settings.header_text | default: '#4a4a4a' -%}
 {%- assign logo_img_width = logo_height | times: 4 | at_least: 280 -%}
+
+{%- unless sticky_header -%}
+  {%- comment -%} Stickiness lives on the section wrapper (see .header-section in chrome.css). {%- endcomment -%}
+  <style>#shopify-section-{{ section.id }} { position: static; }</style>
+{%- endunless -%}
 
 <header
   class="site-header{% unless sticky_header %} site-header--static{% endunless %}"
@@ -101,12 +108,21 @@
       {% if show_help %}
         {% if help_menu != blank %}
           <div class="site-header__help site-header__nav-item--has-sub">
-            <a href="{{ help_menu.links.first.url | default: routes.root_url }}" class="site-header__action site-header__action--help" aria-label="Help" aria-haspopup="true">
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-                <circle cx="9" cy="9" r="8" stroke="currentColor" stroke-width="1.3"/>
-                <path d="M6.5 7a2.5 2.5 0 0 1 5 0c0 1.5-2.5 1.5-2.5 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
-                <circle cx="9" cy="13" r="0.8" fill="currentColor"/>
-              </svg>
+            <a
+              href="{{ help_fallback_url }}"
+              class="site-header__action site-header__action--help{% if show_action_labels %} site-header__action--text{% endif %}"
+              aria-label="Help"
+              aria-haspopup="true"
+            >
+              {%- if show_action_labels -%}
+                Help <span class="site-header__caret" aria-hidden="true">▾</span>
+              {%- else -%}
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                  <circle cx="9" cy="9" r="8" stroke="currentColor" stroke-width="1.3"/>
+                  <path d="M6.5 7a2.5 2.5 0 0 1 5 0c0 1.5-2.5 1.5-2.5 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+                  <circle cx="9" cy="13" r="0.8" fill="currentColor"/>
+                </svg>
+              {%- endif -%}
             </a>
             <ul class="site-header__subnav site-header__subnav--help" role="list">
               {% for link in help_menu.links %}
@@ -115,8 +131,20 @@
             </ul>
           </div>
         {% else %}
-          <a href="/pages/help" class="site-header__action site-header__action--text" aria-label="Help">
-            {% if show_action_labels %}Help ▾{% else %}<span aria-hidden="true">?</span>{% endif %}
+          {%- comment -%}
+            No secondary menu assigned. /pages/help does not exist on this store — FAQ is the
+            real support page, so the fallback points there rather than shipping a 404.
+          {%- endcomment -%}
+          <a href="{{ help_fallback_url }}" class="site-header__action site-header__action--text" aria-label="Help">
+            {%- if show_action_labels -%}
+              Help
+            {%- else -%}
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                <circle cx="9" cy="9" r="8" stroke="currentColor" stroke-width="1.3"/>
+                <path d="M6.5 7a2.5 2.5 0 0 1 5 0c0 1.5-2.5 1.5-2.5 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+                <circle cx="9" cy="13" r="0.8" fill="currentColor"/>
+              </svg>
+            {%- endif -%}
           </a>
         {% endif %}
       {% endif %}
@@ -176,11 +204,20 @@
             {% endfor %}
           {% endif %}
         </ul>
+        {%- comment -%}
+          The desktop Help action is hidden below 768px, so this list is the only support
+          affordance on mobile. Without a fallback, an unconfigured header leaves phone users
+          with no way to reach support at all.
+        {%- endcomment -%}
         {% if help_menu != blank %}
           <ul class="mobile-menu__utility" role="list">
             {% for link in help_menu.links %}
               <li><a href="{{ link.url }}">{{ link.title }}</a></li>
             {% endfor %}
+          </ul>
+        {% elsif show_help %}
+          <ul class="mobile-menu__utility" role="list">
+            <li><a href="{{ help_fallback_url }}">Help</a></li>
           </ul>
         {% endif %}
       </nav>
@@ -289,10 +326,14 @@
         { "value": "13", "label": "13px" },
         { "value": "14", "label": "14px" },
         { "value": "15", "label": "15px" },
-        { "value": "16", "label": "16px" }
+        { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" },
+        { "value": "18", "label": "18px (live match)" },
+        { "value": "20", "label": "20px" },
+        { "value": "22", "label": "22px" }
       ],
       "default": "default",
-      "info": "Family is brand Type OS — size only."
+      "info": "Family is brand Type OS — size only. Default / Type OS is 18px, matching live."
     },
     {
       "type": "range",
@@ -301,8 +342,9 @@
       "min": 16,
       "max": 48,
       "step": 2,
-      "default": 32,
-      "unit": "px"
+      "default": 30,
+      "unit": "px",
+      "info": "30px matches live (7.5px 15px per link)."
     },
     {
       "type": "header",

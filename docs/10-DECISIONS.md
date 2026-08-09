@@ -500,11 +500,12 @@ Decision: "Both perform identically with the same grip and stability. The differ
 ```
 Source: manychat-kb/02-open-vs-closed-sole.md
 
-### P-004: First-Time Buyer → Open Sole
+### P-004: First-Time Buyer → Open Sole — SUPERSEDED 2026-08-02
 ```
-Decision: "Most first-time buyers start with Open Sole — the barefoot feel is where they shine."
+OLD (DO NOT USE): "Most first-time buyers start with Open Sole — the barefoot feel is where they shine."
+SUPERSEDED: Do not recommend first-timers toward either sole. Choice = preference / feel only (P-003).
 ```
-Source: manychat-kb/02-open-vs-closed-sole.md
+Source: Owner letter 2026-08-02; manychat-kb/02-open-vs-closed-sole.md (updated)
 
 ### P-005: No Machine Washing
 ```
@@ -549,6 +550,46 @@ Source: docs/09-PRODUCT-KNOWLEDGE.md (Data Quality Flags)
 Decision: Two DRAFT products at $82.00 (Purple Blue, Grey Swirl, Turquoise & Purple). Not live.
 ```
 Source: docs/09-PRODUCT-KNOWLEDGE.md (Products Not on Live Storefront)
+
+### P-012: Pool Positioning RETIRED — 2026-08-07
+```
+Decision: Remove all pool positioning from every surface.
+
+BANNED: pool, poolside, pool deck, "around the pool", "in the pool",
+        water park, tidal pool / tidepool, spa visits, aqua barre, water aerobics
+
+USE INSTEAD: resortwear, paddleboarding, beach, outdoor yoga
+             (plus boating, boat deck, hot sand, travel)
+
+Do not invent scenery. No rocky coves, rocky coastline, rocky shorelines,
+tidepools, shell-covered beaches, pebbly lake beds. Beach covers it.
+
+Reason: customers bought for pool use and slipped on wet tile.
+        Pool language attracts the wrong buyer and creates liability.
+
+Scope: FAQ, GEO, product descriptions, SEO tags, collection copy,
+       blog, email, ManyChat, ads, and all operating-system docs.
+```
+Source: Owner letter 2026-08-07; `.cursor/rules/no-pool-positioning.mdc`
+
+### P-013: "Fully enclosed" RETIRED — 2026-08-08
+```
+Decision: Drop "Sleek, fully enclosed feel." from the P-003 Closed Sole answer.
+
+BANNED: "fully enclosed", "fully-enclosed", "fully enclosed heel", "fully enclosed feel"
+
+SURVIVING APPROVED LINE:
+  Closed Sole: Heel and foot fully covered. Same grip, same stability.
+
+Reason: Owner letter — "quit saying fully enclosed heel - dont make shit up".
+        Supersedes the older approved P-003 wording. Historical record kept,
+        marked RETIRED, in docs/09-PRODUCT-KNOWLEDGE.md and
+        manychat-kb/02-open-vs-closed-sole.md — not reusable as source copy.
+
+Scope: PDP + variant templates, collection copy, studio/wholesale/partner
+       pages, FAQ, GEO, ManyChat KB, and all operating-system docs.
+```
+Source: Owner letter 2026-08-08; P-003 (`manychat-kb/02-open-vs-closed-sole.md`)
 
 ---
 
@@ -595,11 +636,15 @@ Rationale: Instructor market buys 2–3 pairs.
 ```
 Source: manychat-kb/04-pricing.md
 
-### BZ-007: Newsletter 10% Off First Order
+### BZ-007: Newsletter 10% Off First Order — RETIRED
 ```
-Decision: 10% off via newsletter signup.
+Original decision: 10% off via newsletter signup.
+Superseded 2026-07-31 (Footer LOCK): newsletter offer is "Join the list" with benefit
+checkmarks — NO 10%, NO discount promise. Do not reintroduce in any surface
+(footer, page newsletter, email, ManyChat, ads).
+Authority: specs/frozen/footer.md · planning/m4-section-freeze.md (Footer row)
 ```
-Source: manychat-kb/04-pricing.md
+Source: manychat-kb/04-pricing.md · retired per Footer LOCK 2026-07-31
 
 ### BZ-008: Shop Pay — 4 Installments
 ```

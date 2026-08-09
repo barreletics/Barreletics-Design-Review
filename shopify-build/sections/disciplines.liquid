@@ -2,7 +2,7 @@
   Disciplines — cream typographic band (Home WORKING).
 {% endcomment %}
 
-<section class="discipline-film" aria-label="{{ section.settings.aria_label | default: 'Built for every studio discipline' | escape }}">
+<section class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} discipline-film" aria-label="{{ section.settings.aria_label | default: 'Built for every studio discipline' | escape }}" style="{% render 'section-inset-vars' %}">
   <div class="discipline-film__inner">
     {% if section.settings.headline != blank %}
       <p class="discipline-film__line h2-display">{{ section.settings.headline | newline_to_br }}</p>
@@ -30,24 +30,14 @@
     width: 100%;
     max-width: 1100px;
     margin: 0 auto;
-    padding: 88px 40px 80px;
+    padding: var(--section-padding-y, 64px) var(--section-padding-x, 40px);
     text-align: center;
   }
-  /* Home WORKING: clamp(28px, 3.5vw, 40px) / 400 — lock against theme overrides */
+  /* Type OS — .h2-display tokens (no local clamp/weight fight) */
   .discipline-film__line.h2-display {
-    font-size: clamp(28px, 3.5vw, 40px) !important;
-    font-weight: 400 !important;
-    line-height: 1.15 !important;
-    letter-spacing: -0.028em !important;
-    color: #1c1916;
-    text-transform: none;
+    color: var(--text-primary);
     max-width: none;
-    margin: 0 0 32px;
-  }
-  @media (max-width: 768px) {
-    .discipline-film__line.h2-display {
-      font-size: clamp(26px, 7vw, 32px) !important;
-    }
+    margin: 0 0 var(--gap-c);
   }
   .discipline-film__moves {
     display: flex;
@@ -72,7 +62,9 @@
     font-weight: 400;
   }
   @media (max-width: 768px) {
-    .discipline-film__inner { padding: 56px 16px 48px; }
+    .discipline-film__inner {
+      padding: var(--section-padding-y-mobile, 48px) var(--section-padding-x-mobile, 16px);
+    }
   }
 </style>
 
@@ -80,7 +72,10 @@
 {
   "name": "Disciplines",
   "settings": [
-    { "type": "header", "content": "Shared — Content" },
+    {
+      "type": "header",
+      "content": "Shared — Content"
+    },
     {
       "type": "textarea",
       "id": "headline",
@@ -88,28 +83,163 @@
       "default": "Upgrade your grip.\nUpgrade your workout.",
       "info": "H2 Display (brand). Use a line break for two lines. Type OS owns size/weight."
     },
-    { "type": "header", "content": "Section — Disciplines" },
-    { "type": "text", "id": "aria_label", "label": "Aria label", "default": "Built for every studio discipline" }
+    {
+      "type": "header",
+      "content": "Section — Disciplines"
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Aria label",
+      "default": "Built for every studio discipline"
+    },
+    {
+      "type": "header",
+      "content": "Shared — Section frame"
+    },
+    {
+      "type": "paragraph",
+      "content": "OUTER inset from the page edges (margin). Top and bottom are independent; left & right = one control. Custom mobile OFF = mobile uses the same inset as desktop. Defaults 0 = full bleed."
+    },
+    {
+      "type": "checkbox",
+      "id": "inset_custom_mobile",
+      "label": "Custom mobile inset",
+      "default": false,
+      "info": "OFF (default): ignore the mobile inset sliders — mobile uses desktop Inset top / bottom / left & right. ON: use the mobile inset sliders instead."
+    },
+    {
+      "type": "range",
+      "id": "inset_top",
+      "label": "Inset top",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom",
+      "label": "Inset bottom",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x",
+      "label": "Inset left & right",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Same value on both sides."
+    },
+    {
+      "type": "range",
+      "id": "inset_top_mobile",
+      "label": "Inset top — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom_mobile",
+      "label": "Inset bottom — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x_mobile",
+      "label": "Inset left & right — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_desktop",
+      "label": "Hide on desktop",
+      "default": false
+    }
   ],
   "blocks": [
     {
       "type": "discipline",
       "name": "Discipline",
       "settings": [
-        { "type": "text", "id": "discipline", "label": "Discipline name", "default": "Barre" }
+        {
+          "type": "text",
+          "id": "discipline",
+          "label": "Discipline name",
+          "default": "Barre"
+        }
       ]
     }
   ],
-  "presets": [{
-    "name": "Disciplines",
-    "blocks": [
-      { "type": "discipline", "settings": { "discipline": "Barre" } },
-      { "type": "discipline", "settings": { "discipline": "Reformer" } },
-      { "type": "discipline", "settings": { "discipline": "Megaformer" } },
-      { "type": "discipline", "settings": { "discipline": "Lagree" } },
-      { "type": "discipline", "settings": { "discipline": "Pilates" } },
-      { "type": "discipline", "settings": { "discipline": "Yoga" } }
-    ]
-  }]
+  "presets": [
+    {
+      "name": "Disciplines",
+      "blocks": [
+        {
+          "type": "discipline",
+          "settings": {
+            "discipline": "Barre"
+          }
+        },
+        {
+          "type": "discipline",
+          "settings": {
+            "discipline": "Reformer"
+          }
+        },
+        {
+          "type": "discipline",
+          "settings": {
+            "discipline": "Megaformer"
+          }
+        },
+        {
+          "type": "discipline",
+          "settings": {
+            "discipline": "Lagree"
+          }
+        },
+        {
+          "type": "discipline",
+          "settings": {
+            "discipline": "Pilates"
+          }
+        },
+        {
+          "type": "discipline",
+          "settings": {
+            "discipline": "Yoga"
+          }
+        }
+      ]
+    }
+  ]
 }
 {% endschema %}

@@ -482,11 +482,10 @@
 - **Source:** manychat-kb/02-open-vs-closed-sole.md, docs/09-PRODUCT-KNOWLEDGE.md
 - **Category:** PRODUCT
 
-### P-004: First-Time Buyer Recommendation
-- **Decision:** "Most first-time buyers start with Open Sole — the barefoot feel is where they shine."
-- **Rationale:** Open Sole showcases the product's signature barefoot feel.
-- **Supersedes:** N/A
-- **Source:** manychat-kb/02-open-vs-closed-sole.md
+### P-004: First-Time Buyer Recommendation — SUPERSEDED 2026-08-02
+- **Decision (OLD — DO NOT USE):** "Most first-time buyers start with Open Sole — the barefoot feel is where they shine."
+- **Superseded by:** Owner letter 2026-08-02 — first-time buyers do **not** choose Open by default. Do not recommend either sole as the first-timer default. Choice = preference / feel only (see P-003).
+- **Source (stale):** manychat-kb/02-open-vs-closed-sole.md
 - **Category:** PRODUCT
 
 ### P-005: No Machine Washing
@@ -584,10 +583,10 @@
 - **Source:** manychat-kb/04-pricing.md, docs/09-PRODUCT-KNOWLEDGE.md
 - **Category:** BUSINESS
 
-### BZ-007: Newsletter 10% Off First Order
-- **Decision:** New customers get 10% off via newsletter signup.
-- **Rationale:** List building + first-purchase incentive.
-- **Supersedes:** N/A
+### BZ-007: Newsletter 10% Off First Order — RETIRED
+- **Decision:** ~~New customers get 10% off via newsletter signup.~~ **Retired 2026-07-31 (Footer LOCK).** Newsletter is "Join the list" with benefit checkmarks — no discount promise, on any surface (footer, page newsletter, email, ManyChat, ads).
+- **Rationale:** List building without discounting the product; the offer trained first-time buyers to wait for a code.
+- **Superseded by:** `specs/frozen/footer.md` · `planning/m4-section-freeze.md` (Footer row)
 - **Source:** manychat-kb/04-pricing.md
 - **Category:** BUSINESS
 

@@ -1,76 +1,60 @@
 {% comment %}
-  DEPRECATED (D-042 / R-01 / R-02) — Do not assign this template in Shopify Admin.
-  Canonical surface: /pages/partners#studio-partners via page-partners.liquid
-  NotesFromStudio UGC is a separate editorial track — not this program page.
+  Page Studio Program Section
+  Heading, one paragraph, application form. Nothing else.
+
+  Used on: templates/page.studio-program.json  →  /pages/studio-program
+
+  ARCHITECTURE NOTE (2026-08-08)
+  D-042 previously consolidated Wholesale / Studio / Ambassador onto /pages/partners and deprecated
+  this file. Owner direction 2026-08-08 restores three dedicated program pages with their own intake
+  forms; /pages/partners remains the hub that routes to them. Recorded as D-048 in
+  planning/10-decision-log.md, superseding D-042. See planning/partner-programs.md.
+  Redirect map (planning/m4a-redirect-map.md): the /pages/studio-program → /pages/partners 301 is
+  RETIRED as of 2026-08-08 (D-048) and must not be created — it would make this page unreachable. If
+  it was already imported into Shopify Admin from an earlier CSV, delete it before launch
+  (owner/Brian task).
+
+  ROUTING NOTE
+  Submissions post through Shopify's native {% form 'contact' %}, which always delivers to the store
+  Sender email and cannot carry a custom subject line. The hidden form_id token below is the value
+  the mail rule matches on to route applications away from the support inbox.
+
+  SHAPE NOTE (owner direction 2026-08-08 — "stop creating shit, make it straightforward like any
+  other brand")
+  This is the ordinary version every apparel brand ships: plain heading, one paragraph saying who it
+  is for and what happens after you submit, then the form. Eyebrow, hero CTA, benefit cards, studio
+  voices, FAQ block, and the cross-page CTA were removed. Do not add sections back.
+
+  COPY NOTES
+  - No published partner price list, tier structure, or opening minimum exists. Never imply one is
+    being withheld.
+  - No reassurance filler. "A person will read it" and the like assert basic competence and were cut.
+    A stated response time is a fact and stays.
+  - No tax content. Barreletics has never collected a resale certificate or tax ID (owner, 2026-08-08),
+    so the page must not describe a process that does not exist. Do not reintroduce it.
+  - Sole wording, if it ever returns here, is governed by .cursor/rules/sole-description-language.mdc.
+
+  FORM NOTE
+  First-contact form only. Number of locations, instructor headcount, weekly client visits, role,
+  phone, current front-desk retail, referral source, styles-of-interest checkboxes, and the tax field
+  were removed: none of them change the first reply, and all of them can be asked in it.
 {% endcomment %}
 
-{% comment %}
-  Page Studio Program Section (orphaned)
-  Studio partnership / instructor program overview with benefits and application form.
-  Used on: page.studio-program.json — DEPRECATED
-{% endcomment %}
+{%- liquid
+  assign form_token = section.settings.form_token | default: 'BL-PARTNER-STUDIO'
+-%}
 
 <section class="section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
   <div class="section__inner section__inner--narrow">
-    {% if section.settings.eyebrow != blank %}
-      <p class="eyebrow eyebrow--accent">{{ section.settings.eyebrow }}</p>
-    {% endif %}
     <h1 class="page-studio__title type-hero">{{ section.settings.title }}</h1>
-    {% if section.settings.subtitle != blank %}
-      <p class="page-studio__subtitle">{{ section.settings.subtitle }}</p>
-    {% endif %}
-  </div>
-</section>
-
-<section class="section section--cream">
-  <div class="section__inner">
-    <h2 class="page-studio__section-title">{{ section.settings.benefits_heading }}</h2>
-    <div class="page-studio__benefits-grid">
-      {% for block in section.blocks %}
-        {% if block.type == 'benefit' %}
-          <div class="page-studio__benefit-card" {{ block.shopify_attributes }}>
-            <h3 class="page-studio__benefit-title">{{ block.settings.title }}</h3>
-            <p class="page-studio__benefit-desc">{{ block.settings.description }}</p>
-          </div>
-        {% endif %}
-      {% endfor %}
+    <div class="page-studio__body type-lede">
+      {{ section.settings.body }}
     </div>
   </div>
 </section>
 
-{% assign testimonial_count = 0 %}
-{% for block in section.blocks %}
-  {% if block.type == 'testimonial' %}
-    {% assign testimonial_count = testimonial_count | plus: 1 %}
-  {% endif %}
-{% endfor %}
-
-{% if testimonial_count > 0 %}
-<section class="section">
-  <div class="section__inner">
-    <h2 class="page-studio__section-title">What Studios Say</h2>
-    <div class="page-studio__testimonials">
-      {% for block in section.blocks %}
-        {% if block.type == 'testimonial' %}
-          <div class="page-studio__testimonial" {{ block.shopify_attributes }}>
-            <blockquote class="page-studio__quote">{{ block.settings.quote }}</blockquote>
-            <p class="page-studio__attribution">
-              <strong>{{ block.settings.name }}</strong>
-              {% if block.settings.studio != blank %}<br>{{ block.settings.studio }}{% endif %}
-            </p>
-          </div>
-        {% endif %}
-      {% endfor %}
-    </div>
-  </div>
-</section>
-{% endif %}
-
-<section class="section section--cream">
+<section class="section section--cream" id="studio-apply">
   <div class="section__inner section__inner--narrow">
-    <h2 class="page-studio__form-title">{{ section.settings.form_heading }}</h2>
-    <p class="page-studio__form-subtitle">{{ section.settings.form_subtitle }}</p>
-
     {% form 'contact' %}
       {% if form.posted_successfully? %}
         <div class="page-studio__success" role="alert">
@@ -85,46 +69,62 @@
       {% endif %}
 
       <input type="hidden" name="contact[subject]" value="Studio Program Application">
+      <input type="hidden" name="contact[form_id]" value="{{ form_token }}">
 
       <div class="page-studio__fields">
         <div class="page-studio__field-row">
           <div class="page-studio__field">
-            <label for="studio-name" class="page-studio__label">Studio Name</label>
+            <label for="studio-name" class="page-studio__label">Studio name</label>
             <input type="text" id="studio-name" name="contact[studio_name]" class="page-studio__input" required>
           </div>
           <div class="page-studio__field">
-            <label for="studio-contact" class="page-studio__label">Your Name</label>
-            <input type="text" id="studio-contact" name="contact[name]" class="page-studio__input" required autocomplete="name">
+            <label for="studio-url" class="page-studio__label">Studio website</label>
+            <input type="url" id="studio-url" name="contact[studio_url]" class="page-studio__input" required placeholder="https://">
           </div>
         </div>
 
         <div class="page-studio__field-row">
           <div class="page-studio__field">
+            <label for="studio-location" class="page-studio__label">City, state / country</label>
+            <input type="text" id="studio-location" name="contact[location]" class="page-studio__input" required placeholder="Chicago, IL">
+          </div>
+          <div class="page-studio__field">
+            <label for="studio-discipline" class="page-studio__label">Primary discipline</label>
+            <select id="studio-discipline" name="contact[discipline]" class="page-studio__select" required>
+              <option value="" disabled selected>Select discipline</option>
+              <option value="Barre">Barre</option>
+              <option value="Reformer Pilates">Reformer Pilates</option>
+              <option value="Lagree / Megaformer">Lagree / Megaformer</option>
+              <option value="Mat Pilates">Mat Pilates</option>
+              <option value="Yoga">Yoga</option>
+              <option value="Multiple disciplines">Multiple disciplines</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="page-studio__field-row">
+          <div class="page-studio__field">
+            <label for="studio-contact" class="page-studio__label">Your name</label>
+            <input type="text" id="studio-contact" name="contact[name]" class="page-studio__input" required autocomplete="name">
+          </div>
+          <div class="page-studio__field">
             <label for="studio-email" class="page-studio__label">Email</label>
             <input type="email" id="studio-email" name="contact[email]" class="page-studio__input" required autocomplete="email">
           </div>
-          <div class="page-studio__field">
-            <label for="studio-location" class="page-studio__label">Studio Location</label>
-            <input type="text" id="studio-location" name="contact[location]" class="page-studio__input" placeholder="City, State">
-          </div>
         </div>
 
         <div class="page-studio__field">
-          <label for="studio-discipline" class="page-studio__label">Primary Discipline</label>
-          <select id="studio-discipline" name="contact[discipline]" class="page-studio__select">
-            <option value="" disabled selected>Select discipline</option>
-            <option value="Barre">Barre</option>
-            <option value="Reformer Pilates">Reformer Pilates</option>
-            <option value="Lagree / Megaformer">Lagree / Megaformer</option>
-            <option value="Mat Pilates">Mat Pilates</option>
-            <option value="Yoga">Yoga</option>
-            <option value="Multiple">Multiple Disciplines</option>
-          </select>
-        </div>
-
-        <div class="page-studio__field">
-          <label for="studio-message" class="page-studio__label">Tell us about your studio</label>
-          <textarea id="studio-message" name="contact[body]" class="page-studio__textarea" rows="4" placeholder="Number of instructors, class volume, current grip solution..."></textarea>
+          <label for="studio-background" class="page-studio__label">Message</label>
+          <textarea id="studio-background" name="contact[body]" class="page-studio__textarea" rows="5" required placeholder="Tell us about the studio and what you'd want to carry. If you picked Other, tell us what you teach."></textarea>
+          {%- comment -%}
+            First sentence is Andrew's own wording (2026-08-08). The second exists because the
+            discipline select carries an Other option and he decided the describe-it answer belongs
+            here rather than in a conditional text box. The prompt deliberately does not ask for
+            location — that has its own field above. Any field whose answer this prompt already
+            invites was removed: studio Instagram (the website identifies the studio) and starting
+            quantity ("what you'd want to carry" covers it).
+          {%- endcomment -%}
         </div>
 
         <div class="page-studio__field">
@@ -136,112 +136,45 @@
 </section>
 
 <style>
+  /* Nothing on this page links here, but the anchor is kept for inbound links and the
+     site header is sticky, so the form must not land behind it. */
+  #studio-apply {
+    scroll-margin-top: 96px;
+  }
+
+  /* Softer warm band, owner pick 2026-08-08 (variant B of the form-band comparison).
+     --bg-alternate #f5f2ec stepped down from white too hard; --bg-alternate-soft #faf8f6
+     halves the step and keeps the warmth. Set here, not as a Theme Editor setting, so the
+     old tone cannot come back on a fresh section add. */
+  #studio-apply.section--cream {
+    background: var(--bg-alternate-soft);
+  }
+
   .page-studio__title {
-    font-size: var(--type-hero-size);
-    font-weight: var(--type-hero-weight);
-    line-height: var(--type-hero-leading);
-    letter-spacing: var(--type-hero-tracking);
     text-transform: none;
     color: var(--text-primary);
     text-align: center;
+    margin: 0 0 var(--gap-b, 20px);
+  }
+
+  .page-studio__body {
+    text-align: center;
+    margin: 0 auto;
+    max-width: var(--max-width-copy);
+  }
+
+  .page-studio__body p {
     margin: 0 0 var(--space-3);
   }
 
-  .page-studio__subtitle {
-    font-size: var(--text-md);
-    color: var(--text-body);
-    text-align: center;
-    line-height: var(--leading-relaxed);
-    margin: 0;
-    max-width: var(--max-width-copy);
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .page-studio__section-title {
-    font-size: var(--text-2xl);
-    font-weight: var(--weight-bold);
-    color: var(--text-primary);
-    text-align: center;
-    margin: 0 0 var(--space-8);
-    letter-spacing: var(--tracking-tight);
-  }
-
-  .page-studio__benefits-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: var(--grid-gap);
-  }
-
-  .page-studio__benefit-card {
-    background: var(--bg-primary);
-    border: 1px solid var(--border-default);
-    border-radius: var(--radius-card);
-    padding: var(--space-6);
-    text-align: center;
-  }
-
-  .page-studio__benefit-title {
-    font-size: var(--text-lg);
-    font-weight: var(--weight-bold);
-    color: var(--text-primary);
-    margin: 0 0 var(--space-2);
-  }
-
-  .page-studio__benefit-desc {
-    font-size: var(--text-base);
-    color: var(--text-body);
-    line-height: var(--leading-relaxed);
-    margin: 0;
-  }
-
-  .page-studio__testimonials {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: var(--grid-gap);
-  }
-
-  .page-studio__testimonial {
-    padding: var(--space-6);
-    background: var(--bg-alternate);
-    border-radius: var(--radius-card);
-  }
-
-  .page-studio__quote {
-    font-size: var(--text-base);
-    color: var(--text-body);
-    line-height: var(--leading-loose);
-    font-style: italic;
-    margin: 0 0 var(--space-4);
-    padding: 0;
-    border: none;
-  }
-
-  .page-studio__attribution {
-    font-size: var(--text-sm);
-    color: var(--text-muted);
-    margin: 0;
-  }
-
-  .page-studio__form-title {
-    font-size: var(--text-2xl);
-    font-weight: var(--weight-bold);
-    color: var(--text-primary);
-    text-align: center;
-    margin: 0 0 var(--space-2);
-  }
-
-  .page-studio__form-subtitle {
-    font-size: var(--text-base);
-    color: var(--text-body);
-    text-align: center;
-    margin: 0 0 var(--space-8);
+  .page-studio__body p:last-child {
+    margin-bottom: 0;
   }
 
   .page-studio__fields {
     display: grid;
     gap: var(--space-4);
-    max-width: 600px;
+    max-width: 680px;
     margin: 0 auto;
   }
 
@@ -259,6 +192,7 @@
     text-transform: uppercase;
     letter-spacing: var(--tracking-wide);
     margin-bottom: var(--space-1);
+    padding: 0;
   }
 
   .page-studio__input,
@@ -284,9 +218,16 @@
     box-shadow: 0 0 0 1px var(--text-primary);
   }
 
+  .page-studio__input:focus-visible,
+  .page-studio__select:focus-visible,
+  .page-studio__textarea:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+  }
+
   .page-studio__textarea {
     resize: vertical;
-    min-height: 100px;
+    min-height: 120px;
   }
 
   .page-studio__select {
@@ -299,7 +240,7 @@
 
   .page-studio__success {
     padding: var(--space-4);
-    background: var(--bg-alternate);
+    background: var(--bg-primary);
     border: 1px solid var(--border-default);
     border-radius: var(--radius-button);
     margin-bottom: var(--space-5);
@@ -317,15 +258,7 @@
   }
 
   @media (max-width: 768px) {
-    .page-studio__title {
-      font-size: var(--text-3xl);
-    }
-
     .page-studio__field-row {
-      grid-template-columns: 1fr;
-    }
-
-    .page-studio__benefits-grid {
       grid-template-columns: 1fr;
     }
   }
@@ -337,90 +270,35 @@
   "settings": [
     {
       "type": "text",
-      "id": "eyebrow",
-      "label": "Eyebrow",
-      "default": "Studio Program"
-    },
-    {
-      "type": "text",
       "id": "title",
       "label": "Title",
-      "default": "Studio & Instructor Program"
+      "default": "Studio program"
     },
     {
-      "type": "textarea",
-      "id": "subtitle",
-      "label": "Subtitle",
-      "default": "Join the studios and instructors upgrading their grip. Special pricing, dedicated support, and marketing materials for qualified partners."
-    },
-    {
-      "type": "text",
-      "id": "benefits_heading",
-      "label": "Benefits heading",
-      "default": "Program Benefits"
-    },
-    {
-      "type": "text",
-      "id": "form_heading",
-      "label": "Form heading",
-      "default": "Apply to Join"
-    },
-    {
-      "type": "text",
-      "id": "form_subtitle",
-      "label": "Form subtitle",
-      "default": "Tell us about your studio. We'll review your application within 3-5 business days."
+      "type": "richtext",
+      "id": "body",
+      "label": "Body text",
+      "default": "<p>Open to studios and certified instructors teaching barre, reformer Pilates, Lagree, Megaformer, mat Pilates, or yoga. We reply within 3\u20135 business days.</p>",
+      "info": "Who it is for, and the response time. Nothing else. No process-speak — a sentence like \"partner pricing and opening quantities are worked out after we review your application\" describes a procedure without telling the reader anything and was cut. Only concrete numbers, timeframes, and requirements belong here."
     },
     {
       "type": "text",
       "id": "submit_text",
       "label": "Submit button text",
-      "default": "Submit Application"
+      "default": "Submit application"
+    },
+    {
+      "type": "textarea",
+      "id": "success_message",
+      "label": "Success message",
+      "default": "Application received. We reply within 3\u20135 business days."
     },
     {
       "type": "text",
-      "id": "success_message",
-      "label": "Success message",
-      "default": "Application received. We'll review and get back to you within 3-5 business days."
-    }
-  ],
-  "blocks": [
-    {
-      "type": "benefit",
-      "name": "Benefit",
-      "settings": [
-        {
-          "type": "text",
-          "id": "title",
-          "label": "Title"
-        },
-        {
-          "type": "textarea",
-          "id": "description",
-          "label": "Description"
-        }
-      ]
-    },
-    {
-      "type": "testimonial",
-      "name": "Testimonial",
-      "settings": [
-        {
-          "type": "textarea",
-          "id": "quote",
-          "label": "Quote"
-        },
-        {
-          "type": "text",
-          "id": "name",
-          "label": "Name"
-        },
-        {
-          "type": "text",
-          "id": "studio",
-          "label": "Studio name"
-        }
-      ]
+      "id": "form_token",
+      "label": "Routing token",
+      "default": "BL-PARTNER-STUDIO",
+      "info": "Hidden value included in the submission email. The mail rule matches this string to route applications to the partner applications inbox. Do not change without updating the rule — see planning/partner-programs.md."
     }
   ],
   "presets": [

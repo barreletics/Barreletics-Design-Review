@@ -1,9 +1,8 @@
 {% comment %}
-  APPROVED / FROZEN — clean A+ Jul 31 2026 — do not restore blurb or checklist
-  without Andrew approval in current message.
-  Charcoal/black Join the list (simplified) · link columns · Made in USA · Connect.
-  NO brand blurb · NO checkmark checklist · NO 10%.
-  Composition lineage: 19b8fe6. Registry: planning/m4-section-freeze.md
+  FOOTER LOCKED Jul 31 2026 — sitewide via footer-group (all pages).
+  Trusted by (toggle) · Join the list (toggle, NO 10%) · columns · Light/Dark per band.
+  Spec: specs/frozen/footer.md · Registry: planning/m4-section-freeze.md
+  Do not reintroduce 10% or page-level duplicate newsletters.
 {% endcomment %}
 
 {% assign menu_primary = section.settings.menu %}
@@ -16,43 +15,85 @@
   {% assign use_column_pickers = true %}
 {% endif %}
 
-<footer class="site-footer site-footer--a-plus" role="contentinfo" {{ section.shopify_attributes }}>
+{% assign trust_theme = section.settings.trust_theme | default: section.settings.trust_band_style | default: 'light' %}
+{% if trust_theme == 'cream' or trust_theme == 'black' %}
+  {% if trust_theme == 'cream' %}{% assign trust_theme = 'light' %}{% else %}{% assign trust_theme = 'dark' %}{% endif %}
+{% endif %}
+{% assign join_theme = section.settings.join_theme | default: 'light' %}
+{% assign columns_theme = section.settings.columns_theme | default: 'light' %}
+{% assign trust_title_size = section.settings.trust_title_size | default: 'default' %}
+{% assign trust_body_size = section.settings.trust_body_size | default: 'default' %}
+{% assign join_title_size = section.settings.join_title_size | default: 'default' %}
+{% assign join_body_size = section.settings.join_body_size | default: 'default' %}
 
-  {% if section.settings.show_newsletter %}
-    <div class="footer-newsletter-band">
-      <div class="footer-newsletter-band__inner">
-        <div class="fn-signup">
-          {% if section.settings.newsletter_heading != blank %}
-            <h2>{{ section.settings.newsletter_heading }}</h2>
-          {% endif %}
-          {% if section.settings.newsletter_text != blank %}
-            <p>{{ section.settings.newsletter_text }}</p>
-          {% endif %}
-          {% form 'customer', id: 'footer-newsletter' %}
-            <div class="fn-form">
-              <input
-                class="fn-input"
-                type="email"
-                name="contact[email]"
-                placeholder="Email address"
-                required
-                autocomplete="email"
-                aria-label="Email address"
-              >
-              <input type="hidden" name="contact[tags]" value="newsletter">
-              <button class="fn-btn" type="submit">{{ section.settings.newsletter_cta }}</button>
-            </div>
-            {% if section.settings.newsletter_privacy != blank %}
-              <p class="fn-legal">{{ section.settings.newsletter_privacy }}</p>
-            {% endif %}
-          {% endform %}
-        </div>
-      </div>
+<footer
+  class="site-footer site-footer--a-plus"
+  role="contentinfo"
+  style="{% if trust_title_size != 'default' %}--ft-trust-title-size: {{ trust_title_size }}px;{% endif %}{% if trust_body_size != 'default' %}--ft-trust-body-size: {{ trust_body_size }}px;{% endif %}{% if join_title_size != 'default' %}--ft-join-title-size: {{ join_title_size }}px;{% endif %}{% if join_body_size != 'default' %}--ft-join-body-size: {{ join_body_size }}px;{% endif %}"
+  {{ section.shopify_attributes }}
+>
+
+  {% if section.settings.show_studio_trust %}
+    <div class="footer-studio-trust footer-studio-trust--{{ trust_theme }}" aria-label="Studio trust">
+      {% if section.settings.studio_trust_title != blank %}
+        <p class="footer-studio-trust__line">{{ section.settings.studio_trust_title }}</p>
+      {% endif %}
+      {% if section.settings.studio_trust_subhead != blank %}
+        <p class="footer-studio-trust__sub">{{ section.settings.studio_trust_subhead }}</p>
+      {% endif %}
     </div>
   {% endif %}
 
-  <div class="site-footer__body">
+  <div class="site-footer__body site-footer__body--{{ columns_theme }}">
     <div class="site-footer__inner">
+
+      {% if section.settings.show_newsletter %}
+        <div class="footer-newsletter footer-newsletter--{{ join_theme }}">
+          <div class="fn-signup">
+            {% if section.settings.newsletter_heading != blank %}
+              <h2 class="fn-signup__title">{{ section.settings.newsletter_heading }}</h2>
+            {% endif %}
+            {% if section.settings.newsletter_text != blank %}
+              <p>{{ section.settings.newsletter_text }}</p>
+            {% endif %}
+            {% form 'customer', id: 'footer-newsletter' %}
+              <div class="fn-form">
+                <input
+                  class="fn-input"
+                  type="email"
+                  name="contact[email]"
+                  placeholder="Email address"
+                  required
+                  autocomplete="email"
+                  aria-label="Email address"
+                >
+                <input type="hidden" name="contact[tags]" value="newsletter">
+                <button class="fn-btn" type="submit">{{ section.settings.newsletter_cta }}</button>
+              </div>
+              {% if section.settings.newsletter_privacy != blank %}
+                <p class="fn-legal">{{ section.settings.newsletter_privacy }}</p>
+              {% endif %}
+            {% endform %}
+          </div>
+
+          {% if section.settings.show_checklist %}
+            <ul class="fn-checks" aria-label="List benefits">
+              {% if section.settings.check_1 != blank %}
+                <li><span class="fn-check" aria-hidden="true">✓</span><span class="fn-check-text">{{ section.settings.check_1 }}</span></li>
+              {% endif %}
+              {% if section.settings.check_2 != blank %}
+                <li><span class="fn-check" aria-hidden="true">✓</span><span class="fn-check-text">{{ section.settings.check_2 }}</span></li>
+              {% endif %}
+              {% if section.settings.check_3 != blank %}
+                <li><span class="fn-check" aria-hidden="true">✓</span><span class="fn-check-text">{{ section.settings.check_3 }}</span></li>
+              {% endif %}
+              {% if section.settings.check_4 != blank %}
+                <li><span class="fn-check" aria-hidden="true">✓</span><span class="fn-check-text">{{ section.settings.check_4 }}</span></li>
+              {% endif %}
+            </ul>
+          {% endif %}
+        </div>
+      {% endif %}
 
       <div class="site-footer__grid">
         {% if use_column_pickers %}
@@ -145,35 +186,45 @@
               </div>
             {% endfor %}
           {% else %}
-            {%- comment -%} Flat primary menu — use Home WORKING 4-col fallback (not a thin Explore list) {%- endcomment -%}
+            {%- comment -%}
+              Fallback columns — rendered only when no column menu is assigned. Same link
+              set as the Footer Shop / Learn / Support menus in
+              planning/navigation-menu-spec.md §3, so the fallback and the menu-driven
+              footer agree. Every href here returns 200 on this store; rows whose
+              destination does not exist yet (Gift Cards, How It Works, Warranty, Track
+              Order) are held out until the page or product is created rather than
+              shipping a 404. Composition, column count and headings are unchanged.
+            {%- endcomment -%}
             <div class="site-footer__col">
               <h6>{{ section.settings.shop_heading | default: 'Shop' }}</h6>
               <ul>
-                <li><a href="/collections/closed-sole">Closed Sole</a></li>
-                <li><a href="/collections/open-sole">Open Sole</a></li>
-                <li><a href="/collections/all">All Colors</a></li>
-                <li><a href="/products/gift-card">Gift Cards</a></li>
-                <li><a href="/collections/all">Bundles</a></li>
+                <li><a href="/collections/barre-pilates-yoga-shoe-sock-footwear">All Grippy Shoes</a></li>
+                <li><a href="/products/studio-performance-skin-footwear">Open Sole</a></li>
+                <li><a href="/products/best-reformer-pilates-legree-workout-shoes">Closed Sole</a></li>
+                <li><a href="/products/aquatic-performance-skins">Outdoor</a></li>
+                <li><a href="/collections/apparel">Apparel</a></li>
               </ul>
             </div>
             <div class="site-footer__col">
               <h6>{{ section.settings.learn_heading | default: 'Learn' }}</h6>
               <ul>
-                <li><a href="/pages/our-story">Our Story</a></li>
-                <li><a href="/pages/how-it-works">How It Works</a></li>
+                <li><a href="/pages/our-story">About Us</a></li>
                 <li><a href="/blogs/news">Journal</a></li>
-                <li><a href="/pages/size-guide">Size Guide</a></li>
-                <li><a href="/pages/compare">Compare</a></li>
+                <li><a href="/products/barreletics-x-coperni-closed-sole">Collaborations</a></li>
+                <li><a href="/pages/compare-open-closed-sole">Compare Styles</a></li>
+                <li><a href="/pages/best-barre-pilates-yoga-grippy-socks">Better Than Grippy Socks</a></li>
               </ul>
             </div>
             <div class="site-footer__col">
               <h6>{{ section.settings.support_heading | default: 'Support' }}</h6>
               <ul>
                 <li><a href="/pages/faq">FAQ</a></li>
-                <li><a href="/pages/shipping-returns">Shipping &amp; Returns</a></li>
-                <li><a href="/pages/warranty">Warranty</a></li>
-                <li><a href="/pages/contact">Contact Us</a></li>
-                <li><a href="/apps/tracktor">Track Order</a></li>
+                <li><a href="/pages/performance-skins-size-chart">Size Guide</a></li>
+                <li><a href="/pages/care">Care Instructions</a></li>
+                <li><a href="/pages/returns">Returns &amp; Exchanges</a></li>
+                <li><a href="/policies/shipping-policy">Shipping Policy</a></li>
+                <li><a href="/policies/refund-policy">Refund Policy</a></li>
+                <li><a href="/pages/contact-us-form">Contact Us</a></li>
               </ul>
             </div>
             <div class="site-footer__col">
@@ -183,40 +234,45 @@
                 <li><a href="https://www.tiktok.com/@barreletics" target="_blank" rel="noopener noreferrer">TikTok</a></li>
                 <li><a href="https://www.facebook.com/barreletics" target="_blank" rel="noopener noreferrer">Facebook</a></li>
                 <li><a href="https://www.pinterest.com/barreletics" target="_blank" rel="noopener noreferrer">Pinterest</a></li>
-                <li><a href="{{ section.settings.email_url | default: '/pages/contact' }}">Email Us</a></li>
+                <li><a href="{{ section.settings.email_url | default: '/pages/contact-us-form' }}">Email Us</a></li>
               </ul>
             </div>
           {% endif %}
         {% else %}
-          {%- comment -%} No menus assigned — Home WORKING 4-col fallback {%- endcomment -%}
+          {%- comment -%}
+            Same fallback set as above, for the case where no footer menu is assigned at
+            all. Keep the two blocks in sync — see planning/navigation-menu-spec.md §3.
+          {%- endcomment -%}
           <div class="site-footer__col">
             <h6>{{ section.settings.shop_heading | default: 'Shop' }}</h6>
             <ul>
-              <li><a href="/collections/closed-sole">Closed Sole</a></li>
-              <li><a href="/collections/open-sole">Open Sole</a></li>
-              <li><a href="/collections/all">All Colors</a></li>
-              <li><a href="/products/gift-card">Gift Cards</a></li>
-              <li><a href="/collections/all">Bundles</a></li>
+              <li><a href="/collections/barre-pilates-yoga-shoe-sock-footwear">All Grippy Shoes</a></li>
+              <li><a href="/products/studio-performance-skin-footwear">Open Sole</a></li>
+              <li><a href="/products/best-reformer-pilates-legree-workout-shoes">Closed Sole</a></li>
+              <li><a href="/products/aquatic-performance-skins">Outdoor</a></li>
+              <li><a href="/collections/apparel">Apparel</a></li>
             </ul>
           </div>
           <div class="site-footer__col">
             <h6>{{ section.settings.learn_heading | default: 'Learn' }}</h6>
             <ul>
-              <li><a href="/pages/our-story">Our Story</a></li>
-              <li><a href="/pages/how-it-works">How It Works</a></li>
+              <li><a href="/pages/our-story">About Us</a></li>
               <li><a href="/blogs/news">Journal</a></li>
-              <li><a href="/pages/size-guide">Size Guide</a></li>
-              <li><a href="/pages/compare">Compare</a></li>
+              <li><a href="/products/barreletics-x-coperni-closed-sole">Collaborations</a></li>
+              <li><a href="/pages/compare-open-closed-sole">Compare Styles</a></li>
+              <li><a href="/pages/best-barre-pilates-yoga-grippy-socks">Better Than Grippy Socks</a></li>
             </ul>
           </div>
           <div class="site-footer__col">
             <h6>{{ section.settings.support_heading | default: 'Support' }}</h6>
             <ul>
               <li><a href="/pages/faq">FAQ</a></li>
-              <li><a href="/pages/shipping-returns">Shipping &amp; Returns</a></li>
-              <li><a href="/pages/warranty">Warranty</a></li>
-              <li><a href="/pages/contact">Contact Us</a></li>
-              <li><a href="/apps/tracktor">Track Order</a></li>
+              <li><a href="/pages/performance-skins-size-chart">Size Guide</a></li>
+              <li><a href="/pages/care">Care Instructions</a></li>
+              <li><a href="/pages/returns">Returns &amp; Exchanges</a></li>
+              <li><a href="/policies/shipping-policy">Shipping Policy</a></li>
+              <li><a href="/policies/refund-policy">Refund Policy</a></li>
+              <li><a href="/pages/contact-us-form">Contact Us</a></li>
             </ul>
           </div>
           <div class="site-footer__col">
@@ -226,7 +282,7 @@
               <li><a href="https://www.tiktok.com/@barreletics" target="_blank" rel="noopener noreferrer">TikTok</a></li>
               <li><a href="https://www.facebook.com/barreletics" target="_blank" rel="noopener noreferrer">Facebook</a></li>
               <li><a href="https://www.pinterest.com/barreletics" target="_blank" rel="noopener noreferrer">Pinterest</a></li>
-              <li><a href="{{ section.settings.email_url | default: '/pages/contact' }}">Email Us</a></li>
+              <li><a href="{{ section.settings.email_url | default: '/pages/contact-us-form' }}">Email Us</a></li>
             </ul>
           </div>
         {% endif %}
@@ -251,13 +307,128 @@
   "settings": [
     {
       "type": "header",
-      "content": "Newsletter band (dark)"
+      "content": "Trusted by (above newsletter)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_studio_trust",
+      "label": "Show Trusted by strip",
+      "default": true,
+      "info": "Sitewide (footer group). Off = hide on every page. Keep as footer toggle — not a separate section."
+    },
+    {
+      "type": "text",
+      "id": "studio_trust_title",
+      "label": "Trusted by heading",
+      "default": "Trusted by 1,000's of instructors & studios."
+    },
+    {
+      "type": "textarea",
+      "id": "studio_trust_subhead",
+      "label": "Trusted by subcopy",
+      "default": "Dig into deep lunges and every position—endless grip that breathes."
+    },
+    {
+      "type": "select",
+      "id": "trust_theme",
+      "label": "Trusted by",
+      "default": "light",
+      "options": [
+        { "value": "light", "label": "Light" },
+        { "value": "dark", "label": "Dark" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "trust_title_size",
+      "label": "Trusted by title size",
+      "default": "default",
+      "info": "Family is brand Type OS — size only.",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "18", "label": "18" },
+        { "value": "20", "label": "20" },
+        { "value": "22", "label": "22" },
+        { "value": "24", "label": "24" },
+        { "value": "26", "label": "26" },
+        { "value": "28", "label": "28" },
+        { "value": "30", "label": "30" },
+        { "value": "32", "label": "32" },
+        { "value": "36", "label": "36" },
+        { "value": "40", "label": "40" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "trust_body_size",
+      "label": "Trusted by body size",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "13", "label": "13" },
+        { "value": "14", "label": "14" },
+        { "value": "15", "label": "15" },
+        { "value": "16", "label": "16" },
+        { "value": "17", "label": "17" },
+        { "value": "18", "label": "18" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Join the list band"
     },
     {
       "type": "checkbox",
       "id": "show_newsletter",
-      "label": "Show newsletter band",
-      "default": true
+      "label": "Show Join the list band",
+      "default": true,
+      "info": "Sitewide email signup. Off = hide on every page. Independent of Trusted by toggle."
+    },
+    {
+      "type": "select",
+      "id": "join_theme",
+      "label": "Join the list",
+      "default": "light",
+      "info": "Light or brand dark. Text follows automatically.",
+      "options": [
+        { "value": "light", "label": "Light" },
+        { "value": "dark", "label": "Dark" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "join_title_size",
+      "label": "Join the list title size",
+      "default": "default",
+      "info": "Family is brand Type OS — size only.",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "18", "label": "18" },
+        { "value": "20", "label": "20" },
+        { "value": "22", "label": "22" },
+        { "value": "24", "label": "24" },
+        { "value": "26", "label": "26" },
+        { "value": "28", "label": "28" },
+        { "value": "30", "label": "30" },
+        { "value": "32", "label": "32" },
+        { "value": "36", "label": "36" },
+        { "value": "40", "label": "40" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "join_body_size",
+      "label": "Join the list body size",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "13", "label": "13" },
+        { "value": "14", "label": "14" },
+        { "value": "15", "label": "15" },
+        { "value": "16", "label": "16" },
+        { "value": "17", "label": "17" },
+        { "value": "18", "label": "18" }
+      ]
     },
     {
       "type": "text",
@@ -268,7 +439,8 @@
     {
       "type": "textarea",
       "id": "newsletter_text",
-      "label": "Newsletter text"
+      "label": "Newsletter text",
+      "default": "New drops and studio stories. Once or twice a quarter — never spam."
     },
     {
       "type": "text",
@@ -281,6 +453,52 @@
       "id": "newsletter_privacy",
       "label": "Newsletter privacy line",
       "default": "By subscribing you agree to receive marketing emails. Unsubscribe anytime."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_checklist",
+      "label": "Show value checkmarks",
+      "default": true,
+      "info": "Toggle off in Theme Editor to strip checks if you prefer the simpler band."
+    },
+    {
+      "type": "text",
+      "id": "check_1",
+      "label": "Check 1",
+      "default": "New drops and studio stories first"
+    },
+    {
+      "type": "text",
+      "id": "check_2",
+      "label": "Check 2",
+      "default": "Early access to new colorways and limited editions"
+    },
+    {
+      "type": "text",
+      "id": "check_3",
+      "label": "Check 3",
+      "default": "Studio partner discounts and events"
+    },
+    {
+      "type": "text",
+      "id": "check_4",
+      "label": "Check 4",
+      "default": "Care tips to extend the life of your performance skins"
+    },
+    {
+      "type": "header",
+      "content": "Columns / bottom footer"
+    },
+    {
+      "type": "select",
+      "id": "columns_theme",
+      "label": "Columns + bottom",
+      "default": "light",
+      "info": "Light or brand dark. Text follows automatically.",
+      "options": [
+        { "value": "light", "label": "Light" },
+        { "value": "dark", "label": "Dark" }
+      ]
     },
     {
       "type": "header",

@@ -1,47 +1,63 @@
 {% comment %}
-  DEPRECATED (D-042 / R-01 / R-02) — Do not assign this template in Shopify Admin.
-  Canonical surface: /pages/partners#ambassadors via page-partners.liquid
+  Page Ambassador Section
+  Heading, one paragraph, application form. Nothing else.
+
+  Used on: templates/page.ambassador.json  →  /pages/ambassador
+
+  ARCHITECTURE NOTE (2026-08-08)
+  D-042 previously consolidated Wholesale / Studio / Ambassador onto /pages/partners and deprecated
+  this file. Owner direction 2026-08-08 restores three dedicated program pages with their own intake
+  forms; /pages/partners remains the hub that routes to them. Recorded as D-048 in
+  planning/10-decision-log.md, superseding D-042. See planning/partner-programs.md.
+  Redirect map (planning/m4a-redirect-map.md): the /pages/ambassador → /pages/partners 301 is RETIRED
+  as of 2026-08-08 (D-048) and must not be created — it would make this page unreachable. If it was
+  already imported into Shopify Admin from an earlier CSV, delete it before launch (owner/Brian task).
+  /pages/become-an-affiliate → /pages/partners stays as-is; it correctly points at the hub.
+
+  ROUTING NOTE
+  Submissions post through Shopify's native {% form 'contact' %}, which always delivers to the store
+  Sender email and cannot carry a custom subject line. The hidden form_id token below is the value
+  the mail rule matches on to route applications away from the support inbox.
+
+  SHAPE NOTE (owner direction 2026-08-08 — "stop creating shit, make it straightforward like any
+  other brand")
+  Plain heading, one paragraph saying who it is for and what happens after you submit, then the form.
+  Eyebrow, hero CTA, how-it-works steps, benefit cards, requirements list, terms note, FAQ block, and
+  the cross-page CTA were removed. Do not add sections back.
+
+  TERMS — REMOVED, NOT OWNER-APPROVED
+  The commission and discount figures previously published here (10% commission, 15% after $2,500,
+  30% instructor discount, 15% audience code, $25 payout threshold) were benchmarked against
+  comparable programs, never signed off by Andrew. On a plain page they read as a public offer, so
+  they are gone from the template and from these defaults. Do not restore any figure without an
+  owner letter. The page says only that terms are confirmed in writing on acceptance.
+
+  COPY NOTES
+  - No reassurance filler. "We read every application" and the like assert basic competence and were
+    cut. A stated response time is a fact and stays.
+  - No tax content. Barreletics has never collected a resale certificate or tax ID (owner, 2026-08-08).
+
+  FORM NOTE
+  First-contact form only. Certification, years teaching, classes per week, clients per week, TikTok,
+  follower-count range, other links, the stockist question, and referral source were removed — none
+  of them change the first reply, and all of them can be asked in it.
 {% endcomment %}
 
-{% comment %}
-  Page Ambassador Section (orphaned)
-  Ambassador program overview with application form and social proof.
-  Used on: page.ambassador.json — DEPRECATED
-{% endcomment %}
+{%- liquid
+  assign form_token = section.settings.form_token | default: 'BL-PARTNER-AMBASSADOR'
+-%}
 
 <section class="section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
   <div class="section__inner section__inner--narrow">
-    {% if section.settings.eyebrow != blank %}
-      <p class="eyebrow eyebrow--accent">{{ section.settings.eyebrow }}</p>
-    {% endif %}
     <h1 class="page-ambassador__title type-hero">{{ section.settings.title }}</h1>
-    {% if section.settings.subtitle != blank %}
-      <p class="page-ambassador__subtitle">{{ section.settings.subtitle }}</p>
-    {% endif %}
-  </div>
-</section>
-
-<section class="section section--cream">
-  <div class="section__inner">
-    <h2 class="page-ambassador__heading">{{ section.settings.benefits_heading }}</h2>
-    <div class="page-ambassador__benefits">
-      {% for block in section.blocks %}
-        {% if block.type == 'benefit' %}
-          <div class="page-ambassador__benefit" {{ block.shopify_attributes }}>
-            <h3 class="page-ambassador__benefit-title">{{ block.settings.title }}</h3>
-            <p class="page-ambassador__benefit-desc">{{ block.settings.description }}</p>
-          </div>
-        {% endif %}
-      {% endfor %}
+    <div class="page-ambassador__body type-lede">
+      {{ section.settings.body }}
     </div>
   </div>
 </section>
 
-<section class="section">
+<section class="section section--cream" id="ambassador-apply">
   <div class="section__inner section__inner--narrow">
-    <h2 class="page-ambassador__form-heading">{{ section.settings.form_heading }}</h2>
-    <p class="page-ambassador__form-subtitle">{{ section.settings.form_subtitle }}</p>
-
     {% form 'contact' %}
       {% if form.posted_successfully? %}
         <div class="page-ambassador__success" role="alert">
@@ -56,51 +72,61 @@
       {% endif %}
 
       <input type="hidden" name="contact[subject]" value="Ambassador Application">
+      <input type="hidden" name="contact[form_id]" value="{{ form_token }}">
 
       <div class="page-ambassador__fields">
         <div class="page-ambassador__field-row">
           <div class="page-ambassador__field">
-            <label for="ambassador-first" class="page-ambassador__label">First Name</label>
-            <input type="text" id="ambassador-first" name="contact[first_name]" class="page-ambassador__input" required autocomplete="given-name">
+            <label for="ambassador-name" class="page-ambassador__label">Your name</label>
+            <input type="text" id="ambassador-name" name="contact[name]" class="page-ambassador__input" required autocomplete="name">
           </div>
           <div class="page-ambassador__field">
-            <label for="ambassador-last" class="page-ambassador__label">Last Name</label>
-            <input type="text" id="ambassador-last" name="contact[last_name]" class="page-ambassador__input" required autocomplete="family-name">
+            <label for="ambassador-email" class="page-ambassador__label">Email</label>
+            <input type="email" id="ambassador-email" name="contact[email]" class="page-ambassador__input" required autocomplete="email">
           </div>
-        </div>
-
-        <div class="page-ambassador__field">
-          <label for="ambassador-email" class="page-ambassador__label">Email</label>
-          <input type="email" id="ambassador-email" name="contact[email]" class="page-ambassador__input" required autocomplete="email">
         </div>
 
         <div class="page-ambassador__field-row">
           <div class="page-ambassador__field">
-            <label for="ambassador-instagram" class="page-ambassador__label">Instagram Handle</label>
-            <input type="text" id="ambassador-instagram" name="contact[instagram]" class="page-ambassador__input" placeholder="@yourhandle">
+            <label for="ambassador-location" class="page-ambassador__label">City, state / country</label>
+            <input type="text" id="ambassador-location" name="contact[location]" class="page-ambassador__input" required placeholder="Austin, TX">
           </div>
           <div class="page-ambassador__field">
-            <label for="ambassador-tiktok" class="page-ambassador__label">TikTok Handle (optional)</label>
-            <input type="text" id="ambassador-tiktok" name="contact[tiktok]" class="page-ambassador__input" placeholder="@yourhandle">
+            <label for="ambassador-discipline" class="page-ambassador__label">Primary discipline</label>
+            <select id="ambassador-discipline" name="contact[discipline]" class="page-ambassador__select" required>
+              <option value="" disabled selected>Select discipline</option>
+              <option value="Barre">Barre</option>
+              <option value="Reformer Pilates">Reformer Pilates</option>
+              <option value="Lagree / Megaformer">Lagree / Megaformer</option>
+              <option value="Mat Pilates">Mat Pilates</option>
+              <option value="Yoga">Yoga</option>
+              <option value="Multiple disciplines">Multiple disciplines</option>
+              <option value="Other">Other</option>
+            </select>
           </div>
         </div>
 
         <div class="page-ambassador__field">
-          <label for="ambassador-discipline" class="page-ambassador__label">Primary Discipline</label>
-          <select id="ambassador-discipline" name="contact[discipline]" class="page-ambassador__select">
-            <option value="" disabled selected>Select your primary discipline</option>
-            <option value="Barre">Barre</option>
-            <option value="Reformer Pilates">Reformer Pilates</option>
-            <option value="Lagree / Megaformer">Lagree / Megaformer</option>
-            <option value="Mat Pilates">Mat Pilates</option>
-            <option value="Yoga">Yoga</option>
-            <option value="Multiple">Multiple Disciplines</option>
-          </select>
+          <label for="ambassador-instagram" class="page-ambassador__label">Instagram handle</label>
+          <input type="text" id="ambassador-instagram" name="contact[instagram]" class="page-ambassador__input" required placeholder="@yourhandle">
         </div>
 
         <div class="page-ambassador__field">
-          <label for="ambassador-message" class="page-ambassador__label">Why Barreletics?</label>
-          <textarea id="ambassador-message" name="contact[body]" class="page-ambassador__textarea" rows="4" placeholder="Tell us about your practice, your audience, and why you'd be a great ambassador..."></textarea>
+          <label for="ambassador-message" class="page-ambassador__label">Message</label>
+          <textarea id="ambassador-message" name="contact[body]" class="page-ambassador__textarea" rows="5" required placeholder="Tell us about your classes and where you teach."></textarea>
+          {%- comment -%}
+            The prompt already invites what and where you teach, so the separate "studio you teach at"
+            field was removed, and someone selecting Other on the discipline list answers here rather
+            than in a conditional describe box (Andrew, 2026-08-08). Discipline options match the
+            studio program page exactly.
+          {%- endcomment -%}
+        </div>
+
+        <div class="page-ambassador__field">
+          <label for="ambassador-consent" class="page-ambassador__consent">
+            <input type="checkbox" id="ambassador-consent" name="contact[terms_agreed]" value="Yes" required>
+            <span>{{ section.settings.consent_text }}</span>
+          </label>
         </div>
 
         <div class="page-ambassador__field">
@@ -112,84 +138,45 @@
 </section>
 
 <style>
+  /* Nothing on this page links here, but the anchor is kept for inbound links and the
+     site header is sticky, so the form must not land behind it. */
+  #ambassador-apply {
+    scroll-margin-top: 96px;
+  }
+
+  /* Softer warm band, owner pick 2026-08-08 (variant B of the form-band comparison).
+     --bg-alternate #f5f2ec stepped down from white too hard; --bg-alternate-soft #faf8f6
+     halves the step and keeps the warmth. Set here, not as a Theme Editor setting, so the
+     old tone cannot come back on a fresh section add. */
+  #ambassador-apply.section--cream {
+    background: var(--bg-alternate-soft);
+  }
+
   .page-ambassador__title {
-    font-size: var(--type-hero-size);
-    font-weight: var(--type-hero-weight);
-    line-height: var(--type-hero-leading);
-    letter-spacing: var(--type-hero-tracking);
     text-transform: none;
     color: var(--text-primary);
     text-align: center;
+    margin: 0 0 var(--gap-b, 20px);
+  }
+
+  .page-ambassador__body {
+    text-align: center;
+    margin: 0 auto;
+    max-width: var(--max-width-copy);
+  }
+
+  .page-ambassador__body p {
     margin: 0 0 var(--space-3);
   }
 
-  .page-ambassador__subtitle {
-    font-size: var(--text-md);
-    color: var(--text-body);
-    text-align: center;
-    line-height: var(--leading-relaxed);
-    margin: 0;
-    max-width: var(--max-width-copy);
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .page-ambassador__heading {
-    font-size: var(--text-2xl);
-    font-weight: var(--weight-bold);
-    color: var(--text-primary);
-    text-align: center;
-    margin: 0 0 var(--space-8);
-    letter-spacing: var(--tracking-tight);
-  }
-
-  .page-ambassador__benefits {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: var(--grid-gap);
-  }
-
-  .page-ambassador__benefit {
-    text-align: center;
-    padding: var(--space-6);
-    background: var(--bg-primary);
-    border-radius: var(--radius-card);
-    border: 1px solid var(--border-default);
-  }
-
-  .page-ambassador__benefit-title {
-    font-size: var(--text-lg);
-    font-weight: var(--weight-bold);
-    color: var(--text-primary);
-    margin: 0 0 var(--space-2);
-  }
-
-  .page-ambassador__benefit-desc {
-    font-size: var(--text-base);
-    color: var(--text-body);
-    line-height: var(--leading-relaxed);
-    margin: 0;
-  }
-
-  .page-ambassador__form-heading {
-    font-size: var(--text-2xl);
-    font-weight: var(--weight-bold);
-    color: var(--text-primary);
-    text-align: center;
-    margin: 0 0 var(--space-2);
-  }
-
-  .page-ambassador__form-subtitle {
-    font-size: var(--text-base);
-    color: var(--text-body);
-    text-align: center;
-    margin: 0 0 var(--space-8);
+  .page-ambassador__body p:last-child {
+    margin-bottom: 0;
   }
 
   .page-ambassador__fields {
     display: grid;
     gap: var(--space-4);
-    max-width: 600px;
+    max-width: 680px;
     margin: 0 auto;
   }
 
@@ -232,9 +219,16 @@
     box-shadow: 0 0 0 1px var(--text-primary);
   }
 
+  .page-ambassador__input:focus-visible,
+  .page-ambassador__select:focus-visible,
+  .page-ambassador__textarea:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+  }
+
   .page-ambassador__textarea {
     resize: vertical;
-    min-height: 100px;
+    min-height: 120px;
   }
 
   .page-ambassador__select {
@@ -243,6 +237,25 @@
     background-repeat: no-repeat;
     background-position: right 14px center;
     padding-right: 36px;
+  }
+
+  .page-ambassador__consent {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-start;
+    font-size: var(--type-trust-size);
+    color: var(--text-body);
+    line-height: var(--leading-relaxed);
+    min-height: 44px;
+    padding: var(--space-2) 0;
+  }
+
+  .page-ambassador__consent input {
+    margin-top: 3px;
+    flex: 0 0 auto;
+    width: 18px;
+    height: 18px;
+    accent-color: var(--accent-primary);
   }
 
   .page-ambassador__success {
@@ -265,15 +278,7 @@
   }
 
   @media (max-width: 768px) {
-    .page-ambassador__title {
-      font-size: var(--text-3xl);
-    }
-
     .page-ambassador__field-row {
-      grid-template-columns: 1fr;
-    }
-
-    .page-ambassador__benefits {
       grid-template-columns: 1fr;
     }
   }
@@ -285,69 +290,41 @@
   "settings": [
     {
       "type": "text",
-      "id": "eyebrow",
-      "label": "Eyebrow",
-      "default": "Ambassador Program"
-    },
-    {
-      "type": "text",
       "id": "title",
       "label": "Title",
-      "default": "Represent the Next Generation of Grip"
+      "default": "Ambassador program"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body text",
+      "default": "<p>For instructors and practitioners who teach barre, reformer Pilates, Lagree, Megaformer, mat Pilates, or yoga. We reply within 5\u20137 business days.</p>",
+      "info": "Who it is for, and the response time. Nothing else. No process-speak about terms being confirmed later — it describes a procedure without telling the reader anything. Commission, discount, and payout figures are NOT owner-approved — do not publish any of them here without an owner letter."
     },
     {
       "type": "textarea",
-      "id": "subtitle",
-      "label": "Subtitle",
-      "default": "Join our community of instructors and athletes who are redefining studio performance. Earn commission, get early access, and help spread the word."
-    },
-    {
-      "type": "text",
-      "id": "benefits_heading",
-      "label": "Benefits heading",
-      "default": "Ambassador Benefits"
-    },
-    {
-      "type": "text",
-      "id": "form_heading",
-      "label": "Form heading",
-      "default": "Apply Now"
-    },
-    {
-      "type": "text",
-      "id": "form_subtitle",
-      "label": "Form subtitle",
-      "default": "We review applications on a rolling basis and respond within 5-7 business days."
+      "id": "consent_text",
+      "label": "Consent checkbox text",
+      "default": "I understand this is an application, not an offer."
     },
     {
       "type": "text",
       "id": "submit_text",
       "label": "Submit button text",
-      "default": "Submit Application"
+      "default": "Submit application"
+    },
+    {
+      "type": "textarea",
+      "id": "success_message",
+      "label": "Success message",
+      "default": "Application received. We reply within 5\u20137 business days."
     },
     {
       "type": "text",
-      "id": "success_message",
-      "label": "Success message",
-      "default": "Application received! We'll review and get back to you within 5-7 business days."
-    }
-  ],
-  "blocks": [
-    {
-      "type": "benefit",
-      "name": "Benefit",
-      "settings": [
-        {
-          "type": "text",
-          "id": "title",
-          "label": "Title"
-        },
-        {
-          "type": "textarea",
-          "id": "description",
-          "label": "Description"
-        }
-      ]
+      "id": "form_token",
+      "label": "Routing token",
+      "default": "BL-PARTNER-AMBASSADOR",
+      "info": "Hidden value included in the submission email. The mail rule matches this string to route applications to the partner applications inbox. Do not change without updating the rule — see planning/partner-programs.md."
     }
   ],
   "presets": [

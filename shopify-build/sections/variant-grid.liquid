@@ -113,7 +113,7 @@
 -%}
 
 <section
-  class="variants-section"
+  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} variants-section"
   id="{{ vg_anchor }}"
   aria-label="Shop all styles"
   data-variants-collapse
@@ -121,7 +121,7 @@
   data-see-all="{{ see_all_mode }}"
   data-variants-expanded="false"
   data-default-tab="{{ default_tab }}"
-  style="
+  style="{% render 'section-inset-vars' %} 
     {% if title_size != 'default' %}--vg-title-size: {{ title_size }}px;{% endif %}
     {% if body_size != 'default' %}--vg-body-size: {{ body_size }}px;{% endif %}
     {% if title_weight != 'default' %}--vg-title-weight: {{ title_weight }};{% endif %}
@@ -132,7 +132,9 @@
       {% if section.settings.eyebrow != blank %}
         <p class="variants-head__eyebrow type-label eyebrow--accent">{{ section.settings.eyebrow }}</p>
       {% endif %}
-      <h2 class="variants-head__title h2-standard">{{ section.settings.title }}</h2>
+      {% if section.settings.title != blank %}
+        <h2 class="variants-head__title h2-standard">{{ section.settings.title }}</h2>
+      {% endif %}
       {% if section.settings.body != blank %}
         <p class="variants-head__body type-body">{{ section.settings.body }}</p>
       {% endif %}
@@ -167,7 +169,8 @@
           <button type="button" class="variants-size__btn" data-size="L">L</button>
         </div>
         {% if section.settings.show_utility_links != false %}
-          <a href="{{ section.settings.size_chart_url | default: '/pages/size-chart' }}" class="variants-link">Size chart →</a>
+          {%- comment -%} /pages/size-chart 404s; the real page is performance-skins-size-chart. {%- endcomment -%}
+          <a href="{{ section.settings.size_chart_url | default: '/pages/performance-skins-size-chart' }}" class="variants-link">Size chart →</a>
           <a href="{{ section.settings.compare_url | default: '/pages/compare-open-closed-sole' }}" class="variants-link">Compare →</a>
         {% endif %}
       </div>
@@ -259,7 +262,7 @@
 
 <style>
   #shopify-section-{{ section.id }} .variants-section {
-    padding: var(--space-15) var(--section-padding-x);
+    padding: var(--section-padding-y) var(--section-padding-x);
     background: var(--bg-primary);
   }
 
@@ -279,17 +282,20 @@
   }
 
   #shopify-section-{{ section.id }} .variants-head__title {
-    font-size: var(--vg-title-size, clamp(28px, 3.2vw, 36px)) !important;
-    font-weight: var(--vg-title-weight, 400) !important;
-    line-height: 1.15 !important;
-    letter-spacing: -0.028em !important;
-    margin: 0 0 16px;
+    /* Type OS H2 Standard — class on element; TE size override optional */
+    font-size: var(--vg-title-size, var(--type-section-size));
+    font-weight: var(--vg-title-weight, var(--type-section-weight));
+    line-height: var(--type-section-leading);
+    letter-spacing: var(--type-section-tracking);
+    margin: 0 0 var(--gap-a);
   }
 
   #shopify-section-{{ section.id }} .variants-head__body {
     max-width: 48ch;
     margin: 0;
-    font-size: var(--vg-body-size, var(--type-body-size, 17px));
+    font-size: var(--vg-body-size, var(--type-body-size));
+    font-weight: var(--type-body-weight);
+    line-height: var(--type-body-leading);
   }
 
   #shopify-section-{{ section.id }} .variants-toolbar {
@@ -578,16 +584,18 @@
 
   #shopify-section-{{ section.id }} .var-card__add {
     margin-top: 0;
-    font-size: 13px;
-    font-weight: 600;
+    font-size: var(--type-cta-size);
+    font-weight: var(--type-cta-weight);
+    line-height: var(--type-cta-leading, 1);
     color: #fff;
     cursor: pointer;
     background: #1c1916;
     border: 1px solid #1c1916;
     border-radius: 4px;
-    min-height: 44px;
-    padding: 12px 20px;
-    letter-spacing: 0.03em;
+    min-height: var(--type-cta-min-height);
+    padding: var(--type-cta-pad-y) var(--type-cta-pad-x);
+    letter-spacing: var(--type-cta-tracking);
+    text-transform: uppercase;
     transition: background 0.2s, color 0.2s, border-color 0.2s;
     width: 100%;
     font-family: inherit;
@@ -659,6 +667,9 @@
       align-items: stretch;
       gap: 12px;
       padding: 12px 0;
+      /* A wrapping column flex container sizes its cross axis to the widest item,
+         which lets .variants-tabs grow past the viewport instead of scrolling. */
+      flex-wrap: nowrap;
     }
 
     #shopify-section-{{ section.id }} .variants-tabs {
@@ -667,6 +678,8 @@
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
+      min-width: 0;
+      max-width: 100%;
     }
 
     #shopify-section-{{ section.id }} .variants-tabs::-webkit-scrollbar {
@@ -689,6 +702,20 @@
     #shopify-section-{{ section.id }} .variants-size__btn {
       min-width: 44px;
       min-height: 44px;
+    }
+
+    /* Underlined text controls stay 14px with the rule hugging the text, so the
+       touch region is grown with an overlay instead of padding — nothing moves. */
+    #shopify-section-{{ section.id }} .variants-link,
+    #shopify-section-{{ section.id }} .variants-see-all__btn {
+      position: relative;
+    }
+
+    #shopify-section-{{ section.id }} .variants-link::after,
+    #shopify-section-{{ section.id }} .variants-see-all__btn::after {
+      content: '';
+      position: absolute;
+      inset: -12px -10px;
     }
 
     #shopify-section-{{ section.id }} .var-grid {
@@ -993,7 +1020,96 @@
     { "type": "checkbox", "id": "show_utility_links", "label": "Show size chart & compare links", "default": true },
     { "type": "url", "id": "size_chart_url", "label": "Size chart URL" },
     { "type": "url", "id": "compare_url", "label": "Compare URL" }
+    ,
+    { "type": "header", "content": "Shared — Section frame" },
+    {
+      "type": "paragraph",
+      "content": "OUTER inset from the page edges (margin). Top and bottom are independent; left & right = one control. Custom mobile OFF = mobile uses the same inset as desktop. Defaults 0 = full bleed."
+    },
+    {
+      "type": "checkbox",
+      "id": "inset_custom_mobile",
+      "label": "Custom mobile inset",
+      "default": false,
+      "info": "OFF (default): ignore the mobile inset sliders — mobile uses desktop Inset top / bottom / left & right. ON: use the mobile inset sliders instead."
+    },
+    {
+      "type": "range",
+      "id": "inset_top",
+      "label": "Inset top",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom",
+      "label": "Inset bottom",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x",
+      "label": "Inset left & right",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Same value on both sides."
+    },
+    {
+      "type": "range",
+      "id": "inset_top_mobile",
+      "label": "Inset top — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom_mobile",
+      "label": "Inset bottom — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x_mobile",
+      "label": "Inset left & right — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_desktop",
+      "label": "Hide on desktop",
+      "default": false
+    }
   ],
+
   "presets": [{ "name": "Variant Grid" }]
 }
 {% endschema %}

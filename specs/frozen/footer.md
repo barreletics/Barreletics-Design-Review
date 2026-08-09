@@ -1,27 +1,47 @@
 # Frozen Spec — Footer
 
 ---
-status: FROZEN
-surface: Footer (`snippets/footer.liquid`)
-authority: M4A + R-05 (PR #18); Doc 11 Support wording → Liquid/M4A split
-updated: 2026-07-20
+status: FROZEN · LOCKED 2026-07-31
+surface: Sitewide footer (`sections/footer.liquid` via `footer-group.json`)
+authority: Home WORKING layout · Andrew lock letter 2026-07-31
+theme: `187144929571` (M4 Visual QA) — never live
+updated: 2026-07-31
 ---
 
-## Applied decisions
-| ID | Choice |
-|----|--------|
-| R-05 | Keep Support split: FAQ, Shipping, Returns, Warranty, Contact; **Partners under Company** |
+> Sitewide on every page via `{% sections 'footer-group' %}` in `layout/theme.liquid`.  
+> Do **not** add page-level duplicate Join the list / newsletter sections.  
+> Do **not** reintroduce 10% / discount claims.
 
-## Approved columns
-1. **Shop** — All Grippy Shoes, Open, Closed, Outdoor, Apparel
-2. **Support** — FAQ, Shipping, Returns, Warranty, Contact Us
-3. **Company** — About, Journal, Collaborations, Compare, **Partner Programs → `/pages/partners`**
-4. **Newsletter** — 10% off first order
+## Stack (top → bottom)
 
-Dark `#1c1916`; IG / TikTok / Facebook; copyright.
+1. **Trusted by** (optional TE toggle) — cream light or brand dark `#1c1916`
+2. **Join the list** (optional TE toggle) — white light or brand dark; form + checks; **NO 10%**
+3. **Columns** — Shop · Learn · Support · Connect (+ Best Grippy Socks SEO under Learn)
+4. **Bottom** — copyright · Made in USA
+
+## TE locks (keep these controls)
+
+| Control | Values |
+|---------|--------|
+| Show Trusted by strip | on/off |
+| Trusted by theme | Light / Dark |
+| Show Join the list band | on/off |
+| Join the list theme | Light / Dark |
+| Columns + bottom theme | Light / Dark |
+| Title/body size overrides | Type OS size only (no font family) |
+| Show value checkmarks | on/off |
+
+**Dark Join:** checkmarks match text color (no rust). Light Join: rust ✓.
 
 ## Critical includes
-- Support split; Partners under Company
 
-## Deferred Optionals
-- Privacy / Terms legal links
+- Join the list (not 10%)
+- Independent Light/Dark per band (Trusted / Join / Columns)
+- SEO Learn link: `/pages/best-barre-pilates-yoga-grippy-socks`
+- Files: `footer.liquid`, `footer-group.json`, `assets/chrome.css`
+
+## Forbidden without Andrew letter
+
+- Reintroduce 10%
+- Split Trusted/Join into per-page sections that drift
+- Overwrite locked mocks to change footer

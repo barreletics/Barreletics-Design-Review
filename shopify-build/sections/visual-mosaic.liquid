@@ -8,7 +8,10 @@
   assign vm_gap = section.settings.grid_gap | default: 12
   assign vm_row_h = section.settings.tile_height | default: 268
   assign vm_radius = section.settings.corner_radius | default: 4
-  assign vm_pad = section.settings.section_padding | default: 16
+  assign vm_pad_legacy = section.settings.section_padding | default: 16
+  assign vm_pad_top = section.settings.pad_top | default: vm_pad_legacy
+  assign vm_pad_bottom = section.settings.pad_bottom | default: vm_pad_legacy
+  assign vm_pad_x = section.settings.pad_x | default: vm_pad_legacy
   assign vm_fit = section.settings.media_fit | default: 'cover'
   assign vm_mob_cols = section.settings.mobile_columns | default: '2' | plus: 0
   assign vm_mob_h = section.settings.mobile_tile_height | default: 180
@@ -47,16 +50,18 @@
 -%}
 
 <section
-  class="visual-mosaic"
+  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} visual-mosaic"
   id="visual-mosaic-{{ section.id }}"
   aria-label="{{ section.settings.aria_label | default: 'Studio proof' | escape }}"
-  style="
+  style="{% render 'section-inset-vars' %} 
     --vm-cols-css: {{ vm_cols_css }};
     --vm-mob-cols-css: {{ vm_mob_cols_css }};
     --vm-gap: {{ vm_gap }}px;
     --vm-row-h: {{ vm_row_h }}px;
     --vm-radius: {{ vm_radius }}px;
-    --vm-pad: {{ vm_pad }}px;
+    --vm-pad-top: {{ vm_pad_top }}px;
+    --vm-pad-bottom: {{ vm_pad_bottom }}px;
+    --vm-pad-x: {{ vm_pad_x }}px;
     --vm-fit: {{ vm_fit }};
     --vm-mob-h: {{ vm_mob_h }}px;
   "
@@ -160,7 +165,7 @@
 
 <style>
   #visual-mosaic-{{ section.id }}.visual-mosaic {
-    padding: var(--vm-pad) var(--vm-pad) calc(var(--vm-pad) / 2);
+    padding: var(--vm-pad-top, 16px) var(--vm-pad-x, 16px) var(--vm-pad-bottom, 16px);
     background: #fff;
   }
   #visual-mosaic-{{ section.id }} .visual-mosaic__grid {
@@ -265,9 +270,9 @@
     padding: 11px 18px;
     border: 1px solid #fff;
     color: #fff;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
+    font-size: var(--type-cta-size);
+    font-weight: var(--type-cta-weight);
+    letter-spacing: var(--type-cta-tracking);
     text-transform: uppercase;
     background: rgba(28, 25, 22, 0.35);
   }
@@ -318,21 +323,51 @@
   "class": "section-visual-mosaic",
   "max_blocks": 16,
   "settings": [
-    { "type": "header", "content": "Shared — Content" },
+    {
+      "type": "header",
+      "content": "Shared — Content"
+    },
     {
       "type": "select",
       "id": "default_link_target",
       "label": "Default tile link",
       "options": [
-        { "value": "custom", "label": "Custom URL…" },
-        { "value": "#variants", "label": "#variants — Shop styles" },
-        { "value": "#knock-socks", "label": "#knock-socks — Statement" },
-        { "value": "#reviews", "label": "#reviews" },
-        { "value": "#guarantee", "label": "#guarantee" },
-        { "value": "#never-loses-grip", "label": "#never-loses-grip" },
-        { "value": "#one-pair", "label": "#one-pair" },
-        { "value": "#coperni", "label": "#coperni" },
-        { "value": "#problem", "label": "#problem" }
+        {
+          "value": "custom",
+          "label": "Custom URL…"
+        },
+        {
+          "value": "#variants",
+          "label": "#variants — Shop styles"
+        },
+        {
+          "value": "#knock-socks",
+          "label": "#knock-socks — Statement"
+        },
+        {
+          "value": "#reviews",
+          "label": "#reviews"
+        },
+        {
+          "value": "#guarantee",
+          "label": "#guarantee"
+        },
+        {
+          "value": "#never-loses-grip",
+          "label": "#never-loses-grip"
+        },
+        {
+          "value": "#one-pair",
+          "label": "#one-pair"
+        },
+        {
+          "value": "#coperni",
+          "label": "#coperni"
+        },
+        {
+          "value": "#problem",
+          "label": "#problem"
+        }
       ],
       "default": "#variants",
       "info": "Used when a tile’s link is set to Default. Homepage anchors jump on the same page."
@@ -350,8 +385,10 @@
       "default": "Studio proof",
       "info": "Screen-reader name only — not visible on the page."
     },
-
-    { "type": "header", "content": "Shared — Layout" },
+    {
+      "type": "header",
+      "content": "Shared — Layout"
+    },
     {
       "type": "paragraph",
       "content": "Add Tile blocks to add squares. Rows fill automatically (tiles ÷ columns). Raise Columns or Tile height to reshape without code."
@@ -399,26 +436,57 @@
     },
     {
       "type": "range",
-      "id": "section_padding",
-      "label": "Section padding",
+      "id": "pad_top",
+      "label": "Content pad — top",
       "min": 0,
       "max": 48,
       "step": 2,
       "unit": "px",
-      "default": 16
+      "default": 16,
+      "info": "Space inside the white mosaic area, above the tiles. Not the same as Section frame inset below."
+    },
+    {
+      "type": "range",
+      "id": "pad_bottom",
+      "label": "Content pad — bottom",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 16,
+      "info": "Space inside the white mosaic area, below the tiles."
+    },
+    {
+      "type": "range",
+      "id": "pad_x",
+      "label": "Content pad — left & right",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 16,
+      "info": "One control for both sides — space inside the white area beside the tiles."
     },
     {
       "type": "select",
       "id": "media_fit",
       "label": "Media fit",
       "options": [
-        { "value": "cover", "label": "Cover" },
-        { "value": "contain", "label": "Contain" }
+        {
+          "value": "cover",
+          "label": "Cover"
+        },
+        {
+          "value": "contain",
+          "label": "Contain"
+        }
       ],
       "default": "cover"
     },
-
-    { "type": "header", "content": "Section — Mosaic / tiles" },
+    {
+      "type": "header",
+      "content": "Section — Mosaic / tiles"
+    },
     {
       "type": "checkbox",
       "id": "hero_column_wide",
@@ -431,8 +499,14 @@
       "id": "mobile_columns",
       "label": "Columns per row (mobile)",
       "options": [
-        { "value": "1", "label": "1 column (stack)" },
-        { "value": "2", "label": "2 columns" }
+        {
+          "value": "1",
+          "label": "1 column (stack)"
+        },
+        {
+          "value": "2",
+          "label": "2 columns"
+        }
       ],
       "default": "2"
     },
@@ -445,6 +519,96 @@
       "step": 4,
       "unit": "px",
       "default": 180
+    },
+    {
+      "type": "header",
+      "content": "Section frame"
+    },
+    {
+      "type": "paragraph",
+      "content": "OUTER inset from the page edges (whole section). Separate from Content pad above. Top/bottom independent; left & right = one control. Defaults 0 = full width."
+    },
+    {
+      "type": "checkbox",
+      "id": "inset_custom_mobile",
+      "label": "Custom mobile inset",
+      "default": false,
+      "info": "OFF (default): ignore the mobile inset sliders — mobile uses desktop Inset top / bottom / left & right. ON: use the mobile inset sliders instead."
+    },
+    {
+      "type": "range",
+      "id": "inset_top",
+      "label": "Inset top",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom",
+      "label": "Inset bottom",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x",
+      "label": "Inset left & right",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Same value on both sides."
+    },
+    {
+      "type": "range",
+      "id": "inset_top_mobile",
+      "label": "Inset top — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom_mobile",
+      "label": "Inset bottom — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x_mobile",
+      "label": "Inset left & right — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_desktop",
+      "label": "Hide on desktop",
+      "default": false
     }
   ],
   "blocks": [
@@ -452,8 +616,15 @@
       "type": "tile",
       "name": "Tile",
       "settings": [
-        { "type": "header", "content": "Shared — Content" },
-        { "type": "text", "id": "title", "label": "Heading" },
+        {
+          "type": "header",
+          "content": "Shared — Content"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading"
+        },
         {
           "type": "text",
           "id": "cta_text",
@@ -465,16 +636,46 @@
           "id": "link_target",
           "label": "Tile link",
           "options": [
-            { "value": "default", "label": "Use section default" },
-            { "value": "custom", "label": "Custom URL…" },
-            { "value": "#variants", "label": "#variants — Shop styles" },
-            { "value": "#knock-socks", "label": "#knock-socks — Statement" },
-            { "value": "#reviews", "label": "#reviews" },
-            { "value": "#guarantee", "label": "#guarantee" },
-            { "value": "#never-loses-grip", "label": "#never-loses-grip" },
-            { "value": "#one-pair", "label": "#one-pair" },
-            { "value": "#coperni", "label": "#coperni" },
-            { "value": "#problem", "label": "#problem" }
+            {
+              "value": "default",
+              "label": "Use section default"
+            },
+            {
+              "value": "custom",
+              "label": "Custom URL…"
+            },
+            {
+              "value": "#variants",
+              "label": "#variants — Shop styles"
+            },
+            {
+              "value": "#knock-socks",
+              "label": "#knock-socks — Statement"
+            },
+            {
+              "value": "#reviews",
+              "label": "#reviews"
+            },
+            {
+              "value": "#guarantee",
+              "label": "#guarantee"
+            },
+            {
+              "value": "#never-loses-grip",
+              "label": "#never-loses-grip"
+            },
+            {
+              "value": "#one-pair",
+              "label": "#one-pair"
+            },
+            {
+              "value": "#coperni",
+              "label": "#coperni"
+            },
+            {
+              "value": "#problem",
+              "label": "#problem"
+            }
           ],
           "default": "default"
         },
@@ -484,8 +685,10 @@
           "label": "Custom tile URL",
           "info": "Used when Tile link = Custom URL…."
         },
-
-        { "type": "header", "content": "Shared — Media" },
+        {
+          "type": "header",
+          "content": "Shared — Media"
+        },
         {
           "type": "paragraph",
           "content": "Pick ONE media path per tile. Priority: Shopify video → Video URL → Shopify image → Image URL fallback. Leave unused fields blank."
@@ -526,15 +729,23 @@
           "label": "Alt text",
           "default": "Barreletics in studio"
         },
-
-        { "type": "header", "content": "Section — Tile" },
+        {
+          "type": "header",
+          "content": "Section — Tile"
+        },
         {
           "type": "select",
           "id": "size",
           "label": "Size",
           "options": [
-            { "value": "hero", "label": "Large (spans 2 rows)" },
-            { "value": "sm", "label": "Square (1 cell)" }
+            {
+              "value": "hero",
+              "label": "Large (spans 2 rows)"
+            },
+            {
+              "value": "sm",
+              "label": "Square (1 cell)"
+            }
           ],
           "default": "sm",
           "info": "Large = featured box from the original multi-box section. Use one Large + four Squares for the Home WORKING mosaic."
@@ -544,8 +755,14 @@
           "id": "column_span",
           "label": "Column span",
           "options": [
-            { "value": "1", "label": "1 column" },
-            { "value": "2", "label": "2 columns" }
+            {
+              "value": "1",
+              "label": "1 column"
+            },
+            {
+              "value": "2",
+              "label": "2 columns"
+            }
           ],
           "default": "1",
           "info": "Desktop only. Span 2 columns for a wider square (like original featured width)."
@@ -555,8 +772,14 @@
           "id": "text_color",
           "label": "Text color",
           "options": [
-            { "value": "white", "label": "White" },
-            { "value": "black", "label": "Black" }
+            {
+              "value": "white",
+              "label": "White"
+            },
+            {
+              "value": "black",
+              "label": "Black"
+            }
           ],
           "default": "white"
         },
@@ -565,10 +788,22 @@
           "id": "content_position",
           "label": "Text position",
           "options": [
-            { "value": "bottom-left", "label": "Bottom left (WORKING)" },
-            { "value": "bottom-center", "label": "Bottom center" },
-            { "value": "center", "label": "Center" },
-            { "value": "top-left", "label": "Top left" }
+            {
+              "value": "bottom-left",
+              "label": "Bottom left (WORKING)"
+            },
+            {
+              "value": "bottom-center",
+              "label": "Bottom center"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "top-left",
+              "label": "Top left"
+            }
           ],
           "default": "bottom-left"
         },
@@ -577,12 +812,30 @@
           "id": "media_position",
           "label": "Media focal point",
           "options": [
-            { "value": "center center", "label": "Center" },
-            { "value": "center left", "label": "Left" },
-            { "value": "center right", "label": "Right" },
-            { "value": "top center", "label": "Top" },
-            { "value": "bottom center", "label": "Bottom" },
-            { "value": "50% 30%", "label": "Center (well above)" }
+            {
+              "value": "center center",
+              "label": "Center"
+            },
+            {
+              "value": "center left",
+              "label": "Left"
+            },
+            {
+              "value": "center right",
+              "label": "Right"
+            },
+            {
+              "value": "top center",
+              "label": "Top"
+            },
+            {
+              "value": "bottom center",
+              "label": "Bottom"
+            },
+            {
+              "value": "50% 30%",
+              "label": "Center (well above)"
+            }
           ],
           "default": "center center"
         }

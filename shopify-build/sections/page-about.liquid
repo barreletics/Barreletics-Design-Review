@@ -7,7 +7,7 @@
 <section class="section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
   <div class="section__inner section__inner--narrow">
     {% if section.settings.eyebrow != blank %}
-      <p class="eyebrow eyebrow--accent">{{ section.settings.eyebrow }}</p>
+      <p class="eyebrow eyebrow--accent page-about__eyebrow">{{ section.settings.eyebrow }}</p>
     {% endif %}
     <h1 class="page-about__title type-hero">{{ section.settings.title }}</h1>
     <div class="page-about__intro">
@@ -19,7 +19,7 @@
 {% if section.settings.manifesto != blank %}
 <section class="section section--dark">
   <div class="section__inner section__inner--narrow">
-    <blockquote class="page-about__manifesto">
+    <blockquote class="page-about__manifesto type-statement">
       {{ section.settings.manifesto }}
     </blockquote>
   </div>
@@ -75,44 +75,38 @@
 </script>
 
 <style>
+  .page-about__eyebrow {
+    margin: 0 0 var(--gap-a);
+  }
+
+  /* Size/weight/tracking come from .type-hero — cadence only here */
   .page-about__title {
-    font-size: var(--type-hero-size);
-    font-weight: var(--type-hero-weight);
-    line-height: var(--type-hero-leading);
-    letter-spacing: var(--type-hero-tracking);
-    text-transform: none;
     color: var(--text-primary);
-    margin: 0 0 var(--space-6);
+    margin: 0 0 var(--gap-b);
   }
 
   .page-about__intro {
-    font-size: var(--text-md);
+    font-size: var(--type-lede-size);
+    font-weight: var(--type-lede-weight);
     color: var(--text-body);
-    line-height: var(--leading-loose);
+    line-height: var(--type-lede-leading);
   }
 
   .page-about__intro p {
     margin-bottom: var(--space-4);
   }
 
+  /* Dark-band tier 1 — size/weight/tracking come from .type-statement */
   .page-about__manifesto {
-    font-size: var(--text-2xl);
-    font-weight: var(--weight-medium);
     color: var(--color-white);
-    line-height: var(--leading-relaxed);
     text-align: center;
     margin: 0;
     padding: 0;
     border: none;
-    letter-spacing: var(--tracking-tight);
   }
 
+  /* Size/weight/tracking come from .h2-standard */
   .page-about__values-title {
-    font-size: var(--type-section-size);
-    font-weight: var(--type-section-weight);
-    line-height: var(--type-section-leading);
-    letter-spacing: var(--type-section-tracking);
-    text-transform: none;
     color: var(--text-primary);
     text-align: center;
     margin: 0 0 var(--space-9);
@@ -131,17 +125,21 @@
     border: 1px solid var(--border-default);
   }
 
+  /* Card titles take the H3 role */
   .page-about__value-title {
-    font-size: var(--text-lg);
-    font-weight: var(--weight-bold);
+    font-size: var(--type-h3-size);
+    font-weight: var(--type-h3-weight);
+    line-height: var(--type-h3-leading);
+    letter-spacing: var(--type-h3-tracking);
     color: var(--text-primary);
     margin: 0 0 var(--space-2);
   }
 
   .page-about__value-body {
-    font-size: var(--text-base);
+    font-size: var(--type-body-size);
+    font-weight: var(--type-body-weight);
     color: var(--text-body);
-    line-height: var(--leading-relaxed);
+    line-height: var(--type-body-leading);
     margin: 0;
   }
 
@@ -149,39 +147,24 @@
     text-align: center;
   }
 
+  /* Size/weight/tracking come from .h2-standard */
   .page-about__usa-title {
-    font-size: var(--type-section-size);
-    font-weight: var(--type-section-weight);
-    line-height: var(--type-section-leading);
-    letter-spacing: var(--type-section-tracking);
-    text-transform: none;
     color: var(--text-primary);
-    margin: var(--space-3) 0 var(--space-4);
+    margin: var(--gap-a) 0 var(--gap-b);
   }
 
   .page-about__usa-body {
-    font-size: var(--text-md);
+    font-size: var(--type-body-size);
+    font-weight: var(--type-body-weight);
     color: var(--text-body);
-    line-height: var(--leading-loose);
+    line-height: var(--type-body-leading);
     max-width: var(--max-width-copy);
     margin: 0 auto;
   }
 
   @media (max-width: 768px) {
-    .page-about__title {
-      font-size: var(--text-3xl);
-    }
-
-    .page-about__manifesto {
-      font-size: var(--text-xl);
-    }
-
     .page-about__values-grid {
       grid-template-columns: 1fr;
-    }
-
-    .page-about__usa-title {
-      font-size: var(--text-2xl);
     }
   }
 </style>
@@ -194,13 +177,13 @@
       "type": "text",
       "id": "eyebrow",
       "label": "Eyebrow",
-      "default": "Our Story"
+      "default": ""
     },
     {
       "type": "text",
       "id": "title",
       "label": "Page title",
-      "default": "Redefining Grip"
+      "default": "Our Story"
     },
     {
       "type": "richtext",

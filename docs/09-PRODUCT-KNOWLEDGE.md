@@ -5,6 +5,17 @@
 **Method:** Lossless extraction from repository sources + live Shopify catalog  
 **Conflicts:** Where repository and production differ, BOTH versions are preserved and labeled
 
+> ## ⛔ BANNED COPY — pool positioning (Owner letter 2026-08-07)
+> **Never write:** pool · poolside · pool deck · around the pool · water park · tidal pool / tidepool · spa visits · aqua barre · water aerobics · "in the pool"
+> **Why:** customers bought for the pool, then slipped on wet tile. Pool positioning attracts the wrong buyer and creates liability.
+> **Use instead:** **resortwear · paddleboarding · beach · outdoor yoga** (plus boating, boat deck, hot sand, travel).
+> Applies to FAQ, GEO, product descriptions, SEO tags, blog, email, ManyChat, and every OS doc.
+
+> ## ⛔ BANNED COPY — "fully enclosed" (Owner letter 2026-08-08, P-013)
+> **Never write:** fully enclosed · fully-enclosed · fully enclosed heel · fully enclosed feel
+> **Say instead:** **Heel and foot fully covered. Same grip, same stability.** (surviving P-003 wording)
+> This supersedes the older approved P-003 sentence *"Sleek, fully enclosed feel."* — see the RETIRED note under Product 2 → Key Differentiator.
+
 ---
 
 ## PRODUCT CATALOG
@@ -23,7 +34,7 @@ CURRENT PRODUCTION: $74.00 (standard) / $78.00 (limited edition colorways)
 Shop Pay: 4 interest-free installments of $18.50
 Shipping: Free over $150 / $9.95 flat rate under $150
 Discount: Buy 2+ save 15% (code: save15)
-Newsletter signup: 10% off first order
+Newsletter signup: RETIRED — no discount offer. "Join the list" only (no 10%).
 ```
 Source: docs/08-LIVE-SITE-COPY-AUDIT.md (URL 02), manychat-kb/04-pricing.md
 
@@ -167,8 +178,8 @@ Secondary (Also Great For):
 - Outdoor volleyball — grip on sand and grass without bulk
 - Martial arts — Tai Chi, Qi Gong, Karate (barefoot feel + floor connection)
 - Barefoot running — natural gait with protective layer
-- Boating and poolside — grip where bare feet slip
-- Beach and hot surfaces — protection without losing ground feel
+- Boating and paddleboarding — grip where bare feet slip
+- Beach, resortwear, and hot surfaces — protection without losing ground feel
 - Rock climbing (barefoot enthusiasts)
 ```
 Source: manychat-kb/10-faq-general.md, docs/08-LIVE-SITE-COPY-AUDIT.md (URL 30 FAQ)
@@ -188,7 +199,7 @@ Caution (inherently slippery for any footwear):
 - Wet polished marble
 - Certain wet tiles
 - Oiled or waxed floors
-- Certain spa/pool/tile areas
+- Certain wet tile and stone areas
 ```
 Source: docs/08-LIVE-SITE-COPY-AUDIT.md (URL 30 FAQ — Durability & Performance)
 
@@ -239,11 +250,12 @@ Source: docs/08-LIVE-SITE-COPY-AUDIT.md (URL 03)
 Both perform identically with the same grip and stability. The difference is feel and coverage.
 
 Open Sole: Heel exposed, mid-foot breathing hole. More grounded, barefoot feel. Natural toe splay.
-Closed Sole: Heel and foot fully covered. Sleek, fully enclosed feel. Same grip, same stability.
+Closed Sole: Heel and foot fully covered. Same grip, same stability.
 
-Most first-time buyers start with Open Sole — the barefoot feel is where they shine.
+Choice = preference / feel only. Do not recommend first-timers toward Open (P-004 superseded 2026-08-02). Do not assign disciplines to either sole.
 ```
-Source: manychat-kb/02-open-vs-closed-sole.md
+> ⛔ **RETIRED 2026-08-08 (owner letter — "quit saying fully enclosed heel"):** the Closed Sole line previously read *"Heel and foot fully covered. **Sleek, fully enclosed feel.** Same grip, same stability."* The phrase **"fully enclosed"** / **"fully enclosed heel"** is retired from all customer-facing copy. Kept here as historical record of the original P-003 wording only — do not reuse as source copy.
+Source: manychat-kb/02-open-vs-closed-sole.md (updated 2026-08-02)
 
 #### Bullet Points (from PDP)
 ```
@@ -289,21 +301,18 @@ Closed Sole design for outdoor/water use. Provides grip, stability, and protecti
 Great for:
 - Beach workouts & beach volleyball
 - Paddleboarding & boating
-- Climbing rocks & navigating tidal pools
-- Outdoor & poolside yoga
-- Rocky shorelines & shell-covered beaches
-- Pool decks & water parks
-- Spa visits
+- Outdoor yoga
+- Resortwear & travel
 - Hot sand & sun-baked pavement
 - Anywhere you'd go barefoot — but better
 
-Barreletics hug your feet like a second skin, giving you the confidence to move naturally over rocky shorelines, hot sand, and uneven surfaces — without the bulk of shoes or the unpredictability of flip flops.
+Barreletics hug your feet like a second skin, giving you the confidence to move naturally over hot sand and uneven surfaces — without the bulk of shoes or the unpredictability of flip flops.
 
 The open-toe design lets your toes spread naturally, giving you better balance, better grip, and a more connected feel underfoot.
 
-A barrier where it matters: hot sand, sun-baked pavement, pebbly lake beds, shell-covered shorelines. The sole creates just enough separation to keep you comfortable — without losing ground feel.
+A barrier where it matters: hot sand and sun-baked pavement. The sole creates just enough separation to keep you comfortable — without losing ground feel.
 
-Better than barefoot on wet terrain: climbing on rocks at the ocean's edge, navigating a slippery boat deck, stepping across tidal pools.
+Better than barefoot on wet terrain: a slippery boat deck, a wet paddleboard, the walk back from the beach.
 
 Also a great alternative to water shoes — far less bulky, far more versatile, don't trap sand or water inside.
 ```
@@ -1158,7 +1167,8 @@ Open Sole additional:
 Best Grippy Shoes for Barre, Pilates & Yoga – Smarter Than Grip Socks
 
 Water Shoes:
-Aqua Shoes, Aquatic Water Shoes, boat shoes that don't slip, boating shoes, grippy shoes for boats, grippy shoes for pools, grippy water shoes, jet ski shoes, jet ski water shoe, kids water shoe, paddle board shoes, paddle board water sock, sexy water shoe, surf shoe, surf shoes, surf sock, water clogs, Water Shoes, water shoes like barefoot, water sock, womens water shoe
+Aqua Shoes, Aquatic Water Shoes, beach shoes, boat shoes that don't slip, boating shoes, grippy shoes for boats, grippy water shoes, jet ski shoes, jet ski water shoe, kids water shoe, paddle board shoes, paddle board water sock, resort shoes, surf shoe, surf shoes, surf sock, water clogs, Water Shoes, water shoes like barefoot, water sock, womens water shoe
+⚠ RETIRED KEYWORDS (do not re-add): grippy shoes for pools, pool shoes, pool deck shoes — remove from live Shopify SEO tags.
 
 T-Shirt/Tank:
 anti microbial yoga shirt, Apparel, ethically sourced women's yoga shirt, Light and airy yoga shirt, moisture wicking yoga shirt, under amour yoga shirt, women's yoga shirt, Yoga Pants & Shirts, yoga shirt made in USA
@@ -1181,8 +1191,8 @@ Yoga Tight:
 **Yoga Tight:**
 > Our founder, Stefanie Miller, was inspired to create the perfect pair of yoga pants to compliment her Performance Skin Footwear while modeling around the world. She fell in love with textiles while working for some of the best fashion designers throughout her career. Made with super-soft fabric, these compression pants are comfortable and flattering whether you're practicing at home or on the go. Comfort and durability for an exceptional workout experience. No expense spared! Detailed Quality Down To Every Stitch. Made in the USA!
 
-**Water Shoes:**
-> Perfect for outdoor adventures, the closed sole provides grip, stability, and protection from hot sand. Ideal for paddle-boarding, boating and poolside activities. Always check wet surfaces for slippage.
+**Water Shoes:** *(revised 2026-08-07 — live Shopify still shows the old "poolside" line; needs updating in Admin)*
+> Perfect for outdoor adventures, the closed sole provides grip, stability, and protection from hot sand. Ideal for paddleboarding, boating, beach, and resortwear. Always check wet surfaces for slippage.
 
 **Coperni:**
 > *(empty — no Shopify body HTML)*

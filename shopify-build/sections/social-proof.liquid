@@ -1,20 +1,39 @@
 {% comment %}
   Reviews — Home WORKING composition:
   featured quote + 3 image cards per page + prev/next carousel.
+  Optional compact text-card + stars row under the image cards (PDP community pattern).
 {% endcomment %}
 
-<section class="reviews-section" id="reviews" aria-label="Customer reviews">
+{% liquid
+  assign show_text_cards = section.settings.show_text_cards
+  assign has_text_cards = false
+  if show_text_cards
+    for block in section.blocks
+      if block.type == 'text_review'
+        assign has_text_cards = true
+        break
+      endif
+    endfor
+  endif
+%}
+
+<section
+  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} reviews-section"
+  id="reviews"
+  aria-label="Customer reviews"
+  style="{% render 'section-inset-vars' %}{% if section.settings.bg_color != blank %} background: {{ section.settings.bg_color }};{% endif %}"
+>
   <div class="reviews-inner">
     <div class="reviews-head">
       <div>
         {% if section.settings.title != blank %}
-          <h2 class="reviews-head__title">{{ section.settings.title }}</h2>
+          <h2 class="reviews-head__title h2-standard">{{ section.settings.title }}</h2>
         {% endif %}
         {% if section.settings.body != blank %}
           <p class="reviews-head__body">{{ section.settings.body }}</p>
         {% endif %}
       </div>
-      {% if section.settings.all_reviews_url != blank %}
+      {% if section.settings.all_reviews_url != blank and section.settings.all_reviews_label != blank %}
         <a class="reviews-head__more" href="{{ section.settings.all_reviews_url }}">
           {{ section.settings.all_reviews_label | default: 'More stories →' }}
         </a>
@@ -35,18 +54,62 @@
       <button type="button" class="reviews-nav__btn" id="reviews-prev-{{ section.id }}" aria-label="Previous reviews">←</button>
       <button type="button" class="reviews-nav__btn" id="reviews-next-{{ section.id }}" aria-label="Next reviews">→</button>
     </div>
+
+    {% if has_text_cards %}
+      {% if section.settings.community_label != blank %}
+        <p class="reviews-community-label">{{ section.settings.community_label }}</p>
+      {% endif %}
+      <div class="reviews-text-grid">
+        {% for block in section.blocks %}
+          {% if block.type == 'text_review' %}
+            {% liquid
+              assign star_n = block.settings.rating | default: 5
+              if star_n < 1
+                assign star_n = 1
+              endif
+              if star_n > 5
+                assign star_n = 5
+              endif
+            %}
+            <article class="reviews-text-card" {{ block.shopify_attributes }}>
+              <div class="reviews-text-card__stars" aria-label="{{ star_n }} out of 5 stars">
+                {% for i in (1..5) %}
+                  {% if i <= star_n %}★{% else %}<span class="reviews-text-card__star--empty">☆</span>{% endif %}
+                {% endfor %}
+              </div>
+              {% if block.settings.body != blank %}
+                <p class="reviews-text-card__body">“{{ block.settings.body | strip | remove: '"' | remove: '“' | remove: '”' }}”</p>
+              {% endif %}
+              <footer class="reviews-text-card__footer">
+                {% if block.settings.author != blank %}
+                  <span class="reviews-text-card__author">{{ block.settings.author }}</span>
+                {% endif %}
+                {% if block.settings.location != blank %}
+                  <span class="reviews-text-card__loc">{{ block.settings.location }}</span>
+                {% endif %}
+              </footer>
+            </article>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
   </div>
 </section>
 
 <script type="application/json" id="reviews-data-{{ section.id }}">
 [
+{%- assign first_review = true -%}
 {%- for block in section.blocks -%}
+  {%- if block.type == 'review' -%}
+  {%- unless first_review -%},{%- endunless -%}
   {
     "quote": {{ block.settings.body | json }},
     "author": {{ block.settings.author | json }},
     "meta": {{ block.settings.location | json }},
     "img": {{ block.settings.image_url | json }}
-  }{%- unless forloop.last -%},{%- endunless -%}
+  }
+  {%- assign first_review = false -%}
+  {%- endif -%}
 {%- endfor -%}
 ]
 </script>
@@ -126,7 +189,7 @@
 
 <style>
   .reviews-section {
-    padding: 96px 40px;
+    padding: var(--section-padding-y) var(--section-padding-x);
     background: #f5f2ec;
   }
   .reviews-inner {
@@ -142,19 +205,16 @@
     margin-bottom: 8px;
   }
   .reviews-head__title {
-    font-size: clamp(28px, 3.5vw, 40px);
-    font-weight: 400;
-    color: #1c1916;
-    letter-spacing: -0.028em;
-    margin: 0 0 16px;
-    line-height: 1.15;
+    /* Type OS H2 Standard — class on element; no local clamp */
+    margin: 0 0 var(--gap-a);
   }
   .reviews-head__body {
-    font-size: 17px;
-    color: #4a4a4a;
+    font-size: var(--type-lede-size);
+    font-weight: var(--type-lede-weight);
+    color: var(--text-body);
     margin: 0;
     max-width: 28ch;
-    line-height: 1.45;
+    line-height: var(--type-lede-leading);
   }
   .reviews-head__more {
     font-size: 13px;
@@ -279,15 +339,76 @@
     font-size: 12px;
     color: #8a8a8a;
   }
+
+  /* Compact text-card + stars row (community pattern under image cards) */
+  .reviews-community-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #8a8a8a;
+    text-align: center;
+    margin: 48px 0 24px;
+  }
+  .reviews-text-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .reviews-text-card {
+    background: #fff;
+    border: 1px solid #e6e6e6;
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .reviews-text-card__stars {
+    color: #d4af37;
+    font-size: 14px;
+    letter-spacing: 0.12em;
+    line-height: 1;
+  }
+  .reviews-text-card__star--empty { opacity: 0.3; }
+  .reviews-text-card__body {
+    font-size: 14px;
+    font-style: italic;
+    color: #4a4a4a;
+    line-height: 1.6;
+    margin: 0;
+    flex: 1;
+  }
+  .reviews-text-card__footer {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .reviews-text-card__author {
+    font-size: 12px;
+    font-weight: 700;
+    color: #1c1916;
+  }
+  .reviews-text-card__loc {
+    font-size: 12px;
+    font-weight: 400;
+    color: #8a8a8a;
+  }
+
   @media (max-width: 1024px) {
     .reviews-grid { grid-template-columns: repeat(2, 1fr); }
+    .reviews-text-grid { grid-template-columns: repeat(2, 1fr); }
   }
   @media (max-width: 768px) {
-    .reviews-section { padding: 48px 16px; }
+    .reviews-section {
+      padding: var(--section-padding-y-mobile) var(--section-padding-x-mobile);
+    }
     .reviews-grid { grid-template-columns: 1fr; gap: 16px; margin-top: 24px; }
+    .reviews-text-grid { grid-template-columns: 1fr; }
     .reviews-nav { justify-content: space-between; }
     .reviews-section .review-card__pad { padding: 18px 18px 20px; }
     .reviews-section .review-card__body { font-size: 14px; }
+    .reviews-community-label { margin: 36px 0 20px; }
   }
 </style>
 
@@ -295,43 +416,260 @@
 {
   "name": "Social Proof",
   "settings": [
-    { "type": "header", "content": "Shared — Content" },
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "info": "Unused on Home WORKING — leave blank." },
-    { "type": "text", "id": "title", "label": "Heading", "default": "Real people. Real results." },
-    { "type": "text", "id": "body", "label": "Body", "default": "See the difference. Feel the grip." },
-    { "type": "text", "id": "all_reviews_label", "label": "CTA label", "default": "More stories →" },
-    { "type": "url", "id": "all_reviews_url", "label": "CTA link" },
-    { "type": "header", "content": "Section — Reviews — aggregate" },
-    { "type": "checkbox", "id": "show_aggregate", "label": "Show aggregate rating", "default": false, "info": "Home WORKING hides aggregate counts." },
-    { "type": "text", "id": "rating", "label": "Rating", "default": "4.9" },
-    { "type": "text", "id": "review_count", "label": "Review count", "default": "294" }
+    {
+      "type": "header",
+      "content": "Shared — Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "info": "Unused on Home WORKING — leave blank."
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Real people. Real results."
+    },
+    {
+      "type": "text",
+      "id": "body",
+      "label": "Body",
+      "default": "See the difference. Feel the grip."
+    },
+    {
+      "type": "text",
+      "id": "all_reviews_label",
+      "label": "CTA label",
+      "default": "More stories →",
+      "info": "Stories link only — not a write-review button. Leave blank to hide."
+    },
+    {
+      "type": "url",
+      "id": "all_reviews_url",
+      "label": "CTA link"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#f5f2ec",
+      "info": "Home WORKING cream. PDP uses white (#ffffff)."
+    },
+    {
+      "type": "header",
+      "content": "Section — Reviews — aggregate"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_aggregate",
+      "label": "Show aggregate rating",
+      "default": false,
+      "info": "Home WORKING hides aggregate counts."
+    },
+    {
+      "type": "text",
+      "id": "rating",
+      "label": "Rating",
+      "default": "4.9"
+    },
+    {
+      "type": "text",
+      "id": "review_count",
+      "label": "Review count",
+      "default": "294"
+    },
+    {
+      "type": "header",
+      "content": "Section — Reviews — text cards"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_text_cards",
+      "label": "Show text-card row under image cards",
+      "default": true,
+      "info": "Compact ★ + quote cards (community pattern). Uses Text review blocks only. Off on Home if unused."
+    },
+    {
+      "type": "text",
+      "id": "community_label",
+      "label": "Text-card row label",
+      "default": "More from the community"
+    },
+    {
+      "type": "header",
+      "content": "Shared — Section frame"
+    },
+    {
+      "type": "paragraph",
+      "content": "OUTER inset from the page edges (margin). Top and bottom are independent; left & right = one control. Custom mobile OFF = mobile uses the same inset as desktop. Defaults 0 = full bleed."
+    },
+    {
+      "type": "checkbox",
+      "id": "inset_custom_mobile",
+      "label": "Custom mobile inset",
+      "default": false,
+      "info": "OFF (default): ignore the mobile inset sliders — mobile uses desktop Inset top / bottom / left & right. ON: use the mobile inset sliders instead."
+    },
+    {
+      "type": "range",
+      "id": "inset_top",
+      "label": "Inset top",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom",
+      "label": "Inset bottom",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x",
+      "label": "Inset left & right",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Same value on both sides."
+    },
+    {
+      "type": "range",
+      "id": "inset_top_mobile",
+      "label": "Inset top — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom_mobile",
+      "label": "Inset bottom — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x_mobile",
+      "label": "Inset left & right — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_desktop",
+      "label": "Hide on desktop",
+      "default": false
+    }
   ],
   "blocks": [
     {
       "type": "review",
-      "name": "Review",
+      "name": "Image review",
       "settings": [
-        { "type": "range", "id": "rating", "label": "Star rating", "min": 1, "max": 5, "step": 1, "default": 5 },
-        { "type": "textarea", "id": "body", "label": "Review text" },
-        { "type": "text", "id": "author", "label": "Author name" },
-        { "type": "text", "id": "location", "label": "Location / context" },
-        { "type": "text", "id": "image_url", "label": "Card image URL" }
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Star rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Review text"
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Author name"
+        },
+        {
+          "type": "text",
+          "id": "location",
+          "label": "Location / context"
+        },
+        {
+          "type": "text",
+          "id": "image_url",
+          "label": "Card image URL"
+        }
+      ]
+    },
+    {
+      "type": "text_review",
+      "name": "Text review",
+      "settings": [
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Star rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Review text"
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Author name"
+        },
+        {
+          "type": "text",
+          "id": "location",
+          "label": "Location / context"
+        }
       ]
     }
   ],
-  "presets": [{
-    "name": "Social Proof",
-    "blocks": [
-      {
-        "type": "review",
-        "settings": {
-          "body": "My love-hate relationship with the sock has finally come to a ceremonial end. The improvement during the first minute of barre class is beyond words. I will never go back.",
-          "author": "Mia Evans",
-          "location": "Barre Instructor · NYC · Verified Purchase",
-          "image_url": "https://barreletics.com/cdn/shop/files/Square_Pink.png?v=1764627088&width=1200"
+  "presets": [
+    {
+      "name": "Social Proof",
+      "blocks": [
+        {
+          "type": "review",
+          "settings": {
+            "body": "My love-hate relationship with the sock has finally come to a ceremonial end. The vast improvement during the first minute of barre class, with my new Barreletics performance skin shoes, is beyond words.",
+            "author": "Mia Evans",
+            "location": "Barre Instructor · NYC · Verified Purchase",
+            "image_url": "https://barreletics.com/cdn/shop/files/Square_Pink.png?v=1764627088&width=1200"
+          }
         }
-      }
-    ]
-  }]
+      ]
+    }
+  ]
 }
 {% endschema %}
