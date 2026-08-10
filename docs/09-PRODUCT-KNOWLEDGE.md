@@ -1011,8 +1011,8 @@ Source: manychat-kb/08-shipping.md, docs/08-LIVE-SITE-COPY-AUDIT.md (URL 30)
 | Yoga Tight | gid://shopify/Product/4406966648935 | lightly-padded-knee-yoga-pant-black | ACTIVE | 49 |
 | Coperni | gid://shopify/Product/10137256886563 | barreletics-x-coperni-closed-sole | ACTIVE | 36 |
 | Gift Card | gid://shopify/Product/4015747203175 | gift-card | DRAFT | 0 |
-| One Off Colors (Open) | gid://shopify/Product/10121206137123 | one-off-colors-open-sole | DRAFT | 0 |
-| One Off Colors (Closed) | gid://shopify/Product/10121290776867 | one-off-colors-closed-sole | DRAFT | 0 |
+| One Off Colors (Open) | gid://shopify/Product/10121206137123 | one-off-colors-open-sole | DRAFT (template `one-off-open`) | 0 |
+| One Off Colors (Closed) | gid://shopify/Product/10121290776867 | one-off-colors-closed-sole | ACTIVE when stocked (template `one-off-closed`; M4 QA) | varies |
 
 ### Complete SKU Taxonomy
 
@@ -1129,22 +1129,26 @@ Description: "Shopping for someone else but not sure what to give them? Give the
 #### One Off Colors — Open Sole
 ```
 GID: gid://shopify/Product/10121206137123
-Status: DRAFT
+Status: DRAFT until stocked + Online Store
 Price: $82.00
-Colors: Purple Blue (M/L)
-SKUs: (null)
-Inventory: 0
+Handle: one-off-colors-open-sole
+Theme template: one-off-open → product.one-off-open.json
+Colors: Purple Blue (M/L) as of last audit
+Surfaces: Theme settings → One-off colors (when this product is the picker)
+OS: P-011 / D-051 · planning/one-off-surfaces.md
 ```
 
 #### One Off Colors — Closed Sole
 ```
 GID: gid://shopify/Product/10121290776867
-Status: DRAFT
+Status: ACTIVE when published + stocked (M4 QA 2026-08-10)
 Price: $82.00
-Colors: Grey Swirl (M/L), Purple Blue (M/L), Turquoise & Purple (M/L)
-SKUs: (null)
-Inventory: 0
-Note: Option1 is mislabeled as "Grey Swirl" instead of "Color" — configuration error.
+Handle: one-off-colors-closed-sole
+Theme template: one-off-closed → product.one-off-closed.json
+Colors: Grey Swirl, Purple Blue, Turquoise & Purple (M/L) — buy box hides OOS
+Note: Option1 may be mislabeled "Grey Swirl" instead of "Color"; theme treats option position 1 as color on one-offs.
+Surfaces: Theme settings gate → nav + quiet link + All Variants One-Offs tab
+OS: P-011 / D-051 · planning/one-off-surfaces.md
 ```
 
 ### Shopify Collections Mapping

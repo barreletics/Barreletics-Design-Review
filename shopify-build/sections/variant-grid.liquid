@@ -82,7 +82,40 @@
       assign product_outdoor = nil
     endunless
 
+    # Theme settings → One-off colors wins (same product as nav + quiet link)
+    if show_oneoffs and settings.one_off_product != blank
+      assign oo_ref = settings.one_off_product
+      assign oo_handle = oo_ref.handle | default: oo_ref
+      assign product_oneoffs = all_products[oo_handle]
+      if product_oneoffs == blank
+        assign product_oneoffs = oo_ref
+      endif
+    endif
+
     assign default_tab = section.settings.default_tab | default: 'closed'
+
+    # PDP category wins: template suffix → product identity → TE default_tab
+    if request.page_type == 'product' and product != blank
+      assign _vg_title = product.title | downcase
+      assign _vg_handle = product.handle | downcase
+      assign _vg_type = product.type | downcase
+      assign _vg_suffix = template.suffix | downcase
+      assign _vg_tags = product.tags | join: ',' | downcase
+      if _vg_suffix == 'outdoor' or _vg_handle contains 'aquatic' or _vg_handle contains 'outdoor' or _vg_title contains 'water shoe' or _vg_title contains 'outdoor' or _vg_type contains 'outdoor' or _vg_tags contains 'outdoor'
+        assign default_tab = 'outdoor'
+      elsif _vg_suffix == 'open-sole' or _vg_title contains 'open sole' or _vg_handle contains 'open-sole' or _vg_handle contains 'open_sole' or _vg_handle contains 'studio-performance'
+        assign default_tab = 'open'
+      elsif _vg_suffix == 'coperni' or _vg_title contains 'coperni' or _vg_handle contains 'coperni' or _vg_title contains 'one-off' or _vg_handle contains 'one-off'
+        if product_oneoffs != blank
+          assign default_tab = 'oneoffs'
+        else
+          assign default_tab = 'closed'
+        endif
+      elsif _vg_suffix == blank or _vg_suffix == 'product' or _vg_title contains 'closed sole' or _vg_handle contains 'closed-sole' or _vg_handle contains 'reformer' or _vg_handle contains 'legree'
+        assign default_tab = 'closed'
+      endif
+    endif
+
     if default_tab == 'closed' and product_closed == blank
       assign default_tab = 'open'
     endif
@@ -117,6 +150,7 @@
   id="{{ vg_anchor }}"
   aria-label="Shop all styles"
   data-variants-collapse
+  data-size-filter="{% if section.settings.show_size_filter != false %}on{% else %}off{% endif %}"
   data-initial-rows="{{ initial_rows }}"
   data-see-all="{{ see_all_mode }}"
   data-variants-expanded="false"
@@ -163,15 +197,19 @@
         <p class="variants-pdp-note">{{ product.title | escape }} — colors &amp; sizes</p>
       {% endunless %}
       <div class="variants-utils">
-        <div class="variants-size" data-variants-size>
-          <span class="variants-size__label">Size</span>
-          <button type="button" class="variants-size__btn is-active" data-size="M">M</button>
-          <button type="button" class="variants-size__btn" data-size="L">L</button>
-        </div>
+        {% if section.settings.show_size_filter != false %}
+          <div class="variants-size" data-variants-size>
+            <span class="variants-size__label">Size</span>
+            <button type="button" class="variants-size__btn is-active" data-size="M">M</button>
+            <button type="button" class="variants-size__btn" data-size="L">L</button>
+          </div>
+        {% endif %}
         {% if section.settings.show_utility_links != false %}
           {%- comment -%} /pages/size-chart 404s; the real page is performance-skins-size-chart. {%- endcomment -%}
           <a href="{{ section.settings.size_chart_url | default: '/pages/performance-skins-size-chart' }}" class="variants-link">Size chart →</a>
-          <a href="{{ section.settings.compare_url | default: '/pages/compare-open-closed-sole' }}" class="variants-link">Compare →</a>
+          {% if section.settings.show_compare_link != false %}
+            <a href="{{ section.settings.compare_url | default: '/pages/compare-open-closed-sole' }}" class="variants-link">Compare →</a>
+          {% endif %}
         {% endif %}
       </div>
     </div>
@@ -208,7 +246,7 @@
       {% if product_closed != blank %}
         {% render 'variant-grid-panel',
           product: product_closed,
-          sole_label: 'Closed Sole',
+          sole_label: label_closed,
           tab_key: 'closed',
           max_variants: max_variants,
           is_default: def_closed,
@@ -218,7 +256,7 @@
       {% if product_open != blank %}
         {% render 'variant-grid-panel',
           product: product_open,
-          sole_label: 'Open Sole',
+          sole_label: label_open,
           tab_key: 'open',
           max_variants: max_variants,
           is_default: def_open,
@@ -228,7 +266,7 @@
       {% if product_oneoffs != blank %}
         {% render 'variant-grid-panel',
           product: product_oneoffs,
-          sole_label: 'One-Off',
+          sole_label: label_oneoffs,
           tab_key: 'oneoffs',
           max_variants: max_variants,
           is_default: def_oneoffs,
@@ -238,7 +276,7 @@
       {% if product_outdoor != blank %}
         {% render 'variant-grid-panel',
           product: product_outdoor,
-          sole_label: 'Outdoor',
+          sole_label: label_outdoor,
           tab_key: 'outdoor',
           max_variants: max_variants,
           is_default: def_outdoor,
@@ -250,7 +288,14 @@
     {%- assign see_all_label = section.settings.see_all_label | default: 'See all colors & styles' -%}
     {%- if see_all_mode == 'expand' -%}
       <div class="variants-see-all">
-        <button type="button" class="variants-see-all__btn" data-variants-see-all data-see-all-label="{{ see_all_label | escape }}" aria-expanded="false">{{ see_all_label | escape }}</button>
+        <button
+          type="button"
+          class="variants-see-all__btn"
+          data-variants-see-all
+          data-see-all-label="{{ see_all_label | escape }}"
+          data-see-more-label="See more"
+          aria-expanded="false"
+        >{{ see_all_label | escape }}</button>
       </div>
     {%- elsif see_all_mode == 'link' and section.settings.see_all_url != blank -%}
       <div class="variants-see-all">
@@ -394,6 +439,29 @@
 
   #shopify-section-{{ section.id }} .var-grid.is-grid-hidden {
     display: none !important;
+  }
+
+  #shopify-section-{{ section.id }} .var-grid--oneoffs {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+  #shopify-section-{{ section.id }} .var-grid-group__label {
+    margin: 0 0 16px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #9a9182;
+  }
+  #shopify-section-{{ section.id }} .var-grid-group.is-group-empty {
+    display: none;
+  }
+  #shopify-section-{{ section.id }} .var-grid-group__cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 28px;
+    row-gap: 56px;
   }
 
   #shopify-section-{{ section.id }} .var-card {
@@ -648,7 +716,8 @@
   }
 
   @media (max-width: 1024px) {
-    #shopify-section-{{ section.id }} .var-grid {
+    #shopify-section-{{ section.id }} .var-grid,
+    #shopify-section-{{ section.id }} .var-grid-group__cards {
       grid-template-columns: repeat(2, 1fr);
     }
   }
@@ -718,7 +787,8 @@
       inset: -12px -10px;
     }
 
-    #shopify-section-{{ section.id }} .var-grid {
+    #shopify-section-{{ section.id }} .var-grid,
+    #shopify-section-{{ section.id }} .var-grid-group__cards {
       grid-template-columns: repeat(2, 1fr) !important;
       column-gap: 10px !important;
       row-gap: 20px !important;
@@ -772,55 +842,121 @@
       return list[0] || null;
     }
 
-    function cardsOf(grid) {
+    function isOneoffsGrid(grid) {
+      return !!(grid && grid.getAttribute('data-grid-tab') === 'oneoffs');
+    }
+
+    function cardsInGrid(grid) {
       if (!grid) return [];
-      return Array.prototype.filter.call(grid.children, function (el) {
-        return el.classList && el.classList.contains('var-card') && !el.classList.contains('is-size-hidden');
+      return Array.prototype.slice.call(grid.querySelectorAll('.var-card'));
+    }
+
+    function visibleCardsOf(grid) {
+      return cardsInGrid(grid).filter(function (el) {
+        return !el.classList.contains('is-size-hidden');
       });
     }
 
+    function ensureVisibleLimit() {
+      if (!section.getAttribute('data-visible-limit')) {
+        section.setAttribute('data-visible-limit', String(limitFor()));
+      }
+    }
+
+    function resetVisibleLimit() {
+      section.setAttribute('data-visible-limit', String(limitFor()));
+      section.setAttribute('data-variants-expanded', 'false');
+    }
+
     function applySizeFilter() {
+      var sizeFilterOn = section.getAttribute('data-size-filter') !== 'off';
       section.querySelectorAll('.var-card').forEach(function (card) {
+        if (!sizeFilterOn) {
+          card.classList.remove('is-size-hidden');
+          return;
+        }
         var size = (card.getAttribute('data-br-size') || 'M').toUpperCase();
         card.classList.toggle('is-size-hidden', size !== activeSize);
       });
     }
 
+    function syncOneoffGroups(grid) {
+      if (!isOneoffsGrid(grid)) return;
+      grid.querySelectorAll('[data-oneoff-group]').forEach(function (group) {
+        var cards = group.querySelectorAll('.var-card');
+        var anyShown = false;
+        for (var i = 0; i < cards.length; i++) {
+          if (
+            !cards[i].classList.contains('is-size-hidden') &&
+            !cards[i].classList.contains('is-variants-hidden')
+          ) {
+            anyShown = true;
+            break;
+          }
+        }
+        group.classList.toggle('is-group-empty', !anyShown);
+      });
+    }
+
     function applyCollapse() {
       var mode = section.getAttribute('data-see-all') || 'expand';
-      var expanded = section.getAttribute('data-variants-expanded') === 'true' || mode === 'off';
-      var limit = limitFor();
+      var baseLimit = limitFor();
+      ensureVisibleLimit();
       var wrap = section.querySelector('.variants-see-all');
       var btn = section.querySelector('[data-variants-see-all]');
+      var grid = activeGrid();
+      var oneoffs = isOneoffsGrid(grid);
 
-      grids().forEach(function (grid) {
+      grids().forEach(function (g) {
+        var expanded =
+          !isOneoffsGrid(g) &&
+          (section.getAttribute('data-variants-expanded') === 'true' || mode === 'off');
+        var limit = isOneoffsGrid(g)
+          ? parseInt(section.getAttribute('data-visible-limit') || String(baseLimit), 10) || baseLimit
+          : baseLimit;
         var visibleIdx = 0;
-        Array.prototype.forEach.call(grid.children, function (card) {
-          if (!card.classList || !card.classList.contains('var-card')) return;
+        cardsInGrid(g).forEach(function (card) {
           if (card.classList.contains('is-size-hidden')) {
             card.classList.add('is-variants-hidden');
             return;
           }
-          card.classList.toggle('is-variants-hidden', !(expanded || visibleIdx < limit));
+          var show = mode === 'off' || expanded || visibleIdx < limit;
+          card.classList.toggle('is-variants-hidden', !show);
           visibleIdx++;
         });
+        syncOneoffGroups(g);
       });
 
-      var total = cardsOf(activeGrid()).length;
-      var needs = mode !== 'off' && total > limit;
+      var total = visibleCardsOf(grid).length;
+      var shownLimit = oneoffs
+        ? parseInt(section.getAttribute('data-visible-limit') || String(baseLimit), 10) || baseLimit
+        : baseLimit;
+      var expandedAll =
+        !oneoffs &&
+        (section.getAttribute('data-variants-expanded') === 'true' || mode === 'off');
+      var needs = mode !== 'off' && total > (expandedAll ? total : shownLimit) && !expandedAll;
+      if (oneoffs) {
+        needs = mode !== 'off' && total > shownLimit;
+      }
       if (wrap) {
         if (needs) wrap.removeAttribute('hidden');
         else wrap.setAttribute('hidden', '');
       }
       if (btn && mode === 'expand') {
-        btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
-        var openLabel = btn.getAttribute('data-see-all-label') || 'See all colors & styles';
-        btn.textContent = expanded ? 'Show fewer' : openLabel;
+        if (oneoffs) {
+          btn.setAttribute('aria-expanded', 'false');
+          btn.textContent = btn.getAttribute('data-see-more-label') || 'See more';
+        } else {
+          var open = section.getAttribute('data-variants-expanded') === 'true';
+          btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+          var openLabel = btn.getAttribute('data-see-all-label') || 'See all colors & styles';
+          btn.textContent = open ? 'Show fewer' : openLabel;
+        }
       }
     }
 
     function switchTab(tab) {
-      section.setAttribute('data-variants-expanded', 'false');
+      resetVisibleLimit();
       grids().forEach(function (grid) {
         var key = grid.getAttribute('data-grid-tab');
         grid.classList.toggle('is-grid-hidden', !(tab === 'all' || key === tab));
@@ -845,7 +981,7 @@
         section.querySelectorAll('[data-size]').forEach(function (b) {
           b.classList.toggle('is-active', b === btn);
         });
-        section.setAttribute('data-variants-expanded', 'false');
+        resetVisibleLimit();
         applySizeFilter();
         applyCollapse();
       });
@@ -854,17 +990,32 @@
     var seeBtn = section.querySelector('[data-variants-see-all]');
     if (seeBtn && (section.getAttribute('data-see-all') || 'expand') === 'expand') {
       seeBtn.addEventListener('click', function () {
-        var open = section.getAttribute('data-variants-expanded') === 'true';
-        section.setAttribute('data-variants-expanded', open ? 'false' : 'true');
+        var grid = activeGrid();
+        if (isOneoffsGrid(grid)) {
+          var cur = parseInt(section.getAttribute('data-visible-limit') || String(limitFor()), 10) || limitFor();
+          section.setAttribute('data-visible-limit', String(cur + cols()));
+        } else {
+          var open = section.getAttribute('data-variants-expanded') === 'true';
+          section.setAttribute('data-variants-expanded', open ? 'false' : 'true');
+        }
         applyCollapse();
       });
     }
 
+    resetVisibleLimit();
     applySizeFilter();
     applyCollapse();
     window.addEventListener('resize', function () {
       clearTimeout(resizeT);
-      resizeT = setTimeout(applyCollapse, 120);
+      resizeT = setTimeout(function () {
+        var grid = activeGrid();
+        if (isOneoffsGrid(grid)) {
+          var cur = parseInt(section.getAttribute('data-visible-limit') || '0', 10) || 0;
+          var min = limitFor();
+          if (cur < min) section.setAttribute('data-visible-limit', String(min));
+        }
+        applyCollapse();
+      }, 120);
     });
   })();
 </script>
@@ -983,7 +1134,12 @@
 
     { "type": "checkbox", "id": "show_oneoffs", "label": "Show One-Offs tab", "default": true },
     { "type": "text", "id": "label_oneoffs", "label": "One-Offs tab label", "default": "One-Offs" },
-    { "type": "product", "id": "product_oneoffs", "label": "One-Offs product" },
+    {
+      "type": "product",
+      "id": "product_oneoffs",
+      "label": "One-Offs product",
+      "info": "Ignored when Theme settings → One-off colors has a product (that picker wins). Fallback only if Theme setting is empty."
+    },
 
     { "type": "checkbox", "id": "show_outdoor", "label": "Show Outdoor tab", "default": true },
     { "type": "text", "id": "label_outdoor", "label": "Outdoor tab label", "default": "Outdoor" },
@@ -996,7 +1152,7 @@
       { "value": "oneoffs", "label": "One-Offs" },
       { "value": "outdoor", "label": "Outdoor" },
       { "value": "all", "label": "All" }
-    ], "default": "closed" },
+    ], "default": "closed", "info": "On product pages, template suffix / product category (Outdoor · Open · Closed · Coperni) overrides this so the matching tab opens." },
 
     { "type": "header", "content": "Section — Variant grid — see all" },
     { "type": "range", "id": "initial_rows", "min": 1, "max": 6, "step": 1, "default": 2, "label": "Initial rows visible" },
@@ -1017,7 +1173,9 @@
       "default": "variants",
       "info": "Same-page jump target (homepage CTAs use #variants). Default: variants."
     },
-    { "type": "checkbox", "id": "show_utility_links", "label": "Show size chart & compare links", "default": true },
+    { "type": "checkbox", "id": "show_size_filter", "label": "Show M/L size filter", "default": true, "info": "Off for Apparel (S–XL). On for Performance Skins (M/L KEEP filter)." },
+    { "type": "checkbox", "id": "show_utility_links", "label": "Show size chart link", "default": true },
+    { "type": "checkbox", "id": "show_compare_link", "label": "Show Compare link", "default": true, "info": "Off for Apparel. On for Open/Closed sole collections." },
     { "type": "url", "id": "size_chart_url", "label": "Size chart URL" },
     { "type": "url", "id": "compare_url", "label": "Compare URL" }
     ,

@@ -545,11 +545,29 @@ Status: Data quality flag — likely discontinued or placeholder.
 ```
 Source: docs/09-PRODUCT-KNOWLEDGE.md (Data Quality Flags)
 
-### P-011: "One Off Colors" — Future Pricing Tier
+### P-011: One-Off Colors — Surfaces + Lean PDP (updated 2026-08-10)
 ```
-Decision: Two DRAFT products at $82.00 (Purple Blue, Grey Swirl, Turquoise & Purple). Not live.
+Decision: One-off colors are separate products (Closed + Open), not metafield-driven nav.
+
+Gate: Theme settings → One-off colors → product picker.
+  Set → header nav under Grippy + quiet PDP link under ATC + All Variants One-Offs tab.
+  Empty → all hide. Theme setting wins over section product_oneoffs.
+  Do not add One-off colors in Online Store → Navigation.
+
+Products / Admin templates:
+  one-off-colors-closed-sole → theme template one-off-closed
+  one-off-colors-open-sole   → theme template one-off-open
+
+Buy box (one-off PDPs): shoe-photo color pickers; hide sold-out options.
+All Variants One-Offs tab: "Available now" then "Earlier one-offs"; 2-row start; See more (+1 row).
+
+Lean PDP spine (cold traffic — keep brand, drop sock-era stack):
+  buy-box → value-strip → features → variant-grid → reviews → guarantee → juicer → FAQ → sticky.
+
+Pricing remains $82.00 tier. Closed one-off may be Active on M4 QA; Open often Draft until stocked.
+Cross-ref: D-051 · planning/one-off-surfaces.md · page-template-registry.md
 ```
-Source: docs/09-PRODUCT-KNOWLEDGE.md (Products Not on Live Storefront)
+Source: Owner direction 2026-08-10 (M4 QA); planning/one-off-surfaces.md
 
 ### P-012: Pool Positioning RETIRED — 2026-08-07
 ```

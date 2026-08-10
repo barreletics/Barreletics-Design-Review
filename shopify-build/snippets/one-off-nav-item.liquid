@@ -1,0 +1,55 @@
+{% comment %}
+  One-off colors — header subnav item (desktop or mobile).
+  Gate: Theme settings → One-off product is set. Clear picker to hide.
+{% endcomment %}
+{%- liquid
+  assign oo_ref = settings.one_off_product
+  assign oo_product = nil
+  if oo_ref != blank
+    assign oo_handle = oo_ref.handle | default: oo_ref
+    if oo_handle != blank
+      assign oo_product = all_products[oo_handle]
+    endif
+    if oo_product == blank and oo_ref.url != blank
+      assign oo_product = oo_ref
+    endif
+  endif
+
+  assign oo_live = false
+  if oo_product != blank
+    assign oo_live = true
+  endif
+
+  assign oo_parent_ok = false
+  assign oo_parent_needle = settings.one_off_parent_match | default: 'grippy' | strip | downcase
+  assign oo_parent_hay = parent_title | default: '' | downcase
+  if oo_parent_needle != blank and oo_parent_hay contains oo_parent_needle
+    assign oo_parent_ok = true
+  endif
+
+  assign oo_already = false
+  if oo_live and children != blank
+    for child in children
+      assign child_t = child.title | downcase
+      assign child_u = child.url | downcase
+      if child_t contains 'one-off' or child_t contains 'one off'
+        assign oo_already = true
+        break
+      endif
+      if oo_product.handle != blank and child_u contains oo_product.handle
+        assign oo_already = true
+        break
+      endif
+    endfor
+  endif
+
+  assign oo_label = settings.one_off_nav_label | default: 'One-off colors'
+  assign wrap = list_tag | default: 'li'
+-%}
+{%- if oo_live and oo_parent_ok and oo_already == false -%}
+  {%- if wrap == 'none' -%}
+    <a href="{{ oo_product.url }}">{{ oo_label | escape }}</a>
+  {%- else -%}
+    <li><a href="{{ oo_product.url }}">{{ oo_label | escape }}</a></li>
+  {%- endif -%}
+{%- endif -%}

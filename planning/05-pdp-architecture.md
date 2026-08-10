@@ -138,9 +138,23 @@ The PDP reinforces category creation at three touch points:
 
 ---
 
+## One-Off PDPs (2026-08-10 — D-051 / P-011)
+
+Separate from Locked Closed/Open spines. Templates: `product.one-off-closed.json` / `product.one-off-open.json`.
+
+**Lean spine (cold traffic — keep brand, drop sock-era stack):**  
+buy-box → value-strip → features → variant-grid → reviews → guarantee → juicer → FAQ → sticky ATC.
+
+**Buy box:** shoe-photo color tiles; hide sold-out; badge One-Off; no Complete the kit.  
+**Quiet link** on core PDPs only (Theme settings).  
+How-to: `planning/one-off-surfaces.md` · registry: `planning/page-template-registry.md`.
+
+---
+
 **Cross-references:**
 - Design tokens → `03-design-system.md`
 - Component specs → `04-component-library.md`
 - Product content → `07-product-knowledge-base.md`
 - SEO requirements → `12-seo-geo-standards.md`
 - Approved source → `Barreletics PDP - APPROVED July 17.html`
+- One-offs → P-011 / D-051

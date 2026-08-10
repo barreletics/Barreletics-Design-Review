@@ -599,6 +599,23 @@ This entry also re-asserts the **discipline split retired 2026-08-02 under P-003
 
 ---
 
+### D-051: One-Off Colors — Theme Gate, Templates, Lean PDP
+**Decided:** 2026-08-10 | **Severity:** High
+
+**Decision:** One-off merchandising uses a **Theme settings product picker** (`one_off_product`) as the single gate for (1) header nav under Grippy Shoes, (2) quiet PDP text link under ATC, and (3) All Variants One-Offs tab. No Admin Navigation item. No variant-metafield gate for show/hide.
+
+Templates: `product.one-off-closed.json` / `product.one-off-open.json` (Admin suffixes `one-off-closed` / `one-off-open`). Buy box uses shoe-photo color tiles and hides sold-out options. One-Offs tab groups **Available now** / **Earlier one-offs** with a 2-row collapse and progressive **See more**.
+
+Lean one-off PDP spine keeps brand education for cold traffic (features, reviews, guarantee, FAQ) and drops Closed Sole sock-era / sock-math / TRANSFORM stack. Cross-ref **P-011** (`docs/10-DECISIONS.md`).
+
+**Rationale:** Owner simplified away metafield hide workflows; one picker drives all surfaces; sold-out stay on the same product for FOMO in All Variants without a manual “Past” product.
+
+**Impact:** `config/settings_schema.json` One-off colors group; snippets `one-off-nav-item` / `one-off-quiet-link`; `header.liquid`; `pdp-buy-box.liquid`; `variant-grid` + `variant-grid-panel`; page-template-registry; `planning/one-off-surfaces.md`.
+
+**Status:** Approved — Owner direction 2026-08-10 (M4 Visual QA)
+
+---
+
 ## ADR Archive
 
 The original ADR documents (ADR-01 through ADR-07) are preserved in `planning/` for historical reference. Their UNRESOLVED status is now superseded by the decisions above.

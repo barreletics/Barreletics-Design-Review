@@ -89,13 +89,18 @@
       <ul class="site-header__nav-list" role="list">
         {% if main_menu != blank %}
           {% for link in main_menu.links %}
-            <li class="site-header__nav-item{% if link.links != blank %} site-header__nav-item--has-sub{% endif %}">
+            {%- capture oo_nav_probe -%}
+              {% render 'one-off-nav-item', parent_title: link.title, children: link.links %}
+            {%- endcapture -%}
+            {%- assign oo_nav_probe = oo_nav_probe | strip -%}
+            <li class="site-header__nav-item{% if link.links != blank or oo_nav_probe != blank %} site-header__nav-item--has-sub{% endif %}">
               <a href="{{ link.url }}">{{ link.title }}</a>
-              {% if link.links != blank %}
+              {% if link.links != blank or oo_nav_probe != blank %}
                 <ul class="site-header__subnav" role="list">
                   {% for child in link.links %}
                     <li><a href="{{ child.url }}">{{ child.title }}</a></li>
                   {% endfor %}
+                  {{ oo_nav_probe }}
                 </ul>
               {% endif %}
             </li>
@@ -189,13 +194,18 @@
         <ul class="mobile-menu__list" role="list">
           {% if main_menu != blank %}
             {% for link in main_menu.links %}
-              {% if link.links != blank %}
+              {%- capture oo_nav_probe_m -%}
+                {% render 'one-off-nav-item', parent_title: link.title, children: link.links %}
+              {%- endcapture -%}
+              {%- assign oo_nav_probe_m = oo_nav_probe_m | strip -%}
+              {% if link.links != blank or oo_nav_probe_m != blank %}
                 <li class="mobile-menu__item mobile-menu__item--parent">
                   <button class="mobile-menu__toggle" aria-expanded="false" type="button">{{ link.title }}</button>
                   <ul class="mobile-menu__sub" role="list">
                     {% for child in link.links %}
                       <li><a href="{{ child.url }}">{{ child.title }}</a></li>
                     {% endfor %}
+                    {{ oo_nav_probe_m }}
                   </ul>
                 </li>
               {% else %}

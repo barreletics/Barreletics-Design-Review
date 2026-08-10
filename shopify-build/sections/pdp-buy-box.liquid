@@ -5,7 +5,7 @@
 {% endcomment %}
 
 {% liquid
-  assign thumb_count = section.settings.thumb_count | default: 4
+  assign thumb_count = section.settings.thumb_count | default: 7
   # /pages/size-chart 404s on this store. /pages/performance-skins-size-chart ("Shoe Size
   # Chart") is the real standalone page; /pages/sizing is only tab content.
   assign size_chart_url = section.settings.size_chart_url | default: '/pages/performance-skins-size-chart'
@@ -18,51 +18,175 @@
   assign shipping_body = section.settings.shipping_accordion | default: 'Complimentary shipping on orders over $150. Orders ship within 1–2 business days. Standard delivery 3–5 business days; express 1–2 business days available at checkout.'
   assign returns_body = section.settings.returns_accordion | default: '30-day returns on items in new, sellable condition. 90-day warranty covers manufacturing defects only.'
   assign current_variant = product.selected_or_first_available_variant
+  assign _title_d = product.title | downcase
+  assign _handle_d = product.handle | downcase
+  assign _type_d = product.type | downcase
+  assign _suffix_d = template.suffix | downcase
+  assign _tags_d = product.tags | join: ',' | downcase
+  # Category from template suffix + product identity (water shoe / aquatic = Outdoor)
+  assign _cat_outdoor = false
+  assign _cat_open = false
+  assign _cat_oneoff = false
+  if _suffix_d == 'outdoor' or _handle_d contains 'aquatic' or _handle_d contains 'outdoor' or _title_d contains 'outdoor' or _title_d contains 'aquatic' or _title_d contains 'water shoe' or _type_d contains 'outdoor' or _tags_d contains 'outdoor'
+    assign _cat_outdoor = true
+  elsif _suffix_d == 'one-off-closed' or _suffix_d == 'one-off-open' or _suffix_d == 'one-off' or _suffix_d == 'coperni' or _title_d contains 'one-off' or _title_d contains 'one off' or _handle_d contains 'one-off' or _type_d contains 'one-off' or _title_d contains 'coperni' or _handle_d contains 'coperni'
+    # One-off before open-sole — handles like one-off-colors-open-sole contain "open-sole"
+    assign _cat_oneoff = true
+    if _suffix_d == 'one-off-open' or _handle_d contains 'open-sole' or _title_d contains 'open sole'
+      assign _cat_open = true
+    endif
+  elsif _suffix_d == 'open-sole' or _title_d contains 'open sole' or _handle_d contains 'open-sole' or _handle_d contains 'open_sole' or _handle_d contains 'studio-performance'
+    assign _cat_open = true
+  endif
+
   assign sole_badge = section.settings.sole_badge
-  if sole_badge == blank and current_variant.metafields.custom.sole_type != blank
+  # Outdoor / water shoe must never show Closed Sole (wrong Default template or metafield)
+  if _cat_outdoor
+    assign sole_badge = 'Outdoor'
+  elsif _cat_open
+    if sole_badge == blank or sole_badge == 'Closed Sole'
+      assign sole_badge = 'Open Sole'
+    endif
+  elsif sole_badge == blank and current_variant.metafields.custom.sole_type != blank
     assign sole_badge = current_variant.metafields.custom.sole_type
   endif
   if sole_badge == blank and product.metafields.custom.sole_type != blank
     assign sole_badge = product.metafields.custom.sole_type
   endif
   if sole_badge == blank
-    assign _title_d = product.title | downcase
-    assign _handle_d = product.handle | downcase
-    assign _type_d = product.type | downcase
-    if _title_d contains 'one-off' or _title_d contains 'one off' or _handle_d contains 'one-off' or _type_d contains 'one-off'
+    if _cat_oneoff
       assign sole_badge = 'One-Off'
-    elsif _title_d contains 'outdoor' or _handle_d contains 'outdoor' or _type_d contains 'outdoor' or _title_d contains 'aquatic' or _handle_d contains 'aquatic'
-      assign sole_badge = 'Outdoor'
-    elsif _title_d contains 'open sole' or _handle_d contains 'open-sole' or _handle_d contains 'open_sole'
+    elsif _cat_open
       assign sole_badge = 'Open Sole'
-    elsif _title_d contains 'closed sole' or _handle_d contains 'closed-sole' or _handle_d contains 'closed_sole'
+    elsif _title_d contains 'closed sole' or _handle_d contains 'closed-sole' or _handle_d contains 'closed_sole' or _handle_d contains 'reformer' or _handle_d contains 'legree'
       assign sole_badge = 'Closed Sole'
     endif
   endif
+  # Re-assert Outdoor after metafields (Admin sole_type sometimes says Closed Sole)
+  if _cat_outdoor
+    assign sole_badge = 'Outdoor'
+  endif
+
   assign badge_color = section.settings.sole_badge_color | default: 'rust'
+  # Outdoor: honor TE (CURRENT MESSAGE 2026-08-09 — rust). Blank → charcoal fallback.
+  # Open: force rust when blank/charcoal (wrong Closed/Impulse template).
+  if _cat_outdoor
+    if section.settings.sole_badge_color == blank
+      assign badge_color = 'charcoal'
+    endif
+  elsif _cat_open
+    if badge_color == 'black' or badge_color == 'charcoal' or section.settings.sole_badge_color == blank
+      assign badge_color = 'rust'
+    endif
+  endif
   case badge_color
     when 'blue'
+      # Live barreletics.com version-tag accent (LE badges) — #458CD9
       assign badge_bg = '#458CD9'
-    when 'charcoal'
+    when 'black', 'charcoal'
       assign badge_bg = '#1c1916'
-    when 'black'
-      assign badge_bg = '#000000'
     else
       assign badge_bg = '#c45c3f'
   endcase
+
+  # H1 = product name without sole suffix. Badge carries Open / Closed / Outdoor.
+  assign display_title = product.title
+  if display_title contains ' — Open Sole'
+    assign display_title = display_title | remove: ' — Open Sole'
+  endif
+  if display_title contains ' – Open Sole'
+    assign display_title = display_title | remove: ' – Open Sole'
+  endif
+  if display_title contains ' - Open Sole'
+    assign display_title = display_title | remove: ' - Open Sole'
+  endif
+  if display_title contains ' — Closed Sole'
+    assign display_title = display_title | remove: ' — Closed Sole'
+  endif
+  if display_title contains ' – Closed Sole'
+    assign display_title = display_title | remove: ' – Closed Sole'
+  endif
+  if display_title contains ' - Closed Sole'
+    assign display_title = display_title | remove: ' - Closed Sole'
+  endif
+  assign display_title = display_title | strip
+
+  # If water shoe is stuck on Default (Closed) template, replace studio buy-box copy
+  # with approved Outdoor positioning (product.outdoor.json / 09-PK). Full Outdoor spine
+  # still requires Admin Theme template = product.outdoor.
+  if _cat_outdoor
+    if lede_line_1 == 'Secure in every hold.' or lede_line_1 contains 'Secure in every'
+      assign lede_line_1 = 'Perfect for'
+      assign lede_line_2 = 'outdoor adventures.'
+    endif
+    if short_desc contains 'grip socks' or short_desc contains 'reformer, barre' or short_desc contains 'Megaformer'
+      assign short_desc = 'Heel and foot fully covered for outdoor use — grip, stability, and protection from hot sand. Boat decks protect your feet; always be careful on slippery wet tile and stone. Ideal for paddleboarding, boating, beach, and resortwear.'
+    endif
+  endif
+
+  # Hero image priority — Theme settings (global) + optional section override.
+  # Does not require reordering Admin media / variants.
+  assign hero_image = product.featured_image
+  assign hero_mode = settings.pdp_hero_image_mode | default: 'admin_order'
+  assign hero_color = settings.pdp_hero_color | strip
+  assign hero_idx = settings.pdp_hero_media_index | default: 1 | plus: 0
+  if section.settings.hero_image_mode != blank and section.settings.hero_image_mode != 'admin_order'
+    assign hero_mode = section.settings.hero_image_mode
+  endif
+  if section.settings.hero_color != blank
+    assign hero_color = section.settings.hero_color | strip
+    if hero_mode == 'admin_order'
+      assign hero_mode = 'variant_color'
+    endif
+  endif
+  if section.settings.hero_image_mode == 'media_index'
+    assign hero_mode = 'media_index'
+    assign hero_idx = section.settings.hero_media_index | default: hero_idx | plus: 0
+  endif
+  if hero_mode == 'variant_color' and hero_color != blank
+    assign want = hero_color | downcase
+    for v in product.variants
+      assign matched = false
+      for opt in v.options
+        assign od = opt | strip | downcase
+        if od == want or od contains want
+          assign matched = true
+        endif
+      endfor
+      if matched
+        if v.featured_media != blank
+          assign hero_image = v.featured_media.preview_image | default: v.featured_media
+        elsif v.image != blank
+          assign hero_image = v.image
+        endif
+        break
+      endif
+    endfor
+  elsif hero_mode == 'media_index'
+    assign zero = hero_idx | minus: 1
+    if zero < 0
+      assign zero = 0
+    endif
+    if product.images[zero] != blank
+      assign hero_image = product.images[zero]
+    endif
+  endif
+  if hero_image == blank
+    assign hero_image = product.featured_image
+  endif
 %}
 <section id="buy" class="pdp-hero" aria-label="Product details" data-buy-box>
   <div class="pdp-gallery">
     <div class="pdp-gallery__hero">
-      {% if product.featured_image %}
+      {% if hero_image %}
         <img
           id="pdp-main-img"
-          src="{{ product.featured_image | image_url: width: 800 }}"
-          srcset="{{ product.featured_image | image_url: width: 400 }} 400w,
-                  {{ product.featured_image | image_url: width: 600 }} 600w,
-                  {{ product.featured_image | image_url: width: 800 }} 800w"
+          src="{{ hero_image | image_url: width: 800 }}"
+          srcset="{{ hero_image | image_url: width: 400 }} 400w,
+                  {{ hero_image | image_url: width: 600 }} 600w,
+                  {{ hero_image | image_url: width: 800 }} 800w"
           sizes="(max-width: 768px) 100vw, 50vw"
-          alt="{{ product.featured_image.alt | default: product.title | escape }}"
+          alt="{{ hero_image.alt | default: product.title | escape }}"
           loading="eager"
           fetchpriority="high"
         >
@@ -70,14 +194,28 @@
     </div>
     {% if product.images.size > 1 %}
       <div class="pdp-gallery__thumbs">
-        {% for image in product.images limit: thumb_count %}
+        {% assign thumbs_shown = 0 %}
+        {% if hero_image %}
           <button
-            class="pdp-gallery__thumb{% if forloop.first %} is-active{% endif %}"
+            class="pdp-gallery__thumb is-active"
+            data-thumb-src="{{ hero_image | image_url: width: 800 }}"
+            aria-label="View hero image"
+          >
+            <img src="{{ hero_image | image_url: width: 160 }}" alt="{{ hero_image.alt | default: product.title | escape }}" width="72" height="72" loading="lazy">
+          </button>
+          {% assign thumbs_shown = 1 %}
+        {% endif %}
+        {% for image in product.images %}
+          {% if thumbs_shown >= thumb_count %}{% break %}{% endif %}
+          {% if hero_image and image.id == hero_image.id %}{% continue %}{% endif %}
+          <button
+            class="pdp-gallery__thumb{% if thumbs_shown == 0 %} is-active{% endif %}"
             data-thumb-src="{{ image | image_url: width: 800 }}"
             aria-label="View image {{ forloop.index }}"
           >
             <img src="{{ image | image_url: width: 160 }}" alt="View {{ forloop.index }}" width="72" height="72" loading="lazy">
           </button>
+          {% assign thumbs_shown = thumbs_shown | plus: 1 %}
         {% endfor %}
       </div>
     {% endif %}
@@ -93,7 +231,7 @@
     {% endif %}
 
     <div class="pdp-buy__header">
-      <h1 class="pdp-buy__seo-title">{{ product.title }}</h1>
+      <h1 class="pdp-buy__seo-title">{{ display_title | escape }}</h1>
       {% if section.settings.show_sole_badge and sole_badge != blank %}
         <span class="pdp-buy__badge" style="--pdp-badge-bg: {{ badge_bg }};">{{ sole_badge | escape }}</span>
       {% endif %}
@@ -118,54 +256,88 @@
       {% comment %} Hub v17 order: Color, then Size (ignore Admin option order). {% endcomment %}
       {% for option in product.options_with_values %}
         {% assign opt_down = option.name | downcase %}
-        {% if opt_down == 'color' or opt_down == 'colour' %}
+        {% liquid
+          assign is_color_opt = false
+          if opt_down == 'color' or opt_down == 'colour' or opt_down contains 'color' or opt_down contains 'style'
+            assign is_color_opt = true
+          endif
+          # One-off Admin quirk: option 1 sometimes named after first colorway (e.g. "Grey Swirl") not "Color"
+          if _cat_oneoff and opt_down != 'size' and option.position == 1
+            assign is_color_opt = true
+          endif
+        %}
+        {% if is_color_opt %}
           <div class="pdp-buy__option" data-option-position="{{ option.position }}">
             <div class="pdp-buy__option-header">
               <span class="pdp-buy__option-label">Color · <span id="selected-color">{{ option.selected_value }}</span></span>
             </div>
-            <div class="pdp-buy__swatches">
+            <div class="pdp-buy__swatches{% if _cat_oneoff %} pdp-buy__swatches--photos{% endif %}">
               {% for value in option.values %}
-                {% assign swatch_key = value | handleize %}
-                {% case swatch_key %}
-                  {% when 'onyx', 'black', 'ebony' %}
-                    {% assign swatch_bg = '#050505' %}
-                  {% when 'dusty-rose', 'dustyrose' %}
-                    {% assign swatch_bg = '#e9d3cb' %}
-                  {% when 'stone', 'light-grey', 'lightgrey', 'light-gray' %}
-                    {% assign swatch_bg = '#c9c5b8' %}
-                  {% when 'sage' %}
-                    {% assign swatch_bg = '#7b8c84' %}
-                  {% when 'white', 'cream' %}
-                    {% assign swatch_bg = '#ffffff' %}
-                  {% when 'terracotta', 'peach' %}
-                    {% assign swatch_bg = '#d4a78a' %}
-                  {% when 'espresso', 'dark-grey', 'darkgrey' %}
-                    {% assign swatch_bg = '#3d3530' %}
-                  {% when 'mist' %}
-                    {% assign swatch_bg = '#b8c4c0' %}
-                  {% when 'mocha' %}
-                    {% assign swatch_bg = '#8b7355' %}
-                  {% when 'forest' %}
-                    {% assign swatch_bg = '#5c6b5e' %}
-                  {% when 'rivian-green', 'rivian', 'olive', 'green' %}
-                    {% assign swatch_bg = '#5c6b45' %}
-                  {% when 'coperni' %}
-                    {% assign swatch_bg = '#c8b99a' %}
-                  {% when 'cobalt', 'blue', 'cobalt-blue' %}
-                    {% assign swatch_bg = '#2f5fa7' %}
-                  {% when 'orange', 'brand-coral', 'coral' %}
-                    {% assign swatch_bg = '#c45c3f' %}
-                  {% else %}
-                    {% assign swatch_bg = '#d6cfc0' %}
-                {% endcase %}
-                <button
-                  type="button"
-                  class="pdp-buy__swatch{% if value == option.selected_value %} is-active{% endif %}"
-                  aria-label="{{ value }}"
-                  aria-selected="{% if value == option.selected_value %}true{% else %}false{% endif %}"
-                  data-color="{{ value }}"
-                  style="background: {{ swatch_bg }};{% if swatch_bg == '#ffffff' %} box-shadow: inset 0 0 0 1px #ccc;{% endif %}"
-                ></button>
+                {% liquid
+                  assign value_has_available = false
+                  assign value_photo = blank
+                  for v in product.variants
+                    assign v_matches = false
+                    if option.position == 1 and v.option1 == value
+                      assign v_matches = true
+                    elsif option.position == 2 and v.option2 == value
+                      assign v_matches = true
+                    elsif option.position == 3 and v.option3 == value
+                      assign v_matches = true
+                    endif
+                    if v_matches
+                      if value_photo == blank
+                        if v.featured_media != blank
+                          assign value_photo = v.featured_media.preview_image | image_url: width: 120
+                        elsif v.image != blank
+                          assign value_photo = v.image | image_url: width: 120
+                        endif
+                      endif
+                      if v.available
+                        assign value_has_available = true
+                      endif
+                    endif
+                  endfor
+                %}
+                {% if _cat_oneoff and value_has_available == false %}
+                  {% continue %}
+                {% endif %}
+                {% if _cat_oneoff and value_photo != blank %}
+                  <button
+                    type="button"
+                    class="pdp-buy__swatch pdp-buy__swatch--photo{% if value == option.selected_value %} is-active{% endif %}"
+                    aria-label="{{ value }}"
+                    aria-selected="{% if value == option.selected_value %}true{% else %}false{% endif %}"
+                    data-color="{{ value }}"
+                    style="background-image: url({{ value_photo }});"
+                  ></button>
+                {% else %}
+                  {% comment %} Impulse: Files `{handle}.png` exact name, else CSS color from last word of option value. {% endcomment %}
+                  {% liquid
+                    assign swatch_file_extension = 'png'
+                    assign swatch_file_name = value | handle | append: '.' | append: swatch_file_extension
+                    assign swatch_bg_img = blank
+                    if images[swatch_file_name] != blank
+                      assign swatch_bg_img = swatch_file_name | file_img_url: '50x50' | prepend: 'https:' | split: '?' | first
+                    endif
+                    assign swatch_bg = value | split: ' ' | last | handle
+                    if value.swatch != blank and value.swatch.color != blank and swatch_bg_img == blank
+                      assign swatch_bg = value.swatch.color
+                    endif
+                    assign swatch_is_white = false
+                    if swatch_bg == 'white' or swatch_bg == '#ffffff' or swatch_bg == '#fff'
+                      assign swatch_is_white = true
+                    endif
+                  %}
+                  <button
+                    type="button"
+                    class="pdp-buy__swatch{% if value == option.selected_value %} is-active{% endif %}"
+                    aria-label="{{ value }}"
+                    aria-selected="{% if value == option.selected_value %}true{% else %}false{% endif %}"
+                    data-color="{{ value }}"
+                    style="background-color: {{ swatch_bg }};{% if swatch_bg_img != blank %} background-image: url({{ swatch_bg_img }}); background-size: cover; background-position: center; background-repeat: no-repeat;{% endif %} background-clip: padding-box; background-origin: padding-box;{% if swatch_is_white and swatch_bg_img == blank %} box-shadow: inset 0 0 0 1px #ccc;{% endif %}"
+                  ></button>
+                {% endif %}
               {% endfor %}
             </div>
           </div>
@@ -198,7 +370,10 @@
                 {% assign size_letter = '' %}
                 {% assign size_range = '' %}
                 {% assign skip_size = false %}
-                {% if value_up == 'S' or value_up contains 'S (' or value_up contains 'S(' or value_up contains 'SMALL' %}
+                {% comment %} Kids variants exist on Outdoor Admin catalog but are undocumented — never surface. {% endcomment %}
+                {% if value_up == 'KIDS' or value_up contains 'KIDS' or value_up contains 'YOUTH' %}
+                  {% assign skip_size = true %}
+                {% elsif value_up == 'S' or value_up contains 'S (' or value_up contains 'S(' or value_up contains 'SMALL' %}
                   {% if section.settings.show_soon_size != false %}
                     {% assign skip_size = true %}
                   {% else %}
@@ -212,6 +387,28 @@
                   {% assign size_range = 'Women 8–10 · Men 8.5–11' %}
                 {% else %}
                   {% assign size_letter = value %}
+                {% endif %}
+                {% if _cat_oneoff and skip_size == false %}
+                  {% liquid
+                    assign size_has_available = false
+                    for v in product.variants
+                      assign v_size_match = false
+                      if option.position == 1 and v.option1 == value
+                        assign v_size_match = true
+                      elsif option.position == 2 and v.option2 == value
+                        assign v_size_match = true
+                      elsif option.position == 3 and v.option3 == value
+                        assign v_size_match = true
+                      endif
+                      if v_size_match and v.available
+                        assign size_has_available = true
+                        break
+                      endif
+                    endfor
+                    unless size_has_available
+                      assign skip_size = true
+                    endunless
+                  %}
                 {% endif %}
                 {% unless skip_size %}
                   <button
@@ -231,7 +428,16 @@
 
       {% for option in product.options_with_values %}
         {% assign opt_down = option.name | downcase %}
-        {% unless opt_down == 'color' or opt_down == 'colour' or opt_down == 'size' %}
+        {% liquid
+          assign skip_other_opt = false
+          if opt_down == 'color' or opt_down == 'colour' or opt_down contains 'color' or opt_down contains 'style' or opt_down == 'size'
+            assign skip_other_opt = true
+          endif
+          if _cat_oneoff and opt_down != 'size' and option.position == 1
+            assign skip_other_opt = true
+          endif
+        %}
+        {% unless skip_other_opt %}
           <div class="pdp-buy__option" data-option-position="{{ option.position }}">
             <div class="pdp-buy__option-header">
               <span class="pdp-buy__option-label">{{ option.name }}</span>
@@ -257,6 +463,10 @@
       </button>
     </form>
 
+    {% unless section.settings.show_oneoff_link == false %}
+      {% render 'one-off-quiet-link', current_product: product %}
+    {% endunless %}
+
     {% comment %} v19 trust split: under ATC is empty — value strip + accordion own guarantees {% endcomment %}
     {% if section.settings.show_trust_row %}
       <div class="pdp-buy__trust">
@@ -268,7 +478,7 @@
       </div>
     {% endif %}
 
-    {% if section.settings.show_kit_links != false %}
+    {% if section.settings.show_kit_links != false and _cat_outdoor == false %}
       <div class="pdp-buy__kit-links">
         <span class="pdp-buy__kit-label">{{ section.settings.kit_label | default: 'Complete the kit' }}</span>
         <div class="pdp-buy__kit-row">
@@ -288,7 +498,12 @@
     <div class="pdp-buy__accordions">
       <details class="pdp-accordion" data-pdp-accordion>
         <summary class="pdp-accordion__trigger" aria-expanded="false">Description <span>+</span></summary>
-        <div class="pdp-accordion__body">{{ product.description }}</div>
+        <div class="pdp-accordion__body">
+          {{ product.description }}
+          {% if section.settings.description_footnote != blank %}
+            <p class="pdp-buy__desc-footnote">{{ section.settings.description_footnote | escape | newline_to_br }}</p>
+          {% endif %}
+        </div>
       </details>
       <details class="pdp-accordion" data-pdp-accordion>
         <summary class="pdp-accordion__trigger" aria-expanded="false">Care & how to wear <span>+</span></summary>
@@ -297,6 +512,14 @@
           <p><strong>Cleaning:</strong> warm soapy water, rinse well, air dry. No machine washing.</p>
         </div>
       </details>
+      {% if section.settings.note_accordion_label != blank and section.settings.note_accordion_body != blank %}
+        <details class="pdp-accordion" data-pdp-accordion>
+          <summary class="pdp-accordion__trigger" aria-expanded="false">{{ section.settings.note_accordion_label | escape }} <span>+</span></summary>
+          <div class="pdp-accordion__body">
+            <p>{{ section.settings.note_accordion_body | escape | newline_to_br }}</p>
+          </div>
+        </details>
+      {% endif %}
       <details class="pdp-accordion" data-pdp-accordion>
         <summary class="pdp-accordion__trigger" aria-expanded="false">Shipping <span>+</span></summary>
         <div class="pdp-accordion__body">{{ shipping_body | escape }}</div>
@@ -318,7 +541,7 @@
   "name": {{ product.title | json }},
   "description": {{ product.description | strip_html | truncate: 200 | json }},
   "brand": { "@type": "Brand", "name": "Barreletics" },
-  "image": {{ product.featured_image | image_url: width: 800 | json }},
+  "image": {{ hero_image | default: product.featured_image | image_url: width: 800 | json }},
   "url": {{ shop.url | append: product.url | json }},
   {% if current_variant.sku != blank %}"sku": {{ current_variant.sku | json }},{% endif %}
   "offers": {
@@ -549,8 +772,23 @@
     transition: all var(--transition-fast);
     padding: 9px;
     box-sizing: content-box;
-    background-clip: content-box;
+    /* Fill color/image through the padded circle; border ring sits outside */
+    background-clip: padding-box;
+    background-origin: padding-box;
   }
+  .pdp-buy__swatches--photos { gap: 10px; }
+  .pdp-buy__swatch--photo {
+    width: 56px;
+    height: 56px;
+    padding: 0;
+    border-radius: 8px;
+    border: 2px solid #d6cfc0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #f5f2ec;
+  }
+  .pdp-buy__swatch--photo.is-active { border-color: var(--text-primary, #1c1916); }
 
   .pdp-buy__swatch:hover {
     border-color: #9a9182;
@@ -608,6 +846,22 @@
     font-weight: var(--type-cta-weight);
     letter-spacing: var(--type-cta-tracking);
     line-height: var(--type-cta-leading, 1);
+  }
+
+  .pdp-buy__oneoff-link {
+    display: inline-block;
+    margin: 12px 0 4px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #6b645a;
+    text-decoration: none;
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .pdp-buy__oneoff-link:hover {
+    color: var(--charcoal, #1c1916);
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   .pdp-buy__cta.btn--disabled {
@@ -759,6 +1013,15 @@
     margin: 0;
   }
 
+  .pdp-buy__desc-footnote {
+    margin-top: 1em;
+    padding-top: 1em;
+    border-top: 1px solid #e8e2d8;
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--text-body, #4a4a4a);
+  }
+
   @media (max-width: 1024px) {
     .pdp-hero {
       gap: var(--space-9);
@@ -835,7 +1098,35 @@
     { "type": "header", "content": "Shared — Media" },
     {
       "type": "paragraph",
-      "content": "Gallery images come from product media in Admin — not Shopify Video / Image URL fields. No image picker here."
+      "content": "Gallery images come from product media in Admin. Global default: Theme settings → PDP hero image. Section fields below optionally override for this template only — no Admin reorder needed."
+    },
+    {
+      "type": "select",
+      "id": "hero_image_mode",
+      "label": "Hero image priority (section override)",
+      "options": [
+        { "value": "admin_order", "label": "Use theme / Admin default" },
+        { "value": "variant_color", "label": "Variant color / option value" },
+        { "value": "media_index", "label": "Specific media position #" }
+      ],
+      "default": "admin_order",
+      "info": "Leave on Use theme / Admin default to follow Theme settings → PDP hero image."
+    },
+    {
+      "type": "text",
+      "id": "hero_color",
+      "label": "Hero color / option value (override)",
+      "info": "Optional override. e.g. Coral, Bright Yellow, Blue, DarkGrey."
+    },
+    {
+      "type": "range",
+      "id": "hero_media_index",
+      "label": "Hero media position (override)",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "default": 1,
+      "info": "Only when section priority is Specific media position #."
     },
     {
       "type": "range",
@@ -844,8 +1135,8 @@
       "min": 3,
       "max": 8,
       "step": 1,
-      "default": 4,
-      "info": "v19: 4 visible at 72px · touch-scroll if overflow · no arrow buttons."
+      "default": 7,
+      "info": "Default 7 · 72px. Wide desktop fits all; narrower + mobile swipe-scroll. No arrows."
     },
 
     { "type": "header", "content": "Section — PDP buy box — display" },
@@ -885,24 +1176,25 @@
       "id": "show_sole_badge",
       "label": "Show sole badge next to title",
       "default": true,
-      "info": "Quiet rust/blue/charcoal/black pill top-right of the title row (v16 pattern). Toggle off per product if needed."
+      "info": "Version tag pill next to the title (v16 pattern). Color via Sole badge color below."
     },
     {
       "type": "text",
       "id": "sole_badge",
       "label": "Sole badge override",
-      "info": "Optional. Blank → variant/product metafield custom.sole_type → then Open/Closed Sole, Outdoor, or One-Off from handle/title."
+      "info": "Optional. Outdoor/water-shoe products always show Outdoor. Else: TE → metafield custom.sole_type → Open/Closed/One-Off from handle/title/template."
     },
     {
       "type": "select",
       "id": "sole_badge_color",
       "label": "Sole badge color",
       "default": "rust",
+      "info": "Open Sole + Outdoor (CURRENT): Rust #c45c3f. Closed Sole: charcoal/black. Blue = live LE accent.",
       "options": [
-        { "value": "rust", "label": "Rust (orange)" },
-        { "value": "blue", "label": "Blue" },
+        { "value": "black", "label": "Black / charcoal" },
         { "value": "charcoal", "label": "Charcoal" },
-        { "value": "black", "label": "Black" }
+        { "value": "rust", "label": "Rust orange" },
+        { "value": "blue", "label": "Blue (live strip)" }
       ]
     },
     {
@@ -915,6 +1207,21 @@
     {
       "type": "paragraph",
       "content": "Sticky ATC is a separate section (pdp-sticky-atc) — not controlled here."
+    },
+
+    {
+      "type": "header",
+      "content": "Section — PDP buy box — One-off link"
+    },
+    {
+      "type": "paragraph",
+      "content": "Quiet link under ATC. Product + copy live in Theme settings → One-off colors. Shows only when that product has available inventory."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_oneoff_link",
+      "label": "Show one-off quiet link (when live in Theme settings)",
+      "default": true
     },
 
     { "type": "header", "content": "Section — PDP buy box — Complete the kit" },
@@ -966,6 +1273,24 @@
     },
 
     { "type": "header", "content": "Section — PDP buy box — Accordion" },
+    {
+      "type": "textarea",
+      "id": "description_footnote",
+      "label": "Description accordion — closing note",
+      "info": "Optional. Appended at the end of Admin product description (e.g. Outdoor surface note). Leave blank to hide."
+    },
+    {
+      "type": "text",
+      "id": "note_accordion_label",
+      "label": "Extra accordion label",
+      "info": "Optional. e.g. Good to know. Leave blank to hide the row."
+    },
+    {
+      "type": "textarea",
+      "id": "note_accordion_body",
+      "label": "Extra accordion body",
+      "info": "Shown only when label + body are both set."
+    },
     {
       "type": "textarea",
       "id": "shipping_accordion",
