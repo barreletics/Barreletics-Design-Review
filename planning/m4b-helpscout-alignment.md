@@ -2,14 +2,19 @@
 
 ---
 document: M4B Help Scout Alignment
-status: 🟡 Ready for Owner Implementation
+status: ⚠️ STUB — not the Help Scout master
 created: 2026-07-18
+updated: 2026-08-11
 depends_on: [07-product-knowledge-base, 08-copy-guide]
 ---
 
+> **Master saved-reply library:** `helpscout-kb/Barreletics_Email_Template_Master.md`  
+> Includes the full numbered set (1.x–8.x). Latest: **2.6 Sizing — Save the return (torn on first use)**.  
+> This file remains a short M4B alignment stub. Do not paste from here when the master has a more specific reply.
+
 ## Purpose
 
-Maps every major Doc 07 Knowledge Base topic to a Help Scout saved reply. When Help Scout is configured, each saved reply uses the exact approved copy below. No unapproved claims.
+Maps major Doc 07 topics to a short set of Help Scout saved replies. Prefer the **master** above for day-to-day CS. No unapproved claims.
 
 ---
 
@@ -203,14 +208,21 @@ Maps every major Doc 07 Knowledge Base topic to a Help Scout saved reply. When H
 >
 > Thank you for your interest in partnering with Barreletics! We love working with studios, retailers, and instructors.
 >
-> We have three partnership programs:
-> - **Wholesale** — For studios and retailers carrying Performance Skins
-> - **Studio Partners** — For studios offering Performance Skins to students
-> - **Ambassadors** — For instructors representing the brand
+> We have three partnership programs, each with its own short application:
+> - **Wholesale** — For studios and retailers carrying Performance Skins: [link to /pages/wholesale]
+> - **Studio Partners** — For studios offering Performance Skins to students: [link to /pages/studio-program]
+> - **Ambassadors** — For instructors representing the brand: [link to /pages/ambassador]
 >
-> Please fill out our Partner Inquiry form here: [link to /pages/partners]
+> Not sure which fits? Start here and we'll point you the right way: [link to /pages/partners]
 >
 > We review all inquiries and respond within 3-5 business days.
+
+> **UPDATED 2026-08-08 (D-048 supersedes D-042).** This reply previously sent all three audiences to a
+> single "Partner Inquiry form here: [link to /pages/partners]". There are now **three dedicated
+> program pages**, each with its own qualification form (`BL-PARTNER-WHOLESALE` / `-STUDIO` /
+> `-AMBASSADOR`); `/pages/partners` is a **routing hub** whose form is the general-inquiry fallback.
+> See `planning/partner-programs.md` §3–§4. This doc is a repo *proposal*, not a mirror of live
+> Help Scout — if the old single-link version was already saved in Help Scout, update it there.
 >
 > — The Barreletics Team
 
@@ -250,7 +262,6 @@ Maps every major Doc 07 Knowledge Base topic to a Help Scout saved reply. When H
 >
 > - **SAVE15** — Buy 2, Save 15% (applied at checkout)
 > - **Free shipping** on orders over $150
-> - **10% off** your first order when you sign up for our newsletter
 >
 > **Code not working?** A few things to check:
 > - Codes are case-sensitive — try entering it exactly as shown

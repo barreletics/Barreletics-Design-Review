@@ -29,7 +29,7 @@ This Knowledge Base owns authoritative information across the following domains.
 | **Brand** | → Doc 02 | Voice, positioning, category creation, slogans |
 | **Policies** | ✅ Populated | Returns, warranty, shipping, pricing (Sections 13–16) |
 | **Manufacturing** | 🔲 Placeholder | Partner specs, QC process, materials sourcing, production timelines |
-| **Customer Support** | 🔲 Placeholder | Help Scout saved replies, macros, workflows, escalation rules |
+| **Customer Support** | ✅ Active | Help Scout saved replies: `helpscout-kb/Barreletics_Email_Template_Master.md` (incl. **2.6** torn-on-first-use save). Stub: `planning/m4b-helpscout-alignment.md`. |
 | **Tidio AI** | 🔲 Placeholder | Chatbot Q&A pairs, intent routing, handoff rules |
 | **Wholesale** | 🔲 Placeholder | Partner terms, pitch materials, buyer education, MOQs |
 | **Partnerships** | 🔲 Placeholder | Studio partnerships, brand collaborations, co-marketing |
