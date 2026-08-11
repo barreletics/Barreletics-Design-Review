@@ -58,22 +58,21 @@ Widget appearance (position, color, icon, greeting) is configured in **Help Scou
 
 ## Saved Reply Alignment
 
-Doc 07 (Product Knowledge Base) is the single source of truth for all product information. Help Scout saved replies contain the exact approved copy from Doc 07, formatted for customer support responses.
+Doc 07 (Product Knowledge Base) is the single source of truth for product **facts**. Help Scout **saved-reply wording** lives in:
 
-**Saved replies defined in `planning/m4b-helpscout-alignment.md`:**
+**`helpscout-kb/Barreletics_Email_Template_Master.md`** (numbered library: 1.x greetings, 2.x sizing, 3.x returns, …)
 
-| # | Topic | Trigger |
+`planning/m4b-helpscout-alignment.md` is a short M4B stub — **not** the master.
+
+### Sizing — Save-the-return series (2.x)
+
+| # | Help Scout name | Trigger |
 |---|---|---|
-| 1 | Sizing & Fit | Customer asks about sizing |
-| 2 | Shipping Information | Delivery times, costs, international |
-| 3 | Returns & Exchanges | Return policy, exchange process |
-| 4 | Warranty Claims | Manufacturing defect reports |
-| 5 | Product Care | Cleaning, washing, maintenance |
-| 6 | Open Sole vs Closed Sole | Style comparison |
-| 7 | Wholesale/Partner Inquiry | Business partnerships |
-| 8 | Order Status / Tracking | Where is my order |
-| 9 | Discount Codes / Promotions | Deals, code issues |
-| 10 | Performance Skins vs Grip Socks | Differentiation |
+| 2.4 | Sizing — Save the return (narrow foot) | Narrow-foot fit before return |
+| 2.5 | Sizing — Save the return (wrong size) | Too small / too large before return |
+| 2.6 | Sizing — Save the return (torn on first use) | Outdoor (or any) pair tore/broke on first use — offer free replacement + photo + size/width; put-on tip |
+
+**2.6 added 2026-08-11.** Tag: `quality-issue`.
 
 ## Contact Form Routing
 
@@ -93,7 +92,7 @@ See Doc 13 (Knowledge Architecture) for the full cascade process and responsibil
 ## Owner Implementation Steps
 
 1. Log into Help Scout admin
-2. Manage → Saved Replies → create each reply from `planning/m4b-helpscout-alignment.md`
+2. Manage → Saved Replies → create/update each reply from `helpscout-kb/Barreletics_Email_Template_Master.md` (Name = title after the number)
 3. Set up email forwarding: Shopify admin → Settings → Notifications → Customer email → Help Scout inbox
 4. Configure Beacon appearance in Help Scout admin (colors, position, greeting)
 5. Enter Beacon ID in Theme Customizer → Tracking & Integrations → Help Scout Beacon ID
@@ -105,4 +104,5 @@ See Doc 13 (Knowledge Architecture) for the full cascade process and responsibil
 - Doc 13 (Knowledge Architecture) — update cascade process
 - Doc 16 (Integration Architecture) — snippet placement and guard pattern
 - Doc 19 (Tidio Architecture) — parallel chat integration, same knowledge source
-- `planning/m4b-helpscout-alignment.md` — full saved reply content
+- `helpscout-kb/Barreletics_Email_Template_Master.md` — full saved reply content (master)
+- `planning/m4b-helpscout-alignment.md` — short M4B stub (not master)

@@ -4,7 +4,7 @@
 **Audience:** Any competent executive stepping in without prior Barreletics knowledge  
 **Scope:** Run the business for 30 days without founders  
 **Type:** Documentation only — no implementation  
-**Last updated:** 2026-07-19  
+**Last updated:** 2026-08-11  
 **Canonical facts:** Always defer to `planning/07-product-knowledge-base.md` for product/policy truth
 
 ---
@@ -414,7 +414,7 @@ Engagement rate, reach, follower growth, clicks to site (UTM), assisted conversi
 
 ### Platform
 
-**Help Scout** — saved replies aligned in `planning/m4b-helpscout-alignment.md`.  
+**Help Scout** — saved replies master: `helpscout-kb/Barreletics_Email_Template_Master.md` (stub: `planning/m4b-helpscout-alignment.md`).  
 **Tidio AI** — first-touch from `planning/m4b-tidio-knowledge-base.md`; escalate per handoff rules.
 
 ### Response Time Targets
@@ -425,7 +425,9 @@ Engagement rate, reach, follower growth, clicks to site (UTM), assisted conversi
 
 ### Saved Replies
 
-Use approved macros for sizing, shipping, returns, warranty, care, Open vs Closed, wholesale/partner, order status, discounts, vs grip socks. Do not freestyle policy language.
+Use approved macros from `helpscout-kb/Barreletics_Email_Template_Master.md` for sizing (incl. **2.4–2.6** save-the-return), shipping, returns, warranty, care, Open vs Closed, wholesale/partner, order status, discounts, vs grip socks. Do not freestyle policy language.
+
+**2.6 Sizing — Save the return (torn on first use)** (added 2026-08-11): outdoor/first-use tear — offer free replacement before processing return; request break photo + usual shoe size + narrow/average/wide; put-on tip (pull from top of foot, not straps). Tag `quality-issue`.
 
 ### Common Scenarios
 
@@ -434,6 +436,7 @@ Use approved macros for sizing, shipping, returns, warranty, care, Open vs Close
 | Sizing issues | Educate (snug fit; color snug notes); **exchange** — free exchange shipping per Doc 07; Help Scout may recommend return + reorder for stock certainty |
 | Return requests | **30-day**, new/sellable condition; original mesh bag + tag; **not** a “studio trial” |
 | Warranty | **90-day manufacturing defects only**; photos required (esp. international); customer pays intl replacement shipping |
+| Torn / broke on first use | **2.6** — offer free replacement (no charge); request photo + size + foot width; put-on tip; process return if they decline |
 | Product questions | Answer from Doc 07 / saved replies |
 | Wholesale | Qualify → partner form → founder path |
 | Studio | Studio program / partners process |
@@ -1033,7 +1036,8 @@ Canonical: `planning/DECISION_FRAMEWORK.md`.
 | Decision Framework | `planning/DECISION_FRAMEWORK.md` |
 | Retired Claims | `planning/RETIRED_CLAIMS.md` |
 | Roadmap M4–M6 | `planning/MILESTONES-4-5-6-ROADMAP.md` |
-| Help Scout alignment | `planning/m4b-helpscout-alignment.md` |
+| Help Scout saved replies (master) | `helpscout-kb/Barreletics_Email_Template_Master.md` |
+| Help Scout alignment (stub) | `planning/m4b-helpscout-alignment.md` |
 | Tidio KB | `planning/m4b-tidio-knowledge-base.md` |
 | Launch / rollback (M4D) | `planning/m4d-*.md` |
 | Technical developer docs | `docs/00-README.md` … `docs/25-*.md`, `docs/INDEX.md` |
