@@ -21,7 +21,7 @@
 | A0 | Decide board | desktop | **AUTHORITY** | `docs/HELP-OPEN-ME.html` · `planning/help-family-type-law.md` · cloud prompt | Help v8 · type law HARD |
 | A-help | Help hub | desktop | **AWAITING ANDREW** | `docs/Barreletics Help - Definitive-v8.html` | Tiles · M4 destinations · no Track |
 | A1 | About Us `/pages/our-story` | **cloud** | **AWAITING ANDREW** | Brand v2 · [PR #22](https://github.com/barreletics/Barreletics-Design-Review/pull/22) | Docs-only |
-| A2 | FAQ `/pages/faq` | desktop | **AWAITING ANDREW** | FAQ Definitive-v7 | Topic anchors slight standout |
+| A2 | FAQ `/pages/faq` | **cloud** | **AWAITING ANDREW** | `docs/Barreletics FAQ - Definitive-v7.html` · Liquid `page-faq` / `page.faq.json` · M4 push pending Theme Access | FAQ v7 quiet rebuilt; Locked FAQ v4 untouched |
 | A3 | Contact | desktop | **AWAITING ANDREW** | M4 · `page-contact` H1 → support scale | Was type-hero; now Help H1 |
 | A4 | Policy `/pages/returns` | desktop | **AWAITING ANDREW** | `page-returns` H1 support · lede customer · jumps simplified · Need a hand = h2-standard | Repo fixed; push when named |
 | A5 | Size chart | desktop | **AWAITING ANDREW** | `page-size-guide` H1 support · chart fallback M/L · fit notes soft tint | Chart empty if TE cleared blocks — fallback added |

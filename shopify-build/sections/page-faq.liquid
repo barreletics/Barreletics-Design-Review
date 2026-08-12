@@ -1,92 +1,94 @@
 {% comment %}
-  Page FAQ Section
-  Categorized FAQ accordion groups using the faq-accordion snippet.
-  Includes FAQPage structured data for all categories.
-  Used on: page.faq.json
+  FAQ Page — Definitive-v7 quiet
+  Support H1 · underline search · hairline topic row · rule-row accordions.
+  Authority: docs/Barreletics FAQ - Definitive-v7.html
+  Type law: planning/help-family-type-law.md — never type-hero.
+  Never overwrite Locked FAQ v4 mock.
 {% endcomment %}
 
-<section class="section section--cream" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
-  <div class="section__inner section__inner--narrow">
-    {% if section.settings.title != blank %}
-      <h1 class="page-faq__title type-hero">{{ section.settings.title }}</h1>
-    {% endif %}
-    {% if section.settings.subtitle != blank %}
-      <p class="page-faq__subtitle">{{ section.settings.subtitle }}</p>
-    {% endif %}
+<section class="page-faq section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
+  <div class="page-faq__head">
+    <div class="page-faq__head-inner">
+      {% if section.settings.title != blank %}
+        <h1 class="page-faq__title">{{ section.settings.title }}</h1>
+      {% endif %}
+
+      {% if section.settings.show_search %}
+        <div class="page-faq__search">
+          <label class="visually-hidden" for="faq-search-{{ section.id }}">Search FAQ</label>
+          <input
+            class="page-faq__search-input"
+            id="faq-search-{{ section.id }}"
+            type="search"
+            placeholder="{{ section.settings.search_placeholder | default: 'Search questions' | escape }}"
+            autocomplete="off"
+            data-faq-search
+          >
+          <span class="page-faq__search-icon" aria-hidden="true">⌕</span>
+        </div>
+      {% endif %}
+
+      {% assign topic_labels = section.settings.topic_labels | default: 'Orders,Product,Fit,Care,Policies' | split: ',' %}
+      {% assign topic_ids = section.settings.topic_ids | default: 'orders,product,fit,care,policies' | split: ',' %}
+      <nav class="page-faq__topics" aria-label="Jump to FAQ topic" data-faq-topics>
+        {% for label in topic_labels %}
+          {% assign tid = topic_ids[forloop.index0] | strip | handleize %}
+          {% if tid == blank %}{% assign tid = label | strip | handleize %}{% endif %}
+          <a href="#faq-{{ tid }}">{{ label | strip }}</a>
+        {% endfor %}
+      </nav>
+    </div>
+  </div>
+
+  <div class="page-faq__body" data-faq-root>
+    <p class="page-faq__empty" data-faq-empty hidden>No matching questions. Try another search or jump a topic above.</p>
+
+    {% assign rendered_categories = '' %}
+    {% for block in section.blocks %}
+      {% if block.type == 'faq_item' %}
+        {% assign cat = block.settings.category | strip %}
+        {% assign cat_key = cat | downcase | append: '|' %}
+        {% unless rendered_categories contains cat_key %}
+          {% assign rendered_categories = rendered_categories | append: cat_key %}
+          {% assign cat_slug = block.settings.category_slug | strip | handleize %}
+          {% if cat_slug == blank %}
+            {% assign cat_slug = cat | handleize %}
+          {% endif %}
+
+          <section class="page-faq__cat" id="faq-{{ cat_slug }}" data-faq-cat {{ block.shopify_attributes }}>
+            <h2 class="page-faq__cat-title">{{ cat }}</h2>
+            <div class="page-faq__list" data-faq-accordion>
+              {% for item in section.blocks %}
+                {% if item.type == 'faq_item' and item.settings.category == cat %}
+                  <details class="page-faq__item" data-faq-item {{ item.shopify_attributes }}>
+                    <summary class="page-faq__trigger" role="button" aria-expanded="false">
+                      <span class="page-faq__question">{{ item.settings.question }}</span>
+                      <span class="page-faq__icon" aria-hidden="true"></span>
+                    </summary>
+                    <div class="page-faq__answer">
+                      {{ item.settings.answer }}
+                    </div>
+                  </details>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </section>
+        {% endunless %}
+      {% endif %}
+    {% endfor %}
   </div>
 </section>
 
-{% assign categories = section.settings.categories | split: ',' %}
-{% for block in section.blocks %}
-  {% if block.type == 'category' %}
-    <section class="section" id="faq-{{ block.settings.slug }}" {{ block.shopify_attributes }}>
-      <div class="section__inner section__inner--narrow">
-        <h2 class="page-faq__category-title h2-standard">{{ block.settings.category_title }}</h2>
-      </div>
-    </section>
-  {% elsif block.type == 'faq_item' %}
-    {%- comment %} Rendered within the accordion below {% endcomment -%}
-  {% endif %}
-{% endfor %}
-
-{% comment %} Render FAQ items grouped by category {% endcomment %}
-{% assign current_category = '' %}
-{% assign category_items = '' %}
-{% assign all_items_for_schema = '' %}
-
-{% for block in section.blocks %}
-  {% if block.type == 'faq_item' %}
-    <div class="page-faq__item-wrapper" {{ block.shopify_attributes }} style="display:none"
-      data-question="{{ block.settings.question | escape }}"
-      data-answer="{{ block.settings.answer | escape }}"
-      data-category="{{ block.settings.category | escape }}">
-    </div>
-  {% endif %}
-{% endfor %}
-
-{% comment %} Group and render by category using the accordion pattern {% endcomment %}
-{% assign rendered_categories = '' %}
-{% for block in section.blocks %}
-  {% if block.type == 'faq_item' %}
-    {% unless rendered_categories contains block.settings.category %}
-      {% assign rendered_categories = rendered_categories | append: block.settings.category | append: '|' %}
-
-      <section class="section{% cycle '', ' section--cream' %}" id="faq-category-{{ forloop.index }}">
-        <div class="section__inner section__inner--narrow">
-          <h2 class="page-faq__category-heading h2-standard">{{ block.settings.category }}</h2>
-          <div class="faq" data-faq-accordion>
-            <div class="faq__inner">
-              <div class="faq__list">
-                {% for item in section.blocks %}
-                  {% if item.type == 'faq_item' and item.settings.category == block.settings.category %}
-                    <details class="faq__item" data-faq-item {{ item.shopify_attributes }}>
-                      <summary class="faq__trigger" role="button" aria-expanded="false">
-                        <span class="faq__question">{{ item.settings.question }}</span>
-                        <span class="faq__icon" aria-hidden="true"></span>
-                      </summary>
-                      <div class="faq__body">
-                        {{ item.settings.answer }}
-                      </div>
-                    </details>
-                  {% endif %}
-                {% endfor %}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    {% endunless %}
-  {% endif %}
-{% endfor %}
-
-{% comment %} FAQPage structured data for all items {% endcomment %}
+{% comment %} FAQPage structured data {% endcomment %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
+    {%- assign schema_first = true -%}
     {%- for block in section.blocks -%}
       {%- if block.type == 'faq_item' -%}
+        {%- unless schema_first -%},{%- endunless -%}
         {
           "@type": "Question",
           "name": {{ block.settings.question | json }},
@@ -94,7 +96,8 @@
             "@type": "Answer",
             "text": {{ block.settings.answer | strip_html | json }}
           }
-        }{% unless forloop.last %},{% endunless %}
+        }
+        {%- assign schema_first = false -%}
       {%- endif -%}
     {%- endfor -%}
   ]
@@ -102,69 +105,218 @@
 </script>
 
 <style>
+  .page-faq { background: #fff; }
+  .page-faq__head {
+    padding: 72px 40px 28px;
+    text-align: center;
+    background: #fff;
+  }
+  .page-faq__head-inner {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  /* Help-family page H1 — not homepage hero */
   .page-faq__title {
-    font-size: var(--type-hero-size);
-    font-weight: var(--type-hero-weight);
-    line-height: var(--type-hero-leading);
-    letter-spacing: var(--type-hero-tracking);
+    font-size: clamp(32px, 4vw, 44px);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.028em;
     text-transform: none;
-    color: var(--text-primary);
-    text-align: center;
-    margin: 0 0 var(--space-3);
+    color: var(--text-primary, #1c1916);
+    margin: 0 0 28px;
   }
 
-  .page-faq__subtitle {
-    font-size: var(--text-md);
-    color: var(--text-body);
+  .page-faq__search {
+    max-width: 420px;
+    margin: 0 auto 28px;
+    position: relative;
+  }
+  .page-faq__search-input {
+    width: 100%;
+    border: 0;
+    border-bottom: 1px solid #d6cfc0;
+    background: transparent;
+    padding: 12px 28px 12px 0;
+    font-size: 16px;
+    color: var(--text-primary, #1c1916);
+    font-family: inherit;
+    outline: none;
+    border-radius: 0;
+  }
+  .page-faq__search-input::placeholder { color: #9a9182; }
+  .page-faq__search-input:focus { border-bottom-color: #1c1916; }
+  .page-faq__search-icon {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9a9182;
+    font-size: 14px;
+    pointer-events: none;
+  }
+
+  .page-faq__topics {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px 28px;
+    padding: 0 0 8px;
+    border-bottom: 1px solid #e8e2d8;
+  }
+  .page-faq__topics a {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #6b645a;
+    text-decoration: none;
+    padding: 10px 0 12px;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+  }
+  .page-faq__topics a:hover,
+  .page-faq__topics a.is-active {
+    color: #1c1916;
+    border-bottom-color: #1c1916;
+    text-decoration: none;
+  }
+
+  .page-faq__body {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 48px 40px 72px;
+  }
+  .page-faq__empty {
     text-align: center;
-    line-height: var(--leading-relaxed);
+    padding: 32px 0;
+    color: #6b645a;
+    font-size: 15px;
+  }
+
+  .page-faq__cat {
+    margin: 0 0 40px;
+    scroll-margin-top: 120px;
+  }
+  .page-faq__cat:last-child { margin-bottom: 0; }
+  .page-faq__cat.is-empty { display: none; }
+  .page-faq__cat-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #1c1916;
+    margin: 0 0 8px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e8e2d8;
+  }
+
+  .page-faq__item {
+    border: 0;
+    border-bottom: 1px solid #e8e2d8;
+    border-radius: 0;
+    background: transparent;
     margin: 0;
+    padding: 0;
   }
-
-  .page-faq__category-heading {
-    font-size: var(--type-section-size);
-    font-weight: var(--type-section-weight);
-    line-height: var(--type-section-leading);
-    letter-spacing: var(--type-section-tracking);
-    text-transform: none;
-    color: var(--text-primary);
-    margin: 0 0 var(--space-6);
+  .page-faq__item[hidden] { display: none; }
+  .page-faq__trigger {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    padding: 18px 0;
+    font-size: 15px;
+    font-weight: 500;
+    color: #1c1916;
+    list-style: none;
+    min-height: 44px;
   }
-
-  .page-faq__category-heading::before {
-    content: '';
-    display: block;
-    width: 32px;
-    height: 3px;
-    background: var(--accent-primary);
-    margin-bottom: var(--space-4);
-    border-radius: 2px;
+  .page-faq__trigger::-webkit-details-marker { display: none; }
+  .page-faq__trigger::marker { display: none; }
+  .page-faq__icon::after {
+    content: "+";
+    font-size: 18px;
+    font-weight: 300;
+    color: #8a8a8a;
   }
+  .page-faq__item[open] .page-faq__icon::after { content: "\2212"; }
+  .page-faq__answer {
+    padding: 0 0 18px;
+    font-size: 14px;
+    color: #4a4a4a;
+    line-height: 1.7;
+  }
+  .page-faq__answer a {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .page-faq__answer p { margin: 0 0 10px; }
+  .page-faq__answer p:last-child { margin-bottom: 0; }
+  .page-faq__answer ul { margin: 8px 0 0; padding: 0 0 0 18px; }
+  .page-faq__answer li { margin: 0 0 4px; }
 
   @media (max-width: 768px) {
-    .page-faq__title {
-      font-size: var(--text-3xl);
-    }
-
-    .page-faq__category-heading {
-      font-size: var(--text-xl);
-    }
+    .page-faq__head { padding: 48px 16px 20px; }
+    .page-faq__title { font-size: clamp(28px, 8vw, 36px); margin-bottom: 22px; }
+    .page-faq__body { padding: 36px 16px 56px; }
+    .page-faq__topics { gap: 4px 18px; }
   }
 </style>
 
 <script>
   (function() {
-    document.querySelectorAll('[data-faq-accordion]').forEach(function(accordion) {
+    var root = document.querySelector('#shopify-section-{{ section.id }}');
+    if (!root) return;
+
+    var input = root.querySelector('[data-faq-search]');
+    var empty = root.querySelector('[data-faq-empty]');
+    var cats = Array.prototype.slice.call(root.querySelectorAll('[data-faq-cat]'));
+    var topics = Array.prototype.slice.call(root.querySelectorAll('[data-faq-topics] a'));
+
+    function filter() {
+      var q = input ? (input.value || '').trim().toLowerCase() : '';
+      var any = false;
+      cats.forEach(function(cat) {
+        var items = cat.querySelectorAll('[data-faq-item]');
+        var catAny = false;
+        items.forEach(function(item) {
+          var text = item.textContent.toLowerCase();
+          var show = !q || text.indexOf(q) !== -1;
+          item.hidden = !show;
+          if (show) catAny = true;
+        });
+        cat.classList.toggle('is-empty', !catAny);
+        if (catAny) any = true;
+      });
+      if (empty) {
+        if (any) empty.setAttribute('hidden', '');
+        else empty.removeAttribute('hidden');
+      }
+    }
+
+    if (input) input.addEventListener('input', filter);
+
+    topics.forEach(function(a) {
+      a.addEventListener('click', function() {
+        topics.forEach(function(x) { x.classList.remove('is-active'); });
+        a.classList.add('is-active');
+      });
+    });
+
+    root.querySelectorAll('[data-faq-accordion]').forEach(function(accordion) {
       var items = accordion.querySelectorAll('[data-faq-item]');
       items.forEach(function(item) {
         item.addEventListener('toggle', function() {
+          var trigger = item.querySelector('.page-faq__trigger');
           if (item.open) {
             items.forEach(function(other) {
               if (other !== item && other.open) other.open = false;
             });
-            item.querySelector('.faq__trigger').setAttribute('aria-expanded', 'true');
-          } else {
-            item.querySelector('.faq__trigger').setAttribute('aria-expanded', 'false');
+            if (trigger) trigger.setAttribute('aria-expanded', 'true');
+          } else if (trigger) {
+            trigger.setAttribute('aria-expanded', 'false');
           }
         });
       });
@@ -180,13 +332,32 @@
       "type": "text",
       "id": "title",
       "label": "Page title",
-      "default": "Frequently Asked Questions"
+      "default": "FAQ"
     },
     {
-      "type": "textarea",
-      "id": "subtitle",
-      "label": "Subtitle",
-      "default": "Everything you need to know about your Performance Skins."
+      "type": "checkbox",
+      "id": "show_search",
+      "label": "Show search",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "search_placeholder",
+      "label": "Search placeholder",
+      "default": "Search questions"
+    },
+    {
+      "type": "text",
+      "id": "topic_labels",
+      "label": "Topic labels (comma-separated)",
+      "default": "Orders,Product,Fit,Care,Policies",
+      "info": "Hairline jump row. Match category_slug on items."
+    },
+    {
+      "type": "text",
+      "id": "topic_ids",
+      "label": "Topic IDs (comma-separated)",
+      "default": "orders,product,fit,care,policies"
     }
   ],
   "blocks": [
@@ -197,8 +368,14 @@
         {
           "type": "text",
           "id": "category",
-          "label": "Category",
-          "default": "General"
+          "label": "Category title",
+          "default": "Orders & shipping"
+        },
+        {
+          "type": "text",
+          "id": "category_slug",
+          "label": "Category slug (for #anchors)",
+          "info": "e.g. orders · product · fit · care · policies"
         },
         {
           "type": "text",
