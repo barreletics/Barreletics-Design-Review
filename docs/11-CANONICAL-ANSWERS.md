@@ -76,6 +76,28 @@ Below 7, take Medium. Never write a blanket "between sizes? size up."
 > Too tight or toe pressure → the size is likely too small; move up one size.
 > Too loose or shifting → likely too large; move down one size. Already in M? A thin sock underneath gives a snugger fit without affecting grip.
 
+**CA-08b · One tight spot — the blow dryer trick · SUPPORT CHANNEL ONLY** *(Andrew letter 2026-08-12)*
+
+🚫 **Never publish on the size guide, the FAQ, a product page, or any pre-purchase surface.** Andrew's call, and it's the right one: to a shopper who hasn't bought yet, "you may need a hairdryer" is a warning label sitting next to the claim that the fit works for nearly everyone. To someone who already owns the pair and writes in about a tight toe box, the identical sentence is insider help from the manufacturer and it saves the return. Same words, opposite effect — timing is the whole thing.
+
+**Lives in:** `helpscout-kb/Barreletics_Email_Template_Master.md` §2.7 · `manychat-kb/09-faq-fit-sizing.md`. Email and DM replies only.
+
+**Send only when** the customer already owns the pair, the size is otherwise right, and it's the **toe box specifically**. Whole pair small → exchange, not heat.
+
+Order of operations matters. **Always offer the free exchange first.** The heat trick is for a single stubborn spot on a pair that is otherwise the right size — never a workaround for the wrong size.
+
+> We manufacture these ourselves, and the fit works for nearly everyone — but feet vary, and occasionally a pair just isn't right.
+> If the size is right and it's only the toe box running tight: warm that spot with a blow dryer for about 30 seconds, keeping the dryer moving rather than holding it in one place, then gently stretch the material with your hand. Warm, not hot.
+
+Guardrails, always attached:
+- **Exchange first.** Whole pair feels small → free size exchange, not heat.
+- **Keep the dryer moving.** Never park it on one spot.
+- **Warm, not hot**, and off the foot — stretch by hand, not while wearing.
+
+**Does not contradict CA-03 or CA-04.** They don't change from wearing or washing; this is a deliberate one-time adjustment at a temperature you never reach in a class. Do not "reconcile" these by deleting either one.
+
+⚠️ **"Fits 98% of feet" is not approved for publication** pending Andrew's call — a hard percentage invites "based on what?" and this repo has already been through one fabricated-stat sweep. Approved framing is the qualitative version above.
+
 **CA-09 · Placement**
 > The ball of your foot sits where your foot meets your toes. Gently tug the top edge at the ankle.
 

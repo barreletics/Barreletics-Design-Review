@@ -156,6 +156,24 @@ Of course, if you’d still prefer to proceed with the return, we’re happy to 
 
 ---
 
+### 2.7  Sizing — Save the return (tight toe box, the blow dryer trick)
+
+**Support channel only.** Do not put this on the size guide, the FAQ, or any product page — see `docs/11-CANONICAL-ANSWERS.md` CA-08b. Before purchase it reads as a warning label. After purchase it reads as insider help.
+
+**Send only when:** the customer already owns the pair, says it's tight in the **toe box specifically**, and the size is otherwise right. If the whole pair feels small, use **2.5** and exchange instead.
+
+Hi {%customer.firstName,fallback=there%},
+
+Since we manufacture these ourselves, we've picked up a trick for exactly this.
+
+First things first though — if the whole pair feels small, let's just exchange it. That's free and it's the better fix, so reply with your usual shoe size and I'll set it up.
+
+But if the size is right and it's only the toe box that's snug, try this: warm that spot with a blow dryer for about 30 seconds, keeping the dryer moving rather than holding it in one place. Once it's warm, gently stretch the material with your hand. Warm is all you need — not hot — and do it with them off your foot.
+
+That usually opens up the spot that's bothering you. If it doesn't, the exchange offer stands.
+
+---
+
 # 3. Returns & Exchanges
 
 ### 3.1  Returns — Portal link
