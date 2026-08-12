@@ -604,7 +604,7 @@ This entry also re-asserts the **discipline split retired 2026-08-02 under P-003
 
 **Decision:** One-off merchandising uses a **Theme settings product picker** (`one_off_product`) as the single gate for (1) header nav under Grippy Shoes, (2) quiet PDP text link under ATC, and (3) All Variants One-Offs tab. No Admin Navigation item. No variant-metafield gate for show/hide.
 
-Templates: `product.one-off-closed.json` / `product.one-off-open.json` (Admin suffixes `one-off-closed` / `one-off-open`). Buy box uses shoe-photo color tiles and hides sold-out options. One-Offs tab groups **Available now** / **Earlier one-offs** with a 2-row collapse and progressive **See more**.
+Templates: `product.one-off-closed.json` / `product.one-off-open.json` (Admin suffixes `one-off-closed` / `one-off-open`). Buy box uses shoe-photo color tiles and hides sold-out options. One-Offs tab: **single grid** — available first, then sold-out (no Earlier band); 2-row collapse + progressive **See more** (forward update 2026-08-10).
 
 Lean one-off PDP spine keeps brand education for cold traffic (features, reviews, guarantee, FAQ) and drops Closed Sole sock-era / sock-math / TRANSFORM stack. Cross-ref **P-011** (`docs/10-DECISIONS.md`).
 
@@ -613,6 +613,60 @@ Lean one-off PDP spine keeps brand education for cold traffic (features, reviews
 **Impact:** `config/settings_schema.json` One-off colors group; snippets `one-off-nav-item` / `one-off-quiet-link`; `header.liquid`; `pdp-buy-box.liquid`; `variant-grid` + `variant-grid-panel`; page-template-registry; `planning/one-off-surfaces.md`.
 
 **Status:** Approved — Owner direction 2026-08-10 (M4 Visual QA)
+
+---
+
+### D-052: One-Off Featured Drop — One Picker at a Time
+**Decided:** 2026-08-10 | **Severity:** Medium
+
+**Decision:** Keep the **single** Theme settings product picker as the featured one-off. Feature Open **or** Closed in nav — not both. Second sole product may stay Active in Admin with its own PDP template but stays out of nav until selected in Theme settings.
+
+**Rejected for now:**
+- Mixing Open + Closed colorways into one product (badge/inventory/template complexity).
+- Third-level nav under One-off (mobile UX).
+- Building dual nav Liquid until Andrew confirms both drops must be menu-live at once.
+
+**Future pattern (documented only):** two sibling Grippy children + two pickers; quiet link remains one featured product. Cross-ref **P-014**.
+
+**Rationale:** Owner — keep one-offs simple and special; Theme settings gate is already the organized place for a sitewide featured drop.
+
+**Impact:** Docs only this turn — `docs/10-DECISIONS.md` P-014 · `planning/one-off-surfaces.md` · `docs/08-theme-settings-reference.md`. No Liquid until dual-nav letter.
+
+**Status:** Approved — Owner strategy lock 2026-08-10
+
+---
+
+### D-053: One Canonical Answer Source; Sizing, Cleanliness, and Longevity Language Fixed
+**Decided:** 2026-08-12 | **Severity:** High
+
+**Decision:** `docs/11-CANONICAL-ANSWERS.md` becomes the single source for customer-facing answers. Every page, email, ManyChat reply, and ad copies from it verbatim rather than carrying its own wording. Change the answer there first, then propagate.
+
+**Facts settled by owner letter this date:**
+
+| Item | Ruling |
+|---|---|
+| Size chart | **M = W 5.5–7.5 · Kids' 2–5** / **L = W 7.5–11 · Men's up to 10.5** — publish all four columns |
+| Large lower bound | **7.5**, not 8. 7.5 sits in both rows; width is the tiebreaker |
+| Between sizes | Width decides. Wide at 7–7.5 → L · narrow at 7.5–8 → M · **8.5+ → L always** (length governs) |
+| Foot Length column | **Removed.** Repo-only, never on the live site, traceable to no source. We publish shoe size only |
+| "Patented" | **Accurate and approved.** Do not purge — an earlier reading of P-008 wrongly treated it as unsupported |
+| Cleanliness | Non-porous, **wipes clean**; nothing soaks in and lingers like fabric. Never claim the material acts on bacteria |
+| Longevity | Expectation first ("depends how you wear them"), then 1,000 classes and year four. **"18+ months" is internal only** |
+| 195 countries / FedEx ICP | **Real.** Stripping it from the FAQ earlier this date was an error; restored |
+| Apparel tee | Steer clear of the antimicrobial fabric claim |
+| Blow dryer heat-stretch | **HelpScout saved reply only.** Not on any page, not in ManyChat. Exchange offered first |
+
+**Retired — never reintroduce:** "antimicrobial" (any form) · bacteria/hygienic claims about our own material · "hypoallergenic" (carries D-019) · "conforms over the first few wears" and every break-in variant · M 5–8 / L 8.5–11 · L 8–11 · M W 5–7.5 Men 6–8 / L W 8–10 Men 8.5–11 · blanket "between sizes? size up" · "Small is coming soon" · "18+ months" · "gentle environment."
+
+**Rationale:** Owner 2026-08-12: "make one global everything you need to know section rather than manage individually," then "once we update and approve you have to change the language site wide if the same info is on other pages." Per-page copy management had produced four different Large ranges across the site and the docs, three different size charts, and product claims the owner had never approved. A single source with a propagation map is the only structure that prevents recurrence.
+
+**Notable finding:** `docs/09-PRODUCT-KNOWLEDGE.md` already carried the correct chart and width rule. The website had drifted from the operating system, not the reverse — which is the argument for the canonical source being authoritative over any individual template.
+
+**Impact:** `docs/11-CANONICAL-ANSWERS.md` (new authority) · `docs/09-PRODUCT-KNOWLEDGE.md` · `manychat-kb/03,05,06,09,10` · `helpscout-kb/Barreletics_Email_Template_Master.md` (2.1, 2.2, 2.7 new, 4.4, 4.5, 4.9) · `shopify-build/templates/page.faq.json` · size-chart templates + both aliases · `sections/page-size-guide.liquid`. Still to propagate: six `product*.json`, `pdp-buy-box.liquid` (~L409 hardcoded size range), `page.technology.json`, `page.grip-comparison.json`, `collection.apparel.json`, `collection.json`, `collection.open-sole.json`, `page.about.json`, `page.our-story.json`.
+
+**Open:** Kids' 2–5 versus "Youth 4–6" at `09-PRODUCT-KNOWLEDGE.md` line 84 — unresolved, do not quote a youth number. Shopify Coperni variant titles appear to encode "L (W 8-11)"; if so that's an Admin rename, not a repo fix.
+
+**Status:** Approved — owner letters 2026-08-12. Size guide signed same date; FAQ awaiting sign-off.
 
 ---
 

@@ -30,6 +30,10 @@ Or try Dark Grey, Hot Coral, or Blue — they naturally fit tighter than Light G
 
 ## "How do I figure out my correct size before ordering?"
 
-Start with your regular shoe size. If between sizes or narrow feet, we suggest going up half a size and using thin socks to fine-tune.
+Start with your regular shoe size. **M fits women's 5.5–7.5, L fits women's 7.5–11 and men up to 10.5.**
+
+At the 7.5 overlap, width decides — **don't just round up.** Wide foot at 7 or 7.5 → Large. Narrow foot at 7.5 or 8 → Medium. At 8.5 and above, Large regardless of width.
+
+> ⛔ **Retired 2026-08-12:** ~~"going up half a size and using thin socks to fine-tune"~~ — there are no half sizes, and the rule is width, not rounding up.
 
 Check the size chart or ask for a personal recommendation before ordering.

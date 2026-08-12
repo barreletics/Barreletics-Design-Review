@@ -87,7 +87,7 @@ Hi {%customer.firstName%},
 
 Here's our fit guide: https://barreletics.com/pages/performance-skins-size-chart
 
-Sizing runs M (women's 5.5–7.5) and L (women's 8–10.5 / men's up to 10.5). Tell us your usual shoe size if you'd like a recommendation.
+Sizing runs M (women's 5.5–7.5, kids' 2–5) and L (women's 7.5–11, men's up to 10.5). Tell us your usual shoe size if you'd like a recommendation.
 
 
 ---
@@ -95,10 +95,11 @@ Sizing runs M (women's 5.5–7.5) and L (women's 8–10.5 / men's up to 10.5). T
 ### 2.2  Sizing — Between sizes
 Hi {%customer.firstName,fallback=there%},
 
-If you're between a 7.5 and an 8, foot width is the deciding factor:
+Foot width is the deciding factor, not rounding up:
 
-- Wider foot → size up to the Large
-- Narrower foot → size down to the Medium
+- Wide foot at 7 or 7.5 → size up to the Large
+- Narrow foot at 7.5 or 8 → size down to the Medium
+- 8.5 or above → stay in the Large regardless of width; you need the length
 
 Let us know which sounds like you and we'll help from there.
 
@@ -259,8 +260,9 @@ Performance Skins are injection-molded from a proprietary soft synthetic rubber 
 
 - Silicone-free
 - Latex-free
-- Skin-safe and hypoallergenic
+- Skin-safe and non-toxic
 - No hard plastics
+- Non-porous, so it wipes clean — nothing soaks in the way it does in fabric
 
 ---
 
@@ -269,7 +271,7 @@ Hi {%customer.firstName,fallback=there%},
 
 It depends on the person — how often you wear them, how you wear them, and how you care for them. Just like shoes, some people are harder on them than others.
 
-That said, in a studio setting it's a gentle environment, and they hold up beautifully. One of our customers recently passed 1,000 classes on a single pair, and another is on year four of theirs.
+That said, used for what they're designed for — Pilates, barre, reformer, Lagree, yoga — they hold up beautifully. One of our customers recently passed 1,000 classes on a single pair, and another is on year four of theirs.
 
 Care is simple: warm soapy water, air dry, and pull from the top of the foot (not the straps) when putting them on.
 
@@ -318,7 +320,7 @@ Same secure grip class one as class three hundred.
 ### 4.9  Product — Allergy and skin sensitivity
 Hi {%customer.firstName,fallback=there%},
 
-Performance Skins are made from a proprietary soft synthetic rubber blend — designed to be skin-safe and hypoallergenic:
+Performance Skins are made from a proprietary soft synthetic rubber blend — designed to be skin-safe and non-toxic:
 
 - No silicone
 - No latex

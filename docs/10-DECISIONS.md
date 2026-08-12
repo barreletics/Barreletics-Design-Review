@@ -538,12 +538,52 @@ Decision: Structured, injection-molded sole (not printed dots on fabric).
 ```
 Source: docs/09-PRODUCT-KNOWLEDGE.md, Shopify product descriptions
 
-### P-010: Kids Size — Undocumented
+### P-010: Kids Size — Partly resolved 2026-08-12
 ```
-Decision: Water Shoes has 6 Kids variants in Shopify at 0 inventory. Not documented anywhere on live site or in any copy.
+Decision: Water Shoes has 6 dedicated Kids variants in Shopify at 0 inventory. Not documented anywhere on live site or in any copy.
 Status: Data quality flag — likely discontinued or placeholder.
+
+UPDATED 2026-08-12 (owner): Distinct from the dedicated variants, Kids' US 2–5
+fit MEDIUM, and that column has always been published on the live size chart.
+It belongs on the size chart. See P-015 / D-053.
+STILL OPEN: 09-PRODUCT-KNOWLEDGE.md line 84 says "Youth 4–6 wear Medium," which
+does not match Kids' 2–5. Do not quote a youth number until Andrew resolves it.
 ```
-Source: docs/09-PRODUCT-KNOWLEDGE.md (Data Quality Flags)
+Source: docs/09-PRODUCT-KNOWLEDGE.md (Data Quality Flags), owner letter 2026-08-12
+
+### P-015: Canonical Answers Source — sizing, cleanliness, longevity (2026-08-12)
+```
+AUTHORITY: docs/11-CANONICAL-ANSWERS.md is the single source for customer-facing
+answers. Pages, email, ManyChat, and ads copy from it verbatim. Change it there
+first, then propagate. Full record: planning/10-decision-log.md → D-053.
+
+SIZE CHART (publish all four columns):
+  M = Women's 5.5–7.5 · Kids' 2–5
+  L = Women's 7.5–11 · Men's up to 10.5
+  Large starts at 7.5, NOT 8. 7.5 sits in both rows; width is the tiebreaker.
+
+BETWEEN SIZES — width decides, never "size up":
+  Wide foot at 7 or 7.5 → L
+  Narrow foot at 7.5 or 8 → M
+  8.5 and above → L always, regardless of width (length governs)
+
+APPROVED: "patented" (accurate — do not purge) · non-porous / wipes clean ·
+  skin-safe and non-toxic, no latex, no silicone · 195 countries via FedEx
+  International Connect Plus (real) · longevity = expectation first, then
+  1,000 classes and year four
+
+RETIRED — never reintroduce:
+  antimicrobial (any form) · any claim our material resists/repels/kills
+  bacteria · "hygienic" · hypoallergenic (D-019) · "conforms over the first few
+  wears" and all break-in variants · Foot Length column · M 5–8 / L 8.5–11 ·
+  L 8–11 · M W 5–7.5 Men 6–8 / L W 8–10 Men 8.5–11 · blanket "size up" ·
+  "Small is coming soon" · "18+ months" (internal floor only) ·
+  "gentle environment" · antimicrobial fabric on the Apparel tee
+
+SUPPORT-ONLY: the blow dryer heat-stretch tip is a HelpScout saved reply
+  (template 2.7). Never on a page, never in ManyChat. Offer the exchange first.
+```
+Source: owner letters 2026-08-12 · docs/11-CANONICAL-ANSWERS.md · planning/10-decision-log.md D-053
 
 ### P-011: One-Off Colors — Surfaces + Lean PDP (updated 2026-08-10)
 ```
@@ -559,15 +599,36 @@ Products / Admin templates:
   one-off-colors-open-sole   → theme template one-off-open
 
 Buy box (one-off PDPs): shoe-photo color pickers; hide sold-out options.
-All Variants One-Offs tab: "Available now" then "Earlier one-offs"; 2-row start; See more (+1 row).
+All Variants One-Offs tab: single grid — available first, then sold-out (no separate Earlier band).
 
-Lean PDP spine (cold traffic — keep brand, drop sock-era stack):
-  buy-box → value-strip → features → variant-grid → reviews → guarantee → juicer → FAQ → sticky.
+PDP spine: Closed Sole quality twin (no sock-era / TRANSFORM / sock-math). See planning/one-off-surfaces.md.
 
-Pricing remains $82.00 tier. Closed one-off may be Active on M4 QA; Open often Draft until stocked.
+Pricing remains $82.00 tier.
+Featured-drop strategy → **P-014** / **D-052** (one picker at a time).
 Cross-ref: D-051 · planning/one-off-surfaces.md · page-template-registry.md
 ```
 Source: Owner direction 2026-08-10 (M4 QA); planning/one-off-surfaces.md
+
+### P-014: One-Off Featured Drop — Single Theme Picker (2026-08-10)
+```
+Decision: Feature ONE one-off at a time via Theme settings → One-off colors → product picker.
+
+RULES:
+  - Featured = the single `one_off_product` picker (nav + quiet ATC link + core PDP One-Offs tab).
+  - Both sole products may exist in Admin (Closed + Open one-off). Only the featured one appears in nav.
+  - Flip the picker when the drop changes (Open OR Closed — not both in nav).
+  - Do NOT mix Open + Closed variants into one Shopify product for now
+    (inventory, template suffix, ATC, and sole badge all get messier).
+  - Do NOT build a third-level nav (Grippy → One-off → Open/Closed) — messy on mobile.
+
+FUTURE (not built — needs Andrew confirm before Liquid):
+  If both drops must be live in the menu at once → two sibling links under Grippy
+  ("One-off · Open" / "One-off · Closed"), each with its own picker. No third layer.
+  Quiet link stays a single "this week’s" featured product.
+
+Cross-ref: P-011 · D-051 · D-052 · planning/one-off-surfaces.md
+```
+Source: Owner direction 2026-08-10 (strategy lock after M4 one-off QA)
 
 ### P-012: Pool Positioning RETIRED — 2026-08-07
 ```

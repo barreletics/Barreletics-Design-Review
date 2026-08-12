@@ -109,7 +109,7 @@ Source: docs/05-PDP-ARCHITECTURE.md (line 251), docs/08-LIVE-SITE-COPY-AUDIT.md 
 - Skin-Safe — No latex. No silicone.
 - Natural toe splay — better balance and control
 - Second-skin fit — ultra-light, flexible, durable
-- Antimicrobial & sweat-resistant
+- Non-porous — wipes clean, nothing soaks in like fabric *(replaced "Antimicrobial & sweat-resistant" 2026-08-12)*
 - Made in USA
 - Injection-molded/structured sole
 - Full-bottom coverage (heel and foot fully covered)
@@ -120,7 +120,7 @@ Source: docs/08-LIVE-SITE-COPY-AUDIT.md (Global Benefit Pills, URL 02), manychat
 ```
 01 · Reformer-ready — Tested on Megaformer & reformer carriages, hardwood barre studios, and yoga mats.
 02 · No twist — Your foot can't move inside it. No bunch, no reset.
-03 · Sweat-ready — Antimicrobial, sweat-resistant material stays fresh.
+03 · Sweat-ready — Non-porous surface wipes clean; nothing soaks in like fabric.
 04 · Rinse & reuse — Warm soapy water, air dry. No machine washing. No grip degradation.
 05 · Skin-safe — No latex, no silicone. Proprietary grip material. Made in USA.
 06 · Barefoot feel — Natural toe articulation. Move freely — without the slip.
@@ -135,9 +135,9 @@ After Class: When you wipe down your equipment, give your Barreletics a quick wi
 
 Regular Cleaning: Warm soapy water. Rinse thoroughly. Air dry. No machine washing. No special treatment needed.
 
-Why So Easy: Unlike grip socks that absorb sweat and hold bacteria, the material is antimicrobial and sweat-resistant. A damp cloth or quick rinse keeps them fresh between washes.
+Why So Easy: The material is non-porous, so it wipes clean — nothing soaks in and lingers the way it does in fabric. A damp cloth or quick rinse keeps them fresh. Some customers use the dishwasher; you don't need to.
 
-Lifespan: Most customers use the same pair for years — some 6+ days/week for over 3 years with zero issues. Never loses shape. Never loses grip.
+Lifespan: It depends on how you wear them — how often, how hard you go, how you care for them. Just like shoes, some people are harder on them than others. Used for what they're designed for — Pilates, barre, reformer, Lagree, yoga — they hold up beautifully. One customer recently passed 1,000 classes on a single pair. Another is on year four. Never loses shape. Never loses grip.
 ```
 Source: manychat-kb/06-care-and-cleaning.md, docs/08-LIVE-SITE-COPY-AUDIT.md (URL 07)
 
@@ -287,9 +287,11 @@ CURRENT PRODUCTION: $74.00
 Source: docs/08-LIVE-SITE-COPY-AUDIT.md (URL 06)
 
 #### Variants
-**Sizes:** M (W 5.5–7.5) / L (W 8–11) / Kids
+**Sizes:** M (W 5.5–7.5, Kids' 2–5) / L (W 7.5–11, Men's up to 10.5) / Kids variants
 
-**CONFLICT:** The live site and all documentation reference only M and L sizes. However, Shopify contains 6 Kids variants (DarkGrey, Black, Blue, Bright Yellow, White, LightGrey) — all at 0 inventory. Kids size is undocumented in any site copy or size chart.
+**RESOLVED 2026-08-12 (Andrew):** Large starts at **7.5**, not 8. Kids' 2–5 fit Medium and that column belongs on the published size chart — it has always been on the live site.
+
+**REMAINING CONFLICT:** Shopify carries 6 separate Kids variants for this product (DarkGrey, Black, Blue, Bright Yellow, White, LightGrey), all at 0 inventory. That's distinct from "kids' 2–5 wear Medium." Unclear whether the Kids variants are a discontinued dedicated size or a duplicate of Medium. Also unresolved: line 84 of this doc says "Youth 4–6 wear Medium," which does not match Kids' 2–5.
 
 **Colors:** DarkGrey, Black, Blue, Bright Yellow, White, LightGrey, Coral  
 Source: Shopify catalog (gid://shopify/Product/4556276858983)
@@ -522,8 +524,8 @@ Source: docs/08-LIVE-SITE-COPY-AUDIT.md (URL 15)
 ```
 - Made in USA — every pair
 - Injection-molded / structured sole
-- Proprietary grip material (not silicone, not latex)
-- Antimicrobial
+- Patented / proprietary grip material (not silicone, not latex) — "patented" confirmed accurate 2026-08-12
+- Non-porous — wipes clean, nothing soaks in like fabric *(replaced "Antimicrobial" 2026-08-12)*
 - Sweat-resistant
 - Performance Skin material — stretches and conforms to foot
 - Durable — customers report 3–4+ years of daily use
@@ -566,7 +568,7 @@ BARRELETICS:
 - Grip after 6 months: Identical to day 1
 - Full-bottom coverage, structured sole
 - Moves with foot, never bunches
-- Antimicrobial, sweat-resistant
+- Non-porous, sweat-resistant — wipes clean *(replaced "Antimicrobial" 2026-08-12)*
 ```
 Source: docs/04-COMPONENT-LIBRARY.md (lines 412–458), manychat-kb/04-pricing.md, Barreletics_Research_Bible.md
 
@@ -581,15 +583,17 @@ Source: docs/04-COMPONENT-LIBRARY.md (lines 412–458), manychat-kb/04-pricing.m
 ```
 Source: manychat-kb/10-faq-general.md, docs/08-LIVE-SITE-COPY-AUDIT.md (URL 30 FAQ)
 
-### Hygiene Claims
+### Cleanliness Claims — REWRITTEN 2026-08-12 (owner letter)
 ```
-- Antimicrobial, sweat-resistant material
-- Does not hold onto moisture or bacteria like fabric
+- Non-porous — wipes clean; nothing soaks in and lingers the way it does in fabric
+- Sweat-resistant — sweat sits on the surface rather than absorbing
 - Latex- and silicone-free — no residue on shared equipment (Reformers, Megaformers)
-- Significantly more hygienic than grip socks
-- Grip socks absorb sweat and trap bacteria against foot with every workout
+- Contrast with fabric does the persuading: a sock absorbs and holds moisture; this doesn't
 ```
-Source: docs/08-LIVE-SITE-COPY-AUDIT.md (URL 30 FAQ — Beyond Grip Socks)
+
+> ⛔ **RETIRED — never reuse as source copy:** ~~"Antimicrobial"~~ · ~~"does not hold onto bacteria"~~ · ~~"significantly more hygienic than grip socks"~~ · ~~"grip socks trap bacteria against the foot"~~. The claim is about the **surface being wipeable**, never about the material acting on bacteria. Andrew 2026-08-12: "we might be able to say resist bacteria, but we just say because it's easy to wipe down."
+
+Source: docs/08-LIVE-SITE-COPY-AUDIT.md (URL 30 FAQ — Beyond Grip Socks), superseded by `docs/11-CANONICAL-ANSWERS.md` CA-02
 
 ### Medical & Sensitive Use Cases
 ```
