@@ -51,20 +51,35 @@
 
 **Owner sign-off** on M4 `187144929571` → `/pages/performance-skins-size-chart`.
 
-**Canonical sizing rule (Andrew letter 2026-08-12) — width decides:**
+**FORWARD UPDATE — same day, second Andrew letter 2026-08-12.** Large starts at **7.5, not 8**, and the chart publishes **four** columns. The 8–11 version below was signed earlier that afternoon and is superseded. Do **not** restore it.
+
+**Canonical chart (matches the live site):**
+
+| Size | Women's (US) | Men's (US) | Kids' (US) |
+|---|---|---|---|
+| **M** | 5.5–7.5 | — | **2–5** |
+| **L** | **7.5–11** | up to 10.5 | — |
+
+Kids' 2–5 has always been on the live site; the M4 build had dropped it. It stays.
+
+**Width decides at the 7.5 overlap** — 7.5 sits in both rows on purpose:
 
 | Case | Take |
 |---|---|
 | Below 7 | M |
-| Wide foot at 7 or 7.5 | **L** (size up) |
-| Narrow 8 | **M** (size down) |
+| Wide foot at 7 or 7.5 | **L** |
+| Narrow foot at 7.5 or 8 | **M** |
 | 8.5 and above | **L always** — length governs, regardless of width |
 
-Chart: **M = women's 5.5–7.5 · L = women's 8–11, men up to 10.5.** No small size.
+No small size.
 
-**RETIRED — never reintroduce:** M 5–8 / L 8.5–11 · "Between Sizes? Size Up." · "conforms slightly over the first few wears" · "conforms to your foot shape over the first few sessions" · snug-colors note telling people to size up.
+**Table columns are now Size · Women's · Men's · Kids'.** `foot_length` and `best_for` are removed from the schema, replaced by `mens_size` and `kids_size` with the rule in TE help text.
 
-**Also locked here:** Black credited alongside Light Grey as most forgiving · GEO block removed from this page (duplicated the fit tips above it) · foot-length column (8.5"–9.5" / 9.5"–10.5") retained but **unverified — no KB source**.
+⚠️ **Push order matters on this section.** Shopify validates JSON template block settings against the schema already on the theme, so pushing `page-size-guide.liquid` and the three templates in one command silently strips `mens_size` / `kids_size`. Push the section first, then the templates — or push twice and verify the Men's and Kids' cells aren't showing the dash fallback.
+
+**RETIRED — never reintroduce:** M 5–8 / L 8.5–11 · **L 8–11** (shipped briefly 2026-08-12 afternoon) · "Between Sizes? Size Up." · "conforms slightly over the first few wears" · "conforms to your foot shape over the first few sessions" · snug-colors note telling people to size up · the **Foot Length** column (8.5"–9.5" / 9.5"–10.5" — repo-only, never on the live site, no source; Andrew: "we only give shoe size").
+
+**Also locked here:** Black credited alongside Light Grey as most forgiving · GEO block removed from this page (duplicated the fit tips above it).
 
 **Files:** `templates/page.size-chart.json` + aliases `page.performance-skins-size-chart.json`, `page.size-guide.json` (push all three — Admin renders the alias) · `sections/page-size-guide.liquid` (fallback rows + schema defaults corrected so a cleared block list can't resurrect old numbers).
 
