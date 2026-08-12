@@ -24,9 +24,9 @@
         <thead>
           <tr>
             <th scope="col">Size</th>
-            <th scope="col">US Women's</th>
-            <th scope="col">Foot Length</th>
-            <th scope="col">Best For</th>
+            <th scope="col">Women's (US)</th>
+            <th scope="col">Men's (US)</th>
+            <th scope="col">Kids' (US)</th>
           </tr>
         </thead>
         <tbody>
@@ -37,8 +37,8 @@
               <tr {{ block.shopify_attributes }}>
                 <td class="page-size__td--size">{{ block.settings.size_name }}</td>
                 <td>{{ block.settings.us_size }}</td>
-                <td>{{ block.settings.foot_length }}</td>
-                <td>{{ block.settings.best_for }}</td>
+                <td>{{ block.settings.mens_size | default: '—' }}</td>
+                <td>{{ block.settings.kids_size | default: '—' }}</td>
               </tr>
             {% endif %}
           {% endfor %}
@@ -47,14 +47,14 @@
               <tr>
                 <td class="page-size__td--size">M</td>
                 <td>5.5–7.5</td>
-                <td>8.5"–9.5"</td>
-                <td>Women's 5.5–7.5</td>
+                <td>—</td>
+                <td>2–5</td>
               </tr>
               <tr>
                 <td class="page-size__td--size">L</td>
-                <td>8–11</td>
-                <td>9.5"–10.5"</td>
-                <td>Women's 8–11 · Men's up to 10.5</td>
+                <td>7.5–11</td>
+                <td>Up to 10.5</td>
+                <td>—</td>
               </tr>
           {% endif %}
         </tbody>
@@ -248,7 +248,7 @@
       "type": "textarea",
       "id": "subtitle",
       "label": "Subtitle",
-      "default": "Two sizes. In the 7 to 8 overlap, the width of your foot decides — here's how to find yours."
+      "default": "Two sizes, and at the 7.5 overlap the width of your foot decides — here's how to find yours."
     },
     {
       "type": "textarea",
@@ -293,17 +293,20 @@
         {
           "type": "text",
           "id": "us_size",
-          "label": "US size range"
+          "label": "Women's (US)",
+          "info": "M = 5.5–7.5 · L = 7.5–11. 7.5 sits in both rows on purpose — width is the tiebreaker."
         },
         {
           "type": "text",
-          "id": "foot_length",
-          "label": "Foot length"
+          "id": "mens_size",
+          "label": "Men's (US)",
+          "info": "L = Up to 10.5. Leave blank for M — Medium does not fit men's sizing."
         },
         {
           "type": "text",
-          "id": "best_for",
-          "label": "Best for"
+          "id": "kids_size",
+          "label": "Kids' (US)",
+          "info": "M = 2–5. Leave blank for L."
         }
       ]
     },
