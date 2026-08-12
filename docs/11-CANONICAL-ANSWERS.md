@@ -78,9 +78,11 @@ Below 7, take Medium. Never write a blanket "between sizes? size up."
 
 **CA-08b · One tight spot — the blow dryer trick · SUPPORT CHANNEL ONLY** *(Andrew letter 2026-08-12)*
 
-🚫 **Never publish on the size guide, the FAQ, a product page, or any pre-purchase surface.** Andrew's call, and it's the right one: to a shopper who hasn't bought yet, "you may need a hairdryer" is a warning label sitting next to the claim that the fit works for nearly everyone. To someone who already owns the pair and writes in about a tight toe box, the identical sentence is insider help from the manufacturer and it saves the return. Same words, opposite effect — timing is the whole thing.
+🚫 **One home only: `helpscout-kb/Barreletics_Email_Template_Master.md` §2.7, a HelpScout saved reply a human chooses to send.**
 
-**Lives in:** `helpscout-kb/Barreletics_Email_Template_Master.md` §2.7 · `manychat-kb/09-faq-fit-sizing.md`. Email and DM replies only.
+**Not on** the size guide, the FAQ, a product page, or any pre-purchase surface. To a shopper who hasn't bought yet, "you may need a hairdryer" is a warning label sitting next to the claim that the fit works for nearly everyone. To someone who already owns the pair and writes in about a tight toe box, the identical sentence is insider help from the manufacturer and it saves the return. Same words, opposite effect — timing is the whole thing.
+
+**Not in ManyChat either** (owner letter 2026-08-12). Automation can't judge whether the size is right or whether the person has even bought yet, so a bot would eventually hand a hairdryer to a browser. ManyChat's answer to a tight fit stays the free size exchange, full stop. A human decides when this one is appropriate.
 
 **Send only when** the customer already owns the pair, the size is otherwise right, and it's the **toe box specifically**. Whole pair small → exchange, not heat.
 
