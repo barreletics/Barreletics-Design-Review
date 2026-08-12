@@ -18,13 +18,14 @@
 
 | ID | Page / section | Owner | Status | Preview / artifact | Notes |
 |----|----------------|-------|--------|--------------------|-------|
-| A0 | Help variation index | desktop | **AWAITING ANDREW** | `planning/help-pages-variation-index.md` | **PICK SESSION READY** — mark USE THIS per page |
-| A1 | About Us `/pages/our-story` | — | QUEUED | — | Wait for pick in A0 |
-| A2 | FAQ `/pages/faq` | — | QUEUED | — | Wait for pick in A0 |
-| A3 | Contact `/pages/contact-us-form` | — | QUEUED | — | Wait for pick in A0 |
-| A4 | Returns `/pages/returns` | — | QUEUED | — | Wait for pick in A0 |
-| A5 | Size chart (Support satellite) | — | QUEUED | — | In footer Support; include in pick list |
-| A6 | Returns portal (satellite) | — | QUEUED | — | Separate from policy page |
+| A0 | Decide board | desktop | **AUTHORITY** | `docs/HELP-OPEN-ME.html` · `planning/help-family-type-law.md` · cloud prompt | Help v8 · type law HARD |
+| A-help | Help hub | desktop | **AWAITING ANDREW** | `docs/Barreletics Help - Definitive-v8.html` | Tiles · M4 destinations · no Track |
+| A1 | About Us `/pages/our-story` | **cloud** | **AWAITING ANDREW** | Brand v2 · [PR #22](https://github.com/barreletics/Barreletics-Design-Review/pull/22) | Docs-only |
+| A2 | FAQ `/pages/faq` | desktop | **AWAITING ANDREW** | FAQ Definitive-v7 | Topic anchors slight standout |
+| A3 | Contact | desktop | **AWAITING ANDREW** | M4 · `page-contact` H1 → support scale | Was type-hero; now Help H1 |
+| A4 | Policy `/pages/returns` | desktop | **AWAITING ANDREW** | `page-returns` H1 support · lede customer · jumps simplified · Need a hand = h2-standard | Repo fixed; push when named |
+| A5 | Size chart | desktop | **AWAITING ANDREW** | `page-size-guide` H1 support · chart fallback M/L · fit notes soft tint | Chart empty if TE cleared blocks — fallback added |
+| A6 | Returns portal | desktop | **AWAITING ANDREW** | `main-page` support H1 | ReturnZap body · no Track |
 
 ---
 
@@ -62,7 +63,7 @@
 
 | ID | Page / section | Owner | Status | Preview / artifact | Notes |
 |----|----------------|-------|--------|--------------------|-------|
-| E0 | Research + recommendation | **cloud** | IN PROGRESS | `planning/ambassador-program-recommendation.md` | Read/report only — no app install · no theme edit until Andrew approves plan |
+| E0 | Research + recommendation | **cloud** | **AWAITING ANDREW** | `planning/ambassador-program-recommendation.md` · [Review +149 −1](bc-f59087ec-9ea5-47ff-a171-b9d0788b3684#changes) · [PR #21](https://github.com/barreletics/Barreletics-Design-Review/pull/21) | Decision brief ready — no app install · no theme edit until Andrew approves plan |
 
 ---
 

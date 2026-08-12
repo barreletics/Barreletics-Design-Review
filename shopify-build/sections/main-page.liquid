@@ -8,8 +8,9 @@
   A template that hardcodes its own copy silently deletes them.
 
   Used on: page.json (default), page.returns.json, page.shipping-retruns.json,
-  page.start-a-retrun.json, page.returns-portal.json, page.free-people.json,
+  page.start-a-retrun.json, page.returns-portal.json,
   page.judgeme_all_reviews.json
+  (Free People uses page.free-people.json — collab-teaser + collab-hero + variant-grid; no page-title masthead.)
 {% endcomment %}
 
 {%- liquid
@@ -51,11 +52,13 @@
     margin: 0 0 var(--space-8);
   }
 
+  /* Support / utility pages (Help family): page title — not homepage hero.
+     Match Help/FAQ mocks: clamp(32–44) / 400 / −0.028em. */
   .page-content__title {
-    font-size: var(--type-hero-size);
-    font-weight: var(--type-hero-weight);
-    line-height: var(--type-hero-leading);
-    letter-spacing: var(--type-hero-tracking);
+    font-size: clamp(32px, 4vw, 44px);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.028em;
     text-transform: none;
     color: var(--text-primary);
     margin: 0;
@@ -132,7 +135,7 @@
 
   @media (max-width: 768px) {
     .page-content__title {
-      font-size: var(--text-3xl);
+      font-size: clamp(28px, 8vw, 36px);
     }
   }
 </style>

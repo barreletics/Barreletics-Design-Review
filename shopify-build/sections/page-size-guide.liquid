@@ -9,7 +9,7 @@
     {% if section.settings.eyebrow != blank %}
       <p class="eyebrow eyebrow--accent">{{ section.settings.eyebrow }}</p>
     {% endif %}
-    <h1 class="page-size__title type-hero">{{ section.settings.title }}</h1>
+    <h1 class="page-size__title">{{ section.settings.title }}</h1>
     {% if section.settings.subtitle != blank %}
       <p class="page-size__subtitle">{{ section.settings.subtitle }}</p>
     {% endif %}
@@ -30,8 +30,10 @@
           </tr>
         </thead>
         <tbody>
+          {%- assign size_rows = 0 -%}
           {% for block in section.blocks %}
             {% if block.type == 'size_row' %}
+              {%- assign size_rows = size_rows | plus: 1 -%}
               <tr {{ block.shopify_attributes }}>
                 <td class="page-size__td--size">{{ block.settings.size_name }}</td>
                 <td>{{ block.settings.us_size }}</td>
@@ -40,6 +42,21 @@
               </tr>
             {% endif %}
           {% endfor %}
+          {%- comment -%} Fallback if TE cleared size_row blocks — chart must never be empty {%- endcomment -%}
+          {% if size_rows == 0 %}
+              <tr>
+                <td class="page-size__td--size">M</td>
+                <td>5–8</td>
+                <td>8.5"–9.5"</td>
+                <td>Most women's sizes 5–8</td>
+              </tr>
+              <tr>
+                <td class="page-size__td--size">L</td>
+                <td>8.5–11</td>
+                <td>9.5"–10.5"</td>
+                <td>Most women's sizes 8.5–11</td>
+              </tr>
+          {% endif %}
         </tbody>
       </table>
     </div>
@@ -48,13 +65,13 @@
 
 <section class="section">
   <div class="section__inner section__inner--narrow">
-    <h2 class="page-size__section-title">Fit Notes by Color</h2>
+    <h2 class="page-size__section-title h2-standard">Fit Notes by Color</h2>
     <div class="page-size__notes">
       <div class="page-size__note page-size__note--alert">
         <h3 class="page-size__note-title">Dark Grey, Hot Coral & Blue</h3>
         <p class="page-size__note-text">{{ section.settings.snug_colors_note }}</p>
       </div>
-      <div class="page-size__note">
+      <div class="page-size__note page-size__note--soft">
         <h3 class="page-size__note-title">Light Grey</h3>
         <p class="page-size__note-text">{{ section.settings.light_grey_note }}</p>
       </div>
@@ -64,7 +81,7 @@
 
 <section class="section section--cream">
   <div class="section__inner section__inner--narrow">
-    <h2 class="page-size__section-title">Fit Tips</h2>
+    <h2 class="page-size__section-title h2-standard">Fit Tips</h2>
     <div class="page-size__tips">
       {% for block in section.blocks %}
         {% if block.type == 'fit_tip' %}
@@ -88,11 +105,12 @@
 {% endif %}
 
 <style>
+  /* Help-family page H1 — planning/help-family-type-law.md */
   .page-size__title {
-    font-size: var(--type-hero-size);
-    font-weight: var(--type-hero-weight);
-    line-height: var(--type-hero-leading);
-    letter-spacing: var(--type-hero-tracking);
+    font-size: clamp(32px, 4vw, 44px);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.028em;
     text-transform: none;
     color: var(--text-primary);
     text-align: center;
@@ -156,15 +174,21 @@
   }
 
   .page-size__note {
-    padding: var(--space-5);
-    background: var(--bg-alternate);
-    border-radius: var(--radius-card-sm);
-    border-left: 3px solid var(--border-default);
+    padding: var(--space-5) var(--space-6);
+    background: #f5f2ec;
+    border-radius: 0;
+    border: none;
+    border-left: 3px solid #d6cfc0;
   }
 
   .page-size__note--alert {
-    border-left-color: var(--accent-primary);
-    background: rgba(196, 92, 63, 0.06);
+    border-left-color: var(--accent-primary, #c45c3f);
+    background: rgba(196, 92, 63, 0.05);
+  }
+
+  .page-size__note--soft {
+    border-left-color: #c4bdb0;
+    background: #faf8f4;
   }
 
   .page-size__note-title {
@@ -187,11 +211,13 @@
   }
 
   .page-size__tip {
-    padding: var(--space-5);
-    background: var(--bg-primary);
-    border: 1px solid var(--border-default);
-    border-radius: var(--radius-card-sm);
+    padding: var(--space-4) 0;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #e8e2d8;
+    border-radius: 0;
   }
+  .page-size__tips .page-size__tip:last-child { border-bottom: none; }
 
   .page-size__tip-title {
     font-size: var(--text-base);
@@ -215,7 +241,7 @@
 
   @media (max-width: 768px) {
     .page-size__title {
-      font-size: var(--text-3xl);
+      font-size: clamp(28px, 8vw, 36px);
     }
 
     .page-size__table th,

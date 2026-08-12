@@ -42,8 +42,8 @@ Theme Editor: `https://admin.shopify.com/store/barreletics/themes/187144929571/e
 | **Open Sole** | `/products/studio-performance-skin-footwear` | `product.open-sole.json` | Same **PDP v19 Locked** mock + Open spine | **`open-sole`** | `/products/studio-performance-skin-footwear` |
 | **Outdoor / water shoes** | `/products/aquatic-performance-skins` | `product.outdoor.json` | Same **PDP v19 Locked** mock + Outdoor spine | **`outdoor`** | `/products/aquatic-performance-skins` |
 | **Coperni collab** | `/products/barreletics-x-coperni-closed-sole` | `product.coperni.json` | Collab spine (crosslink + story); not a separate hub Locked PDP card — match repo + live | **`coperni`** | `/products/barreletics-x-coperni-closed-sole` |
-| **One-off Closed** | `/products/one-off-colors-closed-sole` | `product.one-off-closed.json` | Lean spine (no sock-era); photo pickers; hide OOS; P-011/D-051 | **`one-off-closed`** | `/products/one-off-colors-closed-sole` |
-| **One-off Open** | `/products/one-off-colors-open-sole` | `product.one-off-open.json` | Same lean one-off spine | **`one-off-open`** | `/products/one-off-colors-open-sole` |
+| **One-off Closed** | `/products/one-off-colors-closed-sole` | `product.one-off-closed.json` | Closed Sole quality twin; One-Offs tab only; FAQ = Closed + 3 one-off Qs; P-011/D-051 | **`one-off-closed`** | `/products/one-off-colors-closed-sole` |
+| **One-off Open** | `/products/one-off-colors-open-sole` | `product.one-off-open.json` | Same + Open deltas (rust badge · Open copy · handle) | **`one-off-open`** | `/products/one-off-colors-open-sole` |
 
 **Deleted / do not recreate:** `product.closed-sole.json` — Closed Sole **is** the default `product.json`.
 
@@ -53,6 +53,7 @@ Theme Editor: `https://admin.shopify.com/store/barreletics/themes/187144929571/e
 
 | Surface | Handle / URL | Repo template | Hub Locked mock | Admin suffix | QA preview path |
 |---------|--------------|---------------|-----------------|--------------|-----------------|
+| **Help hub** | `/pages/help` | `page.help.json` + `sections/page-help.liquid` | Pre-push: `docs/HELP-PREPUSH-PREVIEW.html` (= Help v8). **Push only after Andrew yes.** | **`help`** (create Admin page if 404) | `/pages/help?preview_theme_id=187144929571` |
 | **FAQ** | `/pages/faq` | `page.faq.json` | **FAQ v4 Locked** → `docs/Barreletics FAQ - Definitive-v4.html` (v5+ = copy/layout experiments; promote only with `LOCK THIS`) | **`faq`** | `/pages/faq` |
 | **Returns (policy)** | `/pages/returns` | `page.shipping-retruns.json` *(live Admin typo)* · clean alias `page.returns.json` | Hub **Current:** `docs/REVIEW-2026-08-08.html#returns` (canonical). Mock v3 = superseded concept | Live often **`shipping-retruns`** — do not re-point Admin until letter; alias ready for **`returns`** | `/pages/returns` |
 | **About / Our story** | `/pages/our-story` | `page.our-story.json` and/or `page.about.json` (confirm Admin assignment before edit) | Brand story mock for review: `docs/Barreletics Brand - Definitive-v1.html` (not Locked until letter). Help hub: **Help v3 Locked** | Confirm in Admin (`our-story` / `about` / default) | `/pages/our-story` |
@@ -87,7 +88,7 @@ Help menu authority: About → `/pages/our-story` · FAQ → `/pages/faq` · Con
 | Dead URL | Why | Use instead |
 |----------|-----|-------------|
 | `/blogs/journal` | Not the live blog handle | `/blogs/news` |
-| `/pages/help` | 404 · no `page.help.json` | Help menu + `/pages/faq` fallback |
+| `/pages/help` | Was 404 — template now in repo; Admin page + push after Andrew yes | `/pages/help` + template `help` |
 | `/collections/open-sole` | Collection handle **does not exist** in Admin (404) | Shop All + sole tabs / PDP Open |
 | `/collections/closed-sole` | Same — 404 | Shop All + sole tabs / PDP Closed |
 | `/collections/outdoor` | Same — 404 | PDP Outdoor `/products/aquatic-performance-skins` |
