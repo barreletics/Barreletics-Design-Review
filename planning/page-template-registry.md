@@ -127,6 +127,21 @@ Repo may still contain `collection.open-sole.json` / `collection.closed-sole.jso
 
 ---
 
+## Orphaned templates — no Admin page, render nowhere *(verified 2026-08-12 against all 45 Admin pages)*
+
+| Repo template | Expected handle | Reality |
+|---|---|---|
+| `page.shipping.json` | `/pages/shipping` | **404 — no Admin page exists.** Shipping policy actually lives inside `/pages/returns` ("SHIPPING, RETURNS & FAQ") |
+| `page.warranty.json` | `/pages/warranty` | **404 — no Admin page exists.** Warranty terms actually render on `/pages/returns` and `/pages/faq` |
+
+Both files are maintained and correct in the repo — edits to them just aren't visible to any customer. Before trusting a preview of either, confirm the Admin page exists. **Do not create these pages without a letter**; the store deliberately consolidates shipping + returns + FAQ onto one handle, and adding thin duplicates would split the policy and the SEO.
+
+Also note: contact is `/pages/contact-us-form` with suffix **`contact`**, not `/pages/contact`. `/pages/size-guide` does not exist either — the size chart is `/pages/performance-skins-size-chart` (suffix `size-chart`).
+
+**Help hub tiles audited 2026-08-12 — all five return 200:** `/pages/contact-us-form` · `/pages/faq` · `/pages/performance-skins-size-chart` · `/pages/returns` · `/pages/returns-portal`. The hub correctly avoids the two orphans.
+
+---
+
 ## Maintenance
 
 Update this registry **forward** when Andrew locks a new mock, renames a handle, or changes an Admin suffix. Do not “fix” by restoring older collection/PDP URLs from `planning/m4a-*` archives.
