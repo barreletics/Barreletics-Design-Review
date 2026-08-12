@@ -19,7 +19,7 @@
 | ID | Page / section | Owner | Status | Preview / artifact | Notes |
 |----|----------------|-------|--------|--------------------|-------|
 | A0 | Help variation index | desktop | **AWAITING ANDREW** | `planning/help-pages-variation-index.md` | **PICK SESSION READY** — mark USE THIS per page |
-| A1 | About Us `/pages/our-story` | — | QUEUED | — | Wait for pick in A0 |
+| A1 | About Us `/pages/our-story` | **cloud** | **AWAITING ANDREW** | `docs/Barreletics Brand - Definitive-v2.html` · `docs/HELP-OPEN-ME.html` | Brand v2 mock ready (live chapters + dual lifestyle). Docs-only. No Shopify push. No LOCK. |
 | A2 | FAQ `/pages/faq` | — | QUEUED | — | Wait for pick in A0 |
 | A3 | Contact `/pages/contact-us-form` | — | QUEUED | — | Wait for pick in A0 |
 | A4 | Returns `/pages/returns` | — | QUEUED | — | Wait for pick in A0 |
