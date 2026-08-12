@@ -12,6 +12,8 @@
 **Guardrails:** `.cursor/rules/anti-revert-fail-closed.mdc` · `.cursor/rules/section-freeze-no-drift.mdc`  
 **Rule:** Frozen sections must not drift, revert, or be replaced without **explicit Andrew approval in the CURRENT message**.
 
+> **Page ↔ template registry (2026-08-09 forward):** Canonical handle → repo template → hub Locked mock → Admin suffix → QA preview path lives in **`planning/page-template-registry.md`**. Page work: auto-invoke **`barreletics-page-qa`**. Multi-surface edits: `.cursor/rules/os-sync-on-global-change.mdc` (update this freeze + the registry forward).
+
 ---
 
 ## What “APPROVED / FROZEN” means
@@ -27,19 +29,67 @@
 
 ---
 
+## Owner visual sign-off — 2026-08-11 (M4 `187144929571`)
+
+**SIGNED — do not thrash without CURRENT MESSAGE letter:**
+
+| Item | Sign-off |
+|---|---|
+| **Header nav #2** | 13px / 500 / sentence case · gap 26 · actions 13px · logo TE 45 |
+| **Closed badge default rust** | TE black/charcoal/blue honored |
+| **Buy-box fold / ATC** | Above fold · chart-only Size · no qty · no Coming soon S |
+| **v20d fold chrome** | Hub judge-fold authority |
+| **TRANSFORM contrast** | Title readable (stacking fix) |
+| **Description accordion** | TE `description_accordion_body` (v19 Closed seeded). **NEVER** Admin `product.description`. Fallback = `short_description` only |
+| **Value-strip + features** | 4-up: USA · Free shipping over $150 · 30-day returns · 90-day warranty (no latex/silicone in strip) · Why Barreletics / Grip 4-up |
+
+**NOT signed yet:** Closed FAQ materials + city GEO soft (await approve) · rest of Closed below-fold · Open/Outdoor/one-off · secondary pages · dual nav
+
+---
+
+## Size guide — SIGNED 2026-08-12 ("the size page looks great")
+
+**Owner sign-off** on M4 `187144929571` → `/pages/performance-skins-size-chart`.
+
+**Canonical sizing rule (Andrew letter 2026-08-12) — width decides:**
+
+| Case | Take |
+|---|---|
+| Below 7 | M |
+| Wide foot at 7 or 7.5 | **L** (size up) |
+| Narrow 8 | **M** (size down) |
+| 8.5 and above | **L always** — length governs, regardless of width |
+
+Chart: **M = women's 5.5–7.5 · L = women's 8–11, men up to 10.5.** No small size.
+
+**RETIRED — never reintroduce:** M 5–8 / L 8.5–11 · "Between Sizes? Size Up." · "conforms slightly over the first few wears" · "conforms to your foot shape over the first few sessions" · snug-colors note telling people to size up.
+
+**Also locked here:** Black credited alongside Light Grey as most forgiving · GEO block removed from this page (duplicated the fit tips above it) · foot-length column (8.5"–9.5" / 9.5"–10.5") retained but **unverified — no KB source**.
+
+**Files:** `templates/page.size-chart.json` + aliases `page.performance-skins-size-chart.json`, `page.size-guide.json` (push all three — Admin renders the alias) · `sections/page-size-guide.liquid` (fallback rows + schema defaults corrected so a cleared block list can't resurrect old numbers).
+
+**Single source for all of this:** `docs/11-CANONICAL-ANSWERS.md` → CA-05 through CA-09. Change it there first, then propagate.
+
+**Still carrying wrong sizing (await letter):** `templates/product.json` PDP accordion — publishes M W 5–7.5 / Men 6–8, L W 8–10 / Men 8.5–11 and "go larger" if between sizes.
+
+**FAQ page:** rebuilt from the canonical source the same day and carries the same rule — **not yet signed.**
+
+---
+
 ## Frozen registry
 
 | ID | Surface | Status | Fingerprint (lineage) | Locked composition | Files |
 |----|---------|--------|------------------------|--------------------|-------|
 | **Footer** | Sitewide footer (all pages via `footer-group`) | **LOCKED Jul 31 2026** | WORKING layout + Join the list · Light/Dark TE | Trusted by (toggle) · Join the list (toggle, NO 10%) · columns · Light/Dark per band · size TE · SEO Learn link · **NO brand blurb** · **NO 10%** | `sections/footer.liquid`, `footer-group.json`, `assets/chrome.css` · `specs/frozen/footer.md` |
-| **PDP** | Product templates + buy-box | **LOCKED Aug 1 2026** · **proportions LOCKED 2026-08-08 night** · v16 prior · Closed=`product.json` · Open=`product.open-sole.json` · Outdoor=`product.outdoor.json` | Mock **`Definitive-v19.html`** + `product*.json` (QA **`187144929571`**) | **Proportions (PDP only, not sitewide):** fifty-fifty **560**/pad **80**/mobile **320** · fullbleed **80vh/60vh** · gallery 1:1 · thumbs 72 · Open badge **rust** · Closed charcoal · buy-box type as built · city FAQ last · hybrid `pdp-reviews`. Home fifty-fifty stays **640**. v16 @ `691f03b` prior (NEVER overwrite). | `docs/…Definitive-v19.html` · `templates/product.json` · `product.open-sole.json` · `product.outdoor.json` · `pdp-buy-box.liquid` · `specs/frozen/pdp.md` |
-| **PDP purchase stack** | Buy-box commercial stack (`#buy`) | **LOCKED Aug 1 2026** · title badge restored Aug 2 (CURRENT MESSAGE) | Option A stack + kit Option A · on spine | price → muted `or 4 × $18.50` → color/size → qty+CTA → **empty under ATC** → quiet Complete the kit → accordion · **no widget borders** · **title sole badge TE optional** (show on/off · color: rust/blue/charcoal/black · label override / `sole_type` / handle fallback) · default show **ON** · rust · `show_trust_row: false` | visual: `Definitive-v19.html` `#buy` + v16 badge pattern · live: `product.json` `pdp-buy-box` · `specs/frozen/pdp.md` |
-| **PDP trust split** | Value strip + accordion policy | **LOCKED Aug 1 2026** (4-up strip refinement) | Scan strip · accordion detail · no under-ATC repeat | **Value strip (4-up, no links by default):** Made in USA · **Free shipping over $150** · 30-day returns · 90-day warranty · **Under ATC:** nothing · **Accordion:** Shipping + 30/90 · **no page `studio-trust`** · (Non-toxic / No latex / No silicone **removed** from strip) | `product.json` `value-strip` · `Definitive-v19.html` (mock prior) · `specs/frozen/pdp.md` |
+| **PDP** | Product templates + buy-box | **LOCKED Aug 1 2026** · **proportions LOCKED 2026-08-08 night** · **Closed badge rust LOCKED 2026-08-11** · v16 prior · Closed=`product.json` · Open=`product.open-sole.json` · Outdoor=`product.outdoor.json` | Mock **`Definitive-v19.html`** + `product*.json` (QA **`187144929571`**) | **Proportions (PDP only, not sitewide):** fifty-fifty **560**/pad **80**/mobile **320** · fullbleed **80vh/60vh** · gallery 1:1 · thumbs 72 · **Closed + Open + Outdoor badges = rust** `#c45c3f` (OWNER 2026-08-11 — never charcoal on Closed) · buy-box type as built · city FAQ last · hybrid `pdp-reviews`. Home fifty-fifty stays **640**. v16 @ `691f03b` prior (NEVER overwrite). | `docs/…Definitive-v19.html` · `templates/product.json` · `product.open-sole.json` · `product.outdoor.json` · `pdp-buy-box.liquid` · `specs/frozen/pdp.md` |
+| **PDP purchase stack** | Buy-box commercial stack (`#buy`) | **LOCKED Aug 1 2026** · **Description accordion SIGNED 2026-08-11** · badge default rust + TE honor | Option A stack + kit Option A · on spine | price → muted `or 4 × $18.50` → color/size → qty+CTA → **empty under ATC** → quiet Complete the kit → accordion · **Description accordion = TE `description_accordion_body` (v19 Closed seeded) · NEVER Admin `product.description` · fallback `short_description` only** · sole badge TE default rust · `show_trust_row: false` | visual: `Definitive-v19.html` `#buy` · live: `product.json` `pdp-buy-box` · `specs/frozen/pdp.md` |
+| **PDP trust split** | Value strip + accordion policy | **LOCKED Aug 1 2026** (4-up strip refinement) · **band height forward 2026-08-10** | Scan strip · accordion detail · no under-ATC repeat | **Value strip (4-up, no links by default):** Made in USA · **Free shipping over $150** · 30-day returns · 90-day warranty · **Band height TE:** `padding_y` default **28** / mobile **24** (was 16/`--gap-a`) — type stays 12px · **Under ATC:** nothing · **Accordion:** Shipping + 30/90 · **no page `studio-trust`** · (Non-toxic / No latex / No silicone **removed** from strip) | `product.json` `value-strip` · `sections/value-strip.liquid` · `Definitive-v19.html` (mock prior) · `specs/frozen/pdp.md` |
 | **PDP variants 4×** | Shop-all / variants cards | **LOCKED Jul 31 2026** | Option A under Quick Add · on draft `variant-grid` | Name → meta pill → $74 → Quick Add → quiet `or 4 × $18.50` · **no dual pills** · **LE / Sold Out image badges REQUIRED** · Draft Home chrome | `product.json` `variant-grid` · `Definitive-v19.html` `#variants` · `specs/frozen/pdp.md` |
 | **Type OS** | Typography system | **SETTLED** | See `planning/m4-type-hierarchy.md` | Family/size/weight/tracking; no per-section `font_picker` | Type tokens + TE policy |
 | **Home WORKING** | Homepage layout authority | **WORKING** (layout authority — not a free redesign surface) | Home WORKING mocks / draft match commits | Agents must not invent alternate homepage composition; match WORKING unless Andrew approves change in-message. **Exception locked 2026-08-01:** `proof-numbers` after social-proof (see row below). | `templates/index.json` + home sections |
 | **Proof numbers** | Reusable stats band (Home; optional elsewhere) | **LOCKED Aug 1 2026** · White tone | Draft QA `187144929571` · Andrew visual approve | White default · cream/charcoal TE · 3-up: 1,000's instructors · 1,000+ classes (attribution TBD) · USA · Show toggle · after reviews / before One pair | `sections/proof-numbers.liquid` · `index.json` · `specs/frozen/proof-numbers.md` |
-| **Header nav type** | Sitewide header chrome (`header-group`) | **APPROVED Aug 8 2026** — size “approved as built” (owner) · Help labelled same day | Measured against published theme `185687998755` | Nav **18px / 400 / 0.025em / title case** (no `text-transform`) · gap 30px · utility actions **Help ▾ · Account · Cart** 14px/400 title case (Help is a **label**, not a bare icon) · drawer 18px/400 · Help fallback `/pages/faq` · wordmark tokens untouched | `assets/design-tokens.css` (`--type-nav-*`), `assets/chrome.css`, `sections/header.liquid`, `sections/header-group.json` · evidence `planning/header-type-qa/` |
+| **Header nav type** | Sitewide header chrome (`header-group`) | **LOCKED 2026-08-11** · nav font **#2** (supersedes Aug 8 18px) | v20d fold chrome + M4 `187144929571` | Nav **13px / 500 / 0.01em / sentence case** (no `text-transform`) · gap **26px** · utility actions **Help ▾ · Account · Cart** **13px / 500** · logo height TE (currently 45 — do not thrash to 42 without letter) · Help fallback `/pages/faq` | `assets/design-tokens.css` (`--type-nav-*`), `assets/chrome.css`, `sections/header.liquid`, `sections/header-group.json` · `docs/pdp-fold-v20d-chrome.html` |
+| **PDP fold chrome** | Fold-judgment mock + sitewide nav sync | **LOCKED 2026-08-11** · nav font **#2** | Hub `docs/index.html` · `pdp-fold-v20d-chrome.html` | Logo **42px** on mock · nav **13px / 500 / sentence case** · sitewide header now matches nav #2 (logo TE 45 left alone). **Judge ATC above fold here.** Never thrash without chrome letter. | `docs/pdp-fold-v20d-chrome.html` · `docs/Barreletics PDP - Definitive-v20d-fold-with-chrome.html` · `.cursor/rules/pdp-fold-preview-from-m4.mdc` · hub Shop card |
 | **Juicer / Instagram** | Reusable library section (any page) | **LOCKED Jul 31 2026** · on PDP draft | v19 Juicer · PDP `product.json` includes `home-juicer` | Eyebrow / @barreletics / body · live Juicer (`barreletics`) · **max_height 0** · See more · Follow · TE add/omit · **on PDP after guarantee, before FAQ** | `sections/home-juicer.liquid` · `product.json` · `specs/frozen/juicer.md` · `Definitive-v19.html` `#instagram` |
 
 Update the **Fingerprint** column with the freeze commit SHA after each freeze ship.
@@ -104,9 +154,21 @@ Owner ask: finish M4 navigation end to end. Composition unchanged; **link target
 | `templates/product.closed-sole.json` | Closed Sole variant template | **deleted** — Closed Sole is the default template now |
 | `templates/product.outdoor.json` | Grippy Water Shoes | unchanged, out of scope |
 | Buy-box lede, **both** sole pages | Open: *Secure in every hold. / No sliding. No resets.* · Closed: *Heel and foot fully covered. / Same grip, same stability.* | **both pages:** *Secure in every hold. / No sliding. No resets.* (approved inventory, Problem/Solution) |
-| Sole badge on `product.json` | rust, auto-derived | `sole_badge: "Closed Sole"`, `sole_badge_color: "charcoal"` |
-| Sole badge on `product.open-sole.json` | (varied) | **`sole_badge_color: "rust"`** (`#c45c3f`) — CURRENT MESSAGE 2026-08-08 night. Closed/Outdoor stay charcoal. |
+| Sole badge on `product.json` | charcoal (retired) | **`sole_badge: "Closed Sole"`, `sole_badge_color: "rust"`** — OWNER 2026-08-11 (NEVER black/charcoal) |
+| Sole badge on `product.open-sole.json` | (varied) | **`sole_badge_color: "rust"`** (`#c45c3f`) |
 | FAQ city GEO blocks | mixed mid-list | **NYC / LA / London·Melbourne (/ Toronto on Closed) last** under “Everything you need to know.” Discipline GEO + compare stay above cities. |
+
+### Forward update — Outdoor rust badge + Open Sole PDP pass (2026-08-09)
+
+> **Andrew CURRENT MESSAGE:** do all of the above — Outdoor/water + Open Sole. Outdoor badge **rust** `#c45c3f` (`sole_badge_color: rust`). Open H1 strips Admin sole dash (badge carries sole). Open sock-era = **The Pilates sock era is over.** Love-hate testimonial **Open only**. Featured photo sets unique Open ≠ Closed ≠ Outdoor ≠ Coperni (2026-08-09: Outdoor water-only Denise/Lisa K./Sienna H.; Coperni Kathia/Victoria/Sheryl — no Mia on Coperni). TRANSFORM scrim lightened on Open (`overlay_opacity: 35`). FAQ `bg_class: white` on Open/Outdoor/Closed to separate from cream footer “Trusted by…”. One pair. Done. = compact comparison **without** review quote (Closed/Open/Coperni cleared 2026-08-09). Cover-crop: Outdoor water-shoes/commit/numbers `focal_y 43` + mobile **360**.
+
+### Forward update — Outdoor barefoot / slip / image dedupe (2026-08-09)
+
+> **Andrew CURRENT MESSAGE:** tackle all new Outdoor items. Disciplines = **Anywhere you'd go barefoot — but better.** Secondary slogan **Better than barefoot.** on fullbleed lifestyle only. Image dedupe (beach / boat dock each once). Slip copy = general liability (won't create grip where surface has none) in buy-box, feature, FAQ, numbers. Reviews = 3 curated photos + compact live Judge.me (`show_live_text: true`, `show_text_cards: false`).
+
+### Forward update — Outdoor Judge.me + IG lifestyle (2026-08-09)
+
+> **Andrew CURRENT MESSAGE:** Judge.me text row must work — never hide photo-bearing reviews in compact mode; `show_live_text` always mounts widget. Replace Outdoor packshots with live/IG water lifestyle (paddleboard, dock, beach, resort). Real people body = **Paddleboarding. Beach. Boat. Resortwear.** Commit = dress-them-up resortwear. No pool positioning images.
 
 ### Forward update — Open Sole badge + FAQ city order (2026-08-08 night)
 
@@ -198,6 +260,54 @@ P-003 feel-and-coverage wording.
 
 Still outstanding (owned by another agent this turn, not edited here):
 `templates/page.wholesale.json` and `sections/page-wholesale.liquid`.
+
+---
+
+## Apparel collection — forward update 2026-08-09 (Andrew CURRENT MESSAGE)
+
+> **Andrew:** *"Apparel is not the correct landing page for the collections page. Update that.
+> Please look at the live version. We already made this version so go back to the approved pages
+> and update it."*
+
+**Why it was wrong:** `/collections/apparel` had no dedicated template, so QA fell through to
+default `collection.json` (grippy-shoes Shop All — sole cards, Closed/Open grid, grip FAQ).
+
+**Fix-forward (no restore):**
+- New `templates/collection.apparel.json` — live Apparel copy + Collection v18 shop-first spine
+  (hero → value → grid → fullbleed → tees 50/50 → Think Outside the Sock → reviews → apparel FAQ)
+- `variant-grid`: tab labels drive card meta; `show_size_filter` / `show_compare_link` for Apparel
+  (Yoga Pants / T-Shirts · no M/L shoe filter · no Open/Closed Compare)
+
+**Authority:** live `https://barreletics.com/collections/apparel` + hub **Collection v18 Locked**
+structure. After push: Admin → Apparel collection → Theme template suffix **`apparel`**.
+
+**QA push 2026-08-09 (this turn):** `collection.apparel.json` + `collection.json` (v18 Secure hero,
+`show_sole_cards: false`) + Free People + Coperni sections/templates pushed to **`187144929571`**.
+Verified: Shop All / Collection = v18 · Free People = teaser→hero→grid · Coperni product = collab spine.
+**Still Admin:** Apparel collection → Theme template → **`apparel`** (until then Apparel falls through to
+default Collection v18 shoes stack). Open/Closed/Outdoor **collection handles do not exist** in Admin
+(`/collections/open-sole` etc. 404) — templates exist; create/map handles or stop linking them.
+
+---
+
+## Grippy Shoes collection landing — forward update 2026-08-09 (Andrew CURRENT MESSAGE)
+
+> **Andrew:** *"Fix the grippy shoe landing page now"*
+
+**Why it was wrong:** Default `collection.json` still carried the pre-v18 stack (sole cards on,
+"Shop All Styles" hero, missing pose / Commit fullbleed / Knock Socks, separate GEO, default tab
+Closed). Hub authority is **Collection v18 Locked**.
+
+**Fix-forward (no restore):**
+- `sections/collection-hero.liquid` → v18 split hero (trust + Secure in Every Hold + CTAs + media
+  with `media_fill` inset|column · sole cards off by default)
+- `templates/collection.json` → v18 spine (hero → value → grid All-default → pose → Commit
+  fullbleed → disciplines → Never Loses → Knock Socks → reviews → unified FAQ). Apparel stays on
+  `collection.apparel.json`.
+
+**Authority:** `docs/Barreletics Collection - Definitive-v18.html` · live handle
+`/collections/barre-pilates-yoga-shoe-sock-footwear`. QA theme **`187144929571`**.
+FAQ sole answers use P-003 wording (no discipline split; no “fully enclosed”).
 
 ---
 
@@ -396,7 +506,7 @@ to re-skin `pdp-reviews` — **not** to restore `social-proof`.
 | Fullbleed TRANSFORM | `fullbleed-statement` · show_text · title **TRANSFORM YOUR PRACTICE** · CTA Shop now → `#buy` |
 | Lifestyle wow | `fullbleed-lifestyle` · `show_text: false` · Stef running pink CDN · after sock-math / before commit |
 | Reviews | ~~`social-proof` · featured quote + image carousel + optional text-card ★ row~~ — **SUPERSEDED 2026-08-08:** slot is **`pdp-reviews` on live Judge.me**, same index 11. See "Reviews — LIVE Judge.me everywhere" above. CTA **More stories →** retained. |
-| Sock math | Compact (`pdp-sock-math` · headline “One pair. Done.” · CTA empty) |
+| Sock math | Compact (`pdp-sock-math` · headline “One pair. Done.” · **no review quote** · CTA empty) — quote removed 2026-08-09 (Andrew: version without review) |
 | Lifestyle quote | `fifty-fifty` · `content_style: quote` |
 | Think outside | `fifty-fifty` · `content_style: statement` — eyebrow **Grip, Support, Comfort** · title **Think outside the sock!** · CTA Shop now → `#buy` |
 | Guarantee | Centered **3-up** (`guarantee-band` · 30 / 90 / Built to Last) |
@@ -405,7 +515,7 @@ to re-skin `pdp-reviews` — **not** to restore `social-proof`.
 | Newsletter | **No page newsletter** — footer Join the list only (NO 10%) |
 
 - **Buy box:** lede calm 34–44 / 400 · quiet Complete the kit · Coming soon (S) · empty under ATC · `#buy` anchor · **title sole badge** (v16 quiet pill, TE optional)
-- **Purchase stack:** price → muted `or 4 × $18.50` → color/size → qty+CTA → kit → accordion. **Title sole badge:** TE show on/off + color select (rust default / blue `#458CD9` / charcoal `#1c1916` / black `#000000`); label from override → `sole_type` metafield → handle/title fallback.
+- **Purchase stack:** price → muted `or 4 × $18.50` → color/size → qty+CTA → kit → accordion. **Title sole badge:** TE show on/off + color select — Black/charcoal `#1c1916` · Rust `#c45c3f` · Blue (live strip) `#458CD9` (Open default rust · Closed default black); label from override → `sole_type` metafield → handle/title fallback.
 - **Variants 4×:** quiet `or 4 × $18.50` under Quick Add · LE/Sold Out badges REQUIRED · no sole image pills
 - **Gallery thumbs:** 4 visible · touch-scroll · **no arrow buttons**
 - **Archived:** `Definitive-v16-TypeOS-236a001.html` · backups in `docs/pdp-signed-backups/`
@@ -426,6 +536,7 @@ to re-skin `pdp-reviews` — **not** to restore `social-proof`.
 
 - **Authority:** `shopify-build/templates/product.json` `value-strip` + buy-box accordion (mock v19 remains visual prior; strip labels follow spine)
 - **Value strip (scan, 4-up):** Made in USA · **Free shipping over $150** · 30-day returns · 90-day warranty · **no strip links by default**
+- **Band height (2026-08-10 forward):** TE `padding_y` default **28px** desktop / **24px** mobile (was 16/`--gap-a`). Type stays 12px. Tune in Theme Editor — not a type-size change.
 - **Under ATC:** nothing — CTA flows directly to kit
 - **Accordion (detail):** Description · Care · Shipping (Complimentary shipping on orders over $150 · fulfill 1–2 business days · delivery windows) · 30-day returns + 90-day warranty
 - **Do not** reintroduce ✓ ships/30/90 under ATC, or restore Non-toxic / No latex / No silicone strip labels, without Andrew letter.
@@ -443,10 +554,14 @@ to re-skin `pdp-reviews` — **not** to restore `social-proof`.
 
 ---
 
-## Header nav type — UPDATED Aug 8 2026 (owner letter, forward change)
+## Header nav type — LOCKED 2026-08-11 nav #2 (supersedes Aug 8 18px)
+
+**CURRENT MESSAGE 2026-08-11:** Ship v20d LOCKED nav **#2** — **13px / 500 / 0.01em / sentence case** · gap **26px** · actions **13px / 500**. Tokens + `header-group` `nav_link_size: "13"`. Logo TE left at **45** (do not force 42 without letter). Aug 8 18px row below is **history only**.
+
+## Header nav type — UPDATED Aug 8 2026 (history — superseded by nav #2)
 
 Owner: *“The font in the header is not good or right. Look at the live site, it’s much better.”*
-Recorded **forward** — nothing was reverted.
+Recorded **forward** at the time — **superseded 2026-08-11** by nav #2 lock above.
 
 **Measured** on the published storefront, not from a theme copy on disk. Published theme =
 `185687998755` **“Live Barreletics - Brian Go Live”** (Streamline 7.0). Probe + JSON:
