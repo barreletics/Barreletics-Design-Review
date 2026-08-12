@@ -34,5 +34,6 @@
 
 ## Liquid touchpoints
 
+- `sections/page-faq.liquid` · `templates/page.faq.json` — FAQ Definitive-v7 quiet (support H1 · underline search · hairline topics · rule rows)
 - `sections/page-returns.liquid` · `sections/page-contact.liquid` · `sections/page-size-guide.liquid` · `sections/main-page.liquid` (portal)
 - Templates: `page.returns.json` lede · `page.performance-skins-size-chart.json` / `page.size-chart.json`
