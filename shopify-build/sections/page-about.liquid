@@ -1,7 +1,7 @@
 {% comment %}
   Page About Section
-  Brand story, values, category creation narrative.
-  Used on: page.about.json
+  Founder story (live our-story), values, Made in USA.
+  Used on: page.about.json (assigned to /pages/our-story)
 {% endcomment %}
 
 <section class="section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
@@ -10,11 +10,41 @@
       <p class="eyebrow eyebrow--accent page-about__eyebrow">{{ section.settings.eyebrow }}</p>
     {% endif %}
     <h1 class="page-about__title type-hero">{{ section.settings.title }}</h1>
+    {% if section.settings.byline != blank %}
+      <p class="page-about__byline">{{ section.settings.byline }}</p>
+    {% endif %}
     <div class="page-about__intro">
       {{ section.settings.intro_text }}
     </div>
   </div>
 </section>
+
+{% assign story_count = 0 %}
+{% for block in section.blocks %}
+  {% if block.type == 'story_chapter' %}
+    {% assign story_count = story_count | plus: 1 %}
+  {% endif %}
+{% endfor %}
+
+{% if story_count > 0 %}
+<section class="section section--cream page-about-story" aria-label="Founder story">
+  <div class="section__inner section__inner--narrow">
+    {% for block in section.blocks %}
+      {% if block.type == 'story_chapter' %}
+        <article class="page-about-story__chapter" {{ block.shopify_attributes }}>
+          {% if block.settings.eyebrow != blank %}
+            <p class="eyebrow">{{ block.settings.eyebrow }}</p>
+          {% endif %}
+          <h2 class="page-about-story__title h2-standard">{{ block.settings.title }}</h2>
+          <div class="page-about-story__body type-body">
+            {{ block.settings.body }}
+          </div>
+        </article>
+      {% endif %}
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
 
 {% if section.settings.manifesto != blank %}
 <section class="section section--dark">
@@ -26,8 +56,15 @@
 </section>
 {% endif %}
 
-{% if section.blocks.size > 0 %}
-<section class="section section--cream">
+{% assign value_count = 0 %}
+{% for block in section.blocks %}
+  {% if block.type == 'value' %}
+    {% assign value_count = value_count | plus: 1 %}
+  {% endif %}
+{% endfor %}
+
+{% if value_count > 0 %}
+<section class="section">
   <div class="section__inner">
     <h2 class="page-about__values-title h2-standard">{{ section.settings.values_heading }}</h2>
     <div class="page-about__values-grid">
@@ -85,6 +122,12 @@
     margin: 0 0 var(--gap-b);
   }
 
+  .page-about__byline {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin: 0 0 var(--space-6);
+  }
+
   .page-about__intro {
     font-size: var(--type-lede-size);
     font-weight: var(--type-lede-weight);
@@ -95,6 +138,16 @@
   .page-about__intro p {
     margin-bottom: var(--space-4);
   }
+
+  .page-about-story__chapter {
+    padding: var(--space-8) 0;
+    border-bottom: 1px solid var(--border-default);
+  }
+  .page-about-story__chapter:first-child { padding-top: 0; }
+  .page-about-story__chapter:last-child { border-bottom: none; padding-bottom: 0; }
+  .page-about-story__title { margin: var(--gap-a) 0 var(--gap-b); }
+  .page-about-story__body p { margin: 0 0 var(--space-4); }
+  .page-about-story__body p:last-child { margin-bottom: 0; }
 
   /* Dark-band tier 1 — size/weight/tracking come from .type-statement */
   .page-about__manifesto {
@@ -185,10 +238,16 @@
       "default": "Our Story"
     },
     {
+      "type": "text",
+      "id": "byline",
+      "label": "Byline",
+      "default": "By Stefanie Miller, Founder"
+    },
+    {
       "type": "richtext",
       "id": "intro_text",
       "label": "Intro text",
-      "default": "<p>Barreletics is replacing the grip sock category with Performance Skins — injection-molded grippy shoes engineered for barre, reformer, Lagree, and Pilates. Instead of asking 'which grip sock?' we want you asking 'why grip socks at all?'</p>"
+      "default": "<p>Patented Performance Skins for barre, Pilates, reformer, Megaformer, and studio fitness — born from a founder who was done slipping mid-class.</p>"
     },
     {
       "type": "richtext",
@@ -216,6 +275,15 @@
     }
   ],
   "blocks": [
+    {
+      "type": "story_chapter",
+      "name": "Story chapter",
+      "settings": [
+        { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+        { "type": "text", "id": "title", "label": "Chapter title" },
+        { "type": "richtext", "id": "body", "label": "Chapter body" }
+      ]
+    },
     {
       "type": "value",
       "name": "Brand Value",

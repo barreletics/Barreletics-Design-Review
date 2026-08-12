@@ -984,9 +984,10 @@ Domestic (Continental US):
 - Peak periods: allow 48–72 hours for processing
 
 International:
-- Worldwide shipping available
-- Customers responsible for duties, taxes, customs fees
-- Return/exchange shipping costs are customer's responsibility
+- Worldwide shipping — 195 countries via FedEx International Connect Plus, typically 7–14 business days
+- **Duties and taxes are PREPAID** — nothing to pay on delivery *(Andrew 2026-08-12)*
+- Customer-paid exceptions, narrow: international **return** shipping, and international **warranty replacement** shipping
+- 🚫 RETIRED: ~~"customers responsible for duties, taxes, customs fees"~~ — backwards. Prepaid duties are a selling point; see `docs/11-CANONICAL-ANSWERS.md` CA-18
 
 Lost Packages:
 - Once tracking shows delivered, order considered fulfilled

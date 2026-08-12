@@ -474,7 +474,8 @@ PDP (trust row + accordion) · FAQ page · Help Scout (warranty macro) · Tidio 
 **International:**
 - FedEx International Connect Plus
 - 195 countries and territories
-- Customer responsible for duties/taxes/customs
+- **Duties and taxes PREPAID** — nothing to pay on delivery *(Andrew 2026-08-12; retires "customer responsible for duties")*
+- Customer-paid only for international returns and warranty replacement shipping
 
 ### Surface Map
 PDP (trust row) · Announcement ticker · Cart drawer (progress bar) · FAQ page · Help Scout (shipping macro) · Tidio AI · Policy page

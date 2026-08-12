@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PDP v18 — Decision</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --charcoal: #1c1916;
+      --body: #4a4a4a;
+      --muted: #8a8a8a;
+      --warm: #6b645a;
+      --border: #d6cfc0;
+      --cream: #f5f2ec;
+      --card-border: #e8e2d8;
+      --chip: #f0efec;
+      --rust: #c45c3f;
+      --le: #458CD9;
+      --sold: #9a958c;
+      --green: #2f6b4f;
+      --white: #fff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--cream); color: var(--charcoal); margin: 0; padding: 40px 24px 80px;
+    }
+    .wrap { max-width: 1180px; margin: 0 auto; }
+    h1 { font-size: 28px; font-weight: 400; letter-spacing: -0.03em; margin: 0 0 8px; }
+    .lede { color: var(--body); max-width: 62ch; line-height: 1.5; margin: 0 0 28px; font-size: 15px; }
+    .back { font-size: 13px; color: var(--warm); text-decoration: none; display: inline-block; margin-bottom: 20px; }
+    .back:hover { color: var(--charcoal); }
+    section { margin-bottom: 40px; }
+    h2 {
+      font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--muted); margin: 0 0 12px;
+    }
+    code {
+      font-size: 12px; background: var(--white); border: 1px solid var(--border);
+      padding: 1px 5px; border-radius: 3px;
+    }
+
+    .status {
+      background: var(--white); border: 1px solid var(--border); border-left: 4px solid var(--green);
+      border-radius: 6px; padding: 18px 20px; margin-bottom: 12px;
+    }
+    .status__tag {
+      display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--green); margin-bottom: 8px;
+    }
+    .status h3 { font-size: 18px; font-weight: 500; margin: 0 0 8px; letter-spacing: -0.02em; }
+    .status p { margin: 0 0 10px; font-size: 14px; line-height: 1.5; color: var(--body); }
+    .status ul { margin: 0 0 14px; padding-left: 1.15em; font-size: 14px; color: var(--body); line-height: 1.5; }
+    .status li { margin-bottom: 4px; }
+    .btn {
+      display: inline-block; background: var(--charcoal); color: var(--white); text-decoration: none;
+      font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 12px 18px; border-radius: 4px;
+    }
+    .btn:hover { background: #3a342e; }
+    .btn--ghost {
+      background: transparent; color: var(--charcoal); border: 1px solid var(--border); margin-left: 8px;
+    }
+    .btn--ghost:hover { border-color: var(--charcoal); }
+
+    .note {
+      background: var(--white); border: 1px solid var(--border); border-radius: 6px;
+      padding: 16px 18px; font-size: 13px; line-height: 1.5; color: var(--body); margin-bottom: 16px;
+    }
+    .note strong { color: var(--charcoal); }
+
+    /* ── Draft Home screenshot ── */
+    .shot {
+      background: var(--white); border: 1px solid var(--border); border-radius: 8px;
+      overflow: hidden; margin-bottom: 28px;
+      box-shadow: 0 8px 28px rgba(28,25,22,0.06);
+    }
+    .shot__bar {
+      display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between;
+      gap: 8px 16px; padding: 14px 18px; border-bottom: 1px solid var(--border);
+    }
+    .shot__label {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--rust); margin: 0;
+    }
+    .shot__title { font-size: 16px; font-weight: 500; margin: 4px 0 0; letter-spacing: -0.02em; }
+    .shot__meta { font-size: 12px; color: var(--muted); margin: 0; max-width: 42ch; line-height: 1.4; }
+    .shot__img { display: block; width: 100%; height: auto; background: #faf8f4; }
+    .shot__cap {
+      padding: 12px 18px 14px; font-size: 12px; color: var(--body); line-height: 1.45;
+      border-top: 1px solid var(--border); background: #faf8f4;
+    }
+
+    /* ── Option cards ── */
+    .option {
+      display: block; text-decoration: none; color: inherit;
+      background: var(--white); border: 1px solid var(--border); border-radius: 8px;
+      padding: 0; margin-bottom: 18px; overflow: hidden;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      cursor: pointer;
+    }
+    .option:hover { border-color: #b8b0a0; box-shadow: 0 4px 18px rgba(28,25,22,0.06); }
+    .option--rec { border-left: 4px solid var(--rust); }
+    .option.is-selected {
+      border-color: var(--charcoal);
+      box-shadow: 0 0 0 2px var(--charcoal);
+    }
+    .option__head { padding: 18px 20px 12px; }
+    .option__tag {
+      display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--rust); margin-bottom: 6px;
+    }
+    .option__tag--muted { color: var(--muted); }
+    .option h3 { font-size: 18px; font-weight: 500; margin: 0 0 6px; letter-spacing: -0.02em; color: var(--charcoal); }
+    .option__what { font-size: 14px; color: var(--body); line-height: 1.5; margin: 0; }
+    .option__preview {
+      background: #faf8f4; border-top: 1px solid var(--border);
+      padding: 22px 20px 24px;
+    }
+    .option__preview-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--muted); margin: 0 0 14px;
+    }
+    .option__foot {
+      display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: space-between;
+      align-items: flex-start; padding: 14px 20px 16px; border-top: 1px solid var(--border);
+    }
+    .option__pros, .option__cons {
+      font-size: 12px; color: var(--body); line-height: 1.45; margin: 0; padding-left: 1.1em; flex: 1; min-width: 200px;
+    }
+    .option__pros li, .option__cons li { margin-bottom: 2px; }
+    .option__pick {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--charcoal); align-self: center; white-space: nowrap;
+    }
+    .option--rec .option__pick { color: var(--rust); }
+
+    /* ── Elevated mock chrome (matches draft Home) ── */
+    .mock {
+      background: var(--white); border: 1px solid var(--card-border); border-radius: 8px;
+      padding: 18px 16px 20px; max-width: 100%;
+      box-shadow: 0 2px 12px rgba(28,25,22,0.04);
+    }
+    .mock__toolbar {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px 16px;
+      padding: 0 0 14px; margin-bottom: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+    .mock__tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+    .mock__tab {
+      padding: 10px 18px; font-size: 11px; font-weight: 700; letter-spacing: 0.05em;
+      text-transform: uppercase; border-radius: 4px; border: 1px solid var(--border);
+      background: var(--white); color: var(--muted); font-family: inherit; cursor: default;
+    }
+    .mock__tab--on {
+      background: var(--charcoal); color: var(--white); border-color: var(--charcoal);
+    }
+    .mock__utils {
+      display: flex; align-items: center; flex-wrap: wrap; gap: 12px 14px;
+    }
+    .mock__size {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .mock__size-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
+      color: var(--charcoal);
+    }
+    .mock__size-btn {
+      font-size: 12px; font-weight: 700; letter-spacing: 0.04em;
+      min-width: 34px; padding: 7px 12px; border: none; border-radius: 3px;
+      background: var(--chip); color: var(--muted); font-family: inherit; cursor: default;
+    }
+    .mock__size-btn--on { background: var(--charcoal); color: var(--white); }
+    .mock__link {
+      font-size: 11px; color: var(--muted); text-decoration: none;
+      border-bottom: 1px solid #d0c8be; padding-bottom: 1px;
+    }
+    .mock__grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px 18px;
+    }
+    @media (max-width: 900px) {
+      .mock__grid { grid-template-columns: repeat(2, 1fr); }
+      .mock__grid .vcard:nth-child(n+5) { display: none; }
+    }
+    @media (max-width: 520px) {
+      .mock__grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+    }
+    .vcard {
+      display: flex; flex-direction: column;
+      border: 1px solid var(--card-border); border-radius: 6px; overflow: hidden;
+      background: var(--white);
+      box-shadow: 0 4px 16px rgba(28,25,22,0.07);
+    }
+    .vcard--sold { /* keep readable — draft does not crush opacity */ }
+    .vcard__img {
+      width: 100%; aspect-ratio: 1; overflow: hidden; background: var(--cream); position: relative;
+    }
+    .vcard__img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .vcard__sole {
+      position: absolute; bottom: 10px; left: 10px;
+      font-size: 9px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+      background: rgba(28,25,22,0.72); color: var(--white); padding: 4px 8px; border-radius: 2px;
+    }
+    .vcard__status {
+      position: absolute; top: 10px; left: 10px; z-index: 1;
+      font-size: 8px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--white); padding: 3px 8px; border-radius: 2px;
+    }
+    .vcard__status--sold { background: var(--sold); }
+    .vcard__status--le { background: var(--le); }
+    .vcard__body {
+      padding: 16px 14px 16px; text-align: center;
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+    }
+    .vcard__name {
+      font-size: 16px; font-weight: 700; color: var(--charcoal); margin: 0; line-height: 1.25;
+    }
+    .vcard__meta {
+      display: inline-block; margin: 4px 0 0;
+      font-size: 11px; font-weight: 500; letter-spacing: 0.02em; color: var(--warm);
+      background: var(--chip); padding: 4px 10px; border-radius: 3px;
+    }
+    .vcard__meta--plain {
+      display: block; background: none; padding: 0; color: var(--muted); font-weight: 400;
+    }
+    .vcard__price { font-size: 15px; font-weight: 700; color: var(--charcoal); margin: 6px 0 0; }
+    .vcard__install { font-size: 12px; color: var(--muted); margin: 2px 0 0; }
+    .vcard__install--under-cta {
+      font-size: 12.5px; color: var(--muted); margin: 8px 0 0; line-height: 1.35;
+    }
+    .vcard__sold-txt + .vcard__install--under-cta { margin-top: 8px; }
+    .vcard__add {
+      margin-top: 12px; width: 100%; min-height: 42px; padding: 11px 12px;
+      font-size: 12px; font-weight: 600; letter-spacing: 0.03em;
+      background: var(--charcoal); color: var(--white); border: 1px solid var(--charcoal);
+      border-radius: 4px; font-family: inherit; cursor: default;
+    }
+    .vcard__sold-txt {
+      margin-top: 14px; font-size: 13px; font-weight: 500; color: var(--muted);
+    }
+    .mock__see {
+      text-align: center; margin: 22px 0 0;
+    }
+    .mock__see span {
+      font-size: 13px; font-weight: 500; color: var(--charcoal);
+      border-bottom: 1px solid var(--charcoal); padding-bottom: 2px;
+    }
+
+    .diff-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .diff {
+      font-size: 10px; color: var(--body); background: var(--cream); border: 1px solid var(--border);
+      border-radius: 3px; padding: 3px 7px;
+    }
+    .diff--yes { color: var(--green); border-color: #b8d4c4; background: #f0f7f3; }
+    .diff--no { color: #9a3412; border-color: #e8cfc4; background: #fdf6f3; }
+
+    .steps { background: var(--white); border: 1px solid var(--border); border-radius: 6px; padding: 18px 20px; }
+    .steps ol { margin: 0; padding-left: 1.25em; font-size: 14px; color: var(--body); line-height: 1.55; }
+    .steps li { margin-bottom: 10px; }
+    .steps li:last-child { margin-bottom: 0; }
+    .steps strong { color: var(--charcoal); }
+    .reply {
+      margin-top: 16px; padding: 14px 16px; background: #faf8f4; border: 1px dashed var(--border);
+      border-radius: 6px; font-size: 13px; color: var(--body); line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <a class="back" href="./index.html">← Hub</a>
+    <h1>PDP v18 — Decision</h1>
+    <p class="lede">Pick the variants chrome by sight. Option A is elevated to match <strong>Draft Home (M4 Visual QA)</strong> — the live screenshot below. Mock only — no Shopify until you lock.</p>
+    <p class="note" style="margin-top:-12px;"><strong>Local mock</strong> — serve from <code>docs/</code> at <code>http://127.0.0.1:8765/pdp-v18-decision.html</code>. Commit/push for GitHub Pages.</p>
+
+    <!-- ═══ 1. STATUS ═══ -->
+    <section>
+      <h2>1 · v18 status</h2>
+      <div class="status">
+        <span class="status__tag">Done · Ready to review</span>
+        <h3>Footer + Juicer ship is ready</h3>
+        <p>Full-page Working mock from locked v16. v16 file untouched.</p>
+        <ul>
+          <li><strong>Juicer</strong> — <code>home-juicer</code> + juicer.io embed replaces Yoga Sock Era IG marquee</li>
+          <li><strong>Footer</strong> — Home Join the list + checklist (NO 10%); light columns</li>
+          <li><strong>Variants</strong> — decide A / B / C below; fold into next mock after your pick</li>
+        </ul>
+        <a class="btn" href="./Barreletics%20PDP%20-%20Definitive-v18.html">Open PDP v18</a>
+        <a class="btn btn--ghost" href="./Barreletics%20PDP%20-%20Definitive-v16.html">Open locked v16</a>
+      </div>
+    </section>
+
+    <!-- ═══ 2. GROUND TRUTH SCREENSHOT ═══ -->
+    <section>
+      <h2>2 · Draft Home today (ground truth)</h2>
+      <div class="shot">
+        <div class="shot__bar">
+          <div>
+            <p class="shot__label">Draft Home (M4 Visual QA)</p>
+            <p class="shot__title">Live variants chrome — screenshot Jul 31</p>
+          </div>
+          <p class="shot__meta">Theme <code>187144929571</code> · Closed Sole · Size M · meta pill chip · LE blue / Sold Out grey · no sole image pills</p>
+        </div>
+        <img
+          class="shot__img"
+          src="./assets/draft-home-variants-m4-qa.png"
+          alt="Draft Home M4 Visual QA variants: CLOSED SOLE / OPEN SOLE / OUTDOOR tabs, SIZE M/L, product cards with Sold Out and Limited Edition badges, grey meta chips Closed Sole · Size M, Quick Add buttons"
+          width="1600"
+          height="900"
+        />
+        <p class="shot__cap">
+          <strong>What this is:</strong> the version Andrew said was missing from the decision page.
+          Option A below is built to match this quality — meta as a grey pill, status badges only (not sole pills), soft card shadow, installments, solid Quick Add.
+        </p>
+      </div>
+    </section>
+
+    <!-- ═══ 3. OPTIONS ═══ -->
+    <section>
+      <h2>3 · Variants: pick by sight</h2>
+      <div class="note">
+        <strong>Click an option</strong> to mark your pick.
+        <strong>Recommended = Option A — Draft Home</strong> (exact match to the screenshot above).
+        Option B = Home WORKING HTML / locked PDP mock charcoal sole pills.
+        Option C = tabs only; strip sole from the meta chip too.
+      </div>
+
+      <!-- Option A -->
+      <a class="option option--rec" id="option-a" href="#option-a" data-option="A" aria-label="Select Option A — Draft Home recommended">
+        <div class="option__head">
+          <span class="option__tag">LOCKED · Option A · Recommended</span>
+          <h3>Draft Home (M4 Visual QA) · 4× under Quick Add</h3>
+          <p class="option__what">
+            Exact match to the live draft screenshot: charcoal tabs · SIZE M/L · Size chart / Compare ·
+            status badges only (<strong>SOLD OUT</strong> grey · <strong>LIMITED EDITION</strong> blue) ·
+            <strong>no</strong> sole image pills · grey meta chip <code>Closed Sole · Size M</code> ·
+            $74 · solid Quick Add → quiet or 4 × $18.50 under CTA · Sold Out text · See all. No install under price (no dual pills).
+          </p>
+        </div>
+        <div class="option__preview">
+          <p class="option__preview-label">Live preview — Draft Home chrome</p>
+          <div class="mock">
+            <div class="mock__toolbar">
+              <div class="mock__tabs">
+                <span class="mock__tab mock__tab--on">Closed Sole</span>
+                <span class="mock__tab">Open Sole</span>
+                <span class="mock__tab">Outdoor</span>
+              </div>
+              <div class="mock__utils">
+                <div class="mock__size">
+                  <span class="mock__size-label">Size</span>
+                  <span class="mock__size-btn mock__size-btn--on">M</span>
+                  <span class="mock__size-btn">L</span>
+                </div>
+                <span class="mock__link">Size chart →</span>
+                <span class="mock__link">Compare →</span>
+              </div>
+            </div>
+            <div class="mock__grid">
+              <div class="vcard vcard--sold">
+                <div class="vcard__img">
+                  <img src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&amp;width=400" alt="Dusty Rose" />
+                  <span class="vcard__status vcard__status--sold">Sold Out</span>
+                </div>
+                <div class="vcard__body">
+                  <p class="vcard__name">Dusty Rose</p>
+                  <p class="vcard__meta">Closed Sole · Size M</p>
+                  <p class="vcard__price">$74</p>
+                  <span class="vcard__sold-txt">Sold Out</span>
+                  <p class="vcard__install--under-cta">or 4 × $18.50</p>
+                </div>
+              </div>
+              <div class="vcard">
+                <div class="vcard__img">
+                  <img src="https://barreletics.com/cdn/shop/files/Turquiose.jpg?v=1776454640&amp;width=400" alt="Turquoise" />
+                  <span class="vcard__status vcard__status--le">Limited Edition</span>
+                </div>
+                <div class="vcard__body">
+                  <p class="vcard__name">Turquoise</p>
+                  <p class="vcard__meta">Closed Sole · Size M</p>
+                  <p class="vcard__price">$74</p>
+                  <button class="vcard__add" tabindex="-1">Quick Add →</button>
+                  <p class="vcard__install--under-cta">or 4 × $18.50</p>
+                </div>
+              </div>
+              <div class="vcard vcard--sold">
+                <div class="vcard__img">
+                  <img src="https://barreletics.com/cdn/shop/files/Copper_Swirl.png?v=1780537801&amp;width=400" alt="Copper Swirl" />
+                  <span class="vcard__status vcard__status--sold">Sold Out</span>
+                </div>
+                <div class="vcard__body">
+                  <p class="vcard__name">Copper Swirl</p>
+                  <p class="vcard__meta">Closed Sole · Size M</p>
+                  <p class="vcard__price">$74</p>
+                  <span class="vcard__sold-txt">Sold Out</span>
+                  <p class="vcard__install--under-cta">or 4 × $18.50</p>
+                </div>
+              </div>
+              <div class="vcard">
+                <div class="vcard__img">
+                  <img src="https://barreletics.com/cdn/shop/files/Deep_Teal.png?v=1773521063&amp;width=400" alt="Deep Teal" />
+                  <span class="vcard__status vcard__status--le">Limited Edition</span>
+                </div>
+                <div class="vcard__body">
+                  <p class="vcard__name">Deep Teal</p>
+                  <p class="vcard__meta">Closed Sole · Size M</p>
+                  <p class="vcard__price">$74</p>
+                  <button class="vcard__add" tabindex="-1">Quick Add →</button>
+                  <p class="vcard__install--under-cta">or 4 × $18.50</p>
+                </div>
+              </div>
+            </div>
+            <div class="mock__see"><span>See all colors &amp; styles</span></div>
+          </div>
+          <div class="diff-row">
+            <span class="diff diff--yes">Meta pill chip</span>
+            <span class="diff diff--yes">4× under Quick Add</span>
+            <span class="diff diff--yes">LE blue / Sold Out grey</span>
+            <span class="diff diff--yes">No sole image pills</span>
+            <span class="diff diff--yes">Size + chart + Compare</span>
+            <span class="diff diff--yes">See all</span>
+            <span class="diff">One-Offs may sit off-screen on draft</span>
+          </div>
+        </div>
+        <div class="option__foot">
+          <ul class="option__pros">
+            <li>Already live on draft Home (M4 Visual QA)</li>
+            <li>Cleanest scan: status + color + chip + ATC</li>
+            <li>Matches <code>card_messaging: meta</code> in theme</li>
+          </ul>
+          <ul class="option__cons">
+            <li>Drifts from Home WORKING HTML sole pills (Option B)</li>
+          </ul>
+          <span class="option__pick">Click to pick A →</span>
+        </div>
+      </a>
+
+      <!-- Option B -->
+      <a class="option" id="option-b" href="#option-b" data-option="B" aria-label="Select Option B — Mock pills">
+        <div class="option__head">
+          <span class="option__tag option__tag--muted">Option B</span>
+          <h3>Mock pills</h3>
+          <p class="option__what">
+            Home WORKING HTML / locked PDP mock chrome: charcoal <strong>sole image pills</strong> on the packshot
+            <em>plus</em> meta <code>Closed Sole · Size M</code>. Same elevated card density as A — just re-adds sole pills.
+          </p>
+        </div>
+        <div class="option__preview">
+          <p class="option__preview-label">Live preview — sole pills + meta</p>
+          <div class="mock">
+            <div class="mock__toolbar">
+              <div class="mock__tabs">
+                <span class="mock__tab mock__tab--on">Closed Sole</span>
+                <span class="mock__tab">Open Sole</span>
+                <span class="mock__tab">One-Offs</span>
+                <span class="mock__tab">Outdoor</span>
+              </div>
+              <div class="mock__utils">
+                <div class="mock__size">
+                  <span class="mock__size-label">Size</span>
+                  <span class="mock__size-btn mock__size-btn--on">M</span>
+                  <span class="mock__size-btn">L</span>
+                </div>
+                <span class="mock__link">Size chart →</span>
+                <span class="mock__link">Compare →</span>
+              </div>
+            </div>
+            <div class="mock__grid">
+              <div class="vcard vcard--sold">
+                <div class="vcard__img">
+                  <img src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&amp;width=400" alt="Dusty Rose" />
+                  <span class="vcard__status vcard__status--sold">Sold Out</span>
+                  <span class="vcard__sole">Closed Sole</span>
+                </div>
+                <div class="vcard__body">
+                  <p class="vcard__name">Dusty Rose</p>
+                  <p class="vcard__meta">Closed Sole · Size M</p>
+                  <p class="vcard__price">$74</p>
+                  <p class="vcard__install">or 4 × $18.50</p>
+                  <span class="vcard__sold-txt">Sold Out</span>
+                </div>
+              </div>
+              <div class="vcard">
+                <div class="vcard__img">
+                  <img src="https://barreletics.com/cdn/shop/files/Turquiose.jpg?v=1776454640&amp;width=400" alt="Turquoise" />
+                  <span class="vcard__status vcard__status--le">Limited Edition</span>
+                  <span class="vcard__sole">Closed Sole</span>
+                </div>
+                <div class="vcard__body">
+                  <p class="vcard__name">Turquoise</p>
+                  <p class="vcard__meta">Closed Sole · Size M</p>
+                  <p class="vcard__price">$74</p>
+                  <p class="vcard__install">or 4 × $18.50</p>
+                  <button class="vcard__add" tabindex="-1">Quick Add →</button>
+                </div>
+              </div>
+              <div class="vcard vcard--sold">
+                <div class="vcard__img">
+                  <img src="https://barreletics.com/cdn/shop/files/Copper_Swirl.png?v=1780537801&amp;width=400" alt="Copper Swirl" />
+                  <span class="vcard__status vcard__status--sold">Sold Out</span>
+                  <span class="vcard__sole">Closed Sole</span>
+                </div>
+                <div class="vcard__body">
+                  <p class="vcard__name">Copper Swirl</p>
+                  <p class="vcard__meta">Closed Sole · Size M</p>
+                  <p class="vcard__price">$74</p>
+                  <p class="vcard__install">or 4 × $18.50</p>
+                  <span class="vcard__sold-txt">Sold Out</span>
+                </div>
+              </div>
+              <div class="vcard">
+                <div class="vcard__img">
+                  <img src="https://barreletics.com/cdn/shop/files/Deep_Teal.png?v=1773521063&amp;width=400" alt="Deep Teal" />
+                  <span class="vcard__status vcard__status--le">Limited Edition</span>
+                  <span class="vcard__sole">Closed Sole</span>
+                </div>
+                <div class="vcard__body">
+                  <p class="vcard__name">Deep Teal</p>
+                  <p class="vcard__meta">Closed Sole · Size M</p>
+                  <p class="vcard__price">$74</p>
+                  <p class="vcard__install">or 4 × $18.50</p>
+                  <button class="vcard__add" tabindex="-1">Quick Add →</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="diff-row">
+            <span class="diff">Sole pill on image</span>
+            <span class="diff">Meta chip still on</span>
+            <span class="diff">Matches Home WORKING HTML / v16 mock</span>
+            <span class="diff diff--no">Triple sole signal</span>
+          </div>
+        </div>
+        <div class="option__foot">
+          <ul class="option__pros">
+            <li>Aligns with Home WORKING HTML + locked PDP mock</li>
+            <li>Sole visible when scanning past tabs</li>
+          </ul>
+          <ul class="option__cons">
+            <li>Would change draft Home off meta → badge</li>
+            <li>Tabs + pill + meta = triple sole</li>
+          </ul>
+          <span class="option__pick">Click to pick B →</span>
+        </div>
+      </a>
+
+      <!-- Option C -->
+      <a class="option" id="option-c" href="#option-c" data-option="C" aria-label="Select Option C — Minimal">
+        <div class="option__head">
+          <span class="option__tag option__tag--muted">Option C</span>
+          <h3>Minimal</h3>
+          <p class="option__what">
+            Tabs carry sole type only · cards keep LE / Sold Out + elevated density ·
+            <strong>no</strong> sole image pills · <strong>no</strong> sole in the meta chip
+            (size-only chip, or name + price alone).
+          </p>
+        </div>
+        <div class="option__preview">
+          <p class="option__preview-label">Live preview — tabs only for sole</p>
+          <div class="mock">
+            <div class="mock__toolbar">
+              <div class="mock__tabs">
+                <span class="mock__tab mock__tab--on">Closed Sole</span>
+                <span class="mock__tab">Open Sole</span>
+                <span class="mock__tab">Outdoor</span>
+              </div>
+              <div class="mock__utils">
+                <div class="mock__size">
+                  <span class="mock__size-label">Size</span>
+                  <span class="mock__size-btn mock__size-btn--on">M</span>
+                  <span class="mock__size-btn">L</span>
+                </div>
+                <span class="mock__link">Size chart →</span>
+                <span class="mock__link">Compare →</span>
+              </div>
+            </div>
+            <div class="mock__grid">
+              <div class="vcard vcard--sold">
+                <div class="vcard__img">
+                  <img src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&amp;width=400" alt="Dusty Rose" />
+                  <span class="vcard__status vcard__status--sold">Sold Out</span>
+                </div>
+                <div class="vcard__body">
+                  <p class="vcard__name">Dusty Rose</p>
+                  <p class="vcard__meta">Size M</p>
+                  <p class="vcard__price">$74</p>
+                  <p class="vcard__install">or 4 × $18.50</p>
+                  <span class="vcard__sold-txt">Sold Out</span>
+                </div>
+              </div>
+              <div class="vcard">
+                <div class="vcard__img">
+                  <img src="https://barreletics.com/cdn/shop/files/Turquiose.jpg?v=1776454640&amp;width=400" alt="Turquoise" />
+                  <span class="vcard__status vcard__status--le">Limited Edition</span>
+                </div>
+                <div class="vcard__body">
+                  <p class="vcard__name">Turquoise</p>
+                  <p class="vcard__meta">Size M</p>
+                  <p class="vcard__price">$74</p>
+                  <p class="vcard__install">or 4 × $18.50</p>
+                  <button class="vcard__add" tabindex="-1">Quick Add →</button>
+                </div>
+              </div>
+              <div class="vcard vcard--sold">
+                <div class="vcard__img">
+                  <img src="https://barreletics.com/cdn/shop/files/Copper_Swirl.png?v=1780537801&amp;width=400" alt="Copper Swirl" />
+                  <span class="vcard__status vcard__status--sold">Sold Out</span>
+                </div>
+                <div class="vcard__body">
+                  <p class="vcard__name">Copper Swirl</p>
+                  <p class="vcard__meta">Size M</p>
+                  <p class="vcard__price">$74</p>
+                  <p class="vcard__install">or 4 × $18.50</p>
+                  <span class="vcard__sold-txt">Sold Out</span>
+                </div>
+              </div>
+              <div class="vcard">
+                <div class="vcard__img">
+                  <img src="https://barreletics.com/cdn/shop/files/Deep_Teal.png?v=1773521063&amp;width=400" alt="Deep Teal" />
+                  <span class="vcard__status vcard__status--le">Limited Edition</span>
+                </div>
+                <div class="vcard__body">
+                  <p class="vcard__name">Deep Teal</p>
+                  <p class="vcard__meta">Size M</p>
+                  <p class="vcard__price">$74</p>
+                  <p class="vcard__install">or 4 × $18.50</p>
+                  <button class="vcard__add" tabindex="-1">Quick Add →</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="diff-row">
+            <span class="diff diff--yes">No sole pills</span>
+            <span class="diff diff--yes">Sole stripped from meta chip</span>
+            <span class="diff">Size chip only</span>
+            <span class="diff diff--no">Sole easy to miss if tabs ignored</span>
+          </div>
+        </div>
+        <div class="option__foot">
+          <ul class="option__pros">
+            <li>Cleanest cards — color + price lead</li>
+            <li>Strongest packshot feel</li>
+          </ul>
+          <ul class="option__cons">
+            <li>Sole easy to miss if tabs are ignored</li>
+          </ul>
+          <span class="option__pick">Click to pick C →</span>
+        </div>
+      </a>
+    </section>
+
+    <!-- ═══ 4. PROCEED ═══ -->
+    <section>
+      <h2>4 · Recommended proceed order</h2>
+      <div class="steps">
+        <ol>
+          <li><strong>Review / lock v18</strong> — confirm Juicer + Join the list footer (NO 10%). Mock only.</li>
+          <li><strong>Pick variants Option A / B / C</strong> — click above, then reply. Fold into <strong>v19</strong> (or same v18 if you say so). Default: <strong>A — Draft Home</strong>.</li>
+          <li><strong>No Shopify</strong> until you lock the mock and name a disposable theme ID.</li>
+        </ol>
+        <div class="reply" id="reply-box">
+          Reply with e.g. <code>v18 OK</code> + <code>Option A</code> (or B/C) — then we cut the next mock. Or <code>revise v18: …</code> if footer/Juicer needs fixes first.
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+    (function () {
+      var options = document.querySelectorAll('.option[data-option]');
+      var reply = document.getElementById('reply-box');
+      function select(el) {
+        options.forEach(function (o) { o.classList.remove('is-selected'); });
+        el.classList.add('is-selected');
+        var letter = el.getAttribute('data-option');
+        if (reply) {
+          reply.innerHTML = 'Selected: <strong>Option ' + letter + '</strong> — reply with e.g. <code>v18 OK</code> + <code>Option ' + letter + '</code> to cut the next mock. Or <code>revise v18: …</code> if footer/Juicer needs fixes first.';
+        }
+      }
+      options.forEach(function (el) {
+        el.addEventListener('click', function (e) {
+          e.preventDefault();
+          history.replaceState(null, '', '#' + el.id);
+          select(el);
+        });
+      });
+      var hash = (location.hash || '').replace('#', '');
+      if (hash) {
+        var match = document.getElementById(hash);
+        if (match && match.classList.contains('option')) select(match);
+      }
+    })();
+  </script>
+</body>
+</html>

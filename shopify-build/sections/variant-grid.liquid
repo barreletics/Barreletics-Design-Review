@@ -50,12 +50,13 @@
     assign sole_for_current = ''
     assign title_d = product.title | downcase
     assign handle_d = product.handle | downcase
-    if title_d contains 'open sole' or handle_d contains 'open-sole' or handle_d contains 'studio-performance'
-      assign sole_for_current = 'Open Sole'
+    # One-off BEFORE open-sole — handles like one-off-colors-open-sole contain "open-sole"
+    if title_d contains 'coperni' or handle_d contains 'coperni' or title_d contains 'one-off' or title_d contains 'one off' or handle_d contains 'one-off'
+      assign sole_for_current = 'One-Off'
     elsif title_d contains 'outdoor' or handle_d contains 'aquatic' or handle_d contains 'outdoor'
       assign sole_for_current = 'Outdoor'
-    elsif title_d contains 'coperni' or handle_d contains 'coperni' or title_d contains 'one-off' or handle_d contains 'one-off'
-      assign sole_for_current = 'One-Off'
+    elsif title_d contains 'open sole' or handle_d contains 'open-sole' or handle_d contains 'open_sole' or handle_d contains 'studio-performance'
+      assign sole_for_current = 'Open Sole'
     elsif title_d contains 'closed sole' or handle_d contains 'closed' or handle_d contains 'reformer' or handle_d contains 'legree'
       assign sole_for_current = 'Closed Sole'
     endif
@@ -82,8 +83,24 @@
       assign product_outdoor = nil
     endunless
 
+    # One-off PDPs: keep Closed/Open/Outdoor tabs (shop-all) like Closed Sole.
+    # One-Offs tab = THIS product (not theme picker / not core Open Sole misroute).
+    assign _oo_pdp = false
+    if request.page_type == 'product' and product != blank
+      assign _oo_sfx = template.suffix | downcase
+      assign _oo_h = product.handle | downcase
+      assign _oo_t = product.title | downcase
+      if _oo_sfx == 'one-off-open' or _oo_sfx == 'one-off-closed' or _oo_sfx == 'one-off' or _oo_sfx == 'coperni' or _oo_h contains 'one-off' or _oo_t contains 'one-off' or _oo_t contains 'one off' or _oo_h contains 'coperni' or _oo_t contains 'coperni'
+        assign _oo_pdp = true
+        if show_oneoffs
+          assign product_oneoffs = product
+        endif
+      endif
+    endif
+
     # Theme settings → One-off colors wins (same product as nav + quiet link)
-    if show_oneoffs and settings.one_off_product != blank
+    # Skip on one-off PDPs so Open/Closed one-off pages keep their own One-Offs catalog.
+    if show_oneoffs and settings.one_off_product != blank and _oo_pdp == false
       assign oo_ref = settings.one_off_product
       assign oo_handle = oo_ref.handle | default: oo_ref
       assign product_oneoffs = all_products[oo_handle]
@@ -95,6 +112,7 @@
     assign default_tab = section.settings.default_tab | default: 'closed'
 
     # PDP category wins: template suffix → product identity → TE default_tab
+    # One-off BEFORE open-sole — handles like one-off-colors-open-sole contain "open-sole"
     if request.page_type == 'product' and product != blank
       assign _vg_title = product.title | downcase
       assign _vg_handle = product.handle | downcase
@@ -103,14 +121,14 @@
       assign _vg_tags = product.tags | join: ',' | downcase
       if _vg_suffix == 'outdoor' or _vg_handle contains 'aquatic' or _vg_handle contains 'outdoor' or _vg_title contains 'water shoe' or _vg_title contains 'outdoor' or _vg_type contains 'outdoor' or _vg_tags contains 'outdoor'
         assign default_tab = 'outdoor'
-      elsif _vg_suffix == 'open-sole' or _vg_title contains 'open sole' or _vg_handle contains 'open-sole' or _vg_handle contains 'open_sole' or _vg_handle contains 'studio-performance'
-        assign default_tab = 'open'
-      elsif _vg_suffix == 'coperni' or _vg_title contains 'coperni' or _vg_handle contains 'coperni' or _vg_title contains 'one-off' or _vg_handle contains 'one-off'
+      elsif _vg_suffix == 'one-off-open' or _vg_suffix == 'one-off-closed' or _vg_suffix == 'one-off' or _vg_suffix == 'coperni' or _vg_title contains 'coperni' or _vg_handle contains 'coperni' or _vg_title contains 'one-off' or _vg_title contains 'one off' or _vg_handle contains 'one-off'
         if product_oneoffs != blank
           assign default_tab = 'oneoffs'
         else
           assign default_tab = 'closed'
         endif
+      elsif _vg_suffix == 'open-sole' or _vg_title contains 'open sole' or _vg_handle contains 'open-sole' or _vg_handle contains 'open_sole' or _vg_handle contains 'studio-performance'
+        assign default_tab = 'open'
       elsif _vg_suffix == blank or _vg_suffix == 'product' or _vg_title contains 'closed sole' or _vg_handle contains 'closed-sole' or _vg_handle contains 'reformer' or _vg_handle contains 'legree'
         assign default_tab = 'closed'
       endif
@@ -441,23 +459,8 @@
     display: none !important;
   }
 
+  /* One-Offs: same 4-up grid as other tabs (available first, then sold-out — no group bands). */
   #shopify-section-{{ section.id }} .var-grid--oneoffs {
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
-  }
-  #shopify-section-{{ section.id }} .var-grid-group__label {
-    margin: 0 0 16px;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: #9a9182;
-  }
-  #shopify-section-{{ section.id }} .var-grid-group.is-group-empty {
-    display: none;
-  }
-  #shopify-section-{{ section.id }} .var-grid-group__cards {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     column-gap: 28px;
@@ -717,7 +720,7 @@
 
   @media (max-width: 1024px) {
     #shopify-section-{{ section.id }} .var-grid,
-    #shopify-section-{{ section.id }} .var-grid-group__cards {
+    #shopify-section-{{ section.id }} .var-grid--oneoffs {
       grid-template-columns: repeat(2, 1fr);
     }
   }
@@ -788,7 +791,7 @@
     }
 
     #shopify-section-{{ section.id }} .var-grid,
-    #shopify-section-{{ section.id }} .var-grid-group__cards {
+    #shopify-section-{{ section.id }} .var-grid--oneoffs {
       grid-template-columns: repeat(2, 1fr) !important;
       column-gap: 10px !important;
       row-gap: 20px !important;
@@ -880,24 +883,6 @@
       });
     }
 
-    function syncOneoffGroups(grid) {
-      if (!isOneoffsGrid(grid)) return;
-      grid.querySelectorAll('[data-oneoff-group]').forEach(function (group) {
-        var cards = group.querySelectorAll('.var-card');
-        var anyShown = false;
-        for (var i = 0; i < cards.length; i++) {
-          if (
-            !cards[i].classList.contains('is-size-hidden') &&
-            !cards[i].classList.contains('is-variants-hidden')
-          ) {
-            anyShown = true;
-            break;
-          }
-        }
-        group.classList.toggle('is-group-empty', !anyShown);
-      });
-    }
-
     function applyCollapse() {
       var mode = section.getAttribute('data-see-all') || 'expand';
       var baseLimit = limitFor();
@@ -924,7 +909,6 @@
           card.classList.toggle('is-variants-hidden', !show);
           visibleIdx++;
         });
-        syncOneoffGroups(g);
       });
 
       var total = visibleCardsOf(grid).length;

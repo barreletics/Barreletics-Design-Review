@@ -17,6 +17,11 @@
   assign height_mobile = section.settings.height_mobile | default: '52'
   assign overlay_opacity = section.settings.overlay_opacity | default: 55
   assign overlay_alpha = overlay_opacity | times: 0.01
+  assign focal_x = section.settings.focal_x | default: 50
+  assign focal_y = section.settings.focal_y | default: 50
+  assign water_tint = section.settings.water_tint | default: 'none'
+  assign water_tint_strength = section.settings.water_tint_strength | default: 40
+  assign water_tint_alpha = water_tint_strength | times: 0.01
 
   assign cta_target = section.settings.cta_link_target | default: 'custom'
   if cta_target != blank and cta_target != 'custom'
@@ -35,12 +40,14 @@
 %}
 
 <section
-  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} fullbleed-statement{% unless show_text %} fullbleed-statement--media-only{% endunless %}"
+  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} fullbleed-statement{% unless show_text %} fullbleed-statement--media-only{% endunless %}{% if water_tint != 'none' %} fullbleed-statement--tint-{{ water_tint }}{% endif %}"
   style="{% render 'section-inset-vars' %} 
     --fb-media-radius: {{ media_radius }}px;
     --fb-height-desktop: {{ height_desktop }}vh;
     --fb-height-mobile: {{ height_mobile }}vh;
     --fb-overlay: rgba(28, 25, 22, {{ overlay_alpha }});
+    --fb-focal: {{ focal_x }}% {{ focal_y }}%;
+    --fb-tint-alpha: {{ water_tint_alpha }};
     --fb-cta-bg: {{ cta_bg }};
     --fb-cta-border: {{ cta_border }};
     --fb-cta-text: {{ cta_text_color }};
@@ -89,6 +96,14 @@
         width="2000"
         height="1200"
       >
+    {% elsif section.settings.image_asset != blank %}
+      <img
+        src="{{ section.settings.image_asset | asset_url }}"
+        alt="{{ section.settings.image_alt | escape }}"
+        loading="lazy"
+        width="2000"
+        height="1200"
+      >
     {% elsif section.settings.image_url != blank %}
       <img
         src="{{ section.settings.image_url | escape }}"
@@ -131,22 +146,60 @@
     background: #1c1916;
     border-radius: var(--fb-media-radius, 0);
   }
-  #shopify-section-{{ section.id }} .fullbleed-statement__bg { position: absolute; inset: 0; }
+  /* z-index:0 creates a stacking context so ::after scrim stays behind content (was painting over title) */
+  #shopify-section-{{ section.id }} .fullbleed-statement__bg { position: absolute; inset: 0; z-index: 0; }
   #shopify-section-{{ section.id }} .fullbleed-statement__bg img,
   #shopify-section-{{ section.id }} .fullbleed-statement__video {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: var(--fb-focal, 50% 50%);
     display: block;
   }
   #shopify-section-{{ section.id }} .fullbleed-statement__video {
     position: absolute;
     inset: 0;
   }
+  /* Water tint: stronger in lower frame so paddle/dock water shifts Caribbean/lagoon */
+  #shopify-section-{{ section.id }} .fullbleed-statement__bg::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0;
+    mix-blend-mode: color;
+    background: transparent;
+  }
+  #shopify-section-{{ section.id }} .fullbleed-statement--tint-caribbean .fullbleed-statement__bg::before {
+    opacity: 1;
+    background: linear-gradient(
+      to top,
+      rgba(32, 178, 170, var(--fb-tint-alpha, 0.4)) 0%,
+      rgba(64, 196, 210, calc(var(--fb-tint-alpha, 0.4) * 0.75)) 42%,
+      rgba(120, 210, 230, calc(var(--fb-tint-alpha, 0.4) * 0.25)) 68%,
+      transparent 88%
+    );
+  }
+  #shopify-section-{{ section.id }} .fullbleed-statement--tint-lagoon .fullbleed-statement__bg::before {
+    opacity: 1;
+    background: linear-gradient(
+      to top,
+      rgba(46, 160, 140, var(--fb-tint-alpha, 0.4)) 0%,
+      rgba(64, 180, 150, calc(var(--fb-tint-alpha, 0.4) * 0.75)) 42%,
+      rgba(120, 200, 170, calc(var(--fb-tint-alpha, 0.4) * 0.25)) 68%,
+      transparent 88%
+    );
+  }
+  #shopify-section-{{ section.id }} .fullbleed-statement--tint-caribbean .fullbleed-statement__bg img,
+  #shopify-section-{{ section.id }} .fullbleed-statement--tint-lagoon .fullbleed-statement__bg img {
+    filter: saturate(1.22) contrast(1.04) brightness(1.03);
+  }
   #shopify-section-{{ section.id }} .fullbleed-statement__bg::after {
     content: "";
     position: absolute;
     inset: 0;
+    z-index: 2;
     background: var(--fb-overlay, rgba(28, 25, 22, 0.55));
     pointer-events: none;
   }
@@ -155,7 +208,7 @@
   }
   #shopify-section-{{ section.id }} .fullbleed-statement__content {
     position: relative;
-    z-index: 1;
+    z-index: 2;
     text-align: center;
     padding: 80px 40px;
     max-width: 720px;
@@ -170,7 +223,7 @@
     letter-spacing: var(--type-statement-tracking);
     line-height: var(--type-statement-leading);
     color: #fff;
-    text-shadow: 0 2px 24px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 2px 28px rgba(0, 0, 0, 0.55), 0 1px 2px rgba(0, 0, 0, 0.4);
     margin: 0 0 var(--gap-c);
   }
   #shopify-section-{{ section.id }} .fullbleed-statement__sub {
@@ -414,10 +467,16 @@
     },
     {
       "type": "text",
+      "id": "image_asset",
+      "label": "Theme asset filename",
+      "info": "Optional. e.g. outdoor-paddle-caribbean.jpg — used when Shopify image picker is empty. Beats external URL for color-graded shots."
+    },
+    {
+      "type": "text",
       "id": "image_url",
       "label": "Image URL fallback",
       "default": "https://barreletics.com/cdn/shop/files/IMG_2917.jpg?v=1741040637&width=2000",
-      "info": "Used only when Background image (Shopify) is empty and there is no video."
+      "info": "Used only when Background image + Theme asset are empty and there is no video."
     },
     { "type": "text", "id": "image_alt", "label": "Image alt" },
 
@@ -460,6 +519,57 @@
       "unit": "%",
       "default": 55,
       "info": "Dark overlay behind text. Ignored in image-only mode."
+    },
+    { "type": "header", "content": "Image crop — focal point" },
+    {
+      "type": "paragraph",
+      "content": "When the image is cropped (object-fit: cover), drag these to keep feet / product in frame. Same idea as fifty-fifty focal controls. Per-section — not a global theme setting."
+    },
+    {
+      "type": "range",
+      "id": "focal_x",
+      "label": "Focal X (left → right)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "info": "object-position X"
+    },
+    {
+      "type": "range",
+      "id": "focal_y",
+      "label": "Focal Y (top → bottom)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "info": "Raise toward 75–90% to keep feet visible on dock / paddle shots."
+    },
+    { "type": "header", "content": "Water tint (optional)" },
+    {
+      "type": "select",
+      "id": "water_tint",
+      "label": "Water color grade",
+      "options": [
+        { "value": "none", "label": "None — natural photo" },
+        { "value": "caribbean", "label": "Caribbean blue / turquoise" },
+        { "value": "lagoon", "label": "Lagoon green" }
+      ],
+      "default": "none",
+      "info": "Soft tint stronger on the lower frame (water). Toggle here — no global code."
+    },
+    {
+      "type": "range",
+      "id": "water_tint_strength",
+      "label": "Tint strength",
+      "min": 15,
+      "max": 70,
+      "step": 5,
+      "unit": "%",
+      "default": 40,
+      "info": "Only applies when Water color grade is not None."
     },
     {
       "type": "range",

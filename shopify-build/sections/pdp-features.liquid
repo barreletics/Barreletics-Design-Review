@@ -32,6 +32,10 @@
       {% endfor %}
     </div>
 
+    {% if section.settings.footnote != blank %}
+      <p class="pdp-features__footnote">{{ section.settings.footnote | escape | newline_to_br }}</p>
+    {% endif %}
+
     {% if section.settings.show_disciplines %}
       <div class="pdp-disciplines">
         <p class="pdp-disciplines__label">Built for every discipline</p>
@@ -120,6 +124,14 @@
     color: #6b6459;
     line-height: 1.5;
     margin: 0;
+  }
+
+  .pdp-features__footnote {
+    margin: 28px 0 0;
+    max-width: 62ch;
+    font-size: 12px;
+    line-height: 1.5;
+    color: #8a8a8a;
   }
 
   .pdp-disciplines {
@@ -242,6 +254,12 @@
       "info": "Applies to feature descriptions."
     },
     { "type": "header", "content": "Section — PDP features" },
+    {
+      "type": "textarea",
+      "id": "footnote",
+      "label": "Footnote under features",
+      "info": "Optional. Use with a * in a feature line (e.g. Outdoor surface note). Leave blank to hide."
+    },
     {
       "type": "checkbox",
       "id": "show_disciplines",

@@ -2,11 +2,15 @@
   Trust / Value scan strip — v19 wording + optional Non-toxic
   Desktop: full ·-separated line. Mobile: short line (hide show_on_mobile=false items).
 {% endcomment %}
+{%- liquid
+  assign pad_y = section.settings.padding_y | default: 28
+  assign pad_y_m = section.settings.padding_y_mobile | default: pad_y
+-%}
 
 <section
   class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} value-strip-section"
   aria-label="{{ section.settings.aria_label | default: 'Value propositions' | escape }}"
-  style="{% render 'section-inset-vars' %}{% if section.settings.bg_color != blank %} background: {{ section.settings.bg_color }};{% endif %}"
+  style="{% render 'section-inset-vars' %}--vs-pad-y: {{ pad_y }}px; --vs-pad-y-m: {{ pad_y_m }}px;{% if section.settings.bg_color != blank %} background: {{ section.settings.bg_color }};{% endif %}"
 >
   <div class="value-strip trust-strip__inner">
     <span class="value-strip__full">
@@ -37,9 +41,8 @@
     background: #f5f2ec;
     border-top: 1px solid #d6cfc0;
     border-bottom: 1px solid #d6cfc0;
-    /* Strip tier of the section rhythm: a scan line, not a section. --gap-a, not
-       --section-padding-y, so it stays welded under the buy box. */
-    padding: var(--gap-a, 16px) var(--section-padding-x, 40px);
+    /* Band height via TE padding_y (default 28). Still welded under buy box — not content-section rhythm. */
+    padding: var(--vs-pad-y, 28px) var(--section-padding-x, 40px);
   }
   .value-strip {
     max-width: 1200px;
@@ -50,17 +53,17 @@
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: #6b645a;
-    line-height: 1.4;
+    line-height: 1;
     white-space: nowrap;
     overflow-x: auto;
     scrollbar-width: none;
   }
   .value-strip::-webkit-scrollbar { display: none; }
-  .value-strip__sep { color: #9a9182; margin: 0 2px; }
+  .value-strip__sep { color: #9a9182; margin: 0 8px; }
   .value-strip__short { display: none; }
   @media (max-width: 768px) {
     .value-strip-section {
-      padding: var(--gap-a, 16px) var(--section-padding-x-mobile, 16px);
+      padding: var(--vs-pad-y-m, 24px) var(--section-padding-x-mobile, 16px);
     }
     .value-strip { white-space: normal; }
     .value-strip__full { display: none; }
@@ -95,6 +98,27 @@
       "id": "bg_color",
       "label": "Background",
       "default": "#f5f2ec"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Band height (vertical padding)",
+      "min": 12,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 28,
+      "info": "Height of the cream strip itself — not the type size. Default 28 (was 16)."
+    },
+    {
+      "type": "range",
+      "id": "padding_y_mobile",
+      "label": "Band height — mobile",
+      "min": 12,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 24
     },
     {
       "type": "header",

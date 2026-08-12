@@ -50,10 +50,10 @@ A: Yes! Visit our Size Guide at barreletics.com/pages/size-guide for detailed me
 ### Category: Product Styles
 
 **Q: What's the difference between Open Sole and Closed Sole?**
-A: Open Sole has an open-toe design for maximum ventilation and a barefoot-like feel — best for barre, hot yoga, and heated studios. Closed Sole covers the entire foot for more protection — best for Reformer Pilates, Lagree, and colder studios where you want full foot coverage on equipment (foot bars, springs, straps). Both have the same 360° grip technology.
+A: Coverage and feel only. Open Sole has the heel exposed with a mid-foot breathing hole — more grounded, barefoot feel, natural toe splay. Closed Sole has the heel and foot fully covered. Both perform identically — same grip, same stability, same studio uses.
 
 **Q: Which style should I get?**
-A: It depends on your primary activity. For barre and yoga where breathability matters, try Open Sole. For Reformer and Lagree where foot protection on equipment matters, try Closed Sole. Many customers end up with both! See our comparison page for details.
+A: Choice is preference and feel only. Both perform identically — same grip, same stability — across barre, Pilates, reformer, Lagree, Megaformer, and yoga. Pick Open Sole if you want the more grounded, barefoot feel; pick Closed Sole if you want the heel and foot fully covered. Many customers end up with both! See our comparison page for details.
 
 **Q: Do you have different colors?**
 A: Yes! We offer multiple colorways across our styles. Check our collection pages for current availability. New colorways are released periodically.
@@ -111,7 +111,7 @@ A: Free shipping on orders over $150. Standard shipping rates apply for orders u
 A: Most orders ship within 1-2 business days. Standard delivery is 3-7 business days within the US.
 
 **Q: Do you ship internationally?**
-A: Yes, we ship internationally through our checkout. Delivery times vary by destination (typically 7-14 business days). International customers are responsible for any customs or duties.
+A: Yes — we ship to 195 countries via FedEx International Connect Plus, typically 7–14 business days. Duties and taxes are prepaid, so there's nothing extra to pay when your order arrives.
 
 **Q: Where is my order?**
 A: Check your order status by logging into your account at barreletics.com/account, or use the tracking link in your shipping confirmation email. Tracking can take 24-48 hours to update after a label is created.
@@ -121,10 +121,10 @@ A: Check your order status by logging into your account at barreletics.com/accou
 ### Category: Returns & Warranty
 
 **Q: What's your return policy?**
-A: 30-day returns. Items must be in sellable condition (unworn, unwashed, with tags). Email us with your order number to start a return — we'll send a prepaid label.
+A: 30-day returns. Items must be in sellable condition (unworn, unwashed, with tags). Start a return at https://barreletics.com/pages/returns-portal and follow the prompts to select Refund or Exchange. US returns are a $7.95 flat rate deducted from the refund.
 
 **Q: Can I exchange for a different size?**
-A: We recommend returning the original order and placing a new order for the correct size. This ensures the size you need is in stock.
+A: Yes. Start an exchange at https://barreletics.com/pages/returns-portal — returns and exchanges begin the same way. We ship the exchange at no cost once we receive and inspect the return.
 
 **Q: Do you have a warranty?**
 A: Yes — 90-day warranty against manufacturing defects. This covers defects in materials or construction, grip delamination, and seam failures under normal use. It does not cover normal wear from use or damage from improper care.
@@ -140,7 +140,7 @@ A: Email us with: (1) your order number, (2) photos of the issue, and (3) a brie
 A: Performance Skins are $74 per pair. Check our current promotions for multi-pair savings.
 
 **Q: Do you have any discounts?**
-A: Current offers: Buy 2, Save 15% with code SAVE15. Free shipping on orders over $150. 10% off your first order when you join our newsletter.
+A: Current offers: Buy 2, Save 15% with code SAVE15. Free shipping on orders over $150. Joining our list gets you new drops and studio stories first, plus early access to new colorways — it is not a discount offer.
 
 **Q: Is there a subscription or auto-ship?**
 A: Not currently. Performance Skins last so long that most customers don't need frequent replacements.
@@ -167,9 +167,10 @@ Trigger: Customer mentions "size" or "fit"
 ### Flow 2: Style Recommendation
 ```
 Trigger: Customer mentions "which style" or "open vs closed"
-→ Ask: "What's your primary studio activity? (Barre, Pilates, Reformer, Lagree, Yoga)"
-→ If barre/yoga: Recommend Open Sole
-→ If Reformer/Lagree: Recommend Closed Sole
+→ Answer: "Both perform identically — same grip, same stability, same studio uses. Choice is preference and feel only."
+→ Ask: "Do you want the heel and foot fully covered, or the heel exposed for a more grounded, barefoot feel with natural toe splay?"
+→ If fully covered: Closed Sole. If grounded/barefoot feel: Open Sole.
+→ Never route by discipline — do not recommend a sole based on barre, Pilates, reformer, Lagree, Megaformer, or yoga.
 → Offer: "Would you like to see our side-by-side comparison?"
 ```
 

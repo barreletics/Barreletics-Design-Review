@@ -625,10 +625,10 @@
 - **Source:** docs/09-PRODUCT-KNOWLEDGE.md (Shipping section)
 - **Category:** BUSINESS
 
-### BZ-013: International — Customer Covers Duties/Returns
-- **Decision:** International customers responsible for duties, taxes, customs fees. Return/exchange shipping costs are customer's responsibility.
-- **Rationale:** Standard international shipping policy.
-- **Supersedes:** N/A
+### BZ-013: International — Customer Covers Duties/Returns → **RETIRED 2026-08-12**
+- **Decision:** ~~International customers responsible for duties, taxes, customs fees.~~ **Wrong — duties are PREPAID** (Andrew 2026-08-12, D-054 / P-016). Return and warranty-replacement shipping remain the customer's.
+- **Rationale:** The duties-responsibility language belonged to warranty replacements and leaked onto outbound-order copy across eight surfaces.
+- **Superseded by:** P-016 · canonical CA-18 in `docs/11-CANONICAL-ANSWERS.md`
 - **Source:** docs/09-PRODUCT-KNOWLEDGE.md (Shipping section), manychat-kb/08-shipping.md
 - **Category:** BUSINESS
 

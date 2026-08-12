@@ -356,11 +356,11 @@ Your order is on the way. Carrier delays happen — if tracking hasn't updated i
 ### 5.3  Shipping — International duties
 Hi {%customer.firstName,fallback=there%},
 
-Yes, we ship worldwide. Shipping time and cost depend on your country and are calculated at checkout.
+Yes, we ship worldwide — 195 countries via FedEx International Connect Plus, and orders typically arrive within 7–14 business days.
 
-A note on duties and taxes: depending on where you're located, these may be included at checkout — or they may be collected by your local carrier or customs office when the package arrives. If they're not included up front, be prepared to pay them on delivery.
+Good news on duties and taxes: they're prepaid. You won't be asked for anything extra when the package arrives.
 
-Let us know if you have a specific country in mind and we can help confirm.
+Let us know if you have a specific country in mind and we can help confirm timing.
 
 
 ---

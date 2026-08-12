@@ -2,7 +2,8 @@
 
 **Use this exact letter when launching a Cloud agent overnight / while Andrew is away.**  
 **Repo:** ★ Barreletics-Design-Review · branch with these files pushed  
-**Theme:** M4 `187144929571` only — push **only** if the queue row or this prompt says so  
+**Theme:** M4 `187144929571` only — **Preview → Andrew approves → then push.** Never push before approved / looks good.  
+**Authority letter:** `planning/cloud-handoff-help-hub.md` (Help hub first job)  
 **Queue:** `planning/sprint-queue.md` · Decide board: `docs/HELP-OPEN-ME.html`  
 **Type law:** `planning/help-family-type-law.md` — Page H1 = Help v8 scale · Section H2 = h2-standard · **no type-hero** on Help-family titles  
 **Laws:** anti-revert · Finish→Approve→Lock→Next · no “fully enclosed” · no pool · CURRENT MESSAGE WINS  

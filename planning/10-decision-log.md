@@ -670,6 +670,28 @@ Lean one-off PDP spine keeps brand education for cold traffic (features, reviews
 
 ---
 
+### D-054: International Duties Are Prepaid — Retires BZ-013
+
+**Date:** 2026-08-12 · **Owner letter:** *"no duties are prepaid that is probably for the warranty replacement"*
+
+**Decision:** Duties and taxes on international orders are **prepaid**. Orders clear customs with nothing further to pay. Stated as an advantage, never as a warning.
+
+**Customer-paid exceptions, scoped narrowly:** international **return** shipping · international **warranty replacement** shipping. These are the only two, and they must not leak back into outbound-order copy — that leak is how the error spread in the first place.
+
+**Why it mattered:** the retired claim was on eight surfaces, including HelpScout 5.3 telling international buyers to "be prepared to pay them on delivery." Prepaid duties are a genuine conversion advantage — most DTC brands leave the buyer with a surprise customs bill — and Barreletics was publishing it as a deterrent.
+
+**Impact:** `docs/11-CANONICAL-ANSWERS.md` CA-18 · `docs/10-DECISIONS.md` P-016 · `docs/09-PRODUCT-KNOWLEDGE.md` · `manychat-kb/08-shipping.md` · `helpscout-kb/…Master.md` 5.3 · `shopify-build/templates/page.faq.json`, `page.shipping.json`, `page.returns.json`, `page.shipping-retruns.json` · `sections/page-shipping.liquid`, `page-returns.liquid` (schema defaults too) · `planning/07-product-knowledge-base.md`, `10-decisions-inventory.md`, `m4b-helpscout-alignment.md`, `m4b-tidio-knowledge-base.md`.
+
+**Deliberately NOT edited** — frozen by anti-revert law, and they carry the retired wording as history: locked mocks `docs/Barreletics FAQ - Definitive-v4/v5/v6/v7.html`, `Barreletics Returns - Definitive-v3.html`, the `docs/08-LIVE-SITE-COPY-AUDIT.md` evidence snapshot, and `planning/returns-pages-qa/preview-*.html`. **Never copy shipping or duties copy out of those mocks** — they are design authority for layout only. Copy authority is CA-18.
+
+**Open:** verify the Shopify market / FedEx ICP setting actually collects duties at checkout (DDP) for **all** destinations — `planning/OWNER-MANUAL-TASKS.md` section A. Promising prepaid against a DUP checkout is worse than the old warning.
+
+**Supersedes:** BZ-013 (`docs/10-DECISIONS.md`, `planning/10-decisions-inventory.md`).
+
+**Status:** Approved — owner letter 2026-08-12.
+
+---
+
 ## ADR Archive
 
 The original ADR documents (ADR-01 through ADR-07) are preserved in `planning/` for historical reference. Their UNRESOLVED status is now superseded by the decisions above.

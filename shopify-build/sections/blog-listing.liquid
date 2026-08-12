@@ -1,8 +1,11 @@
 {% comment %}
   Blog Listing Section (Journal index)
-  Masthead → topic filter → featured article → responsive article grid → pagination.
-  Matches docs/Barreletics Journal - Definitive-v6.html.
+  Masthead → curated topic filter → featured article → editorial article grid → pagination.
+  Authority: docs/Barreletics Journal - Definitive-v5.html (hub Locked).
   Used on: blog.json
+
+  ANTI-REVERT / fix-forward: replace blog.all_tags dump with curated TE topic blocks
+  (All · Care · Founder · Movement · Story · Wellness). Do not invent a full-bleed image hero.
 {% endcomment %}
 
 {%- liquid
@@ -60,12 +63,25 @@
       endif
     endfor
   endif
+
+  assign topic_blocks = section.blocks | where: 'type', 'topic'
+  assign show_topic_nav = false
+  if section.settings.show_topics
+    if topic_blocks.size > 0 or section.settings.topics_all_label != blank
+      assign show_topic_nav = true
+    endif
+  endif
+
+  assign active_tag_handle = ''
+  if current_tags.size > 0
+    assign active_tag_handle = current_tags.first | handle
+  endif
 -%}
 
-<section class="section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
+<section class="section blog-listing" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
   <div class="section__inner">
     {% if section.settings.title != blank %}
-      <div class="blog-listing__header">
+      <header class="blog-listing__header">
         {% if section.settings.eyebrow != blank %}
           <p class="eyebrow eyebrow--accent">{{ section.settings.eyebrow }}</p>
         {% endif %}
@@ -73,22 +89,40 @@
         {% if section.settings.subtitle != blank %}
           <p class="blog-listing__subtitle">{{ section.settings.subtitle }}</p>
         {% endif %}
-      </div>
+      </header>
     {% endif %}
 
-    {% if section.settings.show_topics and blog.all_tags.size > 0 %}
+    {% if show_topic_nav %}
       <nav class="journal-topics" aria-label="Topics">
         <a
           href="{{ blog.url }}"
           class="journal-topics__link{% if current_tags.size == 0 %} is-active{% endif %}"
           {% if current_tags.size == 0 %}aria-current="page"{% endif %}
-        >{{ section.settings.topics_all_label }}</a>
-        {% for tag in blog.all_tags limit: section.settings.max_topics %}
+        >{{ section.settings.topics_all_label | default: 'All' }}</a>
+        {% for block in topic_blocks %}
+          {%- liquid
+            assign topic_label = block.settings.label | strip
+            if topic_label == blank
+              continue
+            endif
+            assign topic_tag = block.settings.tag | strip
+            if topic_tag == blank
+              assign topic_tag = topic_label
+            endif
+            assign topic_handle = topic_tag | handle
+            assign topic_active = false
+            if active_tag_handle != blank and active_tag_handle == topic_handle
+              assign topic_active = true
+            elsif current_tags contains topic_tag
+              assign topic_active = true
+            endif
+          -%}
           <a
-            href="{{ blog.url }}/tagged/{{ tag | handle }}"
-            class="journal-topics__link{% if current_tags contains tag %} is-active{% endif %}"
-            {% if current_tags contains tag %}aria-current="page"{% endif %}
-          >{{ tag }}</a>
+            href="{{ blog.url }}/tagged/{{ topic_handle }}"
+            class="journal-topics__link{% if topic_active %} is-active{% endif %}"
+            {% if topic_active %}aria-current="page"{% endif %}
+            {{ block.shopify_attributes }}
+          >{{ topic_label }}</a>
         {% endfor %}
       </nav>
     {% endif %}
@@ -137,45 +171,57 @@
         {% paginate blog.articles by section.settings.articles_per_page %}
           {% for article in blog.articles %}
             {% if article.id == featured_id %}{% continue %}{% endif %}
-            <article class="blog-card">
-              <a href="{{ article.url }}" class="blog-card__link" aria-label="Read {{ article.title }}">
-                <div class="blog-card__image-wrap">
-                  {% if article.image %}
-                    <img
-                      src="{{ article.image | image_url: width: 720 }}"
-                      srcset="{{ article.image | image_url: width: 360 }} 360w,
-                              {{ article.image | image_url: width: 540 }} 540w,
-                              {{ article.image | image_url: width: 720 }} 720w"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      alt="{{ article.image.alt | escape }}"
-                      width="720"
-                      height="450"
-                      loading="lazy"
-                      class="blog-card__image"
-                    >
-                  {% else %}
-                    <div class="blog-card__image-placeholder"></div>
-                  {% endif %}
-                  {% if article.tags.size > 0 %}
-                    <span class="blog-card__tag">{{ article.tags.first }}</span>
-                  {% endif %}
-                </div>
-                <div class="blog-card__content">
-                  <h2 class="blog-card__title">{{ article.title }}</h2>
-                  {% if article.excerpt != blank %}
-                    <p class="blog-card__excerpt">{{ article.excerpt | strip_html | truncate: 120 }}</p>
-                  {% endif %}
-                  <div class="blog-card__meta">
-                    <span class="blog-card__author">{{ article.author }}</span>
-                    <span class="blog-card__date">
-                      <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
-                        {{ article.published_at | date: '%B %d, %Y' }}
-                      </time>
-                    </span>
-                  </div>
-                </div>
-              </a>
-            </article>
+            {%- liquid
+              assign a_words = article.content | strip_html | strip_newlines | split: ' ' | size
+              assign a_read = a_words | divided_by: 200.0 | ceil
+              if a_read < 1
+                assign a_read = 1
+              endif
+              assign a_meta = ''
+              if article.tags.size > 0
+                assign a_meta = article.tags.first
+              endif
+              if section.settings.show_read_time
+                if a_meta != blank
+                  assign a_meta = a_meta | append: ' · ' | append: a_read | append: ' min'
+                else
+                  assign a_meta = a_read | append: ' min'
+                endif
+              endif
+              assign a_dek = article.excerpt | strip_html | strip_newlines | strip
+              if a_dek == blank
+                assign a_dek = article.content | strip_html | strip_newlines | truncatewords: 22
+              else
+                assign a_dek = a_dek | truncate: 140
+              endif
+            -%}
+            <a href="{{ article.url }}" class="blog-card" aria-label="Read {{ article.title | escape }}">
+              <div class="blog-card__media">
+                {% if article.image %}
+                  <img
+                    src="{{ article.image | image_url: width: 720 }}"
+                    srcset="{{ article.image | image_url: width: 360 }} 360w,
+                            {{ article.image | image_url: width: 540 }} 540w,
+                            {{ article.image | image_url: width: 720 }} 720w"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    alt="{{ article.image.alt | escape }}"
+                    width="720"
+                    height="540"
+                    loading="lazy"
+                    class="blog-card__image"
+                  >
+                {% else %}
+                  <div class="blog-card__image-placeholder"></div>
+                {% endif %}
+              </div>
+              {% if a_meta != blank %}
+                <p class="blog-card__meta">{{ a_meta }}</p>
+              {% endif %}
+              <h2 class="blog-card__title">{{ article.title }}</h2>
+              {% if a_dek != blank %}
+                <p class="blog-card__excerpt">{{ a_dek }}</p>
+              {% endif %}
+            </a>
           {% endfor %}
 
           {% if paginate.pages > 1 %}
@@ -202,7 +248,8 @@
 <style>
   .blog-listing__header {
     text-align: center;
-    margin-bottom: var(--space-10);
+    max-width: 560px;
+    margin: 0 auto var(--space-10);
   }
 
   .blog-listing__header .eyebrow {
@@ -220,10 +267,11 @@
     font-weight: var(--type-lede-weight);
     line-height: var(--type-lede-leading);
     color: var(--text-body);
-    margin: 0;
+    max-width: 38ch;
+    margin: 0 auto;
   }
 
-  /* --- Topic filter — Journal v6: centred label row above a hairline rule --- */
+  /* --- Topic filter — Locked v5: centred curated labels + hairline rule --- */
   .journal-topics {
     display: flex;
     flex-wrap: wrap;
@@ -331,35 +379,39 @@
   .blog-listing__grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: var(--grid-gap);
+    gap: 40px 28px;
   }
 
+  /* Locked v5: borderless editorial cards — meta above title, no card chrome */
   .blog-card {
-    border-radius: var(--radius-card);
-    overflow: hidden;
-    background: var(--bg-primary);
-    border: 1px solid var(--border-default);
-    transition: box-shadow var(--transition-fast);
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    overflow: visible;
+    box-shadow: none;
   }
 
   .blog-card:hover {
-    box-shadow: var(--shadow-md);
-  }
-
-  .blog-card__link {
     text-decoration: none;
-    color: inherit;
-    display: block;
+    box-shadow: none;
   }
 
-  .blog-card__image-wrap {
+  .blog-card__media {
     position: relative;
-    aspect-ratio: 16 / 10;
+    aspect-ratio: 4 / 3;
     overflow: hidden;
+    border-radius: var(--radius-button);
     background: var(--bg-alternate);
+    margin-bottom: 18px;
   }
 
   .blog-card__image {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -368,7 +420,7 @@
   }
 
   .blog-card:hover .blog-card__image {
-    transform: scale(1.03);
+    transform: scale(1.04);
   }
 
   .blog-card__image-placeholder {
@@ -377,53 +429,36 @@
     background: linear-gradient(135deg, var(--bg-alternate), var(--border-default));
   }
 
-  .blog-card__tag {
-    position: absolute;
-    top: var(--space-3);
-    left: var(--space-3);
+  .blog-card__meta {
     font-size: var(--type-label-size);
     font-weight: var(--type-label-weight);
-    text-transform: uppercase;
     letter-spacing: var(--type-label-tracking);
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    padding: 4px 8px;
-    border-radius: var(--radius-badge);
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin: 0 0 10px;
   }
 
-  .blog-card__content {
-    padding: var(--space-5);
-  }
-
-  /* Card titles take the H3 role — H2 Standard is reserved for section wayfinding */
   .blog-card__title {
-    font-size: var(--type-h3-size);
+    font-size: 22px;
     font-weight: var(--type-h3-weight);
     line-height: var(--type-h3-leading);
-    letter-spacing: var(--type-h3-tracking);
+    letter-spacing: -0.02em;
     text-transform: none;
     color: var(--text-primary);
-    margin: 0 0 var(--space-2);
+    margin: 0 0 10px;
+  }
+
+  .blog-card:hover .blog-card__title {
+    color: var(--accent-primary);
   }
 
   .blog-card__excerpt {
-    font-size: var(--type-body-size);
+    font-size: 15px;
     font-weight: var(--type-body-weight);
     color: var(--text-body);
-    line-height: var(--type-body-leading);
-    margin: 0 0 var(--space-3);
-  }
-
-  .blog-card__meta {
-    display: flex;
-    gap: var(--space-3);
-    font-size: var(--type-trust-size);
-    font-weight: var(--type-trust-weight);
-    color: var(--text-muted);
-  }
-
-  .blog-card__author {
-    font-weight: var(--type-caption-weight);
+    line-height: 1.5;
+    margin: 0;
+    max-width: 34ch;
   }
 
   .blog-listing__pagination {
@@ -433,6 +468,8 @@
     justify-content: center;
     gap: var(--space-4);
     margin-top: var(--space-8);
+    padding-top: var(--space-8);
+    border-top: 1px solid var(--border-default);
   }
 
   .blog-listing__page-info {
@@ -467,6 +504,10 @@
       gap: var(--grid-gap-sm);
     }
 
+    .blog-listing__header {
+      margin-bottom: var(--space-9);
+    }
+
     .journal-topics {
       gap: var(--space-2) var(--space-4);
       margin-bottom: var(--space-9);
@@ -497,19 +538,19 @@
       "type": "text",
       "id": "eyebrow",
       "label": "Eyebrow",
-      "default": "The Journal"
+      "default": "The journal"
     },
     {
       "type": "text",
       "id": "title",
       "label": "Title",
-      "default": "The Barreletics Journal"
+      "default": "From the Studio"
     },
     {
-      "type": "text",
+      "type": "textarea",
       "id": "subtitle",
-      "label": "Subtitle",
-      "default": "Studio tips, product insights, and performance stories."
+      "label": "Lede",
+      "default": "Studio care, founder notes, and pose-proof stories — then shop Secure in Every Hold."
     },
 
     {
@@ -518,7 +559,7 @@
     },
     {
       "type": "paragraph",
-      "content": "Built from the tags on this blog's articles. Hides itself when the blog has no tags."
+      "content": "Curated editorial topics (Locked Journal). Add Topic blocks below — do not dump every blog SEO tag. Links use /tagged/{handle}; empty tag results if that tag is missing on articles."
     },
     {
       "type": "checkbox",
@@ -531,15 +572,6 @@
       "id": "topics_all_label",
       "label": "\"All\" label",
       "default": "All"
-    },
-    {
-      "type": "range",
-      "id": "max_topics",
-      "label": "Maximum topics shown",
-      "min": 4,
-      "max": 20,
-      "step": 1,
-      "default": 12
     },
 
     {
@@ -603,9 +635,37 @@
       "default": "No articles yet. Check back soon."
     }
   ],
+  "blocks": [
+    {
+      "type": "topic",
+      "name": "Topic",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Care"
+        },
+        {
+          "type": "text",
+          "id": "tag",
+          "label": "Blog tag (for /tagged/ filter)",
+          "info": "Must match an article tag (case-insensitive handle). Defaults to the label if blank.",
+          "default": "Care"
+        }
+      ]
+    }
+  ],
   "presets": [
     {
-      "name": "Blog Listing"
+      "name": "Blog Listing",
+      "blocks": [
+        { "type": "topic", "settings": { "label": "Care", "tag": "Care" } },
+        { "type": "topic", "settings": { "label": "Founder", "tag": "Founder" } },
+        { "type": "topic", "settings": { "label": "Movement", "tag": "Movement" } },
+        { "type": "topic", "settings": { "label": "Story", "tag": "Story" } },
+        { "type": "topic", "settings": { "label": "Wellness", "tag": "Wellness" } }
+      ]
     }
   ]
 }

@@ -1,0 +1,191 @@
+{% comment %}
+  Collab teaser — Free People landing opener (live br-fp-teaser authority).
+  Product-forward H1; partner name is secondary (eyebrow / subhead), never the masthead.
+{% endcomment %}
+
+<section
+  id="{{ section.settings.anchor_id | default: 'collab-teaser' | handleize }}"
+  class="collab-teaser section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %}"
+  style="{% render 'section-inset-vars' %} --ct-accent: {{ section.settings.accent_color | default: '#C4859B' }}; --ct-bg: {{ section.settings.bg_color | default: '#FBF7F2' }};"
+  aria-label="{{ section.settings.aria_label | default: section.settings.headline | strip_html | truncate: 60 | escape }}"
+>
+  <div class="collab-teaser__inner">
+    {% if section.settings.eyebrow != blank %}
+      <p class="collab-teaser__eyebrow"><span>{{ section.settings.eyebrow | escape }}</span></p>
+    {% endif %}
+    {% if section.settings.show_ornament %}
+      <svg class="collab-teaser__ornament" viewBox="0 0 72 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M36 4 C 34 10, 30 14, 24 16 C 30 18, 34 22, 36 28 C 38 22, 42 18, 48 16 C 42 14, 38 10, 36 4 Z" fill="currentColor" opacity="0.9"/>
+        <circle cx="36" cy="16" r="1.6" fill="#fff"/>
+        <path d="M4 16 L 22 16" stroke="currentColor" stroke-width="0.6"/>
+        <path d="M50 16 L 68 16" stroke="currentColor" stroke-width="0.6"/>
+        <circle cx="4" cy="16" r="1" fill="currentColor"/>
+        <circle cx="68" cy="16" r="1" fill="currentColor"/>
+      </svg>
+    {% endif %}
+    {% if section.settings.headline != blank %}
+      <h1 class="collab-teaser__headline">{{ section.settings.headline }}</h1>
+    {% endif %}
+    {% if section.settings.subhead != blank %}
+      <p class="collab-teaser__subhead">{{ section.settings.subhead | escape }}</p>
+    {% endif %}
+    <hr class="collab-teaser__divider" aria-hidden="true">
+    {% if section.settings.body != blank %}
+      <p class="collab-teaser__body">{{ section.settings.body | escape }}</p>
+    {% endif %}
+    {% if section.settings.meta != blank %}
+      <p class="collab-teaser__meta">{{ section.settings.meta | escape }}</p>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  #shopify-section-{{ section.id }} .collab-teaser {
+    background: var(--ct-bg, #FBF7F2);
+    color: #1c1916;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 56px 20px 64px;
+    text-align: center;
+  }
+  #shopify-section-{{ section.id }} .collab-teaser__inner {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  #shopify-section-{{ section.id }} .collab-teaser__eyebrow {
+    font-family: var(--font-body), Roboto, sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    margin: 0 0 48px;
+    color: #1c1916;
+  }
+  #shopify-section-{{ section.id }} .collab-teaser__eyebrow span {
+    display: inline-block;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--ct-accent, #C4859B);
+  }
+  #shopify-section-{{ section.id }} .collab-teaser__ornament {
+    display: block;
+    margin: 0 auto 36px;
+    width: 72px;
+    height: auto;
+    color: var(--ct-accent, #C4859B);
+  }
+  #shopify-section-{{ section.id }} .collab-teaser__headline {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(36px, 9vw, 72px);
+    line-height: 1.05;
+    margin: 0 0 28px;
+    color: #1c1916;
+  }
+  #shopify-section-{{ section.id }} .collab-teaser__headline em {
+    font-style: italic;
+    position: relative;
+    display: inline-block;
+  }
+  #shopify-section-{{ section.id }} .collab-teaser__headline em::after {
+    content: '';
+    position: absolute;
+    left: 4%;
+    right: 4%;
+    bottom: 4px;
+    height: 2px;
+    background: var(--ct-accent, #C4859B);
+    border-radius: 2px;
+  }
+  #shopify-section-{{ section.id }} .collab-teaser__subhead {
+    font-family: var(--font-body), Roboto, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin: 0 0 32px;
+    color: #1c1916;
+  }
+  #shopify-section-{{ section.id }} .collab-teaser__divider {
+    display: block;
+    margin: 40px auto;
+    width: 48px;
+    height: 1px;
+    background: var(--ct-accent, #C4859B);
+    border: 0;
+  }
+  #shopify-section-{{ section.id }} .collab-teaser__body {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-style: italic;
+    font-size: clamp(17px, 4vw, 22px);
+    line-height: 1.55;
+    margin: 0 auto 48px;
+    max-width: 560px;
+    color: #2a2a2a;
+  }
+  #shopify-section-{{ section.id }} .collab-teaser__meta {
+    font-family: var(--font-body), Roboto, sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    margin: 0;
+    color: rgba(28, 25, 22, 0.65);
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .collab-teaser {
+      padding: 40px 16px 48px;
+    }
+    #shopify-section-{{ section.id }} .collab-teaser__eyebrow {
+      margin-bottom: 32px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Collab teaser",
+  "tag": "section",
+  "class": "section-collab-teaser",
+  "settings": [
+    { "type": "text", "id": "anchor_id", "label": "Anchor ID", "default": "collab-teaser" },
+    { "type": "text", "id": "aria_label", "label": "Accessibility label", "default": "Collaboration" },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "In Collaboration with Free People",
+      "info": "Partner credit — keep secondary to the headline."
+    },
+    { "type": "checkbox", "id": "show_ornament", "label": "Show ornament", "default": true },
+    {
+      "type": "html",
+      "id": "headline",
+      "label": "Headline (H1)",
+      "default": "Something <em>wild</em> this way walks.",
+      "info": "This is the page H1 — not the retailer name alone."
+    },
+    {
+      "type": "text",
+      "id": "subhead",
+      "label": "Subhead",
+      "default": "Free People × Barreletics"
+    },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Body",
+      "default": "Performance meets poetry. A footwear story for free spirits — rooted in movement, made to wander. Available exclusively at Free People."
+    },
+    { "type": "text", "id": "meta", "label": "Meta line", "default": "Spring 2026 · Stay wild" },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#FBF7F2" },
+    { "type": "color", "id": "accent_color", "label": "Accent", "default": "#C4859B" },
+    { "type": "checkbox", "id": "hide_on_mobile", "label": "Hide on mobile", "default": false },
+    { "type": "checkbox", "id": "hide_on_desktop", "label": "Hide on desktop", "default": false },
+    { "type": "range", "id": "inset_top", "label": "Inset top", "min": 0, "max": 96, "step": 4, "unit": "px", "default": 0 },
+    { "type": "range", "id": "inset_bottom", "label": "Inset bottom", "min": 0, "max": 96, "step": 4, "unit": "px", "default": 0 },
+    { "type": "range", "id": "inset_x", "label": "Inset left & right", "min": 0, "max": 96, "step": 4, "unit": "px", "default": 0 }
+  ],
+  "presets": [{ "name": "Collab teaser" }]
+}
+{% endschema %}

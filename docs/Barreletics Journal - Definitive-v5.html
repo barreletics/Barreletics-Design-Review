@@ -368,6 +368,19 @@
       .fn-form { flex-direction: column; }
     }
   </style>
+<style id="mobile-qa-sticky-fix">
+  /* Mobile QA 2026-08-08 — the review banner wraps to 2-3 lines on a phone, so the
+     nav's hardcoded 56px sticky offset left it stranded behind the banner (z 100 vs 50).
+     The banner is review chrome, so below 768px it stops sticking and the nav pins to 0. */
+  @media (max-width: 768px) {
+    .mock-banner { position: static; }
+    .site-nav { top: 0; }
+    /* This mock was missing the stacked newsletter rule the other mocks and
+       chrome.css already ship, leaving Subscribe at 42px on a phone. */
+    .fn-form { flex-direction: column; }
+    .fn-input, .fn-btn { width: 100%; min-height: 48px; }
+  }
+</style>
 </head>
 <body>
 <div class="mock-banner" role="note">

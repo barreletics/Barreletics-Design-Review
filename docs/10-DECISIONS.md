@@ -757,11 +757,25 @@ Decision: "Once tracking shows delivered, order considered fulfilled. Cannot iss
 ```
 Source: manychat-kb/08-shipping.md, docs/09-PRODUCT-KNOWLEDGE.md
 
-### BZ-013: International — Customer Covers Duties
+### BZ-013: International — Customer Covers Duties → **SUPERSEDED by P-016**
 ```
-Decision: International customers responsible for duties, taxes, customs. Return shipping costs are customer's.
+RETIRED 2026-08-12. Was: "International customers responsible for duties, taxes, customs."
+That is backwards — duties are prepaid.
 ```
 Source: manychat-kb/08-shipping.md
+
+### P-016: International duties are PREPAID *(Andrew 2026-08-12)*
+```
+Duties and taxes are prepaid. Orders clear customs with nothing further to pay.
+Say it as an advantage — never as a warning.
+
+Customer-paid exceptions (narrow, do not leak into outbound copy):
+  · international RETURN shipping
+  · international WARRANTY REPLACEMENT shipping
+```
+Andrew: the "customer responsible for duties" language was "probably for the warranty replacement." It had spread to eight surfaces, including a HelpScout reply telling buyers to "be prepared to pay them on delivery."
+Supersedes: BZ-013 · Canonical: `docs/11-CANONICAL-ANSWERS.md` CA-18
+⚠️ Open verification: confirm Shopify market/carrier collects duties at checkout (DDP) for all destinations — `planning/OWNER-MANUAL-TASKS.md`
 
 ---
 

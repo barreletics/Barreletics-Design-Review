@@ -21,7 +21,9 @@ Orders process within 24–48 hours and typically ship the next business day.
 
 ## International Orders
 
-We ship worldwide. Customers are responsible for duties, taxes, and customs fees — these vary by location and are outside our control.
+We ship worldwide — 195 countries via FedEx International Connect Plus, typically 7–14 business days. Duties and taxes are prepaid, so there's nothing extra to pay when your order arrives.
+
+Only exception: international returns and warranty replacements — the customer covers that shipping.
 
 ## Tracking
 

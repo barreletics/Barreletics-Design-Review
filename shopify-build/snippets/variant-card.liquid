@@ -132,10 +132,14 @@
       endif
     else
       assign meta_line = vg_sole
-      if size_short != blank and vg_sole != blank
-        assign meta_line = vg_sole | append: ' · Size ' | append: size_tier
-      elsif size_short != blank
-        assign meta_line = 'Size ' | append: size_tier
+      assign size_meta = size_short
+      if size_meta == blank
+        assign size_meta = size_tier
+      endif
+      if size_meta != blank and vg_sole != blank
+        assign meta_line = vg_sole | append: ' · Size ' | append: size_meta
+      elsif size_meta != blank
+        assign meta_line = 'Size ' | append: size_meta
       endif
       if is_limited and vg_sole == 'One-Off'
         assign meta_line = 'One-Off · Limited Edition'

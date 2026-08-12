@@ -41,8 +41,13 @@
 
   assign sole_badge = section.settings.sole_badge
   # Outdoor / water shoe must never show Closed Sole (wrong Default template or metafield)
+  # One-Off PDPs: keep One-Off badge — do NOT rewrite to Open Sole when handle contains open-sole.
   if _cat_outdoor
     assign sole_badge = 'Outdoor'
+  elsif _cat_oneoff
+    if sole_badge == blank or sole_badge == 'Closed Sole' or sole_badge == 'Open Sole'
+      assign sole_badge = 'One-Off'
+    endif
   elsif _cat_open
     if sole_badge == blank or sole_badge == 'Closed Sole'
       assign sole_badge = 'Open Sole'
@@ -68,14 +73,18 @@
   endif
 
   assign badge_color = section.settings.sole_badge_color | default: 'rust'
-  # Outdoor: honor TE (CURRENT MESSAGE 2026-08-09 — rust). Blank → charcoal fallback.
-  # Open: force rust when blank/charcoal (wrong Closed/Impulse template).
-  if _cat_outdoor
-    if section.settings.sole_badge_color == blank
+  # Defaults when blank. Explicit TE black/charcoal/rust/blue ALWAYS honored (2026-08-11).
+  # Core Closed/Open blank → rust. Outdoor blank → charcoal. One-Off blank → Closed black / Open rust.
+  if section.settings.sole_badge_color == blank
+    if _cat_outdoor
       assign badge_color = 'charcoal'
-    endif
-  elsif _cat_open
-    if badge_color == 'black' or badge_color == 'charcoal' or section.settings.sole_badge_color == blank
+    elsif _cat_oneoff
+      if _cat_open
+        assign badge_color = 'rust'
+      else
+        assign badge_color = 'charcoal'
+      endif
+    else
       assign badge_color = 'rust'
     endif
   endif
@@ -346,14 +355,27 @@
 
       {% for option in product.options_with_values %}
         {% assign opt_down = option.name | downcase %}
-        {% if opt_down == 'size' %}
+        {% liquid
+          assign is_size_opt = false
+          if opt_down == 'size' or opt_down contains 'size'
+            assign is_size_opt = true
+          endif
+          # One-off: option 2 is Size when Admin misnames options (Color forced on position 1)
+          if _cat_oneoff and option.position == 2
+            assign is_size_opt = true
+          endif
+        %}
+        {% comment %}
+          Size row = v20c fold: chart-only header (Size Chart →) + M/L. NO "Size" label.
+          Do NOT hide sold-out sizes on one-offs (that stripped L). Colors still hide OOS. Kids never surface.
+        {% endcomment %}
+        {% if is_size_opt %}
           <div class="pdp-buy__option" data-option-position="{{ option.position }}">
-            <div class="pdp-buy__option-header">
-              <span class="pdp-buy__option-label">Size</span>
-              {% if section.settings.show_size_chart_link != false %}
+            {% if section.settings.show_size_chart_link != false %}
+              <div class="pdp-buy__option-header pdp-buy__option-header--chart-only">
                 <a href="{{ size_chart_url }}" class="pdp-buy__size-link">Size Chart →</a>
-              {% endif %}
-            </div>
+              </div>
+            {% endif %}
             <div class="pdp-buy__sizes{% if section.settings.show_soon_size != false %} pdp-buy__sizes--soon{% endif %}" role="group" aria-label="Select size">
               {% if section.settings.show_soon_size != false %}
                 <button
@@ -388,28 +410,6 @@
                 {% else %}
                   {% assign size_letter = value %}
                 {% endif %}
-                {% if _cat_oneoff and skip_size == false %}
-                  {% liquid
-                    assign size_has_available = false
-                    for v in product.variants
-                      assign v_size_match = false
-                      if option.position == 1 and v.option1 == value
-                        assign v_size_match = true
-                      elsif option.position == 2 and v.option2 == value
-                        assign v_size_match = true
-                      elsif option.position == 3 and v.option3 == value
-                        assign v_size_match = true
-                      endif
-                      if v_size_match and v.available
-                        assign size_has_available = true
-                        break
-                      endif
-                    endfor
-                    unless size_has_available
-                      assign skip_size = true
-                    endunless
-                  %}
-                {% endif %}
                 {% unless skip_size %}
                   <button
                     type="button"
@@ -434,6 +434,13 @@
             assign skip_other_opt = true
           endif
           if _cat_oneoff and opt_down != 'size' and option.position == 1
+            assign skip_other_opt = true
+          endif
+          # One-off Size is rendered in the Size loop (position 2) — never duplicate here
+          if _cat_oneoff and option.position == 2
+            assign skip_other_opt = true
+          endif
+          if opt_down contains 'size'
             assign skip_other_opt = true
           endif
         %}
@@ -499,7 +506,17 @@
       <details class="pdp-accordion" data-pdp-accordion>
         <summary class="pdp-accordion__trigger" aria-expanded="false">Description <span>+</span></summary>
         <div class="pdp-accordion__body">
-          {{ product.description }}
+          {%- comment -%}
+            NEVER render Admin product.description here (OWNER 2026-08-11).
+            TE description_accordion_body → else short_description → else placeholder.
+          {%- endcomment -%}
+          {% if section.settings.description_accordion_body != blank %}
+            <p>{{ section.settings.description_accordion_body | escape | newline_to_br }}</p>
+          {% elsif section.settings.short_description != blank %}
+            <p>{{ section.settings.short_description | escape | newline_to_br }}</p>
+          {% else %}
+            <p>Add Description accordion copy in Theme Editor → PDP Buy Box → Description accordion — body.</p>
+          {% endif %}
           {% if section.settings.description_footnote != blank %}
             <p class="pdp-buy__desc-footnote">{{ section.settings.description_footnote | escape | newline_to_br }}</p>
           {% endif %}
@@ -567,19 +584,20 @@
   .pdp-hero {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: var(--space-12);
+    gap: 48px;
     max-width: var(--max-width-hero);
     margin: 0 auto;
-    padding: var(--space-12) var(--space-14) var(--space-12) var(--section-padding-x);
+    /* v20c under v20d chrome — tighter top pad so ATC clears fold */
+    padding: 40px var(--space-14) 48px var(--section-padding-x);
     align-items: flex-start;
   }
 
   .pdp-gallery {
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
+    gap: 12px;
     position: sticky;
-    top: var(--space-12);
+    top: 92px;
   }
 
   .pdp-gallery__hero {
@@ -634,7 +652,8 @@
   .pdp-buy {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    /* v20c fold breathe — keep ATC above fold on desktop */
+    gap: 14px;
   }
 
   .pdp-buy__rating {
@@ -664,10 +683,11 @@
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    margin-bottom: 20px;
+    /* v20c — no extra header margin; gap:14 on .pdp-buy owns spacing */
+    margin-bottom: 0;
   }
 
-  /* Locked v16 @ 691f03b — SEO 18/600 · lede calm 34–44/400 (NOT Type OS hero 72) */
+  /* v20c fold — SEO 18/600 · lede calm 30–40/400 (NOT Type OS hero 72) */
   .pdp-buy__seo-title {
     font-size: 18px;
     font-weight: 600;
@@ -688,12 +708,13 @@
     text-transform: uppercase;
     letter-spacing: 0.08em;
     border-radius: 3px;
+    flex-shrink: 0;
   }
 
   .pdp-buy__name {
-    font-size: clamp(34px, 4vw, 44px);
+    font-size: clamp(30px, 3.6vw, 40px);
     font-weight: 400;
-    line-height: 1.08;
+    line-height: 1.06;
     letter-spacing: 0;
     text-transform: none;
     color: #1c1916;
@@ -704,42 +725,55 @@
   }
 
   .pdp-buy__desc {
-    font-size: var(--fs-body);
+    font-size: 14px;
     font-weight: 400;
-    line-height: var(--lh-body);
+    line-height: 1.5;
     color: #5a5248;
-    max-width: 40ch;
-    margin: 20px 0 0;
+    max-width: 38ch;
+    margin: 0;
   }
 
   .pdp-buy__price-block {
-    padding: var(--space-4) 0;
+    padding: 10px 0;
     border-top: 1px solid var(--border-default);
     border-bottom: 1px solid var(--border-default);
   }
 
   .pdp-buy__price-now {
-    font-size: var(--text-4xl);
-    font-weight: var(--weight-bold);
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1;
     color: var(--text-primary);
   }
 
   .pdp-buy__price-meta {
-    font-size: 13px;
+    display: block;
+    margin-top: 4px;
+    margin-left: 0;
+    font-size: 12px;
     color: var(--text-muted);
-    margin-left: var(--space-2);
   }
 
   .pdp-buy__option {
-    padding: var(--space-4) 0;
-    border-bottom: 1px solid var(--border-default);
+    margin: 0;
+    padding: 0;
+    border-bottom: none;
+  }
+
+  .pdp-buy__option + .pdp-buy__option {
+    margin-top: 4px;
   }
 
   .pdp-buy__option-header {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    margin-bottom: 14px;
+    margin-bottom: 6px;
+  }
+
+  .pdp-buy__option-header--chart-only {
+    justify-content: flex-end;
   }
 
   .pdp-buy__option-label {
@@ -1092,7 +1126,7 @@
       "id": "short_description",
       "label": "Short description (above price)",
       "default": "The premium grip system that replaces traditional grip socks—built for reformer, barre, Pilates and Megaformer.",
-      "info": "v19 buy-box body. Do not dump Admin product.description here — that stays in the Description accordion."
+      "info": "Buy-column body under the lede ONLY. NEVER replace this with Admin product.description. Accordion copy = separate field below."
     },
 
     { "type": "header", "content": "Shared — Media" },
@@ -1110,13 +1144,13 @@
         { "value": "media_index", "label": "Specific media position #" }
       ],
       "default": "admin_order",
-      "info": "Leave on Use theme / Admin default to follow Theme settings → PDP hero image."
+      "info": "Default = Theme settings → PDP hero image. Change this FIRST before using Hero color or Hero media position."
     },
     {
       "type": "text",
       "id": "hero_color",
       "label": "Hero color / option value (override)",
-      "info": "Optional override. e.g. Coral, Bright Yellow, Blue, DarkGrey."
+      "info": "Only used when priority is Variant color (or when this field is filled and priority is still Admin default — then switches to variant color). e.g. Coral, Blue."
     },
     {
       "type": "range",
@@ -1126,7 +1160,7 @@
       "max": 12,
       "step": 1,
       "default": 1,
-      "info": "Only when section priority is Specific media position #."
+      "info": "ONLY applies when Hero image priority = Specific media position #. Ignored on Admin default. 1 = first product image."
     },
     {
       "type": "range",
@@ -1189,7 +1223,7 @@
       "id": "sole_badge_color",
       "label": "Sole badge color",
       "default": "rust",
-      "info": "Open Sole + Outdoor (CURRENT): Rust #c45c3f. Closed Sole: charcoal/black. Blue = live LE accent.",
+      "info": "Default rust for Closed/Open/Outdoor. TE black / charcoal / rust / blue are all honored — never forced. One-Off Closed = black · One-Off Open = rust.",
       "options": [
         { "value": "black", "label": "Black / charcoal" },
         { "value": "charcoal", "label": "Charcoal" },
@@ -1274,22 +1308,32 @@
 
     { "type": "header", "content": "Section — PDP buy box — Accordion" },
     {
+      "type": "paragraph",
+      "content": "Description accordion: use TE body below to control storefront copy. If TE body is blank, Admin product description shows (fallback). Closing note appends after either. Extra accordion is a separate optional row (needs label AND body)."
+    },
+    {
+      "type": "textarea",
+      "id": "description_accordion_body",
+      "label": "Description accordion — body (TE)",
+      "info": "SIGNED copy for the Description accordion. NEVER uses Admin product description. If blank, falls back to Short description (above price) — not Admin."
+    },
+    {
       "type": "textarea",
       "id": "description_footnote",
       "label": "Description accordion — closing note",
-      "info": "Optional. Appended at the end of Admin product description (e.g. Outdoor surface note). Leave blank to hide."
+      "info": "Optional. Appended AFTER the Description accordion body (TE or Admin). Leave blank to hide. Does nothing by itself if you expect a full rewrite — use Description accordion body."
     },
     {
       "type": "text",
       "id": "note_accordion_label",
       "label": "Extra accordion label",
-      "info": "Optional. e.g. Good to know. Leave blank to hide the row."
+      "info": "Optional separate row (e.g. Good to know). Hidden unless Extra accordion body is also filled."
     },
     {
       "type": "textarea",
       "id": "note_accordion_body",
       "label": "Extra accordion body",
-      "info": "Shown only when label + body are both set."
+      "info": "Required with Extra accordion label — both must be set or the row stays hidden."
     },
     {
       "type": "textarea",

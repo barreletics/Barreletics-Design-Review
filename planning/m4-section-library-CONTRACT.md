@@ -148,7 +148,7 @@ No artificial hero cap (H2). Ship distinct capabilities only.
 | Filename | Purpose | Rename / notes |
 |----------|---------|----------------|
 | `reviews` | Quote-led reviews; settings for PDP aggregate when needed | Merges `social-proof` + `pdp-reviews` (P1) |
-| `ig-section` | Instagram / studio UGC grid | **from** `home-ugc` |
+| `home-juicer` | Live Juicer Instagram feed (TE: **Juicer Instagram**) | **LOCKED Jul 31 2026** — reusable any page; supersedes planned `ig-section` / static `home-ugc` for live IG. Filename kept; see `specs/frozen/juicer.md` |
 | `guarantee` | Guarantee / risk-reversal band | **from** `guarantee-band` |
 | `studio-trust` | Studio / instructor trust; **includes GEO** (C3) | New — absorbs `geo-section` |
 
@@ -169,7 +169,7 @@ No artificial hero cap (H2). Ship distinct capabilities only.
 
 ### Final v1 count
 
-**36** approved production sections (3 chrome + 4 entry + 1 companion + 7 commerce + 17 content + 4 proof).  
+**36** approved production sections (3 chrome + 4 entry + 1 companion + 7 commerce + 17 content + 4 proof; live IG = `home-juicer` not separate `ig-section`).  
 Deferred: 3 names (`campaign-stage`, `featured-products`, `featured-collections`).
 
 ---
@@ -194,7 +194,8 @@ Legend: **KEEP** · **REBUILD** · **MERGE→X** · **DELETE**
 | `statement-band.liquid` | **REBUILD** | Standalone first-class (C1) |
 | `value-strip.liquid` | **REBUILD** | Collection / SEO |
 | `guarantee-band.liquid` | **REBUILD** → `guarantee` | Rename |
-| `home-ugc.liquid` | **REBUILD** → `ig-section` | Rename for reuse |
+| `home-juicer.liquid` | **KEEP** · **LOCKED** Jul 31 2026 | TE name Juicer Instagram; reusable any page; `specs/frozen/juicer.md` |
+| `home-ugc.liquid` | **LEGACY** (static UGC) | Live IG = `home-juicer`; do not rebuild as competing IG section |
 | `social-proof.liquid` | **MERGE→reviews** | One reviews section (P1) |
 | `contact-cta.liquid` | **KEEP** | Thin utility |
 | `newsletter.liquid` | **KEEP** | Standalone + footer (C4) |
@@ -212,19 +213,31 @@ Legend: **KEEP** · **REBUILD** · **MERGE→X** · **DELETE**
 | `blog-listing.liquid` | **REBUILD** → `journal-index` | Journal v5 |
 | `article-content.liquid` | **KEEP** | Article template |
 | `page-about.liquid` | **DELETE** after decompose | C6 — compose from library |
-| `page-ambassador.liquid` | **DELETE** after decompose | C6 |
+| `page-ambassador.liquid` | **DELETE** after decompose | C6 — *live surface as of D-048; see note under table* |
 | `page-compare.liquid` | **DELETE** after decompose | Content → `comparison` + library |
 | `page-contact.liquid` | **DELETE** after decompose | `page-head` + form modules |
 | `page-faq.liquid` | **MERGE→faq** then **DELETE** | Capability is `faq` |
 | `page-grip-comparison.liquid` | **DELETE** after decompose | Content → `comparison` |
-| `page-partners.liquid` | **DELETE** after decompose | C6 |
+| `page-partners.liquid` | **DELETE** after decompose | C6 — *live surface as of D-048; see note under table* |
 | `page-returns.liquid` | **DELETE** after decompose | C6 |
 | `page-shipping.liquid` | **DELETE** after decompose | C6 |
 | `page-size-guide.liquid` | **DELETE** after decompose | C6 |
-| `page-studio-program.liquid` | **DELETE** after decompose | C6 |
+| `page-studio-program.liquid` | **DELETE** after decompose | C6 — *live surface as of D-048; see note under table* |
 | `page-technology.liquid` | **DELETE** after decompose | C6 |
 | `page-warranty.liquid` | **DELETE** after decompose | C6 |
-| `page-wholesale.liquid` | **DELETE** after decompose | C6 |
+| `page-wholesale.liquid` | **DELETE** after decompose | C6 — *live surface as of D-048; see note under table* |
+
+> **Partner sections — UPDATED 2026-08-08 (D-048 supersedes D-042).** The four rows above are marked
+> **DELETE after decompose** under C6. That is still the long-term architectural goal, but it is a
+> **future refactor, not a deprecation** — do not read those rows as permission to delete or stop
+> maintaining these files. Owner direction 2026-08-08 (**D-048** in `planning/10-decision-log.md`)
+> reversed D-042's consolidation: `/pages/wholesale`, `/pages/studio-program` and `/pages/ambassador`
+> are **dedicated live pages**, each with its own `BL-PARTNER-*` intake form, and `/pages/partners` is
+> the **routing hub**. All four templates are built, type-corrected and mobile-QA'd
+> (`planning/partner-programs.md` §5, `planning/partner-pages-qa/`). When the decomposition does
+> happen, the right shape is a shared `partner-application` section with a program-type setting plus
+> reuse of `fifty-fifty` / `value-strip` / `collection-faq` for the editorial parts — four dedicated
+> page surfaces are preserved either way.
 
 **Missing from repo (approved; build when reach order):**  
 `hero-fullbleed`, `collection-split` (as final name), `sole-cards`, `visual-mosaic`, `fullbleed-statement`, `lifestyle-break`, `problem-section`, `comparison`, `faq`, `page-head`, `help-hub-grid`, `studio-trust`, `reviews` (as final merged file), `campaign-stage` (**deferred**).
@@ -243,7 +256,7 @@ Legend: **KEEP** · **REBUILD** · **MERGE→X** · **DELETE**
 | 5 | `visual-mosaic` | Second port |
 | 6 | `variant-grid` | Largest KEEP-logic job |
 | 7 | Marketing spine: `disciplines` → `statement-band` → `fullbleed-statement` → `value-strip` → `sock-math` → `comparison` → `problem-section` → `lifestyle-break` | One at a time |
-| 8 | Proof: `reviews` → `ig-section` → `guarantee` → `studio-trust` | One at a time |
+| 8 | Proof: `reviews` → `home-juicer` (**LOCKED**) → `guarantee` → `studio-trust` | Juicer frozen; others one at a time |
 | 9 | `faq` · `newsletter` polish · `contact-cta` · `page-head` · `help-hub-grid` · `journal-index` | One at a time |
 | 10 | `pdp-buy-box` → `pdp-sticky-atc` → `pdp-features` | One at a time |
 | 11 | Template assembly | **Brian** (or later) — not agents on Shopify |
@@ -288,8 +301,9 @@ Once Andrew marks a section **APPROVED / SETTLED / FROZEN**, agents must not sil
 
 | Locked | Status | Notes |
 |--------|--------|-------|
-| **Footer A+** | **LOCKED / APPROVED / FROZEN** 2026-07-31 | Sitewide default footer. Charcoal/black simplified Join the list · columns → Made in USA (+ Connect). **NO brand blurb. NO checkmark checklist. NO 10%.** Lineage `19b8fe6`. |
-| **PDP** | **CONTESTED / NOT FROZEN** 2026-07-31 | Andrew rejected Definitive-v16. Gallery: `docs/pdp-version-gallery.html`. Likely: APPROVED July 17 (`specs/frozen/pdp.md` DP-02). No freeze until letter. |
+| **Footer A+** | **UPDATED** 2026-07-31 (Andrew screenshot) | Light cream **Join the list** + rust ✓ checks · SHOP/LEARN/SUPPORT/CONNECT · Made in USA. **NO brand blurb. NO 10%.** See `planning/m4-section-freeze.md`. |
+| **PDP** | **v19 Locked + product.json 2026-08-01** · v16 prior @ `691f03b` | Hub: v19 Locked + current spine. Never overwrite locked mocks — new versions only. Draft `187144929571`. |
+| **Juicer / Instagram** | **LOCKED** Jul 31 2026 | `home-juicer` · TE **Juicer Instagram** · reusable add/omit any page · max_height 0 · v18 `#instagram` visual · `specs/frozen/juicer.md` |
 | **Type OS** | **SETTLED** | `planning/m4-type-hierarchy.md` |
 | **Home WORKING** | Layout authority | Not a free redesign surface |
 
@@ -304,7 +318,7 @@ Once Andrew marks a section **APPROVED / SETTLED / FROZEN**, agents must not sil
 | Field | Value |
 |-------|-------|
 | Status | **ARCHITECTURE APPROVED** (+ freeze rules §8 · 2026-07-31) |
-| Date | **2026-07-26** (architecture) · **2026-07-31** (Footer A+ freeze) |
+| Date | **2026-07-26** (architecture) · **2026-07-31** (Footer + Juicer freezes) |
 | Approved by | **Andrew** |
 | Contract file | `planning/m4-section-library-CONTRACT.md` |
 | Freeze registry | `planning/m4-section-freeze.md` |

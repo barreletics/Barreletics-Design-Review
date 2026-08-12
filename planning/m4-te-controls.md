@@ -3,7 +3,7 @@
 **Status:** APPROVED 2026-07-30 (Andrew) · **Shared patterns + TE Q&A 2026-07-30**  
 **Authority companion:** `planning/m4-section-library-CONTRACT.md` §7 · freeze rules §8  
 **Type:** Type OS owns typography — **SETTLED** — **no** per-section `font_picker` sprawl (`planning/m4-type-hierarchy.md`)  
-**Freeze registry:** `planning/m4-section-freeze.md` — **Footer A+ LOCKED / APPROVED / FROZEN** 2026-07-31 (sitewide clean stack: charcoal Join the list · columns · Made in USA · Connect; **NO brand blurb · NO checklist · NO 10%**). Do not change this footer without Andrew letter in the current message.
+**Freeze registry:** `planning/m4-section-freeze.md` — **Footer UPDATED** 2026-07-31 (Andrew screenshot: light cream **Join the list** + rust ✓ checks · SHOP/LEARN/SUPPORT/CONNECT · Made in USA; **NO brand blurb · NO 10%**). Do not change this footer without Andrew letter in the current message.
 
 ---
 
@@ -46,11 +46,20 @@ Use Shopify schema `header` settings. Same labels when the block applies. **Omit
 
 1. **`Shared — Content`** — eyebrow, heading, body, CTA label, CTA link + **type overrides** (omit N/A)
 2. **`Shared — Media`** — Shopify video / URL / image / poster (omit Tier B)
-3. **`Shared — Layout`** — height, reverse, media column %, radius (omit if N/A)
+3. **`Shared — Layout`** — reverse, media column %, radius (omit if N/A)  
+4. **`Shared — Section frame`** — **same block / same place on every section**:
+   - **Size** desktop/mobile (stage height vh where applicable; omit on thin bands)
+   - **Inset top** + **Inset bottom** (separate — often need air on one edge only; default **0**)
+   - **Inset left & right** — **one** control (`inset_x`; same value both sides; default **0**)
+   - **Custom mobile inset** checkbox — **off** by default (= mobile matches desktop)
+   - Mobile: top / bottom / left&right (only when custom is on)
+   - **Hide on mobile** / **Hide on desktop** — default **off**
+   - Wire: `class="section-frame …"` + `{% render 'section-inset-vars' %}` + `assets/barreletics-base.css` (**margin**, not padding — so content padding never wins)
+   - Content pad (e.g. mosaic `pad_top` / `pad_bottom` / `pad_x`) stays **section-specific** — not the same as frame inset
 
 ### Block 2 — Section-specific (below Shared)
 
-4. **`Section — …`** — custom controls only for that section  
+5. **`Section — …`** — custom controls only for that section  
    Examples: `Section — Fifty-fifty — media fit` · `Section — Split hero — trust` · `Section — Variant grid — tabs`
 
 ### Rules
@@ -113,14 +122,17 @@ Shopify’s native `url` setting often **drops hash-only** values (`#variants`).
 
 ## Shared pattern — CTA chrome (where CTAs are styled)
 
+Limited versatility — not a style studio. Button CTAs only (not quiet text links like Juicer Follow).
+
 | Setting | Type | Notes |
 |---------|------|-------|
-| `cta_size` | select | Default / Type OS + small px list |
-| `cta_style` | select | `solid` · `outline` |
-| `cta_bg_color` | color | Solid fill |
+| `cta_size` | select | Default / Type OS + small px list (where size override exists) |
+| `cta_style` | select | `solid` · `outline` only |
+| `cta_bg_color` | color | Solid fill (ignored visually on outline) |
 | `cta_border_color` | color | Outline / border |
+| `cta_text_color` | color | Label — white on rust/charcoal fill; charcoal/black on light fill or outline |
 
-Wire via CSS vars on the section root.
+Wire via CSS vars on the section root. Defaults match each section’s current look so TE stays sticky.
 
 ---
 

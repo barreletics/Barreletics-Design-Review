@@ -26,6 +26,7 @@ This file is the **single source for customer-facing answers**. FAQ, PDP, collec
 | **"10% off your first order"** | Retired offer | "Join the list" — no discount promise |
 | blanket **"size up"** for between sizes | Wrong rule — it's width | CA-05 |
 | **"antimicrobial fabric"** on the Apparel tee | Andrew 2026-08-12: steer clear of the claim | describe softness, weight, and moisture movement instead |
+| **"customers are responsible for duties/taxes/customs"** · "be prepared to pay them on delivery" · "not included in our prices" | **P-016** — backwards. Duties are prepaid, and it's a selling point | CA-18. Customer-paid applies **only** to international return and warranty-replacement shipping |
 
 ⚠️ `manychat-kb/05-why-better-than-socks.md` still lists "Antimicrobial & sweat-resistant — doesn't trap bacteria." **That line is retired.** Use CA-01/CA-02.
 
@@ -178,11 +179,19 @@ Set the honest expectation **first**, then land the two proof points. That order
 > Free shipping on Continental US orders over $150. $9.95 flat rate under $150. Expedited and overnight at checkout. We ship worldwide.
 > Orders process within 24–48 hours and typically ship the next business day. Expedited orders placed before 12 PM Eastern ship the same business day. No shipping on weekends or holidays.
 
-**CA-18 · International** *(Andrew confirmed 2026-08-12: the 195 figure is real)*
-> We ship to 195 countries via FedEx International Connect Plus. International orders typically arrive within 7–14 business days.
-> Customers are responsible for duties, taxes, and customs fees — these vary by country and are outside our control.
+**CA-18 · International — duties are PREPAID** *(Andrew 2026-08-12, correcting eight surfaces)*
+> We ship to 195 countries via FedEx International Connect Plus, and orders typically arrive within 7–14 business days.
+> **Duties and taxes are prepaid** — nothing extra to pay when your order arrives.
 
-This is a real carrier arrangement, not marketing padding. It was briefly stripped from the FAQ on 2026-08-12 for being absent from the KB; that was wrong. Keep it on the Shipping page and the FAQ.
+The 195 figure is a real carrier arrangement, not marketing padding. It was briefly stripped from the FAQ on 2026-08-12 for being absent from the KB; that was wrong.
+
+🚫 **RETIRED — this was on eight surfaces and it was backwards:** ~~"Customers are responsible for duties, taxes, and customs fees"~~ · ~~"be prepared to pay them on delivery"~~ (HelpScout 5.3) · ~~"customers are responsible for outbound shipping... and any duties"~~. Prepaid duties are a **conversion advantage** — most DTC brands make the buyer eat a surprise customs bill. Lead with it; never warn about it.
+
+**The two genuine customer-paid exceptions.** Keep these scoped narrowly so they never leak back into outbound-order copy:
+- **International returns** — the customer covers return shipping.
+- **International warranty replacements** — the customer covers replacement shipping (CA-21).
+
+⚠️ **Verify checkout matches the copy.** This is owner-stated. Someone should confirm the Shopify market / carrier setting actually collects duties at checkout (DDP) for all destinations, not just major ones — see `planning/OWNER-MANUAL-TASKS.md`. Copy promising prepaid duties against a DUP checkout would be worse than the old warning.
 
 **CA-19 · Returns — 30 days**
 > Try them indoors for 30 days. If they don't perform, return for a full refund. Items must be clean and like new — no outdoor wear, no sole damage.

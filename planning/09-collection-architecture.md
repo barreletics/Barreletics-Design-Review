@@ -85,7 +85,7 @@ This dual role supports the category creation strategy: customers arrive searchi
 - See `12-seo-geo-standards.md` for full GEO strategy
 
 ### Section 9: Newsletter
-- Email signup with 10% off / SAVE15 code
+- "Join the list" email signup + benefit checkmarks — **NO 10%** (offer retired; see `specs/frozen/footer.md`)
 
 ## Pillar Page Content Requirements (SEO)
 

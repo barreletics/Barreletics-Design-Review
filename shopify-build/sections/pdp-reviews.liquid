@@ -58,13 +58,14 @@
 
   assign render_live = false
   if show_live
-    if live_mode == 'full'
-      assign render_live = true
-    elsif text_count == 0
-      assign render_live = true
-    endif
+    assign render_live = true
   endif
 %}
+{% comment %}
+  HARD: show_live_text always mounts Judge.me. Compact CSS hides chrome +
+  review media; never skip the widget when curated text cards exist, and
+  never JS-hide reviews that include photos (that emptied Outdoor's row).
+{% endcomment %}
 
 <section
   class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} pdp-reviews pdp-reviews--{{ live_mode }}"
@@ -127,6 +128,15 @@
                     sizes: '(max-width: 768px) 100vw, 33vw',
                     alt: block.settings.author
                 }}
+              {% elsif block.settings.image_url != blank %}
+                <img
+                  class="pdp-reviews__photo-img"
+                  src="{{ block.settings.image_url | escape }}"
+                  alt="{{ block.settings.author | default: 'Customer photo' | escape }}"
+                  loading="lazy"
+                  width="900"
+                  height="900"
+                >
               {% else %}
                 <div class="pdp-reviews__photo-img pdp-reviews__photo-img--empty" role="img" aria-label="Add customer photo">
                   <span>Add image</span>
@@ -204,7 +214,41 @@
 
       <div style="clear:both"></div>
 
-      <div class="pdp-reviews__live{% if live_mode == 'compact' %} pdp-reviews__live--compact{% endif %}">
+      {% if live_mode == 'compact' and text_count == 0 %}
+        {% comment %}
+          Visible 3-up text cards. SSR fallback from photo-review quotes so the
+          row is never empty; JS replaces with live Judge.me when it hydrates.
+        {% endcomment %}
+        <div
+          class="pdp-reviews__text-grid pdp-reviews__jm-cards"
+          data-jm-card-target
+          data-jm-card-count="3"
+        >
+          {% assign fb_shown = 0 %}
+          {% for block in section.blocks %}
+            {% if block.type == 'photo_review' and fb_shown < 3 and block.settings.body != blank %}
+              {% assign fb_shown = fb_shown | plus: 1 %}
+              {% assign star_n = block.settings.rating | default: 5 %}
+              <article class="pdp-reviews__text-card" data-jm-fallback>
+                <div class="pdp-reviews__text-stars" aria-label="{{ star_n }} out of 5 stars">
+                  {% for i in (1..5) %}{% if i <= star_n %}★{% else %}☆{% endif %}{% endfor %}
+                </div>
+                <p class="pdp-reviews__text-body">“{{ block.settings.body | strip | remove: '"' | remove: '“' | remove: '”' }}”</p>
+                <footer class="pdp-reviews__text-footer">
+                  {% if block.settings.author != blank %}
+                    <span class="pdp-reviews__text-author">{{ block.settings.author }}</span>
+                  {% endif %}
+                  {% if block.settings.location != blank %}
+                    <span class="pdp-reviews__text-loc">{{ block.settings.location }}</span>
+                  {% endif %}
+                </footer>
+              </article>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <div class="pdp-reviews__live{% if live_mode == 'compact' %} pdp-reviews__live--compact pdp-reviews__live--source{% endif %}">
         {% if scope == 'store' %}
           <div class="jdgm-widget jdgm-all-reviews-widget pdp-reviews__widget">
             {{ jm_widget }}
@@ -541,8 +585,25 @@
     margin: 0;
   }
 
-  .pdp-reviews__live--compact .jdgm-rev:nth-child(n + 7) {
+  .pdp-reviews__live--compact .jdgm-rev:nth-child(n + 4) {
     display: none !important;
+  }
+
+  /* When JS builds the 3 text cards, park the raw Judge.me source off-screen */
+  .pdp-reviews__live--source.is-cardified {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+  }
+
+  .pdp-reviews__jm-cards:not([hidden]) {
+    margin-top: 8px;
   }
 
   .pdp-reviews__standin {
@@ -610,31 +671,109 @@
 
 <script>
   (function () {
-    // Compact live band: after Judge.me hydrates, hide any review that still
-    // carries media so the under-row stays text-only. Full mode is untouched.
-    var sections = document.querySelectorAll('.pdp-reviews--compact');
-    if (!sections.length) return;
+    // Compact mode: copy first 3 Judge.me reviews into our text-card grid
+    // so the row always looks like Closed/Open community cards (dynamic).
+    var roots = document.querySelectorAll('.pdp-reviews--compact');
+    if (!roots.length) return;
 
-    function scrub(root) {
-      var list = root.querySelector('.jdgm-rev-widg__reviews, .jdgm-all-rev-widg__reviews');
-      if (!list) return;
-      Array.prototype.forEach.call(list.querySelectorAll(':scope > .jdgm-rev'), function (rev) {
-        var pics = rev.querySelector('.jdgm-rev__pics, .jdgm-rev__vids');
-        if (pics && pics.querySelector('img, video, .jdgm-rev__pic-img')) {
-          rev.style.display = 'none';
-        }
-      });
+    function starsHtml(score) {
+      var n = Math.max(1, Math.min(5, parseInt(score, 10) || 5));
+      var out = '';
+      for (var i = 1; i <= 5; i++) out += i <= n ? '★' : '☆';
+      return out;
     }
 
-    sections.forEach(function (section) {
-      scrub(section);
-      var widget = section.querySelector('.jdgm-widget');
-      if (!widget) return;
-      var observer = new MutationObserver(function () {
-        clearTimeout(section._jmTextT);
-        section._jmTextT = setTimeout(function () { scrub(section); }, 60);
+    function textOf(el) {
+      return el ? String(el.textContent || '').replace(/\s+/g, ' ').trim() : '';
+    }
+
+    function build(section) {
+      var target = section.querySelector('[data-jm-card-target]');
+      var source = section.querySelector('.pdp-reviews__live--source');
+      if (!target || !source) return false;
+
+      var revs = Array.prototype.slice.call(source.querySelectorAll('.jdgm-rev'));
+      if (!revs.length) return false;
+
+      // Soft preference only — Judge.me still owns the feed. When pictures_first
+      // is on, surface reviews that include media before text-only ones.
+      var picsFirst = section.getAttribute('data-jm-pictures-first') === 'true';
+      if (picsFirst) {
+        revs.sort(function (a, b) {
+          var ap = a.querySelector('.jdgm-rev__pics, .jdgm-rev__vids, .jdgm-gallery') ? 0 : 1;
+          var bp = b.querySelector('.jdgm-rev__pics, .jdgm-rev__vids, .jdgm-gallery') ? 0 : 1;
+          return ap - bp;
+        });
+      }
+
+      var max = parseInt(target.getAttribute('data-jm-card-count') || '3', 10) || 3;
+      var html = '';
+      var count = 0;
+
+      revs.forEach(function (rev) {
+        if (count >= max) return;
+        var bodyEl = rev.querySelector('.jdgm-rev__body');
+        var body = textOf(bodyEl);
+        if (!body) return;
+
+        var author =
+          textOf(rev.querySelector('.jdgm-rev__author')) ||
+          textOf(rev.querySelector('.jdgm-rev__author-wrapper')) ||
+          '';
+        var loc = textOf(rev.querySelector('.jdgm-rev__location'));
+        var score =
+          (rev.querySelector('.jdgm-rev__rating') &&
+            rev.querySelector('.jdgm-rev__rating').getAttribute('data-score')) ||
+          '5';
+
+        // Strip wrapping quotes if Judge.me already includes them
+        body = body.replace(/^[“"]+|[”"]+$/g, '');
+
+        html +=
+          '<article class="pdp-reviews__text-card">' +
+          '<div class="pdp-reviews__text-stars" aria-label="' +
+          score +
+          ' out of 5 stars">' +
+          starsHtml(score) +
+          '</div>' +
+          '<p class="pdp-reviews__text-body">“' +
+          body.replace(/</g, '&lt;') +
+          '”</p>' +
+          '<footer class="pdp-reviews__text-footer">' +
+          (author
+            ? '<span class="pdp-reviews__text-author">' + author.replace(/</g, '&lt;') + '</span>'
+            : '') +
+          (loc
+            ? '<span class="pdp-reviews__text-loc">' + loc.replace(/</g, '&lt;') + '</span>'
+            : '') +
+          '</footer></article>';
+        count += 1;
       });
-      observer.observe(widget, { childList: true, subtree: true });
+
+      if (!count) return false;
+
+      target.innerHTML = html;
+      target.hidden = false;
+      target.removeAttribute('hidden');
+      source.classList.add('is-cardified');
+      return true;
+    }
+
+    roots.forEach(function (section) {
+      if (build(section)) return;
+
+      var source = section.querySelector('.pdp-reviews__live--source');
+      if (!source) return;
+      var tries = 0;
+      var timer = setInterval(function () {
+        tries += 1;
+        if (build(section) || tries > 40) clearInterval(timer);
+      }, 250);
+
+      var obs = new MutationObserver(function () {
+        if (build(section)) obs.disconnect();
+      });
+      obs.observe(source, { childList: true, subtree: true });
     });
   })();
 </script>
@@ -705,7 +844,7 @@
       "id": "show_live_text",
       "label": "Show live Judge.me row",
       "default": true,
-      "info": "On compact PDPs, live Judge.me is skipped when text cards are present. Full mode always shows the widget."
+      "info": "Always mounts Judge.me when checked (compact or full). Compact hides chrome + review media via CSS only — text cards still show."
     },
     {
       "type": "text",
@@ -717,9 +856,9 @@
     {
       "type": "checkbox",
       "id": "pictures_first",
-      "label": "Photo reviews first (full widget)",
+      "label": "Prefer reviews with photos first",
       "default": true,
-      "info": "Only applies in full widget mode."
+      "info": "Soft preference only. Compact text cards: prefer Judge.me reviews that include media. Full widget: Judge.me photo-first when supported. Cannot reorder Judge.me’s whole catalog — no inventing sort."
     },
     {
       "type": "checkbox",
@@ -761,6 +900,12 @@
           "id": "image",
           "label": "Customer photo",
           "info": "Leave blank for Add image placeholder. Prefer a real Judge.me customer photo."
+        },
+        {
+          "type": "text",
+          "id": "image_url",
+          "label": "Photo URL fallback",
+          "info": "CDN URL when Theme Editor image picker is empty (e.g. Outdoor water/beach product shots)."
         },
         {
           "type": "textarea",

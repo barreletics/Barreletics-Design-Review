@@ -71,7 +71,7 @@ updated: 2026-08-08
 - **Authority:** `Definitive-v19.html` `#buy` · `product.json` `pdp-buy-box`
 - **Composition:** reviews → title / lede → price → muted `or 4 × $18.50` → color/size → qty+CTA → **empty under ATC** → quiet Complete the kit → accordion
 - **Complete the kit:** quiet label + Hot Pilates / Hot Yoga links + hint
-- **Title sole badge:** TE optional (CURRENT MESSAGE Aug 2) — show on/off · color rust (default) / blue `#458CD9` / charcoal `#1c1916` / black `#000000` · label override → `custom.sole_type` → handle/title fallback (Open/Closed Sole · Outdoor · One-Off) · quiet v16 `.pdp-buy__badge` pill
+- **Title sole badge:** TE optional (CURRENT MESSAGE Aug 9) — show on/off · color **Black/charcoal** `#1c1916` · **Rust orange** `#c45c3f` · **Blue (live strip)** `#458CD9` · Open default rust · Closed default black · label override → `custom.sole_type` → handle/title fallback (Open/Closed Sole · Outdoor · One-Off) · quiet v16 `.pdp-buy__badge` pill
 
 ## Variants 4× payments — LOCKED
 
@@ -89,7 +89,7 @@ updated: 2026-08-08
 | `fullbleed-lifestyle` | **Media-only wow** · `show_text: false` · **80vh / 60vh** · after sock-math / before commit |
 | `fifty-fifty-*` (PDP) | **`min_height: 560`** · pad 80 · mobile media 320 · cover |
 | `fifty-fifty-lifestyle` | `content_style: quote` · stars on · cream `#f5f2ec` |
-| `pdp-sock-math` | Compact · “One pair. Done.” · `cta_text: ""` |
+| `pdp-sock-math` | Compact · “One pair. Done.” · **no review quote** · `cta_text: ""` |
 | `fifty-fifty-commit` | reverse · cream · video |
 | `pdp-reviews` | Hybrid 3 photo + 6 text · “Real people. Real results.” |
 | `fifty-fifty-numbers` | `content_style: statement` · eyebrow Grip, Support, Comfort · title Think outside the sock! · Shop now → `#buy` |

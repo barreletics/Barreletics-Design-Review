@@ -87,7 +87,7 @@ No third text tier (merge points into paragraph or drop one).
 | `home-ugc` | @barreletics | **Standard** | Functional UGC section label |
 | `guarantee-band` | Zero risk. All grip. | **Statement** | Dark-band tier 1 (not H2) |
 | `geo-section` | Trusted across the country | **Supporting** | Accordion label (eyebrow/H3, not H2) |
-| `newsletter` | 10% off your first pair. | **Standard** | Utility signup framing |
+| `newsletter` | Join the list | **Standard** | Utility signup framing |
 
 Wiring: `fifty-fifty` uses TE `heading_register` (`display` \| `standard`) → `.h2-display` / `.h2-standard`. Fixed sections hardcode the class. `.em` only on hero / Display / statement — never Standard.
 

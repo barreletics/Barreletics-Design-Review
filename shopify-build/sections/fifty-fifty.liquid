@@ -18,6 +18,7 @@
   endif
 
   assign media_fit = section.settings.media_fit | default: 'cover'
+  assign media_aspect = section.settings.media_aspect | default: 'stretch'
 
   assign cta_target = section.settings.cta_link_target | default: 'custom'
   if cta_target != blank and cta_target != 'custom'
@@ -80,7 +81,7 @@
 
 <section
   {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | handleize }}"{% endif %}
-  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} split-section{% if section.settings.reverse %} split-section--reverse{% endif %}{% if media_fit == 'contain' %} split-section--contain{% endif %}{% if media_radius_outer %} split-section--media-outer-radius{% endif %}"
+  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} split-section{% if section.settings.reverse %} split-section--reverse{% endif %}{% if media_fit == 'contain' %} split-section--contain{% endif %}{% if media_aspect == 'square' %} split-section--media-square{% endif %}{% if media_radius_outer %} split-section--media-outer-radius{% endif %}"
   style="{% render 'section-inset-vars' %} 
     --ff-min-height: {{ min_height }}px;
     --ff-mobile-media-height: {{ mobile_media_height }}px;
@@ -150,6 +151,13 @@
         alt="{{ section.settings.image_alt | escape }}"
         loading="lazy"
       >
+    {% elsif section.settings.image_asset != blank %}
+      <img
+        class="split-media__img"
+        src="{{ section.settings.image_asset | asset_url }}"
+        alt="{{ section.settings.image_alt | escape }}"
+        loading="lazy"
+      >
     {% elsif section.settings.image_url != blank %}
       <img
         class="split-media__img"
@@ -166,6 +174,9 @@
 
   <div class="split-text align-editorial{% if content_style == 'quote' %} split-text--quote{% endif %}{% if content_style == 'stats' %} split-text--stats{% endif %}{% if content_style == 'statement' %} split-text--statement{% endif %}" style="background: {{ section.settings.bg_color | default: '#fff' }};">
     {% if content_style == 'quote' %}
+      {% if section.settings.eyebrow != blank %}
+        <h2 class="split-text__title {{ heading_class }}" style="margin:0 0 20px;">{{ section.settings.eyebrow }}</h2>
+      {% endif %}
       {% if section.settings.show_quote_stars != false %}
         <div class="split-quote__stars" aria-hidden="true">★★★★★</div>
       {% endif %}
@@ -272,19 +283,23 @@
 </section>
 
 <style>
-  /* Section rhythm band (2026-08-08). A fifty-fifty is a composed section, not a
-     full-bleed statement, so it must never butt its neighbour at 0 — the media
-     column ran edge to edge and welded itself to the next breather. The band
-     lives on the section box, so the media still fills its own column top to
-     bottom (full-bleed media law below is untouched). The text column subtracts
-     the band so "vertical padding" keeps meaning distance from the section edge. */
+  /* Section rhythm (fix-forward 2026-08-09): band lives on the Shopify
+     section WRAPPER so neighbouring fifty-fifties never weld — without
+     insetting the media column. Prior padding-block on .split-section left
+     64px empty bands above/below the image inside the section frame. */
+  #shopify-section-{{ section.id }} {
+    padding-block: var(--section-padding-y, 64px);
+    box-sizing: border-box;
+    background: {{ section.settings.bg_color | default: '#fff' }};
+  }
   #shopify-section-{{ section.id }} .split-section {
     display: grid;
     grid-template-columns: var(--ff-media-fr, 1fr) var(--ff-text-fr, 1fr);
     gap: var(--ff-column-gap, 0);
+    align-items: stretch;
     min-height: var(--ff-min-height, 640px);
-    padding-block: var(--ff-band, var(--section-padding-y, 64px));
-    box-sizing: content-box;
+    padding-block: 0;
+    box-sizing: border-box;
   }
   #shopify-section-{{ section.id }} .split-section--reverse {
     grid-template-columns: var(--ff-text-fr, 1fr) var(--ff-media-fr, 1fr);
@@ -294,8 +309,18 @@
   #shopify-section-{{ section.id }} .split-media {
     position: relative;
     overflow: hidden;
-    min-height: calc(var(--ff-min-height, 640px) * 0.75);
+    align-self: stretch;
+    height: 100%;
+    min-height: var(--ff-min-height, 640px);
     border-radius: var(--ff-media-radius, 0);
+  }
+  /* Square media column — packshots fill the frame under cover without
+     landscape toe-clip. Section grows with the column width (≥ min_height). */
+  #shopify-section-{{ section.id }} .split-section--media-square .split-media {
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    height: auto;
+    min-height: var(--ff-min-height, 640px);
   }
   /* Round media only on the outer edge (away from the text column) */
   #shopify-section-{{ section.id }} .split-section--media-outer-radius .split-media {
@@ -335,6 +360,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: var(--ff-object-position, center);
   }
   #shopify-section-{{ section.id }} .split-section--contain .split-media {
     display: flex;
@@ -356,7 +382,7 @@
   #shopify-section-{{ section.id }} .split-media__placeholder {
     width: 100%;
     height: 100%;
-    min-height: calc(var(--ff-min-height, 640px) * 0.75);
+    min-height: var(--ff-min-height, 640px);
     background: linear-gradient(135deg, #c9c5b8, #e9d3cb);
     display: flex;
     align-items: center;
@@ -371,9 +397,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    padding:
-      max(0px, calc(var(--ff-vertical-padding, 88px) - var(--ff-band, var(--section-padding-y, 64px))))
-      var(--ff-side-padding, 64px);
+    padding: var(--ff-vertical-padding, 88px) var(--ff-side-padding, 64px);
     border-radius: var(--ff-text-radius, 0);
     text-align: var(--align-editorial, left);
   }
@@ -459,14 +483,21 @@
     opacity: 0.85;
   }
   @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} {
+      padding-block: var(--section-padding-y-mobile, 48px);
+    }
     #shopify-section-{{ section.id }} .split-section {
       grid-template-columns: 1fr;
       min-height: auto;
-      padding-block: var(--ff-band-mobile, var(--section-padding-y-mobile, 48px));
+      padding-block: 0;
     }
     #shopify-section-{{ section.id }} .split-section--reverse .split-media,
     #shopify-section-{{ section.id }} .split-section--reverse .split-text { order: 0; }
-    #shopify-section-{{ section.id }} .split-media {
+    #shopify-section-{{ section.id }} .split-media,
+    #shopify-section-{{ section.id }} .split-section--media-square .split-media {
+      aspect-ratio: auto;
+      width: 100%;
+      height: var(--ff-mobile-media-height, 320px);
       min-height: var(--ff-mobile-media-height, 320px);
     }
     #shopify-section-{{ section.id }} .split-section--media-outer-radius .split-media,
@@ -477,9 +508,7 @@
     }
     #shopify-section-{{ section.id }} .split-text {
       padding:
-        max(0px, calc(
-          min(var(--ff-vertical-padding, 88px), var(--section-padding-y-mobile, 48px))
-          - var(--ff-band-mobile, var(--section-padding-y-mobile, 48px))))
+        min(var(--ff-vertical-padding, 88px), var(--section-padding-y-mobile, 48px))
         min(var(--ff-side-padding, 64px), var(--section-padding-x-mobile, 16px));
     }
   }
@@ -1200,9 +1229,15 @@
     },
     {
       "type": "text",
+      "id": "image_asset",
+      "label": "Theme asset filename",
+      "info": "Optional. e.g. outdoor-water-50-50-blue.jpg — used when Shopify image picker is empty. Prefer for color-graded theme assets."
+    },
+    {
+      "type": "text",
       "id": "image_url",
       "label": "Image URL (optional fallback)",
-      "info": "Only used when the Shopify image picker is empty (and there is no video). Needed when: (1) you paste a CDN/external URL without uploading to Shopify Files, (2) theme defaults ship with mock CDN URLs, or (3) the picker is left blank. If both Shopify image and this URL are set, Shopify image wins. Leave blank if you always use the image picker."
+      "info": "Only used when the Shopify image picker and Theme asset are empty (and there is no video). If Shopify image is set, it wins."
     },
     {
       "type": "text",
@@ -1244,6 +1279,23 @@
       "step": 10,
       "unit": "px",
       "default": 320
+    },
+    {
+      "type": "select",
+      "id": "media_aspect",
+      "label": "Media frame shape",
+      "options": [
+        {
+          "value": "stretch",
+          "label": "Stretch to section height (default)"
+        },
+        {
+          "value": "square",
+          "label": "Square — packshots under cover"
+        }
+      ],
+      "default": "stretch",
+      "info": "Square keeps TopBottom packshots inside the frame with media_fit Cover (no landscape toe-clip). Lifestyle photos stay on Stretch."
     },
     {
       "type": "checkbox",

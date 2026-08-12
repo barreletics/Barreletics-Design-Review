@@ -458,10 +458,10 @@ Current LE colorways: Dusty Rose, Turquoise ($78), Copper Swirl ($78), Deep Teal
 ### 10A. Newsletter Signup (Design System)
 
 **Eyebrow:** "Join the list"  
-**Headline:** "10% off your first pair."  
+**Headline:** "New drops and studio stories first."  
 **Body:** "New drops, studio stories, care tips. Once or twice a quarter. Never spam."  
-**Source:** Section-28-Newsletter.html  
-**Status:** FUTURE DESIGN SYSTEM
+**Source:** `specs/frozen/footer.md` (Footer LOCK 2026-07-31)  
+**Status:** CURRENT — the prior "10% off your first pair." headline is retired; no discount promise
 
 ### 10B. Live Site Newsletter
 

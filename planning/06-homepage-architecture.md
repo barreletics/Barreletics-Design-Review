@@ -85,7 +85,7 @@ Establish Barreletics as a category-creating brand — not just a product. The h
 ### Section 12: Newsletter — "Join the list"
 - Email input + subscribe
 - Klaviyo integration
-- 10% off / SAVE15 code mention
+- Benefit checkmarks — **NO 10%** (offer retired; see `specs/frozen/footer.md`)
 
 ### Global: Announcement Ticker (top of page)
 - Single strip: `Buy 2, Save 15% — Code SAVE15 · Free Shipping Over $150 · 30-Day Returns · Made in USA`

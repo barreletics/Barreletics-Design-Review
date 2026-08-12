@@ -2,7 +2,60 @@
   Sticky Add-to-Cart Bar (D-023)
   Hidden when native ATC is visible. Appears when purchase module scrolls out of view.
   Include in PDP template via section wrapper.
+
+  Optional render params (from pdp-sticky-atc section settings):
+    hero_image_mode, hero_color, hero_media_index — same TE contract as buy-box.
 {% endcomment %}
+{% liquid
+  assign sticky_hero = product.featured_image
+  assign sticky_mode = settings.pdp_hero_image_mode | default: 'admin_order'
+  assign sticky_color = settings.pdp_hero_color | strip
+  assign sticky_idx = settings.pdp_hero_media_index | default: 1 | plus: 0
+  if hero_image_mode != blank and hero_image_mode != 'admin_order'
+    assign sticky_mode = hero_image_mode
+  endif
+  if hero_color != blank
+    assign sticky_color = hero_color | strip
+    if sticky_mode == 'admin_order'
+      assign sticky_mode = 'variant_color'
+    endif
+  endif
+  if hero_image_mode == 'media_index'
+    assign sticky_mode = 'media_index'
+    assign sticky_idx = hero_media_index | default: sticky_idx | plus: 0
+  endif
+  if sticky_mode == 'variant_color' and sticky_color != blank
+    assign want = sticky_color | downcase
+    for v in product.variants
+      assign matched = false
+      for opt in v.options
+        assign od = opt | strip | downcase
+        if od == want or od contains want
+          assign matched = true
+        endif
+      endfor
+      if matched
+        if v.featured_media != blank
+          assign sticky_hero = v.featured_media.preview_image | default: v.featured_media
+        elsif v.image != blank
+          assign sticky_hero = v.image
+        endif
+        break
+      endif
+    endfor
+  elsif sticky_mode == 'media_index'
+    assign zero = sticky_idx | minus: 1
+    if zero < 0
+      assign zero = 0
+    endif
+    if product.images[zero] != blank
+      assign sticky_hero = product.images[zero]
+    endif
+  endif
+  if sticky_hero == blank
+    assign sticky_hero = product.featured_image
+  endif
+%}
 
 <div
   id="sticky-atc"
@@ -13,10 +66,10 @@
 >
   <div class="sticky-atc__inner">
     <div class="sticky-atc__product">
-      {% if product.featured_image %}
+      {% if sticky_hero %}
         <img
           class="sticky-atc__thumb"
-          src="{{ product.featured_image | image_url: width: 80 }}"
+          src="{{ sticky_hero | image_url: width: 80 }}"
           alt="{{ product.title | escape }}"
           width="40"
           height="40"
