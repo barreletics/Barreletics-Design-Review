@@ -4,7 +4,7 @@
   Used on: page.size-guide.json
 {% endcomment %}
 
-<section class="section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
+<section class="section page-size__head" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
   <div class="section__inner section__inner--narrow">
     {% if section.settings.eyebrow != blank %}
       <p class="eyebrow eyebrow--accent">{{ section.settings.eyebrow }}</p>
@@ -16,7 +16,7 @@
   </div>
 </section>
 
-<section class="section section--cream">
+<section class="section page-size__body">
   <div class="section__inner section__inner--narrow">
     <h2 class="page-size__section-title h2-standard">Size Chart</h2>
     <div class="page-size__table-wrap">
@@ -60,28 +60,20 @@
         </tbody>
       </table>
     </div>
-  </div>
-</section>
 
-<section class="section">
-  <div class="section__inner section__inner--narrow">
-    <h2 class="page-size__section-title h2-standard">Fit Notes by Color</h2>
+    <h2 class="page-size__section-title page-size__section-title--stacked h2-standard">Fit Notes by Color</h2>
     <div class="page-size__notes">
-      <div class="page-size__note page-size__note--alert">
+      <div class="page-size__note">
         <h3 class="page-size__note-title">Dark Grey, Hot Coral & Blue</h3>
         <p class="page-size__note-text">{{ section.settings.snug_colors_note }}</p>
       </div>
-      <div class="page-size__note page-size__note--soft">
+      <div class="page-size__note">
         <h3 class="page-size__note-title">Light Grey</h3>
         <p class="page-size__note-text">{{ section.settings.light_grey_note }}</p>
       </div>
     </div>
-  </div>
-</section>
 
-<section class="section section--cream">
-  <div class="section__inner section__inner--narrow">
-    <h2 class="page-size__section-title h2-standard">Fit Tips</h2>
+    <h2 class="page-size__section-title page-size__section-title--stacked h2-standard">Fit Tips</h2>
     <div class="page-size__tips">
       {% for block in section.blocks %}
         {% if block.type == 'fit_tip' %}
@@ -96,7 +88,7 @@
 </section>
 
 {% if section.settings.cta_text != blank %}
-<section class="section">
+<section class="section page-size__cta">
   <div class="section__inner section__inner--narrow" style="text-align: center;">
     <p class="page-size__cta-text">{{ section.settings.cta_note }}</p>
     {% render 'button', label: section.settings.cta_text, url: section.settings.cta_url, style: 'primary', size: 'lg' %}
@@ -132,106 +124,88 @@
     letter-spacing: var(--type-section-tracking);
     text-transform: none;
     color: var(--text-primary);
-    margin: 0 0 var(--space-6);
+    margin: 0 0 var(--space-5);
   }
 
+  /* One continuous white band — the chart, notes, and tips are one system,
+     not three striped sections. */
+  .page-size__section-title--stacked { margin-top: 56px; }
+
+  /* Calm chart system — docs/Barreletics Size Chart - Definitive-v1.html:
+     bordered wrap, cream header, hairline rows. No heavy rules, no tinted alerts. */
   .page-size__table-wrap {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    border: 1px solid #d6cfc0;
+    border-radius: 8px;
   }
 
   .page-size__table {
     width: 100%;
     border-collapse: collapse;
-    font-size: var(--text-base);
+    font-size: 14px;
   }
 
   .page-size__table th {
-    padding: var(--space-3) var(--space-4);
+    padding: 14px 16px;
     text-align: left;
-    font-weight: var(--weight-bold);
-    color: var(--text-primary);
-    border-bottom: 2px solid var(--text-primary);
-    font-size: var(--text-sm);
+    font-size: 11px;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: var(--tracking-wide);
+    letter-spacing: 0.08em;
+    color: #8a8a8a;
+    background: #f5f2ec;
+    border-bottom: 1px solid #d6cfc0;
   }
 
   .page-size__table td {
-    padding: var(--space-4);
-    border-bottom: 1px solid var(--border-default);
-    color: var(--text-body);
+    padding: 14px 16px;
+    border-bottom: 1px solid #e8e2d8;
+    color: var(--text-body, #4a4a4a);
   }
+  .page-size__table tr:last-child td { border-bottom: none; }
 
   .page-size__td--size {
-    font-weight: var(--weight-bold);
-    color: var(--text-primary);
+    font-weight: 500;
+    color: var(--text-primary, #1c1916);
   }
 
-  .page-size__notes {
-    display: grid;
-    gap: var(--space-4);
-  }
-
-  .page-size__note {
-    padding: var(--space-5) var(--space-6);
-    background: #f5f2ec;
-    border-radius: 0;
-    border: none;
-    border-left: 3px solid #d6cfc0;
-  }
-
-  .page-size__note--alert {
-    border-left-color: var(--accent-primary, #c45c3f);
-    background: rgba(196, 92, 63, 0.05);
-  }
-
-  .page-size__note--soft {
-    border-left-color: #c4bdb0;
-    background: #faf8f4;
-  }
-
-  .page-size__note-title {
-    font-size: var(--text-base);
-    font-weight: var(--weight-bold);
-    color: var(--text-primary);
-    margin: 0 0 var(--space-1);
-  }
-
-  .page-size__note-text {
-    font-size: var(--text-base);
-    color: var(--text-body);
-    line-height: var(--leading-relaxed);
-    margin: 0;
-  }
-
+  .page-size__notes,
   .page-size__tips {
     display: grid;
-    gap: var(--space-4);
+    gap: 16px;
   }
 
+  .page-size__note,
   .page-size__tip {
-    padding: var(--space-4) 0;
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid #e8e2d8;
-    border-radius: 0;
+    padding: 20px 22px;
+    background: #f5f2ec;
+    border: 1px solid #e8e2d8;
+    border-radius: 8px;
   }
-  .page-size__tips .page-size__tip:last-child { border-bottom: none; }
 
+  .page-size__note-title,
   .page-size__tip-title {
-    font-size: var(--text-base);
-    font-weight: var(--weight-bold);
-    color: var(--text-primary);
-    margin: 0 0 var(--space-1);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-primary, #1c1916);
+    margin: 0 0 8px;
   }
 
+  .page-size__note-text,
   .page-size__tip-text {
-    font-size: var(--text-base);
-    color: var(--text-body);
-    line-height: var(--leading-relaxed);
+    font-size: 14px;
+    color: var(--text-body, #4a4a4a);
+    line-height: 1.6;
     margin: 0;
   }
+
+  @media (min-width: 769px) {
+    .page-size__tips { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .page-size__head { border-bottom: 1px solid #e8e2d8; }
+  .page-size__cta { border-top: 1px solid #d6cfc0; }
 
   .page-size__cta-text {
     font-size: var(--text-md);
@@ -244,10 +218,12 @@
       font-size: clamp(28px, 8vw, 36px);
     }
 
+    .page-size__section-title--stacked { margin-top: 44px; }
+
     .page-size__table th,
     .page-size__table td {
-      padding: var(--space-2) var(--space-3);
-      font-size: 14px;
+      padding: 12px 14px;
+      font-size: 13px;
     }
   }
 </style>

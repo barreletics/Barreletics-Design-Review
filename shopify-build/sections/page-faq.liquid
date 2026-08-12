@@ -1,173 +1,492 @@
 {% comment %}
-  Page FAQ Section
-  Categorized FAQ accordion groups using the faq-accordion snippet.
-  Includes FAQPage structured data for all categories.
+  Page FAQ Section — FAQ v7 "quiet"
+  Authority: docs/Barreletics FAQ - Definitive-v7.html (Andrew 2026-08-12)
+  Type law: planning/help-family-type-law.md — page H1 clamp(32–44)/400, never type-hero.
+
+  Quiet system: underline search, hairline topic row, rule-separated accordion rows.
+  No counts, no rust bars over category heads, no alternating cream bands, no cards.
+  Topic anchors carry a slight standout (Andrew) — uppercase 12/600 + ruled category head.
+
   Used on: page.faq.json
 {% endcomment %}
 
-<section class="section section--cream" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
-  <div class="section__inner section__inner--narrow">
+{%- liquid
+  assign topic_list = ''
+  for block in section.blocks
+    if block.type == 'faq_item'
+      unless topic_list contains block.settings.category
+        assign topic_list = topic_list | append: block.settings.category | append: '|~|'
+      endunless
+    endif
+  endfor
+  assign topics = topic_list | split: '|~|'
+-%}
+
+<section class="page-faq" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
+  <div class="page-faq__head">
     {% if section.settings.title != blank %}
-      <h1 class="page-faq__title type-hero">{{ section.settings.title }}</h1>
+      <h1 class="page-faq__title">{{ section.settings.title }}</h1>
     {% endif %}
+
     {% if section.settings.subtitle != blank %}
-      <p class="page-faq__subtitle">{{ section.settings.subtitle }}</p>
+      <p class="page-faq__lede">{{ section.settings.subtitle }}</p>
     {% endif %}
+
+    {% if section.settings.show_search %}
+      <form class="faq-search" role="search" onsubmit="return false;">
+        <svg class="faq-search__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true" stroke-linecap="round">
+          <circle cx="10.5" cy="10.5" r="7"></circle><line x1="15.8" y1="15.8" x2="21" y2="21"></line>
+        </svg>
+        <input
+          class="faq-search__input"
+          id="faqSearch-{{ section.id }}"
+          type="search"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="{{ section.settings.search_placeholder }}"
+          aria-label="Search the FAQ"
+          aria-controls="faq-{{ section.id }}">
+        <button type="button" class="faq-search__clear" data-faq-clear aria-label="Clear search" hidden>&times;</button>
+      </form>
+    {% endif %}
+
+    {% if section.settings.show_topics and topics.size > 1 %}
+      <nav class="faq-topics" aria-label="FAQ topics">
+        {% for topic in topics %}
+          <a class="faq-topics__link" href="#faq-topic-{{ topic | handleize }}">{{ topic }}</a>
+        {% endfor %}
+      </nav>
+    {% endif %}
+  </div>
+
+  {% if section.settings.show_topics and topics.size > 1 %}
+    <div class="faq-rail" data-faq-rail aria-hidden="true">
+      <nav class="faq-rail__inner" aria-label="FAQ topics (sticky)">
+        {% for topic in topics %}
+          <a href="#faq-topic-{{ topic | handleize }}">{{ topic }}</a>
+        {% endfor %}
+      </nav>
+    </div>
+  {% endif %}
+
+  <div class="page-faq__questions" id="faq-{{ section.id }}">
+    <p class="faq-count" data-faq-count role="status" aria-live="polite"></p>
+
+    <div class="faq-empty" data-faq-empty role="status">
+      <p class="faq-empty__title">No answer for “<span data-faq-term></span>”</p>
+      <p class="faq-empty__body">Try a shorter word — or ask us and we’ll answer within one business day.</p>
+      <a class="faq-empty__btn" href="{{ section.settings.contact_url | default: '/pages/contact-us-form' }}">Contact us</a>
+    </div>
+
+    {% for topic in topics %}
+      <div class="faq-group" id="faq-topic-{{ topic | handleize }}" data-faq-group>
+        <h2 class="faq-group__title">{{ topic }}</h2>
+        {% for item in section.blocks %}
+          {% if item.type == 'faq_item' and item.settings.category == topic %}
+            <details class="faq-row" data-faq-item {{ item.shopify_attributes }}>
+              <summary class="faq-row__q">{{ item.settings.question }}</summary>
+              <div class="faq-row__a">{{ item.settings.answer }}</div>
+            </details>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endfor %}
   </div>
 </section>
 
-{% assign categories = section.settings.categories | split: ',' %}
-{% for block in section.blocks %}
-  {% if block.type == 'category' %}
-    <section class="section" id="faq-{{ block.settings.slug }}" {{ block.shopify_attributes }}>
-      <div class="section__inner section__inner--narrow">
-        <h2 class="page-faq__category-title h2-standard">{{ block.settings.category_title }}</h2>
-      </div>
-    </section>
-  {% elsif block.type == 'faq_item' %}
-    {%- comment %} Rendered within the accordion below {% endcomment -%}
-  {% endif %}
-{% endfor %}
-
-{% comment %} Render FAQ items grouped by category {% endcomment %}
-{% assign current_category = '' %}
-{% assign category_items = '' %}
-{% assign all_items_for_schema = '' %}
-
-{% for block in section.blocks %}
-  {% if block.type == 'faq_item' %}
-    <div class="page-faq__item-wrapper" {{ block.shopify_attributes }} style="display:none"
-      data-question="{{ block.settings.question | escape }}"
-      data-answer="{{ block.settings.answer | escape }}"
-      data-category="{{ block.settings.category | escape }}">
-    </div>
-  {% endif %}
-{% endfor %}
-
-{% comment %} Group and render by category using the accordion pattern {% endcomment %}
-{% assign rendered_categories = '' %}
-{% for block in section.blocks %}
-  {% if block.type == 'faq_item' %}
-    {% unless rendered_categories contains block.settings.category %}
-      {% assign rendered_categories = rendered_categories | append: block.settings.category | append: '|' %}
-
-      <section class="section{% cycle '', ' section--cream' %}" id="faq-category-{{ forloop.index }}">
-        <div class="section__inner section__inner--narrow">
-          <h2 class="page-faq__category-heading h2-standard">{{ block.settings.category }}</h2>
-          <div class="faq" data-faq-accordion>
-            <div class="faq__inner">
-              <div class="faq__list">
-                {% for item in section.blocks %}
-                  {% if item.type == 'faq_item' and item.settings.category == block.settings.category %}
-                    <details class="faq__item" data-faq-item {{ item.shopify_attributes }}>
-                      <summary class="faq__trigger" role="button" aria-expanded="false">
-                        <span class="faq__question">{{ item.settings.question }}</span>
-                        <span class="faq__icon" aria-hidden="true"></span>
-                      </summary>
-                      <div class="faq__body">
-                        {{ item.settings.answer }}
-                      </div>
-                    </details>
-                  {% endif %}
-                {% endfor %}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    {% endunless %}
-  {% endif %}
-{% endfor %}
-
-{% comment %} FAQPage structured data for all items {% endcomment %}
+{% comment %} FAQPage structured data {% endcomment %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
-    {%- for block in section.blocks -%}
-      {%- if block.type == 'faq_item' -%}
-        {
-          "@type": "Question",
-          "name": {{ block.settings.question | json }},
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": {{ block.settings.answer | strip_html | json }}
-          }
-        }{% unless forloop.last %},{% endunless %}
-      {%- endif -%}
+    {%- assign faq_blocks = section.blocks | where: 'type', 'faq_item' -%}
+    {%- for block in faq_blocks -%}
+      {
+        "@type": "Question",
+        "name": {{ block.settings.question | json }},
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": {{ block.settings.answer | strip_html | json }}
+        }
+      }{% unless forloop.last %},{% endunless %}
     {%- endfor -%}
   ]
 }
 </script>
 
 <style>
+  /* ---- Quiet canvas: white throughout. No cream bands between topics. ---- */
+  .page-faq { background: #fff; }
+
+  .page-faq__head {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 104px 40px 0;
+    text-align: center;
+  }
+
+  /* Help-family page H1 — planning/help-family-type-law.md */
   .page-faq__title {
-    font-size: var(--type-hero-size);
-    font-weight: var(--type-hero-weight);
-    line-height: var(--type-hero-leading);
-    letter-spacing: var(--type-hero-tracking);
+    font-size: clamp(32px, 4vw, 44px);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.028em;
     text-transform: none;
-    color: var(--text-primary);
-    text-align: center;
-    margin: 0 0 var(--space-3);
+    color: var(--text-primary, #1c1916);
+    margin: 0 0 40px;
   }
 
-  .page-faq__subtitle {
-    font-size: var(--text-md);
-    color: var(--text-body);
+  .page-faq__lede {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--text-body, #4a4a4a);
+    max-width: 46ch;
+    margin: -20px auto 32px;
+  }
+
+  /* ---- Search: a ruled line, not a filled control ---- */
+  .faq-search { position: relative; display: block; max-width: 640px; margin: 0 auto; }
+
+  .faq-search__input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 40px 14px 30px;
+    font-family: inherit;
+    font-size: 17px;
     text-align: center;
-    line-height: var(--leading-relaxed);
+    color: var(--text-primary, #1c1916);
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #d6cfc0;
+    border-radius: 0;
+    transition: border-color 0.2s;
+  }
+  .faq-search__input::placeholder { color: #a39c92; }
+  .faq-search__input:focus { outline: none; box-shadow: none; border-bottom-color: #1c1916; }
+  .faq-search__input::-webkit-search-cancel-button { display: none; }
+
+  .faq-search__icon {
+    position: absolute;
+    left: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    stroke: #a39c92;
+    stroke-width: 1.6;
+    pointer-events: none;
+  }
+
+  .faq-search__clear {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: #8a8a8a;
+    font-size: 20px;
+    line-height: 1;
+  }
+  .faq-search__clear:hover { color: #1c1916; }
+
+  /* ---- Topics: a quiet line of words. Slight standout per Andrew. ---- */
+  .faq-topics {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0 36px;
+    max-width: 640px;
+    margin: 30px auto 0;
+  }
+
+  .faq-topics__link {
+    display: inline-block;
+    padding: 10px 0;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-primary, #1c1916);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+  }
+  .faq-topics__link:hover { color: #c45c3f; border-bottom-color: #1c1916; text-decoration: none; }
+
+  /* ---- Sticky rail: hairline, white, fades in past the head ---- */
+  .faq-rail {
+    position: sticky;
+    top: var(--faq-rail-top, 64px);
+    z-index: 20;
+    background: #fff;
+    border-bottom: 1px solid #e8e2d8;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s;
+  }
+  .faq-rail.is-visible { opacity: 1; visibility: visible; }
+
+  .faq-rail__inner {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 0 40px;
+    display: flex;
+    gap: 0 12px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .faq-rail__inner::-webkit-scrollbar { display: none; }
+
+  .faq-rail a {
+    flex: 0 0 auto;
+    padding: 13px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #6b645a;
+    text-decoration: none;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+  }
+  .faq-rail a:hover { color: #1c1916; text-decoration: none; }
+  .faq-rail a.is-active { color: #1c1916; border-bottom-color: #c45c3f; }
+
+  /* ---- Questions ---- */
+  .page-faq__questions {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 72px 40px 96px;
+  }
+
+  .faq-count {
+    font-size: 12px;
+    color: #a39c92;
+    letter-spacing: 0.06em;
+    text-align: center;
     margin: 0;
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .faq-count.is-shown { height: auto; margin: 0 0 26px; opacity: 1; }
+
+  .faq-group { margin: 0 0 56px; scroll-margin-top: var(--faq-scroll-offset, 130px); }
+  .faq-group:last-child { margin-bottom: 0; }
+
+  /* Topic anchor standout: quiet label on a firm rule */
+  .faq-group__title {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #a39c92;
+    margin: 0 0 4px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #1c1916;
   }
 
-  .page-faq__category-heading {
-    font-size: var(--type-section-size);
-    font-weight: var(--type-section-weight);
-    line-height: var(--type-section-leading);
-    letter-spacing: var(--type-section-tracking);
-    text-transform: none;
-    color: var(--text-primary);
-    margin: 0 0 var(--space-6);
+  .faq-row {
+    border: none;
+    border-bottom: 1px solid #e8e2d8;
+    border-radius: 0;
+    margin: 0;
+    padding: 0;
+    background: transparent;
   }
 
-  .page-faq__category-heading::before {
-    content: '';
-    display: block;
-    width: 32px;
-    height: 3px;
-    background: var(--accent-primary);
-    margin-bottom: var(--space-4);
-    border-radius: 2px;
+  .faq-row__q {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    cursor: pointer;
+    list-style: none;
+    padding: 22px 0;
+    font-size: 17px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.45;
+    color: var(--text-primary, #1c1916);
   }
+  .faq-row__q::-webkit-details-marker { display: none; }
+  .faq-row__q:hover { color: #c45c3f; }
+
+  .faq-row__q::after {
+    content: "";
+    flex: 0 0 auto;
+    width: 9px;
+    height: 9px;
+    margin-top: 8px;
+    border-right: 1px solid #8a8a8a;
+    border-bottom: 1px solid #8a8a8a;
+    transform: rotate(45deg);
+    transition: transform 0.2s;
+  }
+  .faq-row[open] .faq-row__q { color: #1c1916; }
+  .faq-row[open] .faq-row__q::after { transform: rotate(-135deg); margin-top: 12px; }
+
+  .faq-row__a {
+    padding: 0 0 26px;
+    max-width: 58ch;
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--text-body, #4a4a4a);
+  }
+  .faq-row__a p { margin: 0 0 10px; }
+  .faq-row__a p:last-child { margin-bottom: 0; }
+  .faq-row__a ul { margin: 8px 0 0; padding: 0 0 0 18px; }
+  .faq-row__a li { margin: 0 0 4px; }
+  .faq-row__a a { text-decoration: underline; text-underline-offset: 2px; }
+
+  /* ---- Search states ---- */
+  .faq-row.is-hidden,
+  .faq-group.is-hidden { display: none; }
+
+  .faq-empty { display: none; text-align: center; padding: 56px 20px; }
+  .faq-empty.is-shown { display: block; }
+  .faq-empty__title { font-size: 17px; font-weight: 600; color: #1c1916; margin: 0 0 8px; }
+  .faq-empty__body { font-size: 14px; color: #6b645a; margin: 0 0 20px; }
+  .faq-empty__btn {
+    display: inline-flex;
+    padding: 13px 26px;
+    background: #1c1916;
+    color: #fff;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+  }
+  .faq-empty__btn:hover { background: #c45c3f; text-decoration: none; }
 
   @media (max-width: 768px) {
-    .page-faq__title {
-      font-size: var(--text-3xl);
-    }
+    .page-faq__head { padding: 56px 20px 0; }
+    .page-faq__title { font-size: clamp(28px, 8vw, 36px); margin-bottom: 28px; }
+    .faq-search__input { font-size: 16px; padding: 13px 30px; }
+    .faq-search__icon { left: 0; }
+    .faq-topics { gap: 0 20px; margin-top: 22px; }
+    .page-faq__questions { padding: 40px 20px 64px; }
+    .faq-row__q { font-size: 16px; padding: 19px 0; }
+    .faq-group { margin-bottom: 44px; }
+    .faq-rail__inner { padding: 0 14px; gap: 0; justify-content: space-between; }
+    .faq-rail a { padding: 13px 6px; letter-spacing: 0.08em; }
+  }
 
-    .page-faq__category-heading {
-      font-size: var(--text-xl);
-    }
+  @media (max-width: 360px) {
+    .faq-rail a { padding: 13px 4px; font-size: 10px; letter-spacing: 0.06em; }
+    .faq-topics { gap: 0 14px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq-rail, .faq-row__q::after { transition: none; }
   }
 </style>
 
 <script>
-  (function() {
-    document.querySelectorAll('[data-faq-accordion]').forEach(function(accordion) {
-      var items = accordion.querySelectorAll('[data-faq-item]');
-      items.forEach(function(item) {
-        item.addEventListener('toggle', function() {
-          if (item.open) {
-            items.forEach(function(other) {
-              if (other !== item && other.open) other.open = false;
-            });
-            item.querySelector('.faq__trigger').setAttribute('aria-expanded', 'true');
-          } else {
-            item.querySelector('.faq__trigger').setAttribute('aria-expanded', 'false');
-          }
+  (function () {
+    var root = document.getElementById('shopify-section-{{ section.id }}');
+    if (!root) return;
+
+    var head = root.querySelector('.page-faq__head');
+    var rail = root.querySelector('[data-faq-rail]');
+    var railLinks = rail ? [].slice.call(rail.querySelectorAll('a')) : [];
+    var groups = [].slice.call(root.querySelectorAll('[data-faq-group]'));
+    var rows = [].slice.call(root.querySelectorAll('[data-faq-item]'));
+    var search = root.querySelector('.faq-search__input');
+    var clear = root.querySelector('[data-faq-clear]');
+    var count = root.querySelector('[data-faq-count]');
+    var empty = root.querySelector('[data-faq-empty]');
+    var term = root.querySelector('[data-faq-term]');
+
+    /* One row open at a time within a topic group */
+    rows.forEach(function (row) {
+      row.addEventListener('toggle', function () {
+        if (!row.open) return;
+        var group = row.closest('[data-faq-group]');
+        if (!group) return;
+        group.querySelectorAll('[data-faq-item]').forEach(function (other) {
+          if (other !== row && other.open) other.open = false;
         });
       });
+    });
+
+    /* Rail sits under the live sticky header, whatever its height is */
+    function positionRail() {
+      var header = document.querySelector('.site-header');
+      var top = header ? Math.round(header.getBoundingClientRect().height) : 64;
+      root.style.setProperty('--faq-rail-top', top + 'px');
+      var railH = rail ? Math.round(rail.getBoundingClientRect().height) : 0;
+      root.style.setProperty('--faq-scroll-offset', top + railH + 24 + 'px');
+    }
+
+    function onScroll() {
+      if (!rail || !head) return;
+      var past = head.getBoundingClientRect().bottom < parseInt(root.style.getPropertyValue('--faq-rail-top') || '64', 10);
+      rail.classList.toggle('is-visible', past);
+      rail.setAttribute('aria-hidden', past ? 'false' : 'true');
+
+      var active = null;
+      groups.forEach(function (group) {
+        if (group.classList.contains('is-hidden')) return;
+        if (group.getBoundingClientRect().top <= 160) active = group.id;
+      });
+      railLinks.forEach(function (link) {
+        link.classList.toggle('is-active', link.getAttribute('href') === '#' + active);
+      });
+    }
+
+    positionRail();
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', function () { positionRail(); onScroll(); });
+
+    /* Search filter — progressive enhancement; every answer stays linkable with JS off */
+    if (!search) return;
+
+    function filter() {
+      var q = search.value.trim().toLowerCase();
+      clear.hidden = q.length === 0;
+
+      if (!q) {
+        rows.forEach(function (row) { row.classList.remove('is-hidden'); });
+        groups.forEach(function (group) { group.classList.remove('is-hidden'); });
+        count.classList.remove('is-shown');
+        count.textContent = '';
+        empty.classList.remove('is-shown');
+        return;
+      }
+
+      var hits = 0;
+      rows.forEach(function (row) {
+        var text = row.textContent.toLowerCase();
+        var hit = text.indexOf(q) !== -1;
+        row.classList.toggle('is-hidden', !hit);
+        if (hit) hits++;
+      });
+
+      groups.forEach(function (group) {
+        var visible = group.querySelectorAll('[data-faq-item]:not(.is-hidden)').length;
+        group.classList.toggle('is-hidden', visible === 0);
+      });
+
+      count.textContent = hits === 1 ? '1 answer' : hits + ' answers';
+      count.classList.add('is-shown');
+      empty.classList.toggle('is-shown', hits === 0);
+      if (hits === 0 && term) term.textContent = search.value.trim();
+    }
+
+    search.addEventListener('input', filter);
+    clear.addEventListener('click', function () {
+      search.value = '';
+      filter();
+      search.focus();
     });
   })();
 </script>
@@ -180,13 +499,35 @@
       "type": "text",
       "id": "title",
       "label": "Page title",
-      "default": "Frequently Asked Questions"
+      "default": "How can we help?"
     },
     {
       "type": "textarea",
       "id": "subtitle",
-      "label": "Subtitle",
-      "default": "Everything you need to know about your Performance Skins."
+      "label": "Lede (optional — v7 quiet ships without one)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "label": "Show search",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "search_placeholder",
+      "label": "Search placeholder",
+      "default": "Search sizing, shipping, grip, returns…"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_topics",
+      "label": "Show topic anchors + sticky rail",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "contact_url",
+      "label": "Contact link (empty search state)"
     }
   ],
   "blocks": [
@@ -197,8 +538,9 @@
         {
           "type": "text",
           "id": "category",
-          "label": "Category",
-          "default": "General"
+          "label": "Topic",
+          "info": "Groups the answer and creates the topic anchor. Keep to five topics.",
+          "default": "Orders & shipping"
         },
         {
           "type": "text",
