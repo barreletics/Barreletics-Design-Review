@@ -59,8 +59,15 @@ Basis: **D-019** ("skin-safe, non-toxic material") + **P-008** ("proprietary gri
 
 No small size. M and L only — **never** write "S coming soon."
 
-**CA-06 · Between sizes (7.5–8)** — the rule is **width, not "size up"**
-> Wide foot → size up to L. Narrow foot → size down to M.
+⚠️ **Retired 2026-08-12:** the size-chart pages previously published **M = 5–8, L = 8.5–11**, and `product.json` published **M = W 5–7.5 / Men 6–8, L = W 8–10 / Men 8.5–11**. Both are wrong. The table above is the only correct chart. Unverified: the foot-length column (8.5"–9.5" / 9.5"–10.5") appears in no KB source — confirm or drop it.
+
+**CA-06 · Between sizes** — the rule is **width, not "size up"** *(Andrew letter 2026-08-12)*
+> Width decides — don't just round up.
+> **Wide foot at 7 or 7.5** → size up to Large.
+> **Narrow 8** → size down to Medium.
+> **8.5 and above** → stay in Large, regardless of width. You need the length.
+
+Below 7, take Medium. Never write a blanket "between sizes? size up."
 
 **CA-07 · Colors and fit**
 > Dark Grey, Hot Coral, and Blue run slightly snugger. Black and Light Grey are the most forgiving, especially for wider feet.
