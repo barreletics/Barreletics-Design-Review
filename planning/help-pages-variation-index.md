@@ -25,7 +25,8 @@ Mark each page: `USE THIS → [variation]` or paste your pick.
 | Variation | Hub / path | Role |
 |---|---|---|
 | A — Live M4 (repo template as assigned) | preview link above | Current runtime |
-| B — Brand story mock | `docs/Barreletics Brand - Definitive-v1.html` | Not Locked |
+| B — Brand story mock v1 | `docs/Barreletics Brand - Definitive-v1.html` | Prior / missing on disk — do not overwrite |
+| B2 — Brand story mock v2 | `docs/Barreletics Brand - Definitive-v2.html` | **BUILD / REFINE** (A1 cloud) — dual lifestyle + live chapters · see `docs/HELP-OPEN-ME.html` |
 | C — Help hub framing | `docs/Barreletics Help - Definitive-v3.html` (Locked Help hub) | Hub links out — not the About body itself |
 | D — Help hub footer-fix candidate | `docs/Barreletics Help - Definitive-v4.html` | Footer only candidate; say LOCK THIS to promote |
 
