@@ -45,8 +45,16 @@ Do the two sizing ones first if you only have time for two — wrong sizing cost
 
 The repo fixes the M4 build. These live in Admin and survive any theme push.
 
-- [ ] **Pool language still live** (from the no-pool copy law, P-012): Closed Sole / Water Shoe product description · product FAQ "Great for" list · the FAQ caution line · and the **aqua barre** and **water aerobics blog posts**. Blog posts are the big one — they're indexed and they attract exactly the wrong buyer.
+- [ ] **Water Shoes product description — one field, twelve pages.** Verified live 2026-08-12. The description on `/products/aquatic-performance-skins` reads: "Perfect for outdoor adventures, the closed sole provides grip, stability, and protection from hot sand. **Ideal for paddle-boarding, boating and poolside activities.** Always check wet surfaces for slippage." Shopify echoes it into JSON-LD structured data on **every page of the site**, which is why "poolside" appears sitewide. Fixing this one field clears all of it. Suggested: "Perfect for outdoor adventures — grip, stability, and protection from hot sand. Ideal for paddle-boarding, boating, beach, and resortwear. Certain wet tile and stone areas are inherently slippery for any footwear."
+
+- [ ] **`/blogs/news/barre-anywhere` — the real problem.** Verified live 2026-08-12. This is an **aqua barre article**: how to convert a land barre class into an aqua barre class in the shallow end with a pool noodle, and it pitches Performance Skins for "working out in the pool doing water aerobics, aqua barre or any other pool or beach activity." It actively recommends the product for pool use, which is exactly the slip liability P-012 exists to prevent. Unpublish or rewrite — don't just trim the word "pool."
+
+- [ ] **`/blogs/news/eating-healthy-is-important-to-maximize-your-performance-in-the-water` — lower risk.** A nutrition article for aquatic athletes and swimmers. Off-brand and it draws aquatic-fitness traffic, but it never recommends the shoes for wet surfaces. Your call whether it's worth the SEO of an existing indexed post.
+
+- [ ] **No other pool language in the blog.** All 14 live articles were scanned 2026-08-12. There is no post titled "aqua barre" or "water aerobics" — the earlier rule named them imprecisely. Everything else was the JSON-LD echo above.
+
 - [ ] **Antimicrobial in live product descriptions.** Admin copy, not repo copy. Replace with: non-porous, wipes clean, nothing soaks in the way it does in fabric.
+- [ ] **Product FAQ "Great for" list and the FAQ caution line** (per P-012). Not yet re-verified against the live site — check whether these still carry pool wording before spending time on them.
 - [ ] **Coperni variant titles.** Shopify variant names appear to read `L (W 8-11)`. If the size range is baked into the variant title, that's an Admin rename — the repo can't fix it.
 - [ ] **Live size chart renders its table twice.** Identical both times. Live-theme bug, unrelated to the M4 build.
 
