@@ -4,6 +4,8 @@
 
 This file is the **single source for customer-facing answers**. FAQ, PDP, collection copy, Help pages, email, ManyChat, HelpScout, and ads all copy from here **verbatim**. Do not rewrite an answer on a page. Change it here, then propagate.
 
+**Found something only Andrew can fix — in HelpScout, ManyChat, Shopify Admin, or the live theme?** Append it to `planning/OWNER-MANUAL-TASKS.md`. Do **not** interrupt a build to ask him to go change it by hand unless it blocks the build. He batches those in one sitting at the end.
+
 **Upstream sources this consolidates:** `manychat-kb/02`–`16` · `helpscout-kb/Barreletics_Email_Template_Master.md` · `docs/09-PRODUCT-KNOWLEDGE.md` · `docs/10-DECISIONS.md` · `planning/10-decision-log.md`.
 
 **When the KB and this file disagree, this file wins** — it carries Andrew's later corrections. Where a KB guide still holds retired wording, it is noted below.
