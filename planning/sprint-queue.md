@@ -62,7 +62,7 @@
 
 | ID | Page / section | Owner | Status | Preview / artifact | Notes |
 |----|----------------|-------|--------|--------------------|-------|
-| E0 | Research + recommendation | **cloud** | IN PROGRESS | `planning/ambassador-program-recommendation.md` | Read/report only — no app install · no theme edit until Andrew approves plan |
+| E0 | Research + recommendation | **cloud** | **AWAITING ANDREW** | `planning/ambassador-program-recommendation.md` | Decision brief ready — no app install · no theme edit until Andrew approves plan (§5 decisions) |
 
 ---
 
