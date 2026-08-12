@@ -54,12 +54,28 @@ Theme Editor: `https://admin.shopify.com/store/barreletics/themes/187144929571/e
 | Surface | Handle / URL | Repo template | Hub Locked mock | Admin suffix | QA preview path |
 |---------|--------------|---------------|-----------------|--------------|-----------------|
 | **Help hub** | `/pages/help` | `page.help.json` + `sections/page-help.liquid` | Pre-push: `docs/HELP-PREPUSH-PREVIEW.html` (= Help v8). **Push only after Andrew yes.** | **`help`** (create Admin page if 404) | `/pages/help?preview_theme_id=187144929571` |
-| **FAQ** | `/pages/faq` | `page.faq.json` | **FAQ v4 Locked** → `docs/Barreletics FAQ - Definitive-v4.html` (v5+ = copy/layout experiments; promote only with `LOCK THIS`) | **`faq`** | `/pages/faq` |
-| **Returns (policy)** | `/pages/returns` | `page.shipping-retruns.json` *(live Admin typo)* · clean alias `page.returns.json` | Hub **Current:** `docs/REVIEW-2026-08-08.html#returns` (canonical). Mock v3 = superseded concept | Live often **`shipping-retruns`** — do not re-point Admin until letter; alias ready for **`returns`** | `/pages/returns` |
+| **FAQ** | `/pages/faq` | `page.faq.json` | **FAQ v7 quiet** → `docs/Barreletics FAQ - Definitive-v7.html` (Andrew 2026-08-12: rebuild target). **v4 Locked** = prior fingerprint — never overwrite | **`faq`** ✅ verified | `/pages/faq` |
+| **Size chart** | `/pages/performance-skins-size-chart` | **`page.size-chart.json`** *(the file Admin actually renders)* · identical aliases `page.performance-skins-size-chart.json`, `page.size-guide.json` — **push all three or the page goes stale** | Calm system: `docs/Barreletics Size Chart - Definitive-v1.html`. Chart shows **M / L only** — no "S coming soon" | **`size-chart`** ✅ verified | `/pages/performance-skins-size-chart` |
+| **Returns (policy)** | `/pages/returns` | **`page.shipping-retruns.json`** *(live Admin typo — this is the file that renders)* · identical alias `page.returns.json` | Hub **Current:** `docs/REVIEW-2026-08-08.html#returns` (canonical). Mock v3 = superseded concept | **`shipping-retruns`** ✅ verified — do not re-point Admin until letter; alias ready for **`returns`** | `/pages/returns` |
 | **About / Our story** | `/pages/our-story` | `page.our-story.json` and/or `page.about.json` (confirm Admin assignment before edit) | Brand story mock for review: `docs/Barreletics Brand - Definitive-v1.html` (not Locked until letter). Help hub: **Help v3 Locked** | Confirm in Admin (`our-story` / `about` / default) | `/pages/our-story` |
-| **Contact** | `/pages/contact-us-form` | `page.contact-us-form.json` | Contact v1 (hub, not Locked) · live form page | **`contact-us-form`** | `/pages/contact-us-form` |
+| **Contact** | `/pages/contact-us-form` | **`page.contact.json`** *(Admin suffix is `contact`, not the handle)* · alias `page.contact-us-form.json` | Contact v1 (hub, not Locked) · live form page. **GOOD — do not thrash** | **`contact`** ✅ verified | `/pages/contact-us-form` |
 
 Help menu authority: About → `/pages/our-story` · FAQ → `/pages/faq` · Contact → `/pages/contact-us-form` · Returns → `/pages/returns`. Header Help fallback = **`/pages/faq`**.
+
+### Admin suffixes verified against Shopify 2026-08-12 (read this before editing a Help page)
+
+Several Help pages render a template whose **name does not match the handle**. Editing the sibling file silently does nothing, and pushing only one name of a pair leaves the live page on a stale copy — that is what emptied the Fit Tips off the size chart.
+
+| Live handle | Admin suffix | File that actually renders |
+|---|---|---|
+| `/pages/help` | `help` | `page.help.json` |
+| `/pages/faq` | `faq` | `page.faq.json` |
+| `/pages/performance-skins-size-chart` | `size-chart` | `page.size-chart.json` |
+| `/pages/returns` | `shipping-retruns` | `page.shipping-retruns.json` |
+| `/pages/returns-portal` | `start-a-retrun` | `page.start-a-retrun.json` |
+| `/pages/contact-us-form` | `contact` | `page.contact.json` |
+
+Re-query any time with `shopify store execute -s barreletics.myshopify.com -q 'query { pages(first: 100) { nodes { handle templateSuffix } } }'`. Keep alias files byte-identical and push every alias in the pair.
 
 **Returns URL roles (2026-08-09):** announcement banner → `/pages/returns#returns` · Help/footer → `/pages/returns` · portal → `/pages/returns-portal` (separate).
 

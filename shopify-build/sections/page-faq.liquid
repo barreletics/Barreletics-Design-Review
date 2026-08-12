@@ -51,9 +51,13 @@
     {% endif %}
 
     {% if section.settings.show_topics and topics.size > 1 %}
+      {%- comment -%}
+        Anchors use the short word ("Orders"), category heads keep the full name
+        ("Orders & shipping") — v7 mock. Full names wrap the quiet single line.
+      {%- endcomment -%}
       <nav class="faq-topics" aria-label="FAQ topics">
         {% for topic in topics %}
-          <a class="faq-topics__link" href="#faq-topic-{{ topic | handleize }}">{{ topic }}</a>
+          <a class="faq-topics__link" href="#faq-topic-{{ topic | handleize }}">{{ topic | split: ' & ' | first }}</a>
         {% endfor %}
       </nav>
     {% endif %}
@@ -63,7 +67,7 @@
     <div class="faq-rail" data-faq-rail aria-hidden="true">
       <nav class="faq-rail__inner" aria-label="FAQ topics (sticky)">
         {% for topic in topics %}
-          <a href="#faq-topic-{{ topic | handleize }}">{{ topic }}</a>
+          <a href="#faq-topic-{{ topic | handleize }}">{{ topic | split: ' & ' | first }}</a>
         {% endfor %}
       </nav>
     </div>
