@@ -111,7 +111,7 @@ A: Free shipping on orders over $150. Standard shipping rates apply for orders u
 A: Most orders ship within 1-2 business days. Standard delivery is 3-7 business days within the US.
 
 **Q: Do you ship internationally?**
-A: Yes — we ship to 195 countries via FedEx International Connect Plus, typically 7–14 business days. Duties and taxes are prepaid, so there's nothing extra to pay when your order arrives.
+A: Yes — we ship to 195 countries via FedEx International Connect Plus, typically 7–14 business days. Duties and taxes are charged at checkout, so there's nothing extra to pay when your order arrives.
 
 **Q: Where is my order?**
 A: Check your order status by logging into your account at barreletics.com/account, or use the tracking link in your shipping confirmation email. Tracking can take 24-48 hours to update after a label is created.

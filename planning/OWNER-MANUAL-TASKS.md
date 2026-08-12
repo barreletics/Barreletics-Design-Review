@@ -15,7 +15,7 @@ These block work. Everything else in this file is mechanical.
 - [?] **Kids sizing conflict.** Every chart including the live site says Kids' US **2–5** wear Medium. But `docs/09-PRODUCT-KNOWLEDGE.md` line 84 says **Youth 4–6**. Which is right? Until you say, nobody quotes a youth number.
 - [?] **Dead Kids variants.** Shopify carries 6 dedicated Kids variants on Water Shoes (DarkGrey, Black, Blue, Bright Yellow, White, LightGrey), all at 0 inventory, documented nowhere. Discontinued, or should they come back? Separate question from "kids 2–5 fit Medium."
 - [?] **Foot length inches.** Removed from the size chart because they matched no source. If you ever want a measurement column, someone has to measure a real pair.
-- [?] **Prepaid duties — does checkout actually collect them?** You said duties are prepaid, so nine surfaces now promise "nothing extra to pay on delivery." Someone has to confirm the Shopify market / FedEx ICP setting really is DDP, **and for every destination, not just Canada and the UK**. If any country ships DUP, a buyer there gets a customs bill we told them wouldn't come — worse than the old warning ever was. Shopify Admin → Settings → Markets → the market → Duties and import taxes.
+- [?] **Duties at checkout — does every market actually collect them?** You said duties are charged at time of purchase, so nine surfaces now say "nothing extra to pay on delivery." Someone has to confirm the Shopify market / FedEx ICP setting really is DDP, **and for every destination, not just Canada and the UK**. If any country ships DUP, a buyer there gets a customs bill we told them wouldn't come — worse than the old warning ever was. Shopify Admin → Settings → Markets → the market → Duties and import taxes.
 
 ---
 
@@ -31,7 +31,7 @@ Do the two sizing ones first if you only have time for two — wrong sizing cost
 - [ ] **4.4 Product — Materials.** Says "hypoallergenic." Retired by D-019.
 - [ ] **4.5 Product — Lifespan.** Says "gentle environment," which reads like we're calling studio work easy.
 - [ ] **4.9 Product — Allergy and skin sensitivity.** Says "hypoallergenic." Same retirement.
-- [ ] **5.3 Shipping — International duties.** Told buyers to "be prepared to pay them on delivery." Duties are prepaid, so this reply was talking people out of international orders. Now leads with prepaid.
+- [ ] **5.3 Shipping — International duties.** Led with "be prepared to pay them on delivery." Duties are charged at checkout, so that framing talked people out of international orders. Reordered so the fact leads — **your hedge about customs varying by country is kept**, just moved after it.
 
 ---
 
@@ -136,11 +136,11 @@ Change the opening line to end with "skin-safe and non-toxic" instead of "skin-s
 
 Replace the whole body with:
 
-Yes, we ship worldwide — 195 countries via FedEx International Connect Plus, and orders typically arrive within 7–14 business days.
+Yes, we ship worldwide — 195 countries via FedEx International Connect Plus. Shipping time and cost depend on your country and are calculated at checkout, and orders typically arrive within 7–14 business days.
 
-Good news on duties and taxes: they're prepaid. You won't be asked for anything extra when the package arrives.
+A note on duties and taxes: these are charged at checkout, so in most cases there's nothing further to pay when your order arrives. Customs handling does vary by country, though — if they weren't collected up front, your local carrier or customs office may ask for them on delivery.
 
-Let us know if you have a specific country in mind and we can help confirm timing.
+Let us know if you have a specific country in mind and we can help confirm.
 
 ---
 

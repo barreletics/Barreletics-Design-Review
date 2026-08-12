@@ -985,9 +985,10 @@ Domestic (Continental US):
 
 International:
 - Worldwide shipping — 195 countries via FedEx International Connect Plus, typically 7–14 business days
-- **Duties and taxes are PREPAID** — nothing to pay on delivery *(Andrew 2026-08-12)*
-- Customer-paid exceptions, narrow: international **return** shipping, and international **warranty replacement** shipping
-- 🚫 RETIRED: ~~"customers responsible for duties, taxes, customs fees"~~ — backwards. Prepaid duties are a selling point; see `docs/11-CANONICAL-ANSWERS.md` CA-18
+- **Duties and taxes are charged at checkout** — nothing to pay on delivery *(Andrew 2026-08-12: "charged at time of purchase")*
+- Customer-paid exceptions, narrow: international **return** shipping · international **warranty replacements**, where the customer covers shipping **and duties**
+- HelpScout 5.3 keeps a deliberate hedge that customs handling varies by country — Andrew's liability backstop. Do not delete it. Appropriate on the Shipping policy page too; never in FAQ, ManyChat, or marketing
+- 🚫 RETIRED on outbound-order copy: ~~"customers responsible for duties, taxes, customs fees"~~ — the buyer pays at purchase, so this is both wrong and a deterrent. See `docs/11-CANONICAL-ANSWERS.md` CA-18
 
 Lost Packages:
 - Once tracking shows delivered, order considered fulfilled

@@ -66,7 +66,8 @@ Maps major Doc 07 topics to a short set of Help Scout saved replies. Prefer the 
 > **International:**
 > - We ship internationally via our Shopify checkout
 > - Delivery times vary by destination (typically 7-14 business days)
-> - Duties and taxes are prepaid — nothing extra to pay on delivery *(corrected 2026-08-12; was "customers are responsible for customs/duties")*
+> - Duties and taxes are charged at checkout — nothing extra to pay on delivery *(corrected 2026-08-12; was "customers are responsible for customs/duties")*
+> - Keep 5.3's hedge that customs handling varies by country — deliberate backstop, not drift
 >
 > You'll receive a tracking number as soon as your order ships.
 >

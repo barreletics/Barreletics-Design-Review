@@ -764,18 +764,26 @@ That is backwards — duties are prepaid.
 ```
 Source: manychat-kb/08-shipping.md
 
-### P-016: International duties are PREPAID *(Andrew 2026-08-12)*
+### P-016: International duties are charged at checkout *(Andrew 2026-08-12)*
 ```
-Duties and taxes are prepaid. Orders clear customs with nothing further to pay.
-Say it as an advantage — never as a warning.
+Duties and taxes are charged at checkout ("at time of purchase").
+Orders clear customs with nothing further to pay.
+State it plainly as an advantage — never as a warning.
 
-Customer-paid exceptions (narrow, do not leak into outbound copy):
+Customer-paid, and ONLY here:
   · international RETURN shipping
-  · international WARRANTY REPLACEMENT shipping
+  · international WARRANTY REPLACEMENTS — shipping AND duties
+
+KEEP the HelpScout 5.3 hedge (customs handling varies by country).
+Andrew: "it says this as a backup to cover ourselves." An agent deleted it
+on 2026-08-12 and restored it the same day. Accurate fact leads, hedge
+follows. Never "be prepared to pay them on delivery."
+Hedge belongs in HelpScout + the Shipping policy page only — never FAQ,
+ManyChat, PDP, or marketing.
 ```
-Andrew: the "customer responsible for duties" language was "probably for the warranty replacement." It had spread to eight surfaces, including a HelpScout reply telling buyers to "be prepared to pay them on delivery."
-Supersedes: BZ-013 · Canonical: `docs/11-CANONICAL-ANSWERS.md` CA-18
-⚠️ Open verification: confirm Shopify market/carrier collects duties at checkout (DDP) for all destinations — `planning/OWNER-MANUAL-TASKS.md`
+The duties-responsibility line originated on **warranty replacements**, where it is correct, and leaked onto outbound-order copy across eight surfaces.
+Supersedes: BZ-013 · Canonical: `docs/11-CANONICAL-ANSWERS.md` CA-18 and CA-21
+⚠️ Open verification: confirm Shopify market/carrier collects duties at checkout (DDP) for all destinations — `planning/OWNER-MANUAL-TASKS.md`. This is what the 5.3 hedge protects against.
 
 ---
 

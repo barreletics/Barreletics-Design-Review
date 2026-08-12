@@ -670,15 +670,19 @@ Lean one-off PDP spine keeps brand education for cold traffic (features, reviews
 
 ---
 
-### D-054: International Duties Are Prepaid — Retires BZ-013
+### D-054: International Duties Are Charged at Checkout — Retires BZ-013
 
-**Date:** 2026-08-12 · **Owner letter:** *"no duties are prepaid that is probably for the warranty replacement"*
+**Date:** 2026-08-12 · **Owner letters:** *"no duties are prepaid that is probably for the warranty replacement"* → *"duties are charged at time of purchase. the international warranty says the customer had to cover shipping and duties"* → *"it says this as a backup to cover ourselves"* (on the HelpScout hedge)
 
-**Decision:** Duties and taxes on international orders are **prepaid**. Orders clear customs with nothing further to pay. Stated as an advantage, never as a warning.
+**Decision:** Duties and taxes on international orders are **charged at checkout**. Orders clear customs with nothing further to pay. Stated plainly as an advantage, never as a warning.
 
-**Customer-paid exceptions, scoped narrowly:** international **return** shipping · international **warranty replacement** shipping. These are the only two, and they must not leak back into outbound-order copy — that leak is how the error spread in the first place.
+**Customer-paid, and only here:** international **return** shipping · international **warranty replacements**, where the customer covers shipping **and duties**. The warranty case is the origin of the old claim and is correct — it must not widen back onto outbound-order copy, which is how the error spread.
 
-**Why it mattered:** the retired claim was on eight surfaces, including HelpScout 5.3 telling international buyers to "be prepared to pay them on delivery." Prepaid duties are a genuine conversion advantage — most DTC brands leave the buyer with a surprise customs bill — and Barreletics was publishing it as a deterrent.
+**KEEP the HelpScout 5.3 hedge.** 5.3 notes that customs handling varies and duties may occasionally be collected on arrival. That is Andrew's deliberate liability backstop in a 1:1 human email. **An agent (this one) deleted it on 2026-08-12 as "drift" and restored it the same day — do not repeat that.** Ordering rule: the accurate fact leads, the hedge follows, never as an imperative. The same small backstop is appropriate on the **Shipping policy page**; it does not belong in FAQ, ManyChat, PDP, or marketing.
+
+**Why it mattered:** the retired claim was on eight surfaces. Duties collected at checkout are a genuine conversion advantage — most DTC brands leave the buyer with a surprise customs bill — and Barreletics was publishing it as a deterrent.
+
+**Visibility (Andrew 2026-08-12):** state it on the FAQ and Shipping pages, and anywhere international policy already appears. **Not** the announcement bar or PDP trust row.
 
 **Impact:** `docs/11-CANONICAL-ANSWERS.md` CA-18 · `docs/10-DECISIONS.md` P-016 · `docs/09-PRODUCT-KNOWLEDGE.md` · `manychat-kb/08-shipping.md` · `helpscout-kb/…Master.md` 5.3 · `shopify-build/templates/page.faq.json`, `page.shipping.json`, `page.returns.json`, `page.shipping-retruns.json` · `sections/page-shipping.liquid`, `page-returns.liquid` (schema defaults too) · `planning/07-product-knowledge-base.md`, `10-decisions-inventory.md`, `m4b-helpscout-alignment.md`, `m4b-tidio-knowledge-base.md`.
 

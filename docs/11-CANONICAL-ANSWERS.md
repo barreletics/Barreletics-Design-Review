@@ -26,7 +26,7 @@ This file is the **single source for customer-facing answers**. FAQ, PDP, collec
 | **"10% off your first order"** | Retired offer | "Join the list" — no discount promise |
 | blanket **"size up"** for between sizes | Wrong rule — it's width | CA-05 |
 | **"antimicrobial fabric"** on the Apparel tee | Andrew 2026-08-12: steer clear of the claim | describe softness, weight, and moisture movement instead |
-| **"customers are responsible for duties/taxes/customs"** · "be prepared to pay them on delivery" · "not included in our prices" | **P-016** — backwards. Duties are prepaid, and it's a selling point | CA-18. Customer-paid applies **only** to international return and warranty-replacement shipping |
+| **"customers are responsible for duties/taxes/customs"** · "be prepared to pay them on delivery" · "not included in our prices" | **P-016** — backwards on outbound orders. Duties are charged at checkout, and that's a selling point | CA-18. Customer-paid applies **only** to international returns and warranty replacements — and warranty replacements **do** include duties |
 
 ⚠️ `manychat-kb/05-why-better-than-socks.md` still lists "Antimicrobial & sweat-resistant — doesn't trap bacteria." **That line is retired.** Use CA-01/CA-02.
 
@@ -179,19 +179,21 @@ Set the honest expectation **first**, then land the two proof points. That order
 > Free shipping on Continental US orders over $150. $9.95 flat rate under $150. Expedited and overnight at checkout. We ship worldwide.
 > Orders process within 24–48 hours and typically ship the next business day. Expedited orders placed before 12 PM Eastern ship the same business day. No shipping on weekends or holidays.
 
-**CA-18 · International — duties are PREPAID** *(Andrew 2026-08-12, correcting eight surfaces)*
+**CA-18 · International — duties are charged at checkout** *(Andrew 2026-08-12: "duties are charged at time of purchase")*
 > We ship to 195 countries via FedEx International Connect Plus, and orders typically arrive within 7–14 business days.
-> **Duties and taxes are prepaid** — nothing extra to pay when your order arrives.
+> **Duties and taxes are charged at checkout** — nothing extra to pay when your order arrives.
 
 The 195 figure is a real carrier arrangement, not marketing padding. It was briefly stripped from the FAQ on 2026-08-12 for being absent from the KB; that was wrong.
 
-🚫 **RETIRED — this was on eight surfaces and it was backwards:** ~~"Customers are responsible for duties, taxes, and customs fees"~~ · ~~"be prepared to pay them on delivery"~~ (HelpScout 5.3) · ~~"customers are responsible for outbound shipping... and any duties"~~. Prepaid duties are a **conversion advantage** — most DTC brands make the buyer eat a surprise customs bill. Lead with it; never warn about it.
+🚫 **RETIRED on outbound-order copy:** ~~"Customers are responsible for duties, taxes, and customs fees"~~ · ~~"customer is responsible for any duties... not included in our prices"~~ · ~~"customers are responsible for outbound shipping... and any duties"~~. The buyer pays duties **at purchase**, so telling them they're responsible on arrival is both wrong and a deterrent. Duties collected up front are a **conversion advantage** — most DTC brands leave a surprise customs bill at the door. State it plainly; don't warn about it.
 
-**The two genuine customer-paid exceptions.** Keep these scoped narrowly so they never leak back into outbound-order copy:
+**Where the customer genuinely pays — do not widen this:**
 - **International returns** — the customer covers return shipping.
-- **International warranty replacements** — the customer covers replacement shipping (CA-21).
+- **International warranty replacements** — the customer covers shipping **and duties** on the replacement (CA-21). This is the origin of the old claim; Andrew: *"the international warranty says the customer has to cover shipping and duties."* It is correct **here** and nowhere else.
 
-⚠️ **Verify checkout matches the copy.** This is owner-stated. Someone should confirm the Shopify market / carrier setting actually collects duties at checkout (DDP) for all destinations, not just major ones — see `planning/OWNER-MANUAL-TASKS.md`. Copy promising prepaid duties against a DUP checkout would be worse than the old warning.
+⚠️ **KEEP the HelpScout 5.3 hedge — it is deliberate.** *(Andrew 2026-08-12: "it says this as a backup to cover ourselves")* HelpScout 5.3 notes that customs handling varies and duties may occasionally be collected on arrival. That is an intentional liability backstop in a **1:1 human email**, not drift. An agent stripped it on 2026-08-12 and had to put it back. **Never remove it again.** The rule: the accurate fact leads, the hedge follows — never the reverse, and never as an imperative like ~~"be prepared to pay them on delivery."~~ The same small backstop is appropriate on the **Shipping policy page**. It does **not** belong in FAQ, ManyChat, PDP, or any marketing surface.
+
+⚠️ **Verify checkout matches the copy.** Someone should confirm the Shopify market / carrier setting really does collect duties at checkout (DDP) for **all** destinations, not just the majors — see `planning/OWNER-MANUAL-TASKS.md`. This is exactly what the 5.3 hedge is protecting against.
 
 **CA-19 · Returns — 30 days**
 > Try them indoors for 30 days. If they don't perform, return for a full refund. Items must be clean and like new — no outdoor wear, no sole damage.
@@ -204,7 +206,9 @@ This is a fit trial, **not** a studio trial — do not write "try them in class 
 
 **CA-21 · Warranty — 90 days**
 > Every purchase is covered against manufacturing defects for 90 days. Return of the defective item usually isn't required.
-> International: send a photo of the defect. If approved, the customer pays replacement shipping — no need to ship the original pair back.
+> International: send a photo of the defect. If approved, the customer covers shipping **and duties** on the replacement — no need to ship the original pair back.
+
+The duties line belongs **here**, on warranty replacements. Keep it. Do not let it migrate back onto outbound-order or checkout copy (CA-18).
 
 **CA-22 · Delivered but missing**
 > Once tracking shows delivered to your address, the order is considered fulfilled. In an apartment or multi-unit building, check with building staff or the shared mail area first.
