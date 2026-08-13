@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Barreletics Brand — Definitive-v4</title>
+  <meta name="description" content="The Barreletics story. Founder Stefanie Miller. Patented Performance Skins, made in the USA.">
+  <link rel="icon" type="image/png" href="barreletics-mark.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --fw-hero: 700;
+      --fw-h2-display: 500;
+      --fw-h2-standard: 600;
+      --fw-statement: 500;
+      --fw-body: 400;
+      --fs-hero: clamp(50px, 6.4vw, 72px);
+      --fs-h2-display: clamp(38px, 4.6vw, 52px);
+      --fs-h2-standard: clamp(26px, 2.9vw, 32px);
+      --fs-statement: clamp(28px, 3vw, 36px);
+      --fs-lede: 17px;
+      --fs-body: 16px;
+      --ls-hero: -0.028em;
+      --ls-h2-display: -0.028em;
+      --ls-h2-standard: -0.012em;
+      --ls-statement: -0.022em;
+      --lh-hero: 1.06;
+      --lh-h2-display: 1.10;
+      --lh-h2-standard: 1.22;
+      --lh-lede: 1.60;
+      --lh-body: 1.72;
+      --gap-a: 16px;
+      --gap-c: 32px;
+      --ink: #1c1916;
+      --body: #4a4a4a;
+      --muted: #6b645a;
+      --line: #d6cfc0;
+      --line-soft: #e8e2d8;
+      --cream: #f5f2ec;
+      --rust: #c45c3f;
+      --pad-x: 20px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-weight: 400; color: var(--ink); background: #fff;
+      line-height: 1.6; -webkit-font-smoothing: antialiased;
+    }
+    img { display: block; max-width: 100%; }
+    a { color: var(--ink); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    button, input { font-family: inherit; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+
+    .mock-banner {
+      position: sticky; top: 0; z-index: 200;
+      background: #1c1916; color: #fff;
+      padding: 10px 16px; text-align: center;
+      font-size: 12px; font-weight: 500; letter-spacing: 0.02em; line-height: 1.45;
+    }
+    .mock-banner strong { color: #e8c4b8; }
+    .mock-banner a { color: #fff; text-decoration: underline; text-underline-offset: 2px; }
+    .mock-banner .phone { display: block; margin-top: 4px; font-size: 11px; opacity: 0.9; }
+
+    .site-header {
+      position: sticky; top: 58px; z-index: 50;
+      background: #fff; border-bottom: 1px solid var(--line-soft);
+    }
+    .site-header__inner {
+      max-width: 1280px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      min-height: 56px; padding: 12px var(--pad-x);
+    }
+    .site-header__logo { display: flex; align-items: center; text-decoration: none; flex-shrink: 0; }
+    .site-header__logo:hover { text-decoration: none; }
+    .site-header__logo-img { height: 42px; width: auto; display: block; max-width: 200px; }
+    .site-header__nav { display: none; }
+    .site-header__nav a, .site-header__actions a {
+      font-size: 13px; font-weight: 500; text-transform: none; letter-spacing: 0.01em;
+      color: #4a4a4a; text-decoration: none; white-space: nowrap;
+    }
+    .site-header__nav a:hover, .site-header__actions a:hover { color: var(--ink); text-decoration: none; }
+    .site-header__actions { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
+
+    /* Hero matches the landscape jump on a phone — 4:3, not a tall cover crop. */
+    .hero {
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      background: var(--ink);
+    }
+    .hero img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center 18%;
+    }
+
+    .head { padding: 40px var(--pad-x) 8px; }
+    .head__inner { max-width: 22em; }
+    .head h1 {
+      font-size: var(--fs-hero); font-weight: var(--fw-hero);
+      letter-spacing: var(--ls-hero); line-height: var(--lh-hero);
+      margin: 0 0 16px;
+    }
+    .head__lede {
+      font-size: var(--fs-lede); line-height: var(--lh-lede); color: var(--body);
+      max-width: 36ch;
+    }
+    .head__byline { font-size: 15px; font-weight: 400; color: var(--muted); margin: 16px 0 0; }
+    .pull {
+      font-size: var(--fs-h2-display); font-weight: var(--fw-h2-display);
+      letter-spacing: var(--ls-h2-display); line-height: var(--lh-h2-display);
+      max-width: 14em; margin: 32px 0 0; padding: 0 var(--pad-x) 40px;
+    }
+
+    .media { line-height: 0; background: var(--cream); }
+    .media img { width: 100%; height: 100%; object-fit: cover; }
+    .media--square { aspect-ratio: 1 / 1; overflow: hidden; }
+    .media--portrait { aspect-ratio: 4 / 5; overflow: hidden; }
+    .media--portrait img { object-position: center 18%; }
+    .media--museum {
+      background: var(--ink);
+      padding: 28px var(--pad-x);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .media--museum img {
+      width: auto; height: auto;
+      max-width: 100%; max-height: 42vh;
+      object-fit: contain;
+    }
+
+    .beat { padding: 40px var(--pad-x) 48px; }
+    .beat__inner { max-width: 32em; }
+    .beat h2 {
+      font-size: var(--fs-h2-display); font-weight: var(--fw-h2-display);
+      letter-spacing: var(--ls-h2-display); line-height: var(--lh-h2-display);
+      margin: 0 0 20px;
+    }
+    .prose { font-size: var(--fs-lede); line-height: 1.7; color: var(--body); }
+    .prose p + p { margin-top: 1em; }
+    .prose strong { color: var(--ink); font-weight: 600; }
+
+    .depth {
+      margin-top: 24px;
+      border-top: 1px solid var(--line-soft);
+    }
+    .depth details { padding: 4px 0; }
+    .depth summary {
+      font-size: 16px; font-weight: 500; cursor: pointer; list-style: none;
+      display: flex; justify-content: space-between; gap: 16px; align-items: center;
+      min-height: 48px;
+    }
+    .depth summary::-webkit-details-marker { display: none; }
+    .depth summary::after { content: '+'; font-weight: 400; color: var(--muted); }
+    .depth details[open] summary::after { content: '–'; }
+    .depth .prose { margin: 0 0 16px; }
+
+    .facts {
+      background: var(--cream);
+      padding: 56px var(--pad-x);
+    }
+    .facts__intro { max-width: 22em; margin: 0 0 40px; }
+    .facts__kicker {
+      font-size: 16px; line-height: 1.5;
+      color: var(--muted); margin: 0 0 12px;
+    }
+    .facts__intro h2 {
+      font-size: var(--fs-hero); font-weight: var(--fw-hero);
+      letter-spacing: var(--ls-hero); line-height: var(--lh-hero);
+      margin: 0 0 16px;
+    }
+    .facts__intro p { font-size: var(--fs-lede); line-height: var(--lh-lede); color: var(--body); }
+    .facts__grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 28px 20px;
+    }
+    .facts dt {
+      font-size: 18px; font-weight: 500;
+      letter-spacing: -0.02em; line-height: 1.2; margin: 0 0 6px;
+    }
+    .facts dd { font-size: 14px; line-height: 1.5; color: var(--body); margin: 0; }
+
+    .signoff { margin-top: 28px; }
+    .signoff__name { font-size: 15px; font-weight: 600; color: var(--ink); }
+    .signoff__role { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+    .geo { padding: 8px var(--pad-x) 64px; }
+    .geo__inner { max-width: 34em; }
+    .geo h2 {
+      font-size: 15px; font-weight: 500; letter-spacing: 0; line-height: 1.4;
+      color: var(--muted); margin: 0 0 12px;
+    }
+    .geo details { border-top: 1px solid var(--line-soft); padding: 4px 0; }
+    .geo details:last-child { border-bottom: 1px solid var(--line-soft); }
+    .geo summary {
+      font-size: 16px; font-weight: 500; cursor: pointer; list-style: none;
+      display: flex; justify-content: space-between; gap: 16px; align-items: center;
+      min-height: 48px;
+    }
+    .geo summary::-webkit-details-marker { display: none; }
+    .geo summary::after { content: '+'; font-weight: 400; color: var(--muted); }
+    .geo details[open] summary::after { content: '–'; }
+    .geo details p {
+      margin: 0 0 16px; font-size: var(--fs-body); line-height: var(--lh-body); color: var(--body);
+    }
+
+    .close { background: var(--ink); color: #fff; padding: 72px var(--pad-x); text-align: center; }
+    .close h2 {
+      font-size: var(--fs-h2-display); font-weight: var(--fw-h2-display);
+      letter-spacing: var(--ls-h2-display); line-height: var(--lh-h2-display);
+      margin: 0 0 12px;
+    }
+    .close p { font-size: var(--fs-lede); color: rgba(255,255,255,0.7); margin: 0 0 28px; }
+    .close a {
+      display: inline-block; background: #fff; color: var(--ink);
+      font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 16px 28px; text-decoration: none; min-height: 48px;
+    }
+    .close a:hover { background: var(--rust); color: #fff; text-decoration: none; }
+
+    .site-footer { background: #fff; }
+    .site-footer__inner { max-width: 1200px; margin: 0 auto; padding: 0 var(--pad-x) 28px; }
+    .footer-newsletter {
+      margin: 0 calc(-1 * var(--pad-x)) 40px; padding: 40px var(--pad-x);
+      border-bottom: 1px solid rgba(28,25,22,0.12);
+    }
+    .fn-signup h2 {
+      font-size: var(--fs-h2-standard); font-weight: var(--fw-h2-standard);
+      letter-spacing: var(--ls-h2-standard); line-height: var(--lh-h2-standard);
+      margin: 0 0 var(--gap-a);
+    }
+    .fn-signup p { font-size: 16px; color: var(--body); line-height: 1.72; margin: 0 0 20px; }
+    .fn-form { display: flex; flex-direction: column; gap: 8px; }
+    .fn-input {
+      width: 100%; padding: 14px 16px; border: 1px solid var(--line); background: #fff;
+      font-size: 16px; color: var(--ink); border-radius: 4px;
+    }
+    .fn-btn {
+      min-height: 48px; padding: 12px 20px; background: var(--ink); color: #fff; border: none;
+      font-size: 15px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+      border-radius: 4px; cursor: pointer;
+    }
+    .fn-btn:hover { background: var(--rust); }
+    .fn-legal { font-size: 11px; color: #8a8a8a; margin: 10px 0 0; }
+    .site-footer__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px 20px; padding-top: 8px; }
+    .site-footer__col h6 {
+      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+      margin: 0 0 14px;
+    }
+    .site-footer__col ul { list-style: none; }
+    .site-footer__col a { font-size: 14px; color: #4a4a4a; display: inline-block; padding: 6px 0; }
+    .site-footer__bottom {
+      display: flex; flex-direction: column; gap: 8px;
+      padding: 24px 0 0; margin-top: 32px;
+      border-top: 1px solid var(--line); font-size: 12px; color: #8a8a8a;
+    }
+
+    @media (min-width: 769px) {
+      :root { --pad-x: 40px; }
+      .site-header { top: 44px; }
+      .site-header__inner { min-height: 72px; padding: 16px 40px; gap: 24px; }
+      .site-header__nav {
+        display: flex; align-items: center; list-style: none;
+        flex: 1; justify-content: center; gap: 26px;
+      }
+      .site-header__actions { gap: 18px; }
+      .hero { aspect-ratio: 16 / 9; max-height: 56vh; }
+      .hero img { object-position: center 12%; }
+      .head { padding: 72px 8vw 8px; }
+      .pull { padding: 0 8vw 64px; margin-top: 40px; }
+      .media--square { aspect-ratio: auto; height: min(56vh, 640px); }
+      .media--portrait { aspect-ratio: auto; height: min(64vh, 720px); }
+      .media--museum { padding: 48px 8vw; }
+      .media--museum img { max-height: 52vh; }
+      .beat { padding: 64px 8vw 80px; }
+      .facts { padding: 80px 8vw; }
+      .facts__intro { margin-bottom: 56px; }
+      .facts__grid { grid-template-columns: repeat(4, 1fr); gap: 40px 32px; }
+      .facts dt { font-size: 22px; }
+      .facts dd { font-size: 15px; max-width: 22ch; }
+      .geo { padding: 8px 8vw 96px; }
+      .close { padding: 120px 8vw; }
+      .footer-newsletter {
+        display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 64px; align-items: end;
+        margin: 0 -40px 48px; padding: 48px 40px;
+      }
+      .fn-signup p { margin: 0; }
+      .fn-form { flex-direction: row; }
+      .fn-input { width: auto; flex: 1; font-size: 14px; }
+      .fn-btn { min-height: 44px; }
+      .site-footer__inner { padding: 0 40px 40px; }
+      .site-footer__grid { grid-template-columns: repeat(4, 1fr); gap: 40px; }
+      .site-footer__bottom { flex-direction: row; justify-content: space-between; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="mock-banner" role="note">
+  <strong>BRAND v4</strong> — Mobile-first. v1–v3 untouched.
+  <span class="phone">On your phone, same Wi-Fi: <a href="http://192.168.1.147:8903/Barreletics%20Brand%20-%20Definitive-v4.html">192.168.1.147:8903/…v4</a> · localhost fails on phone</span>
+</div>
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <a class="site-header__logo" href="Barreletics%20Home%20-%20Definitive-WORKING.html" aria-label="Barreletics">
+      <img class="site-header__logo-img" src="barreletics-logo.png" alt="" width="129" height="42">
+    </a>
+    <nav class="site-header__nav" aria-label="Primary">
+      <a href="Barreletics%20Collection%20-%20Definitive-v18.html">Grippy Footwear</a>
+      <a href="Barreletics%20Home%20-%20Definitive-WORKING.html#hot-kits">Hot Pilates &amp; Yoga Kits</a>
+      <a href="#">Apparel</a>
+      <a href="Barreletics%20Home%20-%20Definitive-WORKING.html#coperni">Collaborations</a>
+      <a href="Barreletics%20Journal%20-%20Definitive-v5.html">Journal</a>
+    </nav>
+    <div class="site-header__actions">
+      <a href="Barreletics%20Help%20-%20Definitive-v8.html">Help ▾</a>
+      <a href="#">Account</a>
+      <a href="#">Cart</a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero" aria-label="Barreletics in motion">
+    <img src="https://barreletics.com/cdn/shop/products/barreletixxjumpingtogether.jpg?v=1619360969&amp;width=2400" alt="Two women in Performance Skins" width="2400" height="1600">
+  </section>
+
+  <section class="head">
+    <div class="head__inner">
+      <h1>Our story</h1>
+      <p class="head__lede">Patented Performance Skins for barre, Pilates, reformer, Megaformer, and studio fitness. Built because grip socks kept failing when grip mattered most.</p>
+      <p class="head__byline">Stefanie Miller, Founder</p>
+    </div>
+  </section>
+  <p class="pull">We didn’t improve the grip sock. We made it obsolete.</p>
+
+  <section class="media media--square" aria-label="Performance Skin">
+    <img src="https://barreletics.com/cdn/shop/files/Square_Pink.png?v=1764627088&amp;width=1800" alt="Performance Skin in studio" width="1800" height="1800">
+  </section>
+  <article class="beat">
+    <div class="beat__inner">
+      <h2>The only tool available kept interrupting the work.</h2>
+      <div class="prose">
+        <p>Grippy yoga socks were the only option. They slipped when grip mattered most. I kept breaking focus to fix my socks instead of holding the position.</p>
+        <p>Fabric holds moisture. I wanted a clean, connected practice.</p>
+        <p>That same evening, I tore the silicone sleeve off a water bottle, cut it up, and made the first prototype. Two years of testing followed.</p>
+        <p>Performance Skins were born: patented studio footwear, designed and manufactured in the USA.</p>
+      </div>
+    </div>
+  </article>
+
+  <section class="media media--museum" aria-label="Joseph Pilates archival">
+    <img src="https://barreletics.com/cdn/shop/files/Screenshot_2026-06-06_at_6.59.10_PM.png?v=1780787015&amp;width=1600" alt="Archival photograph of Joseph Pilates on the Reformer" width="1600" height="1600">
+  </section>
+  <article class="beat">
+    <div class="beat__inner">
+      <h2>Joseph Pilates built the method around the feet.</h2>
+      <div class="prose">
+        <p>The foot connects the body to the floor, the mat, the Reformer — every surface beneath you. That connection is the work. A sock that slips moves your focus off form and onto your footing.</p>
+      </div>
+      <div class="depth">
+        <details>
+          <summary>Joseph Pilates, Contrology, and the apparatus</summary>
+          <div class="prose">
+            <p>Joseph Pilates developed his method, originally called Contrology, around breath, concentration, control, precision, alignment, flow, and full-body awareness. He also created the apparatus to serve that method: the Reformer, Cadillac, Wunda Chair, Ladder Barrel, Spine Corrector, Foot Corrector, Toe Corrector, and Ped-o-Pul.</p>
+            <p>The feet were always part of the system. In Pilates, the foot connects the body to the floor, the mat, the Reformer, the Cadillac, the Wunda Chair, the Megaformer — every surface beneath you.</p>
+            <p>Pilates depends on feedback. The foot has to sense, press, articulate, stabilize, and respond. A grip sock that slips, shifts, or bunches moves your focus off form and onto your footing. It is like holding a plank on a sliding towel. You can still do the move. Your body is compensating instead of engaging.</p>
+            <p>That is the part Joseph Pilates — and any serious barre or Pilates practitioner — would understand immediately. A practice built on control, precision, and connection should not be compromised by what is under your feet.</p>
+            <p>Clean feet, clean floors, wiped-down equipment — that’s what creates a clean environment. The tool under you should support the practice, not work against it.</p>
+            <p>If you prefer a sock layer, have cold feet, or train in a studio that requires socks, Performance Skins can be worn over a very thin pair. The thinnest option possible, ideally toe-free or fitted, so you still feel the grip.</p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </article>
+
+  <section class="facts" aria-label="Barreletics facts">
+    <div class="facts__intro">
+      <p class="facts__kicker">Two years. One patent.</p>
+      <h2>Made in the USA.</h2>
+      <p>Designed and manufactured in Michigan. 360° injection-molded grip. Same grip, same stability in Open Sole or Closed Sole — choice is preference and feel only.</p>
+    </div>
+    <dl class="facts__grid">
+      <div>
+        <dt>Coperni</dt>
+        <dd>Spring–Summer 2026 runway, Paris.</dd>
+      </div>
+      <div>
+        <dt>Free People</dt>
+        <dd>Spring 2026.</dd>
+      </div>
+      <div>
+        <dt>195 countries</dt>
+        <dd>Shipped worldwide.</dd>
+      </div>
+      <div>
+        <dt>1,000+ instructors</dt>
+        <dd>Trusted in studio.</dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="media media--portrait" aria-label="Stefanie Miller">
+    <img src="https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&amp;width=2000" alt="Stefanie Miller, founder of Barreletics" width="2000" height="2500">
+  </section>
+  <article class="beat">
+    <div class="beat__inner">
+      <h2>Fashion trained the eye. The studio set the standard.</h2>
+      <div class="prose">
+        <p>A former career as a fashion model took me around the world — design, textiles, architecture, craftsmanship, the details that elevate an experience.</p>
+        <p>That foundation now meets a practice I take seriously. Every pair is made to perform, and to support how you move and show up.</p>
+        <p><strong>I hope you love them as much as I do.</strong></p>
+        <div class="signoff">
+          <p class="signoff__name">Stefanie Miller</p>
+          <p class="signoff__role">Founder, Barreletics</p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <section class="geo" aria-label="About Barreletics">
+    <div class="geo__inner">
+      <h2>Barreletics, in brief</h2>
+      <details>
+        <summary>What is Barreletics?</summary>
+        <p>Barreletics makes patented Performance Skins — studio footwear for barre, Pilates, reformer, Lagree, and Megaformer. Founded in Michigan by Stefanie Miller. Made in the USA. One pair replaces disposable grip socks with 360° injection-molded grip.</p>
+      </details>
+      <details>
+        <summary>Open Sole or Closed Sole?</summary>
+        <p>Closed Sole is heel and foot fully covered. Open Sole is heel exposed, mid-foot breathing hole — more grounded, barefoot feel, natural toe splay. Both perform identically — same grip, same stability. Choice is preference and feel only.</p>
+      </details>
+      <details>
+        <summary>Is this a grip sock alternative for Pilates?</summary>
+        <p>Yes. Performance Skins are built as a grip sock alternative for Pilates, barre, and reformer — full-contact molded grip that does not peel the way silicone dots do.</p>
+      </details>
+      <details>
+        <summary>Where are Performance Skins made?</summary>
+        <p>Made in the USA. Designed and manufactured in Michigan. Material, injection molding, and quality stay domestic.</p>
+      </details>
+    </div>
+  </section>
+
+  <section class="close">
+    <h2>Let us knock your socks off</h2>
+    <p>One pair. All-over grip. Built for the studio.</p>
+    <a href="Barreletics%20Collection%20-%20Definitive-v18.html">Shop Performance Skins</a>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div class="footer-newsletter">
+      <div class="fn-signup">
+        <h2>Join the list</h2>
+        <p>New colorways and studio stories.</p>
+      </div>
+      <div>
+        <form class="fn-form" onsubmit="event.preventDefault();">
+          <label class="sr-only" for="fn-email">Email address</label>
+          <input class="fn-input" id="fn-email" type="email" placeholder="Email address" required>
+          <button class="fn-btn" type="submit">Subscribe</button>
+        </form>
+        <p class="fn-legal">By subscribing you agree to receive marketing emails. Unsubscribe anytime.</p>
+      </div>
+    </div>
+    <div class="site-footer__grid">
+      <div class="site-footer__col">
+        <h6>Shop</h6>
+        <ul>
+          <li><a href="Barreletics%20Collection%20-%20Definitive-v18.html">Grippy Footwear</a></li>
+          <li><a href="#">Apparel</a></li>
+          <li><a href="Barreletics%20Home%20-%20Definitive-WORKING.html#coperni">Collaborations</a></li>
+        </ul>
+      </div>
+      <div class="site-footer__col">
+        <h6>Learn</h6>
+        <ul>
+          <li><a href="Barreletics%20Brand%20-%20Definitive-v4.html" aria-current="page">About Us</a></li>
+          <li><a href="Barreletics%20Journal%20-%20Definitive-v5.html">Journal</a></li>
+          <li><a href="Barreletics%20Size%20Chart%20-%20Definitive-v1.html">Size Chart</a></li>
+        </ul>
+      </div>
+      <div class="site-footer__col">
+        <h6>Support</h6>
+        <ul>
+          <li><a href="Barreletics%20FAQ%20-%20Definitive-v7.html">FAQ</a></li>
+          <li><a href="REVIEW-2026-08-08.html#returns">Shipping &amp; Returns</a></li>
+          <li><a href="Barreletics%20Contact%20-%20Definitive-v1.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="site-footer__col">
+        <h6>Connect</h6>
+        <ul>
+          <li><a href="https://www.instagram.com/barreletics/" target="_blank" rel="noopener">Instagram</a></li>
+          <li><a href="Barreletics%20Contact%20-%20Definitive-v1.html">Email Us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-footer__bottom">
+      <span>© 2026 Barreletics. All rights reserved.</span>
+      <span>Made in USA</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
