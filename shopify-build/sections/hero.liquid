@@ -5,7 +5,7 @@
 
 {% render 'section-wrapper', id: 'hero', class: 'hero-section', tag: 'section', aria_label: 'Hero' %}
 
-<div class="hero">
+<div class="hero{% render 'split-mobile-stack-class', mobile_stack_order: section.settings.mobile_stack_order %}">
   <div class="hero__copy">
     {% if section.settings.eyebrow != blank %}
       <p class="hero__eyebrow">{{ section.settings.eyebrow }}</p>
@@ -185,7 +185,18 @@
     { "type": "url", "id": "cta_secondary_url", "label": "Secondary CTA link" },
     { "type": "text", "id": "trust_line", "label": "Trust line", "default": "Trusted by 1,000's of instructors · Made in USA" },
     { "type": "image_picker", "id": "image", "label": "Hero image" },
-    { "type": "text", "id": "image_alt", "label": "Image alt text", "default": "Studio session with Barreletics performance skins" }
+    { "type": "text", "id": "image_alt", "label": "Image alt text", "default": "Studio session with Barreletics performance skins" },
+    {
+      "type": "select",
+      "id": "mobile_stack_order",
+      "label": "Mobile stack order",
+      "default": "media_first",
+      "options": [
+        { "value": "media_first", "label": "Image above copy" },
+        { "value": "copy_first", "label": "Copy above image" }
+      ],
+      "info": "Below 768px only."
+    }
   ],
   "presets": [{ "name": "Hero" }]
 }

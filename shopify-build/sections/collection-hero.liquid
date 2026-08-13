@@ -30,7 +30,7 @@
   endif
 -%}
 
-<section class="{{ layout_class }}" aria-label="{{ section.settings.aria_label | default: 'Collection hero' | escape }}">
+<section class="{{ layout_class }}{% render 'split-mobile-stack-class', mobile_stack_order: section.settings.mobile_stack_order %}" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }} aria-label="{{ section.settings.aria_label | default: 'Collection hero' | escape }}">
   <div class="coll-hero__copy">
     {% if show_trust and section.settings.trust_text != blank %}
       <p class="coll-hero__trust">
@@ -364,7 +364,6 @@
       gap: 28px;
     }
     #shopify-section-{{ section.id }} .coll-hero--split .coll-hero__media {
-      order: -1;
       min-height: 0;
       max-height: 52vh;
     }
@@ -389,6 +388,19 @@
     { "type": "text", "id": "secondary_cta_text", "label": "Secondary CTA", "default": "See why →" },
     { "type": "text", "id": "secondary_cta_url", "label": "Secondary CTA URL", "default": "#pose" },
     { "type": "text", "id": "aria_label", "label": "ARIA label", "default": "Collection hero" },
+
+    { "type": "header", "content": "Layout" },
+    {
+      "type": "select",
+      "id": "mobile_stack_order",
+      "label": "Mobile stack order",
+      "default": "media_first",
+      "options": [
+        { "value": "media_first", "label": "Image above copy" },
+        { "value": "copy_first", "label": "Copy above image" }
+      ],
+      "info": "Split hero only, below 768px. Copy-first in DOM; media_first lifts image above."
+    },
 
     { "type": "header", "content": "Media (split hero)" },
     { "type": "select", "id": "media_type", "label": "Media type", "default": "image", "options": [

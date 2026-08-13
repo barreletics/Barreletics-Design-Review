@@ -390,3 +390,41 @@ h1, h2, h3, h4, h5, h6 {
 .media-fill--bottom { object-position: center bottom; }
 .media-fill--left { object-position: left center; }
 .media-fill--right { object-position: right center; }
+
+/* Split sections — mobile stack order (TE: mobile_stack_order on fifty-fifty, split-hero, collection-hero, hero) */
+@media (max-width: 768px) {
+  .mobile-stack--copy-first.split-section .split-media,
+  .mobile-stack--copy-first.split-hero .split-hero__media,
+  .mobile-stack--copy-first.coll-hero--split .coll-hero__media,
+  .mobile-stack--copy-first.hero .hero__image {
+    order: 2 !important;
+  }
+
+  .mobile-stack--copy-first.split-section .split-text,
+  .mobile-stack--copy-first.split-hero .split-hero__copy,
+  .mobile-stack--copy-first.coll-hero--split .coll-hero__copy,
+  .mobile-stack--copy-first.hero .hero__copy {
+    order: 1 !important;
+  }
+
+  .mobile-stack--media-first.coll-hero--split .coll-hero__media {
+    order: -1 !important;
+  }
+
+  .mobile-stack--media-first.hero .hero__image {
+    order: -1 !important;
+  }
+
+  .mobile-stack--media-first.split-hero .split-hero__media {
+    order: 1 !important;
+  }
+
+  .mobile-stack--media-first.split-hero .split-hero__copy {
+    order: 2 !important;
+  }
+
+  .mobile-stack--media-first.split-section .split-media,
+  .mobile-stack--media-first.split-section .split-text {
+    order: 0 !important;
+  }
+}

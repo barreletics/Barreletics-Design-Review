@@ -75,7 +75,7 @@
 -%}
 
 <div
-  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} split-hero{% if reverse_layout %} split-hero--reverse{% endif %}"
+  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} split-hero{% if reverse_layout %} split-hero--reverse{% endif %}{% render 'split-mobile-stack-class', mobile_stack_order: section.settings.mobile_stack_order %}"
   id="split-hero-{{ section.id }}"
   role="region"
   {% if region_label != blank %}aria-label="{{ region_label | escape }}"{% endif %}
@@ -546,7 +546,18 @@
       "id": "reverse_layout",
       "label": "Reverse layout (copy left / media right)",
       "default": false,
-      "info": "Desktop only. Mobile stays media first."
+      "info": "Desktop only (769px+)."
+    },
+    {
+      "type": "select",
+      "id": "mobile_stack_order",
+      "label": "Mobile stack order",
+      "default": "media_first",
+      "options": [
+        { "value": "media_first", "label": "Image above copy" },
+        { "value": "copy_first", "label": "Copy above image" }
+      ],
+      "info": "Below 768px only."
     },
 
     { "type": "header", "content": "Section — Split hero — trust" },

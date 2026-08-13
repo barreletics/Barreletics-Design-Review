@@ -81,7 +81,7 @@
 
 <section
   {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | handleize }}"{% endif %}
-  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} split-section{% if section.settings.reverse %} split-section--reverse{% endif %}{% if media_fit == 'contain' %} split-section--contain{% endif %}{% if media_aspect == 'square' %} split-section--media-square{% endif %}{% if media_radius_outer %} split-section--media-outer-radius{% endif %}"
+  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} split-section{% if section.settings.reverse %} split-section--reverse{% endif %}{% if media_fit == 'contain' %} split-section--contain{% endif %}{% if media_aspect == 'square' %} split-section--media-square{% endif %}{% if media_radius_outer %} split-section--media-outer-radius{% endif %}{% render 'split-mobile-stack-class', mobile_stack_order: section.settings.mobile_stack_order %}"
   style="{% render 'section-inset-vars' %} 
     --ff-min-height: {{ min_height }}px;
     --ff-mobile-media-height: {{ mobile_media_height }}px;
@@ -1301,7 +1301,19 @@
       "type": "checkbox",
       "id": "reverse",
       "label": "Reverse layout (text left, media right)",
-      "default": false
+      "default": false,
+      "info": "Desktop only (769px+)."
+    },
+    {
+      "type": "select",
+      "id": "mobile_stack_order",
+      "label": "Mobile stack order",
+      "default": "media_first",
+      "options": [
+        { "value": "media_first", "label": "Image above copy" },
+        { "value": "copy_first", "label": "Copy above image" }
+      ],
+      "info": "Below 768px only."
     },
     {
       "type": "range",
