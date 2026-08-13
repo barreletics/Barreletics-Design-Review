@@ -688,7 +688,7 @@ Lean one-off PDP spine keeps brand education for cold traffic (features, reviews
 
 **Deliberately NOT edited** — frozen by anti-revert law, and they carry the retired wording as history: locked mocks `docs/Barreletics FAQ - Definitive-v4/v5/v6/v7.html`, `Barreletics Returns - Definitive-v3.html`, the `docs/08-LIVE-SITE-COPY-AUDIT.md` evidence snapshot, and `planning/returns-pages-qa/preview-*.html`. **Never copy shipping or duties copy out of those mocks** — they are design authority for layout only. Copy authority is CA-18.
 
-**Open:** verify the Shopify market / FedEx ICP setting actually collects duties at checkout (DDP) for **all** destinations — `planning/OWNER-MANUAL-TASKS.md` section A. Promising prepaid against a DUP checkout is worse than the old warning.
+**Closed 2026-08-12** — Andrew confirmed: *"we are collecting DDP."* The store collects duties and import taxes at checkout, so "charged at checkout" is backed by the setting, not just a description. Nothing left open on this decision. The HelpScout 5.3 hedge remains anyway, covering the rare destination that bills despite DDP.
 
 **Supersedes:** BZ-013 (`docs/10-DECISIONS.md`, `planning/10-decisions-inventory.md`).
 

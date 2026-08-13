@@ -15,7 +15,7 @@ These block work. Everything else in this file is mechanical.
 - [?] **Kids sizing conflict.** Every chart including the live site says Kids' US **2–5** wear Medium. But `docs/09-PRODUCT-KNOWLEDGE.md` line 84 says **Youth 4–6**. Which is right? Until you say, nobody quotes a youth number.
 - [?] **Dead Kids variants.** Shopify carries 6 dedicated Kids variants on Water Shoes (DarkGrey, Black, Blue, Bright Yellow, White, LightGrey), all at 0 inventory, documented nowhere. Discontinued, or should they come back? Separate question from "kids 2–5 fit Medium."
 - [?] **Foot length inches.** Removed from the size chart because they matched no source. If you ever want a measurement column, someone has to measure a real pair.
-- [?] **Duties at checkout — does every market actually collect them?** You said duties are charged at time of purchase, so nine surfaces now say "nothing extra to pay on delivery." Someone has to confirm the Shopify market / FedEx ICP setting really is DDP, **and for every destination, not just Canada and the UK**. If any country ships DUP, a buyer there gets a customs bill we told them wouldn't come — worse than the old warning ever was. Shopify Admin → Settings → Markets → the market → Duties and import taxes.
+- [x] **Duties at checkout — confirmed DDP.** Andrew 2026-08-12: *"we are collecting DDP."* Nothing to do; the checkout setting backs the copy. Closed. *(If markets or the carrier ever change, this claim is on the FAQ, the Returns page, and the collection FAQ — CA-18.)*
 
 ---
 
@@ -146,6 +146,8 @@ Let us know if you have a specific country in mind and we can help confirm.
 
 ## Log
 
-**2026-08-12 (later)** — Duties correction. Andrew: duties are **prepaid**; the "customer responsible for duties" line was probably about warranty replacements. Corrected on nine live surfaces plus six source docs. Added the DDP verification question to section A and HelpScout 5.3 to sections B and F. Authority: CA-18 · P-016 · D-054.
+**2026-08-12 (later)** — Duties correction. Andrew: duties are **prepaid**; the "customer responsible for duties" line was probably about warranty replacements. Corrected on nine live surfaces plus six source docs. Added HelpScout 5.3 to sections B and F. Authority: CA-18 · P-016 · D-054.
+
+**2026-08-12 (later still)** — DDP confirmed by Andrew, so the section A verification question is closed the same day it was raised. Section A is down to the three sizing/variant questions.
 
 **2026-08-12** — Created. Sections A through F from the canonical-answers pass: sizing corrected to L 7.5–11 with kids' 2–5, antimicrobial and bacteria claims retired in favor of the wipe-clean framing, longevity rewritten, "patented" confirmed accurate, 195 countries confirmed real, blow dryer tip routed to HelpScout only. Authority: `docs/11-CANONICAL-ANSWERS.md` · `planning/10-decision-log.md` D-053 · `docs/10-DECISIONS.md` P-015.

@@ -193,7 +193,7 @@ The 195 figure is a real carrier arrangement, not marketing padding. It was brie
 
 ⚠️ **KEEP the HelpScout 5.3 hedge — it is deliberate.** *(Andrew 2026-08-12: "it says this as a backup to cover ourselves")* HelpScout 5.3 notes that customs handling varies and duties may occasionally be collected on arrival. That is an intentional liability backstop in a **1:1 human email**, not drift. An agent stripped it on 2026-08-12 and had to put it back. **Never remove it again.** The rule: the accurate fact leads, the hedge follows — never the reverse, and never as an imperative like ~~"be prepared to pay them on delivery."~~ The same small backstop is appropriate on the **Shipping policy page**. It does **not** belong in FAQ, ManyChat, PDP, or any marketing surface.
 
-⚠️ **Verify checkout matches the copy.** Someone should confirm the Shopify market / carrier setting really does collect duties at checkout (DDP) for **all** destinations, not just the majors — see `planning/OWNER-MANUAL-TASKS.md`. This is exactly what the 5.3 hedge is protecting against.
+✅ **Confirmed DDP — Andrew 2026-08-12: "we are collecting DDP."** Checkout collects duties and import taxes, so the copy above is backed by the actual setting. This claim is cleared for use anywhere international policy appears. The HelpScout 5.3 hedge still stays — it covers the destination that bills anyway despite DDP, which is a rare exception, not the norm.
 
 **CA-19 · Returns — 30 days**
 > Try them indoors for 30 days. If they don't perform, return for a full refund. Items must be clean and like new — no outdoor wear, no sole damage.

@@ -783,7 +783,7 @@ ManyChat, PDP, or marketing.
 ```
 The duties-responsibility line originated on **warranty replacements**, where it is correct, and leaked onto outbound-order copy across eight surfaces.
 Supersedes: BZ-013 · Canonical: `docs/11-CANONICAL-ANSWERS.md` CA-18 and CA-21
-⚠️ Open verification: confirm Shopify market/carrier collects duties at checkout (DDP) for all destinations — `planning/OWNER-MANUAL-TASKS.md`. This is what the 5.3 hedge protects against.
+✅ Verified 2026-08-12 — Andrew: "we are collecting DDP." Checkout collects duties and import taxes; the copy matches the setting. The 5.3 hedge stays for the rare destination that bills anyway.
 
 ---
 
