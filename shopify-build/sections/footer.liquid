@@ -1,6 +1,7 @@
 {% comment %}
   FOOTER LOCKED Jul 31 2026 — sitewide via footer-group (all pages).
   Trusted by (toggle) · Join the list (toggle, NO 10%) · columns · Light/Dark per band.
+  Join the list = option A (2026-08-12): headline left, form right, checks OFF.
   Spec: specs/frozen/footer.md · Registry: planning/m4-section-freeze.md
   Do not reintroduce 10% or page-level duplicate newsletters.
 {% endcomment %}
@@ -56,6 +57,8 @@
             {% if section.settings.newsletter_text != blank %}
               <p>{{ section.settings.newsletter_text }}</p>
             {% endif %}
+          </div>
+          <div class="fn-form-col">
             {% form 'customer', id: 'footer-newsletter' %}
               <div class="fn-form">
                 <input
@@ -74,24 +77,23 @@
                 <p class="fn-legal">{{ section.settings.newsletter_privacy }}</p>
               {% endif %}
             {% endform %}
+            {% if section.settings.show_checklist %}
+              <ul class="fn-checks" aria-label="List benefits">
+                {% if section.settings.check_1 != blank %}
+                  <li><span class="fn-check" aria-hidden="true">✓</span><span class="fn-check-text">{{ section.settings.check_1 }}</span></li>
+                {% endif %}
+                {% if section.settings.check_2 != blank %}
+                  <li><span class="fn-check" aria-hidden="true">✓</span><span class="fn-check-text">{{ section.settings.check_2 }}</span></li>
+                {% endif %}
+                {% if section.settings.check_3 != blank %}
+                  <li><span class="fn-check" aria-hidden="true">✓</span><span class="fn-check-text">{{ section.settings.check_3 }}</span></li>
+                {% endif %}
+                {% if section.settings.check_4 != blank %}
+                  <li><span class="fn-check" aria-hidden="true">✓</span><span class="fn-check-text">{{ section.settings.check_4 }}</span></li>
+                {% endif %}
+              </ul>
+            {% endif %}
           </div>
-
-          {% if section.settings.show_checklist %}
-            <ul class="fn-checks" aria-label="List benefits">
-              {% if section.settings.check_1 != blank %}
-                <li><span class="fn-check" aria-hidden="true">✓</span><span class="fn-check-text">{{ section.settings.check_1 }}</span></li>
-              {% endif %}
-              {% if section.settings.check_2 != blank %}
-                <li><span class="fn-check" aria-hidden="true">✓</span><span class="fn-check-text">{{ section.settings.check_2 }}</span></li>
-              {% endif %}
-              {% if section.settings.check_3 != blank %}
-                <li><span class="fn-check" aria-hidden="true">✓</span><span class="fn-check-text">{{ section.settings.check_3 }}</span></li>
-              {% endif %}
-              {% if section.settings.check_4 != blank %}
-                <li><span class="fn-check" aria-hidden="true">✓</span><span class="fn-check-text">{{ section.settings.check_4 }}</span></li>
-              {% endif %}
-            </ul>
-          {% endif %}
         </div>
       {% endif %}
 
@@ -440,7 +442,7 @@
       "type": "textarea",
       "id": "newsletter_text",
       "label": "Newsletter text",
-      "default": "New drops and studio stories. Once or twice a quarter — never spam."
+      "default": "New colorways and studio stories."
     },
     {
       "type": "text",
@@ -458,8 +460,8 @@
       "type": "checkbox",
       "id": "show_checklist",
       "label": "Show value checkmarks",
-      "default": true,
-      "info": "Toggle off in Theme Editor to strip checks if you prefer the simpler band."
+      "default": false,
+      "info": "Off by default (Andrew 2026-08-12, option A). On = checks under the form — do not turn on without a letter."
     },
     {
       "type": "text",
