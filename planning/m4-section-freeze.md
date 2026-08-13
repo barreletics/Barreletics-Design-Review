@@ -118,7 +118,7 @@ Update the **Fingerprint** column with the freeze commit SHA after each freeze s
 - **Stack:** Trusted by (toggle) → Join the list (toggle, NO 10%) → Shop/Learn/Support/Connect → Made in USA
 - **TE:** Light/Dark per band (text follows); size overrides; show/hide Trusted + Join; checkmarks toggle **default off**. Dark Join = text-colored checks (no rust) if ever re-enabled.
 - **Join the list A — SIGNED Andrew 2026-08-12:** headline left, form right. No rust checks. Body = **"New colorways and studio stories."** — no send-frequency claim, no "never spam", no "nothing else". Checklist TE stays, default off; do not turn on without a letter.
-- **Only page-level duplicate left:** `templates/collection.hot-kits.json` still has a standalone `newsletter` section with checks on. Footer Join the list still renders under it. Leave it until Andrew says to pull it.
+- **Hot Kits (Andrew 2026-08-12):** pulled the standalone `newsletter` from `collection.hot-kits.json`. Kits now uses the same footer Join the list as every other page. Hero / fifty-fifty / value-strip untouched.
 
 - **Sitewide:** `layout/theme.liquid` → `{% sections 'footer-group' %}` (every page).
 - **Authority:** `specs/frozen/footer.md`

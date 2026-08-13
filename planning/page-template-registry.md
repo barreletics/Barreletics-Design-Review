@@ -29,6 +29,7 @@ Theme Editor: `https://admin.shopify.com/store/barreletics/themes/187144929571/e
 |---------|--------------|---------------|-----------------|--------------|-----------------|
 | **Shop All (grippy shoes)** | `/collections/barre-pilates-yoga-shoe-sock-footwear` | `collection.json` | **Collection v18 Locked** → `docs/Barreletics Collection - Definitive-v18.html` | *(default / none)* | `/collections/barre-pilates-yoga-shoe-sock-footwear` |
 | **Apparel** | `/collections/apparel` | `collection.apparel.json` | Structure follows **Collection v18 Locked** (apparel copy; no sole education). Live content: `https://barreletics.com/collections/apparel` | **`apparel`** (Admin set 2026-08-09 via `collectionUpdate`; was `apparel-page`) | `/collections/apparel` |
+| **Hot Pilates & Yoga Kits** | `/collections/hot-kits` | `collection.hot-kits.json` | Coming-soon placeholder (owner 2026-08-08). No Locked mock. **No page newsletter** — footer Join the list only (Andrew 2026-08-12). | **`hot-kits`** | `/collections/hot-kits` — **404 until collection is published to Online Store** |
 
 **Do not treat Apparel as Shop All.** Wrong page = Apparel still on default collection template.
 

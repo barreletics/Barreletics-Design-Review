@@ -40,7 +40,7 @@ updated: 2026-08-12
 - SEO Learn link: `/pages/best-barre-pilates-yoga-grippy-socks`
 - Files: `footer.liquid`, `footer-group.json`, `assets/chrome.css`
 
-**SIGNED 2026-08-12** — Andrew approved option A on M4. One global signup: footer-group only.
+**SIGNED 2026-08-12** — Andrew approved option A on M4. One global signup: footer-group only. Hot Kits page newsletter pulled the same day — that template no longer has a second Join the list.
 
 ## Forbidden without Andrew letter
 
