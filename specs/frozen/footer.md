@@ -1,7 +1,7 @@
 # Frozen Spec — Footer
 
 ---
-status: FROZEN · LOCKED 2026-07-31
+status: FROZEN · SIGNED 2026-08-12 (Join the list A) · LOCKED 2026-07-31
 surface: Sitewide footer (`sections/footer.liquid` via `footer-group.json`)
 authority: Home WORKING layout · Andrew lock letter 2026-07-31
 theme: `187144929571` (M4 Visual QA) — never live
@@ -39,6 +39,8 @@ updated: 2026-08-12
 - Independent Light/Dark per band (Trusted / Join / Columns)
 - SEO Learn link: `/pages/best-barre-pilates-yoga-grippy-socks`
 - Files: `footer.liquid`, `footer-group.json`, `assets/chrome.css`
+
+**SIGNED 2026-08-12** — Andrew approved option A on M4. One global signup: footer-group only.
 
 ## Forbidden without Andrew letter
 

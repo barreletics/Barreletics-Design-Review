@@ -95,7 +95,7 @@ No small size.
 
 | ID | Surface | Status | Fingerprint (lineage) | Locked composition | Files |
 |----|---------|--------|------------------------|--------------------|-------|
-| **Footer** | Sitewide footer (all pages via `footer-group`) | **LOCKED Jul 31 2026** · **Join the list A 2026-08-12** | WORKING layout + Join the list · Light/Dark TE | Trusted by (toggle) · Join the list **split** (headline left, form right, **checks OFF**) · columns · Light/Dark per band · size TE · SEO Learn link · **NO brand blurb** · **NO 10%** · **NO cadence / never-spam / nothing-else** | `sections/footer.liquid`, `footer-group.json`, `assets/chrome.css` · `specs/frozen/footer.md` |
+| **Footer** | Sitewide footer (all pages via `footer-group`) | **SIGNED 2026-08-12** (Join the list A) · LOCKED Jul 31 2026 | WORKING layout + Join the list · Light/Dark TE | Trusted by (toggle) · Join the list **split** (headline left, form right, **checks OFF**) · columns · Light/Dark per band · size TE · SEO Learn link · **NO brand blurb** · **NO 10%** · **NO cadence / never-spam / nothing-else** · Andrew approved 2026-08-12 | `sections/footer.liquid`, `footer-group.json`, `assets/chrome.css` · `specs/frozen/footer.md` |
 | **PDP** | Product templates + buy-box | **LOCKED Aug 1 2026** · **proportions LOCKED 2026-08-08 night** · **Closed badge rust LOCKED 2026-08-11** · v16 prior · Closed=`product.json` · Open=`product.open-sole.json` · Outdoor=`product.outdoor.json` | Mock **`Definitive-v19.html`** + `product*.json` (QA **`187144929571`**) | **Proportions (PDP only, not sitewide):** fifty-fifty **560**/pad **80**/mobile **320** · fullbleed **80vh/60vh** · gallery 1:1 · thumbs 72 · **Closed + Open + Outdoor badges = rust** `#c45c3f` (OWNER 2026-08-11 — never charcoal on Closed) · buy-box type as built · city FAQ last · hybrid `pdp-reviews`. Home fifty-fifty stays **640**. v16 @ `691f03b` prior (NEVER overwrite). | `docs/…Definitive-v19.html` · `templates/product.json` · `product.open-sole.json` · `product.outdoor.json` · `pdp-buy-box.liquid` · `specs/frozen/pdp.md` |
 | **PDP purchase stack** | Buy-box commercial stack (`#buy`) | **LOCKED Aug 1 2026** · **Description accordion SIGNED 2026-08-11** · badge default rust + TE honor | Option A stack + kit Option A · on spine | price → muted `or 4 × $18.50` → color/size → qty+CTA → **empty under ATC** → quiet Complete the kit → accordion · **Description accordion = TE `description_accordion_body` (v19 Closed seeded) · NEVER Admin `product.description` · fallback `short_description` only** · sole badge TE default rust · `show_trust_row: false` | visual: `Definitive-v19.html` `#buy` · live: `product.json` `pdp-buy-box` · `specs/frozen/pdp.md` |
 | **PDP trust split** | Value strip + accordion policy | **LOCKED Aug 1 2026** (4-up strip refinement) · **band height forward 2026-08-10** | Scan strip · accordion detail · no under-ATC repeat | **Value strip (4-up, no links by default):** Made in USA · **Free shipping over $150** · 30-day returns · 90-day warranty · **Band height TE:** `padding_y` default **28** / mobile **24** (was 16/`--gap-a`) — type stays 12px · **Under ATC:** nothing · **Accordion:** Shipping + 30/90 · **no page `studio-trust`** · (Non-toxic / No latex / No silicone **removed** from strip) | `product.json` `value-strip` · `sections/value-strip.liquid` · `Definitive-v19.html` (mock prior) · `specs/frozen/pdp.md` |
@@ -111,7 +111,14 @@ Update the **Fingerprint** column with the freeze commit SHA after each freeze s
 
 ---
 
-## Footer — LOCKED Jul 31 2026
+## Footer — SIGNED 2026-08-12 (Join the list A) · LOCKED Jul 31 2026
+
+- **Sitewide:** `layout/theme.liquid` → `{% sections 'footer-group' %}` (every page). One edit, every page. Do **not** paste Join the list into page templates.
+- **Authority:** `specs/frozen/footer.md`
+- **Stack:** Trusted by (toggle) → Join the list (toggle, NO 10%) → Shop/Learn/Support/Connect → Made in USA
+- **TE:** Light/Dark per band (text follows); size overrides; show/hide Trusted + Join; checkmarks toggle **default off**. Dark Join = text-colored checks (no rust) if ever re-enabled.
+- **Join the list A — SIGNED Andrew 2026-08-12:** headline left, form right. No rust checks. Body = **"New colorways and studio stories."** — no send-frequency claim, no "never spam", no "nothing else". Checklist TE stays, default off; do not turn on without a letter.
+- **Only page-level duplicate left:** `templates/collection.hot-kits.json` still has a standalone `newsletter` section with checks on. Footer Join the list still renders under it. Leave it until Andrew says to pull it.
 
 - **Sitewide:** `layout/theme.liquid` → `{% sections 'footer-group' %}` (every page).
 - **Authority:** `specs/frozen/footer.md`
