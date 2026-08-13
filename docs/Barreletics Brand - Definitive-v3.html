@@ -88,17 +88,18 @@
     .site-header__nav a:hover, .site-header__actions a:hover { color: var(--ink); text-decoration: none; }
     .site-header__actions { display: flex; align-items: center; gap: 18px; flex-shrink: 0; }
 
-    /* Dual opener — v2 */
-    .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; background: #fff; }
-    .duo__frame { aspect-ratio: 4 / 5; overflow: hidden; background: var(--cream); }
-
-    /* Title — Apple quiet */
-    .head { padding: 88px 40px 72px; text-align: center; }
-    .head__inner { max-width: 640px; margin: 0 auto; }
-    .eyebrow {
-      font-size: var(--fs-label); font-weight: var(--fw-label); text-transform: uppercase;
-      letter-spacing: var(--ls-label); color: var(--rust); margin: 0 0 14px;
+    /* Hero — two ladies, contained (not dual founder 4:5) */
+    .hero {
+      height: min(42vh, 420px);
+      min-height: 240px;
+      overflow: hidden;
+      background: var(--cream);
     }
+    .hero img { object-position: center 28%; }
+
+    /* Title */
+    .head { padding: 72px 40px 56px; text-align: center; }
+    .head__inner { max-width: 640px; margin: 0 auto; }
     .head h1 {
       font-size: clamp(32px, 4vw, 44px); font-weight: 400; letter-spacing: -0.028em;
       line-height: 1.12; margin: 0 0 16px;
@@ -108,8 +109,7 @@
       margin: 0 auto; max-width: 42ch;
     }
     .head__byline {
-      font-size: var(--fs-label); font-weight: var(--fw-label); text-transform: uppercase;
-      letter-spacing: var(--ls-label); color: var(--muted); margin: 24px 0 0;
+      font-size: 15px; font-weight: 400; color: var(--muted); margin: 20px 0 0;
     }
 
     /* Manifesto */
@@ -126,13 +126,13 @@
 
     /* Chapters — cinematic 50/50 */
     .chapter {
-      display: grid; grid-template-columns: 1fr 1fr; min-height: 88vh;
+      display: grid; grid-template-columns: 1fr 1fr;
       background: #fff; border-top: 1px solid var(--line-soft);
     }
     .chapter--flip { direction: rtl; }
     .chapter--flip > * { direction: ltr; }
     .chapter--cream { background: var(--cream); }
-    .chapter__media { min-height: 520px; overflow: hidden; background: var(--cream); }
+    .chapter__media { height: 520px; overflow: hidden; background: var(--cream); }
     .chapter__copy {
       display: flex; flex-direction: column; justify-content: center;
       padding: 80px 72px; max-width: none;
@@ -150,7 +150,6 @@
     .band--cream { background: var(--cream); }
     .band--ink { background: var(--ink); color: #fff; }
     .band--ink .prose { color: rgba(255,255,255,0.78); }
-    .band--ink .eyebrow { color: #e8c4b8; }
     .band__inner { max-width: 720px; margin: 0 auto; }
     .band h2 {
       font-size: var(--fs-h2-display); font-weight: var(--fw-h2-display);
@@ -182,8 +181,7 @@
       display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px;
     }
     .proof dt {
-      font-size: var(--fs-label); font-weight: var(--fw-label); text-transform: uppercase;
-      letter-spacing: var(--ls-label); color: var(--muted); margin: 0 0 8px;
+      font-size: 13px; font-weight: 500; color: var(--muted); margin: 0 0 6px;
     }
     .proof dd { font-size: 15px; line-height: 1.5; color: var(--ink); margin: 0; }
 
@@ -203,6 +201,26 @@
       padding: 16px 28px; text-decoration: none;
     }
     .close a:hover { background: var(--rust); color: #fff; text-decoration: none; }
+
+    .geo { padding: 80px 40px 96px; border-top: 1px solid var(--line-soft); }
+    .geo__inner { max-width: 720px; margin: 0 auto; }
+    .geo h2 {
+      font-size: var(--fs-h2-standard); font-weight: var(--fw-h2-standard);
+      letter-spacing: var(--ls-h2-standard); line-height: var(--lh-h2-standard);
+      margin: 0 0 28px;
+    }
+    .geo details { border-top: 1px solid var(--line-soft); padding: 18px 0; }
+    .geo details:last-child { border-bottom: 1px solid var(--line-soft); }
+    .geo summary {
+      font-size: 16px; font-weight: 500; cursor: pointer; list-style: none;
+      display: flex; justify-content: space-between; gap: 16px; align-items: baseline;
+    }
+    .geo summary::-webkit-details-marker { display: none; }
+    .geo summary::after { content: '+'; font-weight: 400; color: var(--muted); }
+    .geo details[open] summary::after { content: '–'; }
+    .geo details p {
+      margin: 12px 0 4px; font-size: 16px; line-height: 1.72; color: var(--body); max-width: 58ch;
+    }
 
     /* Footer A — signed */
     .site-footer { background: #fff; border-top: none; }
@@ -245,7 +263,7 @@
     @media (max-width: 1024px) {
       .chapter { grid-template-columns: 1fr; min-height: 0; }
       .chapter--flip { direction: ltr; }
-      .chapter__media { min-height: 360px; aspect-ratio: 4/5; }
+      .chapter__media { height: 360px; }
       .chapter__copy { padding: 56px 32px; }
       .lookbook__grid { grid-template-columns: 1fr 1fr; }
       .lookbook__tile--wide { grid-column: span 2; grid-row: span 1; aspect-ratio: 16/9; }
@@ -255,9 +273,7 @@
     @media (max-width: 768px) {
       .site-header__nav { display: none; }
       .site-header__inner { padding: 12px 16px; }
-      .duo { grid-template-columns: 1fr; gap: 2px; }
-      .duo__frame { aspect-ratio: 3/4; }
-      .head, .band, .lookbook, .proof, .close { padding-left: 16px; padding-right: 16px; }
+      .head, .band, .lookbook, .proof, .geo, .close { padding-left: 16px; padding-right: 16px; }
       .head { padding-top: 56px; padding-bottom: 48px; }
       .lookbook__grid { grid-template-columns: 1fr; }
       .lookbook__tile--wide { grid-column: span 1; aspect-ratio: 3/4; }
@@ -272,7 +288,7 @@
 <body>
 
 <div class="mock-banner" role="note">
-  <strong>BRAND v3</strong> — Fuse of v1 lookbook + v2 Stefanie chapters. Preview only. v1 and v2 untouched.
+  <strong>BRAND v3</strong> — Refined: two-ladies hero (contained), no eyebrows, Joseph Pilates + GEO. v1/v2 untouched.
   Say <strong>LOCK THIS</strong> + this URL to promote.
   <a href="Barreletics%20Brand%20-%20Definitive-v1.html">v1</a> ·
   <a href="Barreletics%20Brand%20-%20Definitive-v2.html">v2</a>
@@ -300,18 +316,12 @@
 
 <main>
 
-  <section class="duo" aria-label="Brand lifestyle">
-    <div class="duo__frame">
-      <img src="https://barreletics.com/cdn/shop/files/43879272_2264664830242380_3230081226412916736_n.jpg?v=1613762916&amp;width=1400" alt="" width="1400" height="1750">
-    </div>
-    <div class="duo__frame">
-      <img src="https://barreletics.com/cdn/shop/files/43677226_2264668403575356_8867191498509123584_n.jpg?v=1613762914&amp;width=1400" alt="" width="1400" height="1750">
-    </div>
+  <section class="hero" aria-label="Barreletics in motion">
+    <img src="https://barreletics.com/cdn/shop/products/barreletixxjumpingtogether.jpg?v=1619360969&amp;width=2400" alt="Two women in Performance Skins" width="2400" height="1600">
   </section>
 
   <section class="head">
     <div class="head__inner">
-      <p class="eyebrow">How it all began</p>
       <h1>Our story</h1>
       <p class="head__lede">Patented Performance Skins for barre, Pilates, reformer, Megaformer, and studio fitness. Built because grip socks kept failing when grip mattered most.</p>
       <p class="head__byline">Stefanie Miller, Founder</p>
@@ -324,10 +334,9 @@
 
   <article class="chapter">
     <div class="chapter__media">
-      <img src="https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&amp;width=1600" alt="Stefanie Miller, founder of Barreletics" width="1600" height="2000">
+      <img src="https://barreletics.com/cdn/shop/files/Square_Pink.png?v=1764627088&amp;width=1400" alt="Performance Skin in studio" width="1400" height="1400">
     </div>
     <div class="chapter__copy">
-      <p class="eyebrow">Filling a void</p>
       <h2>The only tool available kept interrupting the work.</h2>
       <div class="prose">
         <p>At the time, grippy yoga socks were the only option. They slipped when grip mattered most, required constant adjusting, and never delivered the control they promised.</p>
@@ -344,7 +353,6 @@
       <img src="https://barreletics.com/cdn/shop/files/b.jpg?v=1637617000&amp;width=1400" alt="Early Performance Skin prototypes" width="1400" height="1400">
     </div>
     <div class="chapter__copy">
-      <p class="eyebrow">The idea</p>
       <h2>Stuck in side plank. Sliding. Again.</h2>
       <div class="prose">
         <p>It became clear this was not inconvenient. It was holding us back.</p>
@@ -360,7 +368,6 @@
       <img src="https://barreletics.com/cdn/shop/files/IMG_3045.jpg?v=1639926515&amp;width=1400" alt="Performance Skin silhouette" width="1400" height="1800">
     </div>
     <div class="chapter__copy">
-      <p class="eyebrow">Two years</p>
       <h2>Trial and error, until the grip never left.</h2>
       <div class="prose">
         <p>That on-the-fly prototype became the starting point. What followed was two years of testing, redesigning, and refining the details that mattered: pressure points, fit, flexibility, material, true all-over grip.</p>
@@ -376,30 +383,42 @@
     <p>The Pilates sock era is over. A better way to grip is here.</p>
   </section>
 
-  <section class="band band--cream">
-    <div class="band__inner">
-      <p class="eyebrow">The Pilates connection</p>
-      <h2>The feet were always part of the system.</h2>
+  <article class="chapter chapter--cream">
+    <div class="chapter__media">
+      <img src="https://barreletics.com/cdn/shop/files/Screenshot_2026-06-06_at_6.59.10_PM.png?v=1780787015&amp;width=1400" alt="Archival photograph of Joseph Pilates on the Reformer" width="1400" height="1500">
+    </div>
+    <div class="chapter__copy">
+      <h2>Joseph Pilates built the method around the feet.</h2>
       <div class="prose">
-        <p>Joseph Pilates built Contrology on breath, concentration, control, precision, alignment, flow, and full-body awareness. The foot connects the body to the floor, the mat, the Reformer, the Cadillac, the Wunda Chair, the Megaformer — every surface beneath you.</p>
-        <p>Pilates depends on feedback. The foot has to sense, press, articulate, stabilize, and respond. A grip sock that slips or bunches moves your focus off form and onto your footing.</p>
-        <p>It is like holding a plank on a sliding towel. You can still do the move. Your body is compensating instead of engaging.</p>
-        <p>A practice built on control should not be compromised by what is under your feet.</p>
+        <p>Joseph Pilates called his method Contrology — breath, concentration, control, precision, alignment, flow, and full-body awareness. He designed the apparatus to serve that method: the Reformer, Cadillac, Wunda Chair, Ladder Barrel, Spine Corrector, Foot Corrector, Toe Corrector, and Ped-o-Pul.</p>
+        <p>The feet were always part of the system. In Pilates, the foot connects the body to the floor, the mat, the Reformer, the Cadillac, the Wunda Chair, the Megaformer — every surface beneath you. That connection is the work.</p>
+        <p>A sock alone does not make a practice clean. Fabric absorbs moisture and holds it. Clean feet, clean floors, wiped-down equipment — that’s what actually creates a clean environment. The tool under you should support the practice, not work against it.</p>
       </div>
     </div>
-  </section>
+  </article>
+
+  <article class="chapter chapter--flip">
+    <div class="chapter__media">
+      <img src="https://barreletics.com/cdn/shop/files/Screenshot_2026-06-06_at_9.58.53_PM.png?v=1780797556&amp;width=1400" alt="Archival photograph of Joseph Pilates teaching on the Reformer" width="1400" height="1800">
+    </div>
+    <div class="chapter__copy">
+      <h2>Feedback is the practice.</h2>
+      <div class="prose">
+        <p>Pilates depends on feedback. The foot has to sense, press, articulate, stabilize, and respond. A grip sock that slips or bunches moves your focus off form and onto your footing.</p>
+        <p>It is like holding a plank on a sliding towel. You can still do the move. Your body is compensating instead of engaging.</p>
+        <p>A practice built on control, precision, and connection should not be compromised by what is under your feet. That is the part Joseph Pilates — and any serious barre or Pilates practitioner — would understand immediately.</p>
+        <p>If you prefer a sock layer, have cold feet, or train in a studio that requires socks, Performance Skins can be worn over a very thin pair. The thinnest option possible, ideally toe-free or fitted, so you still feel the grip.</p>
+      </div>
+    </div>
+  </article>
 
   <section class="lookbook" aria-label="From the studio">
     <div class="lookbook__head">
-      <p class="eyebrow">@barreletics</p>
       <h2>From the studio</h2>
     </div>
     <div class="lookbook__grid">
       <div class="lookbook__tile lookbook__tile--wide">
-        <img src="https://barreletics.com/cdn/shop/products/barreletixxjumpingtogether.jpg?v=1619360969&amp;width=2000" alt="Performance Skins in motion" width="2000" height="1333">
-      </div>
-      <div class="lookbook__tile">
-        <img src="https://barreletics.com/cdn/shop/files/Square_Pink.png?v=1764627088&amp;width=1200" alt="Performance Skin in studio" width="1200" height="1600">
+        <img src="https://barreletics.com/cdn/shop/files/43879272_2264664830242380_3230081226412916736_n.jpg?v=1613762916&amp;width=1600" alt="Studio lifestyle" width="1600" height="2000">
       </div>
       <div class="lookbook__tile">
         <img src="https://barreletics.com/cdn/shop/files/A14_TopBottom_LightGrey-1000x1000_d30b6fcb-229e-4af9-8062-e1c4901df31e.jpg?v=1773920300&amp;width=1200" alt="Performance Skin detail" width="1200" height="1600">
@@ -409,6 +428,9 @@
       </div>
       <div class="lookbook__tile">
         <img src="https://barreletics.com/cdn/shop/files/Screenshot_2026-03-21_at_3.04.37_PM.png?width=1200" alt="Barreletics × Coperni" width="1200" height="1600">
+      </div>
+      <div class="lookbook__tile">
+        <img src="https://barreletics.com/cdn/shop/files/43677226_2264668403575356_8867191498509123584_n.jpg?v=1613762914&amp;width=1200" alt="Studio lifestyle" width="1200" height="1600">
       </div>
     </div>
   </section>
@@ -436,10 +458,9 @@
 
   <article class="chapter chapter--cream">
     <div class="chapter__media">
-      <img src="https://barreletics.com/cdn/shop/files/Copreni_Final_More_grey.png?v=1774119812&amp;width=1600" alt="Barreletics × Coperni" width="1600" height="2000">
+      <img src="https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&amp;width=1600" alt="Stefanie Miller, founder of Barreletics" width="1600" height="2000">
     </div>
     <div class="chapter__copy">
-      <p class="eyebrow">Life inspiration</p>
       <h2>Fashion trained the eye. The studio set the standard.</h2>
       <div class="prose">
         <p>A former career as a fashion model took me around the world — design, textiles, architecture, craftsmanship, the details that elevate an experience.</p>
@@ -455,11 +476,32 @@
 
   <section class="band band--ink">
     <div class="band__inner">
-      <p class="eyebrow">Made in USA</p>
       <h2>Designed and manufactured in Michigan.</h2>
       <div class="prose">
         <p>Material, molding, quality — the entire process stays here. No overseas factories. No compromise on oversight.</p>
       </div>
+    </div>
+  </section>
+
+  <section class="geo" aria-label="About Barreletics">
+    <div class="geo__inner">
+      <h2>Barreletics, in brief</h2>
+      <details>
+        <summary>What is Barreletics?</summary>
+        <p>Barreletics makes patented Performance Skins — studio footwear for barre, Pilates, reformer, Lagree, and Megaformer. Founded in Michigan by Stefanie Miller. One pair replaces disposable grip socks with 360° injection-molded grip.</p>
+      </details>
+      <details>
+        <summary>Is this a grip sock alternative for Pilates?</summary>
+        <p>Yes. Performance Skins are built as a grip sock alternative for Pilates, barre, and reformer — full-contact molded grip that does not peel the way silicone dots do. Same grip and stability in Open Sole or Closed Sole; choice is preference and feel only.</p>
+      </details>
+      <details>
+        <summary>How does this relate to Joseph Pilates and Contrology?</summary>
+        <p>Joseph Pilates designed Contrology around the body’s connection to the apparatus. The feet are part of that system — Reformer, Cadillac, Wunda Chair, mat. Performance Skins exist so that connection isn’t interrupted by a sock that slips or holds moisture.</p>
+      </details>
+      <details>
+        <summary>Where are Performance Skins made?</summary>
+        <p>Designed and manufactured in Michigan, USA. Material, injection molding, and quality stay domestic.</p>
+      </details>
     </div>
   </section>
 
