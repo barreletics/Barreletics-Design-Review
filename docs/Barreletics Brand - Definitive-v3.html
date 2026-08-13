@@ -52,7 +52,17 @@
       font-weight: 400; color: var(--ink); background: #fff;
       line-height: 1.6; -webkit-font-smoothing: antialiased;
     }
-    img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    img { display: block; }
+    .fill {
+      position: relative;
+      overflow: hidden;
+      background: var(--cream);
+    }
+    .fill > img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
     a { color: var(--ink); text-decoration: none; }
     a:hover { text-decoration: underline; }
     button, input { font-family: inherit; }
@@ -90,12 +100,11 @@
 
     /* Hero — two ladies, contained (not dual founder 4:5) */
     .hero {
-      height: min(42vh, 420px);
-      min-height: 240px;
-      overflow: hidden;
-      background: var(--cream);
+      aspect-ratio: 16 / 7;
+      max-height: 380px;
+      width: 100%;
     }
-    .hero img { object-position: center 28%; }
+    .hero img { object-position: center 35%; }
 
     /* Title */
     .head { padding: 72px 40px 56px; text-align: center; }
@@ -119,20 +128,21 @@
       letter-spacing: var(--ls-statement); line-height: 1.25;
       max-width: 18em; margin: 0 auto;
     }
-    .statement--media { position: relative; padding: 0; min-height: 56vh; display: flex; align-items: center; }
-    .statement--media img { position: absolute; inset: 0; }
+    .statement--media { position: relative; padding: 0; min-height: 42vh; display: flex; align-items: center; }
+    .statement--media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
     .statement--media .statement__scrim { position: absolute; inset: 0; background: rgba(28,25,22,0.48); }
     .statement--media p { position: relative; z-index: 1; padding: 80px 40px; }
 
     /* Chapters — cinematic 50/50 */
     .chapter {
       display: grid; grid-template-columns: 1fr 1fr;
+      align-items: stretch;
       background: #fff; border-top: 1px solid var(--line-soft);
     }
     .chapter--flip { direction: rtl; }
     .chapter--flip > * { direction: ltr; }
     .chapter--cream { background: var(--cream); }
-    .chapter__media { height: 520px; overflow: hidden; background: var(--cream); }
+    .chapter__media { min-height: 440px; }
     .chapter__copy {
       display: flex; flex-direction: column; justify-content: center;
       padding: 80px 72px; max-width: none;
@@ -169,8 +179,8 @@
       display: grid; grid-template-columns: 2fr 1fr 1fr; grid-template-rows: 1fr 1fr;
       gap: 4px;
     }
-    .lookbook__tile { overflow: hidden; background: var(--cream); aspect-ratio: 3/4; }
-    .lookbook__tile--wide { grid-row: span 2; aspect-ratio: auto; }
+    .lookbook__tile { aspect-ratio: 3/4; }
+    .lookbook__tile--wide { grid-row: span 2; aspect-ratio: auto; min-height: 0; }
     .lookbook__tile img { transition: transform 0.7s ease; }
     .lookbook__tile:hover img { transform: scale(1.04); }
 
@@ -263,7 +273,7 @@
     @media (max-width: 1024px) {
       .chapter { grid-template-columns: 1fr; min-height: 0; }
       .chapter--flip { direction: ltr; }
-      .chapter__media { height: 360px; }
+      .chapter__media { min-height: 320px; }
       .chapter__copy { padding: 56px 32px; }
       .lookbook__grid { grid-template-columns: 1fr 1fr; }
       .lookbook__tile--wide { grid-column: span 2; grid-row: span 1; aspect-ratio: 16/9; }
@@ -316,7 +326,7 @@
 
 <main>
 
-  <section class="hero" aria-label="Barreletics in motion">
+  <section class="hero fill" aria-label="Barreletics in motion">
     <img src="https://barreletics.com/cdn/shop/products/barreletixxjumpingtogether.jpg?v=1619360969&amp;width=2400" alt="Two women in Performance Skins" width="2400" height="1600">
   </section>
 
@@ -333,7 +343,7 @@
   </section>
 
   <article class="chapter">
-    <div class="chapter__media">
+    <div class="chapter__media fill">
       <img src="https://barreletics.com/cdn/shop/files/Square_Pink.png?v=1764627088&amp;width=1400" alt="Performance Skin in studio" width="1400" height="1400">
     </div>
     <div class="chapter__copy">
@@ -349,7 +359,7 @@
   </article>
 
   <article class="chapter chapter--flip chapter--cream">
-    <div class="chapter__media">
+    <div class="chapter__media fill">
       <img src="https://barreletics.com/cdn/shop/files/b.jpg?v=1637617000&amp;width=1400" alt="Early Performance Skin prototypes" width="1400" height="1400">
     </div>
     <div class="chapter__copy">
@@ -364,7 +374,7 @@
   </article>
 
   <article class="chapter">
-    <div class="chapter__media">
+    <div class="chapter__media fill">
       <img src="https://barreletics.com/cdn/shop/files/IMG_3045.jpg?v=1639926515&amp;width=1400" alt="Performance Skin silhouette" width="1400" height="1800">
     </div>
     <div class="chapter__copy">
@@ -384,7 +394,7 @@
   </section>
 
   <article class="chapter chapter--cream">
-    <div class="chapter__media">
+    <div class="chapter__media fill">
       <img src="https://barreletics.com/cdn/shop/files/Screenshot_2026-06-06_at_6.59.10_PM.png?v=1780787015&amp;width=1400" alt="Archival photograph of Joseph Pilates on the Reformer" width="1400" height="1500">
     </div>
     <div class="chapter__copy">
@@ -398,7 +408,7 @@
   </article>
 
   <article class="chapter chapter--flip">
-    <div class="chapter__media">
+    <div class="chapter__media fill">
       <img src="https://barreletics.com/cdn/shop/files/Screenshot_2026-06-06_at_9.58.53_PM.png?v=1780797556&amp;width=1400" alt="Archival photograph of Joseph Pilates teaching on the Reformer" width="1400" height="1800">
     </div>
     <div class="chapter__copy">
@@ -417,19 +427,19 @@
       <h2>From the studio</h2>
     </div>
     <div class="lookbook__grid">
-      <div class="lookbook__tile lookbook__tile--wide">
+      <div class="lookbook__tile lookbook__tile--wide fill">
         <img src="https://barreletics.com/cdn/shop/files/43879272_2264664830242380_3230081226412916736_n.jpg?v=1613762916&amp;width=1600" alt="Studio lifestyle" width="1600" height="2000">
       </div>
-      <div class="lookbook__tile">
+      <div class="lookbook__tile fill">
         <img src="https://barreletics.com/cdn/shop/files/A14_TopBottom_LightGrey-1000x1000_d30b6fcb-229e-4af9-8062-e1c4901df31e.jpg?v=1773920300&amp;width=1200" alt="Performance Skin detail" width="1200" height="1600">
       </div>
-      <div class="lookbook__tile">
+      <div class="lookbook__tile fill">
         <img src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&amp;width=1200" alt="Dusty Rose Performance Skin" width="1200" height="1600">
       </div>
-      <div class="lookbook__tile">
+      <div class="lookbook__tile fill">
         <img src="https://barreletics.com/cdn/shop/files/Screenshot_2026-03-21_at_3.04.37_PM.png?width=1200" alt="Barreletics × Coperni" width="1200" height="1600">
       </div>
-      <div class="lookbook__tile">
+      <div class="lookbook__tile fill">
         <img src="https://barreletics.com/cdn/shop/files/43677226_2264668403575356_8867191498509123584_n.jpg?v=1613762914&amp;width=1200" alt="Studio lifestyle" width="1200" height="1600">
       </div>
     </div>
@@ -457,7 +467,7 @@
   </section>
 
   <article class="chapter chapter--cream">
-    <div class="chapter__media">
+    <div class="chapter__media fill">
       <img src="https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&amp;width=1600" alt="Stefanie Miller, founder of Barreletics" width="1600" height="2000">
     </div>
     <div class="chapter__copy">
