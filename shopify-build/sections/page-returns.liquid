@@ -35,10 +35,18 @@
   <div class="section__inner section__inner--narrow">
     <p class="eyebrow">Start a return</p>
     <h2 class="h2-standard">{{ section.settings.start_title }}</h2>
-    <div class="page-returns-start__body type-body">{{ section.settings.start_body }}</div>
+    {% if section.settings.start_body != blank %}
+      <div class="page-returns-start__body type-body">{{ section.settings.start_body }}</div>
+    {% endif %}
     <div class="page-returns-start__actions">
       <a class="btn btn--primary" href="{{ portal }}">{{ section.settings.start_cta_label | default: 'Start a return' }}</a>
-      <a class="btn btn--secondary" href="{{ portal }}">{{ section.settings.exchange_cta_label | default: 'Start an exchange' }}</a>
+      {%- comment -%}
+        Second button pointed at the same portal URL as the first — one destination,
+        two buttons. Blank label hides it; set a label in TE to bring it back.
+      {%- endcomment -%}
+      {% if section.settings.exchange_cta_label != blank %}
+        <a class="btn btn--secondary" href="{{ portal }}">{{ section.settings.exchange_cta_label }}</a>
+      {% endif %}
     </div>
     <p class="page-returns-start__note type-body">
       Unsure on size first? Check the <a href="{{ size_url }}">size chart</a> or
@@ -53,8 +61,11 @@
       <article class="page-returns-card" id="returns">
         <p class="eyebrow">Returns</p>
         <h2 class="h2-standard">{{ section.settings.returns_heading }}</h2>
+        {%- comment -%}
+          No portal link here — the Start a return button above and the Go to
+          returns portal button below already cover it.
+        {%- endcomment -%}
         <div class="type-body">{{ section.settings.returns_body }}</div>
-        <p class="page-returns-card__note"><a href="{{ portal }}">Open the returns portal →</a></p>
       </article>
 
       <article class="page-returns-card" id="warranty">
@@ -83,12 +94,11 @@
       <article class="page-returns-card" id="exchanges">
         <p class="eyebrow">Exchanges</p>
         <h2 class="h2-standard">{{ section.settings.exchanges_heading }}</h2>
+        {%- comment -%}
+          Was Size chart · FAQ · Contact. Size chart is in the note under the top
+          buttons, FAQ and Contact both close the page — all three were repeats.
+        {%- endcomment -%}
         <div class="type-body">{{ section.settings.exchanges_body }}</div>
-        <p class="page-returns-card__note">
-          <a href="{{ size_url }}">Size chart</a> ·
-          <a href="{{ faq_url }}">FAQ</a> ·
-          <a href="{{ contact_url }}">Contact</a>
-        </p>
       </article>
 
       <article class="page-returns-card page-returns-card--wide" id="international">
@@ -173,7 +183,12 @@
   }
   .page-returns-jumps a:hover { color: var(--text-primary); border-bottom-color: var(--text-primary); }
 
-  .page-returns-start__body { margin: var(--gap-b) 0 var(--space-6); }
+  /* Heading owns the gap below it so the stack still breathes when the optional
+     body copy is empty. Body keeps its own bottom margin only. */
+  .page-returns-start .h2-standard { margin: 0 0 var(--gap-b); }
+  .page-returns-start__body { margin: 0 0 var(--space-6); }
+  .page-returns-start__body p { margin-bottom: var(--space-4); }
+  .page-returns-start__body > *:last-child { margin-bottom: 0; }
   .page-returns-start__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: var(--space-4); }
   .page-returns-start__note { color: var(--text-muted); margin: 0; }
   .page-returns-start__note a { text-decoration: underline; text-underline-offset: 2px; }
@@ -327,11 +342,11 @@
     { "type": "url", "id": "contact_url", "label": "Contact URL" },
     { "type": "url", "id": "faq_url", "label": "FAQ URL" },
     { "type": "text", "id": "start_title", "label": "Start title", "default": "Ready to return or exchange?" },
-    { "type": "richtext", "id": "start_body", "label": "Start body", "default": "<p>Open the returns portal within 30 days of delivery. Choose Refund or Exchange, follow the prompts, and ship with the prepaid label.</p>" },
+    { "type": "richtext", "id": "start_body", "label": "Start body", "info": "Leave empty. The How to start a return steps below already give these instructions — filling this in repeats them.", "default": "" },
     { "type": "text", "id": "start_cta_label", "label": "Start CTA", "default": "Start a return" },
-    { "type": "text", "id": "exchange_cta_label", "label": "Exchange CTA", "default": "Start an exchange" },
+    { "type": "text", "id": "exchange_cta_label", "label": "Exchange CTA", "info": "Leave empty. This button went to the same portal URL as the Start CTA. Add a label only if it gets its own destination.", "default": "" },
     { "type": "text", "id": "returns_heading", "label": "Returns heading", "default": "30-day returns" },
-    { "type": "richtext", "id": "returns_body", "label": "Returns body", "default": "<p>Initiate within <strong>30 days of delivery</strong> for a refund when items are in <strong>new, sellable condition</strong> — clean, unused outdoors, no sole damage or scuffs.</p><p>Like buying any footwear: try them on for fit. This is <strong>not</strong> a studio trial and not “try them in class for 30 days.”</p><ul><li><strong>Performance Skins:</strong> tried on indoors only; return in the original mesh bag with tag (if supplied) and packing slip. Poly mailer OK — no shoe box required.</li><li><strong>Apparel &amp; accessories:</strong> unused, unwashed, tags attached, original packaging, packing slip.</li><li><strong>US return shipping:</strong> $7.95 flat rate, deducted from refund. Prepaid label after approval.</li><li><strong>Refunds:</strong> within 72 hours of inspection (bank processing may take longer).</li></ul>" },
+    { "type": "richtext", "id": "returns_body", "label": "Returns body", "default": "<p>Initiate within 30 days of delivery for a refund when items are in <strong>new, sellable condition</strong> — clean, unused outdoors, no sole damage or scuffs.</p><ul><li><strong>Performance Skins:</strong> tried on indoors only; return in the original mesh bag with tag (if supplied) and packing slip. Poly mailer OK — no shoe box required.</li><li><strong>Apparel &amp; accessories:</strong> unused, unwashed, tags attached, original packaging, packing slip.</li><li><strong>US return shipping:</strong> $7.95 flat rate, deducted from refund. Prepaid label after approval.</li><li><strong>Refunds:</strong> within 72 hours of inspection (bank processing may take longer).</li></ul>" },
     { "type": "text", "id": "warranty_heading", "label": "Warranty heading", "default": "90-day warranty" },
     { "type": "richtext", "id": "warranty_body", "label": "Warranty body", "default": "<p>Every purchase is covered against <strong>manufacturing defects</strong> for 90 days from delivery. Return of the defective item is usually not required.</p>" },
     { "type": "richtext", "id": "warranty_covered", "label": "Warranty covered list", "default": "<ul><li>Manufacturing defects</li><li>Structural failure from defect</li><li>Item arrives defective (contact within 24 hours)</li></ul>" },
@@ -339,7 +354,7 @@
     { "type": "text", "id": "shipping_heading", "label": "Shipping heading", "default": "Free over $150" },
     { "type": "richtext", "id": "shipping_body", "label": "Shipping body", "default": "<ul><li><strong>Free shipping</strong> Continental US on orders over $150</li><li><strong>$9.95 flat</strong> under $150 (Continental US)</li><li>Process 24–48 hrs; typically ship next business day</li><li>Expedited / overnight at checkout</li><li>We ship worldwide — duties and taxes charged at checkout</li></ul>" },
     { "type": "text", "id": "exchanges_heading", "label": "Exchanges heading", "default": "Size exchanges" },
-    { "type": "richtext", "id": "exchanges_body", "label": "Exchanges body", "default": "<p>Wrong size? A size exchange is often faster than a refund. Start through the same returns portal within 30 days — select Exchange.</p><p>We ship your exchange at <strong>no cost to you</strong> once we receive and inspect the return.</p>" },
+    { "type": "richtext", "id": "exchanges_body", "label": "Exchanges body", "default": "<p>Wrong size? A size exchange is often faster than a refund. Start through the same returns portal and select Exchange.</p><p>We ship your exchange at <strong>no cost to you</strong> once we receive and inspect the return.</p>" },
     { "type": "text", "id": "intl_heading", "label": "International heading", "default": "International orders & returns" },
     { "type": "richtext", "id": "intl_body", "label": "International body", "default": "<p><strong>Duties and taxes are charged at checkout</strong> — nothing extra to pay when your order arrives.</p><p>If you need to send something back from outside the US, return shipping is the customer's. Warranty replacements are the same — the customer covers shipping and any duties on the replacement. Size carefully before ordering.</p>" },
     { "type": "text", "id": "process_heading", "label": "Process heading", "default": "How to start a return" },

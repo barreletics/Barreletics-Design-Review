@@ -47,6 +47,18 @@
 
 ---
 
+## Returns card interiors — SIGNED 2026-08-14 ("looks great")
+
+**Owner sign-off** on M4 `187144929571` → `/pages/returns`. Returns v3 composition unchanged — this was a missing-CSS repair inside the existing policy cards, not a redesign.
+
+- **Root cause:** `barreletics-base.css` resets all margins to 0 and sets `ul, ol { list-style: none; }`. `page-returns.liquid` never restored either for its rich-text card bodies, so multi-paragraph copy and the labeled lists rendered as one unbroken block. Same repair pattern already in `article-content.liquid`.
+- **Shipped:** `.page-returns-card > .type-body` gets `p` margin `--space-4` · `ul/ol` `list-style: revert` + `padding-left: --space-6` · `li` margin `--space-2` · last child margin 0.
+- **Scoped on purpose:** the `> .type-body` child selector keeps `.page-returns-coverage__col` lists on their own bordered-row / ✓✕ treatment. Do **not** widen to `.page-returns-card ul` — that breaks the warranty Covered / Not covered columns.
+- **Also signed 2026-08-14:** `.page-returns-cta__inner .page-returns-cta__alt` top margin `--space-8`. The `__inner .type-body` rule was outranking the unscoped `__alt` rule and zeroing it, pinning "Looking for product FAQ?" against the Contact button.
+- **Applies to any section with rich-text output:** the global reset means every new rich-text wrapper needs `p` / `ul` / `li` rules or it ships as a text blob. Check this before calling a card section done.
+
+---
+
 ## Size guide — SIGNED 2026-08-12 ("the size page looks great")
 
 **Owner sign-off** on M4 `187144929571` → `/pages/performance-skins-size-chart`.
