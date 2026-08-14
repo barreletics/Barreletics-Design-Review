@@ -6,6 +6,7 @@
   class="page-about-joseph{% render 'split-mobile-stack-class', mobile_stack_order: section.settings.mobile_stack_order %}"
   id="shopify-section-{{ section.id }}"
   {{ section.shopify_attributes }}
+  style="{% render 'type-override-vars', title_size: section.settings.title_size, title_weight: section.settings.title_weight, body_size: section.settings.body_size, body_weight: section.settings.body_weight %}"
 >
   <div class="page-about-joseph__gallery" aria-label="{{ section.settings.gallery_aria | escape }}">
     {% if section.settings.image_1 != blank %}
@@ -80,15 +81,16 @@
   }
   #shopify-section-{{ section.id }} .page-about-joseph__inner { max-width: 32em; }
   #shopify-section-{{ section.id }} .page-about-joseph__title {
-    font-size: clamp(36px, 4.8vw, 56px);
-    font-weight: 400;
+    font-size: var(--te-title-size, clamp(36px, 4.8vw, 56px));
+    font-weight: var(--te-title-weight, 400);
     letter-spacing: -0.032em;
     line-height: 1.06;
     margin: 0 0 24px;
     color: var(--text-primary, #1c1916);
   }
   #shopify-section-{{ section.id }} .page-about-joseph__body {
-    font-size: 17px;
+    font-size: var(--te-body-size, 17px);
+    font-weight: var(--te-body-weight, 400);
     line-height: 1.7;
     color: var(--text-body, #4a4a4a);
   }
@@ -134,6 +136,66 @@
     { "type": "text", "id": "image_2_alt", "label": "Image 2 alt", "default": "Archival photograph of Joseph Pilates teaching on the Reformer" },
     { "type": "text", "id": "title", "label": "Essay heading", "default": "Joseph Pilates built the method around the feet." },
     { "type": "richtext", "id": "body", "label": "Essay body" },
+    { "type": "header", "content": "Type — size & weight", "info": "Family is brand Type OS. Default keeps the signed v25 sizing." },
+    {
+      "type": "select",
+      "id": "title_size",
+      "label": "Essay heading size",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "24", "label": "24px" },
+        { "value": "28", "label": "28px" },
+        { "value": "32", "label": "32px" },
+        { "value": "36", "label": "36px" },
+        { "value": "40", "label": "40px" },
+        { "value": "44", "label": "44px" },
+        { "value": "48", "label": "48px" },
+        { "value": "56", "label": "56px" },
+        { "value": "64", "label": "64px" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Essay heading weight",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" },
+        { "value": "700", "label": "700" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "body_size",
+      "label": "Essay body size",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "14", "label": "14px" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" },
+        { "value": "18", "label": "18px" },
+        { "value": "20", "label": "20px" },
+        { "value": "22", "label": "22px" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "body_weight",
+      "label": "Essay body weight",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" }
+      ]
+    },
     { "type": "header", "content": "Layout" },
     {
       "type": "select",

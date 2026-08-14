@@ -7,6 +7,7 @@
   id="shopify-section-{{ section.id }}"
   {{ section.shopify_attributes }}
   aria-label="{{ section.settings.aria_label | default: 'Our story' | escape }}"
+  style="{% render 'type-override-vars', title_size: section.settings.title_size, title_weight: section.settings.title_weight, body_size: section.settings.body_size, body_weight: section.settings.body_weight, sub_size: section.settings.pull_quote_size, sub_weight: section.settings.pull_quote_weight %}"
 >
   <div class="page-about-intro__inner">
     <h1 class="page-about-intro__title">{{ section.settings.title }}</h1>
@@ -29,15 +30,16 @@
   }
   #shopify-section-{{ section.id }} .page-about-intro__inner { max-width: 24em; }
   #shopify-section-{{ section.id }} .page-about-intro__title {
-    font-size: clamp(56px, 8.5vw, 104px);
-    font-weight: 400;
+    font-size: var(--te-title-size, clamp(56px, 8.5vw, 104px));
+    font-weight: var(--te-title-weight, 400);
     letter-spacing: -0.038em;
     line-height: 0.96;
     margin: 0 0 24px;
     color: var(--text-primary, #1c1916);
   }
   #shopify-section-{{ section.id }} .page-about-intro__lede {
-    font-size: 18px;
+    font-size: var(--te-body-size, 18px);
+    font-weight: var(--te-body-weight, 400);
     line-height: 1.55;
     color: var(--text-body, #4a4a4a);
     max-width: 36ch;
@@ -48,8 +50,8 @@
     margin: 16px 0 0;
   }
   #shopify-section-{{ section.id }} .page-about-intro__pull {
-    font-size: clamp(32px, 4.6vw, 52px);
-    font-weight: 500;
+    font-size: var(--te-sub-size, clamp(32px, 4.6vw, 52px));
+    font-weight: var(--te-sub-weight, 500);
     letter-spacing: -0.032em;
     line-height: 1.08;
     max-width: 14em;
@@ -59,11 +61,11 @@
   @media (max-width: 768px) {
     #shopify-section-{{ section.id }} .page-about-intro { padding: 32px 20px 28px; }
     #shopify-section-{{ section.id }} .page-about-intro__title {
-      font-size: clamp(40px, 10vw, 52px);
+      font-size: var(--te-title-size, clamp(40px, 10vw, 52px));
       margin-bottom: 16px;
     }
     #shopify-section-{{ section.id }} .page-about-intro__pull {
-      font-size: clamp(24px, 6vw, 32px);
+      font-size: var(--te-sub-size, clamp(24px, 6vw, 32px));
       margin-top: 24px;
     }
   }
@@ -87,7 +89,104 @@
       "label": "Pull quote",
       "default": "We didn't improve the grip sock. We made it obsolete."
     },
-    { "type": "text", "id": "aria_label", "label": "ARIA label", "default": "Our story" }
+    { "type": "text", "id": "aria_label", "label": "ARIA label", "default": "Our story" },
+    { "type": "header", "content": "Type — size & weight", "info": "Family is brand Type OS. Default keeps the signed v25 sizing." },
+    {
+      "type": "select",
+      "id": "title_size",
+      "label": "Title size",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "32", "label": "32px" },
+        { "value": "36", "label": "36px" },
+        { "value": "40", "label": "40px" },
+        { "value": "44", "label": "44px" },
+        { "value": "48", "label": "48px" },
+        { "value": "56", "label": "56px" },
+        { "value": "64", "label": "64px" },
+        { "value": "72", "label": "72px" },
+        { "value": "80", "label": "80px" },
+        { "value": "88", "label": "88px" },
+        { "value": "96", "label": "96px" },
+        { "value": "104", "label": "104px" },
+        { "value": "112", "label": "112px" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" },
+        { "value": "700", "label": "700" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "body_size",
+      "label": "Lede size",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "14", "label": "14px" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" },
+        { "value": "18", "label": "18px" },
+        { "value": "20", "label": "20px" },
+        { "value": "22", "label": "22px" },
+        { "value": "24", "label": "24px" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "body_weight",
+      "label": "Lede weight",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "pull_quote_size",
+      "label": "Pull quote size",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "24", "label": "24px" },
+        { "value": "28", "label": "28px" },
+        { "value": "32", "label": "32px" },
+        { "value": "36", "label": "36px" },
+        { "value": "40", "label": "40px" },
+        { "value": "44", "label": "44px" },
+        { "value": "48", "label": "48px" },
+        { "value": "52", "label": "52px" },
+        { "value": "56", "label": "56px" },
+        { "value": "64", "label": "64px" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "pull_quote_weight",
+      "label": "Pull quote weight",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" },
+        { "value": "700", "label": "700" }
+      ]
+    }
   ],
   "presets": [{ "name": "About — Intro" }]
 }

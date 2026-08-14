@@ -7,6 +7,7 @@
   id="shopify-section-{{ section.id }}"
   {{ section.shopify_attributes }}
   aria-label="{{ section.settings.aria_label | escape }}"
+  style="{% render 'type-override-vars', title_size: section.settings.title_size, title_weight: section.settings.title_weight, body_size: section.settings.body_size, body_weight: section.settings.body_weight, sub_size: section.settings.cta_size %}"
 >
   {% if section.settings.heading != blank %}
     <h2 class="page-about-close__title">{{ section.settings.heading }}</h2>
@@ -29,15 +30,16 @@
     text-align: center;
   }
   #shopify-section-{{ section.id }} .page-about-close__title {
-    font-size: clamp(44px, 7vw, 88px);
-    font-weight: 400;
+    font-size: var(--te-title-size, clamp(44px, 7vw, 88px));
+    font-weight: var(--te-title-weight, 400);
     letter-spacing: -0.038em;
     line-height: 1.02;
     margin: 0 0 20px;
     color: #fff;
   }
   #shopify-section-{{ section.id }} .page-about-close__body {
-    font-size: 17px;
+    font-size: var(--te-body-size, 17px);
+    font-weight: var(--te-body-weight, 400);
     line-height: 1.6;
     color: rgba(255, 255, 255, 0.72);
     margin: 0 0 32px;
@@ -47,7 +49,7 @@
     background: #fff;
     color: #1c1916;
     padding: 14px 28px;
-    font-size: 14px;
+    font-size: var(--te-sub-size, 14px);
     font-weight: 500;
     text-decoration: none;
     border-radius: 4px;
@@ -60,7 +62,7 @@
   @media (max-width: 768px) {
     #shopify-section-{{ section.id }} .page-about-close { padding: 56px 20px; }
     #shopify-section-{{ section.id }} .page-about-close__title {
-      font-size: clamp(28px, 8vw, 40px);
+      font-size: var(--te-title-size, clamp(28px, 8vw, 40px));
     }
   }
 </style>
@@ -73,7 +75,86 @@
     { "type": "text", "id": "body", "label": "Body", "default": "One pair. All-over grip. Built for the studio." },
     { "type": "text", "id": "cta_text", "label": "CTA text", "default": "Shop Performance Skins" },
     { "type": "url", "id": "cta_url", "label": "CTA URL" },
-    { "type": "text", "id": "aria_label", "label": "ARIA label", "default": "Shop Performance Skins" }
+    { "type": "text", "id": "aria_label", "label": "ARIA label", "default": "Shop Performance Skins" },
+    { "type": "header", "content": "Type — size & weight", "info": "Family is brand Type OS. Default keeps the signed v25 sizing." },
+    {
+      "type": "select",
+      "id": "title_size",
+      "label": "Heading size",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "28", "label": "28px" },
+        { "value": "32", "label": "32px" },
+        { "value": "36", "label": "36px" },
+        { "value": "40", "label": "40px" },
+        { "value": "44", "label": "44px" },
+        { "value": "48", "label": "48px" },
+        { "value": "56", "label": "56px" },
+        { "value": "64", "label": "64px" },
+        { "value": "72", "label": "72px" },
+        { "value": "80", "label": "80px" },
+        { "value": "88", "label": "88px" },
+        { "value": "96", "label": "96px" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Heading weight",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" },
+        { "value": "700", "label": "700" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "body_size",
+      "label": "Body size",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "14", "label": "14px" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" },
+        { "value": "18", "label": "18px" },
+        { "value": "20", "label": "20px" },
+        { "value": "22", "label": "22px" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "body_weight",
+      "label": "Body weight",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "cta_size",
+      "label": "CTA label size",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "12", "label": "12px" },
+        { "value": "13", "label": "13px" },
+        { "value": "14", "label": "14px" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" },
+        { "value": "18", "label": "18px" }
+      ]
+    }
   ],
   "presets": [{ "name": "About — Close" }]
 }
