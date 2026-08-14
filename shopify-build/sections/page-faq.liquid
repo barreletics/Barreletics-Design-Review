@@ -101,6 +101,19 @@
       </div>
     {% endfor %}
   </div>
+
+  {% if section.settings.show_related %}
+    <nav class="faq-related" aria-label="More help">
+      <p class="faq-related__title">{{ section.settings.related_title | default: 'More help' }}</p>
+      <ul class="faq-related__list">
+        <li><a href="/pages/help">Help center</a></li>
+        <li><a href="/pages/returns">Returns &amp; exchanges</a></li>
+        <li><a href="/pages/returns-portal">Start a return</a></li>
+        <li><a href="/pages/performance-skins-size-chart">Size guide</a></li>
+        <li><a href="{{ section.settings.contact_url | default: '/pages/contact-us-form' }}">Contact us</a></li>
+      </ul>
+    </nav>
+  {% endif %}
 </section>
 
 {% comment %} FAQPage structured data {% endcomment %}
@@ -358,6 +371,47 @@
   .faq-row.is-hidden,
   .faq-group.is-hidden { display: none; }
 
+  /* Quiet cross-links — hairline row, same register as the topic rail (v7). */
+  .faq-related {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 48px 40px 96px;
+    text-align: center;
+  }
+  .faq-related__title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #9a9182;
+    margin: 0 0 18px;
+  }
+  .faq-related__list {
+    list-style: none;
+    margin: 0;
+    padding: 20px 0 0;
+    border-top: 1px solid #d6cfc0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px 28px;
+  }
+  .faq-related__list a {
+    font-size: 15px;
+    color: #1c1916;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+  }
+  .faq-related__list a:hover {
+    color: #c45c3f;
+    border-bottom-color: #c45c3f;
+    text-decoration: none;
+  }
+  @media (max-width: 768px) {
+    .faq-related { padding: 36px 20px 64px; }
+    .faq-related__list { gap: 12px 20px; }
+  }
+
   .faq-empty { display: none; text-align: center; padding: 56px 20px; }
   .faq-empty.is-shown { display: block; }
   .faq-empty__title { font-size: 17px; font-weight: 600; color: #1c1916; margin: 0 0 8px; }
@@ -613,6 +667,20 @@
       "type": "url",
       "id": "contact_url",
       "label": "Contact link (empty search state)"
+    },
+    { "type": "header", "content": "More help links" },
+    {
+      "type": "checkbox",
+      "id": "show_related",
+      "label": "Show help links at the bottom",
+      "default": true,
+      "info": "Help center · Returns · Start a return · Size guide · Contact."
+    },
+    {
+      "type": "text",
+      "id": "related_title",
+      "label": "Links heading",
+      "default": "More help"
     }
   ],
   "blocks": [
