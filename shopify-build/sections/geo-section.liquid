@@ -6,7 +6,10 @@
 
 {% assign geo_heading = section.settings.heading | default: 'Trusted in studios everywhere' %}
 
-<div class="geo-section">
+<div
+  class="geo-section"
+  style="{% render 'type-override-vars', title_size: section.settings.title_size, body_size: section.settings.body_size, sub_size: section.settings.question_size %}"
+>
   <div class="geo-section__container">
     <p class="geo-section__eyebrow">{{ geo_heading }}</p>
 
@@ -66,7 +69,7 @@
   }
 
   .geo-section__eyebrow {
-    font-size: var(--text-sm);
+    font-size: var(--te-title-size, var(--text-sm));
     text-transform: uppercase;
     letter-spacing: var(--tracking-widest);
     color: var(--text-muted);
@@ -84,7 +87,7 @@
 
   .geo-section__trigger {
     cursor: pointer;
-    font-size: 12px;
+    font-size: var(--te-sub-size, 12px);
     font-weight: var(--weight-medium);
     color: #9a9182;
     padding: 12px 0;
@@ -112,7 +115,7 @@
 
   .geo-section__content {
     padding: 0 0 12px;
-    font-size: 12px;
+    font-size: var(--te-body-size, 12px);
     color: #9a9182;
     line-height: var(--leading-loose);
   }
@@ -133,6 +136,56 @@
       "id": "heading",
       "label": "Section heading",
       "default": "Trusted in studios everywhere"
+    },
+    { "type": "header", "content": "Type — size", "info": "Family is brand Type OS. Default keeps the compact SEO-block sizing used on collection and PDP." },
+    {
+      "type": "select",
+      "id": "title_size",
+      "label": "Heading size",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "11", "label": "11px" },
+        { "value": "12", "label": "12px" },
+        { "value": "13", "label": "13px" },
+        { "value": "14", "label": "14px" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" },
+        { "value": "18", "label": "18px" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "question_size",
+      "label": "Question size",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "12", "label": "12px" },
+        { "value": "13", "label": "13px" },
+        { "value": "14", "label": "14px" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" },
+        { "value": "18", "label": "18px" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "body_size",
+      "label": "Answer size",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "12", "label": "12px" },
+        { "value": "13", "label": "13px" },
+        { "value": "14", "label": "14px" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" },
+        { "value": "18", "label": "18px" }
+      ]
     }
   ],
   "blocks": [
