@@ -101,6 +101,10 @@
 </section>
 {% endif %}
 
+{% if section.settings.show_related %}
+  {% render 'help-links', title: section.settings.related_title %}
+{% endif %}
+
 <style>
   /* Help-family page H1 — planning/help-family-type-law.md */
   .page-size__title {
@@ -344,7 +348,10 @@
       "id": "cta_note",
       "label": "CTA note",
       "default": "Still unsure? Contact us and we'll help you find the right fit."
-    }
+    },
+    { "type": "header", "content": "More help links" },
+    { "type": "checkbox", "id": "show_related", "label": "Show help links at the bottom", "default": true, "info": "Shared row across the support pages. The current page is left out automatically." },
+    { "type": "text", "id": "related_title", "label": "Links heading", "default": "More help" }
   ],
   "blocks": [
     {
