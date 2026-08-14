@@ -25,8 +25,8 @@
     <nav class="page-returns-jumps" aria-label="Jump to section">
       <a href="#start-return">Start a return</a>
       <a href="#returns">Returns</a>
-      <a href="#shipping">Shipping</a>
       <a href="#warranty">Warranty</a>
+      <a href="#shipping">Shipping</a>
     </nav>
   </div>
 </section>
@@ -164,6 +164,12 @@
   @media (max-width: 768px) {
     .page-returns-head__title { font-size: var(--te-title-size, clamp(28px, 8vw, 36px)); }
   }
+  /* Sticky header + announcement sit over the jump targets. Same offset as FAQ. */
+  .page-returns-start,
+  .page-returns-card,
+  .page-returns-cta {
+    scroll-margin-top: var(--faq-scroll-offset, 130px);
+  }
   .page-returns-jumps {
     display: flex; flex-wrap: wrap; gap: 12px 20px; justify-content: center;
   }
@@ -211,6 +217,7 @@
   }
   .page-returns-card > .type-body li { margin-bottom: var(--space-2); }
   .page-returns-card > .type-body > *:last-child { margin-bottom: 0; }
+  .page-returns-card > .type-body a { text-decoration: underline; text-underline-offset: 2px; }
 
   .page-returns-coverage {
     display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;
@@ -340,7 +347,7 @@
     { "type": "text", "id": "exchanges_heading", "label": "Exchanges heading", "default": "Size exchanges" },
     { "type": "richtext", "id": "exchanges_body", "label": "Exchanges body", "default": "<p>Wrong size? A size exchange is often faster than a refund. Start through the same returns portal and select Exchange.</p><p>We ship your exchange at <strong>no cost to you</strong> once we receive and inspect the return.</p>" },
     { "type": "text", "id": "intl_heading", "label": "International heading", "default": "International orders & returns" },
-    { "type": "richtext", "id": "intl_body", "label": "International body", "default": "<p><strong>Duties and taxes are charged at checkout</strong> — nothing extra to pay when your order arrives.</p><p>If you need to send something back from outside the US, return shipping is the customer's. Warranty replacements are the same — the customer covers shipping and any duties on the replacement. Size carefully before ordering.</p>" },
+    { "type": "richtext", "id": "intl_body", "label": "International body", "default": "<p><strong>Duties and taxes are charged at checkout</strong> — nothing extra to pay when your order arrives.</p><p>If you need to send something back from outside the US, return shipping is the customer's. Warranty replacements are the same — the customer covers shipping and any duties on the replacement. Check the <a href=\"/pages/performance-skins-size-chart\">size chart</a> before you order.</p>" },
     { "type": "text", "id": "cta_title", "label": "Bottom CTA title", "default": "Need a hand?" },
     { "type": "textarea", "id": "cta_body", "label": "Bottom CTA body", "default": "Sizing, claims, or a stuck return — Contact us with your order number." },
     { "type": "text", "id": "cta_portal_label", "label": "Bottom portal button", "default": "Start a return" },
