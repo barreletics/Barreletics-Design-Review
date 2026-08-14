@@ -110,36 +110,26 @@
   </div>
 </section>
 
-<section class="page-returns-process section section--cream" aria-label="How to return">
-  <div class="section__inner section__inner--narrow">
-    <h2 class="h2-standard page-returns-process__title">{{ section.settings.process_heading }}</h2>
-    {% if section.settings.process_lede != blank %}
-      <p class="page-returns-process__lede type-body">{{ section.settings.process_lede }}</p>
-    {% endif %}
-    <div class="page-returns-process__steps">
-      {% for block in section.blocks %}
-        {% if block.type == 'return_step' %}
-          <div class="page-returns-process__step" {{ block.shopify_attributes }}>
-            <span class="page-returns-process__num">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
-            <div>
-              <h3>{{ block.settings.title }}</h3>
-              <p class="type-body">{{ block.settings.description }}</p>
-            </div>
-          </div>
-        {% endif %}
-      {% endfor %}
-    </div>
-    <div class="page-returns-process__cta">
-      <a class="btn btn--primary" href="{{ portal }}">Go to returns portal</a>
-    </div>
-  </div>
-</section>
+{%- comment -%}
+  The numbered "How to start a return" band was removed 2026-08-14 (Andrew:
+  "it is self explanatory just follow the prompts"). Its three steps only
+  narrated the portal's own screens, and the prepaid-label and 72-hour facts
+  they carried already live in the 30-day returns card. Its portal button
+  moved into the closing CTA below so there is still an action after the
+  policy cards. Do not rebuild it.
+{%- endcomment -%}
 
 <section class="page-returns-cta section" id="contact" aria-label="Contact">
   <div class="section__inner section__inner--narrow page-returns-cta__inner">
     <h2 class="h2-standard">{{ section.settings.cta_title }}</h2>
     <p class="type-body">{{ section.settings.cta_body }}</p>
-    <a class="btn btn--primary" href="{{ contact_url }}">{{ section.settings.cta_label | default: 'Contact' }}</a>
+    <div class="page-returns-cta__actions">
+      <a class="btn btn--primary" href="{{ portal }}">{{ section.settings.cta_portal_label | default: 'Start a return' }}</a>
+      <a class="btn btn--secondary" href="{{ contact_url }}">{{ section.settings.cta_label | default: 'Contact' }}</a>
+    </div>
+    {% if section.settings.cta_refund_note != blank %}
+      <p class="page-returns-cta__refund type-body">{{ section.settings.cta_refund_note }}</p>
+    {% endif %}
     <p class="page-returns-cta__alt type-body">
       Looking for product FAQ? <a href="{{ faq_url }}">Frequently Asked Questions</a>
     </p>
@@ -239,23 +229,15 @@
   .page-returns-coverage__col--yes li::before { content: "✓"; color: var(--text-primary); }
   .page-returns-coverage__col--no li::before { content: "✕"; color: var(--accent-primary, #c45c3f); }
 
-  .page-returns-process__title { text-align: center; margin: 0 0 var(--gap-a); }
-  .page-returns-process__lede { text-align: center; margin: 0 0 var(--space-8); color: var(--text-body); }
-  .page-returns-process__step {
-    display: grid; grid-template-columns: 40px 1fr; gap: 20px;
-    padding: 20px 0; border-top: 1px solid var(--border-default);
-  }
-  .page-returns-process__step:last-child { border-bottom: 1px solid var(--border-default); }
-  .page-returns-process__num {
-    font-size: 13px; font-weight: 700; color: var(--accent-primary, #c45c3f); letter-spacing: 0.06em; padding-top: 2px;
-  }
-  .page-returns-process__step h3 { font-size: 16px; font-weight: 500; margin: 0 0 6px; }
-  .page-returns-process__step p { margin: 0; }
-  .page-returns-process__cta { text-align: center; margin-top: var(--space-8); }
-
   .page-returns-cta__inner { text-align: center; }
   .page-returns-cta__inner .h2-standard { margin: 0 0 var(--gap-b); }
   .page-returns-cta__inner .type-body { margin: 0 0 var(--space-6); }
+  .page-returns-cta__actions {
+    display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;
+  }
+  .page-returns-cta__inner .page-returns-cta__refund {
+    margin: var(--space-6) 0 0; color: var(--text-muted); font-size: 14px;
+  }
   /* Needs the __inner prefix to outrank the .type-body rule above, which was
      zeroing this line's top margin and pinning it under the button. */
   .page-returns-cta__inner .page-returns-cta__alt { margin: var(--space-8) 0 0; color: var(--text-muted); }
@@ -265,8 +247,10 @@
     .page-returns-policy__grid,
     .page-returns-coverage { grid-template-columns: 1fr; }
     .page-returns-card--wide { grid-column: auto; }
-    .page-returns-start__actions { flex-direction: column; }
-    .page-returns-start__actions .btn { width: 100%; }
+    .page-returns-start__actions,
+    .page-returns-cta__actions { flex-direction: column; }
+    .page-returns-start__actions .btn,
+    .page-returns-cta__actions .btn { width: 100%; }
   }
 </style>
 
@@ -346,7 +330,7 @@
     { "type": "text", "id": "start_cta_label", "label": "Start CTA", "default": "Start a return" },
     { "type": "text", "id": "exchange_cta_label", "label": "Exchange CTA", "info": "Leave empty. This button went to the same portal URL as the Start CTA. Add a label only if it gets its own destination." },
     { "type": "text", "id": "returns_heading", "label": "Returns heading", "default": "30-day returns" },
-    { "type": "richtext", "id": "returns_body", "label": "Returns body", "default": "<p>Try them on for size — indoors only.</p><p>Initiate within 30 days of delivery for a refund when items are in <strong>new, sellable condition</strong> — clean, unused outdoors, no sole damage or scuffs.</p><ul><li><strong>Performance Skins:</strong> return in the original mesh bag with tag (if supplied) and packing slip. Poly mailer OK — no shoe box required.</li><li><strong>Apparel &amp; accessories:</strong> unused, unwashed, tags attached, original packaging, packing slip.</li><li><strong>US return shipping:</strong> $7.95 flat rate, deducted from refund. Prepaid label after approval.</li><li><strong>Refunds:</strong> within 72 hours of inspection (bank processing may take longer).</li></ul>" },
+    { "type": "richtext", "id": "returns_body", "label": "Returns body", "default": "<p>Try them on for size — indoors only.</p><p>Initiate within 30 days of delivery for a refund when items are in <strong>new, sellable condition</strong> — clean, unused outdoors, no sole damage or scuffs.</p><ul><li><strong>Performance Skins:</strong> return in the original mesh bag with tag (if supplied) and packing slip. Poly mailer OK — no shoe box required.</li><li><strong>Apparel &amp; accessories:</strong> unused, unwashed, tags attached, original packaging, packing slip.</li><li><strong>US return shipping:</strong> $7.95 flat rate, deducted from refund. Prepaid label after approval.</li></ul>" },
     { "type": "text", "id": "warranty_heading", "label": "Warranty heading", "default": "90-day warranty" },
     { "type": "richtext", "id": "warranty_body", "label": "Warranty body", "default": "<p>Every purchase is covered against <strong>manufacturing defects</strong> for 90 days from delivery. Return of the defective item is usually not required.</p>" },
     { "type": "richtext", "id": "warranty_covered", "label": "Warranty covered list", "info": "No arrival deadline — the 90-day warranty covers defects. See CA-21 in docs/11-CANONICAL-ANSWERS.md.", "default": "<ul><li>Manufacturing defects</li><li>Structural failure from defect</li><li>Item arrives defective</li></ul>" },
@@ -357,21 +341,11 @@
     { "type": "richtext", "id": "exchanges_body", "label": "Exchanges body", "default": "<p>Wrong size? A size exchange is often faster than a refund. Start through the same returns portal and select Exchange.</p><p>We ship your exchange at <strong>no cost to you</strong> once we receive and inspect the return.</p>" },
     { "type": "text", "id": "intl_heading", "label": "International heading", "default": "International orders & returns" },
     { "type": "richtext", "id": "intl_body", "label": "International body", "default": "<p><strong>Duties and taxes are charged at checkout</strong> — nothing extra to pay when your order arrives.</p><p>If you need to send something back from outside the US, return shipping is the customer's. Warranty replacements are the same — the customer covers shipping and any duties on the replacement. Size carefully before ordering.</p>" },
-    { "type": "text", "id": "process_heading", "label": "Process heading", "default": "How to start a return" },
-    { "type": "textarea", "id": "process_lede", "label": "Process lede", "default": "Three steps. Keep packaging if you can — condition still has to be sellable." },
     { "type": "text", "id": "cta_title", "label": "Bottom CTA title", "default": "Need a hand?" },
     { "type": "textarea", "id": "cta_body", "label": "Bottom CTA body", "default": "Sizing, claims, or a stuck return — Contact us with your order number." },
-    { "type": "text", "id": "cta_label", "label": "Bottom CTA label", "default": "Contact" }
-  ],
-  "blocks": [
-    {
-      "type": "return_step",
-      "name": "Return step",
-      "settings": [
-        { "type": "text", "id": "title", "label": "Title" },
-        { "type": "textarea", "id": "description", "label": "Description" }
-      ]
-    }
+    { "type": "text", "id": "cta_portal_label", "label": "Bottom portal button", "default": "Start a return" },
+    { "type": "text", "id": "cta_label", "label": "Bottom contact button", "default": "Contact" },
+    { "type": "textarea", "id": "cta_refund_note", "label": "Bottom refund timing note", "default": "Refunds are processed within 72 hours of your return arriving. Your bank may take a few days after that to post it." }
   ],
   "presets": [{ "name": "Returns Page" }]
 }
