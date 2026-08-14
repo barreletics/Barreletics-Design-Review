@@ -1,0 +1,152 @@
+{% comment %}
+  About page — 50/50 split with mobile stack order (v25 Locked)
+{% endcomment %}
+
+{%- liquid
+  assign reverse = section.settings.reverse
+  assign media_pct = section.settings.media_column_pct | default: 50
+  assign text_pct = 100 | minus: media_pct
+-%}
+
+<section
+  class="page-about-split{% if reverse %} page-about-split--reverse{% endif %}{% if section.settings.cream_bg %} page-about-split--cream{% endif %}{% render 'split-mobile-stack-class', mobile_stack_order: section.settings.mobile_stack_order %}"
+  id="shopify-section-{{ section.id }}"
+  {{ section.shopify_attributes }}
+  aria-label="{{ section.settings.aria_label | escape }}"
+  style="--pas-media-fr: {{ media_pct }}fr; --pas-text-fr: {{ text_pct }}fr;"
+>
+  <div class="page-about-split__media">
+    {% if section.settings.image != blank %}
+      {{
+        section.settings.image
+        | image_url: width: 1600
+        | image_tag:
+          widths: '600, 900, 1200, 1600',
+          sizes: '(max-width: 768px) 100vw, 50vw',
+          alt: section.settings.image_alt,
+          loading: 'lazy',
+          class: 'page-about-split__img'
+      }}
+    {% elsif section.settings.image_url != blank %}
+      <img
+        class="page-about-split__img"
+        src="{{ section.settings.image_url | escape }}"
+        alt="{{ section.settings.image_alt | escape }}"
+        loading="lazy"
+      >
+    {% endif %}
+  </div>
+  <div class="page-about-split__copy">
+    {% if section.settings.title != blank %}
+      <h2 class="page-about-split__title">{{ section.settings.title }}</h2>
+    {% endif %}
+    {% if section.settings.body != blank %}
+      <div class="page-about-split__body rte">{{ section.settings.body }}</div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  #shopify-section-{{ section.id }} .page-about-split {
+    display: grid;
+    grid-template-columns: var(--pas-media-fr, 1fr) var(--pas-text-fr, 1fr);
+    align-items: center;
+    background: #fff;
+  }
+  #shopify-section-{{ section.id }} .page-about-split--cream { background: var(--color-warm-cream, #f5f2ec); }
+  #shopify-section-{{ section.id }} .page-about-split--reverse { direction: rtl; }
+  #shopify-section-{{ section.id }} .page-about-split--reverse > * { direction: ltr; }
+  #shopify-section-{{ section.id }} .page-about-split__media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(20px, 3vw, 36px) clamp(12px, 2vw, 24px);
+  }
+  #shopify-section-{{ section.id }} .page-about-split__img {
+    width: auto;
+    max-width: 100%;
+    max-height: min({{ section.settings.media_max_vh }}vh, {{ section.settings.media_max_px }}px);
+    object-fit: contain;
+  }
+  #shopify-section-{{ section.id }} .page-about-split__copy {
+    padding: clamp(28px, 4vw, 56px) clamp(20px, 4vw, 48px);
+    max-width: 36em;
+  }
+  #shopify-section-{{ section.id }} .page-about-split__title {
+    font-size: clamp(36px, 4.8vw, 56px);
+    font-weight: 400;
+    letter-spacing: -0.032em;
+    line-height: 1.06;
+    margin: 0 0 24px;
+    color: var(--text-primary, #1c1916);
+  }
+  #shopify-section-{{ section.id }} .page-about-split__body {
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--text-body, #4a4a4a);
+  }
+  #shopify-section-{{ section.id }} .page-about-split__body p + p { margin-top: 1em; }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .page-about-split {
+      grid-template-columns: 1fr;
+      display: flex;
+      flex-direction: column;
+    }
+    #shopify-section-{{ section.id }} .page-about-split--reverse { direction: ltr; }
+    #shopify-section-{{ section.id }} .page-about-split__media { padding: 16px 16px 0; }
+    #shopify-section-{{ section.id }} .page-about-split__img {
+      max-height: min({{ section.settings.media_max_vh_mobile }}vh, {{ section.settings.media_max_px_mobile }}px);
+    }
+    #shopify-section-{{ section.id }} .page-about-split__copy { padding: 8px 20px 32px; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "About — Split",
+  "settings": [
+    { "type": "text", "id": "aria_label", "label": "ARIA label", "default": "Story section" },
+    { "type": "text", "id": "title", "label": "Heading" },
+    { "type": "richtext", "id": "body", "label": "Body" },
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "text", "id": "image_url", "label": "Image URL fallback" },
+    { "type": "text", "id": "image_alt", "label": "Image alt" },
+    { "type": "header", "content": "Layout" },
+    {
+      "type": "checkbox",
+      "id": "reverse",
+      "label": "Reverse layout (text left, media right)",
+      "default": false,
+      "info": "Desktop only (769px+)."
+    },
+    {
+      "type": "select",
+      "id": "mobile_stack_order",
+      "label": "Mobile stack order",
+      "default": "media_first",
+      "options": [
+        { "value": "media_first", "label": "Image above copy" },
+        { "value": "copy_first", "label": "Copy above image" }
+      ],
+      "info": "Below 768px only."
+    },
+    {
+      "type": "range",
+      "id": "media_column_pct",
+      "label": "Media column width (desktop %)",
+      "min": 40,
+      "max": 60,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    { "type": "checkbox", "id": "cream_bg", "label": "Cream background", "default": false },
+    { "type": "header", "content": "Media size caps" },
+    { "type": "range", "id": "media_max_vh", "label": "Max height desktop (vh)", "min": 44, "max": 84, "step": 2, "unit": "vh", "default": 78 },
+    { "type": "range", "id": "media_max_px", "label": "Max height desktop (px)", "min": 360, "max": 820, "step": 20, "unit": "px", "default": 760 },
+    { "type": "range", "id": "media_max_vh_mobile", "label": "Max height mobile (vh)", "min": 36, "max": 60, "step": 2, "unit": "vh", "default": 58 },
+    { "type": "range", "id": "media_max_px_mobile", "label": "Max height mobile (px)", "min": 280, "max": 520, "step": 10, "unit": "px", "default": 480 }
+  ],
+  "presets": [{ "name": "About — Split" }]
+}
+{% endschema %}
