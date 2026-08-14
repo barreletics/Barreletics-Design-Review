@@ -194,6 +194,19 @@
   .page-returns-card__note { margin: var(--space-4) 0 0; font-size: 13px; color: var(--text-muted); }
   .page-returns-card__note a { color: var(--text-primary); text-decoration: underline; text-underline-offset: 2px; }
 
+  /* Rich-text editor output: the global reset strips paragraph spacing and list
+     markers, so restore them here. Scoped to the direct .type-body child so the
+     coverage columns below keep their own bordered-row list treatment. */
+  .page-returns-card > .type-body p { margin-bottom: var(--space-4); }
+  .page-returns-card > .type-body ul,
+  .page-returns-card > .type-body ol {
+    list-style: revert;
+    padding-left: var(--space-6);
+    margin-bottom: var(--space-4);
+  }
+  .page-returns-card > .type-body li { margin-bottom: var(--space-2); }
+  .page-returns-card > .type-body > *:last-child { margin-bottom: 0; }
+
   .page-returns-coverage {
     display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;
   }
