@@ -251,7 +251,7 @@ Change here first, then update every surface below and note it in `planning/m4-s
 
 | Answer | Surfaces to keep in sync |
 |---|---|
-| CA-01, CA-02 | `page.technology.json` (**two** cards titled "Antimicrobial", ~L46 + ~L60) · `page.grip-comparison.json` (~L39, L40, L63) · `collection.apparel.json` (~L71 tee) · `page.faq.json` · `product*.json` · `value-strip.liquid` |
+| CA-01, CA-02 | **Purged 2026-08-14** on `page.technology.json` (cards now "Wipes clean") · `page.grip-comparison.json` · `collection.apparel.json` (tee). Keep in sync: `page.faq.json` · `product*.json` · `value-strip.liquid`. Never restore "antimicrobial" or bacteria-growth claims. |
 | CA-03, CA-04 | `page.faq.json` · size-chart templates (all three aliases) · `product*.json` |
 | CA-05–CA-09 | size-chart templates (`page.size-chart.json` + both aliases) · `sections/page-size-guide.liquid` (fallback rows **and** schema defaults) · **`pdp-buy-box.liquid` ~L409 hardcoded `size_range`** · `page.faq.json` · six `product*.json` FAQ blocks · `collection.json` (~L296 "Small is coming soon" + size-up) · `collection.open-sole.json` (~L69 size-up) |
 | CA-10 | `page.faq.json` · `page.compare.json` · `product.json` · `product.open-sole.json` · collection copy |

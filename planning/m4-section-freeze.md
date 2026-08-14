@@ -47,7 +47,23 @@
 
 ---
 
-## Returns card interiors — SIGNED 2026-08-14 ("looks great")
+## Returns — LOCKED 2026-08-14 (Andrew: "returns is locked")
+
+**Owner lock** on M4 `187144929571` → `/pages/returns` (`page.shipping-retruns.json` + alias `page.returns.json`). Do not thrash without a letter.
+
+**Composition (forward):** head → Start a return (one portal button) → policy cards → Need a hand? (Start a return + Contact + 72-hour refund note). **No** numbered how-to band. **No** studio-trial line. **No** 24-hour defect clock. Jump row = Start a return / Returns / Warranty / Shipping. Anchors use `scroll-margin-top` 130px so the sticky header does not cover card headings.
+
+**Card interiors (signed same day, "looks great"):** rich-text `p` / `ul` / `li` restored on `.page-returns-card > .type-body` only. Do **not** widen to `.page-returns-card ul` — that breaks warranty Covered / Not covered.
+
+**Copy law on this page:** "Try them on for size — indoors only." International ends with a size-chart link, not "Size carefully before ordering."
+
+### Antimicrobial purge — 2026-08-14 (same lock turn)
+
+P-015 / CA-02. Live runtime cleaned: `page.technology.json` · `page.grip-comparison.json` · `collection.apparel.json`. Say wipe-clean / non-porous. Never restore "antimicrobial" or "resists bacterial growth." Frozen backups and evidence snapshots left alone.
+
+---
+
+## Returns card interiors — SIGNED 2026-08-14 ("looks great") — subsumed by the lock above
 
 **Owner sign-off** on M4 `187144929571` → `/pages/returns`. Returns v3 composition unchanged — this was a missing-CSS repair inside the existing policy cards, not a redesign.
 
@@ -115,7 +131,7 @@ No small size.
 | **Type OS** | Typography system | **SETTLED** | See `planning/m4-type-hierarchy.md` | Family/size/weight/tracking; no per-section `font_picker` | Type tokens + TE policy |
 | **Home WORKING** | Homepage layout authority | **WORKING** (layout authority — not a free redesign surface) | Home WORKING mocks / draft match commits | Agents must not invent alternate homepage composition; match WORKING unless Andrew approves change in-message. **Exception locked 2026-08-01:** `proof-numbers` after social-proof (see row below). | `templates/index.json` + home sections |
 | **Proof numbers** | Reusable stats band (Home; optional elsewhere) | **LOCKED Aug 1 2026** · White tone | Draft QA `187144929571` · Andrew visual approve | White default · cream/charcoal TE · 3-up: 1,000's instructors · 1,000+ classes (attribution TBD) · USA · Show toggle · after reviews / before One pair | `sections/proof-numbers.liquid` · `index.json` · `specs/frozen/proof-numbers.md` |
-| **Header nav type** | Sitewide header chrome (`header-group`) | **LOCKED 2026-08-11** · nav font **#2** (supersedes Aug 8 18px) | v20d fold chrome + M4 `187144929571` | Nav **13px / 500 / 0.01em / sentence case** (no `text-transform`) · gap **26px** · utility actions **Help ▾ · Account · Cart** **13px / 500** · logo height TE (currently 45 — do not thrash to 42 without letter) · Help fallback `/pages/faq` | `assets/design-tokens.css` (`--type-nav-*`), `assets/chrome.css`, `sections/header.liquid`, `sections/header-group.json` · `docs/pdp-fold-v20d-chrome.html` |
+| **Header nav type** | Sitewide header chrome (`header-group`) | **LOCKED 2026-08-11** · nav font **#2** (supersedes Aug 8 18px) · **Help fallback `/pages/help` 2026-08-14** | v20d fold chrome + M4 `187144929571` | Nav **13px / 500 / 0.01em / sentence case** (no `text-transform`) · gap **26px** · utility actions **Help ▾ · Account · Cart** **13px / 500** · logo height TE (currently 45 — do not thrash to 42 without letter) · Help fallback **`/pages/help`** (hub exists — do **not** restore `/pages/faq`) | `assets/design-tokens.css` (`--type-nav-*`), `assets/chrome.css`, `sections/header.liquid`, `sections/header-group.json` · `docs/pdp-fold-v20d-chrome.html` |
 | **PDP fold chrome** | Fold-judgment mock + sitewide nav sync | **LOCKED 2026-08-11** · nav font **#2** | Hub `docs/index.html` · `pdp-fold-v20d-chrome.html` | Logo **42px** on mock · nav **13px / 500 / sentence case** · sitewide header now matches nav #2 (logo TE 45 left alone). **Judge ATC above fold here.** Never thrash without chrome letter. | `docs/pdp-fold-v20d-chrome.html` · `docs/Barreletics PDP - Definitive-v20d-fold-with-chrome.html` · `.cursor/rules/pdp-fold-preview-from-m4.mdc` · hub Shop card |
 | **Juicer / Instagram** | Reusable library section (any page) | **LOCKED Jul 31 2026** · on PDP draft | v19 Juicer · PDP `product.json` includes `home-juicer` | Eyebrow / @barreletics / body · live Juicer (`barreletics`) · **max_height 0** · See more · Follow · TE add/omit · **on PDP after guarantee, before FAQ** | `sections/home-juicer.liquid` · `product.json` · `specs/frozen/juicer.md` · `Definitive-v19.html` `#instagram` |
 | **Brand / About** | `/pages/our-story` · `page.our-story.json` | **LOCKED 2026-08-13** · mock v25 | `docs/Barreletics Brand - Definitive-v25.html` | Hero → intro + pull → founder split → prototype split → 2-col values → Joseph cream mat → USA facts → letter close → GEO → dark close · **TE mobile stack** on splits + Joseph · v24 black museum prior | `page-about-*.liquid` · `page.our-story.json` · `specs/frozen/about.md` |
@@ -625,13 +641,14 @@ Recorded **forward** at the time — **superseded 2026-08-11** by nav #2 lock ab
   `help_menu` branches now respect `show_action_labels`: label + caret when on, question-mark
   icon when off. Help · Account · Cart share 14px / 400 / 0.025em title case. Do not revert the
   assigned-menu branch to icon-only.
-- **Help fallback URL = `/pages/faq`** (`help_fallback_url` in `header.liquid`). `/pages/help`
-  **404s** — never point Help there again. Mobile drawer falls back to the same URL when no
-  help menu is assigned, gated on `show_help`.
+- **Help fallback URL = `/pages/help`** (`help_fallback_url` in `header.liquid`). Forward
+  2026-08-14 — the Help hub exists. **Do not restore `/pages/faq`.** The Aug 8 note that
+  `/pages/help` 404s is **history only**. Mobile drawer uses the same URL when no help menu
+  is assigned, gated on `show_help`.
 - **Forward fix 2026-08-08 (“which FAQ or help are we using”):** the desktop “Help ▾” parent
-  anchor hrefed `help_menu.links.first.url` = `/pages/our-story`, so clicking the word Help
-  landed on About Us. It now hrefs `help_fallback_url` (`/pages/faq`) in both branches.
-  Dropdown children, labels, and layout unchanged. Do not revert it to `links.first.url`.
+  used to href `help_menu.links.first.url` = `/pages/our-story` (About). It hrefs
+  `help_fallback_url` in both branches. That URL is now **`/pages/help`**. Dropdown children,
+  labels, and layout unchanged. Do not revert it to `links.first.url`.
 - Headroom at 1440px, last nav item → utility actions: **167.7px** at 18px (133.7px at 22px).
   Both sizes crowd only in the 768–960px tablet band.
 - **Bug fixed in passing:** inline cart count was painting on top of the "Cart" label

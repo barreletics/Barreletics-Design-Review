@@ -61,7 +61,7 @@ Theme Editor: `https://admin.shopify.com/store/barreletics/themes/187144929571/e
 | **About / Our story** | `/pages/our-story` | `page.our-story.json` and/or `page.about.json` (confirm Admin assignment before edit) | Brand story mock for review: `docs/Barreletics Brand - Definitive-v1.html` (not Locked until letter). Help hub: **Help v3 Locked** | Confirm in Admin (`our-story` / `about` / default) | `/pages/our-story` |
 | **Contact** | `/pages/contact-us-form` | **`page.contact.json`** *(Admin suffix is `contact`, not the handle)* · alias `page.contact-us-form.json` | Contact v1 (hub, not Locked) · live form page. **GOOD — do not thrash** | **`contact`** ✅ verified | `/pages/contact-us-form` |
 
-Help menu authority: About → `/pages/our-story` · FAQ → `/pages/faq` · Contact → `/pages/contact-us-form` · Returns → `/pages/returns`. Header Help fallback = **`/pages/faq`**.
+Help menu authority: About → `/pages/our-story` · FAQ → `/pages/faq` · Contact → `/pages/contact-us-form` · Returns → `/pages/returns`. Header Help fallback = **`/pages/help`** (hub exists 2026-08-14 — do **not** restore `/pages/faq`).
 
 ### Admin suffixes verified against Shopify 2026-08-12 (read this before editing a Help page)
 
