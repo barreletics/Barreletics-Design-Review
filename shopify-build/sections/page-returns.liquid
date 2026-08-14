@@ -8,7 +8,12 @@
 {% assign contact_url = section.settings.contact_url | default: '/pages/contact-us-form' %}
 {% assign faq_url = section.settings.faq_url | default: '/pages/faq' %}
 
-<section class="page-returns-head section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
+<section
+  class="page-returns-head section"
+  id="shopify-section-{{ section.id }}"
+  style="{% render 'type-override-vars', title_size: section.settings.title_size, title_weight: section.settings.title_weight, body_size: section.settings.body_size, body_weight: section.settings.body_weight %}"
+  {{ section.shopify_attributes }}
+>
   <div class="section__inner section__inner--narrow page-returns-head__inner">
     {% if section.settings.eyebrow != blank %}
       <p class="eyebrow eyebrow--accent">{{ section.settings.eyebrow }}</p>
@@ -136,21 +141,22 @@
   /* Help-family page H1 — not homepage hero (planning/help-family-type-law.md) */
   .page-returns-head__title {
     margin: 0 0 var(--gap-b);
-    font-size: clamp(32px, 4vw, 44px);
-    font-weight: 400;
+    font-size: var(--te-title-size, clamp(32px, 4vw, 44px));
+    font-weight: var(--te-title-weight, 400);
     line-height: 1.15;
     letter-spacing: -0.028em;
     text-transform: none;
     color: var(--text-primary);
   }
   .page-returns-head__lede {
-    font-size: var(--type-lede-size);
+    font-size: var(--te-body-size, var(--type-lede-size));
+    font-weight: var(--te-body-weight, 400);
     line-height: var(--type-lede-leading);
     color: var(--text-body);
     margin: 0 0 var(--space-6);
   }
   @media (max-width: 768px) {
-    .page-returns-head__title { font-size: clamp(28px, 8vw, 36px); }
+    .page-returns-head__title { font-size: var(--te-title-size, clamp(28px, 8vw, 36px)); }
   }
   .page-returns-jumps {
     display: flex; flex-wrap: wrap; gap: 12px 20px; justify-content: center;
@@ -235,6 +241,66 @@
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Returns & Warranty" },
     { "type": "text", "id": "title", "label": "Title", "default": "Zero risk. All grip." },
     { "type": "textarea", "id": "lede", "label": "Lede", "default": "Try them on at home. If the fit isn't right, you have 30 days to send them back — and every pair is covered against defects for 90." },
+    { "type": "header", "content": "Type — size & weight", "info": "Family is brand Type OS. Default keeps the approved Returns type. Title caps at 56px — support pages never use the homepage hero size." },
+    {
+      "type": "select",
+      "id": "title_size",
+      "label": "Title size",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "24", "label": "24px" },
+        { "value": "26", "label": "26px" },
+        { "value": "28", "label": "28px" },
+        { "value": "30", "label": "30px" },
+        { "value": "32", "label": "32px" },
+        { "value": "36", "label": "36px" },
+        { "value": "40", "label": "40px" },
+        { "value": "44", "label": "44px" },
+        { "value": "48", "label": "48px" },
+        { "value": "56", "label": "56px" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" },
+        { "value": "700", "label": "700" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "body_size",
+      "label": "Lede size",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "14", "label": "14px" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" },
+        { "value": "18", "label": "18px" },
+        { "value": "20", "label": "20px" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "body_weight",
+      "label": "Lede weight",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" }
+      ]
+    },
     { "type": "url", "id": "portal_url", "label": "Returns portal URL", "info": "Default /pages/returns-portal" },
     { "type": "url", "id": "size_url", "label": "Size chart URL" },
     { "type": "url", "id": "contact_url", "label": "Contact URL" },

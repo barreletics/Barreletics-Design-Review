@@ -5,7 +5,12 @@
   No Track Order. planning/help-family-type-law.md
 {% endcomment %}
 
-<section class="page-help section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
+<section
+  class="page-help section"
+  id="shopify-section-{{ section.id }}"
+  style="{% render 'type-override-vars', title_size: section.settings.title_size, title_weight: section.settings.title_weight, body_size: section.settings.body_size, body_weight: section.settings.body_weight, sub_size: section.settings.card_title_size, sub_weight: section.settings.card_title_weight %}"
+  {{ section.shopify_attributes }}
+>
   <div class="section__inner section__inner--narrow page-help__head">
     <h1 class="page-help__title">{{ section.settings.title | default: 'How Can We Help?' }}</h1>
     {% if section.settings.lede != blank %}
@@ -36,8 +41,8 @@
     padding-bottom: var(--space-6, 24px);
   }
   .page-help__title {
-    font-size: clamp(32px, 4vw, 44px);
-    font-weight: 400;
+    font-size: var(--te-title-size, clamp(32px, 4vw, 44px));
+    font-weight: var(--te-title-weight, 400);
     line-height: 1.15;
     letter-spacing: -0.028em;
     text-transform: none;
@@ -45,14 +50,15 @@
     margin: 0 0 var(--gap-b, 20px);
   }
   .page-help__lede {
-    font-size: 16px;
+    font-size: var(--te-body-size, 16px);
+    font-weight: var(--te-body-weight, 400);
     line-height: 1.6;
     color: var(--text-body, #4a4a4a);
     margin: 0 auto;
     max-width: 46ch;
   }
   @media (max-width: 768px) {
-    .page-help__title { font-size: clamp(28px, 8vw, 36px); }
+    .page-help__title { font-size: var(--te-title-size, clamp(28px, 8vw, 36px)); }
   }
 
   .page-help__grid-wrap {
@@ -92,8 +98,8 @@
   }
   .page-help__card-title {
     grid-column: 1;
-    font-size: 18px;
-    font-weight: 500;
+    font-size: var(--te-sub-size, 18px);
+    font-weight: var(--te-sub-weight, 500);
     color: #1c1916;
     margin: 0 0 8px;
     letter-spacing: -0.02em;
@@ -145,6 +151,95 @@
       "id": "lede",
       "label": "Lede",
       "default": "Answers, policy, sizing, and contact — pick a destination. Full FAQ lives on its own page."
+    },
+    { "type": "header", "content": "Type — size & weight", "info": "Family is brand Type OS. Default keeps the approved Help page type. Title caps at 56px — support pages never use the homepage hero size." },
+    {
+      "type": "select",
+      "id": "title_size",
+      "label": "Title size",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "24", "label": "24px" },
+        { "value": "26", "label": "26px" },
+        { "value": "28", "label": "28px" },
+        { "value": "30", "label": "30px" },
+        { "value": "32", "label": "32px" },
+        { "value": "36", "label": "36px" },
+        { "value": "40", "label": "40px" },
+        { "value": "44", "label": "44px" },
+        { "value": "48", "label": "48px" },
+        { "value": "56", "label": "56px" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" },
+        { "value": "700", "label": "700" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "body_size",
+      "label": "Lede size",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "14", "label": "14px" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" },
+        { "value": "18", "label": "18px" },
+        { "value": "20", "label": "20px" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "body_weight",
+      "label": "Lede weight",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "card_title_size",
+      "label": "Card title size",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "14", "label": "14px" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" },
+        { "value": "18", "label": "18px" },
+        { "value": "20", "label": "20px" },
+        { "value": "22", "label": "22px" },
+        { "value": "24", "label": "24px" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "card_title_weight",
+      "label": "Card title weight",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" }
+      ]
     }
   ],
   "blocks": [
