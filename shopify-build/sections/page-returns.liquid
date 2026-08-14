@@ -136,9 +136,11 @@
   </div>
 </section>
 
-{% if section.settings.show_related %}
-  {% render 'help-links', title: section.settings.related_title, contact_url: contact_url %}
-{% endif %}
+{%- comment -%}
+  No shared help-links row here — the Need a hand? CTA above already closes the
+  page with Contact and FAQ, and the portal button covers Start a return.
+  The row stays on FAQ and Size guide, which have no closing CTA.
+{%- endcomment -%}
 
 <style>
   .page-returns-head__inner { text-align: center; }
@@ -329,10 +331,7 @@
     { "type": "textarea", "id": "process_lede", "label": "Process lede", "default": "Three steps. Keep packaging if you can — condition still has to be sellable." },
     { "type": "text", "id": "cta_title", "label": "Bottom CTA title", "default": "Need a hand?" },
     { "type": "textarea", "id": "cta_body", "label": "Bottom CTA body", "default": "Sizing, claims, or a stuck return — Contact us with your order number." },
-    { "type": "text", "id": "cta_label", "label": "Bottom CTA label", "default": "Contact" },
-    { "type": "header", "content": "More help links" },
-    { "type": "checkbox", "id": "show_related", "label": "Show help links at the bottom", "default": true, "info": "Shared row across the support pages. The current page is left out automatically." },
-    { "type": "text", "id": "related_title", "label": "Links heading", "default": "More help" }
+    { "type": "text", "id": "cta_label", "label": "Bottom CTA label", "default": "Contact" }
   ],
   "blocks": [
     {
