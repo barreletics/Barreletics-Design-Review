@@ -11,8 +11,8 @@
 {%- if sticky_header == nil -%}{%- assign sticky_header = true -%}{%- endif -%}
 {%- assign nav_link_size = section.settings.nav_link_size | default: 'default' -%}
 {%- assign nav_gap = section.settings.nav_gap | default: 30 -%}
-{%- comment -%} /pages/help 404s on this store; FAQ is the real support page. {%- endcomment -%}
-{%- assign help_fallback_url = '/pages/faq' -%}
+{%- comment -%} Help center hub (page.help.json) — routes to FAQ, returns, size, contact. {%- endcomment -%}
+{%- assign help_fallback_url = '/pages/help' -%}
 {%- assign show_help = section.settings.show_help -%}
 {%- if show_help == nil -%}{%- assign show_help = true -%}{%- endif -%}
 {%- assign show_account = section.settings.show_account -%}
@@ -137,8 +137,7 @@
           </div>
         {% else %}
           {%- comment -%}
-            No secondary menu assigned. /pages/help does not exist on this store — FAQ is the
-            real support page, so the fallback points there rather than shipping a 404.
+            No secondary menu assigned — link straight to the help center hub.
           {%- endcomment -%}
           <a href="{{ help_fallback_url }}" class="site-header__action site-header__action--text" aria-label="Help">
             {%- if show_action_labels -%}
