@@ -751,11 +751,16 @@ Decision: "Never collect [personal data] in DM" — address, payment, account in
 ```
 Source: manychat-kb/14-escalation-and-handoff.md
 
-### BZ-012: Lost Package Policy
+### BZ-012: Lost Package Policy → **AMENDED by P-018 (2026-08-14)**
 ```
-Decision: "Once tracking shows delivered, order considered fulfilled. Cannot issue refunds for packages shown as delivered."
+Was: "Once tracking shows delivered, order considered fulfilled. Cannot issue refunds
+for packages shown as delivered."
+
+Now: "Once tracking shows delivered, order considered fulfilled" stays. The absolute
+"cannot issue refunds" is RETIRED — it was an internal backstop that agents began
+quoting at customers as policy, and it was never on the site.
 ```
-Source: manychat-kb/08-shipping.md, docs/09-PRODUCT-KNOWLEDGE.md
+Source: manychat-kb/08-shipping.md, docs/09-PRODUCT-KNOWLEDGE.md · see **P-018** below
 
 ### BZ-013: International — Customer Covers Duties → **SUPERSEDED by P-016**
 ```
@@ -784,6 +789,40 @@ ManyChat, PDP, or marketing.
 The duties-responsibility line originated on **warranty replacements**, where it is correct, and leaked onto outbound-order copy across eight surfaces.
 Supersedes: BZ-013 · Canonical: `docs/11-CANONICAL-ANSWERS.md` CA-18 and CA-21
 ✅ Verified 2026-08-12 — Andrew: "we are collecting DDP." Checkout collects duties and import taxes; the copy matches the setting. The 5.3 hedge stays for the rare destination that bills anyway.
+
+### P-017: No arrival deadline on defects *(Andrew 2026-08-14)*
+```
+RETIRED: "Item arrived defective? Contact within 24 hours."
+
+The 90-day warranty already covers a defect present on arrival. There is no
+clock, and there never was an enforced one.
+
+The line survived only on the Returns page and in the product KB — CA-21 and
+the FAQ never carried it. A customer reading FAQ saw no deadline; a customer
+reading Returns saw 24 hours and assumed they had missed it.
+```
+Removed from `page.shipping-retruns.json`, `page.returns.json`, and the `page-returns` schema default (warranty Covered list now reads "Item arrives defective").
+Canonical: `docs/11-CANONICAL-ANSWERS.md` CA-21 · Amends the warranty block in `docs/09-PRODUCT-KNOWLEDGE.md`
+
+### P-018: Lost packages — discretion, not an absolute *(Andrew 2026-08-14)*
+```
+KEEP customer-facing: CA-22 only. "Once tracking shows delivered, the order is
+considered fulfilled. In an apartment or multi-unit building, check with
+building staff or the shared mail area first." It stops there.
+
+RETIRED: "Cannot issue refunds for packages shown as delivered."
+
+Reason: that sentence was an internal backstop, never site copy, and agents
+began pasting it at customers as if it were policy. It also left no room to
+keep a good first-time customer over a $60 order.
+
+INTERNAL guidance replaces it — delivered means fulfilled, NOT an automatic
+refund and NOT an automatic denial. Work the causes, wait 48 hours, then use
+judgment. Escalate repeat claims, repeat addresses, and high-value orders.
+```
+Amends: BZ-012 (absolute retired; "considered fulfilled" stands)
+Canonical customer wording: `docs/11-CANONICAL-ANSWERS.md` CA-22 · Internal rule: `docs/09-PRODUCT-KNOWLEDGE.md` Lost Packages block
+**Never** promote the internal guidance into FAQ, ManyChat, PDP, or marketing.
 
 ---
 

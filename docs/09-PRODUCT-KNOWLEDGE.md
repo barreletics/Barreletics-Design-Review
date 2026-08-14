@@ -159,7 +159,7 @@ Exchanges:
 - All purchases covered against manufacturing defects.
 - If something isn't right within 90 days, contact us — we'll take care of it.
 - Return of defective item not required in most cases.
-- Item arrived defective? Contact within 24 hours.
+- 🚫 RETIRED 2026-08-14 (Andrew): ~~"Item arrived defective? Contact within 24 hours."~~ — never enforced, absent from CA-21 and the FAQ, and it read as a trap on the Returns page. The 90-day warranty covers arrival defects with no clock. Removed from `page.shipping-retruns.json`, `page.returns.json`, and the `page-returns` schema default.
 - International: Photo proof within 90 days → replacement shipped (customer covers shipping/duties).
 ```
 Source: manychat-kb/07-returns-and-exchanges.md, docs/08-LIVE-SITE-COPY-AUDIT.md (URL 30)
@@ -992,9 +992,16 @@ International:
 
 Lost Packages:
 - Once tracking shows delivered, order considered fulfilled
-- Cannot issue refunds for packages shown as delivered
 - Apartment/multi-unit: check with building/mail area first
 ```
+
+**Lost-package handling — INTERNAL AGENT GUIDANCE, never customer-facing copy (Andrew 2026-08-14).** Customers get CA-22 wording only (`docs/11-CANONICAL-ANSWERS.md`), which stops at "considered fulfilled." The rule below decides the case; it is never pasted at a customer.
+
+- Tracking shows delivered = **fulfilled. Not an automatic refund**, and not an automatic denial either.
+- Work the likely causes first: building staff or shared mail area, other doors/side entrances, neighbors, a carrier marking early with delivery later that day.
+- If it still hasn't surfaced after 48 hours, treat it as a judgment call. First-time customer, modest order, clean history → replace and keep the customer.
+- Escalate to Andrew: repeat claims from the same customer or address, high-value orders, anything that smells like abuse.
+- 🚫 RETIRED 2026-08-14: ~~"Cannot issue refunds for packages shown as delivered"~~ — agents were quoting an internal backstop at customers as if it were policy. It was never on the site. Keep the discretion; do not restore the absolute.
 Source: manychat-kb/08-shipping.md, docs/08-LIVE-SITE-COPY-AUDIT.md (URL 30)
 
 ---

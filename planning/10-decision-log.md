@@ -696,6 +696,37 @@ Lean one-off PDP spine keeps brand education for cold traffic (features, reviews
 
 ---
 
+### D-055: Returns Page — Repeats Stripped, Defect Clock Retired, Lost-Package Absolute Retired
+
+**Date:** 2026-08-14 · **Owner letters:** *"anything else to strip out that is repeated?"* → *"i dont like the tone of this is not a studio trial jsut say try on for size and if you like hem indoor only"* → defect deadline: *"drop"* → lost packages: *"isnt c the best or A?"* (chose internal-guidance split)
+
+**Decision — three parts.**
+
+**1. Repeats stripped from `/pages/returns`.** The page explained how to return twice — once as prose above the buttons, again as the numbered steps. Prose emptied, wrapper guarded so the stack still breathes. Second top button removed: it pointed at the same portal URL as the first. Two card link rows removed (`Open the returns portal →` in the 30-day card; `Size chart · FAQ · Contact` in the exchanges card) — every destination already appears elsewhere on the page. Portal entry points 4 → 2. "30 days" 5 → 2.
+
+**2. Studio-trial line replaced, not just deleted.** *"Like buying any footwear… This is not a studio trial and not 'try them in class for 30 days.'"* → **"Try them on for size — indoors only."** Andrew on the old line: the tone was defensive. Leads with the instruction instead of the accusation. The duplicate *"tried on indoors only"* was dropped from the Performance Skins bullet.
+
+**3. Defect clock and lost-package absolute retired.** See `docs/10-DECISIONS.md` **P-017** and **P-018**. Defect: no arrival deadline — the 90-day warranty covers it, and CA-21/FAQ never carried the 24-hour line, so Returns readers thought they had missed a window that did not exist. Lost packages: CA-22 stays as the only customer-facing wording; the absolute *"cannot issue refunds"* becomes internal agent guidance with discretion, because agents were quoting a backstop at customers as policy.
+
+**Also fixed — card interiors (SIGNED same day, "looks great").** `barreletics-base.css` zeroes all margins and sets `ul, ol { list-style: none; }`. `page-returns.liquid` never restored either for its rich-text card bodies, so multi-paragraph copy and labeled lists rendered as one unbroken block. Scoped to `.page-returns-card > .type-body` so the warranty coverage columns keep their bordered-row ✓/✕ treatment. **Do not widen that selector.** Registry detail in `planning/m4-section-freeze.md`.
+
+**Four process traps hit on the way — recorded so the next agent skips them.**
+
+- `/pages/returns` renders **`page.shipping-retruns.json`** (live Admin typo), not `page.returns.json`. Every copy edit went to the unused alias first and nothing reached the storefront. Map: `planning/page-template-registry.md`. Both files kept identical.
+- `shopify theme push` prints a **success banner even when a file is rejected**. Five section pushes failed validation while the CLI looked happy, because the output was being trimmed to the last few lines. Never truncate push output.
+- Shopify **rejects `"default": ""`** in a schema — that was the rejection. Omit the key to mean empty.
+- **`barreletics.myshopify.com` 301s to `barreletics.com` and drops `preview_theme_id`**, silently serving the live theme. Andrew reviewed stale content because of it. Always rewrite preview links to the primary domain.
+
+New always-apply rules from this: `.cursor/rules/always-give-a-verified-link.mdc` · `.cursor/rules/bullets-not-paragraphs.mdc`
+
+**Impact:** `shopify-build/sections/page-returns.liquid` · `templates/page.shipping-retruns.json` + `page.returns.json` · `docs/10-DECISIONS.md` (P-017, P-018, BZ-012 amended) · `docs/09-PRODUCT-KNOWLEDGE.md` (warranty + Lost Packages blocks) · `planning/m4-section-freeze.md`.
+
+**Already correct, deliberately not touched:** `manychat-kb/08-shipping.md` (soft lost-package wording already matches CA-22) · `manychat-kb/07-returns-and-exchanges.md` and `helpscout-kb/…Master.md` (never carried the 24-hour defect clock) · locked mocks and `docs/08-LIVE-SITE-COPY-AUDIT.md` (frozen history).
+
+**Status:** Approved — owner letters 2026-08-14. Card spacing signed; copy dedupe and policy retirements pending visual sign-off.
+
+---
+
 ## ADR Archive
 
 The original ADR documents (ADR-01 through ADR-07) are preserved in `planning/` for historical reference. Their UNRESOLVED status is now superseded by the decisions above.
