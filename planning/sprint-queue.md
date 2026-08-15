@@ -19,13 +19,13 @@
 | ID | Page / section | Owner | Status | Preview / artifact | Notes |
 |----|----------------|-------|--------|--------------------|-------|
 | A0 | Decide board | desktop | **AUTHORITY** | `docs/HELP-OPEN-ME.html` · `planning/help-family-type-law.md` · cloud prompt | Help v8 · type law HARD |
-| A-help | Help hub | desktop | **AWAITING ANDREW** | `docs/Barreletics Help - Definitive-v8.html` | Tiles · M4 destinations · no Track |
-| A1 | About Us `/pages/our-story` | desktop | **AWAITING M4 QA** | Mock v25 Locked · `page.our-story.json` spine in repo | Push theme `187144929571` for visual approve |
-| A2 | FAQ `/pages/faq` | desktop | **AWAITING ANDREW** | FAQ Definitive-v7 | Topic anchors slight standout |
-| A3 | Contact | desktop | **AWAITING ANDREW** | M4 · `page-contact` H1 → support scale | Was type-hero; now Help H1 |
-| A4 | Policy `/pages/returns` | desktop | **AWAITING ANDREW** | `page-returns` H1 support · lede customer · jumps simplified · Need a hand = h2-standard | Repo fixed; push when named |
-| A5 | Size chart | desktop | **AWAITING ANDREW** | `page-size-guide` H1 support · chart fallback M/L · fit notes soft tint | Chart empty if TE cleared blocks — fallback added |
-| A6 | Returns portal | desktop | **AWAITING ANDREW** | `main-page` support H1 | ReturnZap body · no Track |
+| A-help | Help hub | desktop | **LOCKED 2026-08-15** | `/pages/help` | Andrew: lock help |
+| A1 | About Us `/pages/our-story` | desktop | **LOCKED 2026-08-13** | Mock v25 | Do not thrash |
+| A2 | FAQ `/pages/faq` | desktop | **LOCKED 2026-08-15** | FAQ | Andrew: lock help |
+| A3 | Contact | desktop | **LOCKED 2026-08-15** | `/pages/contact-us-form` | Do not thrash |
+| A4 | Policy `/pages/returns` | desktop | **LOCKED 2026-08-14** | `/pages/returns` | Full page lock |
+| A5 | Size chart | desktop | **LOCKED 2026-08-12** | Size guide signed | Do not thrash |
+| A6 | Returns portal | desktop | **LOCKED 2026-08-15** | `/pages/returns-portal` | Andrew: lock help |
 
 ---
 
@@ -33,7 +33,7 @@
 
 | ID | Page / section | Owner | Status | Preview / artifact | Notes |
 |----|----------------|-------|--------|--------------------|-------|
-| B0 | Closed Sole — walk remainder | desktop | QUEUED | `/products/best-reformer-pilates-legree-workout-shoes` | After Help pick or parallel if different files |
+| B0 | Closed Sole — content micro-check | desktop | **IN PROGRESS** | `/products/best-reformer-pilates-legree-workout-shoes` | Copy conflicts fixed 2026-08-15. Layout already approved. |
 | B1 | Closed — reviews photo cards → Judge.me Leslie / B P. / Tracie | — | QUEUED | same | Photos + copy; do not thrash LOCKED buy-box |
 | B2 | Closed — commit video (TBD) | — | QUEUED | same | No recycled brand clips until new asset |
 | B3 | Open Sole walk | — | QUEUED | `/products/studio-performance-skin-footwear` | After Closed AWAITING clear enough |

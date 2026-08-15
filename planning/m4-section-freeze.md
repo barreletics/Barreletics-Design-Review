@@ -43,7 +43,36 @@
 | **Description accordion** | TE `description_accordion_body` (v19 Closed seeded). **NEVER** Admin `product.description`. Fallback = `short_description` only |
 | **Value-strip + features** | 4-up: USA · Free shipping over $150 · 30-day returns · 90-day warranty (no latex/silicone in strip) · Why Barreletics / Grip 4-up |
 
-**NOT signed yet:** Closed FAQ materials + city GEO soft (await approve) · rest of Closed below-fold · Open/Outdoor/one-off · secondary pages · dual nav
+**NOT signed yet:** Closed FAQ materials + city GEO soft (await approve) · rest of Closed below-fold · Open/Outdoor/one-off · dual nav
+
+---
+
+## Help family — LOCKED 2026-08-15 (Andrew: "lock help")
+
+**Owner lock.** Help menu is done. Do not reopen without a letter.
+
+| Surface | Handle | Status |
+|---|---|---|
+| Help hub | `/pages/help` | LOCKED |
+| FAQ | `/pages/faq` | LOCKED |
+| Returns | `/pages/returns` | LOCKED 2026-08-14 |
+| Size guide | `/pages/performance-skins-size-chart` | SIGNED 2026-08-12 |
+| Contact | `/pages/contact-us-form` | LOCKED — do not thrash |
+| Returns portal | `/pages/returns-portal` | LOCKED |
+
+Header Help fallback = `/pages/help`. Do **not** restore `/pages/faq`.
+
+---
+
+## Closed Sole copy — forward 2026-08-15 (content micro-check)
+
+Layout already approved ("closed sole looks good"). Copy-only in `product.json`. **No** buy-box layout / CSS / spine change.
+
+- **Banned 18+ months** stripped from One pair. Done., guarantee band, and FAQ. Longevity = CA-13 (depends how you wear them · 1,000 classes · year four · molded grip).
+- Sock math annual cost = **$144–$336** / 8–12 pairs (was $112–144 / 6–8).
+- Size FAQ = CA-05/CA-06 (M 5.5–7.5 + kids 2–5 · L 7.5–11 · width at 7.5). No "conforms" · no "between sizes, go larger."
+- Shipping accordion + FAQ = process **24–48 hours**, typically ship next business day (was "ship within 1–2 business days").
+- Admin SEO on the live product still says **"cushioned"** — that is Shopify Admin, not this template. Fix in Admin when Andrew wants it.
 
 ---
 
