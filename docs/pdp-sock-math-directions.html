@@ -120,15 +120,23 @@
 
     .cycle {
       display: grid;
-      gap: 28px;
-      padding: 64px 48px;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
       align-content: center;
       background: #fff;
+      padding: 56px 40px 48px;
     }
-    .cycle-item { margin: 0; }
+    .cycle-item {
+      margin: 0;
+      padding: 0 24px;
+      text-align: center;
+    }
+    .cycle-item + .cycle-item {
+      border-left: 1px solid #d6cfc0;
+    }
     .cycle-item span {
       display: block;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
       font-size: 11px;
       font-weight: 600;
       letter-spacing: 0.08em;
@@ -136,34 +144,79 @@
       color: #8a8a8a;
     }
     .cycle-item--out span { color: #c45c3f; }
-    .cycle-item p {
-      margin: 0;
-      font-size: 18px;
-      line-height: 1.4;
+    .cycle-price {
+      margin: 0 0 8px;
+      font-size: 36px;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      line-height: 1;
       color: #1c1916;
     }
+    .cycle-price small {
+      font-size: 14px;
+      font-weight: 400;
+      color: #8a8a8a;
+    }
+    .cycle-item p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.45;
+      color: #4a4a4a;
+    }
     .cycle-foot {
-      margin: 8px 0 0;
+      grid-column: 1 / -1;
+      margin: 32px 24px 0;
       padding-top: 24px;
       border-top: 1px solid #d6cfc0;
+      text-align: center;
       font-size: 15px;
       line-height: 1.5;
       color: #4a4a4a;
     }
+    .cycle-foot b { font-weight: 600; color: #1c1916; }
 
     @media (max-width: 768px) {
       .dir-label, .dir-note { padding-left: 20px; padding-right: 20px; }
       .split { grid-template-columns: 1fr; margin-bottom: 32px; }
       .copy, .solo { padding: 48px 24px; }
       .visual { min-height: 280px; }
+      .cycle { grid-template-columns: 1fr; padding: 40px 24px; }
+      .cycle-item + .cycle-item { border-left: 0; border-top: 1px solid #d6cfc0; padding-top: 24px; margin-top: 24px; }
+      .cycle-foot { margin: 24px 0 0; }
     }
   </style>
 </head>
 <body>
   <div class="bar">
-    <h1>Four directions. Same lines.</h1>
-    <p>A has no sock math. B and C keep it, not as a price chart. D is copy only. E is Claude’s cycle idea, cleaned.</p>
+    <h1>E is the one to judge. A–D still below.</h1>
+    <p>Claude’s Cycle / Exit / numbers. Our type. No emoji. No second ATC. Math line is the drawer.</p>
   </div>
+
+  <p class="dir-label">E — Claude, refined</p>
+  <p class="dir-note">Left = the lines. Right = Cycle vs Exit. Easy read.</p>
+  <section class="split">
+    <div class="copy">
+      <h2 class="h">One pair. Done.</h2>
+      <p class="sub">
+        Last month you said grip socks were a waste.<br>
+        Then you ordered another 3-pack.<br><br>
+        <strong>This ends that.</strong>
+      </p>
+    </div>
+    <div class="cycle">
+      <div class="cycle-item">
+        <span>The cycle</span>
+        <p class="cycle-price">$144–$336 <small>/yr</small></p>
+        <p>New pairs every few months.</p>
+      </div>
+      <div class="cycle-item cycle-item--out">
+        <span>The pair</span>
+        <p class="cycle-price">$74 <small>once</small></p>
+        <p>Actually lasts. No reordering.</p>
+      </div>
+      <p class="cycle-foot">The math is the drawer. And <b>“I need new ones again.”</b></p>
+    </div>
+  </section>
 
   <p class="dir-label">A — No math</p>
   <p class="dir-note">Claude’s left stack. Photo instead of $74.</p>
@@ -233,30 +286,6 @@
       Then you ordered another 3-pack.<br><br>
       <strong>This ends that.</strong>
     </p>
-  </section>
-
-  <p class="dir-label">E — Cycle vs the pair</p>
-  <p class="dir-note">Claude’s “with math,” without $74 as the point. The math is the drawer.</p>
-  <section class="split">
-    <div class="copy">
-      <h2 class="h">One pair. Done.</h2>
-      <p class="sub">
-        Last month you said grip socks were a waste.<br>
-        Then you ordered another 3-pack.<br><br>
-        <strong>This ends that.</strong>
-      </p>
-    </div>
-    <div class="cycle">
-      <div class="cycle-item">
-        <span>The cycle</span>
-        <p>Dots die. You slide. Another 3-pack.</p>
-      </div>
-      <div class="cycle-item cycle-item--out">
-        <span>The pair</span>
-        <p>Locked in. Same grip. You stop buying socks.</p>
-      </div>
-      <p class="cycle-foot">The math is the drawer. And “I need new ones again.”</p>
-    </div>
   </section>
 </body>
 </html>
