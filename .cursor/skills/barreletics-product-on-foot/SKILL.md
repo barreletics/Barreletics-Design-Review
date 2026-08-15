@@ -2,87 +2,86 @@
 name: barreletics-product-on-foot
 description: >-
   Composite the real Barreletics Performance Skin onto feet by copying website
-  on-foot photos only. Use when putting the shoe on a lifestyle shot, Sock Math
-  photos, ChatGPT studio feet, “add the shoe,” Closed/Open on-foot, or any
-  generated product-on-foot image. Never invent a new shoe from a packshot.
+  close-ups of the shoe already on a foot. Use when adding the shoe to a lifestyle
+  shot, Sock Math photos, ChatGPT studio feet, or any product-on-foot generate.
+  Never invent a shoe. Never use an empty packshot as the only ref.
 ---
 
 # Barreletics product on a foot
 
-Andrew 2026-08-15: *look at pictures on the website with the shoe on a foot and just copy that.*
+Andrew 2026-08-15: *look at existing images on feet. there are plenty of close ups.*
 
-Empty packshots lie. Agents invent sneakers, extra straps, melted cages. **Worn site photos are the only shoe reference.**
+**Read the close-ups in `refs/` before you generate. Those files are the product.**
 
 ## Fail closed
 
 - Do **not** invent a shoe.
 - Do **not** use `A14_TopBottom_*` / `Outside_Black` as the only shoe ref.
-- Do **not** ship a composite Andrew would call “on drugs.”
-- If the output does not match a worn site photo → delete it. Try once more. Then stop.
+- Do **not** feed a previous generated attempt as a shoe ref (it drifts).
+- If it does not match `refs/closeup-coral-putting-on.jpg` geometry → delete. One retry. Then stop.
 
-Copy law still applies in any caption: Closed Sole = *heel and foot fully covered.* Never “fully enclosed.”
+## Mandatory close-ups (in this skill)
 
-## Worn refs (download these, then look)
+Look at these files. Do not skip.
 
-| File | URL | Why |
-|---|---|---|
-| Yellow / blue on foot | `https://barreletics.com/cdn/shop/products/Yellow_Image-Blue_Shoe_1200x1200_59ef7b79-1661-4c2f-a2da-c6b9211e2c42.jpg` | Best 3/4. Blue skin on a real foot. |
-| P5A7000 coral | `https://cdn.shopify.com/s/files/1/0045/0612/4391/files/P5A7000_blue_background_2.jpg` | Coral on a real foot. Blue backdrop. |
-| IMG_2917 | `https://barreletics.com/cdn/shop/files/IMG_2917.jpg` | Coral on a real foot. Maroon backdrop. |
-| Stef run | `https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg` | Blue on foot, full body, stride. |
-| Jumping | `https://barreletics.com/cdn/shop/products/barreletixxjumpingtogether.jpg` | Coral on two pairs of pointed feet. |
-| Customer gray | `https://review-images.judgeme.com/barreletics/1774226614__img_9682__original.jpeg` | Gray on both feet, yoga mat, top view. |
-| Customer rose | `https://review-images.judgeme.com/barreletics/1778161226__9063__original.jpg` | Dusty rose on dark skin, wood, top view. |
+| File | What it is |
+|---|---|
+| `refs/closeup-coral-putting-on.jpg` | Homepage. Both feet. Hands putting coral on. **Best geometry.** |
+| `refs/closeup-coral-held.jpg` | P5A7000. Coral on a pointed foot, blue backdrop. |
+| `refs/closeup-blue-held.jpg` | Yellow backdrop. Blue on a pointed foot. |
+| `refs/closeup-rose-customer.jpg` | Judge.me. Dusty rose on dark skin, top view. |
+| `refs/closeup-gray-customer.jpg` | Judge.me. Gray on both feet, yoga mat, top view. |
 
-Local copies (if present): `docs/sock-math-photos/on-foot/`
+CDN if you need a fresh download:
 
-**Do not use as on-foot truth:** `IMG_2704` (hands holding product), mesh-bag reviews, empty `Multi_Image` lineup, Open keep shots (`IMG_5051`, `IMG_3158`, `Square_Pink`) unless Andrew names Open.
+- `https://cdn.shopify.com/s/files/1/0045/0612/4391/files/65797B34-D7D3-41DE-A279-F3779BBFB06C.jpg`
+- `https://cdn.shopify.com/s/files/1/0045/0612/4391/files/P5A7000_blue_background_2.jpg`
+- `https://barreletics.com/cdn/shop/products/Yellow_Image-Blue_Shoe_1200x1200_59ef7b79-1661-4c2f-a2da-c6b9211e2c42.jpg`
+- `https://review-images.judgeme.com/barreletics/1778161226__9063__original.jpg`
+- `https://review-images.judgeme.com/barreletics/1774226614__img_9682__original.jpeg`
 
-## What the worn shoe actually looks like
+## Exact geometry (copy, do not improve)
 
-Copy this geometry. Do not “improve” it.
+From `closeup-coral-putting-on.jpg` and the customer top-views:
 
-- One-piece thin molded polymer. Second skin. Not a sneaker. Not a sock.
-- Heel cup / heel wrap. Small **white asterisk / dragonfly** on the outer heel.
-- Geometric cutouts on the instep (usually a center opening + side openings).
-- Band across the ball of the foot. Toes often show at the front.
-- Thin sole that follows the foot. Sits **flush** on skin — no floating straps, no melted edges.
-- Five toes. Normal ankle. No extra limbs.
+1. **Toe band** — one horizontal band across the base of the toes. Toes stick out the front. Not a flip-flop thong. Not a closed sneaker toe.
+2. **Top of foot** — **three** openings: one center triangle + one on each side. That is the whole pattern. No extra lattice. No extra Y-straps.
+3. **Heel** — a wrap from the midfoot around the back of the heel. Small **white asterisk / dragonfly** on the outer heel.
+4. **Material** — one-piece thin matte polymer. Flush on skin. Sharp edges. Not melted. Not a sock. Not a sneaker.
+5. **Anatomy** — five toes. Normal ankle. No extra fingers.
 
-Color = the worn ref you picked (coral, blue, gray, dusty rose). Recolor only if Andrew names a color **and** you keep this geometry.
+Color = the close-up you picked (coral, blue, dusty rose, gray).
 
 ## Workflow
 
-1. Download 2 worn refs in the color you will use. **Read them.**
-2. Generate with references in this order:
-   1. lifestyle / barefoot scene (locked)
-   2. worn on-foot #1
-   3. worn on-foot #2 (same product, same color if possible)
-3. Use the prompt below. Do not add packshots unless a third ref is a **worn** 3/4.
-4. Read the output. Compare to the worn refs.
-5. Kill it if: extra toes, melted straps, sneaker tongue, random lattice, shoe growing out of skin, Open cage when the job is Closed and Andrew said copy site photos but the result is a new design.
-6. Put survivors on the mock. Do not push Shopify until Andrew names a theme ID.
+1. **Read** the matching close-up(s) in `refs/`.
+2. Generate with refs in this order only:
+   1. locked lifestyle / barefoot scene
+   2. close-up #1 (same color)
+   3. close-up #2 (same product family)
+3. Prompt below. Do not add packshots. Do not add prior generates.
+4. Compare output to the close-up. Kill if cutout count is wrong, thong appears, or edges melt.
+5. Mock only. No Shopify push until Andrew names a theme ID.
 
-## Prompt (paste, then only swap color + scene notes)
+## Prompt
 
 ```
-Copy the Barreletics Performance Skin EXACTLY as it is worn in the website photos (images 2 and 3). Do not redesign.
+Copy the Barreletics Performance Skin from the website close-ups (images 2 and 3). Do not redesign.
 
 Image 1 is the locked scene. Do not change camera, crop, lighting, body, clothes, or studio. Replace only the bare feet.
 
-The shoe must match the worn photos:
-- same thin molded polymer
-- same heel wrap and small white asterisk logo on the outer heel
-- same geometric cutouts, same count, same shapes
-- same band across the ball of the foot
-- same toe opening
-- flush on the skin, not floating, not melted
-- five toes, normal anatomy
+Exact geometry from the close-ups:
+- one band across the base of the toes; toes visible in front
+- THREE openings on top of the foot: center triangle + one each side
+- heel wrap from midfoot around the back of the heel
+- small white asterisk logo on the outer heel
+- thin matte polymer, flush on skin, sharp edges
+- five toes
+- NO flip-flop thong, NO extra lattice, NO sneaker, NO socks
 
-Color: [coral | blue | gray | dusty rose] matching the worn photos.
-No sneaker. No extra straps. No invented lattice. No socks.
+Color: [coral | blue | dusty rose | gray] matching the close-ups.
 ```
 
 ## After a miss
 
-Andrew already rejected two invented sets. Next miss → stop generating. Ask which worn site photo to copy more closely. Do not keep rolling dice.
+Stop. Ask which close-up to match. Do not keep rolling dice.
