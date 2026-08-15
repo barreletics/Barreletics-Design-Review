@@ -41,7 +41,7 @@
 | **v20d fold chrome** | Hub judge-fold authority |
 | **TRANSFORM contrast** | Title readable (stacking fix) |
 | **Description accordion** | TE `description_accordion_body` (v19 Closed seeded). **NEVER** Admin `product.description`. Fallback = `short_description` only |
-| **Value-strip + features** | 4-up: USA · Free shipping over $150 · 30-day returns · 90-day warranty (no latex/silicone in strip) · Why Barreletics / Grip 4-up |
+| **Value-strip + features** | 4-up **forward 2026-08-15:** USA · Free shipping over $150 · **30-day · 90-day** · **No latex · no silicone** (Andrew: keep the numbers visible, bring latex/silicone back). Accordion label = **Returns & warranty** (detail, not a second scan of 30/90). |
 
 **NOT signed yet:** Closed FAQ materials + city GEO soft (await approve) · rest of Closed below-fold · Open/Outdoor/one-off · dual nav
 
@@ -74,6 +74,7 @@ Layout already approved ("closed sole looks good"). Copy-only in `product.json`.
 - Size FAQ = CA-05/CA-06 (M 5.5–7.5 + kids 2–5 · L 7.5–11 · width at 7.5). No "conforms" · no "between sizes, go larger."
 - Shipping accordion + FAQ = process **24–48 hours**, typically ship next business day (was "ship within 1–2 business days").
 - Admin SEO on the live product still says **"cushioned"** — that is Shopify Admin, not this template. Fix in Admin when Andrew wants it.
+- **Trust split forward 2026-08-15:** strip still 4-up — USA · Free shipping over $150 · 30-day · 90-day · No latex · no silicone. Accordion title **Returns & warranty** (try-on / sellable / $7.95 / defects). Guarantee band (after reviews, `#guarantee`) retitled Try on at home · Defects covered · Grip does not wear off — so 30/90 are not xeroxed as headlines. Grip line lives **once** there. Do not invent new slogans for it.
 
 ---
 
