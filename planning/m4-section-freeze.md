@@ -68,7 +68,8 @@ Header Help fallback = `/pages/help`. Do **not** restore `/pages/faq`.
 
 Layout already approved ("closed sole looks good"). Copy-only in `product.json`. **No** buy-box layout / CSS / spine change.
 
-- **Banned 18+ months** stripped from One pair. Done., guarantee band, and FAQ. Longevity = CA-13 (depends how you wear them · 1,000 classes · year four · molded grip).
+- **Banned 18+ months** stripped. **Grip never degrades stays** (Andrew 2026-08-15: the shoe may wear; the grip does not). Longevity anecdotes = 1,000 classes · year four.
+- **Size buttons** (shared `pdp-buy-box.liquid` labels only — no layout/CSS): M **Women 5.5–7.5 · Kids 2–5** · L **Women 7.5–11 · Men to 10.5**. Matches CA-05. Do not restore Women 8–10 / Men 8.5–11.
 - Sock math annual cost = **$144–$336** / 8–12 pairs (was $112–144 / 6–8).
 - Size FAQ = CA-05/CA-06 (M 5.5–7.5 + kids 2–5 · L 7.5–11 · width at 7.5). No "conforms" · no "between sizes, go larger."
 - Shipping accordion + FAQ = process **24–48 hours**, typically ship next business day (was "ship within 1–2 business days").
