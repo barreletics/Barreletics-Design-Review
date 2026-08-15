@@ -589,7 +589,7 @@ to re-skin `pdp-reviews` — **not** to restore `social-proof`.
 | Fullbleed TRANSFORM | `fullbleed-statement` · show_text · title **TRANSFORM YOUR PRACTICE** · CTA Shop now → `#buy` |
 | Lifestyle wow | `fullbleed-lifestyle` · `show_text: false` · Stef running pink CDN · after sock-math / before commit |
 | Reviews | ~~`social-proof` · featured quote + image carousel + optional text-card ★ row~~ — **SUPERSEDED 2026-08-08:** slot is **`pdp-reviews` on live Judge.me**, same index 11. See "Reviews — LIVE Judge.me everywhere" above. CTA **More stories →** retained. |
-| Sock math | Compact (`pdp-sock-math` · headline “One pair. Done.” · **no review quote** · CTA empty) — quote removed 2026-08-09 (Andrew: version without review) |
+| Sock math | Compact (`pdp-sock-math` · headline “One pair. Done.” · **no review quote** · CTA empty) — quote removed 2026-08-09 (Andrew: version without review). **COPY LOCKED 2026-08-15 mock L:** `docs/pdp-sock-math-directions.html` **L** — One pair. Done. / 3-pack / This ends that. / Cycle: Silicone never grips. Fabric stretches. Dots fall off in the wash. / Pair: 360° grip · Secure in every hold. / Foot: Yoga socks are useless. White packshot. Photo still open (M–R). Not on M4 until named. |
 | Lifestyle quote | `fifty-fifty` · `content_style: quote` |
 | Think outside | `fifty-fifty` · `content_style: statement` — eyebrow **Grip, Support, Comfort** · title **Think outside the sock!** · CTA Shop now → `#buy` |
 | Guarantee | Centered **3-up** (`guarantee-band` · 30 / 90 / Built to Last) |
