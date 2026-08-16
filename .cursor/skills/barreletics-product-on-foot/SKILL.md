@@ -19,6 +19,7 @@ Andrew 2026-08-15: *look at existing images on feet. there are plenty of close u
 - Do **not** use `A14_TopBottom_*` / `Outside_Black` as the only shoe ref.
 - Do **not** feed a previous generated attempt as a shoe ref (it drifts).
 - If it does not match `refs/closeup-coral-putting-on.jpg` geometry → delete. One retry. Then stop.
+- **Too many holes = fail.** The real shoe is simple: toe band + **three** top openings + heel wrap. A busy lattice / extra side windows is a miss.
 
 ## Mandatory close-ups (in this skill)
 
@@ -45,7 +46,7 @@ CDN if you need a fresh download:
 From `closeup-coral-putting-on.jpg` and the customer top-views:
 
 1. **Toe band** — one horizontal band across the base of the toes. Toes stick out the front. Not a flip-flop thong. Not a closed sneaker toe.
-2. **Top of foot** — **three** openings: one center triangle + one on each side. That is the whole pattern. No extra lattice. No extra Y-straps.
+2. **Top of foot** — **only three** openings: one center + one on each side. That is the whole pattern. No extra lattice. No extra side windows. No cage of many holes.
 3. **Heel** — a wrap from the midfoot around the back of the heel. Small **white asterisk / dragonfly** on the outer heel.
 4. **Material** — one-piece thin matte polymer. Flush on skin. Sharp edges. Not melted. Not a sock. Not a sneaker.
 5. **Anatomy** — five toes. Normal ankle. No extra fingers.
