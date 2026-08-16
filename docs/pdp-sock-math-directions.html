@@ -260,36 +260,35 @@
     }
     .split--std .pane { min-height: 0; }
     .split--std .visual {
-      flex: 0 0 480px;
-      height: 480px;
-      min-height: 480px;
-      max-height: 480px;
+      flex: 0 0 var(--std-h, 480px);
+      height: var(--std-h, 480px);
+      min-height: var(--std-h, 480px);
+      max-height: var(--std-h, 480px);
       padding: 0;
       overflow: hidden;
       background: #ece7de;
-    }
-    .split--std .visual img {
-      width: 100%;
-      height: 480px;
-      max-width: none;
-      max-height: none;
-      object-fit: cover;
-      object-position: center center;
-    }
-    .split--std.split--k .visual {
-      background: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 40px;
     }
-    .split--std.split--k .visual img {
+    .split--std .visual img {
       width: auto;
       height: auto;
       max-width: 100%;
-      max-height: 400px;
+      max-height: var(--std-h, 480px);
       object-fit: contain;
+      transform: scale(var(--std-scale, 1));
+      transform-origin: center center;
     }
+    .split--std.split--k .visual {
+      background: #fff;
+      padding: 40px;
+    }
+    .split--std.split--k .visual img {
+      max-height: calc(var(--std-h, 480px) - 80px);
+    }
+    .bar label { font-size: 13px; color: #6b645a; margin-right: 16px; }
+    .bar input[type="range"] { vertical-align: middle; width: 120px; }
 
     @media (max-width: 768px) {
       .dir-label, .dir-note { padding-left: 20px; padding-right: 20px; }
@@ -302,24 +301,23 @@
       .split--e .cycle { border-left: 0; border-top: 1px solid #d6cfc0; }
       .split--f .pane { min-height: 0; }
       .split--f .visual { min-height: 260px; }
-      .split--std .visual,
-      .split--std .visual img {
+      .split--std .visual {
+        flex-basis: 360px;
         height: 360px;
         min-height: 360px;
         max-height: 360px;
-        flex-basis: 360px;
       }
-      .split--std.split--k .visual img {
-        height: auto;
-        max-height: 280px;
-      }
+      .split--std .visual img { max-height: 360px; }
     }
   </style>
 </head>
 <body>
   <div class="bar">
-    <h1>v8 · one 480 box. Same as K / L.</h1>
-    <p>Every photo fills that box. Hard refresh.</p>
+    <h1>v9 · same 480 box. Photo shrinks to fit.</h1>
+    <p>
+      <label>Frame <input id="std-h" type="range" min="360" max="560" step="20" value="480"> <span id="std-h-out">480</span></label>
+      <label>Photo size <input id="std-scale" type="range" min="50" max="100" step="5" value="100"> <span id="std-scale-out">100%</span></label>
+    </p>
   </div>
 
   <p class="dir-label">1 — Blue court</p>
@@ -882,5 +880,22 @@
       </div>
     </div>
   </section>
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var h = document.getElementById('std-h');
+      var s = document.getElementById('std-scale');
+      var ho = document.getElementById('std-h-out');
+      var so = document.getElementById('std-scale-out');
+      function apply() {
+        root.style.setProperty('--std-h', h.value + 'px');
+        root.style.setProperty('--std-scale', String(Number(s.value) / 100));
+        ho.textContent = h.value;
+        so.textContent = s.value + '%';
+      }
+      h.addEventListener('input', apply);
+      s.addEventListener('input', apply);
+    })();
+  </script>
 </body>
 </html>
