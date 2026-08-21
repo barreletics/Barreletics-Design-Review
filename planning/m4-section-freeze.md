@@ -43,7 +43,56 @@
 | **Description accordion** | TE `description_accordion_body` (v19 Closed seeded). **NEVER** Admin `product.description`. Fallback = `short_description` only |
 | **Value-strip + features** | 4-up: USA · Free shipping over $150 · **30-day returns** · **90-day warranty** (must say the words — not “30-day · 90-day”). No latex/silicone on the strip (Andrew 2026-08-15 — that lives in Description accordion + FAQ). Accordion label = **Returns & warranty**. |
 
-**NOT signed yet:** Closed FAQ materials + city GEO soft (await approve) · rest of Closed below-fold · Open/Outdoor/one-off · dual nav
+**NOT signed yet:** Open / one-off · dual nav
+
+---
+
+## Closed Sole PDP — SIGNED 2026-08-16
+
+**Andrew:** “Great I think we are good” · “lock in the page” · “lock it.”  
+**No extra wow.** Do not add a third full-bleed. Do not enlarge existing bleeds.
+
+| Item | Locked |
+|---|---|
+| Handle | `/products/best-reformer-pilates-legree-workout-shoes` |
+| Template | `shopify-build/templates/product.json` |
+| QA | `187144929571` · [Closed preview](https://barreletics.com/products/best-reformer-pilates-legree-workout-shoes?preview_theme_id=187144929571) |
+| Spine | buy-box → value-strip → features → disciplines → sock-era → variant-grid → Kimberly quote → TRANSFORM → sock-math → **wow** → commit → reviews → numbers → guarantee → juicer → FAQ → sticky |
+| Wow | `fullbleed-lifestyle` · `show_text: false` · video · **80vh / 60vh** · after Sock Math / before Commit. Swap media in this slot only — never add another. |
+| TRANSFORM | `fullbleed-statement` · type-on-media · Multi_Image · 80 / 60 |
+| Sock Math | Editorial L · copy from `docs/pdp-sock-math-directions.html` (v8) · photo Juicer **5986441** (Q outdoor) · 480 frame · cover |
+| Kimberly | Juicer **5986429** · `focal_y: 85` · quote + stars. **Never** barefoot reformer (`src-3`). |
+| Videos | Sock-era / Commit / Numbers = `image_position: center` |
+| Badge | Closed Sole · rust |
+| 50/50 TE | Global schema order LOCKED (every 50/50): **1 Photo/video → 2 Focus+height → 3 Heading/body/CTA → 4 Trust strip → 5 Quote/stats → 6 Layout extras → 7 Insets** |
+| Trust strip | SIGNED 2026-08-16 · off by default · *Trusted by 1,000+ Instructors* or stars only |
+
+Do **not** thrash `product.json` spine or `fifty-fifty.liquid` TE order without a letter. Open / Outdoor not included.
+
+**Forward 2026-08-21 — Closed reviews text only.** Andrew: Outdoor no-photo looks better → Closed match. `show_photo_cards: false` · `show_live_text: false` · 6 text cards stay · More stories → `/pages/reviews`. Photo blocks kept in JSON, hidden. Buy-box / spine untouched.
+
+**Forward 2026-08-21 — all PDPs + Shop All + Apparel + Home match.** Andrew: reviews page is great → same treatment everywhere else. Flags only: `show_photo_cards: false` · `show_live_text: false` · text cards stay · More stories → `/pages/reviews`. `/pages/reviews` keeps the full Judge.me list. Buy-box / spine / TE photos untouched.
+
+**SIGNED 2026-08-21 — review cards.** Andrew: “the judge me cards are great… much better.” Text-card row on Shop All / PDPs / Home / Apparel is **LOCKED**. Photos + full list stay on `/pages/reviews` only. Do not put photo cards or live JM back on those pages without a letter.
+
+**Forward 2026-08-21 — Coperni product first.** Andrew: product, then other images, then full runway. Spine: buy-box → value-strip → coperni-crosslink → coperni-pdp-story → rest. Firefox mute/autoplay **earmarked** — not this turn.
+
+**Forward 2026-08-21 — Coperni title = Display.** Banner title was custom 28–50 / Georgia italic — off Type OS. Now `--type-h2-display-*` (same as 50/50s). Story quote stays quote-size. Buy-box lede untouched.
+
+**Forward 2026-08-21 — `/pages/reviews` full Judge.me list.** Andrew: all reviews + scroll / load more. Mount official `judgeme_all_reviews` (`all_reviews_header` + `all_reviews_N`) + `judgeme_core` in theme. Compact PDP reviews unchanged. Photos stay on this page. **No Product / Shop tabs** (hide `.jdgm-subtab`).
+
+### LOCKED 2026-08-21 — reviews + Coperni (Andrew: commit and lock every page)
+
+| Page | Locked |
+|---|---|
+| `/pages/reviews` | Full Judge.me list + Load more · no Product/Shop tabs · photos live here |
+| Shop All · Apparel · Home | Text cards + More stories → `/pages/reviews` · no photo cards · no live JM |
+| Closed · Open · Outdoor | Same text-card reviews (Closed/Outdoor already signed/locked as pages) |
+| One-off Closed · One-off Open | Same text-card reviews |
+| Coperni | **Product first** → images → runway · banner title = Type OS Display |
+
+**Do not** put photo cards or live JM back on PDPs / Shop All / Home / Apparel.  
+**Earmarked, not locked:** Firefox mute / autoplay.
 
 ---
 
@@ -155,7 +204,7 @@ No small size.
 | ID | Surface | Status | Fingerprint (lineage) | Locked composition | Files |
 |----|---------|--------|------------------------|--------------------|-------|
 | **Footer** | Sitewide footer (all pages via `footer-group`) | **SIGNED 2026-08-12** (Join the list A) · LOCKED Jul 31 2026 | WORKING layout + Join the list · Light/Dark TE | Trusted by (toggle) · Join the list **split** (headline left, form right, **checks OFF**) · columns · Light/Dark per band · size TE · SEO Learn link · **NO brand blurb** · **NO 10%** · **NO cadence / never-spam / nothing-else** · Andrew approved 2026-08-12 | `sections/footer.liquid`, `footer-group.json`, `assets/chrome.css` · `specs/frozen/footer.md` |
-| **PDP** | Product templates + buy-box | **LOCKED Aug 1 2026** · **proportions LOCKED 2026-08-08 night** · **Closed badge rust LOCKED 2026-08-11** · v16 prior · Closed=`product.json` · Open=`product.open-sole.json` · Outdoor=`product.outdoor.json` | Mock **`Definitive-v19.html`** + `product*.json` (QA **`187144929571`**) | **Proportions (PDP only, not sitewide):** fifty-fifty **560**/pad **80**/mobile **320** · fullbleed **80vh/60vh** · gallery 1:1 · thumbs 72 · **Closed + Open + Outdoor badges = rust** `#c45c3f` (OWNER 2026-08-11 — never charcoal on Closed) · buy-box type as built · city FAQ last · hybrid `pdp-reviews`. Home fifty-fifty stays **640**. v16 @ `691f03b` prior (NEVER overwrite). | `docs/…Definitive-v19.html` · `templates/product.json` · `product.open-sole.json` · `product.outdoor.json` · `pdp-buy-box.liquid` · `specs/frozen/pdp.md` |
+| **PDP** | Product templates + buy-box | **Closed PDP SIGNED 2026-08-16** · **LOCKED Aug 1 2026** · **proportions LOCKED 2026-08-08 night** · **Closed badge rust LOCKED 2026-08-11** · v16 prior · Closed=`product.json` · Open=`product.open-sole.json` · Outdoor=`product.outdoor.json` | Mock **`Definitive-v19.html`** + current Closed `product.json` (QA **`187144929571`**) | **Closed SIGNED 2026-08-16** (see block above). **No extra wow.** Wow = `fullbleed-lifestyle` 80/60 video. **Proportions (PDP only):** fifty-fifty **560**/pad **80**/mobile **320** · fullbleed **80vh/60vh** · gallery 1:1 · thumbs 72 · **Closed + Open + Outdoor badges = rust** `#c45c3f` · city FAQ last · `pdp-reviews`. Home fifty-fifty stays **640**. v16 @ `691f03b` prior (NEVER overwrite). | `docs/…Definitive-v19.html` · `templates/product.json` · `product.open-sole.json` · `product.outdoor.json` · `pdp-buy-box.liquid` · `specs/frozen/pdp.md` |
 | **PDP purchase stack** | Buy-box commercial stack (`#buy`) | **LOCKED Aug 1 2026** · **Description accordion SIGNED 2026-08-11** · badge default rust + TE honor | Option A stack + kit Option A · on spine | price → muted `or 4 × $18.50` → color/size → qty+CTA → **empty under ATC** → quiet Complete the kit → accordion · **Description accordion = TE `description_accordion_body` (v19 Closed seeded) · NEVER Admin `product.description` · fallback `short_description` only** · sole badge TE default rust · `show_trust_row: false` | visual: `Definitive-v19.html` `#buy` · live: `product.json` `pdp-buy-box` · `specs/frozen/pdp.md` |
 | **PDP trust split** | Value strip + accordion policy | **LOCKED Aug 1 2026** (4-up strip refinement) · **band height forward 2026-08-10** | Scan strip · accordion detail · no under-ATC repeat | **Value strip (4-up, no links by default):** Made in USA · **Free shipping over $150** · 30-day returns · 90-day warranty · **Band height TE:** `padding_y` default **28** / mobile **24** (was 16/`--gap-a`) — type stays 12px · **Under ATC:** nothing · **Accordion:** Shipping + 30/90 · **no page `studio-trust`** · (Non-toxic / No latex / No silicone **removed** from strip) | `product.json` `value-strip` · `sections/value-strip.liquid` · `Definitive-v19.html` (mock prior) · `specs/frozen/pdp.md` |
 | **PDP variants 4×** | Shop-all / variants cards | **LOCKED Jul 31 2026** | Option A under Quick Add · on draft `variant-grid` | Name → meta pill → $74 → Quick Add → quiet `or 4 × $18.50` · **no dual pills** · **LE / Sold Out image badges REQUIRED** · Draft Home chrome | `product.json` `variant-grid` · `Definitive-v19.html` `#variants` · `specs/frozen/pdp.md` |
@@ -241,6 +290,75 @@ Owner ask: finish M4 navigation end to end. Composition unchanged; **link target
 | Sole badge on `product.open-sole.json` | (varied) | **`sole_badge_color: "rust"`** (`#c45c3f`) |
 | FAQ city GEO blocks | mixed mid-list | **NYC / LA / London·Melbourne (/ Toronto on Closed) last** under “Everything you need to know.” Discipline GEO + compare stay above cities. |
 
+### Outdoor PDP — LOCKED 2026-08-20
+
+**Andrew:** “ok lets lock in outdoor.”
+**Handle:** `/products/aquatic-performance-skins` · template `product.outdoor.json` · Admin suffix **`outdoor`**
+**Beat:** features → disciplines → Better than barefoot 50/50 → Shop all → Denise → sand video → dress them up → text reviews (no photo cards) → second skin → juicer.
+**Type:** 50/50 titles = dress-them-up Display size.
+**Photos:** he picks in TE (`te-pick-` Files). Do not reshuffle the spine without a letter.
+**Out of this lock:** Open, Shop All, Home, Coperni, one-offs. Help family already LOCKED — do not reopen.
+
+### Forward update — Open sock-math pad 80 (2026-08-20)
+
+> **Andrew CURRENT MESSAGE:** 72 vs site. Open One pair pad = **80** (matches PDP 50/50). His TE photos kept. Closed stays 0. Real IG stills in Files as `te-pick-ig-real-`.
+
+### Forward update — Sock math pad + no dark strip (2026-08-20)
+
+> **Andrew CURRENT MESSAGE:** One pair / Done needs TE padding top/bottom. Kill darker strip under “Yoga socks are useless.” Leave his TE photos — do not push Open/Closed JSON. IG stills → Files as `te-pick-`.
+
+### Forward update — Open media swap (2026-08-20)
+
+> **Andrew CURRENT MESSAGE:** bad pics for video and images. Open only. TRANSFORM = Barre short studio video. Wow = studio clip `cf4ac9` (not mat). Sock-math = putting-on `65797`. Commit = blue studio (not court). Numbers = jumping. Closed untouched. Not signed.
+
+### Forward update — Open TRANSFORM video + sock-math unframed (2026-08-20)
+
+> **Andrew CURRENT MESSAGE:** Open only. Frame gone on One pair / Done (`image_unframed`). TRANSFORM video + unframed sock-math. Closed sock-math stays 480 framed. Keep `product.open-sole.json` = `product.in-studio-template.json`. Not signed.
+
+### Forward update — Outdoor copies Closed beat (2026-08-20)
+
+> **Andrew CURRENT MESSAGE:** Outdoor only. Same beat as Closed: Better than barefoot 50/50 → Shop all → Denise → sand video → dress them up → text reviews (no photo cards) → second skin. Juicer stays. 3 real water quotes only — do not invent 3 more. Closed / Open / buy-box / Liquid untouched.
+
+### Forward update — Outdoor titles match dress them up (2026-08-20)
+
+> **Andrew CURRENT MESSAGE:** Outdoor only. Dress them up is the locked title size. Better than barefoot + Feels like a second skin → same Display size (not Statement). Sand line bumped to 48/500. Slogans stay. Closed / Open / buy-box / Liquid untouched.
+
+### Forward update — Outdoor home-run layout (2026-08-20)
+
+> **Andrew CURRENT MESSAGE:** Outdoor only. Layout home run — he adds photos in TE. Sand wow → Denise 50/50 → Better than barefoot 50/50 → text reviews (no photos, no compact Judge.me) → dress-them-up → numbers. Alternate L/R + cream/white. Closed / Open / buy-box / Liquid untouched.
+
+### Forward update — Outdoor: one wow + text reviews (2026-08-20)
+
+> **Andrew CURRENT MESSAGE:** Outdoor only. Sand-kick is the only wow. Dock wow → 50/50 **Better than barefoot.** + lake paddle lady. Water-shoes 50/50 dropped. Reviews = heading + text cards only; photos live on `/pages/reviews`. Closed / Open / buy-box / 560 untouched.
+
+### Forward update — Outdoor flow: Denise after sand (2026-08-20)
+
+> **Andrew CURRENT MESSAGE:** Outdoor only. Shop → sand-kick hero → Denise quote. Then water-shoes 50/50 → dock wow. Closed / Open / buy-box / 560 untouched.
+
+### Forward update — Outdoor second wow: dock water (2026-08-18)
+
+> **Andrew CURRENT MESSAGE:** Lake-lady contain doesn’t work with the design / doesn’t look like a customer shot. Second wow = `outdoor-dock-adventures.jpg` Cover 80/70 (marina, coral on dock). Not Judge.me. Closed / sand-kick / 560 untouched.
+
+### Forward update — Outdoor lake wow: whole photo (2026-08-18)
+
+> **Andrew CURRENT MESSAGE:** Second wow must show the lady’s face **and** the paddleboard. Tall photo + Cover was cropping both. This instance only: `media_fit: contain` · 100vh/80vh. Closed / sand-kick stay Cover. Shared `fullbleed-statement` default remains Cover.
+
+### Forward update — Outdoor paddle shots (2026-08-18)
+
+> **Andrew CURRENT MESSAGE:** Water-shoes 50/50 = blue-graded paddle POV (`outdoor-water-50-50-blue.jpg`). Second wow = lady on the lake (`outdoor-paddle-caribbean.jpg`). Sand-kick hero + 560 Cover stay. Closed / Open / buy-box untouched.
+
+### Forward update — PDP 50/50 Cover uniform (2026-08-18)
+
+> **Andrew CURRENT MESSAGE:** keep 50/50 uniform site-wide. Open + Outdoor match Closed: **Cover** · **560** · pad **80** · mobile **320**. No Fit. No Square. Closed JSON untouched. Home fifty-fifty stays 640.
+
+### Forward update — Outdoor wow break + beach-walk hero (2026-08-18)
+
+> **Andrew CURRENT MESSAGE:** Sock Math between the two Outdoor wows. First wow = live beach-walk video `18588a6a` at **100vh / 80vh**. Closed / Open / buy-box untouched. No pool copy.
+
+### Forward update — Open 50/50s: no Judge.me + Fit mode (2026-08-17)
+
+> **Andrew CURRENT MESSAGE:** Judge.me review photos stay on the 3 review cards only — never in 50/50s. 50/50 media uses Shopify Files / studio on-foot. `fifty-fifty` **Fit** = natural photo (column width, height follows the file). No 560 crop. No letterbox. Closed `product.json` untouched. Cover stays Closed/Home default.
+
 ### Forward update — Outdoor rust badge + Open Sole PDP pass (2026-08-09)
 
 > **Andrew CURRENT MESSAGE:** do all of the above — Outdoor/water + Open Sole. Outdoor badge **rust** `#c45c3f` (`sole_badge_color: rust`). Open H1 strips Admin sole dash (badge carries sole). Open sock-era = **The Pilates sock era is over.** Love-hate testimonial **Open only**. Featured photo sets unique Open ≠ Closed ≠ Outdoor ≠ Coperni (2026-08-09: Outdoor water-only Denise/Lisa K./Sienna H.; Coperni Kathia/Victoria/Sheryl — no Mia on Coperni). TRANSFORM scrim lightened on Open (`overlay_opacity: 35`). FAQ `bg_class: white` on Open/Outdoor/Closed to separate from cream footer “Trusted by…”. One pair. Done. = compact comparison **without** review quote (Closed/Open/Coperni cleared 2026-08-09). Cover-crop: Outdoor water-shoes/commit/numbers `focal_y 43` + mobile **360**.
@@ -300,6 +418,10 @@ pages have not been re-reviewed visually.
 in the Outdoor *"A great alternative to water shoes"* slot was genuinely clipping: the shoe leaves
 only 6.7% white above it, and `cover` was taking 9% at 390px — the toes were cut, with 6px of air
 left at 1440px. Same failure on Outdoor commit/numbers and both Open Sole pack-shot slots.
+**50/50 trust strip SIGNED 2026-08-16** (Andrew: “trusted update worked”). TE: **Show stars + trust line** + **Trust line** on every `fifty-fifty`. Off by default. Quote/Kimberly stars unchanged. Never invent review counts — use *Trusted by 1,000+ Instructors* or stars only.
+
+**50/50 Theme Editor order SIGNED 2026-08-16** (Andrew: “Great I think we are good” · lock). Schema order only — same IDs, same Liquid. Every 50/50: **1 Photo / video → 2 Focus + height → 3 Heading / body / CTA → 4 Trust strip → 5 Quote / stats → 6 Layout extras → 7 Insets**. Do not reorder Features / Full-bleed / buy-box without a letter.
+
 `fifty-fifty` gained a **Custom (%) focal point** Theme Editor control (`focal_x` / `focal_y`
 ranges) because the old nine-value select can only snap to an edge. Fixes are per-slot settings:
 Outdoor water-shoes/commit/numbers `focal_y 43` + `mobile_media_height 360`, Open second-skin
@@ -587,9 +709,9 @@ to re-skin `pdp-reviews` — **not** to restore `social-proof`.
 | Value strip | **4-up scan (no strip links by default):** Made in USA · **Free shipping over $150** · 30-day returns · 90-day warranty |
 | Trust architecture | Strip = scan · accordion = policy detail · empty under ATC |
 | Fullbleed TRANSFORM | `fullbleed-statement` · show_text · title **TRANSFORM YOUR PRACTICE** · CTA Shop now → `#buy` |
-| Lifestyle wow | `fullbleed-lifestyle` · `show_text: false` · Stef running pink CDN · after sock-math / before commit |
+| Lifestyle wow | `fullbleed-lifestyle` · `show_text: false` · **video** · 80vh / 60vh · after sock-math / before commit. **SIGNED 2026-08-16: this is the wow. No third full-bleed. Do not enlarge.** Swap media in-slot only. |
 | Reviews | ~~`social-proof` · featured quote + image carousel + optional text-card ★ row~~ — **SUPERSEDED 2026-08-08:** slot is **`pdp-reviews` on live Judge.me**, same index 11. See "Reviews — LIVE Judge.me everywhere" above. CTA **More stories →** retained. |
-| Sock math | Compact (`pdp-sock-math` · headline “One pair. Done.” · **no review quote** · CTA empty) — quote removed 2026-08-09 (Andrew: version without review). **COPY LOCKED 2026-08-15 mock L:** `docs/pdp-sock-math-directions.html` **L** — One pair. Done. / 3-pack / This ends that. / Cycle: Silicone never grips. Fabric stretches. Dots fall off in the wash. / Pair: 360° grip · Secure in every hold. / Foot: Yoga socks are useless. **Photo queue 2026-08-15 v5:** L layout, fixed 680 frame, `object-fit: contain` (photo shrinks to frame — never grow the frame). White = Files `In_Studio_Performance_Skin-_White.jpg` 3000×2000. Not on M4 until theme named. |
+| Sock math | **SIGNED 2026-08-16 on Closed:** editorial L (`layout: editorial`) · `docs/pdp-sock-math-directions.html` **v8** — One pair. / Done. / 3-pack / This ends that. / Cycle $144–$336 · $74 once · Silicone never grips… / 360° grip · Secure in every hold. / Foot: Yoga socks are useless. Photo Juicer **5986441** · **480** frame · lifestyle `cover`. Compact layout left for Coperni. Do not grow the frame. |
 | Lifestyle quote | `fifty-fifty` · `content_style: quote` |
 | Think outside | `fifty-fifty` · `content_style: statement` — eyebrow **Grip, Support, Comfort** · title **Think outside the sock!** · CTA Shop now → `#buy` |
 | Guarantee | Centered **3-up** (`guarantee-band` · 30 / 90 / Built to Last) |

@@ -25,11 +25,15 @@
 
   if scope == 'store'
     assign jm_widget = shop.metafields.judgeme.all_reviews_page
+    assign jm_header = shop.metafields.judgeme.all_reviews_header
+    assign jm_chunk = shop.metafields.judgeme.all_reviews_0
     assign jm_rating = shop.metafields.judgeme.all_reviews_rating
     assign jm_count = shop.metafields.judgeme.all_reviews_count | plus: 0
     assign write_url = '/pages/reviews'
   else
     assign jm_widget = product.metafields.judgeme.widget
+    assign jm_header = ''
+    assign jm_chunk = ''
     assign jm_rating = product.metafields.judgeme.average_rating
     assign jm_count = product.metafields.judgeme.review_count | plus: 0
     assign write_url = product.url
@@ -41,7 +45,7 @@
   endif
 
   assign has_widget = false
-  if jm_widget != blank
+  if jm_widget != blank or jm_header != blank or jm_chunk != blank
     assign has_widget = true
   endif
 
@@ -249,7 +253,11 @@
       {% endif %}
 
       <div class="pdp-reviews__live{% if live_mode == 'compact' %} pdp-reviews__live--compact pdp-reviews__live--source{% endif %}">
-        {% if scope == 'store' %}
+        {% if scope == 'store' and live_mode == 'full' %}
+          <div class="pdp-reviews__widget pdp-reviews__widget--all">
+            {% render 'judgeme_all_reviews' %}
+          </div>
+        {% elsif scope == 'store' %}
           <div class="jdgm-widget jdgm-all-reviews-widget pdp-reviews__widget">
             {{ jm_widget }}
           </div>
@@ -586,6 +594,18 @@
   }
 
   .pdp-reviews__live--compact .jdgm-rev:nth-child(n + 4) {
+    display: none !important;
+  }
+
+  /* Full store page: keep Judge.me pagination / Load more visible */
+  .pdp-reviews--full .jdgm-paginate,
+  .pdp-reviews--full .jdgm-paginate-all-reviews {
+    display: block !important;
+    margin-top: 28px;
+  }
+
+  /* One list only — hide Product Reviews / Shop Reviews tabs */
+  .pdp-reviews--full .jdgm-subtab {
     display: none !important;
   }
 
