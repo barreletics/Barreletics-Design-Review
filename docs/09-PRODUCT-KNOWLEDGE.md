@@ -507,14 +507,13 @@ Source: docs/08-LIVE-SITE-COPY-AUDIT.md (URL 04, URL 11 product cards)
 
 #### Description
 ```
-Performance meets poetry. A footwear story for free spirits — rooted in movement, made to wander. This exclusive is sold only at Free People — not on Barreletics.com.
+Performance meets poetry. A footwear story for free spirits — rooted in movement, made to wander. The Free People exclusive is sold only at Free People.
 Spring 2026 · Stay wild
 ```
-Buy CTA: **Shop at Free People →** `https://www.freepeople.com/fpmovement/shop/barreletics-pilates-grip-shoes/`  
-**No product grid / no ATC on `/pages/free-people`.** (Andrew 2026-08-21)
+**Stay on Barreletics.com.** Do not send shoppers to freepeople.com. CTA = Shop styles below. Grid = our Performance Skins. (Andrew 2026-08-21)
 
 #### Products Available
-Free People exclusive only — buy at Free People (stores + site). Not sold on Barreletics.com.
+Story page + our color grid (Open / Closed / Outdoor / Coperni). The **Free People exclusive** itself is sold only at Free People — say that on the page. Do not outbound.
 
 ---
 
