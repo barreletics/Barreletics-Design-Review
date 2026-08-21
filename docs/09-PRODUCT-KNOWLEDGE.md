@@ -507,14 +507,14 @@ Source: docs/08-LIVE-SITE-COPY-AUDIT.md (URL 04, URL 11 product cards)
 
 #### Description
 ```
-Performance meets poetry. A footwear story for free spirits — rooted in movement, made to wander. Available exclusively at Free People.
+Performance meets poetry. A footwear story for free spirits — rooted in movement, made to wander. This exclusive is sold only at Free People — not on Barreletics.com.
 Spring 2026 · Stay wild
 ```
-Source: docs/08-LIVE-SITE-COPY-AUDIT.md (URL 15)
+Buy CTA: **Shop at Free People →** `https://www.freepeople.com/fpmovement/shop/barreletics-pilates-grip-shoes/`  
+**No product grid / no ATC on `/pages/free-people`.** (Andrew 2026-08-21)
 
 #### Products Available
-Same Performance Skin product grid (Open Sole, Closed Sole, Outdoor) at same pricing ($74–$78).  
-Source: docs/08-LIVE-SITE-COPY-AUDIT.md (URL 15)
+Free People exclusive only — buy at Free People (stores + site). Not sold on Barreletics.com.
 
 ---
 
@@ -963,7 +963,9 @@ Source: Barreletics_Research_Bible.md (Section 5)
 | Coperni product grey | barreletics.com/cdn/shop/files/Copreni_Final_More_grey.png |
 | Coperni runway SS26 | barreletics.com/cdn/shop/files/Screenshot_2026-03-20_at_6.53.30_PM.png |
 | Blue bg studio | cdn.shopify.com/s/files/1/0045/0612/4391/files/P5A7000_blue_background_2.jpg |
-| IMG_5051 (progress) | cdn.shopify.com/s/files/1/0045/0612/4391/files/IMG_5051.jpg |
+| IMG_5051 (yellow Open, blue court) — **KEEP Open / collections** | barreletics.com/cdn/shop/files/IMG_5051.jpg · local `docs/keep-open-collections/IMG_5051.jpg` |
+| Square_Pink (pink Open, blue bg) — **KEEP Open / collections** | barreletics.com/cdn/shop/files/Square_Pink.png?v=1764627088 · local `docs/keep-open-collections/Square_Pink.png` |
+| IMG_3158 (orange Open, red mat) — **KEEP Open / collections** | barreletics.com/cdn/shop/files/IMG_3158.jpg · local `docs/keep-open-collections/IMG_3158.jpg` |
 | Yellow shoe | cdn.shopify.com/s/files/1/0045/0612/4391/files/Yellow.jpg |
 | Blue pants lifestyle | cdn.shopify.com/s/files/1/0045/0612/4391/files/barrletixx_blue_pants_FINAL...jpg |
 
@@ -1208,7 +1210,7 @@ Yoga Tight:
 **Yoga Tight:**
 > Our founder, Stefanie Miller, was inspired to create the perfect pair of yoga pants to compliment her Performance Skin Footwear while modeling around the world. She fell in love with textiles while working for some of the best fashion designers throughout her career. Made with super-soft fabric, these compression pants are comfortable and flattering whether you're practicing at home or on the go. Comfort and durability for an exceptional workout experience. No expense spared! Detailed Quality Down To Every Stitch. Made in the USA!
 
-**Water Shoes:** *(revised 2026-08-07 — live Shopify still shows the old "poolside" line; needs updating in Admin)*
+**Water Shoes:** *(Admin description cleaned 2026-08-20 — no poolside)*
 > Perfect for outdoor adventures, the closed sole provides grip, stability, and protection from hot sand. Ideal for paddleboarding, boating, beach, and resortwear. Always check wet surfaces for slippage.
 
 **Coperni:**

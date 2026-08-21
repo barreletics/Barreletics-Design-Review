@@ -488,7 +488,7 @@ structure. After push: Admin → Apparel collection → Theme template suffix **
 
 **QA push 2026-08-09 (this turn):** `collection.apparel.json` + `collection.json` (v18 Secure hero,
 `show_sole_cards: false`) + Free People + Coperni sections/templates pushed to **`187144929571`**.
-Verified: Shop All / Collection = v18 · Free People = teaser→hero→grid · Coperni product = collab spine.
+Verified: Shop All / Collection = v18 · Free People = teaser→hero (**no grid** — exclusive buy at Free People only, 2026-08-21) · Coperni product = collab spine.
 **Still Admin:** Apparel collection → Theme template → **`apparel`** (until then Apparel falls through to
 default Collection v18 shoes stack). Open/Closed/Outdoor **collection handles do not exist** in Admin
 (`/collections/open-sole` etc. 404) — templates exist; create/map handles or stop linking them.

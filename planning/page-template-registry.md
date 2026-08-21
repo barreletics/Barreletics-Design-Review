@@ -98,7 +98,7 @@ Re-query any time with `shopify store execute -s barreletics.myshopify.com -q 'q
 
 | Surface | Handle / URL | Repo template | Hub Locked mock | Admin suffix | QA preview path |
 |---------|--------------|---------------|-----------------|--------------|-----------------|
-| **Free People** | `/pages/free-people` | `page.free-people.json` | Live page + repo teaser→hero→grid spine (hub has no Locked Free People card) | **`free-people`** | `/pages/free-people` |
+| **Free People** | `/pages/free-people` | `page.free-people.json` | Live page + repo teaser→hero. **No shop grid.** Exclusive buy at Free People only → `https://www.freepeople.com/fpmovement/shop/barreletics-pilates-grip-shoes/` (Andrew 2026-08-21). Hub has no Locked card. | **`free-people`** | `/pages/free-people` |
 | **Returns portal** | `/pages/returns-portal` | Live Admin often **`page.start-a-retrun.json`** *(typo)* · clean alias `page.returns-portal.json` | ReturnZap embed (live). Mock portal v1 = superseded bespoke form | Live **`start-a-retrun`**; clean-up → **`returns-portal`** when Andrew letters Admin change | `/pages/returns-portal` |
 
 ---
