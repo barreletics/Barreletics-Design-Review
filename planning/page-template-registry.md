@@ -18,7 +18,9 @@
 | **Admin suffix** | Shopify Admin → resource → **Theme template** dropdown value (filename after `type.`) |
 | **QA preview** | Path on storefront + `?preview_theme_id=187144929571` (or named disposable ID) |
 
-Preview base: `https://barreletics.myshopify.com{path}?preview_theme_id=187144929571`  
+**Team review index (one page for Andrew + team):** `docs/team-review.html`
+
+Preview base: `https://barreletics.com{path}?preview_theme_id=187144929571`  
 Theme Editor: `https://admin.shopify.com/store/barreletics/themes/187144929571/editor`
 
 ---
