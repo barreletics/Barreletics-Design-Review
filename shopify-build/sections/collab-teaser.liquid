@@ -6,7 +6,7 @@
 <section
   id="{{ section.settings.anchor_id | default: 'collab-teaser' | handleize }}"
   class="collab-teaser section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %}"
-  style="{% render 'section-inset-vars' %} --ct-accent: {{ section.settings.accent_color | default: '#C4859B' }}; --ct-bg: {{ section.settings.bg_color | default: '#FBF7F2' }};"
+  style="{% render 'section-inset-vars' %} --ct-accent: {{ section.settings.accent_color | default: '#C4859B' }}; --ct-bg: {{ section.settings.bg_color | default: '#FBF7F2' }}; --ct-badge-bg: {{ section.settings.badge_bg_color | default: section.settings.accent_color | default: '#C4859B' }};"
   aria-label="{{ section.settings.aria_label | default: section.settings.headline | strip_html | truncate: 60 | escape }}"
 >
   <div class="collab-teaser__inner">
@@ -28,6 +28,9 @@
     {% endif %}
     {% if section.settings.subhead != blank %}
       <p class="collab-teaser__subhead">{{ section.settings.subhead | escape }}</p>
+    {% endif %}
+    {% if section.settings.badge_text != blank %}
+      <p class="collab-teaser__badge"><span>{{ section.settings.badge_text | escape }}</span></p>
     {% endif %}
     <hr class="collab-teaser__divider" aria-hidden="true">
     {% if section.settings.body != blank %}
@@ -103,8 +106,23 @@
     font-weight: 700;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    margin: 0 0 32px;
+    margin: 0 0 20px;
     color: #1c1916;
+  }
+  #shopify-section-{{ section.id }} .collab-teaser__badge {
+    margin: 0 0 32px;
+  }
+  #shopify-section-{{ section.id }} .collab-teaser__badge span {
+    display: inline-block;
+    font-family: var(--font-body), Roboto, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--ct-badge-bg, var(--ct-accent, #C4859B));
+    padding: 8px 14px;
+    border-radius: 2px;
   }
   #shopify-section-{{ section.id }} .collab-teaser__divider {
     display: block;
@@ -171,6 +189,13 @@
       "label": "Subhead",
       "default": "Free People × Barreletics"
     },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge",
+      "info": "Short pill — e.g. Only at Free People"
+    },
+    { "type": "color", "id": "badge_bg_color", "label": "Badge background" },
     {
       "type": "textarea",
       "id": "body",
