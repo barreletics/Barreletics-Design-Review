@@ -422,6 +422,7 @@ Footer Learn           (handle footer-learn)   [architecture: Company]
     About Us           /pages/our-story
     Journal            /blogs/news
     Collaborations     /products/barreletics-x-coperni-closed-sole
+    Partner programs   /pages/partners
     Compare Styles     /pages/compare-open-closed-sole
     Better Than Grippy Socks   /pages/best-barre-pilates-yoga-grippy-socks
 

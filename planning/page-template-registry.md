@@ -99,6 +99,7 @@ Re-query any time with `shopify store execute -s barreletics.myshopify.com -q 'q
 | Surface | Handle / URL | Repo template | Hub Locked mock | Admin suffix | QA preview path |
 |---------|--------------|---------------|-----------------|--------------|-----------------|
 | **Free People** | `/pages/free-people` | `page.free-people.json` | Live page + repo teaser→hero→grid. Exclusive sold only at Free People — **say it, don’t outbound.** CTA stays on-site (`#variants`). Hub has no Locked card. | **`free-people`** | `/pages/free-people` |
+| **Partner programs** | `/pages/partners` | `page.partners.json` | Hub for wholesale / studio / ambassador. Footer Learn link only — not on Help page (Andrew 2026-08-21). | **`partners`** | `/pages/partners` |
 | **Returns portal** | `/pages/returns-portal` | Live Admin often **`page.start-a-retrun.json`** *(typo)* · clean alias `page.returns-portal.json` | ReturnZap embed (live). Mock portal v1 = superseded bespoke form | Live **`start-a-retrun`**; clean-up → **`returns-portal`** when Andrew letters Admin change | `/pages/returns-portal` |
 
 ---
