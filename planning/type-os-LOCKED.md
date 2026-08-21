@@ -3,7 +3,7 @@
 **Status:** WORKING — sign off after `docs/type-os-specimen.html` review  
 **Code source:** `shopify-build/assets/design-tokens.css`  
 **Deep spec:** `planning/m4-type-hierarchy.md`  
-**Visual mock:** `docs/type-os-specimen.html`
+**Visual mock:** `docs/type-os-specimen.html` (quote 50/50 A/B added 2026-08-21)
 
 ---
 
@@ -34,7 +34,8 @@
 
 | Section | Title type | Body type |
 |---------|------------|-----------|
-| `fifty-fifty` | Big 50/50 · 500 · 38–52px | Body · 400 · 16px |
+| `fifty-fifty` (display) | Big 50/50 · 500 · 38–52px | Body · 400 · 16px |
+| `fifty-fifty` **quote** | **Pending** — now Cormorant 400 italic 28px | See specimen A vs B |
 | `pdp-features` | Features title · 400 · 28–40px | Body · 400 · 16px |
 | `disciplines` | Label · 500 · 12–14px | — |
 | `variant-grid` | Section · 600 · 26–32px | Body · 400 · 16px |
@@ -70,6 +71,19 @@
 
 ---
 
+## Quote 50/50 (pending lock)
+
+Closed PDP Kimberly block (`content_style: quote`).
+
+| Option | Type | Feel |
+|--------|------|------|
+| **A — now** | Cormorant Garamond · 400 · italic · 28px | Fashion quote — different from other 50/50s |
+| **B — match** | Roboto · 500 · straight · 38–52px | Same as “Never loses shape.” |
+
+**Do not change Liquid until Andrew says `keep A` or `switch to B`.**
+
+---
+
 ## Agent rules
 
 1. **Never** change buy-box lede to match 50/50 titles.
@@ -85,5 +99,6 @@
 - [ ] Andrew reviewed `docs/type-os-specimen.html`
 - [ ] Coperni banner weight picked (500 vs 400)
 - [ ] Coperni Georgia italics — keep or kill
+- [ ] Quote 50/50 — keep A (Cormorant italic) or switch to B (Roboto)
 - [ ] Update this file status to **LOCKED** + date
 - [ ] Add row to `planning/m4-section-freeze.md` if needed
