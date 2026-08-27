@@ -507,11 +507,12 @@ SUPERSEDED: Do not recommend first-timers toward either sole. Choice = preferenc
 ```
 Source: Owner letter 2026-08-02; manychat-kb/02-open-vs-closed-sole.md (updated)
 
-### P-005: No Machine Washing
+### P-005: Care — hand wash only (updated 2026-08-26)
 ```
-Decision: "Warm soapy water, air dry. No machine washing."
+Decision: "Hand wash with warm soapy water. That's it."
+Never write dishwasher, washing machine, or “no machine washing” — on any platform.
 ```
-Source: manychat-kb/06-care-and-cleaning.md
+Source: owner letters 2026-08-21 / 2026-08-26 · `.cursor/rules/no-dishwasher-washing-machine.mdc` · manychat-kb/06-care-and-cleaning.md
 
 ### P-006: Made in USA — Every Pair
 ```
@@ -823,6 +824,16 @@ judgment. Escalate repeat claims, repeat addresses, and high-value orders.
 Amends: BZ-012 (absolute retired; "considered fulfilled" stands)
 Canonical customer wording: `docs/11-CANONICAL-ANSWERS.md` CA-22 · Internal rule: `docs/09-PRODUCT-KNOWLEDGE.md` Lost Packages block
 **Never** promote the internal guidance into FAQ, ManyChat, PDP, or marketing.
+
+### P-019: Optional sock kit — buy-box J *(Andrew 2026-08-27)*
+```
+Complete the kit
+Optional sock kit →
+A sock made for Performance Skins with grip around the toes.
+Does your studio require a sock? Need help with sweat, warmth, or comfort?
+```
+One link. Not a Hot Pilates kit. Not a grippy sock. Theme settings → **Sock kit** is the one place. Buy-box checkbox only shows/hides. Layout / fold untouched.
+Source: `docs/pdp-sock-kit-v21.html` option J · `planning/m4-section-freeze.md`
 
 ---
 

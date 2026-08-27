@@ -14,6 +14,10 @@
 
 > **Page ↔ template registry (2026-08-09 forward):** Canonical handle → repo template → hub Locked mock → Admin suffix → QA preview path lives in **`planning/page-template-registry.md`**. Page work: auto-invoke **`barreletics-page-qa`**. Multi-surface edits: `.cursor/rules/os-sync-on-global-change.mdc` (update this freeze + the registry forward).
 
+> **Studio FAQ bank 2026-08-26:** Theme settings → **Studio FAQ** is the one list for Closed / Open / One-Offs / Coperni (`use_studio_bank`). Outdoor + Shop All + `/pages/faq` stay local. No 18+ months. Open vs Closed = P-003. Extra One-Off blocks stay on those two PDPs only.
+
+> **Sock kit LOCKED 2026-08-27 (J):** Theme settings → **Sock kit**. Label `Complete the kit` · one link `Optional sock kit →` · small type `A sock made for Performance Skins with grip around the toes.` + `Does your studio require a sock? Need help with sweat, warmth, or comfort?` Buy-box checkbox only shows/hides. Layout / fold untouched. Not on M4 until Andrew names theme ID.
+
 ---
 
 ## What “APPROVED / FROZEN” means
