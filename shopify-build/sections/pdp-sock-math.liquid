@@ -1,6 +1,7 @@
 {% comment %}
-  Sock Math — COMPACT (Definitive-v18 / v19 mid-page)
-  Quote + 2-col comparison. Not July 17 Option C giant $74 vs $144 header.
+  Sock Math
+  compact — v18/v19 2-col compare (Coperni / default). Do not change.
+  editorial — mock L (docs/pdp-sock-math-directions.html v8). Closed only.
 {% endcomment %}
 
 {% liquid
@@ -24,55 +25,75 @@
   elsif section.settings.image_url != blank
     assign editorial_img = section.settings.image_url
   endif
-  assign image_fit = section.settings.image_fit | default: 'contain'
+  assign image_fit = section.settings.image_fit | default: 'cover'
   assign image_scale = section.settings.image_scale | default: 100 | times: 0.01
   assign image_frame = section.settings.image_frame | default: 480
+  assign image_unframed = section.settings.image_unframed
+  assign pad_top = section.settings.pad_top | default: 0
+  assign pad_bottom = section.settings.pad_bottom | default: 0
 %}
 
 <section
-  class="sock-math sock-math--{{ layout }}"
+  class="sock-math sock-math--{{ layout }}{% if image_unframed %} sock-math--unframed{% endif %}"
   aria-label="{{ section.settings.aria_label | default: 'One pair' | escape }}"
-  style="{% if title_size != 'default' %}--sm-title-size: {{ title_size }}px;{% endif %}{% if title_weight != 'default' %}--sm-title-weight: {{ title_weight }};{% endif %}{% if body_size != 'default' %}--sm-body-size: {{ body_size }}px;{% endif %}--sm-fit: {{ image_fit }};--sm-scale: {{ image_scale }};--sm-frame: {{ image_frame }}px;"
+  style="{% if title_size != 'default' %}--sm-title-size: {{ title_size }}px;{% endif %}{% if title_weight != 'default' %}--sm-title-weight: {{ title_weight }};{% endif %}{% if body_size != 'default' %}--sm-body-size: {{ body_size }}px;{% endif %}--sm-fit: {{ image_fit }};--sm-scale: {{ image_scale }};--sm-frame: {{ image_frame }}px;--sm-pad-top: {{ pad_top }}px;--sm-pad-bottom: {{ pad_bottom }}px;"
 >
   {% if layout == 'editorial' %}
     <div class="sock-math__split">
       <div class="sock-math__copy">
-        <h2 class="sock-math__headline">{{ section.settings.headline }}</h2>
+        <h2 class="sock-math__headline h2-display">
+          {% if section.settings.done_line != blank %}
+            {{ section.settings.headline }}<em>{{ section.settings.done_line }}</em>
+          {% else %}
+            {{ section.settings.headline }}
+          {% endif %}
+        </h2>
         {% if section.settings.subheadline != blank %}
-          <p class="sock-math__sub">{{ section.settings.subheadline }}</p>
+          <p class="sock-math__sub">{{ section.settings.subheadline | newline_to_br }}</p>
         {% endif %}
-        {% if section.settings.theirs_1 != blank or section.settings.ours_1 != blank %}
-          <div class="sock-math__paths">
-            {% if section.settings.theirs_1 != blank %}
-              <p class="sock-math__path sock-math__path--theirs">
-                <span>{{ section.settings.theirs_label | default: 'The 3-pack' }}</span>
-                {{ section.settings.theirs_1 }}
-                {% if section.settings.theirs_2 != blank %} {{ section.settings.theirs_2 }}{% endif %}
-                {% if section.settings.theirs_3 != blank %} {{ section.settings.theirs_3 }}{% endif %}
-              </p>
-            {% endif %}
-            {% if section.settings.ours_1 != blank %}
-              <p class="sock-math__path sock-math__path--ours">
-                <span>{{ section.settings.ours_label | default: 'The pair' }}</span>
-                {{ section.settings.ours_1 }}
-                {% if section.settings.ours_2 != blank %} {{ section.settings.ours_2 }}{% endif %}
-                {% if section.settings.ours_3 != blank %} {{ section.settings.ours_3 }}{% endif %}
-              </p>
-            {% endif %}
-          </div>
+        {% if section.settings.punch != blank %}
+          <p class="sock-math__end">{{ section.settings.punch }}</p>
         {% endif %}
       </div>
-      {% if editorial_img != blank %}
-        <div class="sock-math__visual">
-          <img
-            src="{{ editorial_img | escape }}"
-            alt="{{ section.settings.image_alt | default: section.settings.headline | escape }}"
-            width="1200"
-            height="1500"
-            loading="lazy"
-          >
+      <div class="sock-math__pane">
+        {% if editorial_img != blank %}
+          <div class="sock-math__visual">
+            <img
+              src="{{ editorial_img | escape }}"
+              alt="{{ section.settings.image_alt | default: section.settings.headline | escape }}"
+              width="1200"
+              height="1500"
+              loading="lazy"
+            >
+          </div>
+        {% endif %}
+        <div class="sock-math__cycle">
+          <div class="sock-math__cycle-item">
+            <span>{{ section.settings.theirs_label | default: 'The cycle' }}</span>
+            {% if section.settings.their_price != blank %}
+              <p class="sock-math__cycle-price">{{ section.settings.their_price }} <small>/yr</small></p>
+            {% endif %}
+            {% if section.settings.theirs_1 != blank %}
+              <p>{{ section.settings.theirs_1 }}</p>
+            {% endif %}
+          </div>
+          <div class="sock-math__cycle-item sock-math__cycle-item--ours">
+            <span>{{ section.settings.ours_label | default: 'The pair' }}</span>
+            {% if section.settings.our_price != blank %}
+              <p class="sock-math__cycle-price">{{ section.settings.our_price }} <small>once</small></p>
+            {% endif %}
+            {% if section.settings.ours_1 != blank %}
+              <p class="sock-math__grip">{{ section.settings.ours_1 }}</p>
+            {% endif %}
+            {% if section.settings.ours_2 != blank %}
+              <p>{{ section.settings.ours_2 }}</p>
+            {% endif %}
+          </div>
+          {% if section.settings.cycle_foot != blank %}
+            <p class="sock-math__cycle-foot">{{ section.settings.cycle_foot }}</p>
+          {% endif %}
         </div>
-      {% endif %}
+      </div>
     </div>
   {% else %}
   <div class="sock-math__header">
@@ -110,7 +131,7 @@
           <p class="sock-math__col-price sock-math__col-price--bold">{{ section.settings.our_price }}<span> once</span></p>
         {% endif %}
         <ul class="sock-math__list">
-          <li><span class="sock-math__check" aria-hidden="true">✓</span>{{ section.settings.ours_1 | default: '18+ month lifespan' }}</li>
+          <li><span class="sock-math__check" aria-hidden="true">✓</span>{{ section.settings.ours_1 | default: '1,000 classes. Year four.' }}</li>
           <li><span class="sock-math__check" aria-hidden="true">✓</span>{{ section.settings.ours_2 | default: 'Grip never degrades' }}</li>
           <li><span class="sock-math__check" aria-hidden="true">✓</span>{{ section.settings.ours_3 | default: 'One pair, every class' }}</li>
         </ul>
@@ -119,7 +140,7 @@
   </div>
   {% endif %}
 
-  {% if section.settings.cta_text != blank %}
+  {% if layout != 'editorial' and section.settings.cta_text != blank %}
     <div class="sock-math__cta-wrap">
       <a href="{{ cta_href }}" class="btn btn--primary">{{ section.settings.cta_text }}</a>
     </div>
@@ -127,84 +148,157 @@
 </section>
 
 <style>
-  .sock-math--compact,
-  .sock-math--editorial {
+  .sock-math--compact {
     background: #f5f2ec;
     padding: 0 0 var(--section-padding-y);
   }
   .sock-math--editorial {
-    padding: 0;
+    background: #f5f2ec;
+    padding: var(--sm-pad-top, 0) 0 var(--sm-pad-bottom, 0);
   }
-  .sock-math__split {
+  .sock-math--editorial .sock-math__split {
+    max-width: 1200px;
+    margin: 0 auto;
     display: grid;
-    grid-template-columns: 1fr 1.15fr;
-    min-height: 520px;
+    grid-template-columns: 1fr 1.2fr;
+    background: #f5f2ec;
     align-items: stretch;
   }
-  .sock-math__copy {
-    padding: var(--section-padding-y) 56px;
+  .sock-math--editorial .sock-math__copy {
+    padding: 64px 56px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    max-width: 640px;
   }
-  .sock-math--editorial .sock-math__headline {
+  .sock-math--editorial h2.sock-math__headline {
     text-align: left;
-    margin: 0 0 28px;
+    margin: 0 0 8px;
+    font-size: var(--type-h2-display-size);
+    font-weight: var(--type-h2-display-weight);
+    line-height: var(--type-h2-display-leading);
+    letter-spacing: var(--type-h2-display-tracking);
+    color: #1c1916;
+  }
+  .sock-math--editorial h2.sock-math__headline em {
+    display: block;
+    font-style: normal;
+    font-weight: 400;
+    color: #6b645a;
+    margin-top: 4px;
   }
   .sock-math--editorial .sock-math__sub {
     text-align: left;
     padding: 0;
     max-width: 28em;
+    margin: 0;
+    font-size: 16px;
+    font-weight: 400;
     line-height: 1.7;
-    margin: 0;
-  }
-  .sock-math--editorial .sock-math__sub strong {
-    color: #1c1916;
-    font-weight: 600;
-  }
-  .sock-math__paths {
-    margin-top: 40px;
-    display: grid;
-    gap: 18px;
-  }
-  .sock-math__path {
-    margin: 0;
-    font-size: 15px;
-    line-height: 1.5;
     color: #4a4a4a;
   }
-  .sock-math__path span {
-    display: block;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #8a8a8a;
-    margin-bottom: 6px;
+  .sock-math--editorial .sock-math__end {
+    margin: 36px 0 0;
+    font-size: var(--sm-body-size, 16px);
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 1.5;
+    color: #1c1916;
   }
-  .sock-math__path--ours span {
-    color: #c45c3f;
+  .sock-math--editorial .sock-math__pane {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
   }
-  .sock-math__visual {
-    background: #ece7de;
+  .sock-math--editorial .sock-math__visual {
+    flex: 0 0 var(--sm-frame, 480px);
     height: var(--sm-frame, 480px);
     min-height: var(--sm-frame, 480px);
     max-height: var(--sm-frame, 480px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    padding: 0;
     overflow: hidden;
+    background: #ece7de;
   }
-  .sock-math__visual img {
-    width: auto;
-    height: auto;
-    max-width: 100%;
-    max-height: var(--sm-frame, 480px);
-    object-fit: var(--sm-fit, contain);
-    transform: scale(var(--sm-scale, 1));
-    transform-origin: center center;
+  .sock-math--editorial .sock-math__visual img {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    object-fit: var(--sm-fit, cover);
+    object-position: center center;
     display: block;
+  }
+  .sock-math--editorial.sock-math--unframed .sock-math__visual {
+    flex: 1 1 auto;
+    height: auto;
+    min-height: 420px;
+    max-height: none;
+    background: transparent;
+  }
+  .sock-math--editorial .sock-math__cycle {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    padding: 28px 24px 24px;
+    background: #fff;
+  }
+  .sock-math--editorial .sock-math__cycle-item {
+    margin: 0;
+    padding: 0 24px;
+    text-align: center;
+  }
+  .sock-math--editorial .sock-math__cycle-item + .sock-math__cycle-item {
+    border-left: 1px solid #d6cfc0;
+  }
+  .sock-math--editorial .sock-math__cycle-item span {
+    display: block;
+    margin-bottom: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #8a8a8a;
+  }
+  .sock-math--editorial .sock-math__cycle-item--ours span {
+    color: #c45c3f;
+  }
+  .sock-math--editorial .sock-math__cycle-item p.sock-math__cycle-price {
+    margin: 0 0 8px;
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: #1c1916;
+  }
+  .sock-math--editorial .sock-math__cycle-item--ours .sock-math__cycle-price {
+    color: #c45c3f;
+  }
+  .sock-math--editorial .sock-math__cycle-price small {
+    font-size: 14px;
+    font-weight: 400;
+    color: #8a8a8a;
+  }
+  .sock-math--editorial .sock-math__cycle-item p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.45;
+    color: #4a4a4a;
+  }
+  .sock-math--editorial .sock-math__cycle-item p.sock-math__grip {
+    margin: 6px 0 0;
+    font-size: 13px;
+    font-weight: 500;
+    color: #1c1916;
+  }
+  .sock-math--editorial .sock-math__cycle-foot {
+    grid-column: 1 / -1;
+    margin: 20px 8px 0;
+    padding-top: 18px;
+    border-top: 1px solid #d6cfc0;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.5;
+    color: #1c1916;
   }
   .sock-math__header {
     text-align: center;
@@ -332,9 +426,31 @@
     .sock-math__grid { grid-template-columns: 1fr; }
     .sock-math__col--theirs { border-right: none; border-bottom: 1px solid #d6cfc0; }
     .sock-math__col { padding: 28px 24px; }
-    .sock-math__split { grid-template-columns: 1fr; min-height: 0; }
-    .sock-math__copy { padding: var(--section-padding-y-mobile) 24px 32px; max-width: none; }
-    .sock-math__visual { min-height: 0; }
+    .sock-math--editorial { padding: var(--sm-pad-top, 0) 0 var(--sm-pad-bottom, 0); }
+    .sock-math--editorial .sock-math__split { grid-template-columns: 1fr; }
+    .sock-math--editorial .sock-math__copy { padding: 48px 24px; }
+    .sock-math--editorial .sock-math__visual,
+    .sock-math--editorial .sock-math__visual img {
+      height: 360px;
+      min-height: 360px;
+      max-height: 360px;
+      flex-basis: 360px;
+    }
+    .sock-math--editorial.sock-math--unframed .sock-math__visual,
+    .sock-math--editorial.sock-math--unframed .sock-math__visual img {
+      height: 320px;
+      min-height: 320px;
+      max-height: 320px;
+      flex-basis: 320px;
+    }
+    .sock-math--editorial .sock-math__cycle { grid-template-columns: 1fr; padding: 40px 24px; }
+    .sock-math--editorial .sock-math__cycle-item + .sock-math__cycle-item {
+      border-left: 0;
+      border-top: 1px solid #d6cfc0;
+      padding-top: 24px;
+      margin-top: 24px;
+    }
+    .sock-math--editorial .sock-math__cycle-foot { margin: 24px 0 0; }
   }
 </style>
 
@@ -348,7 +464,25 @@
       "id": "headline",
       "label": "Heading",
       "default": "One pair. Done.",
-      "info": "Family is brand Type OS — use Title size/weight to adjust. No font family picker."
+      "info": "Editorial L: set to One pair. Use Done line below."
+    },
+    {
+      "type": "text",
+      "id": "done_line",
+      "label": "Done line (editorial)",
+      "info": "Quiet second line. Mock L = Done."
+    },
+    {
+      "type": "text",
+      "id": "punch",
+      "label": "Punch (editorial)",
+      "info": "Mock L = This ends that."
+    },
+    {
+      "type": "text",
+      "id": "cycle_foot",
+      "label": "Cycle foot (editorial)",
+      "info": "Mock L = Yoga socks are useless."
     },
     {
       "type": "select",
@@ -419,7 +553,7 @@
       "label": "Layout",
       "options": [
         { "value": "compact", "label": "Compact — 2-col compare" },
-        { "value": "editorial", "label": "Editorial — copy + photo" }
+        { "value": "editorial", "label": "Editorial — mock L" }
       ],
       "default": "compact"
     },
@@ -432,6 +566,13 @@
     { "type": "image_picker", "id": "image", "label": "Editorial photo" },
     { "type": "text", "id": "image_url", "label": "Editorial photo URL" },
     { "type": "text", "id": "image_alt", "label": "Editorial photo alt" },
+    {
+      "type": "checkbox",
+      "id": "image_unframed",
+      "label": "No photo frame (fill column)",
+      "info": "Open only. Closed stays framed. Ignores Photo frame height.",
+      "default": false
+    },
     {
       "type": "select",
       "id": "image_fit",
@@ -462,6 +603,28 @@
       "label": "Photo size inside frame",
       "default": 100
     },
+    {
+      "type": "range",
+      "id": "pad_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Open PDP match is 80 (same as 50/50s). Closed stays 0."
+    },
+    {
+      "type": "range",
+      "id": "pad_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Open PDP match is 80 (same as 50/50s). Closed stays 0."
+    },
     { "type": "header", "content": "Section — Sock math — compact" },
     {
       "type": "textarea",
@@ -481,7 +644,7 @@
     { "type": "text", "id": "theirs_3", "label": "Their point 3", "default": "6–8 pairs per year minimum" },
     { "type": "text", "id": "ours_label", "label": "Our column label", "default": "Barreletics" },
     { "type": "text", "id": "our_price", "label": "Our price", "default": "$74" },
-    { "type": "text", "id": "ours_1", "label": "Our point 1", "default": "18+ month lifespan" },
+    { "type": "text", "id": "ours_1", "label": "Our point 1", "default": "1,000 classes. Year four." },
     { "type": "text", "id": "ours_2", "label": "Our point 2", "default": "Grip never degrades" },
     { "type": "text", "id": "ours_3", "label": "Our point 3", "default": "One pair, every class" },
     {
