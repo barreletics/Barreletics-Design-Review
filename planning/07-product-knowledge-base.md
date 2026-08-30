@@ -256,14 +256,12 @@ Injection-molded grip never peels or flakes. Longevity varies: months to years, 
 ### Canonical Answer
 
 **After class:**
-- Warm soapy water, rinse, air dry
+- Hand wash with warm soapy water. That's it.
 - Or wipe with equipment wipes post-class
 
 **Key care points:**
-- Non-porous material — doesn't absorb sweat or bacteria like fabric socks
-- Antimicrobial properties — rinses clean, doesn't hold odor
-- Air dry recommended (no machine dryer)
-- No machine washing required (but not harmful if gentle cycle)
+- Hand wash with warm soapy water. That's it.
+- Never mention dishwasher or washing machine.
 
 **Putting on / taking off:**
 - Pull from the top of the foot, not the straps
@@ -378,7 +376,7 @@ This is the core category-creation comparison. Every mention should move the cus
 | Material | Fabric — absorbs sweat, harbors bacteria, stretches | Non-porous — rinse clean, antimicrobial, maintains shape |
 | Cost | $14–$18/pair × 6–8 pairs/year = $112–$144/year | $74 one-time |
 | Lifespan | 6–8 weeks per pair | 18+ months (many report 3–4 years) |
-| Hygiene | Bacterial buildup, odor, machine wash required | Rinse and reuse, no bacterial absorption |
+| Hygiene | Bacterial buildup, odor, must be laundered | Hand wash with warm soapy water. That's it. |
 | Fit | Stretches out, bunches, requires frequent replacement | Second-skin fit, maintains shape |
 
 **The Double Failure:** Grip socks fail in two ways simultaneously — silicone dots that wear off (grip failure) AND fabric that absorbs sweat and bacteria (material failure). Barreletics solves both.

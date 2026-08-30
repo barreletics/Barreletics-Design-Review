@@ -488,11 +488,11 @@
 - **Source (stale):** manychat-kb/02-open-vs-closed-sole.md
 - **Category:** PRODUCT
 
-### P-005: No Machine Washing
-- **Decision:** Care: "Warm soapy water, air dry. No machine washing. No grip degradation."
-- **Rationale:** Protects product longevity.
-- **Supersedes:** N/A
-- **Source:** docs/09-PRODUCT-KNOWLEDGE.md, manychat-kb/06-care-and-cleaning.md
+### P-005: Care — hand wash only (updated 2026-08-26)
+- **Decision:** “Hand wash with warm soapy water. That's it.” Never mention dishwasher or washing machine — even to say don’t.
+- **Rationale:** Owner letters 2026-08-21 / 2026-08-26. Naming a machine puts the idea in the customer’s head.
+- **Supersedes:** “Warm soapy water, air dry. No machine washing.”
+- **Source:** docs/09-PRODUCT-KNOWLEDGE.md, docs/11-CANONICAL-ANSWERS.md CA-23/24, manychat-kb/06-care-and-cleaning.md
 - **Category:** PRODUCT
 
 ### P-006: Made in USA — Every Pair

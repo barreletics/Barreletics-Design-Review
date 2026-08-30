@@ -486,18 +486,26 @@
     {% endif %}
 
     {% if section.settings.show_kit_links != false and _cat_outdoor == false %}
+      {% liquid
+        assign kit_label = settings.sock_kit_label | default: 'Complete the kit'
+        assign kit_link_1_label = settings.sock_kit_link_label | default: 'Optional sock kit →'
+        assign kit_link_1_url = settings.sock_kit_link_url
+        assign kit_link_2_label = settings.sock_kit_link_2_label
+        assign kit_link_2_url = settings.sock_kit_link_2_url
+        assign kit_hint = settings.sock_kit_hint
+      %}
       <div class="pdp-buy__kit-links">
-        <span class="pdp-buy__kit-label">{{ section.settings.kit_label | default: 'Complete the kit' }}</span>
+        <span class="pdp-buy__kit-label">{{ kit_label }}</span>
         <div class="pdp-buy__kit-row">
-          {% if section.settings.kit_link_1_label != blank %}
-            <a href="{{ section.settings.kit_link_1_url | default: '/collections/hot-kits' }}">{{ section.settings.kit_link_1_label }}</a>
+          {% if kit_link_1_label != blank %}
+            <a href="{{ kit_link_1_url | default: '#' }}">{{ kit_link_1_label }}</a>
           {% endif %}
-          {% if section.settings.kit_link_2_label != blank %}
-            <a href="{{ section.settings.kit_link_2_url | default: '/collections/hot-kits' }}">{{ section.settings.kit_link_2_label }}</a>
+          {% if kit_link_2_label != blank %}
+            <a href="{{ kit_link_2_url | default: '#' }}">{{ kit_link_2_label }}</a>
           {% endif %}
         </div>
-        {% if section.settings.kit_hint != blank %}
-          <p class="pdp-buy__kit-hint">{{ section.settings.kit_hint }}</p>
+        {% if kit_hint != blank %}
+          <p class="pdp-buy__kit-hint">{{ kit_hint | escape | newline_to_br }}</p>
         {% endif %}
       </div>
     {% endif %}
@@ -526,7 +534,7 @@
         <summary class="pdp-accordion__trigger" aria-expanded="false">Care & how to wear <span>+</span></summary>
         <div class="pdp-accordion__body">
           <p><strong>How to put on:</strong> pull from the top of the foot — not the straps — to help extend their lifespan.</p>
-          <p><strong>Cleaning:</strong> warm soapy water, rinse well, air dry. No machine washing.</p>
+          <p><strong>Cleaning:</strong> Hand wash with warm soapy water. That's it.</p>
         </div>
       </details>
       {% if section.settings.note_accordion_label != blank and section.settings.note_accordion_body != blank %}
@@ -1260,44 +1268,14 @@
 
     { "type": "header", "content": "Section — PDP buy box — Complete the kit" },
     {
+      "type": "paragraph",
+      "content": "Copy is Theme settings → Sock kit. This checkbox only shows or hides the block."
+    },
+    {
       "type": "checkbox",
       "id": "show_kit_links",
-      "label": "Show Complete the kit links",
+      "label": "Show Complete the kit",
       "default": true
-    },
-    {
-      "type": "text",
-      "id": "kit_label",
-      "label": "Kit label",
-      "default": "Complete the kit"
-    },
-    {
-      "type": "text",
-      "id": "kit_link_1_label",
-      "label": "Kit link 1 label",
-      "default": "Hot Pilates Kit →"
-    },
-    {
-      "type": "url",
-      "id": "kit_link_1_url",
-      "label": "Kit link 1 URL"
-    },
-    {
-      "type": "text",
-      "id": "kit_link_2_label",
-      "label": "Kit link 2 label",
-      "default": "Hot Yoga Kit →"
-    },
-    {
-      "type": "url",
-      "id": "kit_link_2_url",
-      "label": "Kit link 2 URL"
-    },
-    {
-      "type": "text",
-      "id": "kit_hint",
-      "label": "Kit hint",
-      "default": "Performance Skin + thin liner for heated studios."
     },
     {
       "type": "text",

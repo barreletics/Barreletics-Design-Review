@@ -252,7 +252,7 @@ From docs/04-COMPONENT-LIBRARY.md
 | 1 | 360° traction | Full-contact grip across entire underfoot — not patches of silicone dots that wash off. | CURRENT PRODUCTION |
 | 2 | Second-skin fit | Your foot can't move inside it. That's the point. No twist, no bunch, no reset. | CURRENT PRODUCTION |
 | 3 | Reformer-ready | Tested on Megaformer & reformer carriages, hardwood barre studios, and yoga mats. | CURRENT PRODUCTION |
-| 4 | Rinse & reuse | Warm soapy water, air dry. No machine washing. No grip degradation. | CURRENT PRODUCTION |
+| 4 | Rinse & reuse | Hand wash with warm soapy water. That's it. | CURRENT PRODUCTION |
 | 5 | No latex · no silicone | Skin-safe proprietary grip material. Made in USA. | CURRENT PRODUCTION |
 | 6 | Barefoot-inspired | Natural toe articulation. Move freely — without the slip. | CURRENT PRODUCTION |
 
@@ -265,7 +265,7 @@ From docs/04-COMPONENT-LIBRARY.md, docs/09-PRODUCT-KNOWLEDGE.md
 | 1 | Reformer-ready | Tested on Megaformer & reformer carriages, hardwood barre studios, and yoga mats. | CURRENT PRODUCTION |
 | 2 | No twist | Your foot can't move inside it. No bunch, no reset. | CURRENT PRODUCTION |
 | 3 | Sweat-ready | Antimicrobial, sweat-resistant material stays fresh. | CURRENT PRODUCTION |
-| 4 | Rinse & reuse | Warm soapy water, air dry. No machine washing. No grip degradation. | CURRENT PRODUCTION |
+| 4 | Rinse & reuse | Hand wash with warm soapy water. That's it. | CURRENT PRODUCTION |
 | 5 | Skin-safe | No latex, no silicone. Proprietary grip material. Made in USA. | CURRENT PRODUCTION |
 | 6 | Barefoot feel | Natural toe articulation. Move freely — without the slip. | CURRENT PRODUCTION |
 

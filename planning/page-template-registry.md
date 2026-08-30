@@ -31,7 +31,7 @@ Theme Editor: `https://admin.shopify.com/store/barreletics/themes/187144929571/e
 |---------|--------------|---------------|-----------------|--------------|-----------------|
 | **Shop All (grippy shoes)** | `/collections/barre-pilates-yoga-shoe-sock-footwear` | `collection.json` | **Collection v18 Locked** → `docs/Barreletics Collection - Definitive-v18.html` | *(default / none)* | `/collections/barre-pilates-yoga-shoe-sock-footwear` |
 | **Apparel** | `/collections/apparel` | `collection.apparel.json` | Structure follows **Collection v18 Locked** (apparel copy; no sole education). Live content: `https://barreletics.com/collections/apparel` | **`apparel`** (Admin set 2026-08-09 via `collectionUpdate`; was `apparel-page`) | `/collections/apparel` |
-| **Hot Pilates & Yoga Kits** | `/collections/hot-kits` | `collection.hot-kits.json` | Coming-soon placeholder (owner 2026-08-08). No Locked mock. **No page newsletter** — footer Join the list only (Andrew 2026-08-12). | **`hot-kits`** | `/collections/hot-kits` — **404 until collection is published to Online Store** |
+| **Optional sock kit** | `/collections/hot-kits` | `collection.hot-kits.json` | Coming-soon. Copy LOCKED J 2026-08-27. Handle stays `hot-kits`. Nav: **Socks** under Apparel (`m4-menu` only). **No page newsletter**. | **`hot-kits`** | `/collections/hot-kits` — **404 until collection is published to Online Store** |
 
 **Do not treat Apparel as Shop All.** Wrong page = Apparel still on default collection template.
 
@@ -41,7 +41,7 @@ Theme Editor: `https://admin.shopify.com/store/barreletics/themes/187144929571/e
 
 | Surface | Handle / URL | Repo template | Hub Locked mock | Admin suffix | QA preview path |
 |---------|--------------|---------------|-----------------|--------------|-----------------|
-| **Closed Sole** | `/products/best-reformer-pilates-legree-workout-shoes` | `product.json` | **SIGNED 2026-08-16** · living spine = current `product.json` (v19 mock lineage). **No extra wow.** Wow = `fullbleed-lifestyle` 80/60. Prior fingerprint: v16 @ `691f03b` — never overwrite v16/v19 HTML | *(default / none)* | `/products/best-reformer-pilates-legree-workout-shoes` |
+| **Closed Sole** | `/products/best-reformer-pilates-legree-workout-shoes` | `product.json` | **SIGNED 2026-08-16** · living spine = current `product.json` (v19 mock lineage). **No extra wow.** Wow = `fullbleed-lifestyle` 80/60. Prior fingerprint: v16 @ `691f03b` — never overwrite v16/v19 HTML. **Studio FAQ** = Theme settings → Studio FAQ (`use_studio_bank`). | *(default / none)* | `/products/best-reformer-pilates-legree-workout-shoes` |
 | **Open Sole** | `/products/studio-performance-skin-footwear` | `product.open-sole.json` | Same **PDP v19 Locked** mock + Open spine | Live Admin **`in-studio-template`** (renders `product.in-studio-template.json` — keep byte-identical to `product.open-sole.json`). Do not flip Admin to `open-sole` without a letter — live Impulse uses this suffix. | `/products/studio-performance-skin-footwear` |
 | **Outdoor / water shoes** | `/products/aquatic-performance-skins` | `product.outdoor.json` | Same **PDP v19 Locked** mock + Outdoor spine | **`outdoor`** | `/products/aquatic-performance-skins` |
 | **Coperni collab** | `/products/barreletics-x-coperni-closed-sole` | `product.coperni.json` | **Product first** (2026-08-21): buy-box → strip → crosslink images → runway story. Not a Locked Closed PDP. | **`coperni`** | `/products/barreletics-x-coperni-closed-sole` |
@@ -62,7 +62,7 @@ Theme Editor: `https://admin.shopify.com/store/barreletics/themes/187144929571/e
 | **Returns (policy)** | `/pages/returns` | **`page.shipping-retruns.json`** *(live Admin typo — this is the file that renders)* · identical alias `page.returns.json` | Hub **Current:** `docs/REVIEW-2026-08-08.html#returns` (canonical). Mock v3 = superseded concept | **`shipping-retruns`** ✅ verified — do not re-point Admin until letter; alias ready for **`returns`** | `/pages/returns` |
 | **About / Our story** | `/pages/our-story` | `page.our-story.json` and/or `page.about.json` (confirm Admin assignment before edit) | Brand story mock for review: `docs/Barreletics Brand - Definitive-v1.html` (not Locked until letter). Help hub: **Help v3 Locked** | Confirm in Admin (`our-story` / `about` / default) | `/pages/our-story` |
 | **Contact** | `/pages/contact-us-form` | **`page.contact.json`** *(Admin suffix is `contact`, not the handle)* · alias `page.contact-us-form.json` | Contact v1 (hub, not Locked) · live form page. **GOOD — do not thrash** | **`contact`** ✅ verified | `/pages/contact-us-form` |
-| **Reviews (all Judge.me)** | `/pages/reviews` | `page.reviews.json` · live Admin often **`page.judgeme_all_reviews.json`** — keep both on full store widget | Live Judge.me all-reviews + pagination / Load more. Photos stay here. Not a PDP. | Live **`judgeme_all_reviews`**; also `reviews` | `/pages/reviews` |
+| **Reviews (all Judge.me)** | `/pages/reviews` | `page.reviews.json` · live Admin often **`page.judgeme_all_reviews.json`** — keep both on full store widget | Shared Open+Closed page. 3 photo cards = Leslie S. / B P. / Tracie (Judge.me photo reviews). Full Judge.me list + native Write a Review. Review counts hidden (stars stay). Not a PDP. No sole-specific review pages. | Live **`judgeme_all_reviews`**; also `reviews` | `/pages/reviews` |
 
 Help menu authority: About → `/pages/our-story` · FAQ → `/pages/faq` · Contact → `/pages/contact-us-form` · Returns → `/pages/returns`. Header Help fallback = **`/pages/help`** (hub exists 2026-08-14 — do **not** restore `/pages/faq`).
 
@@ -98,6 +98,7 @@ Re-query any time with `shopify store execute -s barreletics.myshopify.com -q 'q
 
 | Surface | Handle / URL | Repo template | Hub Locked mock | Admin suffix | QA preview path |
 |---------|--------------|---------------|-----------------|--------------|-----------------|
+| **Collaborations** | `/pages/collaborations` | `page.collaborations.json` | Help-style tiles → Coperni + Free People. Footer + header parent. Never link the parent at a single product or `/`. | **`collaborations`** | `/pages/collaborations` |
 | **Free People** | `/pages/free-people` | `page.free-people.json` | Live page + repo teaser→hero→grid. Exclusive sold only at Free People — **say it, don’t outbound.** CTA stays on-site (`#variants`). Hub has no Locked card. | **`free-people`** | `/pages/free-people` |
 | **Partner programs** | `/pages/partners` | `page.partners.json` | Hub for wholesale / studio / ambassador. Footer Learn link only — not on Help page (Andrew 2026-08-21). | **`partners`** | `/pages/partners` |
 | **Returns portal** | `/pages/returns-portal` | Live Admin often **`page.start-a-retrun.json`** *(typo)* · clean alias `page.returns-portal.json` | ReturnZap embed (live). Mock portal v1 = superseded bespoke form | Live **`start-a-retrun`**; clean-up → **`returns-portal`** when Andrew letters Admin change | `/pages/returns-portal` |
@@ -113,6 +114,7 @@ Re-query any time with `shopify store execute -s barreletics.myshopify.com -q 'q
 | `/collections/open-sole` | Collection handle **does not exist** in Admin (404) | Shop All + sole tabs / PDP Open |
 | `/collections/closed-sole` | Same — 404 | Shop All + sole tabs / PDP Closed |
 | `/collections/outdoor` | Same — 404 | PDP Outdoor `/products/aquatic-performance-skins` |
+| `/collections/collaborations` | Collection does not exist (404) | `/pages/collaborations` |
 | `/pages/contact` | 404 | `/pages/contact-us-form` |
 | `/pages/about` | 404 | `/pages/our-story` |
 

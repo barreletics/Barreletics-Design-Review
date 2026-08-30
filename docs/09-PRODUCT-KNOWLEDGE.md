@@ -11,6 +11,11 @@
 > **Use instead:** **resortwear · paddleboarding · beach · outdoor yoga** (plus boating, boat deck, hot sand, travel).
 > Applies to FAQ, GEO, product descriptions, SEO tags, blog, email, ManyChat, and every OS doc.
 
+> ## ⛔ BANNED COPY — dishwasher / washing machine (Owner letters 2026-08-21 / 2026-08-26, P-005)
+> **Never write:** dishwasher · washing machine · machine wash · machine washing · “no machine washing” · “some customers use the dishwasher”
+> **Say instead:** **Hand wash with warm soapy water. That's it.**
+> Applies to PDP buy-box, FAQ, Care, warranty, ManyChat, Tidio, Help Scout, ads, email, and every OS doc.
+
 > ## ⛔ BANNED COPY — "fully enclosed" (Owner letter 2026-08-08, P-013)
 > **Never write:** fully enclosed · fully-enclosed · fully enclosed heel · fully enclosed feel
 > **Say instead:** **Heel and foot fully covered. Same grip, same stability.** (surviving P-003 wording)
@@ -121,7 +126,7 @@ Source: docs/08-LIVE-SITE-COPY-AUDIT.md (Global Benefit Pills, URL 02), manychat
 01 · Reformer-ready — Tested on Megaformer & reformer carriages, hardwood barre studios, and yoga mats.
 02 · No twist — Your foot can't move inside it. No bunch, no reset.
 03 · Sweat-ready — Non-porous surface wipes clean; nothing soaks in like fabric.
-04 · Rinse & reuse — Warm soapy water, air dry. No machine washing. No grip degradation.
+04 · Rinse & reuse — Hand wash with warm soapy water. That's it.
 05 · Skin-safe — No latex, no silicone. Proprietary grip material. Made in USA.
 06 · Barefoot feel — Natural toe articulation. Move freely — without the slip.
 ```
@@ -133,9 +138,9 @@ How to Put On: Pull from the top of the foot — not the straps — to help exte
 
 After Class: When you wipe down your equipment, give your Barreletics a quick wipe with the same cloth. Takes 5 seconds.
 
-Regular Cleaning: Warm soapy water. Rinse thoroughly. Air dry. No machine washing. No special treatment needed.
+Regular Cleaning: Hand wash with warm soapy water. That's it.
 
-Why So Easy: The material is non-porous, so it wipes clean — nothing soaks in and lingers the way it does in fabric. A damp cloth or quick rinse keeps them fresh. Some customers use the dishwasher; you don't need to.
+Why So Easy: The material is non-porous, so it wipes clean — nothing soaks in and lingers the way it does in fabric. Hand wash with warm soapy water. That's it.
 
 Lifespan: It depends on how you wear them — how often, how hard you go, how you care for them. Just like shoes, some people are harder on them than others. Used for what they're designed for — Pilates, barre, reformer, Lagree, yoga — they hold up beautifully. One customer recently passed 1,000 classes on a single pair. Another is on year four. Never loses shape. Never loses grip.
 ```

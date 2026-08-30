@@ -1,12 +1,12 @@
 # Frozen Spec — PDP
 
 ---
-status: v19 Locked + draft-matched · proportions LOCKED 2026-08-08 night · v16 Locked prior
+status: Closed PDP SIGNED 2026-08-16 · v19 Locked lineage · proportions LOCKED 2026-08-08 night · v16 Locked prior
 surface: Product (`templates/product.json` Closed · `product.open-sole.json` · `product.outdoor.json`)
-authority_mock: `docs/Barreletics PDP - Definitive-v19.html`
-authority_draft: theme `187144929571` (M4 Visual QA) ↔ `shopify-build/templates/product*.json`
+authority_mock: `docs/Barreletics PDP - Definitive-v19.html` (lineage — do not overwrite)
+authority_draft: theme `187144929571` (M4 Visual QA) ↔ current `shopify-build/templates/product.json`
 authority_locked_prior: `docs/Barreletics PDP - Definitive-v16.html` @ `691f03b`
-updated: 2026-08-08
+updated: 2026-08-16
 ---
 
 > ## ⛔ NEVER OVERWRITE LOCKED MOCK FILES
@@ -18,7 +18,9 @@ updated: 2026-08-08
 
 ## Locked spine order (`product.json`)
 
-`pdp-buy-box` → `value-strip` → `pdp-features` → `disciplines` → `fifty-fifty-sock-era` → `variant-grid` → `fifty-fifty-lifestyle` (quote) → `fullbleed-statement` (**TRANSFORM YOUR PRACTICE**) → `pdp-sock-math` (compact) → `fullbleed-lifestyle` (**media-only wow** · Stef running) → `fifty-fifty-commit` → `social-proof` → `fifty-fifty-numbers` (Think outside the sock!) → `guarantee-band` (centered 3-up) → `home-juicer` → `collection-faq` (FAQ+GEO) → `pdp-sticky-atc`
+`pdp-buy-box` → `value-strip` → `pdp-features` → `disciplines` → `fifty-fifty-sock-era` → `variant-grid` → `fifty-fifty-lifestyle` (Kimberly quote) → `fullbleed-statement` (**TRANSFORM YOUR PRACTICE**) → `pdp-sock-math` (**editorial L**) → `fullbleed-lifestyle` (**media-only wow** · video · 80/60) → `fifty-fifty-commit` → `reviews` (`pdp-reviews`) → `fifty-fifty-numbers` (Think outside the sock!) → `guarantee-band` (centered 3-up) → `home-juicer` → `collection-faq` (FAQ+GEO) → `pdp-sticky-atc`
+
+**SIGNED 2026-08-16 (Closed only):** no extra wow section. Wow = `fullbleed-lifestyle` at 80vh / 60vh. Swap media in-slot only. Open / Outdoor not signed.
 
 **Absent on page (HARD):** `studio-trust` · page-level `newsletter`
 
@@ -32,7 +34,7 @@ updated: 2026-08-08
 | `fullbleed-statement` + lifestyle wow | `height_desktop: **80**` · `height_mobile: **60**` | Was drifted 90/100 + 70 |
 | Buy gallery | aspect **1:1** · thumbs **72×72** · `object-fit: cover` | Already on lock |
 | Buy-box type (living) | SEO title **18/600** · lede `clamp(34–44)/400` · price via `--text-4xl` (**36**) · ATC Type OS CTA | Keep as built — do not thrash to mock 15/32 unless letter |
-| Sole badge | **Open = rust** `#c45c3f` · **Closed/Outdoor = charcoal** `#1c1916` | CURRENT MESSAGE 2026-08-08 |
+| Sole badge | **Closed + Open + Outdoor = rust** `#c45c3f` (OWNER 2026-08-11 — never charcoal on Closed) | TE black/charcoal/blue honored |
 | Trust line | `Trusted by 1,000+ Instructors` | Never invent review counts · H1 has **no** sole dash |
 | FAQ cities | NYC / LA / London·Melbourne (/ Toronto) **last** under Everything you need to know | |
 
@@ -46,8 +48,8 @@ updated: 2026-08-08
 | DP-PS | **Purchase stack LOCKED** — Option A + empty under ATC + kit Option A |
 | DP-4X | **Variants 4× LOCKED** — under Quick Add |
 | DP-TR | **Trust split LOCKED 2026-08-01** — **4-up strip** (Made in USA · Free shipping over $150 · 30/90) · no under-ATC repeat · accordion detail · no page studio-trust · no strip links by default |
-| DP-RV | **Reviews = hybrid `pdp-reviews`** — 3 curated photo + 6 curated text (product knowledge quotes) · TE for real photos |
-| DP-SM | **Sock math compact** — One pair. Done. · empty CTA |
+| DP-RV | **Reviews = `pdp-reviews`** live Judge.me (same spine index). Hybrid curated cards are history. |
+| DP-SM | **Sock math editorial L on Closed** — v8 copy · Juicer 5986441 · 480 cover. Compact left for Coperni. |
 | DP-FB | **TRANSFORM** + **lifestyle wow** at **80vh / 60vh** (proportions lock 2026-08-08) |
 | DP-PROP | **PDP fifty-fifty 560 / fullbleed 80·60** — not sitewide; Home stays 640 |
 | DP-LS | **Lifestyle = fifty-fifty quote** · **Numbers = Think outside the sock!** statement |

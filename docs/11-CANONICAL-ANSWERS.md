@@ -218,11 +218,10 @@ The duties line belongs **here**, on warranty replacements. Keep it. Do not let 
 ## Care
 
 **CA-23 · Cleaning**
-> Warm soapy water, rinse, air dry. That's it — no machine washing.
-> When you wipe down your equipment, a pass with the same cloth works too.
+> Hand wash with warm soapy water. That's it.
 
-**CA-24 · Dishwasher** *(acknowledge, don't recommend)*
-> Some customers run theirs through the dishwasher. You don't need to — a rinse by hand does the same job with less wear.
+**CA-24 · Dishwasher / washing machine** — RETIRED 2026-08-21
+> Do not mention dishwasher or washing machine. Care is hand wash only.
 
 **CA-25 · Putting them on**
 > Pull from the top of the foot, not the straps. Pulling the straps puts stress on the attachment points.
@@ -245,6 +244,37 @@ Do not lead with condition-specific promises. Anecdotes belong in support conver
 
 ---
 
+## Website chatbot (Tidio) — unanswered intents added 2026-08-24
+
+These four came from Tidio’s “suggestions” queue. Answers live here. Tidio paste copy: `docs/19-tidio-architecture.md` + `planning/m4b-tidio-knowledge-base.md`.
+
+**CA-28 · Wrong items in the order** *(Tidio intent: Order damaged or wrong · asked 2026-08-12)*
+> Sorry to hear this. When you have a moment, send your order number and a photo of what arrived: https://barreletics.com/pages/contact-us-form
+>
+> We'll get the right pair on the way as soon as we have those.
+
+Tone matches Help Scout **8.1** (quality/defect), compressed for chat. No “that’s on us,” no “teammate,” no “take care of the rest.” In Tidio: hand off after this — do not process the swap in the bot. Do not charge the $7.95 return rate on a store error. Do not promise a callback time.
+
+**CA-29 · Outdoor colors out of stock / restock** *(Tidio intent: Product availability · asked 2026-07-10)*
+> We don’t publish restock dates. Outdoor colors come back in production batches. Check the Outdoor page for what’s in stock now, or join the list for new drops. A teammate can note the color you want.
+
+Product: https://barreletics.com/products/aquatic-performance-skins  
+Say **Outdoor**, not aquatic / water shoe, in our voice. Never invent a date or a color coming back. Never say pool.
+
+**CA-30 · Weight of the shoes** *(Tidio intent: Product details · asked 2026-06-28)*
+> We don’t publish a scale weight. They’re ultra-light studio footwear — second-skin feel, not a shoe you weigh. If you need a shipping weight for a carrier, a teammate can pull it.
+
+Do not invent ounces or grams. None are in the OS.
+
+**CA-31 · Men’s 13 / 14** *(Tidio intent: Product advice · asked 2026-08-24)*
+> Our largest is Large — men's up to 10.5. We don't currently offer 13 or 14, but we're tracking the request as we plan future sizes.
+>
+> Size chart: https://barreletics.com/pages/performance-skins-size-chart
+
+Tone matches Help Scout **2.3** (no Small). Same chart as **CA-05**. Do not promise a 13/14 or a date. Do not offer a custom size.
+
+---
+
 ## Propagation — where these answers live
 
 Change here first, then update every surface below and note it in `planning/m4-section-freeze.md`.
@@ -260,6 +290,7 @@ Change here first, then update every surface below and note it in `planning/m4-s
 | CA-17–CA-22 | `page.shipping-retruns.json` (live) + `page.returns.json` alias · `page.shipping.json` + `sections/page-shipping.liquid` · `page.faq.json` · `page.start-a-retrun.json` |
 | CA-23–CA-25 | `page.faq.json` · care-instructions page · `page.technology.json` |
 | CA-26 | PDP · collection · kit pages |
+| CA-28–CA-31 | `docs/19-tidio-architecture.md` · `planning/m4b-tidio-knowledge-base.md` · `planning/tidio-lyro-guidance.md` · live Tidio (Andrew paste — OWNER-MANUAL §G) |
 
 **Reminder:** three Help pages render a template whose name doesn't match the handle — see the verified suffix table in `planning/page-template-registry.md`. Push every alias in a pair.
 

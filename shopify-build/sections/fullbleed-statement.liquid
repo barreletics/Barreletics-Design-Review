@@ -19,6 +19,7 @@
   assign overlay_alpha = overlay_opacity | times: 0.01
   assign focal_x = section.settings.focal_x | default: 50
   assign focal_y = section.settings.focal_y | default: 50
+  assign media_fit = section.settings.media_fit | default: 'cover'
   assign water_tint = section.settings.water_tint | default: 'none'
   assign water_tint_strength = section.settings.water_tint_strength | default: 40
   assign water_tint_alpha = water_tint_strength | times: 0.01
@@ -40,7 +41,7 @@
 %}
 
 <section
-  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} fullbleed-statement{% unless show_text %} fullbleed-statement--media-only{% endunless %}{% if water_tint != 'none' %} fullbleed-statement--tint-{{ water_tint }}{% endif %}"
+  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} fullbleed-statement{% unless show_text %} fullbleed-statement--media-only{% endunless %}{% if media_fit == 'contain' %} fullbleed-statement--contain{% endif %}{% if water_tint != 'none' %} fullbleed-statement--tint-{{ water_tint }}{% endif %}"
   style="{% render 'section-inset-vars' %} 
     --fb-media-radius: {{ media_radius }}px;
     --fb-height-desktop: {{ height_desktop }}vh;
@@ -155,6 +156,14 @@
     object-fit: cover;
     object-position: var(--fb-focal, 50% 50%);
     display: block;
+  }
+  /* Contain: whole photo (face + board). Default Cover unchanged — Closed / sand hero stay fill-crop. */
+  #shopify-section-{{ section.id }} .fullbleed-statement--contain .fullbleed-statement__bg img,
+  #shopify-section-{{ section.id }} .fullbleed-statement--contain .fullbleed-statement__video {
+    object-fit: contain;
+  }
+  #shopify-section-{{ section.id }} .fullbleed-statement--contain {
+    background: #3d7ea6;
   }
   #shopify-section-{{ section.id }} .fullbleed-statement__video {
     position: absolute;
@@ -519,6 +528,17 @@
       "unit": "%",
       "default": 55,
       "info": "Dark overlay behind text. Ignored in image-only mode."
+    },
+    {
+      "type": "select",
+      "id": "media_fit",
+      "label": "Image fit",
+      "options": [
+        { "value": "cover", "label": "Cover — fill (crop)" },
+        { "value": "contain", "label": "Contain — whole photo" }
+      ],
+      "default": "cover",
+      "info": "Cover is the sitewide default. Contain only when a tall photo must show face + product (e.g. Outdoor lake paddle)."
     },
     { "type": "header", "content": "Image crop — focal point" },
     {

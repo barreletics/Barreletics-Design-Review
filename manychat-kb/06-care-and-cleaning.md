@@ -16,15 +16,13 @@ When you wipe down your equipment, give your Barreletics a quick wipe with the s
 
 ## Regular Cleaning
 
-**Warm soapy water. Rinse thoroughly. Air dry.**
-
-That's it. No machine washing. No special treatment needed.
+**Hand wash with warm soapy water. That's it.**
 
 ## Why So Easy?
 
-Barreletics are low-maintenance by design. The material is non-porous, so it wipes clean — nothing soaks in and lingers the way it does in fabric. A damp cloth or quick rinse keeps them fresh.
+Barreletics are low-maintenance by design. The material is non-porous, so it wipes clean — nothing soaks in and lingers the way it does in fabric. Hand wash with warm soapy water. That's it.
 
-Some customers run theirs through the dishwasher. You don't need to; a rinse by hand does the same job with less wear.
+> ⛔ **RETIRED 2026-08-21 (owner letter):** ~~dishwasher~~ · ~~washing machine~~ · ~~"some customers run theirs through the dishwasher"~~. Care is hand wash only. Historical record only.
 
 > ⛔ **RETIRED 2026-08-12 (owner letter):** ~~"the material is antimicrobial and sweat-resistant"~~ and ~~"grip socks... hold bacteria."~~ Never claim the material acts on bacteria — describe the surface instead. Historical record only.
 

@@ -70,6 +70,18 @@
     assign quote_italic = true
   endif
   assign quote_star_color = section.settings.quote_star_color | default: '#d4af37'
+  assign show_trust_strip = section.settings.show_trust_strip
+  assign show_trust_stars = false
+  if show_trust_strip
+    assign show_trust_stars = true
+  elsif content_style == 'quote' and section.settings.show_quote_stars != false
+    assign show_trust_stars = true
+  endif
+  assign trust_text = section.settings.trust_text | strip
+  assign show_trust_label = false
+  if show_trust_strip and trust_text != blank
+    assign show_trust_label = true
+  endif
   assign quote_author_case = section.settings.quote_author_case | default: 'uppercase'
   assign stat_bar_color = section.settings.stat_bar_color | default: '#c45c3f'
 %}
@@ -81,7 +93,7 @@
 
 <section
   {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | handleize }}"{% endif %}
-  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} split-section{% if section.settings.reverse %} split-section--reverse{% endif %}{% if media_fit == 'contain' %} split-section--contain{% endif %}{% if media_aspect == 'square' %} split-section--media-square{% endif %}{% if media_radius_outer %} split-section--media-outer-radius{% endif %}{% render 'split-mobile-stack-class', mobile_stack_order: section.settings.mobile_stack_order %}"
+  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} split-section{% if section.settings.reverse %} split-section--reverse{% endif %}{% if media_fit == 'contain' %} split-section--contain{% endif %}{% if media_fit == 'fit' %} split-section--fit{% endif %}{% if media_aspect == 'square' %} split-section--media-square{% endif %}{% if media_radius_outer %} split-section--media-outer-radius{% endif %}{% render 'split-mobile-stack-class', mobile_stack_order: section.settings.mobile_stack_order %}"
   style="{% render 'section-inset-vars' %} 
     --ff-min-height: {{ min_height }}px;
     --ff-mobile-media-height: {{ mobile_media_height }}px;
@@ -172,14 +184,22 @@
     {% endif %}
   </div>
 
+  {% capture split_trust %}
+    {% if show_trust_stars %}
+      <div class="split-trust{% if show_trust_label %} split-trust--with-text{% endif %}">
+        <span class="split-trust__stars" aria-hidden="true">★★★★★</span>
+        {% if show_trust_label %}
+          <span class="split-trust__text">{{ trust_text | escape }}</span>
+        {% endif %}
+      </div>
+    {% endif %}
+  {% endcapture %}
   <div class="split-text align-editorial{% if content_style == 'quote' %} split-text--quote{% endif %}{% if content_style == 'stats' %} split-text--stats{% endif %}{% if content_style == 'statement' %} split-text--statement{% endif %}" style="background: {{ section.settings.bg_color | default: '#fff' }};">
     {% if content_style == 'quote' %}
       {% if section.settings.eyebrow != blank %}
         <h2 class="split-text__title {{ heading_class }}" style="margin:0 0 20px;">{{ section.settings.eyebrow }}</h2>
       {% endif %}
-      {% if section.settings.show_quote_stars != false %}
-        <div class="split-quote__stars" aria-hidden="true">★★★★★</div>
-      {% endif %}
+      {{ split_trust }}
       {% if section.settings.title != blank %}
         <p class="split-quote__text">“{{ section.settings.title | strip | remove: '"' | remove: '“' | remove: '”' }}”</p>
       {% endif %}
@@ -201,6 +221,7 @@
       {% if section.settings.eyebrow != blank %}
         <p class="split-text__eyebrow type-label">{{ section.settings.eyebrow }}</p>
       {% endif %}
+      {{ split_trust }}
       <div class="split-stats">
         {% assign has_stat_blocks = false %}
         {% for block in section.blocks %}
@@ -246,6 +267,7 @@
       {% if section.settings.eyebrow != blank %}
         <p class="split-text__eyebrow type-label{% unless content_style == 'statement' %} eyebrow--accent{% endunless %}">{{ section.settings.eyebrow }}</p>
       {% endif %}
+      {{ split_trust }}
       {% if section.settings.title != blank %}
         {% liquid
           if content_style == 'statement'
@@ -345,15 +367,15 @@
     transform: scale(var(--ff-image-scale, 1));
     transform-origin: var(--ff-object-position, center);
   }
-  /* Full-bleed media law (Andrew 2026-08-08): outside "contain" mode the image
-     owns its whole column — edge to edge, top to bottom. No inset container,
-     no padding, no margin. Stated explicitly so it cannot drift back. */
-  #shopify-section-{{ section.id }} .split-section:not(.split-section--contain) .split-media {
+  /* Full-bleed media law (Andrew 2026-08-08): Cover mode only. Fit and
+     packshot-contain are excluded — :not(contain) was winning over Fit
+     and forcing object-fit: cover (2026-08-17). */
+  #shopify-section-{{ section.id }} .split-section:not(.split-section--contain):not(.split-section--fit) .split-media {
     padding: 0;
     margin: 0;
   }
-  #shopify-section-{{ section.id }} .split-section:not(.split-section--contain) .split-media__img,
-  #shopify-section-{{ section.id }} .split-section:not(.split-section--contain) .split-media__video {
+  #shopify-section-{{ section.id }} .split-section:not(.split-section--contain):not(.split-section--fit) .split-media__img,
+  #shopify-section-{{ section.id }} .split-section:not(.split-section--contain):not(.split-section--fit) .split-media__video {
     padding: 0;
     margin: 0;
     max-width: none;
@@ -378,6 +400,31 @@
     padding: 48px 24px;
     transform: scale(var(--ff-image-scale, 1));
     transform-origin: center center;
+  }
+  /* Fit = natural photo (Andrew 2026-08-17). Column width owns the
+     image. Height follows the file. No 560 crop. No letterbox. */
+  #shopify-section-{{ section.id }} .split-section.split-section--fit {
+    min-height: 0;
+  }
+  #shopify-section-{{ section.id }} .split-section.split-section--fit .split-media {
+    padding: 0;
+    margin: 0;
+    height: auto;
+    min-height: 0;
+    overflow: hidden;
+  }
+  #shopify-section-{{ section.id }} .split-section.split-section--fit .split-media__img,
+  #shopify-section-{{ section.id }} .split-section.split-section--fit .split-media__video {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    height: auto;
+    max-width: none;
+    padding: 0;
+    margin: 0;
+    object-fit: unset;
+    transform: none;
+    display: block;
   }
   #shopify-section-{{ section.id }} .split-media__placeholder {
     width: 100%;
@@ -500,6 +547,10 @@
       height: var(--ff-mobile-media-height, 320px);
       min-height: var(--ff-mobile-media-height, 320px);
     }
+    #shopify-section-{{ section.id }} .split-section.split-section--fit .split-media {
+      height: auto;
+      min-height: 0;
+    }
     #shopify-section-{{ section.id }} .split-section--media-outer-radius .split-media,
     #shopify-section-{{ section.id }} .split-section--media-outer-radius.split-section--reverse .split-media {
       border-radius: var(--ff-media-radius, 0);
@@ -514,12 +565,25 @@
   }
 
   /* Quote composition — Cormorant ~28px default; Title size/weight scale quote */
+  #shopify-section-{{ section.id }} .split-trust {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 18px;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .split-trust__stars,
   #shopify-section-{{ section.id }} .split-quote__stars {
     color: var(--ff-quote-star, #d4af37);
     font-size: 15px;
     letter-spacing: 0.22em;
-    margin-bottom: 18px;
     line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .split-trust__text {
+    font-size: 13px;
+    font-weight: 400;
+    color: #4a4a4a;
+    letter-spacing: 0;
   }
   #shopify-section-{{ section.id }} .split-quote__text {
     font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
@@ -606,7 +670,232 @@
   "settings": [
     {
       "type": "header",
-      "content": "Shared \u2014 Content"
+      "content": "1 — Photo / video"
+    },
+    {
+      "type": "paragraph",
+      "content": "Pick ONE. Priority: Shopify video → Video URL → Shopify image → Image URL."
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Shopify video",
+      "info": "Preferred when the file lives in Shopify Files. Use this OR Video URL — not both. Shopify video wins if both are set."
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "Video URL (mp4)",
+      "info": "External/CDN mp4 when you are not using Shopify Video above. Ignored if Shopify video is set. Leave blank if using Shopify video or a still image."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image / poster (Shopify)",
+      "info": "Still image for image mode, OR poster frame when using Video URL. Prefer this over URL fields when the asset is in Shopify. Leave blank to use Image URL fallback (or poster URL for video)."
+    },
+    {
+      "type": "text",
+      "id": "poster_url",
+      "label": "Poster URL fallback",
+      "info": "Poster for Video URL only when Image / poster (Shopify) is empty. Not used for still-image mode. Leave blank if Shopify image/poster is set."
+    },
+    {
+      "type": "text",
+      "id": "image_asset",
+      "label": "Theme asset filename",
+      "info": "Optional. e.g. outdoor-water-50-50-blue.jpg — used when Shopify image picker is empty. Prefer for color-graded theme assets."
+    },
+    {
+      "type": "text",
+      "id": "image_url",
+      "label": "Image URL (optional fallback)",
+      "info": "Only used when the Shopify image picker and Theme asset are empty (and there is no video). If Shopify image is set, it wins."
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image alt text"
+    },
+    {
+      "type": "header",
+      "content": "2 — Focus + height"
+    },
+    {
+      "type": "paragraph",
+      "content": "Cover crops to fill a fixed height. Fit shows the natural photo — width fills the column, height follows the file. Contain is the small packshot inset."
+    },
+    {
+      "type": "select",
+      "id": "media_fit",
+      "label": "Media fit",
+      "options": [
+        {
+          "value": "cover",
+          "label": "Cover (lifestyle / video)"
+        },
+        {
+          "value": "fit",
+          "label": "Fit (natural photo)"
+        },
+        {
+          "value": "contain",
+          "label": "Contain (packshot)"
+        }
+      ],
+      "default": "cover"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image focal point",
+      "options": [
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        },
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        },
+        {
+          "value": "top left",
+          "label": "Top left"
+        },
+        {
+          "value": "top right",
+          "label": "Top right"
+        },
+        {
+          "value": "bottom left",
+          "label": "Bottom left"
+        },
+        {
+          "value": "bottom right",
+          "label": "Bottom right"
+        },
+        {
+          "value": "custom",
+          "label": "Custom (use the sliders below)"
+        }
+      ],
+      "default": "center",
+      "info": "object-position for cover crops (and contain alignment). The nine presets snap to the edges; pick Custom when a packshot needs a few percent of nudge to stop the crop clipping it."
+    },
+    {
+      "type": "range",
+      "id": "focal_x",
+      "label": "Custom focal point — horizontal",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "info": "Only when Image focal point = Custom. 0 = show the left edge, 100 = show the right edge."
+    },
+    {
+      "type": "range",
+      "id": "focal_y",
+      "label": "Custom focal point — vertical",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "info": "Only when Image focal point = Custom. 0 = keep the top of the photo, 100 = keep the bottom. Lower this when a cover crop is eating the top of a packshot."
+    },
+    {
+      "type": "range",
+      "id": "image_scale",
+      "label": "Image scale",
+      "min": 100,
+      "max": 150,
+      "step": 5,
+      "unit": "%",
+      "default": 100,
+      "info": "Zooms media inside the cell (cover crop / contain packshot)."
+    },
+    {
+      "type": "range",
+      "id": "contain_width",
+      "label": "Contain media width",
+      "min": 40,
+      "max": 100,
+      "step": 2,
+      "unit": "%",
+      "default": 72,
+      "info": "Only when Media fit = Contain. WORKING mock uses ~72%."
+    },
+    {
+      "type": "color",
+      "id": "media_bg",
+      "label": "Media background (contain)",
+      "default": "#f9f9f9"
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "label": "Desktop min height",
+      "min": 400,
+      "max": 900,
+      "step": 20,
+      "unit": "px",
+      "default": 640,
+      "info": "Home WORKING default is 640px."
+    },
+    {
+      "type": "range",
+      "id": "media_column_pct",
+      "label": "Media column %",
+      "min": 35,
+      "max": 65,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "info": "Desktop only. Text column = 100 − media %. Default 50/50."
+    },
+    {
+      "type": "range",
+      "id": "mobile_media_height",
+      "label": "Mobile media height",
+      "min": 220,
+      "max": 520,
+      "step": 10,
+      "unit": "px",
+      "default": 320
+    },
+    {
+      "type": "select",
+      "id": "media_aspect",
+      "label": "Media frame shape",
+      "options": [
+        {
+          "value": "stretch",
+          "label": "Stretch to section height (default)"
+        },
+        {
+          "value": "square",
+          "label": "Square — packshots under cover"
+        }
+      ],
+      "default": "stretch",
+      "info": "Square keeps TopBottom packshots inside the frame with media_fit Cover (no landscape toe-clip). Lifestyle photos stay on Stretch."
+    },
+    {
+      "type": "header",
+      "content": "3 — Heading / body / CTA"
     },
     {
       "type": "select",
@@ -615,123 +904,23 @@
       "options": [
         {
           "value": "standard",
-          "label": "Standard \u2014 heading + body + CTA"
+          "label": "Standard — heading + body + CTA"
         },
         {
           "value": "statement",
-          "label": "Statement \u2014 big slogan + quiet sub"
+          "label": "Statement — big slogan + quiet sub"
         },
         {
           "value": "quote",
-          "label": "Quote \u2014 stars + italic + author"
+          "label": "Quote — stars + italic + author"
         },
         {
           "value": "stats",
-          "label": "Stats \u2014 rust-bar metrics"
+          "label": "Stats — rust-bar metrics"
         }
       ],
       "default": "standard",
       "info": "Pick a recipe. Quote + Stats controls appear immediately below. Standard/Statement use Heading + Body + CTA as usual."
-    },
-    {
-      "type": "header",
-      "content": "Quote"
-    },
-    {
-      "type": "paragraph",
-      "content": "Only when Content style = Quote. Put the quote in Heading. Title size/weight scale it."
-    },
-    {
-      "type": "checkbox",
-      "id": "show_quote_stars",
-      "label": "Show quote stars",
-      "default": true
-    },
-    {
-      "type": "color",
-      "id": "quote_star_color",
-      "label": "Star color",
-      "default": "#d4af37"
-    },
-    {
-      "type": "checkbox",
-      "id": "quote_italic",
-      "label": "Italic quote",
-      "default": true
-    },
-    {
-      "type": "text",
-      "id": "quote_author",
-      "label": "Author name",
-      "info": "Falls back to Body if blank."
-    },
-    {
-      "type": "select",
-      "id": "quote_author_case",
-      "label": "Author style",
-      "options": [
-        { "value": "uppercase", "label": "Uppercase" },
-        { "value": "sentence", "label": "Sentence case" }
-      ],
-      "default": "uppercase"
-    },
-    {
-      "type": "text",
-      "id": "quote_meta",
-      "label": "Short description / role",
-      "info": "e.g. Barre Instructor \u00b7 New York, NY"
-    },
-    {
-      "type": "header",
-      "content": "Stats"
-    },
-    {
-      "type": "paragraph",
-      "content": "Only when Content style = Stats. Prefer Stat blocks at the bottom; fallbacks below if none."
-    },
-    {
-      "type": "color",
-      "id": "stat_bar_color",
-      "label": "Rust bar color",
-      "default": "#c45c3f",
-      "info": "Left accent on each metric."
-    },
-    {
-      "type": "text",
-      "id": "stat_1_value",
-      "label": "Fallback \u2014 Stat 1 value",
-      "info": "e.g. 360\u00b0 \u2014 ignored when Stat blocks exist"
-    },
-    {
-      "type": "text",
-      "id": "stat_1_label",
-      "label": "Fallback \u2014 Stat 1 label"
-    },
-    {
-      "type": "text",
-      "id": "stat_2_value",
-      "label": "Fallback \u2014 Stat 2 value"
-    },
-    {
-      "type": "text",
-      "id": "stat_2_label",
-      "label": "Fallback \u2014 Stat 2 label"
-    },
-    {
-      "type": "text",
-      "id": "stat_3_value",
-      "label": "Fallback \u2014 Stat 3 value"
-    },
-    {
-      "type": "text",
-      "id": "stat_3_label",
-      "label": "Fallback \u2014 Stat 3 label"
-    },
-    {
-      "type": "checkbox",
-      "id": "stat_3_emphasis",
-      "label": "Fallback Stat 3 as longer line (smaller type)",
-      "default": true
     },
     {
       "type": "text",
@@ -745,15 +934,15 @@
       "options": [
         {
           "value": "display",
-          "label": "Display \u2014 brand statement"
+          "label": "Display — brand statement"
         },
         {
           "value": "standard",
-          "label": "Standard \u2014 wayfinding"
+          "label": "Standard — wayfinding"
         }
       ],
       "default": "display",
-      "info": "Family is brand Type OS \u2014 use Title size/weight to adjust. No font family picker."
+      "info": "Family is brand Type OS — use Title size/weight to adjust. No font family picker."
     },
     {
       "type": "textarea",
@@ -793,7 +982,7 @@
         }
       ],
       "default": "h2",
-      "info": "Outputs the real HTML tag (h1\u2013h6) for SEO/accessibility. Visual size is Title size \u2014 not this control."
+      "info": "Outputs the real HTML tag (h1–h6) for SEO/accessibility. Visual size is Title size — not this control."
     },
     {
       "type": "select",
@@ -890,7 +1079,7 @@
         }
       ],
       "default": "default",
-      "info": "Family is brand Type OS \u2014 size only. Default keeps Type OS."
+      "info": "Family is brand Type OS — size only. Default keeps Type OS."
     },
     {
       "type": "select",
@@ -924,8 +1113,8 @@
       "type": "textarea",
       "id": "body",
       "label": "Body",
-      "default": "Built to hold when it matters most\u2014so you can push deeper, stay longer, and move with confidence.",
-      "info": "Family is brand Type OS \u2014 use Body size/weight to adjust. No font family picker."
+      "default": "Built to hold when it matters most—so you can push deeper, stay longer, and move with confidence.",
+      "info": "Family is brand Type OS — use Body size/weight to adjust. No font family picker."
     },
     {
       "type": "select",
@@ -1022,7 +1211,7 @@
         }
       ],
       "default": "default",
-      "info": "Family is brand Type OS \u2014 size only. Default keeps Type OS body size."
+      "info": "Family is brand Type OS — size only. Default keeps Type OS body size."
     },
     {
       "type": "select",
@@ -1147,19 +1336,19 @@
       "options": [
         {
           "value": "custom",
-          "label": "Custom URL\u2026"
+          "label": "Custom URL…"
         },
         {
           "value": "#buy",
-          "label": "#buy \u2014 Buy box"
+          "label": "#buy — Buy box"
         },
         {
           "value": "#variants",
-          "label": "#variants \u2014 Shop styles"
+          "label": "#variants — Shop styles"
         },
         {
           "value": "#knock-socks",
-          "label": "#knock-socks \u2014 Statement"
+          "label": "#knock-socks — Statement"
         },
         {
           "value": "#reviews",
@@ -1179,7 +1368,7 @@
         },
         {
           "value": "#coperni",
-          "label": "#coperni \u2014 Collab"
+          "label": "#coperni — Collab"
         },
         {
           "value": "#problem",
@@ -1187,115 +1376,130 @@
         }
       ],
       "default": "custom",
-      "info": "Homepage section anchors jump on the same page. Choose Custom URL\u2026 for a full URL, collection/product/page, or any other #hash. Blank custom \u2192 all-products collection."
+      "info": "Homepage section anchors jump on the same page. Choose Custom URL… for a full URL, collection/product/page, or any other #hash. Blank custom → all-products collection."
     },
     {
       "type": "text",
       "id": "cta_url",
       "label": "Custom CTA URL",
-      "info": "Used when CTA link = Custom URL\u2026. Full URL, relative path, or custom #hash. Shopify\u2019s URL picker often drops hash-only links \u2014 this text field keeps them."
+      "info": "Used when CTA link = Custom URL…. Full URL, relative path, or custom #hash. Shopify’s URL picker often drops hash-only links — this text field keeps them."
     },
     {
       "type": "header",
-      "content": "Shared \u2014 Media"
+      "content": "4 — Trust strip"
     },
     {
       "type": "paragraph",
-      "content": "Pick ONE media path. Priority: Shopify video \u2192 Video URL \u2192 Shopify image \u2192 Image URL fallback. Leave unused fields blank."
+      "content": "Off by default. Quote boxes still show stars unless you turn quote stars off."
     },
     {
-      "type": "video",
-      "id": "video",
-      "label": "Shopify video",
-      "info": "Preferred when the file lives in Shopify Files. Use this OR Video URL \u2014 not both. Shopify video wins if both are set."
-    },
-    {
-      "type": "text",
-      "id": "video_url",
-      "label": "Video URL (mp4)",
-      "info": "External/CDN mp4 when you are not using Shopify Video above. Ignored if Shopify video is set. Leave blank if using Shopify video or a still image."
-    },
-    {
-      "type": "image_picker",
-      "id": "image",
-      "label": "Image / poster (Shopify)",
-      "info": "Still image for image mode, OR poster frame when using Video URL. Prefer this over URL fields when the asset is in Shopify. Leave blank to use Image URL fallback (or poster URL for video)."
+      "type": "checkbox",
+      "id": "show_trust_strip",
+      "label": "Show stars + trust line",
+      "default": false
     },
     {
       "type": "text",
-      "id": "poster_url",
-      "label": "Poster URL fallback",
-      "info": "Poster for Video URL only when Image / poster (Shopify) is empty. Not used for still-image mode. Leave blank if Shopify image/poster is set."
-    },
-    {
-      "type": "text",
-      "id": "image_asset",
-      "label": "Theme asset filename",
-      "info": "Optional. e.g. outdoor-water-50-50-blue.jpg — used when Shopify image picker is empty. Prefer for color-graded theme assets."
-    },
-    {
-      "type": "text",
-      "id": "image_url",
-      "label": "Image URL (optional fallback)",
-      "info": "Only used when the Shopify image picker and Theme asset are empty (and there is no video). If Shopify image is set, it wins."
-    },
-    {
-      "type": "text",
-      "id": "image_alt",
-      "label": "Image alt text"
+      "id": "trust_text",
+      "label": "Trust line",
+      "info": "e.g. Trusted by 1,000+ Instructors. Blank = stars only. Never invent review counts."
     },
     {
       "type": "header",
-      "content": "Shared \u2014 Layout"
+      "content": "5 — Quote / stats"
     },
     {
-      "type": "range",
-      "id": "min_height",
-      "label": "Desktop min height",
-      "min": 400,
-      "max": 900,
-      "step": 20,
-      "unit": "px",
-      "default": 640,
-      "info": "Home WORKING default is 640px."
+      "type": "paragraph",
+      "content": "Only if Content style is Quote or Stats."
     },
     {
-      "type": "range",
-      "id": "media_column_pct",
-      "label": "Media column %",
-      "min": 35,
-      "max": 65,
-      "step": 1,
-      "unit": "%",
-      "default": 50,
-      "info": "Desktop only. Text column = 100 \u2212 media %. Default 50/50."
+      "type": "checkbox",
+      "id": "show_quote_stars",
+      "label": "Quote stars (legacy)",
+      "default": true,
+      "info": "Kimberly uses this. New boxes: use Trust strip above."
     },
     {
-      "type": "range",
-      "id": "mobile_media_height",
-      "label": "Mobile media height",
-      "min": 220,
-      "max": 520,
-      "step": 10,
-      "unit": "px",
-      "default": 320
+      "type": "checkbox",
+      "id": "quote_italic",
+      "label": "Italic quote",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "quote_author",
+      "label": "Author name",
+      "info": "Falls back to Body if blank."
     },
     {
       "type": "select",
-      "id": "media_aspect",
-      "label": "Media frame shape",
+      "id": "quote_author_case",
+      "label": "Author style",
       "options": [
         {
-          "value": "stretch",
-          "label": "Stretch to section height (default)"
+          "value": "uppercase",
+          "label": "Uppercase"
         },
         {
-          "value": "square",
-          "label": "Square — packshots under cover"
+          "value": "sentence",
+          "label": "Sentence case"
         }
       ],
-      "default": "stretch",
-      "info": "Square keeps TopBottom packshots inside the frame with media_fit Cover (no landscape toe-clip). Lifestyle photos stay on Stretch."
+      "default": "uppercase"
+    },
+    {
+      "type": "text",
+      "id": "quote_meta",
+      "label": "Short description / role",
+      "info": "e.g. Barre Instructor · New York, NY"
+    },
+    {
+      "type": "color",
+      "id": "stat_bar_color",
+      "label": "Rust bar color",
+      "default": "#c45c3f",
+      "info": "Left accent on each metric."
+    },
+    {
+      "type": "text",
+      "id": "stat_1_value",
+      "label": "Fallback — Stat 1 value",
+      "info": "e.g. 360° — ignored when Stat blocks exist"
+    },
+    {
+      "type": "text",
+      "id": "stat_1_label",
+      "label": "Fallback — Stat 1 label"
+    },
+    {
+      "type": "text",
+      "id": "stat_2_value",
+      "label": "Fallback — Stat 2 value"
+    },
+    {
+      "type": "text",
+      "id": "stat_2_label",
+      "label": "Fallback — Stat 2 label"
+    },
+    {
+      "type": "text",
+      "id": "stat_3_value",
+      "label": "Fallback — Stat 3 value"
+    },
+    {
+      "type": "text",
+      "id": "stat_3_label",
+      "label": "Fallback — Stat 3 label"
+    },
+    {
+      "type": "checkbox",
+      "id": "stat_3_emphasis",
+      "label": "Fallback Stat 3 as longer line (smaller type)",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "6 — Layout extras"
     },
     {
       "type": "checkbox",
@@ -1310,8 +1514,14 @@
       "label": "Mobile stack order",
       "default": "media_first",
       "options": [
-        { "value": "media_first", "label": "Image above copy" },
-        { "value": "copy_first", "label": "Copy above image" }
+        {
+          "value": "media_first",
+          "label": "Image above copy"
+        },
+        {
+          "value": "copy_first",
+          "label": "Copy above image"
+        }
       ],
       "info": "Below 768px only."
     },
@@ -1329,7 +1539,7 @@
     {
       "type": "range",
       "id": "side_padding",
-      "label": "Text panel \u2014 left & right pad",
+      "label": "Text panel — left & right pad",
       "min": 16,
       "max": 96,
       "step": 4,
@@ -1340,7 +1550,7 @@
     {
       "type": "range",
       "id": "vertical_padding",
-      "label": "Text panel \u2014 top & bottom pad",
+      "label": "Text panel — top & bottom pad",
       "min": 32,
       "max": 120,
       "step": 4,
@@ -1357,7 +1567,7 @@
       "step": 2,
       "unit": "px",
       "default": 0,
-      "info": "Rounds the media panel only \u2014 independent of the text panel."
+      "info": "Rounds the media panel only — independent of the text panel."
     },
     {
       "type": "checkbox",
@@ -1388,152 +1598,28 @@
       "type": "text",
       "id": "anchor_id",
       "label": "Anchor ID (optional)",
-      "info": "This section\u2019s own ID for same-page jumps (e.g. never-loses-grip \u2192 #never-loses-grip). Not the same as CTA link."
+      "info": "This section’s own ID for same-page jumps (e.g. never-loses-grip → #never-loses-grip). Not the same as CTA link."
     },
     {
       "type": "text",
       "id": "aria_label",
       "label": "Accessibility name (aria-label)",
-      "info": "Accessibility name for screen readers. Not shown on the page. Leave blank unless you need a special name \u2014 blank uses the Heading."
+      "info": "Accessibility name for screen readers. Not shown on the page. Leave blank unless you need a special name — blank uses the Heading."
     },
     {
       "type": "header",
-      "content": "Media fit"
-    },
-    {
-      "type": "select",
-      "id": "media_fit",
-      "label": "Media fit",
-      "options": [
-        {
-          "value": "cover",
-          "label": "Cover (lifestyle / video)"
-        },
-        {
-          "value": "contain",
-          "label": "Contain (packshot)"
-        }
-      ],
-      "default": "cover"
-    },
-    {
-      "type": "select",
-      "id": "image_position",
-      "label": "Image focal point",
-      "options": [
-        {
-          "value": "center",
-          "label": "Center"
-        },
-        {
-          "value": "top",
-          "label": "Top"
-        },
-        {
-          "value": "bottom",
-          "label": "Bottom"
-        },
-        {
-          "value": "left",
-          "label": "Left"
-        },
-        {
-          "value": "right",
-          "label": "Right"
-        },
-        {
-          "value": "top left",
-          "label": "Top left"
-        },
-        {
-          "value": "top right",
-          "label": "Top right"
-        },
-        {
-          "value": "bottom left",
-          "label": "Bottom left"
-        },
-        {
-          "value": "bottom right",
-          "label": "Bottom right"
-        },
-        {
-          "value": "custom",
-          "label": "Custom (use the sliders below)"
-        }
-      ],
-      "default": "center",
-      "info": "object-position for cover crops (and contain alignment). The nine presets snap to the edges; pick Custom when a packshot needs a few percent of nudge to stop the crop clipping it."
-    },
-    {
-      "type": "range",
-      "id": "focal_x",
-      "label": "Custom focal point — horizontal",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "%",
-      "default": 50,
-      "info": "Only when Image focal point = Custom. 0 = show the left edge, 100 = show the right edge."
-    },
-    {
-      "type": "range",
-      "id": "focal_y",
-      "label": "Custom focal point — vertical",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "%",
-      "default": 50,
-      "info": "Only when Image focal point = Custom. 0 = keep the top of the photo, 100 = keep the bottom. Lower this when a cover crop is eating the top of a packshot."
-    },
-    {
-      "type": "range",
-      "id": "image_scale",
-      "label": "Image scale",
-      "min": 100,
-      "max": 150,
-      "step": 5,
-      "unit": "%",
-      "default": 100,
-      "info": "Zooms media inside the cell (cover crop / contain packshot)."
-    },
-    {
-      "type": "range",
-      "id": "contain_width",
-      "label": "Contain media width",
-      "min": 40,
-      "max": 100,
-      "step": 2,
-      "unit": "%",
-      "default": 72,
-      "info": "Only when Media fit = Contain. WORKING mock uses ~72%."
-    },
-    {
-      "type": "color",
-      "id": "media_bg",
-      "label": "Media background (contain)",
-      "default": "#f9f9f9"
-    },
-    {
-      "type": "text",
-      "id": "video_caption",
-      "label": "Video caption (compat \u2014 unused)"
-    },
-    {
-      "type": "header",
-      "content": "Section frame"
+      "content": "7 — Insets"
     },
     {
       "type": "paragraph",
-      "content": "OUTER inset from the page edges. Top/bottom independent; left & right = one control. Custom mobile OFF = mobile matches desktop. Defaults 0 = full bleed."
+      "content": "Outer inset from the page edges. Defaults 0 = full bleed."
     },
     {
       "type": "checkbox",
       "id": "inset_custom_mobile",
       "label": "Custom mobile inset",
       "default": false,
-      "info": "OFF (default): ignore the mobile inset sliders \u2014 mobile uses desktop Inset top / bottom / left & right. ON: use the mobile inset sliders instead."
+      "info": "OFF (default): ignore the mobile inset sliders — mobile uses desktop Inset top / bottom / left & right. ON: use the mobile inset sliders instead."
     },
     {
       "type": "range",
@@ -1569,7 +1655,7 @@
     {
       "type": "range",
       "id": "inset_top_mobile",
-      "label": "Inset top \u2014 mobile",
+      "label": "Inset top — mobile",
       "min": 0,
       "max": 64,
       "step": 4,
@@ -1580,7 +1666,7 @@
     {
       "type": "range",
       "id": "inset_bottom_mobile",
-      "label": "Inset bottom \u2014 mobile",
+      "label": "Inset bottom — mobile",
       "min": 0,
       "max": 64,
       "step": 4,
@@ -1590,7 +1676,7 @@
     {
       "type": "range",
       "id": "inset_x_mobile",
-      "label": "Inset left & right \u2014 mobile",
+      "label": "Inset left & right — mobile",
       "min": 0,
       "max": 64,
       "step": 4,
@@ -1620,7 +1706,7 @@
           "type": "text",
           "id": "value",
           "label": "Value",
-          "default": "360\u00b0"
+          "default": "360°"
         },
         {
           "type": "text",

@@ -47,7 +47,7 @@ Do the two sizing ones first if you only have time for two — wrong sizing cost
 
 The repo fixes the M4 build. These live in Admin and survive any theme push.
 
-- [ ] **Water Shoes product description — one field, twelve pages.** Verified live 2026-08-12. The description on `/products/aquatic-performance-skins` reads: "Perfect for outdoor adventures, the closed sole provides grip, stability, and protection from hot sand. **Ideal for paddle-boarding, boating and poolside activities.** Always check wet surfaces for slippage." Shopify echoes it into JSON-LD structured data on **every page of the site**, which is why "poolside" appears sitewide. Fixing this one field clears all of it. Suggested: "Perfect for outdoor adventures — grip, stability, and protection from hot sand. Ideal for paddle-boarding, boating, beach, and resortwear. Certain wet tile and stone areas are inherently slippery for any footwear."
+- [x] **Water Shoes product description — one field, twelve pages.** Done 2026-08-20. Admin description + SEO title no longer say pool / poolside. Now: paddle-boarding, boating, beach, and resortwear. Tag `grippy shoes for pools` removed. Image alts may still say pool — Admin media, not this field.
 
 - [ ] **`/blogs/news/barre-anywhere` — the real problem.** Verified live 2026-08-12. This is an **aqua barre article**: how to convert a land barre class into an aqua barre class in the shallow end with a pool noodle, and it pitches Performance Skins for "working out in the pool doing water aerobics, aqua barre or any other pool or beach activity." It actively recommends the product for pool use, which is exactly the slip liability P-012 exists to prevent. Unpublish or rewrite — don't just trim the word "pool."
 
@@ -73,6 +73,29 @@ Not urgent, but it's a permanent trip hazard. Three Admin pages point at a templ
 | Size chart | `/pages/performance-skins-size-chart` | `page.size-chart.json` |
 
 - [ ] Repoint each page's template in Admin to the canonical name, then the duplicate alias files can be deleted from the repo. Until then **every agent must push both files in each pair** or the change appears not to work. This has already burned one session.
+
+---
+
+## G · Tidio / Lyro (2026-08-24)
+
+**OS home:** `docs/19-tidio-architecture.md` · answers: `docs/11-CANONICAL-ANSWERS.md` CA-28–CA-31.  
+Repo is current. Live Lyro is not — agents cannot log into Tidio.
+
+- [ ] **Paste Guidance** from `docs/19-tidio-architecture.md` (three fields: behave · handoff · additional).
+- [ ] **Replace Lyro data source** with `planning/m4b-tidio-knowledge-base.md`.
+- [ ] **Add these four Q&As** (Tidio suggestions queue) if they are separate cards, not only in the upload file:
+
+**Wrong items:** Sorry to hear this. When you have a moment, send your order number and a photo of what arrived: https://barreletics.com/pages/contact-us-form
+
+We'll get the right pair on the way as soon as we have those.
+
+**Outdoor restock:** We don’t publish restock dates. Outdoor colors come back in production batches. Check the Outdoor page for what’s in stock now, or join the list for new drops. A teammate can note the color you want.
+
+**Weight:** We don’t publish a scale weight. They’re ultra-light studio footwear — second-skin feel, not a shoe you weigh. If you need a shipping weight for a carrier, a teammate can pull it.
+
+**Men’s 13/14:** Our largest is Large — men's up to 10.5. We don't currently offer 13 or 14, but we're tracking the request as we plan future sizes.
+
+- [ ] **Spot-check Lyro:** those four · Open vs Closed (no discipline split, no “fully enclosed”) · 7.5 wide → Large · wash = hand wash only · no pool · no 10% · no antimicrobial.
 
 ---
 
@@ -149,5 +172,9 @@ Let us know if you have a specific country in mind and we can help confirm.
 **2026-08-12 (later)** — Duties correction. Andrew: duties are **prepaid**; the "customer responsible for duties" line was probably about warranty replacements. Corrected on nine live surfaces plus six source docs. Added HelpScout 5.3 to sections B and F. Authority: CA-18 · P-016 · D-054.
 
 **2026-08-12 (later still)** — DDP confirmed by Andrew, so the section A verification question is closed the same day it was raised. Section A is down to the three sizing/variant questions.
+
+**2026-08-26** — Care OS lock. Only line: “Hand wash with warm soapy water. That's it.” Dishwasher / washing machine / “dry in seconds” banned. Rule `.cursor/rules/no-dishwasher-washing-machine.mdc`. Live Tidio still needs Andrew re-paste — section G.
+
+**2026-08-24** — Tidio/Lyro. March 2026 Guidance recovered from chat and rewritten against canonical answers. New paste file `planning/tidio-lyro-guidance.md`. Tidio KB `planning/m4b-tidio-knowledge-base.md` rewritten (banned: antimicrobial, size-up, machine wash, pool, 10%, break-in). Live Tidio still needs Andrew paste — section G.
 
 **2026-08-12** — Created. Sections A through F from the canonical-answers pass: sizing corrected to L 7.5–11 with kids' 2–5, antimicrobial and bacteria claims retired in favor of the wipe-clean framing, longevity rewritten, "patented" confirmed accurate, 195 countries confirmed real, blow dryer tip routed to HelpScout only. Authority: `docs/11-CANONICAL-ANSWERS.md` · `planning/10-decision-log.md` D-053 · `docs/10-DECISIONS.md` P-015.

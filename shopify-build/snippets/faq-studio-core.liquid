@@ -1,0 +1,21 @@
+{% comment %}
+  Studio FAQ bank — one source for Closed / Open / One-Off / Coperni.
+  Edit Theme settings → Studio FAQ. Outdoor and /pages/faq do not use this.
+{% endcomment %}
+{% for i in (1..15) %}
+  {% capture qkey %}studio_faq_{{ i }}_q{% endcapture %}
+  {% capture akey %}studio_faq_{{ i }}_a{% endcapture %}
+  {% assign q = settings[qkey] %}
+  {% assign a = settings[akey] %}
+  {% if q != blank %}
+    <details class="faq__item" data-faq-item>
+      <summary class="faq__trigger" role="button" aria-expanded="false">
+        <span class="faq__question">{{ q }}</span>
+        <span class="faq__icon" aria-hidden="true"></span>
+      </summary>
+      <div class="faq__body">
+        {{ a }}
+      </div>
+    </details>
+  {% endif %}
+{% endfor %}

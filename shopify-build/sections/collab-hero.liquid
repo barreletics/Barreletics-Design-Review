@@ -69,6 +69,7 @@
     --ch-cta-bg: {{ cta_bg }};
     --ch-cta-border: {{ cta_border }};
     --ch-cta-text: {{ cta_text_color }};
+    --ch-badge-bg: {{ section.settings.badge_bg_color | default: '#C4859B' }};
     {% if title_size != 'default' %}--ch-title-size: {{ title_size }}px;{% endif %}
     {% if body_size != 'default' %}--ch-body-size: {{ body_size }}px;{% endif %}
     {% if title_weight != 'default' %}--ch-title-weight: {{ title_weight }};{% endif %}
@@ -114,6 +115,9 @@
         {% endif %}
       </div>
       <div class="collab-hero__editorial-copy">
+        {% if section.settings.badge_text != blank %}
+          <p class="collab-hero__badge"><span>{{ section.settings.badge_text | escape }}</span></p>
+        {% endif %}
         {% if section.settings.eyebrow != blank %}
           <p class="collab-hero__eye">{{ section.settings.eyebrow }}</p>
         {% endif %}
@@ -166,6 +170,9 @@
         <img class="collab-hero__video" src="{{ section.settings.poster_url | escape }}" alt="" loading="lazy">
       {% endif %}
       <div class="collab-hero__overlay">
+        {% if section.settings.badge_text != blank %}
+          <p class="collab-hero__badge"><span>{{ section.settings.badge_text | escape }}</span></p>
+        {% endif %}
         {% if section.settings.eyebrow != blank %}
           <p class="collab-hero__eye">{{ section.settings.eyebrow }}</p>
         {% endif %}
@@ -291,6 +298,24 @@
   }
   .collab-hero--editorial .collab-hero__eye {
     color: #6b645a;
+  }
+  .collab-hero__badge {
+    margin: 0 0 16px;
+  }
+  .collab-hero__badge span {
+    display: inline-block;
+    font-family: var(--font-body), Roboto, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--ch-badge-bg, #C4859B);
+    padding: 8px 14px;
+    border-radius: 2px;
+  }
+  .collab-hero--editorial .collab-hero__badge span {
+    color: #fff;
   }
   .collab-hero--editorial .collab-hero__title {
     color: #1c1916;
@@ -510,6 +535,13 @@
   "settings": [
     { "type": "header", "content": "Shared — Content" },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Limited Edition × Paris 2026" },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge",
+      "info": "Short pill — e.g. Available at Free People"
+    },
+    { "type": "color", "id": "badge_bg_color", "label": "Badge background", "default": "#C4859B" },
     {
       "type": "textarea",
       "id": "title",

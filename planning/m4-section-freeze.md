@@ -16,7 +16,7 @@
 
 > **Studio FAQ bank 2026-08-26:** Theme settings → **Studio FAQ** is the one list for Closed / Open / One-Offs / Coperni (`use_studio_bank`). Outdoor + Shop All + `/pages/faq` stay local. No 18+ months. Open vs Closed = P-003. Extra One-Off blocks stay on those two PDPs only.
 
-> **Sock kit LOCKED 2026-08-27 (J):** Theme settings → **Sock kit**. Label `Complete the kit` · one link `Optional sock kit →` · small type `A sock made for Performance Skins with grip around the toes.` + `Does your studio require a sock? Need help with sweat, warmth, or comfort?` Buy-box checkbox only shows/hides. Layout / fold untouched. Not on M4 until Andrew names theme ID.
+> **Sock kit LOCKED 2026-08-27 (J):** Theme settings → **Sock kit**. Label `Complete the kit` · one link `Optional sock kit →` → `/collections/hot-kits` · small type `A sock made for Performance Skins with grip around the toes.` + `Does your studio require a sock? Need help with sweat, warmth, or comfort?` Buy-box checkbox only shows/hides. Layout / fold untouched. Nav: **Socks** under Apparel on `m4-menu` (not live Main menu). Collection page copy reframed — no heat sell. Handle stays `hot-kits`. Still 404 until Andrew publishes the collection to Online Store.
 
 ---
 
@@ -97,6 +97,19 @@ Do **not** thrash `product.json` spine or `fifty-fifty.liquid` TE order without 
 
 **Do not** put photo cards or live JM back on PDPs / Shop All / Home / Apparel.  
 **Earmarked, not locked:** Firefox mute / autoplay.
+
+### Forward 2026-08-30 — review counts hidden + shared photo set + Write a Review
+
+> **Andrew CURRENT MESSAGE:** Hide review COUNTS sitewide until thousands (stars stay; do not invent counts). First 3 review cards = the photo reviews from `/pages/reviews`. One reviews page for Open and Closed. Judge.me Write a Review on `/pages/reviews` only.
+
+| Surface | Forward |
+|---|---|
+| Counts | Stars stay. Hide `N reviews`, Judge.me badge counts, histogram, “Based on X reviews”. `Trusted by 1,000+ Instructors` stays. |
+| Photo set | Same 3 Judge.me photo reviews on Home + `/pages/reviews`: Leslie S. (Katy), B P. (Philadelphia), Tracie. Verbatim quotes + Judge.me images. |
+| Home | Hybrid stays (3 photo + 6 text). Photo cards ON so the first 3 cards match the reviews-page photo set. 6 text cards unchanged. |
+| `/pages/reviews` | Shared page (page.reviews + page.judgeme_all_reviews). Full Judge.me list + native `jdgm-write-rev-link` Write a Review. No sole-specific review pages. |
+| PDPs / Shop All / Apparel | Text cards stay; photo cards remain off. No Write a Review. |
+
 
 ---
 

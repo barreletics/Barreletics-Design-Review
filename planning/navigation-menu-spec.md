@@ -51,28 +51,22 @@ Recorded here as the authoritative item list.
 | 4 | under 1 | `Closed Sole` | `/products/best-reformer-pilates-legree-workout-shoes` |
 | 5 | under 1 | `Outdoor` | `/products/aquatic-performance-skins` |
 | 6 | under 1 | `Compare Styles` | `/pages/compare-open-closed-sole` |
-| 7 | top | `Hot Pilates & Yoga Kits` | `/collections/hot-kits` |
-| 8 | top | `Apparel` | `/collections/apparel` |
-| 9 | under 8 | `Shop All Apparel` | `/collections/apparel` |
-| 10 | under 8 | `Tops` | `/products/barreletics-performance-fabric-yoga-t-shirts` |
-| 11 | under 8 | `Bottoms` | `/products/lightly-padded-knee-yoga-pant-black` |
-| 12 | top | `Collaborations` | `/products/barreletics-x-coperni-closed-sole` |
+| 7 | top | `Apparel` | `/collections/apparel` |
+| 8 | under 7 | `Shop All Apparel` | `/collections/apparel` |
+| 9 | under 7 | `Tops` | `/products/barreletics-performance-fabric-yoga-t-shirts` |
+| 10 | under 7 | `Bottoms` | `/products/lightly-padded-knee-yoga-pant-black` |
+| 11 | under 7 | `Socks` | `/collections/hot-kits` |
+| 12 | top | `Collaborations` | `/pages/collaborations` |
 | 13 | under 12 | `Coperni` | `/products/barreletics-x-coperni-closed-sole` |
 | 14 | under 12 | `Free People` | `/pages/free-people` |
 | 15 | top | `Journal` | `/blogs/news` |
 
 Do **not** touch `Main menu` — that is the published theme's menu.
 
-**Hot Pilates & Yoga Kits is a deliberate placeholder** (owner letter 2026-08-08: *"it's nothing
-right now but put it so we can complete the design and function — we can shut off or on"*). The
-collection exists with zero products so the nav structure and design are complete now. The
-**on/off switch is the collection's Online Store publication**, not the menu item — unpublish to
-hide, publish to reveal. Leaving the item in the menu while the collection is unpublished would
-ship a 404, so keep them in sync: publish before the item goes live to customers, or remove the
-item while it stays dark.
-
-This item is **not** in the Locked architecture (`11-navigation-architecture.md`), which lists four
-top-level items. It is added forward by owner instruction. Do not "correct" it back out.
+**Socks under Apparel (2026-08-27).** Replaces the top-level `Hot Pilates & Yoga Kits` item.
+Collection handle stays `hot-kits`. Title/copy = optional sock kit (J). Still unpublished —
+`/collections/hot-kits` 404s until Andrew publishes it to Online Store. `m4-menu` only — do
+**not** touch live `Main menu`.
 
 ### Step 2 — Menu `Help menu` ✅ done
 
@@ -107,9 +101,11 @@ Same place, three separate menus. Titles must produce handles `footer-shop`,
 |---|---|---|
 | 1 | `About Us` | `/pages/our-story` |
 | 2 | `Journal` | `/blogs/news` |
-| 3 | `Collaborations` | `/products/barreletics-x-coperni-closed-sole` |
-| 4 | `Compare Styles` | `/pages/compare-open-closed-sole` |
-| 5 | `Better Than Grippy Socks` | `/pages/best-barre-pilates-yoga-grippy-socks` |
+| 3 | `Collaborations` | `/pages/collaborations` |
+| 4 | `Partner programs` | `/pages/partners` |
+| 5 | `Ambassador` | `/pages/ambassador` |
+| 6 | `Compare Styles` | `/pages/compare-open-closed-sole` |
+| 7 | `Better Than Grippy Socks` | `/pages/best-barre-pilates-yoga-grippy-socks` |
 
 **Title `Footer Support`**
 

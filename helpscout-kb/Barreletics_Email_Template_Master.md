@@ -311,7 +311,7 @@ A few key differences:
 
 - Grip: Performance Skins grip the floor directly. With grip socks, your foot moves inside the sock *and* the sock moves on the floor.
 - Lifespan: Grip socks typically lose their grip after 6–8 washes. Performance Skins are built to last hundreds of classes — many customers are years into a single pair.
-- Care: Hand wash with warm soapy water, air dry. No machine, no replacement cycle.
+- Care: Hand wash with warm soapy water. That's it.
 
 Same secure grip class one as class three hundred.
 
