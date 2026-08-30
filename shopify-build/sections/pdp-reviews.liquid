@@ -89,10 +89,10 @@
           {% if section.settings.body != blank %}
             <p class="pdp-reviews__body">{{ section.settings.body }}</p>
           {% endif %}
-          {% if has_aggregate and section.settings.show_aggregate %}
+          {% if has_aggregate and section.settings.show_aggregate and jm_count >= 1000 %}
             <p class="pdp-reviews__score">
               <span class="pdp-reviews__stars" aria-hidden="true">★★★★★</span>
-              <span class="visually-hidden">Star rating</span>
+              <strong>{{ jm_rating }}</strong> out of 5 · {{ jm_count }} reviews
             </p>
           {% endif %}
         </div>
@@ -103,12 +103,6 @@
           >{{ section.settings.all_reviews_label }}</a>
         {% endif %}
       </header>
-    {% endif %}
-
-    {% if scope == 'store' and live_mode == 'full' %}
-      <div class="pdp-reviews__write">
-        <a class="jdgm-write-rev-link" href="#">Write a Review</a>
-      </div>
     {% endif %}
 
     {% if show_photo and photo_count > 0 %}
@@ -343,26 +337,6 @@
     display: flex;
     align-items: center;
     gap: 10px;
-  }
-
-  .pdp-reviews__write {
-    margin: 0 0 var(--space-8, 32px);
-  }
-
-  .pdp-reviews__write .jdgm-write-rev-link {
-    display: inline-block;
-  }
-
-  /* Hide Judge.me review COUNTS — stars stay */
-  .pdp-reviews__widget .jdgm-rev-widg__summary-text,
-  .pdp-reviews__widget .jdgm-all-reviews__count,
-  .pdp-reviews__widget .jdgm-prev-badge__text,
-  .pdp-reviews__widget .jdgm-histogram,
-  .pdp-reviews__widget .jdgm-rev-widg__histogram,
-  .pdp-reviews__widget .jdgm-all-reviews__histogram,
-  .pdp-reviews__widget .jdgm-histogram__row,
-  .pdp-reviews__widget .jdgm-star-histogram {
-    display: none !important;
   }
 
   .pdp-reviews__stars {
