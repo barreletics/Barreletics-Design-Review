@@ -1,0 +1,28 @@
+---
+description: Andrew’s Theme Editor photo picks must survive later theme pushes
+alwaysApply: true
+---
+
+# TE photos stick (HARD)
+
+Andrew changes photos in **Theme Editor** on M4 `187144929571`. Those picks must **not** get overwritten by later agent updates.
+
+## How it sticks
+
+1. He picks the **Shopify image** field (`image` / Files), not a one-off URL we will later replace.
+2. When he says **`photos stuck`** or **`pull photos`** + theme ID → `shopify theme pull --theme 187144929571 --path shopify-build --only` that template JSON (one `--only`). Repo then matches TE.
+3. Freeze the image GIDs / URLs in that JSON. Later pushes keep them.
+
+## Agents must not
+
+- Push `index.json` / `product*.json` / collection JSON that **clears or swaps** `image`, `image_url`, `video_url`, `poster_url` unless Andrew **names that photo** in the **CURRENT** message
+- “Fix” media by putting an older URL back
+- Prefer a hardcoded `image_url` over a live TE `image` pick
+
+## Liquid priority (already in `fullbleed-statement`)
+
+`image` (TE picker) → `image_asset` → `image_url`. Do not invert.
+
+## If you must push a template
+
+Preserve existing media settings from the working tree / last pull. Copy/layout-only edits are fine. Media changes need a letter.

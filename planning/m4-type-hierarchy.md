@@ -81,15 +81,17 @@ No third text tier (merge points into paragraph or drop one).
 | `variant-grid` | Shop all styles & colors | **Standard** | Shop wayfinding |
 | `fifty-fifty` grip | Never loses shape. Never loses grip. | **Display** | Brand grip moment |
 | `fifty-fifty` Coperni | Barreletics × Coperni | **Standard** | Named campaign module / navigate |
-| `statement-band` | Studio workouts and footwear will never be the same. | **Statement** | Dark-band tier 1 (not H2) |
+| `statement-band` | Let us knock your socks off | **Display** | Home brand slogan. TE `title_role: display`. Not Hero. Other pages stay Statement unless lettered. |
 | `social-proof` | Real people. Real results. | **Standard** | Reviews framing / wayfinding |
 | `fifty-fifty` sock-math | One pair. Done. | **Display** | Obsession / brand close |
 | `home-ugc` | @barreletics | **Standard** | Functional UGC section label |
-| `guarantee-band` | Zero risk. All grip. | **Statement** | Dark-band tier 1 (not H2) |
+| `guarantee-band` | Zero risk. All grip. | **Display** (Home only) | Matches knock-socks. PDPs stay Statement (*Built on guarantees…*). TE `title_role`. |
 | `geo-section` | Trusted across the country | **Supporting** | Accordion label (eyebrow/H3, not H2) |
 | `newsletter` | Join the list | **Standard** | Utility signup framing |
 
-Wiring: `fifty-fifty` uses TE `heading_register` (`display` \| `standard`) → `.h2-display` / `.h2-standard`. Fixed sections hardcode the class. `.em` only on hero / Display / statement — never Standard.
+Wiring: `fifty-fifty` uses TE `heading_register` (`display` \| `standard`) → `.h2-display` / `.h2-standard`. `statement-band` + `guarantee-band` use TE `title_role` (`statement` \| `display`). `.em` only on hero / Display / statement — never Standard.
+
+**Forward 2026-08-30 (Andrew: knock-socks + Zero risk felt right at Display):** Type OS **tokens did not change.** Home brand slogans use the existing H2 Display role. Do **not** restyle the site or bump clamps. Hero stays page-opening only.
 
 ---
 

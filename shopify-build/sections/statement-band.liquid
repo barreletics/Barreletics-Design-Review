@@ -5,6 +5,7 @@
 {% liquid
   assign title_size = section.settings.title_size | default: 'default'
   assign title_weight = section.settings.title_weight | default: 'default'
+  assign title_role = section.settings.title_role | default: 'statement'
   assign body_size = section.settings.body_size | default: 'default'
   assign cta_target = section.settings.cta_link_target | default: 'custom'
   if cta_target != blank and cta_target != 'custom'
@@ -39,7 +40,7 @@
     {% if section.settings.eyebrow != blank %}
       <p class="statement-band__eyebrow type-label">{{ section.settings.eyebrow }}</p>
     {% endif %}
-    <p class="statement-band__line type-statement">{{ section.settings.title }}</p>
+    <p class="statement-band__line {% if title_role == 'display' %}h2-display{% else %}type-statement{% endif %}">{{ section.settings.title }}</p>
     {% if section.settings.subhead != blank %}
       <p class="statement-band__sub">{{ section.settings.subhead }}</p>
     {% endif %}
@@ -61,7 +62,7 @@
     color: #1c1916;
   }
   #shopify-section-{{ section.id }} .statement-band__inner {
-    max-width: 820px;
+    max-width: {% if title_role == 'display' %}1100px{% else %}820px{% endif %};
     margin: 0 auto;
   }
   #shopify-section-{{ section.id }} .statement-band__eyebrow {
@@ -69,17 +70,17 @@
     color: #6b645a;
   }
   #shopify-section-{{ section.id }} .statement-band__line {
-    font-size: var(--sb-title-size, var(--type-statement-size));
-    font-weight: var(--sb-title-weight, var(--type-statement-weight));
-    letter-spacing: var(--type-statement-tracking);
-    line-height: var(--type-statement-leading);
+    font-size: var(--sb-title-size, {% if title_role == 'display' %}var(--type-h2-display-size){% else %}var(--type-statement-size){% endif %});
+    font-weight: var(--sb-title-weight, {% if title_role == 'display' %}var(--type-h2-display-weight){% else %}var(--type-statement-weight){% endif %});
+    letter-spacing: {% if title_role == 'display' %}var(--type-h2-display-tracking){% else %}var(--type-statement-tracking){% endif %};
+    line-height: {% if title_role == 'display' %}var(--type-h2-display-leading){% else %}var(--type-statement-leading){% endif %};
     margin: 0 auto var(--gap-a);
     color: var(--text-primary);
     max-width: none;
   }
   @media (max-width: 768px) {
     #shopify-section-{{ section.id }} .statement-band__line {
-      font-size: var(--sb-title-size, var(--type-statement-size-mobile));
+      font-size: var(--sb-title-size, {% if title_role == 'display' %}var(--type-h2-display-size-mobile){% else %}var(--type-statement-size-mobile){% endif %});
     }
   }
   #shopify-section-{{ section.id }} .statement-band__sub {
@@ -132,6 +133,17 @@
       "label": "Heading",
       "default": "Let us knock your socks off",
       "info": "Family is brand Type OS — use Title size/weight to adjust. No font family picker."
+    },
+    {
+      "type": "select",
+      "id": "title_role",
+      "label": "Title Type OS role",
+      "options": [
+        { "value": "statement", "label": "Statement (default)" },
+        { "value": "display", "label": "H2 Display — large brand" }
+      ],
+      "default": "statement",
+      "info": "Hero stays page-opening only. Display is the large brand face."
     },
     {
       "type": "select",

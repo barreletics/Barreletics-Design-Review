@@ -11,6 +11,7 @@
   {% assign guarantee_cols = 1 %}
 {% endif %}
 {%- liquid
+  assign title_role = section.settings.title_role | default: 'statement'
   assign cta_style = section.settings.cta_style | default: 'solid'
   assign cta_bg = section.settings.cta_bg_color | default: '#1c1916'
   assign cta_border = section.settings.cta_border_color | default: cta_bg
@@ -27,7 +28,7 @@
     {% if section.settings.eyebrow != blank %}
       <p class="guarantee-head__eyebrow type-label">{{ section.settings.eyebrow }}</p>
     {% endif %}
-    <h2 class="guarantee-head__title type-statement">{{ section.settings.title }}</h2>
+    <h2 class="guarantee-head__title {% if title_role == 'display' %}h2-display{% else %}type-statement{% endif %}">{{ section.settings.title }}</h2>
     {% if section.settings.body != blank %}
       <p class="guarantee-head__sub">{{ section.settings.body }}</p>
     {% endif %}
@@ -61,7 +62,7 @@
     text-align: center;
   }
   #shopify-section-{{ section.id }} .guarantee-head {
-    max-width: 700px;
+    max-width: {% if title_role == 'display' %}1100px{% else %}700px{% endif %};
     margin: 0 auto 40px;
     text-align: center;
   }
@@ -180,6 +181,17 @@
       "id": "title",
       "label": "Heading",
       "default": "Zero risk. All grip."
+    },
+    {
+      "type": "select",
+      "id": "title_role",
+      "label": "Title Type OS role",
+      "options": [
+        { "value": "statement", "label": "Statement (default)" },
+        { "value": "display", "label": "H2 Display — large brand" }
+      ],
+      "default": "statement",
+      "info": "Home slogan can match knock-socks. PDPs stay Statement."
     },
     {
       "type": "textarea",

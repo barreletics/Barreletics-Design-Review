@@ -98,17 +98,22 @@ Do **not** thrash `product.json` spine or `fifty-fifty.liquid` TE order without 
 **Do not** put photo cards or live JM back on PDPs / Shop All / Home / Apparel.  
 **Earmarked, not locked:** Firefox mute / autoplay.
 
-### Forward 2026-08-30 — review counts hidden + shared photo set + Write a Review
+### LOCKED 2026-08-30 — reviews photos + Write a Review (Andrew: “that looks pretty good”)
 
-> **Andrew CURRENT MESSAGE:** Hide review COUNTS sitewide until thousands (stars stay; do not invent counts). First 3 review cards = the photo reviews from `/pages/reviews`. One reviews page for Open and Closed. Judge.me Write a Review on `/pages/reviews` only.
+> **Andrew CURRENT MESSAGE:** Write a Review on `/pages/reviews` only. Do not put review photos on Home Judge.me / photo cards. First 3 photo cards live on the all-reviews page. Home stays signed text cards + More stories.
 
 | Surface | Forward |
 |---|---|
-| Counts | Stars stay. Hide `N reviews`, Judge.me badge counts, histogram, “Based on X reviews”. `Trusted by 1,000+ Instructors` stays. |
-| Photo set | Same 3 Judge.me photo reviews on Home + `/pages/reviews`: Leslie S. (Katy), B P. (Philadelphia), Tracie. Verbatim quotes + Judge.me images. |
-| Home | Hybrid stays (3 photo + 6 text). Photo cards ON so the first 3 cards match the reviews-page photo set. 6 text cards unchanged. |
-| `/pages/reviews` | Shared page (page.reviews + page.judgeme_all_reviews). Full Judge.me list + native `jdgm-write-rev-link` Write a Review. No sole-specific review pages. |
-| PDPs / Shop All / Apparel | Text cards stay; photo cards remain off. No Write a Review. |
+| Counts | Stars stay. Hide `N reviews` until thousands. `Trusted by 1,000+ Instructors` stays. |
+| Home | `show_photo_cards: false`. Text cards + More stories → `/pages/reviews`. No photos. No Write a Review. |
+| `/pages/reviews` | First 3 cards = Leslie S. / B P. / Tracie (Judge.me photos). Full JM list + Write a Review. Same page for Open and Closed. |
+| PDPs / Shop All / Apparel | Text cards stay. Photo cards off. No Write a Review. |
+
+**Forward 2026-08-30 — Home knock-socks + photo (Andrew: try that).** Cream band stays *Let us knock your socks off*. Full-bleed under it = image only, 80/60, no Commit line, no second Shop Now.
+
+**Forward 2026-08-30 — Type OS roles, not token rewrite.** Home *Let us knock your socks off* + *Zero risk. All grip.* = H2 Display. Tokens unchanged. PDPs/collections stay Statement unless lettered. OS: `planning/m4-type-hierarchy.md`.
+
+**Forward 2026-08-30 — TE photos stick.** Andrew changes photos in Theme Editor. After picks, he says `photos stuck` / `pull photos` + theme ID. Pull that template into repo so later pushes don’t revert. Rule: `.cursor/rules/te-photos-stick.mdc`.
 
 
 ---
