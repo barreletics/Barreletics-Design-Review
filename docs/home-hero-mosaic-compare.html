@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Home first two sections — A B C D</title>
+  <title>Home first two sections — E is the one-item open</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root { --ink: #1c1916; --body: #4a4a4a; --rust: #c45c3f; --cream: #f5f2ec; --line: #d6cfc0; }
@@ -45,6 +45,29 @@
     .cta { display: inline-flex; background: var(--rust); color: #fff; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 10px 16px; width: fit-content; }
     .mosaic { display: grid; grid-template-columns: 1.35fr 1fr 1fr; grid-template-rows: 150px 150px; gap: 8px; padding: 10px; }
     .mosaic--equal { grid-template-columns: 1fr 1fr 1fr 1fr; grid-template-rows: 170px; }
+    /* Live br_multi_box: 3 equal cols, first tile 2×2, 10px radius */
+    .mosaic--live {
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: 220px 220px 220px;
+      gap: 10px;
+      padding: 15px;
+    }
+    .mosaic--live .tile { border-radius: 10px; min-height: 0; }
+    .mosaic--live .tile--big {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+    .mosaic--live .tile span.label {
+      left: 50%;
+      bottom: auto;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      font-size: 18px;
+      font-weight: 400;
+      text-shadow: 0 1px 10px rgba(0,0,0,.45);
+    }
+    .mosaic--live .tile--big span.label { font-size: 28px; }
     .tile { position: relative; overflow: hidden; background: #c8c0b8; }
     .tile--big { grid-row: 1 / span 2; }
     .tile span.label { position: absolute; left: 10px; bottom: 10px; color: #fff; font-size: 14px; text-shadow: 0 1px 8px #000; }
@@ -56,26 +79,58 @@
       .mosaic { grid-template-columns: 1fr 1fr; grid-template-rows: 180px 140px 140px; }
       .tile--big { grid-row: auto; grid-column: 1 / -1; min-height: 180px; }
       .mosaic--equal { grid-template-columns: 1fr 1fr; grid-template-rows: 140px 140px; }
+      .mosaic--live { grid-template-columns: 1fr 1fr; grid-template-rows: 200px 160px 160px 160px; }
+      .mosaic--live .tile--big { grid-column: 1 / -1; grid-row: auto; min-height: 200px; }
     }
   </style>
 </head>
 <body>
   <div class="page">
     <div class="verdict">
-      <h1>Unknown brand. First frame is a still. Never a video.</h1>
+      <h1>One item. Like Nike / Alo / Lulu if they sold only that.</h1>
       <ul>
-        <li>They need <b>person + machine + shoe on the foot</b> in one photo. Then they know what you sell.</li>
-        <li>Video waits. Pink square is a pretty shoe, not pilates.</li>
-        <li><b>B:</b> Cadillac girl as a <b>photo</b> in the hero. Video only in the mosaic.</li>
+        <li><b>Hero</b> = the product on a body, in the sport. Still. You see the shoe. You see her. You get it.</li>
+        <li><b>Multi</b> = live square layout (big 2×2 + equal tiles). Same item: colors, close-up, more feet. Not WORKING’s tall skinny column.</li>
+        <li>B is out. Machine first = wrong. Pink square first = catalog. Video first = wait.</li>
+        <li><b>E is the new open.</b> Athlete in the skins. Live multi-square. Shoe only.</li>
       </ul>
-      <p class="pick">Reply A, B, C, or D.</p>
+      <p class="pick">Look at E first. Then A if you want “what we have.”</p>
       <div class="jump">
+        <a href="#e">E · One item</a>
         <a href="#a">A · Now</a>
-        <a href="#b">B · Cadillac still</a>
-        <a href="#c">C · Stef still</a>
-        <a href="#d">D · Full-bleed still</a>
+        <a href="#b">B · Cadillac (no)</a>
+        <a href="#c">C · Stef WORKING</a>
+        <a href="#d">D · Full-bleed (no)</a>
       </div>
     </div>
+
+    <section class="opt" id="e">
+      <div class="opt-head">
+        <h2>E — One item (Nike / Alo / Lulu)</h2>
+        <span class="tag tag--rec">New · this is the thinking</span>
+      </div>
+      <p class="note">Hero = her, in the skins. Mosaic = <b>live multi-square</b> (2×2 + equal tiles, 10px corners) — not the tall skinny WORKING column. Photos = the shoe only. No Cadillac. No video on the open.</p>
+      <div class="hero">
+        <div class="media">
+          <span class="badge">The item, on a body</span>
+          <img src="https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=1600" alt="Performance Skins on foot">
+        </div>
+        <div class="copy">
+          <div class="stars">★★★★★ Trusted by 1,000's of instructors</div>
+          <h3>The Pilates Sock Era is Over</h3>
+          <p>Outperforms barre socks, Pilates socks, and yoga socks — combined.</p>
+          <span class="cta">Shop Now</span>
+        </div>
+      </div>
+      <div class="mosaic mosaic--live">
+        <div class="tile tile--big"><img src="https://barreletics.com/cdn/shop/files/Square_Pink.png?v=1764627088&width=1200" alt=""><span class="label">The shoe</span></div>
+        <div class="tile"><img src="https://barreletics.com/cdn/shop/files/InStudioPerformanceSkin-Blue1200x1200.jpg?v=1770519427&width=800" alt=""><span class="label">Color</span></div>
+        <div class="tile"><img src="https://barreletics.com/cdn/shop/products/Yellow_Image-Blue_Shoe_1200x1200_59ef7b79-1661-4c2f-a2da-c6b9211e2c42.jpg?v=1678412911&width=800" alt=""><span class="label">Color</span></div>
+        <div class="tile"><img src="https://barreletics.com/cdn/shop/products/barreletixxjumpingtogether.jpg?v=1619360969&width=800" alt=""><span class="label">On feet</span></div>
+        <div class="tile"><img src="https://barreletics.com/cdn/shop/files/IMG_2917.jpg?v=1741040637&width=800" alt=""><span class="label">In class</span></div>
+        <div class="tile"><img src="https://barreletics.com/cdn/shop/files/Yellow.jpg?v=1694300585&width=800" alt=""><span class="label">Color</span></div>
+      </div>
+    </section>
 
     <section class="opt" id="a">
       <div class="opt-head">
@@ -110,7 +165,7 @@
     <section class="opt" id="b">
       <div class="opt-head">
         <h2>B — Cadillac still as the hero</h2>
-        <span class="tag tag--rec">Recommended</span>
+        <span class="tag tag--now">Rejected — machine, not the shoe</span>
       </div>
       <p class="note">Photo first — she is on the Cadillac. Studio + pilates + feet in one second. Video lives in a small mosaic tile only.</p>
       <div class="hero">
