@@ -155,6 +155,8 @@ Do **not** thrash `product.json` spine or `fifty-fifty.liquid` TE order without 
 
 **Forward 2026-09-01 — Home Disciplines heading mobile SIGNED.** Match 50/50 “Never loses…” H2 Display: Roboto 500 · `--type-h2-display-size` (38px on phone) · 1.10 leading. Two-line stack. Copy stays “Upgrade your grip. / Upgrade your workout.” CSS only — no TE/JSON.
 
+**Forward 2026-09-01 — Home mobile knock-socks / tabs / mosaic height SIGNED.** Phone only. (1) `statement-band` display title uses `--type-h2-display-size` (38px / 500 / 1.10) — copy “Let us knock your socks off” unchanged. (2) `variant-grid` with >2 tabs: `variants-tabs--stack` wraps 2×2, no horizontal swipe. Two tabs stay one row. Desktop unchanged. (3) Mosaic phone tile height = TE `mobile_tile_height` × 1.35 (~243 if TE is 180). TE value not overwritten. CSS/liquid only — no `index.json`.
+
 
 ---
 

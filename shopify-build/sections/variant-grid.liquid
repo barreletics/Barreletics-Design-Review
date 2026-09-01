@@ -161,6 +161,22 @@
   assign label_oneoffs = section.settings.label_oneoffs | default: 'One-Offs'
   assign label_outdoor = section.settings.label_outdoor | default: 'Outdoor'
   assign vg_anchor = section.settings.anchor_id | default: 'variants' | handleize
+  assign vg_tab_count = 0
+  if show_all_tab
+    assign vg_tab_count = vg_tab_count | plus: 1
+  endif
+  if product_closed != blank
+    assign vg_tab_count = vg_tab_count | plus: 1
+  endif
+  if product_open != blank
+    assign vg_tab_count = vg_tab_count | plus: 1
+  endif
+  if product_oneoffs != blank
+    assign vg_tab_count = vg_tab_count | plus: 1
+  endif
+  if product_outdoor != blank
+    assign vg_tab_count = vg_tab_count | plus: 1
+  endif
 -%}
 
 <section
@@ -194,7 +210,7 @@
 
     <div class="variants-toolbar{% if use_current %} variants-toolbar--pdp{% endif %}">
       {% unless use_current %}
-        <div class="variants-tabs" role="tablist">
+        <div class="variants-tabs{% if vg_tab_count > 2 %} variants-tabs--stack{% endif %}" role="tablist">
           {% if show_all_tab %}
             <button type="button" class="variants-tab{% if default_tab == 'all' %} is-active{% endif %}" role="tab" aria-selected="{% if default_tab == 'all' %}true{% else %}false{% endif %}" data-tab="all">All</button>
           {% endif %}
@@ -752,6 +768,15 @@
       scrollbar-width: none;
       min-width: 0;
       max-width: 100%;
+    }
+
+    #shopify-section-{{ section.id }} .variants-tabs--stack {
+      flex-wrap: wrap;
+      overflow-x: visible;
+    }
+
+    #shopify-section-{{ section.id }} .variants-tabs--stack .variants-tab {
+      flex: 1 1 calc(50% - 4px);
     }
 
     #shopify-section-{{ section.id }} .variants-tabs::-webkit-scrollbar {
