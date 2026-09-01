@@ -157,6 +157,12 @@ Do **not** thrash `product.json` spine or `fifty-fifty.liquid` TE order without 
 
 **Forward 2026-09-01 — Home mobile knock-socks / tabs / mosaic height SIGNED.** Phone only. (1) `statement-band` display title uses `--type-h2-display-size` (38px / 500 / 1.10) — copy “Let us knock your socks off” unchanged. (2) `variant-grid` with >2 tabs: `variants-tabs--stack` wraps 2×2, no horizontal swipe. Two tabs stay one row. Desktop unchanged. (3) Mosaic phone tile height = TE `mobile_tile_height` × 1.35 (~243 if TE is 180). TE value not overwritten. CSS/liquid only — no `index.json`.
 
+**Forward 2026-09-01 — Home mosaic mobile Gap SIGNED.** Phone ≤767px stays `1fr`. Tile gap (including hero → second card) is TE **Gap** (`grid_gap` → `--vm-gap`). No hardcoded mobile `8px`. Drag Gap in Theme Editor. No `index.json`.
+
+**Forward 2026-09-01 — Home Juicer phone feed SIGNED.** Andrew: “jesus christ thank you.” `@barreletics` tiles were a short left column because Juicer boots `j-desktop` at 375. Phone ≤768: stacker/columns/items `width: 100%` + centered. Not hero stars. Not review cards. CSS only — no `index.json`.
+
+**Forward 2026-09-01 — Click the thing he sees SIGNED.** Rule `.cursor/rules/click-the-thing-he-sees.mdc`. Screenshot / on-page copy = the only target. No remaps (Judge.me ≠ hero stars ≠ juicer). Sign-off = commit + push to GitHub.
+
 
 ---
 
