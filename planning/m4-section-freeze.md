@@ -165,6 +165,8 @@ Do **not** thrash `product.json` spine or `fifty-fifty.liquid` TE order without 
 
 **Forward 2026-09-01 — Click the thing he sees SIGNED.** Rule `.cursor/rules/click-the-thing-he-sees.mdc`. Screenshot / on-page copy = the only target. No remaps (Judge.me ≠ hero stars ≠ juicer). Sign-off = commit + push to GitHub.
 
+**Forward 2026-09-01 — Section inset desktop ≠ phone SIGNED.** `section-inset-vars`: desktop sliders never copy onto mobile. Phone always uses mobile inset sliders. Mosaic: Custom mobile inset toggle removed. TE pull: mosaic title mobile 26 · shadow off.
+
 
 ---
 
