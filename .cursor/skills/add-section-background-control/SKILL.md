@@ -2,16 +2,16 @@
 name: add-section-background-control
 description: >-
   Adds one Shopify color picker for a section or text-panel background after
-  Andrew explicitly approves that section. Default equals the current rendered
+  the user explicitly approves that section. Default equals the current rendered
   background. Zero intended visual change. Never auto-invoke for a site-wide
-  pass. Use only when he answers yes to “Add the standard background color
+  pass. Use only when the user answers yes to “Add the standard background color
   control?” for the section being QCed.
 ---
 
 # Add section background control
 
-**Use only after** Andrew approves adding a background control on **this** section.  
-If he did not say yes for this section → stop.  
+**Use only after** the user approves adding a background control on **this** section.  
+If the user did not say yes for this section → stop.  
 Companion: `.cursor/rules/qc-section-admin-preservation.mdc` · `te-user-state-sync.mdc`
 
 Draft `187144929571` only. Never live `185687998755`.
@@ -31,12 +31,12 @@ Draft `187144929571` only. Never live `185687998755`.
 - Convert pickers into dropdowns
 - Edit template JSON merely to create a saved value (missing key → schema default)
 - Add the control to other sections “while we’re here”
-- Overwrite user-owned TE state
+- Overwrite user-owned Theme Editor state
 
 ## Steps
 
 1. Confirm the named section and the current rendered background (computed CSS / hardcoded hex / token).
-2. Pull that page’s template from draft `187144929571` first if TE may have changed. Diff. Keep his values.
+2. Pull that page’s template from draft `187144929571` first if TE may have changed. Diff. Keep user-owned Theme Editor state.
 3. Add the picker + wire it. Fallback = current hex.
 4. Push **only** the section liquid (and CSS if required). One `--only` per file.
 5. Verify on the draft:
@@ -45,4 +45,4 @@ Draft `187144929571` only. Never live `185687998755`.
    - previous TE choices intact
    - no unrelated JSON changed
 
-If a pull/push would risk other settings → **STOP and tell him**.
+If a pull/push would risk other settings → **STOP and tell the user**.

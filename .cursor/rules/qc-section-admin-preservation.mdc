@@ -13,7 +13,7 @@ We QC **page by page, section by section**. Not a site-wide control pass.
 
 ## A. Theme Editor = user-owned current state
 
-Anything Andrew changes in Theme Editor on that draft (copy, media, crop, colors, order, settings) is **authority**.
+Anything the user changes in Theme Editor on that draft (copy, media, crop, colors, order, settings) is **user-owned Theme Editor state**.
 
 Never:
 
@@ -23,44 +23,46 @@ Never:
 - push `index.json` / `templates/*.json` / `settings_data.json` over newer draft state
 - revert a visual pick because an older doc says otherwise
 
-**His newest explicit QC choice wins.**
+**The user’s newest explicit QC choice wins.**
+
+Manual Theme Editor changes on draft `187144929571` are the current authority and must never be overwritten by stale repo state.
 
 ## B. Make TE changes sticky (narrow pull)
 
-When a page/section is finished and he edited TE: pull **that one** draft template into the repo. Shopify → repo. Never the reverse with stale JSON.
+When a page/section is finished and the user edited TE: pull **that one** draft template into the repo. Shopify → repo. Never the reverse with stale JSON.
 
 - One `--only` per file. Home → `templates/index.json`. One PDP/page/collection → that file only. Theme Settings → `settings_data.json`.
 - Never pull/push the whole theme. Never live. Never unrelated templates.
-- Diff before keeping. If you cannot tell which file, or a pull would clobber unrelated work → **STOP and tell him**.
+- Diff before keeping. If you cannot tell which file, or a pull would clobber unrelated work → **STOP and tell the user**.
 
 ```bash
 shopify theme pull --theme 187144929571 --path shopify-build --only templates/<that-file>.json
 ```
 
-Do not ask him for a stick / sync passphrase.
+Do not ask the user for a stick / sync passphrase.
 
 ## C. Before a later code tweak on a QCed surface
 
-1. Latest TE state for that page is pulled / preserved.
+1. Latest user-owned Theme Editor state for that page is pulled / preserved.
 2. Smallest **code-only** fix (liquid / CSS / JS).
 3. Do **not** push template or settings JSON unless that JSON was just pulled from the current draft.
-4. After code push: confirm his TE picks are still on the draft.
+4. After code push: confirm the user’s TE picks are still on the draft.
 
-A code fix that silently changes his admin settings has **failed**.
+A code fix that silently changes the user’s admin settings has **failed**.
 
 ## D. Section-control checkpoint (before closing a section)
 
 Check the **visible section / text-panel background**:
 
 - Already has a TE control → **leave it**. Do not recommend a second one.
-- Fixed, no control → tell him in one short block:
+- Fixed, no control → tell the user in one short block:
   - current background (hex / token)
   - useful to add a control? (often no)
   - simple/safe?
   - **recommend: add it or leave it fixed**
   - then ask exactly: **Add the standard background color control?**
 
-Do not add a control until he approves **that section**.  
+Do not add a control until the user approves **that section**.  
 Do not recommend controls on every section. Fixed is often better.
 
 Adding a control (after yes only): skill `add-section-background-control`.
