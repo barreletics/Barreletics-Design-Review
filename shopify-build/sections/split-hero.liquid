@@ -62,6 +62,18 @@
   assign trust_below = section.settings.trust_below | default: 16
   assign media_column_pct = section.settings.media_column_pct | default: 62
   assign media_radius = section.settings.media_radius | default: 0
+  assign img_x = section.settings.image_pos_x | default: 50
+  assign img_y = section.settings.image_pos_y | default: 50
+  assign img_zoom = section.settings.image_zoom | default: 100
+  assign img_x_m = section.settings.image_pos_x_mobile | default: img_x
+  assign img_y_m = section.settings.image_pos_y_mobile | default: img_y
+  assign img_zoom_m = section.settings.image_zoom_mobile | default: img_zoom
+  assign media_ratio_w = 2400
+  assign media_ratio_h = 2750
+  if image != blank and image.width > 0 and image.height > 0
+    assign media_ratio_w = image.width
+    assign media_ratio_h = image.height
+  endif
   assign cta_size = section.settings.cta_size | default: 'default'
   assign cta_style = section.settings.cta_style | default: 'solid'
   assign cta_bg = section.settings.cta_bg_color | default: '#c45c3f'
@@ -82,7 +94,20 @@
   style="
     {% render 'section-inset-vars' %}
     --sh-media-pct: {{ media_column_pct }}%;
+    --sh-media-pct-num: {{ media_column_pct }};
+    --sh-media-ratio: {{ media_ratio_w }} / {{ media_ratio_h }};
+    --sh-ratio-w: {{ media_ratio_w }};
+    --sh-ratio-h: {{ media_ratio_h }};
+    --sh-height-scale: {{ section.settings.media_height | default: 100 | times: 0.01 }};
+    --sh-media-h: {{ section.settings.media_height | default: 100 }}%;
     --sh-media-radius: {{ media_radius }}px;
+    --sh-copy-bg: {{ section.settings.bg_color | default: '#ffffff' }};
+    --sh-img-x: {{ img_x }}%;
+    --sh-img-y: {{ img_y }}%;
+    --sh-img-zoom: {{ img_zoom | at_least: 100 | times: 0.01 }};
+    --sh-img-x-m: {{ img_x_m }}%;
+    --sh-img-y-m: {{ img_y_m }}%;
+    --sh-img-zoom-m: {{ img_zoom_m | at_least: 100 | times: 0.01 }};
     --sh-star-color: {{ star_color }};
     --sh-star-size: {{ star_size }}px;
     --sh-trust-gap: {{ trust_gap }}px;
@@ -518,28 +543,116 @@
       "default": false
     },
 
+    { "type": "header", "content": "Desktop Hero Image" },
+    {
+      "type": "paragraph",
+      "content": "Move and zoom the photo inside the media box. Hero height and left/right split are under Shared — Layout. Cover — no fill bands."
+    },
+    {
+      "type": "range",
+      "id": "image_pos_x",
+      "label": "Image Position X",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "info": "0 = left · 50 = center · 100 = right"
+    },
+    {
+      "type": "range",
+      "id": "image_pos_y",
+      "label": "Image Position Y",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "info": "0 = top · 50 = center · 100 = bottom (feet)"
+    },
+    {
+      "type": "range",
+      "id": "image_zoom",
+      "label": "Image Zoom",
+      "min": 50,
+      "max": 160,
+      "step": 2,
+      "unit": "%",
+      "default": 100,
+      "info": "100 = fill. Below 100 stays fill (no gaps). Above 100 = tighter crop."
+    },
+    { "type": "header", "content": "Mobile Hero Image" },
+    {
+      "type": "range",
+      "id": "image_pos_x_mobile",
+      "label": "Position X",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_pos_y_mobile",
+      "label": "Position Y",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_zoom_mobile",
+      "label": "Zoom",
+      "min": 50,
+      "max": 160,
+      "step": 2,
+      "unit": "%",
+      "default": 100,
+      "info": "100 = fill. Below 100 stays fill (no gaps). Above 100 = tighter crop."
+    },
     { "type": "header", "content": "Shared — Layout" },
     {
       "type": "range",
+      "id": "media_height",
+      "label": "Section height",
+      "min": 50,
+      "max": 150,
+      "step": 2,
+      "unit": "%",
+      "default": 100,
+      "info": "How tall the whole hero is. 100 = photo shape. Drag down to shorten, up to lengthen. Text column matches."
+    },
+    {
+      "type": "range",
       "id": "media_column_pct",
-      "label": "Media column %",
-      "min": 35,
-      "max": 65,
+      "label": "Left / right split (media %)",
+      "min": 20,
+      "max": 80,
       "step": 1,
       "unit": "%",
       "default": 62,
-      "info": "Desktop only. Text = 100 − media %. Default 62 matches Home WORKING media-dominant hero."
+      "info": "Desktop. Media (left) width. Text gets the rest. 20 = small photo / big text. 80 = big photo / small text."
     },
     {
       "type": "range",
       "id": "media_radius",
-      "label": "Media corner radius",
+      "label": "Corner radius",
       "min": 0,
       "max": 24,
       "step": 2,
       "unit": "px",
       "default": 0,
-      "info": "One control — applies equally to all four corners of the media panel."
+      "info": "One slider — photo side and text side."
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Text panel background",
+      "default": "#ffffff",
+      "info": "Shades the text column so Corner radius is visible on the text side."
     },
     {
       "type": "checkbox",

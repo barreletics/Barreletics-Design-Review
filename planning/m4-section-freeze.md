@@ -113,7 +113,41 @@ Do **not** thrash `product.json` spine or `fifty-fifty.liquid` TE order without 
 
 **Forward 2026-08-30 — Type OS roles, not token rewrite.** Home *Let us knock your socks off* + *Zero risk. All grip.* = H2 Display. Tokens unchanged. PDPs/collections stay Statement unless lettered. OS: `planning/m4-type-hierarchy.md`.
 
-**Forward 2026-08-30 — TE photos stick.** Andrew changes photos in Theme Editor. After picks, he says `photos stuck` / `pull photos` + theme ID. Pull that template into repo so later pushes don’t revert. Rule: `.cursor/rules/te-photos-stick.mdc`.
+**Forward 2026-08-30 — TE photos stick.** Andrew changes photos in Theme Editor. Agents pull that template so later pushes don’t revert. **Never ask him to say a stick phrase.** Rule: `.cursor/rules/te-photos-stick.mdc`.
+
+**Forward 2026-08-31 — Home reviews photos off + Coperni quieter.** After TE pull: keep Coperni video (`shopify://files/videos/Coperni 3.mov`). Tiles = `c1` + `c2` product shots only (c3/c4 stay in JSON, not rendered). `tile_grid: 2x2` so two shots fill the row. No extra 50/50. Home reviews: `show_photo_cards: false` · 6 text cards · More stories → `/pages/reviews` · no Write a Review. Display titles restored on knock-socks + Zero risk.
+
+**Forward 2026-08-31 — TE pull only (Andrew: do not revert or corrupt).** `shopify theme pull --only templates/index.json` from M4 `187144929571`. Repo now matches M4 TE runtime. **No `index.json` push** over his Theme Editor picks. Photos and TE tweaks stick automatically — do not ask him for a phrase. Pulled snapshot: hero = fallback `barreletixxstefrunningpinkbackground` · mosaic = repo URL fallbacks (vm-3 video `75bddc…`) · Coperni picker video `shopify://files/videos/Coperni 3.mov` intact. Hero crop = CSS `object-position: center` only — no JSON media edits.
+
+**Forward 2026-08-31 — Home 1,000+ line + hero focal TE.** Proof `n2`: label `Classes on one pair` · detail `One customer. One pair.` Copy-only in `index.json` after pull — no media field swaps. Split-hero: TE **Media focal point** (default Center) so Andrew can pin Bottom when he picks the hero photo. Photos stick: pull before JSON push; never overwrite `image`/`video`/`image_url`/`video_url`/`poster_url`.
+
+**Forward 2026-08-31 — Hero box fit.** Tall 92vh was cropping portrait heroes. Desktop media height default **78vh** · focal default **Bottom (feet)** · TE: Media fit (Fill/Fit) · Media height 60–100vh. Liquid/CSS only — no `index.json` push.
+
+**Forward 2026-08-31 — Hero portrait frame.** Andrew screenshot = legs-only crop. Cause: landscape vh box on portrait photo. Media now **aspect-ratio 4/5** · max-height 84vh · focal **center**. CSS/Liquid only.
+
+**Forward 2026-08-31 — Hero full-width = editor crop.** Wide screens were breaking 4:5 via max-height while width stayed 62%. Media width now `min(62vw, max-height × ratio)` · grid `max-content + 1fr` so portrait holds full-width. TE dials unchanged. CSS/Liquid only — no JSON.
+
+**Forward 2026-08-31 — Hero align + photo crop.** Andrew: photo correct but hero left-shifted / copy too wide. Restored full-width **62/38** columns. Portrait crop in inner `media-frame` (left of media column). Photo stays; layout lines up with mosaic below. CSS/Liquid only.
+
+**Forward 2026-08-31 — Hero no cream gap.** Andrew screenshot = pink | cream | white. Cause: portrait frame inside 62% column. Fix: media column fills edge-to-edge · `object-fit: contain` · pad color `#e85a7a` (TE). Verified headless 1440 screenshot — no cream strip, full figure + feet, 62/38. CSS/Liquid only.
+
+**Forward 2026-08-31 — Hero cover, no pad, feet.** Andrew: contain + pad was wrong (pink bars); WORKING crop cut feet. Fix-forward: `object-fit: cover` · no pad color · `object-position: center bottom` · 62/38 full-bleed. Removed TE fit/pad controls. CSS/Liquid only — no `index.json`.
+
+**Forward 2026-08-31 — TE sidebar crop lie + portrait lock.** Root cause: TE sidebar narrow preview makes fluid `cover` look full-figure; full width crops to legs. Fix: inner **3:4 portrait frame** (stable crop) · column stays 62% · studio fill `#e85a7a` matches photo. Rule `.cursor/rules/te-sidebar-crop-lies.mdc` · skill `barreletics-te-vs-fullwidth-crop`. Dual-width verify required before crop QA links.
+
+**Forward 2026-08-31 — Hero contain + studio fill (final for crop lie).** Portrait-frame cover still clipped feet on some widths. Settled: `object-fit: contain` · full 62% column · studio fill match photo · dual-width QA mandatory. Never fluid cover for this portrait hero.
+
+**Forward 2026-08-31 — Andrew: remove padding, restore back.** Contain/studio-fill bars removed. Full-bleed `cover` again · no pad · no fill color. CURRENT MESSAGE WINS.
+
+**Forward 2026-08-31 — Hero image X/Y/Zoom TE only.** Layout untouched. Desktop + mobile Position X/Y (0–100) + Zoom (100–160%). `object-fit: cover` + section CSS vars. CSS/Liquid only — no `index.json`.
+
+**Forward 2026-08-31 — Hero TE = storefront crop.** Saved X/Y/Zoom were consumed (50/50/100) but width-fluid `cover` cropped harder on standalone than in TE sidebar. Image is now **height-fit** in the same 62/38 · 84vh box · X/Y/Zoom kept · studio fill `#dc616a` (photo pink, not cream). CSS/Liquid only — no `index.json`.
+
+**Forward 2026-08-31 — Hero pink fill REJECTED.** Andrew: fake pink bands / inset look not approved. Removed height-fit + studio fill. Restored edge-to-edge `cover` in the 62% box. X/Y/Zoom kept. Constraint remains: this portrait photo cannot show full head+feet AND fill a wide landscape media box. CSS/Liquid only — no `index.json`.
+
+**Forward 2026-08-31 — Hero height from photo aspect.** Andrew: stop patching the image; the 62% box was too wide vs its height (`cover` cropped head/feet). Desktop media `aspect-ratio` follows the source photo (2400/2750). 62/38 kept. Cover + X/Y/Zoom kept. No fill. Copy column stretches to that height. CSS/Liquid only — no `index.json`.
+
+**Forward 2026-08-31 — Hero TE controls restored.** Height slider works again (50–150% of photo shape). Zoom 50–160%. Left/right split 20–80%. Images / index.json not pushed.
 
 
 ---

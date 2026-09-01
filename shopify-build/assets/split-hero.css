@@ -1,25 +1,34 @@
 /**
- * Split hero — large pink-shorts lifestyle (media-dominant)
- * Authority: Home WORKING · type via design tokens
+ * Split hero — media-dominant lifestyle
+ * Width split via --sh-media-pct. Desktop height = photo aspect × --sh-height-scale.
+ * Full-bleed cover. No contain. No fill bands.
+ * X/Y = object-position. Zoom = scale() min 1.
+ * One --sh-media-radius clips both sides of the split (photo + copy).
  */
 
 .split-hero {
   display: grid;
   grid-template-columns: minmax(0, var(--sh-media-pct, 62%)) minmax(0, calc(100% - var(--sh-media-pct, 62%)));
-  min-height: var(--hero-min-height, 92vh);
-  background: var(--bg-primary);
+  min-height: 0;
+  align-items: stretch;
+  background: transparent;
+  overflow: hidden;
+  border-radius: var(--sh-media-radius, 0px);
   font-family: var(--font-family);
 }
 
 .split-hero__media {
   position: relative;
   overflow: hidden;
-  min-height: var(--hero-min-height, 92vh);
-  background: var(--bg-alternate);
-  border-top-left-radius: var(--sh-media-radius, 0);
-  border-top-right-radius: var(--sh-media-radius, 0);
-  border-bottom-right-radius: var(--sh-media-radius, 0);
-  border-bottom-left-radius: var(--sh-media-radius, 0);
+  box-sizing: border-box;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  aspect-ratio: calc(var(--sh-ratio-w, 2400) / (var(--sh-ratio-h, 2750) * var(--sh-height-scale, 1)));
+  background: transparent;
+  isolation: isolate;
+  border-radius: var(--sh-media-radius, 0px);
+  clip-path: inset(0 round var(--sh-media-radius, 0px));
 }
 
 .split-hero__media .split-hero__img,
@@ -28,8 +37,11 @@
 .split-hero__media video {
   width: 100%;
   height: 100%;
+  max-width: none;
   object-fit: cover;
-  object-position: center 22%;
+  object-position: var(--sh-img-x, 50%) var(--sh-img-y, 50%);
+  transform: scale(max(1, var(--sh-img-zoom, 1)));
+  transform-origin: var(--sh-img-x, 50%) var(--sh-img-y, 50%);
   display: block;
   position: absolute;
   inset: 0;
@@ -38,7 +50,7 @@
 .split-hero__placeholder {
   width: 100%;
   height: 100%;
-  min-height: var(--hero-min-height, 92vh);
+  min-height: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -51,14 +63,19 @@
 }
 
 .split-hero__copy {
-  background: var(--bg-primary);
+  background: var(--sh-copy-bg, #ffffff);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
   padding: 72px 56px;
-  max-width: 520px;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  align-self: stretch;
   box-sizing: border-box;
+  overflow: hidden;
+  border-radius: var(--sh-media-radius, 0px);
 }
 
 .split-hero__trust {
@@ -200,24 +217,30 @@ a.split-hero__tag:focus-visible {
   }
   .split-hero--reverse .split-hero__media { order: 2; }
   .split-hero--reverse .split-hero__copy { order: 1; }
+  .split-hero--reverse .split-hero__media {
+    justify-content: flex-end;
+  }
 }
 
 @media (max-width: 768px) {
   .split-hero {
     grid-template-columns: 1fr;
     min-height: auto;
+    --sh-img-x: var(--sh-img-x-m, 50%);
+    --sh-img-y: var(--sh-img-y-m, 50%);
+    --sh-img-zoom: var(--sh-img-zoom-m, 1);
   }
 
   .split-hero__media {
     order: 1;
+    width: 100%;
     min-height: 0;
-    aspect-ratio: 3 / 4;
-    max-height: 78vh;
+    max-height: 62vh;
+    aspect-ratio: 4 / 5;
   }
 
   .split-hero__placeholder {
     min-height: 0;
-    aspect-ratio: 3 / 4;
   }
 
   .split-hero__copy {

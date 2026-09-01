@@ -1,0 +1,44 @@
+---
+description: HARD — Theme Editor sidebar crop lies; never approve media crop from TE-narrow preview alone
+alwaysApply: true
+---
+
+# Theme Editor sidebar crop lies (HARD)
+
+**Owner 2026-08-31.** Agents kept “fixing” Home split-hero from the Theme Editor preview (sidebar open). That preview is **narrower** than full desktop. `object-fit: cover` in a **width-fluid** media column therefore shows **full figure in TE** and **legs-only / cut feet at full width**. Andrew cannot keep re-litigating this.
+
+## Why it happens (do not re-discover)
+
+| Viewport | Media column | Cover result on portrait photo |
+|---|---|---|
+| TE + left sidebar | ~narrow | Closer to portrait → more of figure visible (“fits”) |
+| Full browser / sidebar closed | Wide (e.g. 62% of 1440) | Landscape-ish box → cover zooms → head/torso gone or feet wrong |
+
+**TE crop ≠ storefront crop.** Never claim done from TE alone.
+
+## HARD — before any “hero crop fixed” claim
+
+1. Verify at **full desktop width ≥ 1280** (preferably **1440**) with TE sidebar **closed** or via storefront preview URL — not the narrow editor pane.
+2. Also check one **TE-narrow** width (~900) — crop must **match** full width (same figure: head + feet).
+3. If crops differ → the CSS is still width-fluid cover. **Stop.** Use portrait-locked frame (see `split-hero.css`) or ask — do not thrash `contain` / pad / focal for another hour.
+4. Screenshot or CDP measure both widths before sending Andrew a link.
+
+## Forbidden
+
+- Approving / linking a hero crop after only looking at Theme Editor with sidebar open
+- “Fixed” by changing only `object-position` while the media box is still full-column fluid cover
+- Reintroducing cream/white gaps beside the photo (fill color must **match photo studio bg**)
+- Circling TE-fit ↔ full-width-broken without the dual-width check
+
+## Correct pattern (Home split-hero)
+
+- Column stays layout % (e.g. 62/38)
+- **`object-fit: contain`** so head + feet stay visible at TE width and full desktop
+- Column `background` = studio fill matching the photo (TE: Studio fill) — pink continuing, not cream
+- Never width-fluid `cover` for this portrait hero
+- Skill: `barreletics-te-vs-fullwidth-crop`
+
+## Companion
+
+- `.cursor/skills/barreletics-te-vs-fullwidth-crop/SKILL.md`
+- `.cursor/rules/always-give-a-verified-link.mdc` · `test-before-link.mdc`

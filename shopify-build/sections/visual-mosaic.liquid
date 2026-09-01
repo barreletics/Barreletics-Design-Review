@@ -22,19 +22,43 @@
       assign has_hero = true
     endif
   endfor
-  if has_hero and vm_hero_wide
-    assign vm_cols_css = '1.4fr'
+  assign vm_shape = section.settings.featured_layout
+  if vm_shape == blank
+    if vm_cols <= 2 and has_hero
+      assign vm_shape = 'stack_right'
+    elsif vm_hero_wide
+      assign vm_shape = 'working'
+    else
+      assign vm_shape = 'stack_right'
+    endif
+  endif
+  assign vm_stack_right = false
+  assign vm_featured_row = false
+  if vm_shape == 'stack_right'
+    assign vm_stack_right = true
+  endif
+  if vm_shape == 'featured_row'
+    assign vm_featured_row = true
+  endif
+  if vm_stack_right or vm_featured_row
+    assign vm_cols = 3
+    assign vm_cols_css = '1fr 1fr 1fr'
+    assign vm_hero_wide = false
   else
-    assign vm_cols_css = '1fr'
-  endif
-  if vm_cols >= 2
-    assign vm_cols_css = vm_cols_css | append: ' 1fr'
-  endif
-  if vm_cols >= 3
-    assign vm_cols_css = vm_cols_css | append: ' 1fr'
-  endif
-  if vm_cols >= 4
-    assign vm_cols_css = vm_cols_css | append: ' 1fr'
+    if has_hero and vm_hero_wide
+      assign vm_cols_css = '1.4fr'
+    else
+      assign vm_cols_css = '1fr'
+    endif
+    if vm_cols >= 2
+      assign vm_cols_css = vm_cols_css | append: ' 1fr'
+    endif
+    if vm_cols >= 3
+      assign vm_cols_css = vm_cols_css | append: ' 1fr'
+    endif
+    if vm_cols >= 4
+      assign vm_cols_css = vm_cols_css | append: ' 1fr'
+    endif
   endif
   if vm_mob_cols == 1
     assign vm_mob_cols_css = '1fr'
@@ -51,6 +75,8 @@
 
 <section
   class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} visual-mosaic"
+  data-vm-layout="{{ vm_shape }}"
+  data-vm-overlay="{% if section.settings.show_overlay == false %}off{% else %}on{% endif %}"
   id="visual-mosaic-{{ section.id }}"
   aria-label="{{ section.settings.aria_label | default: 'Studio proof' | escape }}"
   style="{% render 'section-inset-vars' %} 
@@ -67,10 +93,21 @@
   "
 >
   <div class="visual-mosaic__grid">
+    {% liquid
+      assign hero_used = false
+      assign sm_shown = 0
+      assign cells_used = 0
+    %}
     {% for block in section.blocks %}
       {% liquid
+        assign skip_tile = false
         assign tile_class = 'vm-tile'
         assign size = block.settings.size | default: 'sm'
+        if vm_stack_right or vm_featured_row
+          if has_hero == false and forloop.first
+            assign size = 'hero'
+          endif
+        endif
         if size == 'hero'
           assign tile_class = tile_class | append: ' vm-tile--hero'
         else
@@ -89,8 +126,27 @@
         assign text_color = block.settings.text_color | default: 'white'
         assign content_pos = block.settings.content_position | default: 'bottom-left'
         assign media_pos = block.settings.media_position | default: 'center center'
-        assign col_span = block.settings.column_span | default: '1' | plus: 0
+        assign col_span = 1
+        if size == 'hero' and vm_stack_right or size == 'hero' and vm_featured_row
+          assign col_span = 2
+        endif
+
+        if vm_stack_right
+          if size == 'hero'
+            if hero_used
+              assign skip_tile = true
+            else
+              assign hero_used = true
+            endif
+          else
+            assign sm_shown = sm_shown | plus: 1
+            if sm_shown > 2
+              assign skip_tile = true
+            endif
+          endif
+        endif
       %}
+      {% unless skip_tile %}
       <a
         class="{{ tile_class }}"
         href="{{ tile_href }}"
@@ -149,7 +205,9 @@
         {% else %}
           <span class="vm-tile__placeholder" aria-hidden="true"></span>
         {% endif %}
-        <span class="vm-tile__shade"></span>
+        {% unless section.settings.show_overlay == false %}
+          <span class="vm-tile__shade"></span>
+        {% endunless %}
         <div class="vm-tile__content">
           {% if block.settings.title != blank %}
             <span class="vm-tile__title">{{ block.settings.title }}</span>
@@ -159,7 +217,37 @@
           {% endif %}
         </div>
       </a>
+      {% liquid
+        if size == 'hero'
+          assign tile_cells = 2 | times: col_span
+        else
+          assign tile_cells = col_span
+        endif
+        assign cells_used = cells_used | plus: tile_cells
+      %}
+      {% endunless %}
     {% endfor %}
+    {% liquid
+      assign fill_n = 0
+      if vm_featured_row
+        assign small_n = section.blocks.size | minus: 1
+        if small_n < 0
+          assign small_n = 0
+        endif
+        assign cells_used = 4 | plus: small_n
+      endif
+      if vm_cols > 1 and cells_used > 0
+        assign rem = cells_used | modulo: vm_cols
+        if rem > 0
+          assign fill_n = vm_cols | minus: rem
+        endif
+      endif
+    %}
+    {% if fill_n > 0 %}
+      {% for i in (1..fill_n) %}
+        <div class="vm-tile vm-tile--sm vm-tile--filler" aria-hidden="true"></div>
+      {% endfor %}
+    {% endif %}
   </div>
 </section>
 
@@ -179,7 +267,10 @@
   #visual-mosaic-{{ section.id }} .vm-tile {
     position: relative;
     overflow: hidden;
-    border-radius: var(--vm-radius);
+    overflow: clip;
+    isolation: isolate;
+    border-radius: var(--vm-radius, 0px);
+    clip-path: inset(0 round var(--vm-radius, 0px));
     display: flex;
     text-decoration: none;
     color: #fff;
@@ -240,6 +331,9 @@
     z-index: 1;
     pointer-events: none;
   }
+  #visual-mosaic-{{ section.id }}[data-vm-overlay="off"] .vm-tile__shade {
+    display: none;
+  }
   #visual-mosaic-{{ section.id }} .vm-tile[data-text-color="black"] .vm-tile__shade {
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 30%, rgba(255, 255, 255, 0.55) 100%);
   }
@@ -285,6 +379,14 @@
     font-weight: 400;
     margin: 0;
   }
+  #visual-mosaic-{{ section.id }} .vm-tile--filler {
+    pointer-events: none;
+    display: block;
+    min-height: var(--vm-row-h);
+    height: 100%;
+    align-self: stretch;
+    background: #ddd8ce;
+  }
   @media (max-width: 900px) {
     #visual-mosaic-{{ section.id }} .visual-mosaic__grid {
       grid-template-columns: var(--vm-mob-cols-css);
@@ -297,6 +399,9 @@
     }
     #visual-mosaic-{{ section.id }} .vm-tile {
       grid-column: span 1;
+    }
+    #visual-mosaic-{{ section.id }} .vm-tile--filler {
+      min-height: var(--vm-mob-h);
     }
   }
   @media (max-width: 560px) {
@@ -325,7 +430,104 @@
   "settings": [
     {
       "type": "header",
-      "content": "Shared — Content"
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "featured_layout",
+      "label": "Grid",
+      "options": [
+        {
+          "value": "stack_right",
+          "label": "1 large + 2 stacked"
+        },
+        {
+          "value": "featured_row",
+          "label": "1 large + row under"
+        },
+        {
+          "value": "working",
+          "label": "Tall left"
+        }
+      ],
+      "default": "working",
+      "info": "1 large + 2 stacked = no row under. Extra tiles stay in the sidebar."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_overlay",
+      "label": "Dark overlay",
+      "default": true,
+      "info": "Off = photos only, no gradient."
+    },
+    {
+      "type": "header",
+      "content": "Size & space"
+    },
+    {
+      "type": "range",
+      "id": "tile_height",
+      "label": "Tile height",
+      "min": 160,
+      "max": 420,
+      "step": 4,
+      "unit": "px",
+      "default": 268
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "label": "Gap",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "corner_radius",
+      "label": "Master Corner Radius",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 4,
+      "info": "One slider. All tiles. 0 = square."
+    },
+    {
+      "type": "range",
+      "id": "pad_top",
+      "label": "Pad top",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "pad_bottom",
+      "label": "Pad bottom",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "pad_x",
+      "label": "Pad left & right",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "More"
     },
     {
       "type": "select",
@@ -386,86 +588,14 @@
       "info": "Screen-reader name only — not visible on the page."
     },
     {
-      "type": "header",
-      "content": "Shared — Layout"
-    },
-    {
-      "type": "paragraph",
-      "content": "Add Tile blocks to add squares. Rows fill automatically (tiles ÷ columns). Raise Columns or Tile height to reshape without code."
-    },
-    {
       "type": "range",
       "id": "columns",
-      "label": "Columns per row (desktop)",
+      "label": "Columns (tall left only)",
       "min": 2,
       "max": 4,
       "step": 1,
       "default": 3,
-      "info": "Home WORKING uses 3 (large tile + 2 small columns)."
-    },
-    {
-      "type": "range",
-      "id": "tile_height",
-      "label": "Tile / row height (desktop)",
-      "min": 160,
-      "max": 420,
-      "step": 4,
-      "unit": "px",
-      "default": 268,
-      "info": "Home WORKING default is 268px. Large tiles span 2 rows."
-    },
-    {
-      "type": "range",
-      "id": "grid_gap",
-      "label": "Gap between tiles",
-      "min": 0,
-      "max": 32,
-      "step": 2,
-      "unit": "px",
-      "default": 12
-    },
-    {
-      "type": "range",
-      "id": "corner_radius",
-      "label": "Tile corner radius",
-      "min": 0,
-      "max": 24,
-      "step": 2,
-      "unit": "px",
-      "default": 4
-    },
-    {
-      "type": "range",
-      "id": "pad_top",
-      "label": "Content pad — top",
-      "min": 0,
-      "max": 48,
-      "step": 2,
-      "unit": "px",
-      "default": 16,
-      "info": "Space inside the white mosaic area, above the tiles. Not the same as Section frame inset below."
-    },
-    {
-      "type": "range",
-      "id": "pad_bottom",
-      "label": "Content pad — bottom",
-      "min": 0,
-      "max": 48,
-      "step": 2,
-      "unit": "px",
-      "default": 16,
-      "info": "Space inside the white mosaic area, below the tiles."
-    },
-    {
-      "type": "range",
-      "id": "pad_x",
-      "label": "Content pad — left & right",
-      "min": 0,
-      "max": 48,
-      "step": 2,
-      "unit": "px",
-      "default": 16,
-      "info": "One control for both sides — space inside the white area beside the tiles."
+      "info": "Ignored when Grid is 1 large + 2 stacked or 1 large + row under."
     },
     {
       "type": "select",
@@ -484,15 +614,11 @@
       "default": "cover"
     },
     {
-      "type": "header",
-      "content": "Section — Mosaic / tiles"
-    },
-    {
       "type": "checkbox",
       "id": "hero_column_wide",
-      "label": "Widen first column (WORKING look)",
+      "label": "Widen tall-left column",
       "default": true,
-      "info": "Uses 1.4fr for column 1 when a Large tile is present — matches Home WORKING."
+      "info": "Only when Grid is Tall left."
     },
     {
       "type": "select",
@@ -522,11 +648,7 @@
     },
     {
       "type": "header",
-      "content": "Section frame"
-    },
-    {
-      "type": "paragraph",
-      "content": "OUTER inset from the page edges (whole section). Separate from Content pad above. Top/bottom independent; left & right = one control. Defaults 0 = full width."
+      "content": "Page inset"
     },
     {
       "type": "checkbox",
@@ -748,7 +870,7 @@
             }
           ],
           "default": "sm",
-          "info": "Large = featured box from the original multi-box section. Use one Large + four Squares for the Home WORKING mosaic."
+          "info": "First tile = Large. Section Grid sets the shape."
         },
         {
           "type": "select",
@@ -765,7 +887,7 @@
             }
           ],
           "default": "1",
-          "info": "Desktop only. Span 2 columns for a wider square (like original featured width)."
+          "info": "Not used. Section Grid sets this."
         },
         {
           "type": "select",

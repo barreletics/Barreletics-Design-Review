@@ -41,8 +41,6 @@
   assign image_scale = section.settings.image_scale | default: 100
   assign contain_width = section.settings.contain_width | default: 72
   assign media_radius = section.settings.media_radius | default: 0
-  assign text_radius = section.settings.section_radius | default: 0
-  assign media_radius_outer = section.settings.media_radius_outer_only
   assign column_gap = section.settings.column_gap | default: 0
   assign side_padding = section.settings.side_padding | default: 64
   assign vertical_padding = section.settings.vertical_padding | default: 88
@@ -93,7 +91,7 @@
 
 <section
   {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | handleize }}"{% endif %}
-  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} split-section{% if section.settings.reverse %} split-section--reverse{% endif %}{% if media_fit == 'contain' %} split-section--contain{% endif %}{% if media_fit == 'fit' %} split-section--fit{% endif %}{% if media_aspect == 'square' %} split-section--media-square{% endif %}{% if media_radius_outer %} split-section--media-outer-radius{% endif %}{% render 'split-mobile-stack-class', mobile_stack_order: section.settings.mobile_stack_order %}"
+  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} split-section{% if section.settings.reverse %} split-section--reverse{% endif %}{% if media_fit == 'contain' %} split-section--contain{% endif %}{% if media_fit == 'fit' %} split-section--fit{% endif %}{% if media_aspect == 'square' %} split-section--media-square{% endif %}{% render 'split-mobile-stack-class', mobile_stack_order: section.settings.mobile_stack_order %}"
   style="{% render 'section-inset-vars' %} 
     --ff-min-height: {{ min_height }}px;
     --ff-mobile-media-height: {{ mobile_media_height }}px;
@@ -103,7 +101,8 @@
     --ff-image-scale: {{ image_scale_ratio }};
     --ff-contain-width: {{ contain_width }}%;
     --ff-media-radius: {{ media_radius }}px;
-    --ff-text-radius: {{ text_radius }}px;
+    --ff-text-radius: {{ media_radius }}px;
+    --ff-panel-bg: {{ section.settings.bg_color | default: '#fff' }};
     --ff-column-gap: {{ column_gap }}px;
     --ff-side-padding: {{ side_padding }}px;
     --ff-vertical-padding: {{ vertical_padding }}px;
@@ -118,11 +117,11 @@
     {% if title_weight != 'default' %}--ff-title-weight: {{ title_weight }};{% endif %}
     {% if body_weight != 'default' %}--ff-body-weight: {{ body_weight }};{% endif %}
     {% if cta_size != 'default' and cta_size != blank %}--ff-cta-size: {{ cta_size }}px;{% endif %}
-    background: {{ section.settings.bg_color | default: '#fff' }};
   "
   {% if region_label != blank %}aria-label="{{ region_label | escape }}"{% endif %}
 >
   <div class="split-media"{% if media_fit == 'contain' %} style="background: {{ section.settings.media_bg | default: '#f9f9f9' }};"{% endif %}>
+    <div class="split-media__clip">
     {% if section.settings.video != blank %}
       {{
         section.settings.video
@@ -182,6 +181,7 @@
         {{ section.settings.image_alt | default: 'Media placeholder' }}
       </div>
     {% endif %}
+    </div>
   </div>
 
   {% capture split_trust %}
@@ -312,7 +312,7 @@
   #shopify-section-{{ section.id }} {
     padding-block: var(--section-padding-y, 64px);
     box-sizing: border-box;
-    background: {{ section.settings.bg_color | default: '#fff' }};
+    background: transparent;
   }
   #shopify-section-{{ section.id }} .split-section {
     display: grid;
@@ -322,6 +322,8 @@
     min-height: var(--ff-min-height, 640px);
     padding-block: 0;
     box-sizing: border-box;
+    overflow: hidden;
+    border-radius: var(--ff-media-radius, 0);
   }
   #shopify-section-{{ section.id }} .split-section--reverse {
     grid-template-columns: var(--ff-text-fr, 1fr) var(--ff-media-fr, 1fr);
@@ -331,10 +333,26 @@
   #shopify-section-{{ section.id }} .split-media {
     position: relative;
     overflow: hidden;
+    overflow: clip;
+    isolation: isolate;
+    contain: paint;
     align-self: stretch;
     height: 100%;
     min-height: var(--ff-min-height, 640px);
     border-radius: var(--ff-media-radius, 0);
+    clip-path: inset(0 round var(--ff-media-radius, 0px));
+    -webkit-clip-path: inset(0 round var(--ff-media-radius, 0px));
+  }
+  #shopify-section-{{ section.id }} .split-media__clip {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    overflow: clip;
+    isolation: isolate;
+    contain: paint;
+    border-radius: var(--ff-media-radius, 0);
+    clip-path: inset(0 round var(--ff-media-radius, 0px));
+    -webkit-clip-path: inset(0 round var(--ff-media-radius, 0px));
   }
   /* Square media column — packshots fill the frame under cover without
      landscape toe-clip. Section grows with the column width (≥ min_height). */
@@ -413,6 +431,13 @@
     min-height: 0;
     overflow: hidden;
   }
+  #shopify-section-{{ section.id }} .split-section.split-section--fit .split-media__clip,
+  #shopify-section-{{ section.id }} .split-section--contain .split-media__clip {
+    position: relative;
+    inset: auto;
+    height: auto;
+    min-height: inherit;
+  }
   #shopify-section-{{ section.id }} .split-section.split-section--fit .split-media__img,
   #shopify-section-{{ section.id }} .split-section.split-section--fit .split-media__video {
     position: relative;
@@ -445,7 +470,11 @@
     justify-content: center;
     align-items: flex-start;
     padding: var(--ff-vertical-padding, 88px) var(--ff-side-padding, 64px);
+    background: var(--ff-panel-bg, {{ section.settings.bg_color | default: '#fff' }});
+    overflow: hidden;
     border-radius: var(--ff-text-radius, 0);
+    clip-path: inset(0 round var(--ff-text-radius, 0px));
+    -webkit-clip-path: inset(0 round var(--ff-text-radius, 0px));
     text-align: var(--align-editorial, left);
   }
   #shopify-section-{{ section.id }} .split-text__title {
@@ -1561,31 +1590,13 @@
     {
       "type": "range",
       "id": "media_radius",
-      "label": "Media corner radius",
+      "label": "Corner radius",
       "min": 0,
       "max": 24,
       "step": 2,
       "unit": "px",
       "default": 0,
-      "info": "Rounds the media panel only — independent of the text panel."
-    },
-    {
-      "type": "checkbox",
-      "id": "media_radius_outer_only",
-      "label": "Round media only on outer edge",
-      "default": false,
-      "info": "When on, only the outer corners of the media (away from the text column) are rounded. Off = all four media corners."
-    },
-    {
-      "type": "range",
-      "id": "section_radius",
-      "label": "Text panel corner radius",
-      "min": 0,
-      "max": 24,
-      "step": 2,
-      "unit": "px",
-      "default": 0,
-      "info": "Rounds the text panel. Pair with Gap + Text panel background so corners read clearly."
+      "info": "One slider — photo side and text side."
     },
     {
       "type": "color",

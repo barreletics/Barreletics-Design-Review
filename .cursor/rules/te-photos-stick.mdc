@@ -1,23 +1,32 @@
 ---
-description: Andrew’s Theme Editor photo picks must survive later theme pushes
+description: Andrew’s Theme Editor photo picks must survive later theme pushes — automatically, no passphrase
 alwaysApply: true
 ---
 
 # TE photos stick (HARD)
 
+**Superset (always-on):** `.cursor/rules/te-user-state-sync.mdc` — all TE picks (media, crop, copy, settings, order) are user-owned during tweaks. This file is the **photo** subset.
+
 Andrew changes photos in **Theme Editor** on M4 `187144929571`. Those picks must **not** get overwritten by later agent updates.
 
-## How it sticks
+## HARD — never ask Andrew to “stick” photos
+
+Do **not** say `photos stuck` · `pull photos` · “say photos stuck.”  
+He already meant: **make the photos stick** while we tweak. That is automatic. No passphrase.
+
+## How it sticks (agent does this — he does not)
 
 1. He picks the **Shopify image** field (`image` / Files), not a one-off URL we will later replace.
-2. When he says **`photos stuck`** or **`pull photos`** + theme ID → `shopify theme pull --theme 187144929571 --path shopify-build --only` that template JSON (one `--only`). Repo then matches TE.
-3. Freeze the image GIDs / URLs in that JSON. Later pushes keep them.
+2. **During QA tweaks:** push **liquid / CSS / JS only**. Never push template JSON over his picks.
+3. **When a tweak needs current TE media** (or after he changes photos): pull that one template JSON yourself → diff → keep his media → commit when he asked to commit. Do not wait for a phrase.
+4. Freeze the image GIDs / URLs in that JSON. Later code pushes keep them.
 
 ## Agents must not
 
 - Push `index.json` / `product*.json` / collection JSON that **clears or swaps** `image`, `image_url`, `video_url`, `poster_url` unless Andrew **names that photo** in the **CURRENT** message
 - “Fix” media by putting an older URL back
 - Prefer a hardcoded `image_url` over a live TE `image` pick
+- Ask him to type a stick / pull phrase
 
 ## Liquid priority (already in `fullbleed-statement`)
 
@@ -25,4 +34,4 @@ Andrew changes photos in **Theme Editor** on M4 `187144929571`. Those picks must
 
 ## If you must push a template
 
-Preserve existing media settings from the working tree / last pull. Copy/layout-only edits are fine. Media changes need a letter.
+Preserve existing media settings from the **live TE pull**, not stale repo. Copy/layout-only edits are fine. Media changes need a letter.
