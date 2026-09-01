@@ -15,6 +15,12 @@
   assign vm_fit = section.settings.media_fit | default: 'cover'
   assign vm_mob_cols = section.settings.mobile_columns | default: '2' | plus: 0
   assign vm_mob_h = section.settings.mobile_tile_height | default: 180
+  assign vm_title_size = section.settings.title_size | default: 'default'
+  assign vm_title_size_m = section.settings.title_size_mobile | default: 'default'
+  assign vm_title_shadow = section.settings.title_shadow
+  if vm_title_shadow == nil
+    assign vm_title_shadow = true
+  endif
   assign vm_hero_wide = section.settings.hero_column_wide
   assign has_hero = false
   for block in section.blocks
@@ -90,6 +96,9 @@
     --vm-pad-x: {{ vm_pad_x }}px;
     --vm-fit: {{ vm_fit }};
     --vm-mob-h: {{ vm_mob_h }}px;
+    {% if vm_title_size != 'default' %}--vm-title-size: {{ vm_title_size }}px; --vm-title-size-sm: {{ vm_title_size }}px;{% endif %}
+    {% if vm_title_size_m != 'default' %}--vm-title-size-m: {{ vm_title_size_m }}px; --vm-title-size-sm-m: {{ vm_title_size_m }}px;{% endif %}
+    --vm-title-shadow: {% if vm_title_shadow %}0 1px 2px rgba(0,0,0,0.55), 0 2px 14px rgba(0,0,0,0.4){% else %}none{% endif %};
   "
 >
   <div class="visual-mosaic__grid">
@@ -353,11 +362,12 @@
     text-align: center;
   }
   #visual-mosaic-{{ section.id }} .vm-tile__title {
-    font-size: 28px;
+    font-size: var(--vm-title-size, 28px);
     font-weight: 400;
     line-height: 1.15;
     margin: 0 0 14px;
     letter-spacing: -0.028em;
+    text-shadow: var(--vm-title-shadow);
   }
   #visual-mosaic-{{ section.id }} .vm-tile__cta {
     display: inline-block;
@@ -375,7 +385,7 @@
     max-width: none;
   }
   #visual-mosaic-{{ section.id }} .vm-tile--sm .vm-tile__title {
-    font-size: 20px;
+    font-size: var(--vm-title-size-sm, 20px);
     font-weight: 400;
     margin: 0;
   }
@@ -414,6 +424,12 @@
       min-height: 0;
       grid-row: span 1;
     }
+    #visual-mosaic-{{ section.id }} .vm-tile__title {
+      font-size: var(--vm-title-size-m, 22px);
+    }
+    #visual-mosaic-{{ section.id }} .vm-tile--sm .vm-tile__title {
+      font-size: var(--vm-title-size-sm-m, 16px);
+    }
     #visual-mosaic-{{ section.id }} .vm-tile--filler {
       min-height: calc(var(--vm-mob-h) * 1.35);
     }
@@ -426,11 +442,11 @@
       gap: var(--vm-gap);
     }
     #visual-mosaic-{{ section.id }} .vm-tile__title {
-      font-size: 22px;
+      font-size: var(--vm-title-size-m, 22px);
       margin-bottom: 10px;
     }
     #visual-mosaic-{{ section.id }} .vm-tile--sm .vm-tile__title {
-      font-size: 16px;
+      font-size: var(--vm-title-size-sm-m, 16px);
     }
   }
 </style>
@@ -477,6 +493,52 @@
     {
       "type": "header",
       "content": "Size & space"
+    },
+    {
+      "type": "select",
+      "id": "title_size",
+      "label": "Title size",
+      "options": [
+        { "value": "default", "label": "Default — 28px hero / 20px small" },
+        { "value": "16", "label": "16px" },
+        { "value": "18", "label": "18px" },
+        { "value": "20", "label": "20px" },
+        { "value": "22", "label": "22px" },
+        { "value": "24", "label": "24px" },
+        { "value": "26", "label": "26px" },
+        { "value": "28", "label": "28px" },
+        { "value": "32", "label": "32px" },
+        { "value": "36", "label": "36px" },
+        { "value": "40", "label": "40px" }
+      ],
+      "default": "default",
+      "info": "All mosaic card titles on desktop. Pick a px = hero and small match."
+    },
+    {
+      "type": "select",
+      "id": "title_size_mobile",
+      "label": "Title size — mobile",
+      "options": [
+        { "value": "default", "label": "Default — 22px hero / 16px small" },
+        { "value": "16", "label": "16px" },
+        { "value": "18", "label": "18px" },
+        { "value": "20", "label": "20px" },
+        { "value": "22", "label": "22px" },
+        { "value": "24", "label": "24px" },
+        { "value": "26", "label": "26px" },
+        { "value": "28", "label": "28px" },
+        { "value": "32", "label": "32px" },
+        { "value": "36", "label": "36px" }
+      ],
+      "default": "default",
+      "info": "Phone ≤767. Default is the current sizes. Pick a px if type is too small."
+    },
+    {
+      "type": "checkbox",
+      "id": "title_shadow",
+      "label": "Title shadow",
+      "default": true,
+      "info": "Dark edge so white type reads on the photo. Off = flat type."
     },
     {
       "type": "range",
