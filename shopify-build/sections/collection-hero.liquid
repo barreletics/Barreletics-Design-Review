@@ -24,13 +24,30 @@
   if show_trust == nil
     assign show_trust = true
   endif
+  assign media_pct = section.settings.media_column_pct | default: 48
+  if media_pct < 35
+    assign media_pct = 35
+  endif
+  assign text_pct = 100 | minus: media_pct
+  assign img_zoom = section.settings.image_zoom | default: 100
+  if img_zoom < 100
+    assign img_zoom = 100
+  endif
+  assign media_h = section.settings.media_height | default: 480
   assign layout_class = 'coll-hero'
   if has_media
     assign layout_class = 'coll-hero coll-hero--split'
   endif
 -%}
 
-<section class="{{ layout_class }}{% render 'split-mobile-stack-class', mobile_stack_order: section.settings.mobile_stack_order %}" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }} aria-label="{{ section.settings.aria_label | default: 'Collection hero' | escape }}">
+<section
+  class="{{ layout_class }}{% render 'split-mobile-stack-class', mobile_stack_order: section.settings.mobile_stack_order %}"
+  id="shopify-section-{{ section.id }}"
+  {{ section.shopify_attributes }}
+  data-media-fill="{{ media_fill }}"
+  aria-label="{{ section.settings.aria_label | default: 'Collection hero' | escape }}"
+  style="--ch-text: {{ text_pct }}fr; --ch-media: {{ media_pct }}fr; --ch-zoom: {{ img_zoom | times: 0.01 }}; --ch-media-h: {{ media_h }}px;"
+>
   <div class="coll-hero__copy">
     {% if show_trust and section.settings.trust_text != blank %}
       <p class="coll-hero__trust">
@@ -151,18 +168,39 @@
 </section>
 
 <style>
-  #shopify-section-{{ section.id }} .coll-hero {
+  #shopify-section-{{ section.id }} {
+    --ch-text: {{ text_pct }}fr;
+    --ch-media: {{ media_pct }}fr;
+    --ch-zoom: {{ img_zoom | times: 0.01 }};
+    --ch-media-h: {{ media_h }}px;
+  }
+  #shopify-section-{{ section.id }} .coll-hero,
+  #shopify-section-{{ section.id }}.coll-hero {
     padding: var(--space-13, 72px) var(--section-padding-x, 40px) var(--space-9, 40px);
     max-width: var(--max-width, 1200px);
     margin: 0 auto;
   }
 
-  #shopify-section-{{ section.id }} .coll-hero--split {
+  #shopify-section-{{ section.id }} .coll-hero--split,
+  #shopify-section-{{ section.id }}.coll-hero--split {
     display: grid;
-    grid-template-columns: 1.05fr 0.95fr;
+    grid-template-columns: var(--ch-text, 52fr) var(--ch-media, 48fr);
     gap: 40px;
     align-items: center;
     padding: 56px 40px 40px;
+  }
+  #shopify-section-{{ section.id }}:has([data-media-fill="bleed"]),
+  #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="bleed"],
+  #shopify-section-{{ section.id }}.coll-hero--split[data-media-fill="bleed"] {
+    max-width: none;
+    width: 100%;
+    gap: 0;
+    align-items: stretch;
+    padding: 0;
+  }
+  #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="bleed"] .coll-hero__copy {
+    padding: 56px 48px;
+    align-self: center;
   }
 
   #shopify-section-{{ section.id }} .coll-hero--split .sole-cards {
@@ -260,26 +298,34 @@
     position: relative;
     overflow: hidden;
     background: #f5f2ec;
-    min-height: 420px;
+    min-height: var(--ch-media-h, 420px);
     aspect-ratio: 4 / 5;
   }
   #shopify-section-{{ section.id }} .coll-hero__media[data-media-fill="inset"] {
     border-radius: 6px;
+    aspect-ratio: auto;
+    height: var(--ch-media-h, 480px);
+    min-height: var(--ch-media-h, 480px);
   }
-  #shopify-section-{{ section.id }} .coll-hero__media[data-media-fill="column"] {
+  #shopify-section-{{ section.id }} .coll-hero__media[data-media-fill="column"],
+  #shopify-section-{{ section.id }} .coll-hero__media[data-media-fill="bleed"] {
     border-radius: 0;
     align-self: stretch;
-    min-height: 100%;
+    min-height: var(--ch-media-h, 480px);
     height: 100%;
+    aspect-ratio: auto;
   }
   #shopify-section-{{ section.id }} .coll-hero__media img,
   #shopify-section-{{ section.id }} .coll-hero__media .coll-hero__video {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
     position: absolute;
     inset: 0;
     display: block;
+    transform: scale(var(--ch-zoom, 1));
+    transform-origin: center center;
   }
 
   #shopify-section-{{ section.id }} .sole-cards {
@@ -363,9 +409,19 @@
       grid-template-columns: 1fr;
       gap: 28px;
     }
+    #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="bleed"] {
+      gap: 0;
+    }
+    #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="bleed"] .coll-hero__copy {
+      padding: 36px 20px;
+    }
     #shopify-section-{{ section.id }} .coll-hero--split .coll-hero__media {
       min-height: 0;
       max-height: 52vh;
+    }
+    #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="bleed"] .coll-hero__media {
+      max-height: none;
+      min-height: 52vw;
     }
     #shopify-section-{{ section.id }} .sole-cards {
       grid-template-columns: 1fr;
@@ -407,9 +463,13 @@
       { "value": "image", "label": "Image" },
       { "value": "video", "label": "Video" }
     ]},
-    { "type": "select", "id": "media_fill", "label": "Media fill", "default": "inset", "info": "inset = rounded 4:5 card in the column (mock default). column = edge-to-edge fill of the 50% media column.", "options": [
-      { "value": "inset", "label": "Inset (mock default)" },
-      { "value": "column", "label": "Column fill" }
+    { "type": "range", "id": "media_column_pct", "label": "Photo column width", "min": 35, "max": 70, "step": 1, "unit": "%", "default": 48, "info": "Desktop. Text column is the rest." },
+    { "type": "range", "id": "media_height", "label": "Photo height", "min": 360, "max": 720, "step": 10, "unit": "px", "default": 480 },
+    { "type": "range", "id": "image_zoom", "label": "Photo zoom", "min": 100, "max": 180, "step": 2, "unit": "%", "default": 100, "info": "Never below 100 — no cream gaps." },
+    { "type": "select", "id": "media_fill", "label": "Photo size", "default": "inset", "info": "Inset = rounded card. Column fill = fills the photo column. Full size = photo to the page edge.", "options": [
+      { "value": "inset", "label": "Inset card" },
+      { "value": "column", "label": "Fill column" },
+      { "value": "bleed", "label": "Full size (edge of page)" }
     ]},
     { "type": "image_picker", "id": "image", "label": "Image (Shopify)" },
     { "type": "text", "id": "image_url", "label": "Image URL fallback", "info": "Used when Shopify image is empty. Leave blank for text-only hero (e.g. Apparel)." },

@@ -342,7 +342,7 @@
 <style>
   #shopify-section-{{ section.id }} .variants-section {
     padding: var(--section-padding-y) var(--section-padding-x);
-    background: var(--bg-primary);
+    background: {% if section.settings.bg_color != blank %}{{ section.settings.bg_color }}{% else %}var(--bg-primary){% endif %};
   }
 
   #shopify-section-{{ section.id }} .variants-inner {
@@ -1033,6 +1033,7 @@
 {
   "name": "Variant Grid",
   "settings": [
+    { "type": "color", "id": "bg_color", "label": "Section background" },
     { "type": "header", "content": "Shared — Content" },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Two versions. One performance." },
     { "type": "text", "id": "title", "label": "Heading", "default": "Shop all colors & styles", "info": "Family is brand Type OS — use Title size/weight to adjust. No font family picker. Header chrome locked — keep title/body structure." },

@@ -4,6 +4,7 @@
   Separate from statement-band (cream solo slogan).
 {% endcomment %}
 {% liquid
+  assign title_role = section.settings.title_role | default: 'statement'
   assign title_size = section.settings.title_size | default: 'default'
   assign title_weight = section.settings.title_weight | default: 'default'
   assign body_size = section.settings.body_size | default: 'default'
@@ -17,6 +18,13 @@
   assign height_mobile = section.settings.height_mobile | default: '52'
   assign overlay_opacity = section.settings.overlay_opacity | default: 55
   assign overlay_alpha = overlay_opacity | times: 0.01
+  assign show_overlay = section.settings.show_overlay
+  if show_overlay == nil
+    assign show_overlay = true
+  endif
+  if show_overlay == false
+    assign overlay_alpha = 0
+  endif
   assign focal_x = section.settings.focal_x | default: 50
   assign focal_y = section.settings.focal_y | default: 50
   assign media_fit = section.settings.media_fit | default: 'cover'
@@ -121,7 +129,7 @@
         <p class="fullbleed-statement__eyebrow type-label">{{ section.settings.eyebrow }}</p>
       {% endif %}
       {% if section.settings.title != blank %}
-        <p class="fullbleed-statement__line type-statement">{{ section.settings.title }}</p>
+        <p class="fullbleed-statement__line {% if title_role == 'display' %}h2-display{% else %}type-statement{% endif %}">{{ section.settings.title }}</p>
       {% endif %}
       {% if section.settings.body != blank %}
         <p class="fullbleed-statement__sub">{{ section.settings.body }}</p>
@@ -204,6 +212,9 @@
   #shopify-section-{{ section.id }} .fullbleed-statement--tint-lagoon .fullbleed-statement__bg img {
     filter: saturate(1.22) contrast(1.04) brightness(1.03);
   }
+  #shopify-section-{{ section.id }} {
+    --fb-overlay: rgba(28, 25, 22, {{ overlay_alpha }});
+  }
   #shopify-section-{{ section.id }} .fullbleed-statement__bg::after {
     content: "";
     position: absolute;
@@ -227,10 +238,10 @@
     margin: 0 0 var(--gap-a, 16px);
   }
   #shopify-section-{{ section.id }} .fullbleed-statement__line {
-    font-size: var(--fb-title-size, var(--type-statement-size));
-    font-weight: var(--fb-title-weight, var(--type-statement-weight));
-    letter-spacing: var(--type-statement-tracking);
-    line-height: var(--type-statement-leading);
+    font-size: var(--fb-title-size, {% if title_role == 'display' %}var(--type-h2-display-size){% else %}var(--type-statement-size){% endif %});
+    font-weight: var(--fb-title-weight, {% if title_role == 'display' %}var(--type-h2-display-weight){% else %}var(--type-statement-weight){% endif %});
+    letter-spacing: {% if title_role == 'display' %}var(--type-h2-display-tracking){% else %}var(--type-statement-tracking){% endif %};
+    line-height: {% if title_role == 'display' %}var(--type-h2-display-leading){% else %}var(--type-statement-leading){% endif %};
     color: #fff;
     text-shadow: 0 2px 28px rgba(0, 0, 0, 0.55), 0 1px 2px rgba(0, 0, 0, 0.4);
     margin: 0 0 var(--gap-c);
@@ -298,6 +309,16 @@
       "label": "Heading",
       "default": "You commit to the class. Commit to the gear.",
       "info": "Family is brand Type OS — use Title size/weight to adjust. No font family picker."
+    },
+    {
+      "type": "select",
+      "id": "title_role",
+      "label": "Heading style",
+      "default": "statement",
+      "options": [
+        { "value": "statement", "label": "Statement (video overlay — PDP TRANSFORM)" },
+        { "value": "display", "label": "Display 52px (matches Shop All / pose band)" }
+      ]
     },
     {
       "type": "select",
@@ -519,15 +540,22 @@
       "default": "52"
     },
     {
+      "type": "checkbox",
+      "id": "show_overlay",
+      "label": "Dark overlay",
+      "default": true,
+      "info": "Off = no dim on the video/photo."
+    },
+    {
       "type": "range",
       "id": "overlay_opacity",
-      "label": "Scrim opacity",
+      "label": "Darkness",
       "min": 0,
       "max": 80,
       "step": 5,
       "unit": "%",
       "default": 55,
-      "info": "Dark overlay behind text. Ignored in image-only mode."
+      "info": "How heavy the dim is. 0 = off. Ignored if Dark overlay is unchecked."
     },
     {
       "type": "select",

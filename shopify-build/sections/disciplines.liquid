@@ -2,7 +2,7 @@
   Disciplines — cream typographic band (Home WORKING).
 {% endcomment %}
 
-<section class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} discipline-film" aria-label="{{ section.settings.aria_label | default: 'Built for every studio discipline' | escape }}" style="{% render 'section-inset-vars' %}">
+<section class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} discipline-film{% if section.settings.headline == blank %} discipline-film--tags-only{% endif %}" aria-label="{{ section.settings.aria_label | default: 'Built for every studio discipline' | escape }}" style="--df-bg: {{ section.settings.bg_color | default: '#f5f2ec' }}; {% render 'section-inset-vars' %}">
   <div class="discipline-film__inner">
     {% if section.settings.headline != blank %}
       <p class="discipline-film__line h2-display">{{ section.settings.headline | newline_to_br }}</p>
@@ -22,7 +22,7 @@
   .discipline-film {
     position: relative;
     overflow: hidden;
-    background: #f5f2ec;
+    background: var(--df-bg, #f5f2ec);
     border-top: 1px solid #e8e2d8;
     border-bottom: 1px solid #e8e2d8;
   }
@@ -65,6 +65,13 @@
     margin: 0 14px;
     font-weight: 400;
   }
+  .discipline-film--tags-only .discipline-film__inner {
+    padding: 28px var(--section-padding-x, 40px);
+  }
+  .discipline-film--tags-only .discipline-film__moves {
+    border-top: none;
+    padding-top: 0;
+  }
   @media (max-width: 768px) {
     .discipline-film__inner {
       padding: var(--section-padding-y-mobile, 48px) var(--section-padding-x-mobile, 16px);
@@ -86,6 +93,12 @@
       "label": "Heading",
       "default": "Upgrade your grip.\nUpgrade your workout.",
       "info": "H2 Display (brand). Use a line break for two lines. Type OS owns size/weight."
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#f5f2ec"
     },
     {
       "type": "header",

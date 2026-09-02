@@ -17,6 +17,7 @@
   assign cta_bg = section.settings.cta_bg_color | default: '#1c1916'
   assign cta_border = section.settings.cta_border_color | default: cta_bg
   assign cta_text_color = section.settings.cta_text_color | default: '#ffffff'
+  assign band_bg = section.settings.bg_color | default: '#f5f2ec'
   assign region_label = section.settings.aria_label | strip
   if region_label == blank
     assign region_label = section.settings.title
@@ -27,6 +28,7 @@
   {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | handleize }}"{% endif %}
   class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} statement-band align-band"
   style="{% render 'section-inset-vars' %} 
+    --sb-band-bg: {{ band_bg }};
     --sb-cta-bg: {{ cta_bg }};
     --sb-cta-border: {{ cta_border }};
     --sb-cta-text: {{ cta_text_color }};
@@ -55,7 +57,7 @@
 <style>
   #shopify-section-{{ section.id }} .statement-band {
     padding: 96px 40px;
-    background: #f5f2ec;
+    background: var(--sb-band-bg, #f5f2ec);
     text-align: center;
     border-top: 1px solid #e8e2d8;
     border-bottom: 1px solid #e8e2d8;
@@ -223,6 +225,16 @@
 
       ],
       "default": "default"
+    },
+    {
+      "type": "header",
+      "content": "Section — Statement band"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#f5f2ec"
     },
     { "type": "text", "id": "cta_text", "label": "CTA label", "default": "Shop Now" },
     

@@ -18,6 +18,8 @@
 
 > **Sock kit LOCKED 2026-08-27 (J):** Theme settings → **Sock kit**. Label `Complete the kit` · one link `Optional sock kit →` → `/collections/hot-kits` · small type `A sock made for Performance Skins with grip around the toes.` + `Does your studio require a sock? Need help with sweat, warmth, or comfort?` Buy-box checkbox only shows/hides. Layout / fold untouched. Nav: **Socks** under Apparel on `m4-menu` (not live Main menu). Collection page copy reframed — no heat sell. Handle stays `hot-kits`. Still 404 until Andrew publishes the collection to Online Store.
 
+> **Shop All SIGNED 2026-09-01 (Andrew: lock everything in):** `templates/collection.json` on M4 `187144929571`. Spine: hero → disciplines (Upgrade + tags) → video 50/50 (Studio workouts, cream `#f5f2ec`) → grid → **in-use mosaic** (3 tiles, photo or video) → Never Slip → fullbleed Commit → Never Loses → Knock Your Socks Off → reviews (text cards + **full live Judge.me**) → FAQ cream. Sole cards off. TE hero crop/width/height stay user-owned. Do not strip mosaic or Judge.me without a letter.
+
 ---
 
 ## What “APPROVED / FROZEN” means
