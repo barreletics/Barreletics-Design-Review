@@ -7,7 +7,8 @@
 **Priors:** v5–v17 — do not overwrite · Hub: `PREVIEW-HUB.html` / `docs/index.html`  
 **Updated:** 2026-07-24  
 
-> **M4 runtime SIGNED 2026-09-01 (Andrew: lock it in · three cards).** Do not overwrite the v18 HTML. Live draft `collection.json` on `187144929571`: mosaic 3-up after grid · Juicer `@barreletics` · cream studio 50/50 · no full Judge.me list. See `planning/m4-section-freeze.md`.  
+> **M4 runtime SIGNED 2026-09-01 (Andrew: lock it in · three cards).** Do not overwrite the v18 HTML. Live draft `collection.json` on `187144929571`: mosaic 3-up after grid · Juicer `@barreletics` · cream studio 50/50 · no full Judge.me list. See `planning/m4-section-freeze.md`.
+> **Typography LOCKED 2026-09-02.** Roles in § Type OS below. Do not retrofit Home or PDP.  
 
 **v18 (from v17):** BZ-020 **type calm** — display/section/statement **400** · H1 Home-sized `clamp(34–46)` · 700 CTAs only. Spine unchanged.  
 **v17 (from v16):** Prior type pass (500/700) + hero trust bump — superseded for weight by v18.  
@@ -35,15 +36,20 @@ Markup hint: `data-media-fill="inset|column"` on `.coll-hero__media` (or section
 
 ---
 
-## Type OS (BZ-020) — Collection lock (calm)
+## Type OS — Collection lock (2026-09-02)
 
-| Role | Weight | Size | Examples |
-|------|--------|------|----------|
-| Body | **400** | 15–16px | hero body, band copy |
-| Section / H1 / statements | **400** | H1 `clamp(34–46)` · section `clamp(28–40)` | Secure in Every Hold · Shop · Never Slip · Commit · Never Loses · Knock Socks · Reviews · FAQ |
-| CTAs / badges / tabs / prices | **700** | — | Shop Now, Quick Add, tabs |
+Supersedes the old BZ-020 “all titles 400” row. Tokens = `planning/m4-type-hierarchy.md`. **Do not retrofit Home or PDP from this page.**
 
-Do **not** stack 500/700 on every title — matches SEO v30 / live calm.
+| On Collection | Role | Examples |
+|---|---|---|
+| Hero H1 | **Hero** | Secure in Every Hold |
+| 50/50 / image-led | **H2 Display** | Studio workouts… · Never loses shape… |
+| Text-only brand statement | **Statement** | Upgrade your grip… · Never slip… · Let us knock your socks off! |
+| Functional / wayfinding | **Standard** | Shop all colors & styles · @barreletics · Reviews · FAQ |
+| Body | **Body** | Hero lede, band subheads |
+| Buttons | **Global CTA Type OS** | Hero Shop Now (15 / 500 / 0.12em / 44px) |
+
+Also locked here: Knock band `#faf8f6` · grid **3 rows** · See more / Show less.
 
 ---
 

@@ -328,6 +328,7 @@
           data-variants-see-all
           data-see-all-label="{{ see_all_label | escape }}"
           data-see-more-label="See more"
+          data-show-less-label="{% if template == 'collection' %}Show less{% else %}Show fewer{% endif %}"
           aria-expanded="false"
         >{{ see_all_label | escape }}</button>
       </div>
@@ -839,6 +840,18 @@
       padding: 12px 10px;
     }
   }
+  {% if template == 'collection' %}
+  /* Shop All QC — functional heading 28 / 26 / 600 */
+  #shopify-section-{{ section.id }} .variants-head__title {
+    font-size: 28px;
+    font-weight: 600;
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .variants-head__title {
+      font-size: 26px;
+    }
+  }
+  {% endif %}
 </style>
 
 <script>
@@ -916,34 +929,55 @@
       var btn = section.querySelector('[data-variants-see-all]');
       var grid = activeGrid();
       var oneoffs = isOneoffsGrid(grid);
-
-      grids().forEach(function (g) {
-        var expanded =
-          !isOneoffsGrid(g) &&
-          (section.getAttribute('data-variants-expanded') === 'true' || mode === 'off');
-        var limit = isOneoffsGrid(g)
-          ? parseInt(section.getAttribute('data-visible-limit') || String(baseLimit), 10) || baseLimit
-          : baseLimit;
-        var visibleIdx = 0;
-        cardsInGrid(g).forEach(function (card) {
-          if (card.classList.contains('is-size-hidden')) {
-            card.classList.add('is-variants-hidden');
-            return;
-          }
-          var show = mode === 'off' || expanded || visibleIdx < limit;
-          card.classList.toggle('is-variants-hidden', !show);
-          visibleIdx++;
-        });
+      var combineAll = {% if template == 'collection' %}true{% else %}false{% endif %};
+      var visibleGrids = Array.prototype.slice.call(grids()).filter(function (g) {
+        return !g.classList.contains('is-grid-hidden');
       });
-
-      var total = visibleCardsOf(grid).length;
-      var shownLimit = oneoffs
-        ? parseInt(section.getAttribute('data-visible-limit') || String(baseLimit), 10) || baseLimit
-        : baseLimit;
       var expandedAll =
         !oneoffs &&
         (section.getAttribute('data-variants-expanded') === 'true' || mode === 'off');
-      var needs = mode !== 'off' && total > (expandedAll ? total : shownLimit) && !expandedAll;
+
+      if (combineAll && !oneoffs && visibleGrids.length > 1) {
+        var running = 0;
+        visibleGrids.forEach(function (g) {
+          cardsInGrid(g).forEach(function (card) {
+            if (card.classList.contains('is-size-hidden')) {
+              card.classList.add('is-variants-hidden');
+              return;
+            }
+            var show = mode === 'off' || expandedAll || running < baseLimit;
+            card.classList.toggle('is-variants-hidden', !show);
+            running++;
+          });
+        });
+      } else {
+        grids().forEach(function (g) {
+          var expanded =
+            !isOneoffsGrid(g) &&
+            (section.getAttribute('data-variants-expanded') === 'true' || mode === 'off');
+          var limit = isOneoffsGrid(g)
+            ? parseInt(section.getAttribute('data-visible-limit') || String(baseLimit), 10) || baseLimit
+            : baseLimit;
+          var visibleIdx = 0;
+          cardsInGrid(g).forEach(function (card) {
+            if (card.classList.contains('is-size-hidden')) {
+              card.classList.add('is-variants-hidden');
+              return;
+            }
+            var show = mode === 'off' || expanded || visibleIdx < limit;
+            card.classList.toggle('is-variants-hidden', !show);
+            visibleIdx++;
+          });
+        });
+      }
+
+      var total = (combineAll && visibleGrids.length > 1)
+        ? visibleGrids.reduce(function (sum, g) { return sum + visibleCardsOf(g).length; }, 0)
+        : visibleCardsOf(grid).length;
+      var shownLimit = oneoffs
+        ? parseInt(section.getAttribute('data-visible-limit') || String(baseLimit), 10) || baseLimit
+        : baseLimit;
+      var needs = mode !== 'off' && (expandedAll || total > shownLimit);
       if (oneoffs) {
         needs = mode !== 'off' && total > shownLimit;
       }
@@ -959,7 +993,8 @@
           var open = section.getAttribute('data-variants-expanded') === 'true';
           btn.setAttribute('aria-expanded', open ? 'true' : 'false');
           var openLabel = btn.getAttribute('data-see-all-label') || 'See all colors & styles';
-          btn.textContent = open ? 'Show fewer' : openLabel;
+          var lessLabel = btn.getAttribute('data-show-less-label') || 'Show fewer';
+          btn.textContent = open ? lessLabel : openLabel;
         }
       }
     }

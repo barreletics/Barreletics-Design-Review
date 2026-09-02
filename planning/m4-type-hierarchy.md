@@ -31,6 +31,29 @@ Classes: `.type-hero` · `.h2-display` · `.h2-standard` · `.type-statement` ·
 
 ---
 
+## QC assignment (LOCKED 2026-09-02 — Collection approved)
+
+**Use this when QCing a page.** Tokens stay in `design-tokens.css`. Do not invent sizes.
+
+| On the page | Type OS role |
+|---|---|
+| Page-opening H1 | **Hero** |
+| 50/50 / image-led editorial | **H2 Display** |
+| Text-only brand statement | **Statement** |
+| Functional / wayfinding heading | **H2 Standard** |
+| Body / lede | **Body** |
+| Buttons | **Global CTA Type OS** (`--type-cta-*`) |
+
+No arbitrary one-off font sizes or weights. Editorial copy stays sentence case unless there is a deliberate brand reason otherwise.
+
+**Rollout is page-by-page. Do not retrofit the site.**
+
+- **Home is frozen.** Do not touch Home. It is the reference page.
+- **PDP:** do not change until we QC that page. Fix only mismatches then.
+- **Collection (Shop All):** approved 2026-09-02 on M4 `187144929571`. Keep current Collection type + Hero Shop Now CTA. Knock band `#faf8f6`. 3-row All Variants.
+
+---
+
 ## Cadence (HARD)
 
 Only three gaps between eyebrow → headline → body → CTA:

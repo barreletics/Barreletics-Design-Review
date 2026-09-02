@@ -20,6 +20,8 @@
 
 > **Shop All SIGNED 2026-09-01 (Andrew: lock it in · three cards):** `templates/collection.json` on M4 `187144929571`. Spine: hero → disciplines (Upgrade + tags) → video 50/50 (Studio workouts, cream `#f5f2ec`) → grid → **in-use mosaic (3 tiles — SIGNED)** → Never Slip → fullbleed Commit → Never Loses → Knock Your Socks Off → **Juicer `@barreletics`** → reviews (curated text cards only · **no full Judge.me list**) → FAQ cream. Sole cards off. TE hero crop/width/height + mosaic photos stay user-owned. Do not strip mosaic or Juicer without a letter. Hub Collection v18 mock stays; do not overwrite it.
 
+> **Collection typography LOCKED 2026-09-02 (Andrew: lock this decision).** Current Collection type + Hero Shop Now CTA stay. **Do not retrofit Home or PDP.** Home is frozen (reference). PDP QC later, mismatches only. Rule for future QC: Hero = Hero · 50/50 / image-led editorial = H2 Display · text-only brand statement = Statement · functional / wayfinding = Standard · body = Body · CTA buttons = global CTA Type OS. No one-off sizes/weights. Preserve: Collection Hero Shop Now Type OS CTA · Knock band `#faf8f6` · 3-row All Variants (See more / Show less). OS: `planning/m4-type-hierarchy.md`.
+
 ---
 
 ## What “APPROVED / FROZEN” means

@@ -1,11 +1,14 @@
 {% comment %}
   Disciplines — cream typographic band (Home WORKING).
 {% endcomment %}
+{% liquid
+  assign heading_role = section.settings.heading_role | default: 'display'
+%}
 
 <section class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} discipline-film{% if section.settings.headline == blank %} discipline-film--tags-only{% endif %}" aria-label="{{ section.settings.aria_label | default: 'Built for every studio discipline' | escape }}" style="--df-bg: {{ section.settings.bg_color | default: '#f5f2ec' }}; {% render 'section-inset-vars' %}">
   <div class="discipline-film__inner">
     {% if section.settings.headline != blank %}
-      <p class="discipline-film__line h2-display">{{ section.settings.headline | newline_to_br }}</p>
+      <p class="discipline-film__line {% if heading_role == 'statement' %}type-statement{% else %}h2-display{% endif %}">{{ section.settings.headline | newline_to_br }}</p>
     {% endif %}
     <div class="discipline-film__moves">
       {% for block in section.blocks %}
@@ -43,6 +46,15 @@
     line-height: var(--type-h2-display-leading);
     letter-spacing: var(--type-h2-display-tracking);
   }
+  .discipline-film__line.type-statement {
+    color: var(--text-primary);
+    max-width: none;
+    margin: 0 0 var(--gap-c);
+    font-size: var(--type-statement-size);
+    font-weight: var(--type-statement-weight);
+    line-height: var(--type-statement-leading);
+    letter-spacing: var(--type-statement-tracking);
+  }
   .discipline-film__moves {
     display: flex;
     flex-wrap: wrap;
@@ -76,6 +88,9 @@
     .discipline-film__inner {
       padding: var(--section-padding-y-mobile, 48px) var(--section-padding-x-mobile, 16px);
     }
+    .discipline-film__line.type-statement {
+      font-size: var(--type-statement-size-mobile);
+    }
   }
 </style>
 
@@ -92,7 +107,17 @@
       "id": "headline",
       "label": "Heading",
       "default": "Upgrade your grip.\nUpgrade your workout.",
-      "info": "H2 Display (brand). Use a line break for two lines. Type OS owns size/weight."
+      "info": "Use a line break for two lines. Type OS owns size/weight."
+    },
+    {
+      "type": "select",
+      "id": "heading_role",
+      "label": "Heading Type OS role",
+      "options": [
+        { "value": "display", "label": "H2 Display" },
+        { "value": "statement", "label": "Statement" }
+      ],
+      "default": "display"
     },
     {
       "type": "color",
