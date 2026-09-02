@@ -44,6 +44,8 @@
   assign column_gap = section.settings.column_gap | default: 0
   assign side_padding = section.settings.side_padding | default: 64
   assign vertical_padding = section.settings.vertical_padding | default: 88
+  assign section_gap = section.settings.section_gap | default: 32
+  assign section_gap_m = section.settings.section_gap_mobile | default: 24
 
   assign image_scale_ratio = image_scale | times: 1.0 | divided_by: 100.0
 
@@ -106,6 +108,8 @@
     --ff-column-gap: {{ column_gap }}px;
     --ff-side-padding: {{ side_padding }}px;
     --ff-vertical-padding: {{ vertical_padding }}px;
+    --ff-section-gap: {{ section_gap }}px;
+    --ff-section-gap-m: {{ section_gap_m }}px;
     --ff-cta-bg: {{ cta_bg }};
     --ff-cta-border: {{ cta_border }};
     --ff-cta-text: {{ cta_text_color }};
@@ -310,9 +314,16 @@
      insetting the media column. Prior padding-block on .split-section left
      64px empty bands above/below the image inside the section frame. */
   #shopify-section-{{ section.id }} {
-    padding-block: var(--section-padding-y, 64px);
+    padding-block: var(--ff-section-gap, var(--section-padding-y, 32px));
     box-sizing: border-box;
-    background: transparent;
+    background: {{ section.settings.bg_color | default: '#ffffff' }};
+  }
+  /* Visible air you named: hero → mosaic tiles = 16 (mosaic pad). Cream, not white. */
+  #shopify-section-{{ section.id }}:has(#never-loses-grip) {
+    padding-bottom: 16px;
+  }
+  #shopify-section-{{ section.id }}:has(#never-loses-grip) + .shopify-section .section-frame {
+    margin-top: 0 !important;
   }
   #shopify-section-{{ section.id }} .split-section {
     display: grid;
@@ -560,7 +571,7 @@
   }
   @media (max-width: 768px) {
     #shopify-section-{{ section.id }} {
-      padding-block: var(--section-padding-y-mobile, 48px);
+      padding-block: var(--ff-section-gap-m, var(--section-padding-y-mobile, 24px));
     }
     #shopify-section-{{ section.id }} .split-section {
       grid-template-columns: 1fr;
@@ -1619,11 +1630,41 @@
     },
     {
       "type": "header",
-      "content": "7 — Insets"
+      "content": "7 — Section gap"
     },
     {
       "type": "paragraph",
-      "content": "Outer inset from the page edges. Defaults 0 = full bleed."
+      "content": "Space above and below this block. Default 32 desktop / 24 phone — site standard."
+    },
+    {
+      "type": "range",
+      "id": "section_gap",
+      "label": "Gap — top & bottom",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 32,
+      "info": "Default 32. Site section gap."
+    },
+    {
+      "type": "range",
+      "id": "section_gap_mobile",
+      "label": "Gap — top & bottom (mobile)",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 24,
+      "info": "Default 24. Phone."
+    },
+    {
+      "type": "header",
+      "content": "8 — Insets"
+    },
+    {
+      "type": "paragraph",
+      "content": "Outer inset from the page edges. Defaults 0 = full bleed. Not the section gap."
     },
     {
       "type": "checkbox",

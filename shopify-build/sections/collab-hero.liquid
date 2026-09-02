@@ -66,6 +66,8 @@
     --ch-grid-width: {{ grid_width }};
     --ch-tile-height-scale: {{ tile_height_scale }};
     --ch-tile-gap: {{ tile_gap }}px;
+    --ch-gap-top: {{ section.settings.section_gap_top | default: 0 }}px;
+    --ch-gap-top-m: {{ section.settings.section_gap_top_mobile | default: 0 }}px;
     --ch-cta-bg: {{ cta_bg }};
     --ch-cta-border: {{ cta_border }};
     --ch-cta-text: {{ cta_text_color }};
@@ -244,6 +246,8 @@
 <style>
   .collab-hero {
     background: #fff;
+    padding-top: var(--ch-gap-top, 0px);
+    box-sizing: border-box;
   }
   .collab-hero__stage {
     position: relative;
@@ -512,6 +516,9 @@
     .collab-hero--editorial .collab-hero__grid { padding: 0 16px 48px; }
   }
   @media (max-width: 768px) {
+    .collab-hero {
+      padding-top: var(--ch-gap-top-m, 0px);
+    }
     .collab-hero__stage {
       height: var(--ch-height-mobile, 78vh);
       min-height: 0;
@@ -733,6 +740,28 @@
     {
       "type": "paragraph",
       "content": "Stage size + OUTER inset from the page edges (margin). Top/bottom independent; left & right = one control. Custom mobile OFF = mobile matches desktop. Defaults keep the current look."
+    },
+    {
+      "type": "range",
+      "id": "section_gap_top",
+      "label": "Gap above",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Default 0 — full bleed. Site gap is 32 on the section above."
+    },
+    {
+      "type": "range",
+      "id": "section_gap_top_mobile",
+      "label": "Gap above (mobile)",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Default 0. Phone."
     },
     {
       "type": "select",

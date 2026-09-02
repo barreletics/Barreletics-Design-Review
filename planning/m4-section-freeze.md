@@ -167,6 +167,8 @@ Do **not** thrash `product.json` spine or `fifty-fifty.liquid` TE order without 
 
 **Forward 2026-09-01 — Section inset desktop ≠ phone SIGNED.** `section-inset-vars`: desktop sliders never copy onto mobile. Phone always uses mobile inset sliders. Mosaic: Custom mobile inset toggle removed. TE pull: mosaic title mobile 26 · shadow off.
 
+**Forward 2026-09-01 — Home section gap rhythm SIGNED (Andrew: lock it in).** Site default **32 / 24** (`settings_schema` + `theme.liquid` → `--section-padding-y`). `fifty-fifty`: wrapper `padding-block` uses TE **Section gap** (default 32/24) · wrapper `background` = panel `bg_color` (cream `#f5f2ec` on Never loses — not white gutters). **Never loses → Coperni = 16px cream** (CSS weld on `#never-loses-grip` + kill next `.section-frame` margin). Reference = hero → mosaic **16** (`mosaic pad_top`). Coperni **`inset_top: 0`** (was 48 white hole). `collab-hero`: optional **Gap above** TE (default 0). Do not revert to 64/48 site gap or transparent wrapper bands.
+
 
 ---
 
