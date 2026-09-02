@@ -7,6 +7,8 @@
 **Priors:** v5–v17 — do not overwrite · Hub: `PREVIEW-HUB.html` / `docs/index.html`  
 **Updated:** 2026-07-24  
 
+> **M4 runtime SIGNED 2026-09-01 (Andrew: lock it in · three cards).** Do not overwrite the v18 HTML. Live draft `collection.json` on `187144929571`: mosaic 3-up after grid · Juicer `@barreletics` · cream studio 50/50 · no full Judge.me list. See `planning/m4-section-freeze.md`.  
+
 **v18 (from v17):** BZ-020 **type calm** — display/section/statement **400** · H1 Home-sized `clamp(34–46)` · 700 CTAs only. Spine unchanged.  
 **v17 (from v16):** Prior type pass (500/700) + hero trust bump — superseded for weight by v18.  
 **v16 (from v15):** Also removed late **Closed Sole or Open Sole** 50/50. Sole education = **grid tabs + FAQ only**.  
