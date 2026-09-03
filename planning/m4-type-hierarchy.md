@@ -21,7 +21,9 @@ The biggest type on the page must not be the heaviest. Weight densifies *small* 
 |------|--------|------|---------------|
 | **Hero H1** | **700** | `clamp(50px, 6.4vw, 72px)` | −0.028em / 1.06 |
 | **H2 Display** (brand) | **500** | `clamp(38px, 4.6vw, 52px)` | −0.028em / 1.10 · measure 15ch |
-| **H2 Standard** (wayfinding) | **600** | `clamp(26px, 2.9vw, 32px)` | −0.012em / 1.22 |
+| **H2 Supporting** (compact editorial) | **400** | **40px** (mobile `clamp(28px, 3.5vw, 40px)`) | −0.02em / 1.10 |
+| **H2 Standard / Section** (wayfinding) | **600** | `clamp(26px, 2.9vw, 32px)` | −0.012em / 1.22 |
+| **Value strip** | **500** | **12px** | 0.08em / uppercase |
 | **Statement** | **500** | `clamp(28px, 3vw, 36px)` | −0.022em |
 | **Lede / body** | **400** | lede 17px · body 16px | lh 1.60 / 1.72 |
 | **Label** | **600** | 11px | 0.08em |
@@ -37,10 +39,12 @@ Classes: `.type-hero` · `.h2-display` · `.h2-standard` · `.type-statement` ·
 
 | On the page | Type OS role |
 |---|---|
-| Page-opening H1 | **Hero** |
-| 50/50 / image-led editorial | **H2 Display** |
+| Page-opening H1 | **Hero** (72 / 700) |
+| 50/50 / image-led editorial · Home Upgrade | **H2 Display** (52 / 500 / 1.1) |
+| Compact editorial (PDP “Built around one obsession: Grip.”) | **H2 Supporting** (40 / 400 / 1.1) |
 | Text-only brand statement | **Statement** |
-| Functional / wayfinding heading | **H2 Standard** |
+| Functional / wayfinding heading | **H2 Section** (32 / 600 / 1.22) |
+| Scan labels | **Value strip** (12 / 500 / uppercase) |
 | Body / lede | **Body** |
 | Buttons | **Global CTA Type OS** (`--type-cta-*`) |
 

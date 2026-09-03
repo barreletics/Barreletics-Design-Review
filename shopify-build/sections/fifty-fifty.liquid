@@ -8,6 +8,8 @@
   assign heading_register = section.settings.heading_register | default: 'display'
   if heading_register == 'display'
     assign heading_class = 'h2-display'
+  elsif heading_register == 'supporting'
+    assign heading_class = 'h2-supporting'
   else
     assign heading_class = 'h2-standard'
   endif
@@ -507,6 +509,12 @@
     line-height: var(--type-section-leading);
     letter-spacing: var(--type-section-tracking);
   }
+  #shopify-section-{{ section.id }} .split-text__title.h2-supporting {
+    font-size: var(--ff-title-size, 40px);
+    font-weight: var(--ff-title-weight, 500);
+    line-height: 1.10;
+    letter-spacing: var(--type-h2-display-tracking);
+  }
   #shopify-section-{{ section.id }} .split-text__title.type-statement {
     font-size: var(--ff-title-size, var(--type-statement-size));
     font-weight: var(--ff-title-weight, var(--type-statement-weight));
@@ -528,7 +536,8 @@
     margin: 0 0 var(--gap-a, 16px);
   }
   #shopify-section-{{ section.id }} .split-text__title.h2-display,
-  #shopify-section-{{ section.id }} .split-text__title.h2-standard {
+  #shopify-section-{{ section.id }} .split-text__title.h2-standard,
+  #shopify-section-{{ section.id }} .split-text__title.h2-supporting {
     margin: 0 0 var(--gap-b, 20px);
   }
   #shopify-section-{{ section.id }} .split-text__body {
@@ -601,6 +610,10 @@
       padding:
         min(var(--ff-vertical-padding, 88px), var(--section-padding-y-mobile, 48px))
         min(var(--ff-side-padding, 64px), var(--section-padding-x-mobile, 16px));
+    }
+    #shopify-section-{{ section.id }} .split-text__title.h2-supporting {
+      font-size: var(--ff-title-size, 34px);
+      line-height: 1.10;
     }
   }
 
@@ -975,6 +988,10 @@
         {
           "value": "display",
           "label": "Display — brand statement"
+        },
+        {
+          "value": "supporting",
+          "label": "Supporting Display — 40 / 34 / 500"
         },
         {
           "value": "standard",

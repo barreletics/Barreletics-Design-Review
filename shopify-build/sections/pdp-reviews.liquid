@@ -308,7 +308,9 @@
 
   .pdp-reviews__inner {
     max-width: 1200px;
+    width: 100%;
     margin: 0 auto;
+    box-sizing: border-box;
   }
 
   .pdp-reviews__head {
@@ -361,8 +363,9 @@
   /* ---- Curated photo cards (3) ------------------------------------------- */
 
   .pdp-reviews__photo-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 20px;
   }
 
@@ -372,13 +375,19 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    flex: 0 1 calc(33.333% - 14px);
+    max-width: calc(33.333% - 14px);
+    min-width: 0;
+    width: 100%;
   }
 
   .pdp-reviews__photo-img {
     width: 100%;
     aspect-ratio: 1;
     object-fit: cover;
+    object-position: center center;
     display: block;
+    margin-inline: auto;
   }
 
   .pdp-reviews__photo-img--empty {
@@ -456,6 +465,11 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
+    width: 100%;
+    max-width: 100%;
+    margin-inline: auto;
+    justify-content: center;
+    justify-items: stretch;
   }
 
   .pdp-reviews__text-card {
@@ -466,6 +480,10 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .pdp-reviews__text-stars {
@@ -482,6 +500,8 @@
     line-height: 1.6;
     margin: 0;
     flex: 1;
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
 
   .pdp-reviews__text-footer {
@@ -657,25 +677,83 @@
   }
 
   @media (max-width: 1024px) {
-    .pdp-reviews__photo-grid,
+    .pdp-reviews__photo-grid {
+      justify-content: center;
+    }
+
+    .pdp-reviews__photo-card {
+      flex: 0 1 calc(50% - 10px);
+      max-width: calc(50% - 10px);
+    }
+
     .pdp-reviews__text-grid,
     .pdp-reviews__live--compact .jdgm-rev-widg__reviews,
     .pdp-reviews__live--compact .jdgm-all-rev-widg__reviews {
       grid-template-columns: repeat(2, 1fr);
+      justify-items: stretch;
     }
   }
 
   @media (max-width: 768px) {
-    .pdp-reviews {
-      padding: var(--section-padding-y-mobile) var(--section-padding-x-mobile);
+    #shopify-section-{{ section.id }} .pdp-reviews {
+      padding: var(--section-padding-y-mobile, 48px) 16px;
+      overflow-x: hidden;
+      text-align: center;
     }
 
-    .pdp-reviews__photo-grid,
-    .pdp-reviews__text-grid,
-    .pdp-reviews__live--compact .jdgm-rev-widg__reviews,
-    .pdp-reviews__live--compact .jdgm-all-rev-widg__reviews {
+    #shopify-section-{{ section.id }} .pdp-reviews__inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    #shopify-section-{{ section.id }} .pdp-reviews__head,
+    #shopify-section-{{ section.id }} .pdp-reviews__head > div {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 100%;
+      text-align: center;
+    }
+
+    #shopify-section-{{ section.id }} .pdp-reviews__title {
+      width: 100%;
+      text-align: center;
+    }
+
+    #shopify-section-{{ section.id }} .pdp-reviews__body {
+      max-width: none;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    #shopify-section-{{ section.id }} .pdp-reviews__photo-grid,
+    #shopify-section-{{ section.id }} .pdp-reviews__text-grid,
+    #shopify-section-{{ section.id }} .pdp-reviews__live--compact .jdgm-rev-widg__reviews,
+    #shopify-section-{{ section.id }} .pdp-reviews__live--compact .jdgm-all-rev-widg__reviews {
+      display: grid;
       grid-template-columns: 1fr;
+      justify-content: center;
+      justify-items: stretch;
+      width: 100%;
+      max-width: 100%;
+      margin-inline: auto;
       gap: 16px;
+    }
+
+    #shopify-section-{{ section.id }} .pdp-reviews__photo-card,
+    #shopify-section-{{ section.id }} .pdp-reviews__text-card,
+    #shopify-section-{{ section.id }} .pdp-reviews__live--compact .jdgm-rev {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      margin-inline: auto;
+      box-sizing: border-box;
     }
 
     .pdp-reviews__photo-pad {

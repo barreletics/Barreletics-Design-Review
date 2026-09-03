@@ -24,6 +24,12 @@
 
 > **Collection typography LOCKED 2026-09-02 (Andrew: lock this decision).** Current Collection type + Hero Shop Now CTA stay. **Do not retrofit Home or PDP.** Home is frozen (reference). PDP QC later, mismatches only. Rule for future QC: Hero = Hero · 50/50 / image-led editorial = H2 Display · text-only brand statement = Statement · functional / wayfinding = Standard · body = Body · CTA buttons = global CTA Type OS. No one-off sizes/weights. Preserve: Collection Hero Shop Now Type OS CTA · Knock band `#faf8f6` · **2-row** All Variants (See more / Show less). OS: `planning/m4-type-hierarchy.md`.
 
+> **Type OS roles 2026-09-03 (Andrew: lock the global typography system).** Tokens only — Home/PDP appearance unchanged. Hero 72/700 · H2 Display 52/500/1.1 · **H2 Supporting 40/400/1.1** (PDP features) · H2 Section 32/600/1.22 · Value strip 12/500/uppercase. Collection 28px heading overrides removed. **Do not modify homepage or PDP JSON.**
+
+> **Shop All APPROVED 2026-09-03 (Andrew: collection page is approved):** Hero (Secure in Every Hold + patented 360° GEO lede) → compact value strip (**Made in USA · Free exchanges · 30-day returns · 90-day warranty** — design/size/position unchanged) → Studio 50/50 → Shop All 2 rows + See more → Real people. Upgrade **off** on Collection only. Why Barreletics cards unchanged (no Toe Freedom). Home/PDP untouched.
+>
+> **Announcement SAVE2 2026-09-03 (Andrew letter):** Global bar on M4 `187144929571` is **Buy 2, Save 10% — Code SAVE2** (was SAVE15 / 15%). Liquid remap + header-group + FAQ price answer. Live theme not touched.
+
 ---
 
 ## What “APPROVED / FROZEN” means
