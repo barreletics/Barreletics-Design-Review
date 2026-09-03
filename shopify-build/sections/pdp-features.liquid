@@ -10,6 +10,7 @@
 
 <section
   class="pdp-features"
+  {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | handleize }}"{% endif %}
   aria-label="{{ section.settings.aria_label | default: 'Product features' | escape }}"
   style="{% if title_size != 'default' %}--pf-title-size: {{ title_size }}px;{% endif %}{% if title_weight != 'default' %}--pf-title-weight: {{ title_weight }};{% endif %}{% if body_size != 'default' %}--pf-body-size: {{ body_size }}px;{% endif %}"
 >
@@ -286,6 +287,12 @@
       "label": "Section aria-label",
       "default": "Product features",
       "info": "Accessibility name for screen readers — not visible on the page."
+    },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor ID",
+      "info": "Optional jump target (e.g. no-socks). Leave blank on PDP."
     }
   ],
   "blocks": [

@@ -7,7 +7,7 @@
 **Priors:** v5–v17 — do not overwrite · Hub: `PREVIEW-HUB.html` / `docs/index.html`  
 **Updated:** 2026-07-24  
 
-> **M4 runtime SIGNED 2026-09-01 (Andrew: lock it in · three cards).** Do not overwrite the v18 HTML. Live draft `collection.json` on `187144929571`: mosaic 3-up after grid · Juicer `@barreletics` · cream studio 50/50 · no full Judge.me list. See `planning/m4-section-freeze.md`.
+> **M4 runtime SIGNED 2026-09-02 night (Andrew: lock it in).** Do not overwrite the v18 HTML. Live draft `collection.json` on `187144929571`: Upgrade + tags → Studio → grid (2 rows) → No socks → Never slip on fullbleed → Never loses → mosaic 3-up → Knock → reviews → Juicer → FAQ light cream `#faf8f6`. See `planning/m4-section-freeze.md`.
 > **Typography LOCKED 2026-09-02.** Roles in § Type OS below. Do not retrofit Home or PDP.  
 
 **v18 (from v17):** BZ-020 **type calm** — display/section/statement **400** · H1 Home-sized `clamp(34–46)` · 700 CTAs only. Spine unchanged.  
@@ -44,12 +44,12 @@ Supersedes the old BZ-020 “all titles 400” row. Tokens = `planning/m4-type-h
 |---|---|---|
 | Hero H1 | **Hero** | Secure in Every Hold |
 | 50/50 / image-led | **H2 Display** | Studio workouts… · Never loses shape… |
-| Text-only brand statement | **Statement** | Upgrade your grip… · Never slip… · Let us knock your socks off! |
+| Text-only brand statement | **Statement** | Upgrade your grip… (40) · Let us knock your socks off! |
 | Functional / wayfinding | **Standard** | Shop all colors & styles · @barreletics · Reviews · FAQ |
 | Body | **Body** | Hero lede, band subheads |
-| Buttons | **Global CTA Type OS** | Hero Shop Now (15 / 500 / 0.12em / 44px) |
+| Buttons | **Global CTA Type OS** | Hero Shop Now (15 / 500 / 0.12em / 44px) · fullbleed Shop Now white outline |
 
-Also locked here: Knock band `#faf8f6` · grid **3 rows** · See more / Show less.
+Also locked here: one cream **`#faf8f6`** · grid **2 rows** · See more / Show less. Never slip lives on the fullbleed, not a text band.
 
 ---
 
