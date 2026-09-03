@@ -1,11 +1,11 @@
 ---
 name: barreletics-te-vs-fullwidth-crop
 description: >-
-  HARD gate for Barreletics hero/media crop. Theme Editor sidebar preview is
-  narrower than full desktop — object-fit cover in a width-fluid column shows
-  full figure in TE and legs-only or cut feet at full width. Auto-invoke BEFORE
-  any split-hero / hero crop / object-fit / object-position / media-frame change,
+  HARD gate for Barreletics Home split-hero crop. Theme Editor sidebar preview
+  is narrower than full desktop — object-fit cover crops differently. Auto-invoke
+  BEFORE any split-hero / hero crop / object-fit / object-position / zoom change,
   and BEFORE claiming a hero photo “fits” or sending a preview link for crop QA.
+  Current approved hero is cover + scale zoom — NEVER contain + studio fill.
 ---
 
 # TE vs full-width crop — FAIL CLOSED
@@ -17,49 +17,54 @@ Companion rule: `.cursor/rules/te-sidebar-crop-lies.mdc`
 You are about to fail if you:
 
 - Judge hero crop from Theme Editor with the left settings sidebar open
-- “Fix” by only nudging `object-position` / focal while media still `cover`s a **full-width fluid** column
+- Reintroduce **`object-fit: contain`** + studio fill / pink pad (rejected)
 - Tell Andrew it’s fixed after one TE glance
-- Re-enter the contain ↔ cover ↔ pad ↔ cream-gap loop without dual-width proof
+- Re-enter the contain ↔ cover ↔ pad ↔ cream-gap loop
 
 ## Root cause (memorize)
 
 Portrait photo + `object-fit: cover` + media box whose **width changes with viewport** =
 
 - **Narrow (TE sidebar)** → box closer to portrait → more of figure visible
-- **Wide (full desktop)** → box more landscape → cover crops harder → head gone / wrong feet
+- **Wide (full desktop)** → box more landscape → cover crops harder
 
-That is why Andrew’s screenshots disagree. Not a Shopify bug. Not “needs one more focal tweak.”
+That is why Andrew’s screenshots disagree. Not a Shopify bug. Not “needs contain + pink fill.”
+
+**Approved response:** keep cover. Compose with X/Y/Zoom at **full desktop**. Do not pad the photo.
 
 ## Mandatory gate (copy into turn before hero crop work)
 
 ```
 TE↔FULLWIDTH CROP GATE
 - [ ] I will NOT approve crop from TE-sidebar-narrow alone
-- [ ] Fix uses portrait-locked inner frame (or equivalent stable aspect) — not fluid full-column cover
-- [ ] Studio fill color matches photo bg (no cream/white gap)
-- [ ] I verified BOTH ≥1280–1440 full width AND ~900 narrow — same figure (head + feet)
+- [ ] I will NOT reintroduce object-fit: contain, studio fill, or pink/cream pad bands
+- [ ] Current hero = cover + object-position X/Y + scale() zoom min 1
+- [ ] I verified BOTH ≥1280–1440 full width AND ~900 narrow
 - [ ] Only then send preview link
 ```
 
-## Correct Home split-hero pattern
+## Current approved Home split-hero (2026-09-01)
 
 Files: `shopify-build/assets/split-hero.css` · `shopify-build/sections/split-hero.liquid`
 
-1. Grid column stays e.g. **62/38** (layout)
-2. Media column `background` = **studio fill** matching photo (`media_fill_color`)
-3. Image **`object-fit: contain`** + `object-position: center` so head + feet stay visible at every width
-4. Side fill = photo pink continuing — not cream/white. If strips show, fill color is wrong — sample photo corners
-5. Dual-width verify (≥1440 and ~900) before link — same full figure both
+1. Grid column stays layout % (e.g. **62/38**). Height = photo aspect × Section height slider.
+2. Image **`object-fit: cover`**, `inset: 0`, 100% × 100%. **No contain. No fill bands.**
+3. X/Y = `object-position` + `transform-origin` (TE Image Position X / Y).
+4. Zoom = `scale(max(1, zoom))`. Liquid `at_least: 100` — TE below 100 stays fill (no gaps).
+5. One Corner radius clips photo + text. Text panel background shades the **copy column only**.
+6. Media `background: transparent`. Do not add `media_fill_color` / studio fill.
+7. Dual-width verify before link. Crops will differ; compose at 1440, don’t “fix” with contain.
 
-**Forbidden “fix”:** width-fluid `object-fit: cover` on this portrait hero (TE will lie again).
+**Forbidden “fix”:** `object-fit: contain` + column/studio fill matching the photo pink. Rejected. Do not restore it from older freeze rows.
 
 ## Forbidden thrash list
 
-- contain + pink pad as the only “fix” without explaining TE lie (already burned Andrew)
-- cream gap from portrait frame inside column without fill color
+- contain + pink pad (already burned Andrew; rejected 2026-08-31)
+- cream/white gaps from shrinking the img box or zoom &lt; 1
 - left-shifted grid that breaks mosaic alignment (unless Andrew asks)
-- `git restore` of hero to “old version that was right” without restore letter — anti-revert still wins
+- merging `split-hero` into `fifty-fifty`
+- `git restore` of hero without restore letter — anti-revert still wins
 
 ## Verify commands (before link)
 
-Storefront preview cookie jar → open home → CDP or screenshot at **1440** and **900** width. Same crop. Then link.
+Storefront preview cookie jar → open home → CDP or screenshot at **1440** and **900** width. Then link.

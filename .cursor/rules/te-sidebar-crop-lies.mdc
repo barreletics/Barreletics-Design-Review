@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Theme Editor sidebar crop lies (HARD)
 
-**Owner 2026-08-31.** Agents kept “fixing” Home split-hero from the Theme Editor preview (sidebar open). That preview is **narrower** than full desktop. `object-fit: cover` in a **width-fluid** media column therefore shows **full figure in TE** and **legs-only / cut feet at full width**. Andrew cannot keep re-litigating this.
+**Owner 2026-08-31 / current hero 2026-09-01.** Agents kept “fixing” Home split-hero from the Theme Editor preview (sidebar open). That preview is **narrower** than full desktop. `object-fit: cover` in a **width-fluid** media column therefore shows **more figure in TE** and a **tighter crop at full width**. Andrew cannot keep re-litigating this.
 
 ## Why it happens (do not re-discover)
 
@@ -19,24 +19,31 @@ alwaysApply: true
 ## HARD — before any “hero crop fixed” claim
 
 1. Verify at **full desktop width ≥ 1280** (preferably **1440**) with TE sidebar **closed** or via storefront preview URL — not the narrow editor pane.
-2. Also check one **TE-narrow** width (~900) — crop must **match** full width (same figure: head + feet).
-3. If crops differ → the CSS is still width-fluid cover. **Stop.** Use portrait-locked frame (see `split-hero.css`) or ask — do not thrash `contain` / pad / focal for another hour.
+2. Also check one **TE-narrow** width (~900) — know they will **differ** under cover. That difference is expected. Compose with X/Y/Zoom at full width.
+3. Do **not** “fix” the TE lie by switching to `contain`, padding, or a studio-fill / pink background. That approach was **rejected**.
 4. Screenshot or CDP measure both widths before sending Andrew a link.
 
 ## Forbidden
 
 - Approving / linking a hero crop after only looking at Theme Editor with sidebar open
-- “Fixed” by changing only `object-position` while the media box is still full-column fluid cover
-- Reintroducing cream/white gaps beside the photo (fill color must **match photo studio bg**)
-- Circling TE-fit ↔ full-width-broken without the dual-width check
+- Reintroducing **`object-fit: contain`** + studio fill / pink pad / cream bands (rejected 2026-08-31)
+- “Fixed” by changing only `object-position` and claiming TE-narrow = storefront
+- Circling contain ↔ cover ↔ pad without reading the **current** pattern below
 
-## Correct pattern (Home split-hero)
+## Current approved pattern (Home split-hero) — 2026-09-01
 
-- Column stays layout % (e.g. 62/38)
-- **`object-fit: contain`** so head + feet stay visible at TE width and full desktop
-- Column `background` = studio fill matching the photo (TE: Studio fill) — pink continuing, not cream
-- Never width-fluid `cover` for this portrait hero
-- Skill: `barreletics-te-vs-fullwidth-crop`
+Files: `shopify-build/assets/split-hero.css` · `shopify-build/sections/split-hero.liquid`
+
+- Layout: width split `--sh-media-pct` (e.g. 62/38). Height = photo aspect × `--sh-height-scale` (TE: Section height).
+- Photo: **`object-fit: cover`**. Full-bleed in the media box. **No contain. No fill bands.**
+- X/Y = `object-position` + `transform-origin` (TE: Image Position X / Y).
+- Zoom = `transform: scale(max(1, zoom))`. Liquid clamps TE zoom with `at_least: 100` so values below 100 stay fill (no cream gaps).
+- One **Corner radius** (`media_radius`) clips photo + text (`overflow: hidden` on `.split-hero`).
+- **Text panel background** (`bg_color` → `--sh-copy-bg`) fills the **text column only**. Not a photo studio fill.
+- Media column `background: transparent`.
+- `split-hero` and `fifty-fifty` stay **separate**. Do not merge.
+
+Skill: `barreletics-te-vs-fullwidth-crop`
 
 ## Companion
 
