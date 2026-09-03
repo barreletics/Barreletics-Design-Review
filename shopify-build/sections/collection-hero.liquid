@@ -9,6 +9,10 @@
   assign media_fill = section.settings.media_fill | default: 'inset'
   assign image = section.settings.image
   assign image_url = section.settings.image_url
+  assign image_mobile = section.settings.image_mobile
+  assign mobile_crop_enable = section.settings.mobile_crop_enable
+  assign media_height_mobile = section.settings.media_height_mobile | default: 320
+  assign media_fit_mobile = section.settings.media_fit_mobile | default: 'cover'
   assign video = section.settings.video
   assign video_url = section.settings.video_url
   assign image_alt = section.settings.image_alt | default: section.settings.title
@@ -98,23 +102,63 @@
           </video>
         {%- endif -%}
       {%- elsif image != blank -%}
-        <img
-          src="{{ image | image_url: width: 1600 }}"
-          srcset="{{ image | image_url: width: 800 }} 800w, {{ image | image_url: width: 1200 }} 1200w, {{ image | image_url: width: 1600 }} 1600w"
-          sizes="(max-width: 768px) 100vw, 45vw"
-          alt="{{ image_alt | escape }}"
-          loading="eager"
-          width="{{ image.width | default: 1200 }}"
-          height="{{ image.height | default: 1500 }}"
-        >
+        {%- if image_mobile != blank -%}
+          <picture>
+            <source
+              media="(max-width: 768px)"
+              srcset="{{ image_mobile | image_url: width: 800 }} 800w, {{ image_mobile | image_url: width: 1200 }} 1200w"
+              sizes="100vw"
+              width="{{ image_mobile.width }}"
+              height="{{ image_mobile.height }}"
+            >
+            <img
+              src="{{ image | image_url: width: 1600 }}"
+              srcset="{{ image | image_url: width: 800 }} 800w, {{ image | image_url: width: 1200 }} 1200w, {{ image | image_url: width: 1600 }} 1600w"
+              sizes="(max-width: 768px) 100vw, 45vw"
+              alt="{{ image_alt | escape }}"
+              loading="eager"
+              width="{{ image.width | default: 1200 }}"
+              height="{{ image.height | default: 1500 }}"
+            >
+          </picture>
+        {%- else -%}
+          <img
+            src="{{ image | image_url: width: 1600 }}"
+            srcset="{{ image | image_url: width: 800 }} 800w, {{ image | image_url: width: 1200 }} 1200w, {{ image | image_url: width: 1600 }} 1600w"
+            sizes="(max-width: 768px) 100vw, 45vw"
+            alt="{{ image_alt | escape }}"
+            loading="eager"
+            width="{{ image.width | default: 1200 }}"
+            height="{{ image.height | default: 1500 }}"
+          >
+        {%- endif -%}
       {%- elsif image_url != blank -%}
-        <img
-          src="{{ image_url | escape }}"
-          alt="{{ image_alt | escape }}"
-          loading="eager"
-          width="1200"
-          height="1500"
-        >
+        {%- if image_mobile != blank -%}
+          <picture>
+            <source
+              media="(max-width: 768px)"
+              srcset="{{ image_mobile | image_url: width: 800 }} 800w, {{ image_mobile | image_url: width: 1200 }} 1200w"
+              sizes="100vw"
+              width="{{ image_mobile.width }}"
+              height="{{ image_mobile.height }}"
+            >
+            <img
+              src="{{ image_url | escape }}"
+              alt="{{ image_alt | escape }}"
+              loading="eager"
+              width="1200"
+              height="1500"
+            >
+          </picture>
+        {%- else -%}
+          <img
+            src="{{ image_url | escape }}"
+            alt="{{ image_alt | escape }}"
+            loading="eager"
+            width="1200"
+            height="1500"
+          >
+        {%- endif -%}
       {%- endif -%}
     </div>
   {% endif %}
@@ -427,6 +471,17 @@
     #shopify-section-{{ section.id }} .sole-cards {
       grid-template-columns: 1fr;
     }
+    {%- if mobile_crop_enable -%}
+    #shopify-section-{{ section.id }} .coll-hero--split .coll-hero__media,
+    #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="bleed"] .coll-hero__media {
+      min-height: {{ media_height_mobile }}px;
+      max-height: none;
+      height: {{ media_height_mobile }}px;
+    }
+    #shopify-section-{{ section.id }} .coll-hero__media img {
+      object-fit: {{ media_fit_mobile }};
+    }
+    {%- endif -%}
   }
 </style>
 
@@ -472,9 +527,34 @@
       { "value": "column", "label": "Fill column" },
       { "value": "bleed", "label": "Full size (edge of page)" }
     ]},
-    { "type": "image_picker", "id": "image", "label": "Image (Shopify)" },
+    { "type": "image_picker", "id": "image", "label": "Desktop image" },
     { "type": "text", "id": "image_url", "label": "Image URL fallback", "info": "Used when Shopify image is empty. Leave blank for text-only hero (e.g. Apparel)." },
     { "type": "text", "id": "image_alt", "label": "Image alt" },
+    { "type": "header", "content": "Mobile image" },
+    { "type": "image_picker", "id": "image_mobile", "label": "Mobile image", "info": "Optional. Leave blank to keep the desktop image on phone." },
+    { "type": "checkbox", "id": "mobile_crop_enable", "label": "Enable custom mobile crop / size", "default": false, "info": "Off keeps the current phone height: 52vw bleed, 52vh inset/column." },
+    {
+      "type": "range",
+      "id": "media_height_mobile",
+      "label": "Mobile image height",
+      "min": 180,
+      "max": 640,
+      "step": 10,
+      "unit": "px",
+      "default": 320,
+      "info": "Used only when custom mobile crop is on."
+    },
+    {
+      "type": "select",
+      "id": "media_fit_mobile",
+      "label": "Mobile image fit",
+      "default": "cover",
+      "options": [
+        { "value": "cover", "label": "Cover" },
+        { "value": "contain", "label": "Contain" }
+      ],
+      "info": "Used only when custom mobile crop is on. Default Cover matches today."
+    },
     { "type": "video", "id": "video", "label": "Shopify video" },
     { "type": "text", "id": "video_url", "label": "Video URL (mp4)", "info": "Used when Media type = Video and Shopify video is empty." },
 
