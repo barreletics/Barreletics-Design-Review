@@ -6,7 +6,7 @@ version: 1.0
 status: 🔒 Locked
 approved_by: Owner / Architect
 approval_date: 2026-07-18
-last_modified: 2026-07-18
+last_modified: 2026-08-08
 depends_on: [01, 02, 03, 04, 05, 06, 07, 08, 09]
 supersedes: [ADR-01 through ADR-07]
 ---
@@ -443,8 +443,10 @@ All ADRs from the prior planning phase (ADR-01 through ADR-07) are resolved per 
 
 ---
 
-### D-042: Partner Programs Consolidated Into Single Page
+### D-042: Partner Programs Consolidated Into Single Page — SUPERSEDED 2026-08-08 (see D-048)
 **Decided:** 2026-07-18 | **Severity:** High
+
+**Status:** Superseded by **D-048** (Owner direction 2026-08-08). Original text preserved below as history — do not implement. Three dedicated partner pages plus a `/pages/partners` routing hub is the current state.
 
 **Decision:** Three separate partner pages (Wholesale, Studio Program, Ambassador) consolidated into a single `/pages/partners` page with three sections and a unified inquiry form. Individual page templates (`page.wholesale.json`, `page.studio-program.json`, `page.ambassador.json`) are superseded. Wholesale/Studio/Ambassador terms (pricing, minimums, commission structures) remain internal — never displayed publicly. Ambassador section is architected with a clear integration point for a future affiliate platform. No affiliate/commission functionality built.
 
@@ -538,6 +540,190 @@ All ADRs from the prior planning phase (ADR-01 through ADR-07) are resolved per 
 **Impact:** M4C status changed to 🔒 Locked. M4D (Launch) authorized to begin. Dashboard updated.
 
 **Status:** Approved
+
+---
+
+### D-048: Three Dedicated Partner Pages Plus a Routing Hub — supersedes D-042
+**Decided:** 2026-08-08 | **Severity:** High
+
+**Decision:** Wholesale, Studio Program, and Ambassador each get a dedicated page with its own intake form: `/pages/wholesale`, `/pages/studio-program`, `/pages/ambassador`. `/pages/partners` is retained as a routing hub — three cards linking to the program pages, plus a general-inquiry fallback form. This reverses D-042's consolidation onto a single page. Program terms (commission %, discounts, thresholds) remain Theme Editor settings and internal pricing is never displayed publicly, unchanged from D-042.
+
+**Rationale:** The three audiences ask genuinely different qualification questions — a studio needs class volume and location, a wholesale buyer needs order volume and resale terms, an ambassador needs audience and content channels. One merged form cannot serve all three without either asking every applicant irrelevant questions or collecting too little to qualify anyone. Owner direction 2026-08-08 governs; D-042's maintenance-burden rationale is outweighed by intake quality.
+
+**Impact:** `templates/page.ambassador.json`, `page.studio-program.json`, `page.wholesale.json`, and `page.partners.json` built and mobile-QA'd (see `planning/partner-programs.md` §5, QA output in `planning/partner-pages-qa/`). The three folding 301s (`/pages/wholesale`, `/pages/ambassador`, `/pages/studio-program` → `/pages/partners`) are **retired** in `planning/m4a-redirect-map.md` — they would have made the new pages unreachable. `planning/page-inventory-decisions.md` Part 2 updated from FOLD to CREATE for the three program templates.
+
+**Downstream doc sweep — COMPLETE 2026-08-08.** The files listed here as "still stale and owned by other agents" have since been updated forward, each cross-referencing D-048 and preserving the D-042 wording as struck history: `planning/m4a-content-inventory.md` (page rows, owner-approval row, forms inventory — the "Partner inquiry (unified)" row is now four rows), `planning/m4a-navigation-config.md` (handle map + Admin note 6), `docs/03-section-library.md` (`page-partners.liquid` entry), `specs/frozen/{wholesale,ambassador,studio}.md` (R-01/R-02 HOLD marked superseded, not deleted), `specs/frozen/navigation.md` (authority re-cited to D-048; the "Partners not in primary nav" call itself is unchanged), `specs/implementation-maps/{wholesale,ambassador,studio}.md` (were titled "deprecated standalone"), `planning/m4-section-library-CONTRACT.md` (DELETE-after-decompose rows annotated as a future refactor, not deprecation), `PROJECT_DASHBOARD.md`, `planning/partner-programs.md` (§4.5 item 7 + architecture note), and `planning/m4b-helpscout-alignment.md` §7 (saved reply now links the three program pages).
+
+Deliberately unchanged: the `/pages/become-an-affiliate` and `/pages/wholesale-calculator` → `/pages/partners` 301s (correct — they point at the hub); `specs/frozen/homepage.md` / `collections.md` references to "D-042 partners page" (those concern holding Free People / Coperni collab sprawl, a different sense of "partner"); D-044's M4A gate record above (historical); `backups/**` and `planning/archive/**` snapshots.
+
+**Status:** Approved — Owner letter 2026-08-08
+
+---
+
+### D-049: The Refined v19 PDP Spine Serves Closed Sole; Open Sole Moves to Its Own Template
+**Decided:** 2026-08-08 | **Severity:** High
+
+**Decision:** `shopify-build/templates/product.json` — the refined, locked v19 spine — now serves the **Closed Sole** product (`best-reformer-pilates-legree-workout-shoes`). **Open Sole** (`studio-performance-skin-footwear`) moves to a new variant template, `shopify-build/templates/product.open-sole.json`, created by renaming the day-old `product.closed-sole.json` and rewriting its copy from Closed Sole to Open Sole. `product.closed-sole.json` no longer exists. `product.outdoor.json` is untouched. The buy-box lede **"Secure in every hold. / No sliding. No resets."** is now the title line on **both** sole pages.
+
+**Rationale:** Owner direction 2026-08-08: *"no make the existing pdp page the closed sole and change the open sole. we probably want to keep secure in every hold on both for the title?"* Closed Sole is the higher-inventory, higher-colorway SKU and the one the refined page's photography and reformer/Lagree GEO copy already suited. The shared lede is approved inventory (Problem/Solution) and reads correctly for either coverage style, so nothing sole-specific is claimed in the headline.
+
+**Scope guard — this is a product-identity change, not a spine change.** All 17 sections in `product.json` and their order are byte-verified unchanged against the pre-edit capture: `pdp-buy-box` → `value-strip` → `pdp-features` → `disciplines` → `fifty-fifty-sock-era` → `variant-grid` → `fifty-fifty-lifestyle` → `fullbleed-statement` → `pdp-sock-math` → `fullbleed-lifestyle` → `fifty-fifty-commit` → `social-proof` → `fifty-fifty-numbers` → `guarantee-band` → `home-juicer` → `collection-faq` → `pdp-sticky-atc`. Only four fields changed in `product.json`: the sole badge label, the badge colour, and two FAQ answers that named a sole using the discipline split retired by P-003.
+
+**Impact:** `product.json` SHA-256 moves from `00a209a5abf9bf9c258d7cb422cb055f7d95da7a0f11f7f7cb0294afa0b847a5` to `9097409f46f4ef7e80a675b50d1072ca072e2a70ff2854fe97c78eee0b9e5b2b` — authorised by this letter. Registries updated forward, prior wording preserved as dated history: `planning/m4-section-freeze.md`, `planning/PDP-WORKING-ENTRY.md`, `planning/pdp-variants-qa/README.md`. QA harness `planning/pdp-variants-qa/build.py` re-pointed and previews relabelled. `.cursor/rules/pdp-hub-lock.mdc` still describes `product.json` as the PDP spine, which remains true — it names no product, so it needs no edit; flagged for the owner rather than changed.
+
+**Admin follow-up (not a repo change):** theme template assignment is per-product in Shopify Admin → Product → Online store → Theme template. Open Sole must be set to `product.open-sole`; Closed Sole stays on **Default product**. The old `product.closed-sole` template name is gone.
+
+**Copy sourcing:** every replacement line traces to the approved slogan inventory (`barreletics-brand-copy` / `barreletics-slogan-engine`), the P-003 sole letter (`manychat-kb/02-open-vs-closed-sole.md`), `docs/09-PRODUCT-KNOWLEDGE.md` Product 2, or the locked v19 spine. Nothing was invented. Per-line source tables live in `planning/pdp-variants-qa/README.md`.
+
+**Status:** Approved — Owner direction 2026-08-08
+
+---
+
+### D-050: Sole Description Language Fixed as HARD Copy Law — "Fully Enclosed" Banned
+**Decided:** 2026-08-08 | **Severity:** High
+
+**Decision:** The Closed Sole is described as **"Heel and foot fully covered."** and nothing else. The phrases **"fully enclosed," "fully-enclosed," "enclosed heel," "sleek, fully enclosed feel,"** and any construction calling the Closed Sole *enclosed* are banned from all customer-facing copy. The sanctioned wording, from the P-003 letter, is the only approved way to describe the sole difference:
+
+- **Closed Sole:** "Heel and foot fully covered."
+- **Open Sole:** "Heel exposed, mid-foot breathing hole. More grounded, barefoot feel. Natural toe splay."
+- **Both:** "Both perform identically — same grip, same stability."
+- **Choosing:** "Choice is preference and feel only."
+
+This entry also re-asserts the **discipline split retired 2026-08-02 under P-003**: never write "Open = barre/yoga, Closed = reformer/Lagree/Megaformer" or any variant assigning a discipline to a sole. Both soles perform identically across all disciplines.
+
+**Rationale:** Owner direction 2026-08-08, the third correction on the same phrase in one day — *"quit saying fully enclosed heel - dont make shit up"* → *"quit fucking saying fully enclosed this is not how we describe it. Fucking make a rule and stop drifting."* The phrase kept reappearing because it was embedded in the approved knowledge base and re-copied by every new agent. This is how the brand describes its own product; drifting invents product claims the Owner has not approved. Cross-references **P-003** (approved sole wording, `manychat-kb/02-open-vs-closed-sole.md`) and **P-013** (`docs/10-DECISIONS.md`, "fully enclosed" retired).
+
+**Impact:** New rule `.cursor/rules/sole-description-language.mdc` (alwaysApply) establishes the ban, the approved wording, the discipline-split prohibition, scope, and exceptions. Cross-referenced from `.cursor/rules/anti-revert-fail-closed.mdc` and `.cursor/rules/section-freeze-no-drift.mdc`. The `barreletics-brand-copy` skill — which auto-invokes on all Barreletics copy work — carries the ban in its anti-patterns list. Scope covers PDP/collection/page templates, section Liquid **and their schema defaults**, mocks in `docs/`, `planning/`, `specs/`, `manychat-kb/`, email, ads, and the ManyChat KB. `docs/09-PRODUCT-KNOWLEDGE.md` and `manychat-kb/02-open-vs-closed-sole.md` are named as the SOURCE documents that must never carry banned phrasing. `backups/**`, `archive/**`, and `planning/archive/**` are frozen snapshots and are excluded.
+
+**Status:** Approved — Owner letter 2026-08-08
+
+---
+
+### D-051: One-Off Colors — Theme Gate, Templates, Lean PDP
+**Decided:** 2026-08-10 | **Severity:** High
+
+**Decision:** One-off merchandising uses a **Theme settings product picker** (`one_off_product`) as the single gate for (1) header nav under Grippy Shoes, (2) quiet PDP text link under ATC, and (3) All Variants One-Offs tab. No Admin Navigation item. No variant-metafield gate for show/hide.
+
+Templates: `product.one-off-closed.json` / `product.one-off-open.json` (Admin suffixes `one-off-closed` / `one-off-open`). Buy box uses shoe-photo color tiles and hides sold-out options. One-Offs tab: **single grid** — available first, then sold-out (no Earlier band); 2-row collapse + progressive **See more** (forward update 2026-08-10).
+
+Lean one-off PDP spine keeps brand education for cold traffic (features, reviews, guarantee, FAQ) and drops Closed Sole sock-era / sock-math / TRANSFORM stack. Cross-ref **P-011** (`docs/10-DECISIONS.md`).
+
+**Rationale:** Owner simplified away metafield hide workflows; one picker drives all surfaces; sold-out stay on the same product for FOMO in All Variants without a manual “Past” product.
+
+**Impact:** `config/settings_schema.json` One-off colors group; snippets `one-off-nav-item` / `one-off-quiet-link`; `header.liquid`; `pdp-buy-box.liquid`; `variant-grid` + `variant-grid-panel`; page-template-registry; `planning/one-off-surfaces.md`.
+
+**Status:** Approved — Owner direction 2026-08-10 (M4 Visual QA)
+
+---
+
+### D-052: One-Off Featured Drop — One Picker at a Time
+**Decided:** 2026-08-10 | **Severity:** Medium
+
+**Decision:** Keep the **single** Theme settings product picker as the featured one-off. Feature Open **or** Closed in nav — not both. Second sole product may stay Active in Admin with its own PDP template but stays out of nav until selected in Theme settings.
+
+**Rejected for now:**
+- Mixing Open + Closed colorways into one product (badge/inventory/template complexity).
+- Third-level nav under One-off (mobile UX).
+- Building dual nav Liquid until Andrew confirms both drops must be menu-live at once.
+
+**Future pattern (documented only):** two sibling Grippy children + two pickers; quiet link remains one featured product. Cross-ref **P-014**.
+
+**Rationale:** Owner — keep one-offs simple and special; Theme settings gate is already the organized place for a sitewide featured drop.
+
+**Impact:** Docs only this turn — `docs/10-DECISIONS.md` P-014 · `planning/one-off-surfaces.md` · `docs/08-theme-settings-reference.md`. No Liquid until dual-nav letter.
+
+**Status:** Approved — Owner strategy lock 2026-08-10
+
+---
+
+### D-053: One Canonical Answer Source; Sizing, Cleanliness, and Longevity Language Fixed
+**Decided:** 2026-08-12 | **Severity:** High
+
+**Decision:** `docs/11-CANONICAL-ANSWERS.md` becomes the single source for customer-facing answers. Every page, email, ManyChat reply, and ad copies from it verbatim rather than carrying its own wording. Change the answer there first, then propagate.
+
+**Facts settled by owner letter this date:**
+
+| Item | Ruling |
+|---|---|
+| Size chart | **M = W 5.5–7.5 · Kids' 2–5** / **L = W 7.5–11 · Men's up to 10.5** — publish all four columns |
+| Large lower bound | **7.5**, not 8. 7.5 sits in both rows; width is the tiebreaker |
+| Between sizes | Width decides. Wide at 7–7.5 → L · narrow at 7.5–8 → M · **8.5+ → L always** (length governs) |
+| Foot Length column | **Removed.** Repo-only, never on the live site, traceable to no source. We publish shoe size only |
+| "Patented" | **Accurate and approved.** Do not purge — an earlier reading of P-008 wrongly treated it as unsupported |
+| Cleanliness | Non-porous, **wipes clean**; nothing soaks in and lingers like fabric. Never claim the material acts on bacteria |
+| Longevity | Expectation first ("depends how you wear them"), then 1,000 classes and year four. **"18+ months" is internal only** |
+| 195 countries / FedEx ICP | **Real.** Stripping it from the FAQ earlier this date was an error; restored |
+| Apparel tee | Steer clear of the antimicrobial fabric claim |
+| Blow dryer heat-stretch | **HelpScout saved reply only.** Not on any page, not in ManyChat. Exchange offered first |
+
+**Retired — never reintroduce:** "antimicrobial" (any form) · bacteria/hygienic claims about our own material · "hypoallergenic" (carries D-019) · "conforms over the first few wears" and every break-in variant · M 5–8 / L 8.5–11 · L 8–11 · M W 5–7.5 Men 6–8 / L W 8–10 Men 8.5–11 · blanket "between sizes? size up" · "Small is coming soon" · "18+ months" · "gentle environment."
+
+**Rationale:** Owner 2026-08-12: "make one global everything you need to know section rather than manage individually," then "once we update and approve you have to change the language site wide if the same info is on other pages." Per-page copy management had produced four different Large ranges across the site and the docs, three different size charts, and product claims the owner had never approved. A single source with a propagation map is the only structure that prevents recurrence.
+
+**Notable finding:** `docs/09-PRODUCT-KNOWLEDGE.md` already carried the correct chart and width rule. The website had drifted from the operating system, not the reverse — which is the argument for the canonical source being authoritative over any individual template.
+
+**Impact:** `docs/11-CANONICAL-ANSWERS.md` (new authority) · `docs/09-PRODUCT-KNOWLEDGE.md` · `manychat-kb/03,05,06,09,10` · `helpscout-kb/Barreletics_Email_Template_Master.md` (2.1, 2.2, 2.7 new, 4.4, 4.5, 4.9) · `shopify-build/templates/page.faq.json` · size-chart templates + both aliases · `sections/page-size-guide.liquid`. Still to propagate: six `product*.json`, `pdp-buy-box.liquid` (~L409 hardcoded size range), `page.technology.json`, `page.grip-comparison.json`, `collection.apparel.json`, `collection.json`, `collection.open-sole.json`, `page.about.json`, `page.our-story.json`.
+
+**Open:** Kids' 2–5 versus "Youth 4–6" at `09-PRODUCT-KNOWLEDGE.md` line 84 — unresolved, do not quote a youth number. Shopify Coperni variant titles appear to encode "L (W 8-11)"; if so that's an Admin rename, not a repo fix.
+
+**Status:** Approved — owner letters 2026-08-12. Size guide signed same date; FAQ awaiting sign-off.
+
+---
+
+### D-054: International Duties Are Charged at Checkout — Retires BZ-013
+
+**Date:** 2026-08-12 · **Owner letters:** *"no duties are prepaid that is probably for the warranty replacement"* → *"duties are charged at time of purchase. the international warranty says the customer had to cover shipping and duties"* → *"it says this as a backup to cover ourselves"* (on the HelpScout hedge)
+
+**Decision:** Duties and taxes on international orders are **charged at checkout**. Orders clear customs with nothing further to pay. Stated plainly as an advantage, never as a warning.
+
+**Customer-paid, and only here:** international **return** shipping · international **warranty replacements**, where the customer covers shipping **and duties**. The warranty case is the origin of the old claim and is correct — it must not widen back onto outbound-order copy, which is how the error spread.
+
+**KEEP the HelpScout 5.3 hedge.** 5.3 notes that customs handling varies and duties may occasionally be collected on arrival. That is Andrew's deliberate liability backstop in a 1:1 human email. **An agent (this one) deleted it on 2026-08-12 as "drift" and restored it the same day — do not repeat that.** Ordering rule: the accurate fact leads, the hedge follows, never as an imperative. The same small backstop is appropriate on the **Shipping policy page**; it does not belong in FAQ, ManyChat, PDP, or marketing.
+
+**Why it mattered:** the retired claim was on eight surfaces. Duties collected at checkout are a genuine conversion advantage — most DTC brands leave the buyer with a surprise customs bill — and Barreletics was publishing it as a deterrent.
+
+**Visibility (Andrew 2026-08-12):** state it on the FAQ and Shipping pages, and anywhere international policy already appears. **Not** the announcement bar or PDP trust row.
+
+**Impact:** `docs/11-CANONICAL-ANSWERS.md` CA-18 · `docs/10-DECISIONS.md` P-016 · `docs/09-PRODUCT-KNOWLEDGE.md` · `manychat-kb/08-shipping.md` · `helpscout-kb/…Master.md` 5.3 · `shopify-build/templates/page.faq.json`, `page.shipping.json`, `page.returns.json`, `page.shipping-retruns.json` · `sections/page-shipping.liquid`, `page-returns.liquid` (schema defaults too) · `planning/07-product-knowledge-base.md`, `10-decisions-inventory.md`, `m4b-helpscout-alignment.md`, `m4b-tidio-knowledge-base.md`.
+
+**Deliberately NOT edited** — frozen by anti-revert law, and they carry the retired wording as history: locked mocks `docs/Barreletics FAQ - Definitive-v4/v5/v6/v7.html`, `Barreletics Returns - Definitive-v3.html`, the `docs/08-LIVE-SITE-COPY-AUDIT.md` evidence snapshot, and `planning/returns-pages-qa/preview-*.html`. **Never copy shipping or duties copy out of those mocks** — they are design authority for layout only. Copy authority is CA-18.
+
+**Closed 2026-08-12** — Andrew confirmed: *"we are collecting DDP."* The store collects duties and import taxes at checkout, so "charged at checkout" is backed by the setting, not just a description. Nothing left open on this decision. The HelpScout 5.3 hedge remains anyway, covering the rare destination that bills despite DDP.
+
+**Supersedes:** BZ-013 (`docs/10-DECISIONS.md`, `planning/10-decisions-inventory.md`).
+
+**Status:** Approved — owner letter 2026-08-12.
+
+---
+
+### D-055: Returns Page — Repeats Stripped, Defect Clock Retired, Lost-Package Absolute Retired
+
+**Date:** 2026-08-14 · **Owner letters:** *"anything else to strip out that is repeated?"* → *"i dont like the tone of this is not a studio trial jsut say try on for size and if you like hem indoor only"* → defect deadline: *"drop"* → lost packages: *"isnt c the best or A?"* (chose internal-guidance split)
+
+**Decision — three parts.**
+
+**1. Repeats stripped from `/pages/returns`.** The page explained how to return twice — once as prose above the buttons, again as the numbered steps. Prose emptied, wrapper guarded so the stack still breathes. Second top button removed: it pointed at the same portal URL as the first. Two card link rows removed (`Open the returns portal →` in the 30-day card; `Size chart · FAQ · Contact` in the exchanges card) — every destination already appears elsewhere on the page. Portal entry points 4 → 2. "30 days" 5 → 2.
+
+**2. Studio-trial line replaced, not just deleted.** *"Like buying any footwear… This is not a studio trial and not 'try them in class for 30 days.'"* → **"Try them on for size — indoors only."** Andrew on the old line: the tone was defensive. Leads with the instruction instead of the accusation. The duplicate *"tried on indoors only"* was dropped from the Performance Skins bullet.
+
+**3. Defect clock and lost-package absolute retired.** See `docs/10-DECISIONS.md` **P-017** and **P-018**. Defect: no arrival deadline — the 90-day warranty covers it, and CA-21/FAQ never carried the 24-hour line, so Returns readers thought they had missed a window that did not exist. Lost packages: CA-22 stays as the only customer-facing wording; the absolute *"cannot issue refunds"* becomes internal agent guidance with discretion, because agents were quoting a backstop at customers as policy.
+
+**Also fixed — card interiors (SIGNED same day, "looks great").** `barreletics-base.css` zeroes all margins and sets `ul, ol { list-style: none; }`. `page-returns.liquid` never restored either for its rich-text card bodies, so multi-paragraph copy and labeled lists rendered as one unbroken block. Scoped to `.page-returns-card > .type-body` so the warranty coverage columns keep their bordered-row ✓/✕ treatment. **Do not widen that selector.** Registry detail in `planning/m4-section-freeze.md`.
+
+**Four process traps hit on the way — recorded so the next agent skips them.**
+
+- `/pages/returns` renders **`page.shipping-retruns.json`** (live Admin typo), not `page.returns.json`. Every copy edit went to the unused alias first and nothing reached the storefront. Map: `planning/page-template-registry.md`. Both files kept identical.
+- `shopify theme push` prints a **success banner even when a file is rejected**. Five section pushes failed validation while the CLI looked happy, because the output was being trimmed to the last few lines. Never truncate push output.
+- Shopify **rejects `"default": ""`** in a schema — that was the rejection. Omit the key to mean empty.
+- **`barreletics.myshopify.com` 301s to `barreletics.com` and drops `preview_theme_id`**, silently serving the live theme. Andrew reviewed stale content because of it. Always rewrite preview links to the primary domain.
+
+New always-apply rules from this: `.cursor/rules/always-give-a-verified-link.mdc` · `.cursor/rules/bullets-not-paragraphs.mdc`
+
+**Impact:** `shopify-build/sections/page-returns.liquid` · `templates/page.shipping-retruns.json` + `page.returns.json` · `docs/10-DECISIONS.md` (P-017, P-018, BZ-012 amended) · `docs/09-PRODUCT-KNOWLEDGE.md` (warranty + Lost Packages blocks) · `planning/m4-section-freeze.md`.
+
+**Already correct, deliberately not touched:** `manychat-kb/08-shipping.md` (soft lost-package wording already matches CA-22) · `manychat-kb/07-returns-and-exchanges.md` and `helpscout-kb/…Master.md` (never carried the 24-hour defect clock) · locked mocks and `docs/08-LIVE-SITE-COPY-AUDIT.md` (frozen history).
+
+**Status:** Approved — owner letters 2026-08-14. Card spacing signed; copy dedupe and policy retirements pending visual sign-off.
 
 ---
 

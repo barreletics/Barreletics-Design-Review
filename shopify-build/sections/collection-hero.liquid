@@ -1,20 +1,173 @@
 {% comment %}
-  Collection Hero with Open/Closed Sole comparison cards
-  Source: Approved Collection Definitive-v4 prototype
+  Collection hero — Collection Definitive-v18 Locked
+  Split: trust + H1 + body + CTAs | media (inset default | column fill)
+  Optional sole cards OFF by default (v15+ shop-first; tabs + FAQ only)
 {% endcomment %}
 
-<section class="coll-hero" aria-label="Collection introduction">
-  <div class="coll-hero__intro">
-    {% if section.settings.eyebrow != blank %}
+{%- liquid
+  assign media_type = section.settings.media_type | default: 'image'
+  assign media_fill = section.settings.media_fill | default: 'inset'
+  assign image = section.settings.image
+  assign image_url = section.settings.image_url
+  assign image_mobile = section.settings.image_mobile
+  assign mobile_crop_enable = section.settings.mobile_crop_enable
+  assign media_height_mobile = section.settings.media_height_mobile | default: 320
+  assign media_fit_mobile = section.settings.media_fit_mobile | default: 'cover'
+  assign video = section.settings.video
+  assign video_url = section.settings.video_url
+  assign image_alt = section.settings.image_alt | default: section.settings.title
+  assign has_media = false
+  if media_type == 'video'
+    if video != blank or video_url != blank
+      assign has_media = true
+    endif
+  elsif image != blank or image_url != blank
+    assign has_media = true
+  endif
+  assign show_trust = section.settings.show_trust
+  if show_trust == nil
+    assign show_trust = true
+  endif
+  assign media_pct = section.settings.media_column_pct | default: 48
+  if media_pct < 35
+    assign media_pct = 35
+  endif
+  assign text_pct = 100 | minus: media_pct
+  assign img_zoom = section.settings.image_zoom | default: 100
+  if img_zoom < 100
+    assign img_zoom = 100
+  endif
+  assign media_h = section.settings.media_height | default: 480
+  assign layout_class = 'coll-hero'
+  if has_media
+    assign layout_class = 'coll-hero coll-hero--split'
+  endif
+-%}
+
+<section
+  class="{{ layout_class }}{% render 'split-mobile-stack-class', mobile_stack_order: section.settings.mobile_stack_order %}"
+  id="shopify-section-{{ section.id }}"
+  {{ section.shopify_attributes }}
+  data-media-fill="{{ media_fill }}"
+  aria-label="{{ section.settings.aria_label | default: 'Collection hero' | escape }}"
+  style="--ch-text: {{ text_pct }}fr; --ch-media: {{ media_pct }}fr; --ch-zoom: {{ img_zoom | times: 0.01 }}; --ch-media-h: {{ media_h }}px;"
+>
+  <div class="coll-hero__copy">
+    {% if show_trust and section.settings.trust_text != blank %}
+      <p class="coll-hero__trust">
+        <span class="coll-hero__stars" aria-hidden="true">★★★★★</span>
+        {{ section.settings.trust_text }}
+      </p>
+    {% elsif section.settings.eyebrow != blank %}
       <p class="coll-hero__eyebrow">{{ section.settings.eyebrow }}</p>
     {% endif %}
-    <h1 class="coll-hero__title">{{ collection.title | default: section.settings.title }}</h1>
-    <p class="coll-hero__body">{{ collection.description | default: section.settings.body }}</p>
+
+    <h1 class="coll-hero__title type-hero">{{ section.settings.title | default: collection.title }}</h1>
+
+    {% if section.settings.body != blank %}
+      <p class="coll-hero__body">{{ section.settings.body }}</p>
+    {% elsif collection.description != blank %}
+      <div class="coll-hero__body">{{ collection.description }}</div>
+    {% endif %}
+
+    {% if section.settings.cta_text != blank or section.settings.secondary_cta_text != blank %}
+      <div class="coll-hero__actions">
+        {% if section.settings.cta_text != blank %}
+          <a class="coll-hero__cta" href="{{ section.settings.cta_url | default: '#grid' }}">{{ section.settings.cta_text }}</a>
+        {% endif %}
+        {% if section.settings.secondary_cta_text != blank %}
+          <a class="coll-hero__link" href="{{ section.settings.secondary_cta_url | default: '#pose' }}">{{ section.settings.secondary_cta_text }}</a>
+        {% endif %}
+      </div>
+    {% endif %}
   </div>
 
+  {% if has_media %}
+    <div class="coll-hero__media" data-media-type="{{ media_type }}" data-media-fill="{{ media_fill }}">
+      {%- if media_type == 'video' -%}
+        {%- if video != blank -%}
+          {{
+            video
+            | video_tag:
+              image_size: '1600x',
+              autoplay: true,
+              loop: true,
+              muted: true,
+              playsinline: true,
+              class: 'coll-hero__video'
+          }}
+        {%- elsif video_url != blank -%}
+          <video class="coll-hero__video" autoplay muted loop playsinline preload="metadata"{% if image != blank %} poster="{{ image | image_url: width: 1600 }}"{% elsif image_url != blank %} poster="{{ image_url | escape }}"{% endif %}>
+            <source src="{{ video_url | escape }}" type="video/mp4">
+          </video>
+        {%- endif -%}
+      {%- elsif image != blank -%}
+        {%- if image_mobile != blank -%}
+          <picture>
+            <source
+              media="(max-width: 768px)"
+              srcset="{{ image_mobile | image_url: width: 800 }} 800w, {{ image_mobile | image_url: width: 1200 }} 1200w"
+              sizes="100vw"
+              width="{{ image_mobile.width }}"
+              height="{{ image_mobile.height }}"
+            >
+            <img
+              src="{{ image | image_url: width: 1600 }}"
+              srcset="{{ image | image_url: width: 800 }} 800w, {{ image | image_url: width: 1200 }} 1200w, {{ image | image_url: width: 1600 }} 1600w"
+              sizes="(max-width: 768px) 100vw, 45vw"
+              alt="{{ image_alt | escape }}"
+              loading="eager"
+              width="{{ image.width | default: 1200 }}"
+              height="{{ image.height | default: 1500 }}"
+            >
+          </picture>
+        {%- else -%}
+          <img
+            src="{{ image | image_url: width: 1600 }}"
+            srcset="{{ image | image_url: width: 800 }} 800w, {{ image | image_url: width: 1200 }} 1200w, {{ image | image_url: width: 1600 }} 1600w"
+            sizes="(max-width: 768px) 100vw, 45vw"
+            alt="{{ image_alt | escape }}"
+            loading="eager"
+            width="{{ image.width | default: 1200 }}"
+            height="{{ image.height | default: 1500 }}"
+          >
+        {%- endif -%}
+      {%- elsif image_url != blank -%}
+        {%- if image_mobile != blank -%}
+          <picture>
+            <source
+              media="(max-width: 768px)"
+              srcset="{{ image_mobile | image_url: width: 800 }} 800w, {{ image_mobile | image_url: width: 1200 }} 1200w"
+              sizes="100vw"
+              width="{{ image_mobile.width }}"
+              height="{{ image_mobile.height }}"
+            >
+            <img
+              src="{{ image_url | escape }}"
+              alt="{{ image_alt | escape }}"
+              loading="eager"
+              width="1200"
+              height="1500"
+            >
+          </picture>
+        {%- else -%}
+          <img
+            src="{{ image_url | escape }}"
+            alt="{{ image_alt | escape }}"
+            loading="eager"
+            width="1200"
+            height="1500"
+          >
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+  {% endif %}
+
   {% if section.settings.show_sole_cards %}
+    {% assign closed_href = section.settings.closed_url | default: '/products/best-reformer-pilates-legree-workout-shoes' %}
+    {% assign open_href = section.settings.open_url | default: '/products/studio-performance-skin-footwear' %}
     <div class="sole-cards">
-      <div class="sole-card">
+      <a class="sole-card" href="{{ closed_href }}">
         {% if section.settings.closed_image != blank %}
           <div class="sole-card__img">
             <img
@@ -28,9 +181,13 @@
         {% endif %}
         <span class="sole-card__tag">Full Coverage</span>
         <h3 class="sole-card__title">Closed Sole</h3>
+        {% if section.settings.closed_best_for != blank %}
+          <p class="sole-card__best">Pick this if: {{ section.settings.closed_best_for }}</p>
+        {% endif %}
         <p class="sole-card__desc">{{ section.settings.closed_desc }}</p>
-      </div>
-      <div class="sole-card">
+        <span class="sole-card__cta">Shop Closed Sole →</span>
+      </a>
+      <a class="sole-card" href="{{ open_href }}">
         {% if section.settings.open_image != blank %}
           <div class="sole-card__img">
             <img
@@ -44,111 +201,287 @@
         {% endif %}
         <span class="sole-card__tag">Barefoot Feel</span>
         <h3 class="sole-card__title">Open Sole</h3>
+        {% if section.settings.open_best_for != blank %}
+          <p class="sole-card__best">Pick this if: {{ section.settings.open_best_for }}</p>
+        {% endif %}
         <p class="sole-card__desc">{{ section.settings.open_desc }}</p>
-      </div>
+        <span class="sole-card__cta">Shop Open Sole →</span>
+      </a>
     </div>
   {% endif %}
 </section>
 
 <style>
-  .coll-hero {
-    padding: var(--space-13) var(--section-padding-x) var(--space-9);
-    max-width: var(--max-width);
+  #shopify-section-{{ section.id }} {
+    --ch-text: {{ text_pct }}fr;
+    --ch-media: {{ media_pct }}fr;
+    --ch-zoom: {{ img_zoom | times: 0.01 }};
+    --ch-media-h: {{ media_h }}px;
+  }
+  #shopify-section-{{ section.id }} .coll-hero,
+  #shopify-section-{{ section.id }}.coll-hero {
+    padding: var(--space-13, 72px) var(--section-padding-x, 40px) var(--space-9, 40px);
+    max-width: var(--max-width, 1200px);
     margin: 0 auto;
   }
 
-  .coll-hero__eyebrow {
-    font-size: var(--text-sm);
+  #shopify-section-{{ section.id }} .coll-hero--split,
+  #shopify-section-{{ section.id }}.coll-hero--split {
+    display: grid;
+    grid-template-columns: var(--ch-text, 52fr) var(--ch-media, 48fr);
+    gap: 40px;
+    align-items: center;
+    padding: 56px 40px 40px;
+  }
+  #shopify-section-{{ section.id }}:has([data-media-fill="bleed"]),
+  #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="bleed"],
+  #shopify-section-{{ section.id }}.coll-hero--split[data-media-fill="bleed"] {
+    max-width: none;
+    width: 100%;
+    gap: 0;
+    align-items: stretch;
+    padding: 0;
+  }
+  #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="bleed"] .coll-hero__copy {
+    padding: 56px 48px;
+    align-self: center;
+  }
+
+  #shopify-section-{{ section.id }} .coll-hero--split .sole-cards {
+    grid-column: 1 / -1;
+  }
+
+  #shopify-section-{{ section.id }} .coll-hero__trust {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    font-weight: 500;
+    color: #6b645a;
+    margin: 0 0 18px;
+    line-height: 1.4;
+  }
+
+  #shopify-section-{{ section.id }} .coll-hero__stars {
+    color: #c45c3f;
+    letter-spacing: 0.1em;
+    font-size: 15px;
+    line-height: 1;
+  }
+
+  #shopify-section-{{ section.id }} .coll-hero__eyebrow {
+    font-size: var(--type-label-size, 11px);
+    font-weight: var(--type-label-weight, 600);
+    letter-spacing: var(--type-label-tracking, 0.08em);
     text-transform: uppercase;
-    letter-spacing: var(--tracking-eyebrow);
-    color: var(--accent-primary);
-    font-weight: var(--weight-bold);
-    margin: 0 0 var(--space-3);
+    color: var(--accent-primary, #c45c3f);
+    margin: 0 0 var(--gap-a, 16px);
   }
 
-  .coll-hero__title {
-    font-size: var(--text-7xl);
-    font-weight: var(--weight-bold);
-    line-height: var(--leading-tight);
-    color: var(--text-primary);
-    margin: 0 0 var(--space-4);
-    letter-spacing: var(--tracking-tight);
+  #shopify-section-{{ section.id }} .coll-hero__title {
+    font-size: var(--type-hero-size);
+    font-weight: var(--type-hero-weight);
+    line-height: var(--type-hero-leading);
+    letter-spacing: var(--type-hero-tracking);
+    text-transform: none;
+    color: var(--text-primary, #1c1916);
+    margin: 0 0 var(--gap-b, 20px);
   }
 
-  .coll-hero__body {
-    font-size: var(--text-md);
-    color: var(--text-body);
-    line-height: var(--leading-relaxed);
-    max-width: 56ch;
+  #shopify-section-{{ section.id }} .coll-hero__body {
+    font-size: var(--text-md, 16px);
+    font-weight: 400;
+    color: var(--text-body, #4a4a4a);
+    line-height: var(--leading-relaxed, 1.6);
+    max-width: 42ch;
     margin: 0;
   }
 
-  .sole-cards {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-6);
-    margin-top: var(--space-9);
+  #shopify-section-{{ section.id }} .coll-hero__actions {
+    margin-top: 28px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
   }
 
-  .sole-card {
-    border: 1px solid var(--border-default);
-    border-radius: var(--radius-gallery);
-    padding: var(--space-7);
+  #shopify-section-{{ section.id }} .coll-hero__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--type-cta-min-height);
+    padding: 14px 28px;
+    background: #c45c3f;
+    color: #fff;
+    font-size: var(--type-cta-size);
+    font-weight: var(--type-cta-weight);
+    letter-spacing: var(--type-cta-tracking);
+    line-height: var(--type-cta-leading, 1);
+    text-transform: uppercase;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  #shopify-section-{{ section.id }} .coll-hero__cta:hover {
+    background: #1c1916;
+    text-decoration: none;
+    color: #fff;
+  }
+
+  #shopify-section-{{ section.id }} .coll-hero__link {
+    font-size: 13px;
+    font-weight: 500;
+    color: #1c1916;
+    text-decoration: none;
+  }
+  #shopify-section-{{ section.id }} .coll-hero__link:hover {
+    text-decoration: underline;
+  }
+
+  #shopify-section-{{ section.id }} .coll-hero__media {
+    position: relative;
+    overflow: hidden;
+    background: #f5f2ec;
+    min-height: var(--ch-media-h, 420px);
+    aspect-ratio: 4 / 5;
+  }
+  #shopify-section-{{ section.id }} .coll-hero__media[data-media-fill="inset"] {
+    border-radius: 6px;
+    aspect-ratio: auto;
+    height: var(--ch-media-h, 480px);
+    min-height: var(--ch-media-h, 480px);
+  }
+  #shopify-section-{{ section.id }} .coll-hero__media[data-media-fill="column"],
+  #shopify-section-{{ section.id }} .coll-hero__media[data-media-fill="bleed"] {
+    border-radius: 0;
+    align-self: stretch;
+    min-height: var(--ch-media-h, 480px);
+    height: 100%;
+    aspect-ratio: auto;
+  }
+  #shopify-section-{{ section.id }} .coll-hero__media img,
+  #shopify-section-{{ section.id }} .coll-hero__media .coll-hero__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    position: absolute;
+    inset: 0;
+    display: block;
+    transform: scale(var(--ch-zoom, 1));
+    transform-origin: center center;
+  }
+
+  #shopify-section-{{ section.id }} .sole-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-6, 24px);
+    margin-top: var(--space-9, 40px);
+  }
+
+  #shopify-section-{{ section.id }} .sole-card {
+    border: 1px solid var(--border-default, #d6cfc0);
+    border-radius: var(--radius-gallery, 8px);
+    padding: var(--space-7, 28px);
     display: flex;
     flex-direction: column;
     gap: 10px;
-    background: var(--bg-primary);
+    background: var(--bg-primary, #fff);
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
   }
-
-  .sole-card__tag {
-    font-size: var(--text-xs);
-    font-weight: var(--weight-bold);
+  #shopify-section-{{ section.id }} .sole-card:hover {
+    border-color: #1c1916;
+    box-shadow: 0 8px 24px rgba(28, 25, 22, 0.08);
+    text-decoration: none;
+  }
+  #shopify-section-{{ section.id }} .sole-card__cta {
+    margin-top: auto;
+    padding-top: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1c1916;
+    border-bottom: 1px solid #1c1916;
+    align-self: flex-start;
+  }
+  #shopify-section-{{ section.id }} .sole-card__tag {
+    font-size: var(--text-xs, 10px);
+    font-weight: var(--weight-bold, 700);
     text-transform: uppercase;
-    letter-spacing: var(--tracking-eyebrow);
-    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    color: var(--text-muted, #8a8a8a);
   }
-
-  .sole-card__title {
+  #shopify-section-{{ section.id }} .sole-card__best {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent-primary, #c45c3f);
+    line-height: 1.4;
+  }
+  #shopify-section-{{ section.id }} .sole-card__title {
     font-size: 22px;
-    font-weight: var(--weight-bold);
-    color: var(--text-primary);
+    font-weight: 700;
+    color: var(--text-primary, #1c1916);
     margin: 0;
   }
-
-  .sole-card__desc {
+  #shopify-section-{{ section.id }} .sole-card__desc {
     font-size: 14px;
-    color: var(--text-body);
-    line-height: var(--leading-relaxed);
+    color: var(--text-body, #4a4a4a);
+    line-height: 1.6;
     margin: 0;
   }
-
-  .sole-card__img {
+  #shopify-section-{{ section.id }} .sole-card__img {
     width: 100%;
     aspect-ratio: 16/9;
-    background: var(--bg-alternate);
-    border-radius: var(--radius-button);
+    background: var(--bg-alternate, #f5f2ec);
+    border-radius: 4px;
     overflow: hidden;
-    margin-bottom: var(--space-1);
+    margin-bottom: 4px;
   }
-
-  .sole-card__img img {
+  #shopify-section-{{ section.id }} .sole-card__img img {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
 
   @media (max-width: 768px) {
-    .coll-hero {
-      padding: var(--section-padding-y-mobile) var(--section-padding-x-mobile) var(--space-7);
+    #shopify-section-{{ section.id }} .coll-hero {
+      padding: 36px 20px;
     }
-
-    .coll-hero__title {
-      font-size: var(--text-3xl);
+    #shopify-section-{{ section.id }} .coll-hero--split {
+      grid-template-columns: 1fr;
+      gap: 28px;
     }
-
-    .sole-cards {
+    #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="bleed"] {
+      gap: 0;
+    }
+    #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="bleed"] .coll-hero__copy {
+      padding: 36px 20px;
+    }
+    #shopify-section-{{ section.id }} .coll-hero--split .coll-hero__media {
+      min-height: 0;
+      max-height: 52vh;
+    }
+    #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="bleed"] .coll-hero__media {
+      max-height: none;
+      min-height: 52vw;
+    }
+    #shopify-section-{{ section.id }} .sole-cards {
       grid-template-columns: 1fr;
     }
+    {%- if mobile_crop_enable -%}
+    #shopify-section-{{ section.id }} .coll-hero--split .coll-hero__media,
+    #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="bleed"] .coll-hero__media {
+      min-height: {{ media_height_mobile }}px;
+      max-height: none;
+      height: {{ media_height_mobile }}px;
+    }
+    #shopify-section-{{ section.id }} .coll-hero__media img {
+      object-fit: {{ media_fit_mobile }};
+    }
+    {%- endif -%}
   }
 </style>
 
@@ -156,14 +489,85 @@
 {
   "name": "Collection Hero",
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Two Versions. One Performance." },
-    { "type": "text", "id": "title", "label": "Title (fallback)", "default": "Shop All Styles & Colors" },
-    { "type": "textarea", "id": "body", "label": "Body (fallback)", "default": "One patented grip system, two builds. Same 360° grip, same durability, same $74. Choose the one that fits your practice." },
-    { "type": "checkbox", "id": "show_sole_cards", "label": "Show Open/Closed comparison cards", "default": true },
+    { "type": "header", "content": "Copy" },
+    { "type": "checkbox", "id": "show_trust", "label": "Show trust line (stars)", "default": true },
+    { "type": "text", "id": "trust_text", "label": "Trust line", "default": "Trusted by 1,000's of instructors & studios" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow (when trust is off)" },
+    { "type": "text", "id": "title", "label": "H1", "default": "Secure in Every Hold" },
+    { "type": "inline_richtext", "id": "body", "label": "Body", "default": "No sliding. No resets. Pick Closed or Open — $74 — then shop every color below." },
+    { "type": "text", "id": "cta_text", "label": "Primary CTA", "default": "Shop Now" },
+    { "type": "text", "id": "cta_url", "label": "Primary CTA URL", "default": "#grid", "info": "Anchor or path. Default #grid." },
+    { "type": "text", "id": "secondary_cta_text", "label": "Secondary CTA", "default": "See why →" },
+    { "type": "text", "id": "secondary_cta_url", "label": "Secondary CTA URL", "default": "#pose" },
+    { "type": "text", "id": "aria_label", "label": "ARIA label", "default": "Collection hero" },
+
+    { "type": "header", "content": "Layout" },
+    {
+      "type": "select",
+      "id": "mobile_stack_order",
+      "label": "Mobile stack order",
+      "default": "media_first",
+      "options": [
+        { "value": "media_first", "label": "Image above copy" },
+        { "value": "copy_first", "label": "Copy above image" }
+      ],
+      "info": "Split hero only, below 768px. Copy-first in DOM; media_first lifts image above."
+    },
+
+    { "type": "header", "content": "Media (split hero)" },
+    { "type": "select", "id": "media_type", "label": "Media type", "default": "image", "options": [
+      { "value": "image", "label": "Image" },
+      { "value": "video", "label": "Video" }
+    ]},
+    { "type": "range", "id": "media_column_pct", "label": "Photo column width", "min": 35, "max": 70, "step": 1, "unit": "%", "default": 48, "info": "Desktop. Text column is the rest." },
+    { "type": "range", "id": "media_height", "label": "Photo height", "min": 360, "max": 720, "step": 10, "unit": "px", "default": 480 },
+    { "type": "range", "id": "image_zoom", "label": "Photo zoom", "min": 100, "max": 180, "step": 2, "unit": "%", "default": 100, "info": "Never below 100 — no cream gaps." },
+    { "type": "select", "id": "media_fill", "label": "Photo size", "default": "inset", "info": "Inset = rounded card. Column fill = fills the photo column. Full size = photo to the page edge.", "options": [
+      { "value": "inset", "label": "Inset card" },
+      { "value": "column", "label": "Fill column" },
+      { "value": "bleed", "label": "Full size (edge of page)" }
+    ]},
+    { "type": "image_picker", "id": "image", "label": "Desktop image" },
+    { "type": "text", "id": "image_url", "label": "Image URL fallback", "info": "Used when Shopify image is empty. Leave blank for text-only hero (e.g. Apparel)." },
+    { "type": "text", "id": "image_alt", "label": "Image alt" },
+    { "type": "header", "content": "Mobile image" },
+    { "type": "image_picker", "id": "image_mobile", "label": "Mobile image", "info": "Optional. Leave blank to keep the desktop image on phone." },
+    { "type": "checkbox", "id": "mobile_crop_enable", "label": "Enable custom mobile crop / size", "default": false, "info": "Off keeps the current phone height: 52vw bleed, 52vh inset/column." },
+    {
+      "type": "range",
+      "id": "media_height_mobile",
+      "label": "Mobile image height",
+      "min": 180,
+      "max": 640,
+      "step": 10,
+      "unit": "px",
+      "default": 320,
+      "info": "Used only when custom mobile crop is on."
+    },
+    {
+      "type": "select",
+      "id": "media_fit_mobile",
+      "label": "Mobile image fit",
+      "default": "cover",
+      "options": [
+        { "value": "cover", "label": "Cover" },
+        { "value": "contain", "label": "Contain" }
+      ],
+      "info": "Used only when custom mobile crop is on. Default Cover matches today."
+    },
+    { "type": "video", "id": "video", "label": "Shopify video" },
+    { "type": "text", "id": "video_url", "label": "Video URL (mp4)", "info": "Used when Media type = Video and Shopify video is empty." },
+
+    { "type": "header", "content": "Sole cards (optional — off for Collection v18)" },
+    { "type": "checkbox", "id": "show_sole_cards", "label": "Show Open/Closed comparison cards", "default": false, "info": "v18 Locked: off. Sole via grid tabs + FAQ only." },
     { "type": "image_picker", "id": "closed_image", "label": "Closed Sole image" },
-    { "type": "textarea", "id": "closed_desc", "label": "Closed Sole description", "default": "Full coverage including heel — more protection everywhere. 360° grip across the entire underfoot." },
+    { "type": "url", "id": "closed_url", "label": "Closed Sole link" },
+    { "type": "text", "id": "closed_best_for", "label": "Closed Sole — Pick this if", "default": "you want heel and foot fully covered.", "info": "Feel and coverage only — never assign a discipline to a sole." },
+    { "type": "textarea", "id": "closed_desc", "label": "Closed Sole description", "default": "Heel and foot fully covered. 360° grip across the entire underfoot. Both perform identically — same grip, same stability." },
     { "type": "image_picker", "id": "open_image", "label": "Open Sole image" },
-    { "type": "textarea", "id": "open_desc", "label": "Open Sole description", "default": "Open heel with a mid-foot vent — your heel contacts the surface directly for a grounded, barefoot-like feel." }
+    { "type": "url", "id": "open_url", "label": "Open Sole link" },
+    { "type": "text", "id": "open_best_for", "label": "Open Sole — Pick this if", "default": "you want a more grounded, barefoot feel with natural toe splay.", "info": "Feel and coverage only — never assign a discipline to a sole." },
+    { "type": "textarea", "id": "open_desc", "label": "Open Sole description", "default": "Heel exposed, mid-foot breathing hole. More grounded, barefoot feel. Natural toe splay. Both perform identically — same grip, same stability." }
   ],
   "presets": [{ "name": "Collection Hero" }]
 }

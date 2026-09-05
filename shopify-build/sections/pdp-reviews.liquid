@@ -1,395 +1,1090 @@
 {% comment %}
-  PDP Reviews Section — Judge.me Integration (D-025)
-  Hybrid approach: Liquid shell with metafield aggregate stats,
-  JS hydration for individual reviews via Judge.me API.
-  Uses review-card.liquid snippet for consistent rendering.
+  Reviews — hybrid (Andrew CURRENT MESSAGE 2026-08-08, forward 2026-08-08 evening):
+
+  1. Top: up to 3 curated PHOTO cards (Theme Editor blocks). Hand-picked best
+     reviews with customer photos. Image blank → "Add image" placeholder.
+     Different sets per template; quotes must be verbatim from
+     docs/09-PRODUCT-KNOWLEDGE.md PRODUCTION-READY REVIEWS.
+
+  2. Under: up to 6 curated TEXT cards (original social-proof community row).
+     Same verified-quote law. This is the signed-off "six text sections" band.
+
+  3. Optional live Judge.me under that (full mode on /pages/reviews). Compact
+     PDPs use the curated 6 text cards — not a empty Judge.me stand-in.
+
+  Judge.me data is still tokenless metafield HTML — never reintroduce the
+  unauthenticated judge.me/api/v1/reviews fetch (401).
 {% endcomment %}
 
-{% assign jm_rating = product.metafields.judgeme.average_rating | default: nil %}
-{% assign jm_count  = product.metafields.judgeme.review_count | default: 0 %}
-{% assign has_reviews = false %}
-{% if jm_count > 0 and jm_rating %}
-  {% assign has_reviews = true %}
-{% endif %}
+{% liquid
+  assign scope = section.settings.scope | default: 'product'
+  assign live_mode = section.settings.live_mode | default: 'compact'
+  assign show_photo = section.settings.show_photo_cards
+  assign show_text = section.settings.show_text_cards
+  assign show_live = section.settings.show_live_text
 
-<section class="pdp-reviews" id="reviews" aria-label="Customer reviews" data-product-handle="{{ product.handle }}">
+  if scope == 'store'
+    assign jm_widget = shop.metafields.judgeme.all_reviews_page
+    assign jm_header = shop.metafields.judgeme.all_reviews_header
+    assign jm_chunk = shop.metafields.judgeme.all_reviews_0
+    assign jm_rating = shop.metafields.judgeme.all_reviews_rating
+    assign jm_count = shop.metafields.judgeme.all_reviews_count | plus: 0
+    assign write_url = '/pages/reviews'
+  else
+    assign jm_widget = product.metafields.judgeme.widget
+    assign jm_header = ''
+    assign jm_chunk = ''
+    assign jm_rating = product.metafields.judgeme.average_rating
+    assign jm_count = product.metafields.judgeme.review_count | plus: 0
+    assign write_url = product.url
+  endif
+
+  assign has_aggregate = false
+  if jm_count > 0 and jm_rating
+    assign has_aggregate = true
+  endif
+
+  assign has_widget = false
+  if jm_widget != blank or jm_header != blank or jm_chunk != blank
+    assign has_widget = true
+  endif
+
+  assign photo_count = 0
+  assign text_count = 0
+  for block in section.blocks
+    if block.type == 'photo_review'
+      assign photo_count = photo_count | plus: 1
+    endif
+    if block.type == 'text_review'
+      assign text_count = text_count | plus: 1
+    endif
+  endfor
+
+  assign render_live = false
+  if show_live
+    assign render_live = true
+  endif
+%}
+{% comment %}
+  HARD: show_live_text always mounts Judge.me. Compact CSS hides chrome +
+  review media; never skip the widget when curated text cards exist, and
+  never JS-hide reviews that include photos (that emptied Outdoor's row).
+{% endcomment %}
+
+<section
+  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} pdp-reviews pdp-reviews--{{ live_mode }}"
+  id="{{ section.settings.anchor_id | default: 'reviews' }}"
+  aria-label="Customer reviews"
+  data-jm-scope="{{ scope }}"
+  data-jm-pictures-first="{% if section.settings.pictures_first %}true{% else %}false{% endif %}"
+  style="{% render 'section-inset-vars' %}{% if section.settings.bg_color != blank %} background: {{ section.settings.bg_color }};{% endif %}"
+>
   <div class="pdp-reviews__inner">
-    <header class="pdp-reviews__head">
-      <div>
-        {% if has_reviews %}
-          <div class="pdp-reviews__stars" aria-hidden="true">★★★★★</div>
-          <p class="pdp-reviews__score"><strong>{{ jm_rating }}</strong> out of 5 · {{ jm_count }} reviews</p>
-        {% else %}
-          <p class="pdp-reviews__score">No reviews yet — be the first!</p>
+    {% if section.settings.title != blank or section.settings.body != blank or has_aggregate %}
+      <header class="pdp-reviews__head">
+        <div>
+          {% if section.settings.title != blank %}
+            <h2 class="pdp-reviews__title h2-standard">{{ section.settings.title }}</h2>
+          {% endif %}
+          {% if section.settings.body != blank %}
+            <p class="pdp-reviews__body">{{ section.settings.body }}</p>
+          {% endif %}
+          {% if has_aggregate and section.settings.show_aggregate and jm_count >= 1000 %}
+            <p class="pdp-reviews__score">
+              <span class="pdp-reviews__stars" aria-hidden="true">★★★★★</span>
+              <strong>{{ jm_rating }}</strong> out of 5 · {{ jm_count }} reviews
+            </p>
+          {% endif %}
+        </div>
+        {% if section.settings.all_reviews_label != blank %}
+          <a
+            class="pdp-reviews__more"
+            href="{{ section.settings.all_reviews_url | default: write_url }}"
+          >{{ section.settings.all_reviews_label }}</a>
         {% endif %}
-      </div>
-      <a
-        href="https://judge.me/reviews/{{ product.handle }}/new"
-        target="_blank"
-        rel="noopener"
-        class="btn btn--primary pdp-reviews__write"
-      >Write a Review</a>
-    </header>
+        {% if live_mode == 'full' %}
+          <a class="pdp-reviews__more pdp-reviews__write jdgm-write-rev-link" href="#judgeme_product_reviews">Write a Review</a>
+        {% endif %}
+      </header>
+    {% endif %}
 
-    {%- comment -%} Featured reviews from section blocks (curated by merchant) {%- endcomment -%}
-    {% assign has_featured = false %}
-    {% for block in section.blocks %}
-      {% if block.type == 'featured_review' %}
-        {% assign has_featured = true %}
-        {% break %}
-      {% endif %}
-    {% endfor %}
-
-    {% if has_featured %}
-      <div class="pdp-reviews__featured">
+    {% if show_photo and photo_count > 0 %}
+      <div class="pdp-reviews__photo-grid">
+        {% assign shown = 0 %}
         {% for block in section.blocks %}
-          {% if block.type == 'featured_review' %}
-            <div class="pdp-review-featured" {{ block.shopify_attributes }}>
-              <div class="pdp-review-featured__media" style="background: {{ block.settings.bg_gradient | default: 'linear-gradient(135deg, #c9c5b8, #e6e0d4)' }};"></div>
-              <div class="pdp-review-featured__content">
-                <span class="pdp-review-featured__stars">★★★★★</span>
-                <h4 class="pdp-review-featured__title">{{ block.settings.title }}</h4>
-                <p class="pdp-review-featured__body">"{{ block.settings.body }}"</p>
-                <div class="pdp-review-featured__attr">
-                  <span class="pdp-review-featured__author">{{ block.settings.author }}</span>
-                  {% if block.settings.verified %}
-                    <span class="pdp-review-featured__badge">Verified Purchase ✓</span>
-                  {% endif %}
+          {% if block.type == 'photo_review' and shown < 3 %}
+            {% liquid
+              assign star_n = block.settings.rating | default: 5
+              if star_n < 1
+                assign star_n = 1
+              endif
+              if star_n > 5
+                assign star_n = 5
+              endif
+              assign shown = shown | plus: 1
+            %}
+            <article class="pdp-reviews__photo-card" {{ block.shopify_attributes }}>
+              {% if block.settings.image != blank %}
+                {{
+                  block.settings.image
+                  | image_url: width: 900
+                  | image_tag:
+                    class: 'pdp-reviews__photo-img',
+                    loading: 'lazy',
+                    widths: '400, 600, 900',
+                    sizes: '(max-width: 768px) 100vw, 33vw',
+                    alt: block.settings.author
+                }}
+              {% elsif block.settings.image_url != blank %}
+                <img
+                  class="pdp-reviews__photo-img"
+                  src="{{ block.settings.image_url | escape }}"
+                  alt="{{ block.settings.author | default: 'Customer photo' | escape }}"
+                  loading="lazy"
+                  width="900"
+                  height="900"
+                >
+              {% else %}
+                <div class="pdp-reviews__photo-img pdp-reviews__photo-img--empty" role="img" aria-label="Add customer photo">
+                  <span>Add image</span>
                 </div>
+              {% endif %}
+              <div class="pdp-reviews__photo-pad">
+                <div class="pdp-reviews__photo-stars" aria-label="{{ star_n }} out of 5 stars">
+                  {% for i in (1..5) %}
+                    {% if i <= star_n %}★{% else %}<span class="pdp-reviews__star--empty">☆</span>{% endif %}
+                  {% endfor %}
+                </div>
+                {% if block.settings.body != blank %}
+                  <p class="pdp-reviews__photo-body">“{{ block.settings.body | strip | remove: '"' | remove: '“' | remove: '”' }}”</p>
+                {% endif %}
+                <footer class="pdp-reviews__photo-footer">
+                  {% if block.settings.author != blank %}
+                    <span class="pdp-reviews__photo-author">{{ block.settings.author }}</span>
+                  {% endif %}
+                  {% if block.settings.location != blank %}
+                    <span class="pdp-reviews__photo-loc">{{ block.settings.location }}</span>
+                  {% endif %}
+                </footer>
               </div>
-            </div>
+            </article>
           {% endif %}
         {% endfor %}
       </div>
     {% endif %}
 
-    {%- comment -%} Community reviews — hydrated via Judge.me JS API {%- endcomment -%}
-    <p class="pdp-reviews__community-label">More from the community</p>
-
-    <div class="pdp-reviews__compact-grid" id="jm-reviews-container">
-      <div class="pdp-reviews__loading" id="jm-reviews-loading">
-        <p>Loading reviews…</p>
+    {% if show_text and text_count > 0 %}
+      {% if section.settings.community_label != blank %}
+        <p class="pdp-reviews__community-label">{{ section.settings.community_label }}</p>
+      {% endif %}
+      <div class="pdp-reviews__text-grid">
+        {% assign text_shown = 0 %}
+        {% for block in section.blocks %}
+          {% if block.type == 'text_review' and text_shown < 6 %}
+            {% liquid
+              assign star_n = block.settings.rating | default: 5
+              if star_n < 1
+                assign star_n = 1
+              endif
+              if star_n > 5
+                assign star_n = 5
+              endif
+              assign text_shown = text_shown | plus: 1
+            %}
+            <article class="pdp-reviews__text-card" {{ block.shopify_attributes }}>
+              <div class="pdp-reviews__text-stars" aria-label="{{ star_n }} out of 5 stars">
+                {% for i in (1..5) %}
+                  {% if i <= star_n %}★{% else %}<span class="pdp-reviews__star--empty">☆</span>{% endif %}
+                {% endfor %}
+              </div>
+              {% if block.settings.body != blank %}
+                <p class="pdp-reviews__text-body">“{{ block.settings.body | strip | remove: '"' | remove: '“' | remove: '”' }}”</p>
+              {% endif %}
+              <footer class="pdp-reviews__text-footer">
+                {% if block.settings.author != blank %}
+                  <span class="pdp-reviews__text-author">{{ block.settings.author }}</span>
+                {% endif %}
+                {% if block.settings.location != blank %}
+                  <span class="pdp-reviews__text-loc">{{ block.settings.location }}</span>
+                {% endif %}
+              </footer>
+            </article>
+          {% endif %}
+        {% endfor %}
       </div>
-    </div>
+    {% endif %}
 
-    <a
-      href="https://judge.me/reviews/{{ product.handle }}"
-      target="_blank"
-      rel="noopener"
-      class="pdp-reviews__all-link"
-    >Read all reviews →</a>
+    {% if render_live %}
+      {% if section.settings.community_label != blank and live_mode == 'compact' and text_count == 0 %}
+        <p class="pdp-reviews__community-label">{{ section.settings.community_label }}</p>
+      {% endif %}
+
+      <div style="clear:both"></div>
+
+      {% if live_mode == 'compact' and text_count == 0 %}
+        {% comment %}
+          Visible 3-up text cards. SSR fallback from photo-review quotes so the
+          row is never empty; JS replaces with live Judge.me when it hydrates.
+        {% endcomment %}
+        <div
+          class="pdp-reviews__text-grid pdp-reviews__jm-cards"
+          data-jm-card-target
+          data-jm-card-count="3"
+        >
+          {% assign fb_shown = 0 %}
+          {% for block in section.blocks %}
+            {% if block.type == 'photo_review' and fb_shown < 3 and block.settings.body != blank %}
+              {% assign fb_shown = fb_shown | plus: 1 %}
+              {% assign star_n = block.settings.rating | default: 5 %}
+              <article class="pdp-reviews__text-card" data-jm-fallback>
+                <div class="pdp-reviews__text-stars" aria-label="{{ star_n }} out of 5 stars">
+                  {% for i in (1..5) %}{% if i <= star_n %}★{% else %}☆{% endif %}{% endfor %}
+                </div>
+                <p class="pdp-reviews__text-body">“{{ block.settings.body | strip | remove: '"' | remove: '“' | remove: '”' }}”</p>
+                <footer class="pdp-reviews__text-footer">
+                  {% if block.settings.author != blank %}
+                    <span class="pdp-reviews__text-author">{{ block.settings.author }}</span>
+                  {% endif %}
+                  {% if block.settings.location != blank %}
+                    <span class="pdp-reviews__text-loc">{{ block.settings.location }}</span>
+                  {% endif %}
+                </footer>
+              </article>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <div class="pdp-reviews__live{% if live_mode == 'compact' %} pdp-reviews__live--compact pdp-reviews__live--source{% endif %}">
+        {% if scope == 'store' and live_mode == 'full' %}
+          <div class="pdp-reviews__widget pdp-reviews__widget--all">
+            {% render 'judgeme_all_reviews' %}
+          </div>
+        {% elsif scope == 'store' %}
+          <div class="jdgm-widget jdgm-all-reviews-widget pdp-reviews__widget">
+            {{ jm_widget }}
+          </div>
+        {% else %}
+          <div
+            id="judgeme_product_reviews"
+            class="jdgm-widget jdgm-review-widget pdp-reviews__widget"
+            data-product-title="{{ product.title | escape }}"
+            data-id="{{ product.id }}"
+          >
+            {{ jm_widget }}
+          </div>
+        {% endif %}
+
+        {% unless has_widget %}
+          <div class="pdp-reviews__standin" role="note">
+            <p class="pdp-reviews__standin-flag">Placeholder — live Judge.me text reviews render here</p>
+            <p class="pdp-reviews__standin-copy">
+              {% if live_mode == 'compact' %}
+                In Shopify this band is filled by Judge.me as a compact text-card row
+                (histogram and review photos hidden — the three cards above are the curated photo set).
+              {% else %}
+                In Shopify this block is the full Judge.me reviews widget.
+              {% endif %}
+              Source:
+              {% if scope == 'store' %}
+                <strong>shop.metafields.judgeme.all_reviews_page</strong>
+              {% else %}
+                <strong>product.metafields.judgeme.widget</strong>
+              {% endif %}.
+              Static previews cannot fetch Judge.me — nothing is broken.
+            </p>
+          </div>
+        {% endunless %}
+      </div>
+    {% endif %}
   </div>
 </section>
 
 <style>
   .pdp-reviews {
-    padding: var(--space-14) var(--section-padding-x);
+    padding: var(--section-padding-y) var(--section-padding-x);
     background: var(--bg-primary);
   }
 
   .pdp-reviews__inner {
-    max-width: 1100px;
+    max-width: 1200px;
+    width: 100%;
     margin: 0 auto;
+    box-sizing: border-box;
   }
 
   .pdp-reviews__head {
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
-    margin-bottom: var(--space-9);
-    gap: var(--space-6);
     flex-wrap: wrap;
-    padding-bottom: var(--space-6);
-    border-bottom: 1px solid var(--border-default);
+    gap: 20px;
+    margin-bottom: var(--space-8);
   }
 
-  .pdp-reviews__stars {
-    font-size: 22px;
-    color: var(--accent-stars);
-    letter-spacing: 0.16em;
-    line-height: 1;
+  .pdp-reviews__title {
+    margin: 0 0 var(--gap-a);
+  }
+
+  .pdp-reviews__body {
+    font-size: var(--type-lede-size);
+    font-weight: var(--type-lede-weight);
+    line-height: var(--type-lede-leading);
+    color: var(--text-body);
+    margin: 0;
+    max-width: 32ch;
   }
 
   .pdp-reviews__score {
     font-size: 14px;
     color: var(--text-body);
-    margin: 6px 0 0;
-  }
-
-  .pdp-reviews__write {
-    padding: 12px 20px;
-    font-size: 12px;
-  }
-
-  .pdp-reviews__featured {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-6);
-  }
-
-  .pdp-review-featured {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    border: 1px solid #e6e6e6;
-    border-radius: var(--radius-card);
-    overflow: hidden;
-    background: var(--bg-primary);
-  }
-
-  .pdp-review-featured:nth-child(even) .pdp-review-featured__media {
-    order: 2;
-  }
-
-  .pdp-review-featured:nth-child(even) .pdp-review-featured__content {
-    order: 1;
-  }
-
-  .pdp-review-featured__media {
-    aspect-ratio: 1;
-    min-height: 280px;
-  }
-
-  .pdp-review-featured__content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: var(--space-9);
-    gap: var(--space-3);
-  }
-
-  .pdp-review-featured__stars {
-    color: var(--accent-stars);
-    letter-spacing: 0.16em;
-    font-size: 14px;
-  }
-
-  .pdp-review-featured__title {
-    font-size: var(--text-lg);
-    font-weight: var(--weight-bold);
-    color: var(--text-primary);
-    margin: 0;
-  }
-
-  .pdp-review-featured__body {
-    font-size: var(--text-base);
-    line-height: var(--leading-loose);
-    color: var(--text-body);
-    font-style: italic;
-    margin: 0;
-  }
-
-  .pdp-review-featured__attr {
+    margin: 10px 0 0;
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-top: 4px;
   }
 
-  .pdp-review-featured__author {
+  .pdp-reviews__stars {
+    color: var(--accent-stars);
+    letter-spacing: 0.12em;
+  }
+
+  .pdp-reviews__more {
     font-size: 13px;
-    font-weight: var(--weight-bold);
+    font-weight: 500;
     color: var(--text-primary);
+    text-decoration: none;
   }
 
-  .pdp-review-featured__badge {
-    font-size: var(--text-sm);
-    color: #7b8c84;
-    letter-spacing: 0.04em;
+  .pdp-reviews__more:hover {
+    color: #c45c3f;
+  }
+
+  /* ---- Curated photo cards (3) ------------------------------------------- */
+
+  .pdp-reviews__photo-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .pdp-reviews__photo-card {
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    flex: 0 1 calc(33.333% - 14px);
+    max-width: calc(33.333% - 14px);
+    min-width: 0;
+    width: 100%;
+  }
+
+  .pdp-reviews__photo-img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    object-position: center center;
+    display: block;
+    margin-inline: auto;
+  }
+
+  .pdp-reviews__photo-img--empty {
+    background: #e8e2d8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #8a8a8a;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .pdp-reviews__photo-pad {
+    padding: 22px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+  }
+
+  .pdp-reviews__photo-stars {
+    color: #c45c3f;
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    line-height: 1;
+  }
+
+  .pdp-reviews__star--empty {
+    opacity: 0.3;
+  }
+
+  .pdp-reviews__photo-body {
+    font-size: 15px;
+    color: #4a4a4a;
+    line-height: 1.55;
+    margin: 0;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .pdp-reviews__photo-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .pdp-reviews__photo-author {
+    font-size: 13px;
+    font-weight: 500;
+    color: #1c1916;
+  }
+
+  .pdp-reviews__photo-loc {
+    font-size: 12px;
+    color: #8a8a8a;
   }
 
   .pdp-reviews__community-label {
-    font-size: var(--text-sm);
+    font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: var(--tracking-widest);
-    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    color: #8a8a8a;
     text-align: center;
-    margin: var(--space-10) 0 var(--space-6);
+    margin: 48px 0 24px;
   }
 
-  .pdp-reviews__compact-grid {
+  /* ---- Curated text cards (6) — original social-proof community row ------ */
+
+  .pdp-reviews__text-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: var(--space-5);
+    gap: 20px;
+    width: 100%;
+    max-width: 100%;
+    margin-inline: auto;
+    justify-content: center;
+    justify-items: stretch;
   }
 
-  .pdp-reviews__loading {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: var(--space-8) 0;
-    color: var(--text-muted);
-    font-size: var(--text-sm);
+  .pdp-reviews__text-card {
+    background: #fff;
+    border: 1px solid #e6e6e6;
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
-  .pdp-reviews__empty {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: var(--space-10) 0;
-    color: var(--text-muted);
-    font-size: var(--text-sm);
+  .pdp-reviews__text-stars {
+    color: #d4af37;
+    font-size: 14px;
+    letter-spacing: 0.12em;
+    line-height: 1;
   }
 
-  .pdp-reviews__error {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: var(--space-8) 0;
-    color: var(--text-muted);
-    font-size: var(--text-sm);
+  .pdp-reviews__text-body {
+    font-size: 14px;
+    font-style: italic;
+    color: #4a4a4a;
+    line-height: 1.6;
+    margin: 0;
+    flex: 1;
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
 
-  .pdp-reviews__all-link {
-    display: block;
-    text-align: center;
-    margin-top: var(--space-7);
+  .pdp-reviews__text-footer {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .pdp-reviews__text-author {
     font-size: 12px;
+    font-weight: 700;
+    color: #1c1916;
+  }
+
+  .pdp-reviews__text-loc {
+    font-size: 12px;
+    font-weight: 400;
+    color: #8a8a8a;
+  }
+
+  /* ---- Judge.me skin ----------------------------------------------------- */
+
+  .pdp-reviews__widget {
+    --jdgm-primary-color: #c45c3f;
+    --jdgm-star-color: var(--accent-stars);
+    font-family: inherit;
+  }
+
+  .pdp-reviews__widget .jdgm-star {
+    color: var(--accent-stars);
+  }
+
+  .pdp-reviews__widget .jdgm-rev,
+  .pdp-reviews__widget .jdgm-rev.jdgm-divider-top {
+    border-color: #e8e2d8;
+    padding: var(--space-6) 0;
+  }
+
+  .pdp-reviews__widget .jdgm-rev__title {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  .pdp-reviews__widget .jdgm-rev__body,
+  .pdp-reviews__widget .jdgm-rev__body p {
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--text-body);
+  }
+
+  .pdp-reviews__widget .jdgm-rev__author {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  .pdp-reviews__widget .jdgm-rev__location,
+  .pdp-reviews__widget .jdgm-rev__timestamp {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .pdp-reviews__widget .jdgm-rev__buyer-badge {
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: #7b8c84;
+  }
+
+  .pdp-reviews__widget .jdgm-write-rev-link,
+  .pdp-reviews__widget .jdgm-btn--solid {
+    border-radius: 0;
     letter-spacing: var(--tracking-wider);
     font-weight: var(--weight-semibold);
-    color: var(--text-primary);
-    text-decoration: none;
-    border-bottom: 1px solid var(--text-primary);
-    padding-bottom: 2px;
-    width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
+  }
+
+  .pdp-reviews__widget .jdgm-histogram__bar-content {
+    background: var(--accent-stars);
+  }
+
+  /* Compact: text-card band only — Juicer is the photo wall */
+  .pdp-reviews__live--compact .jdgm-rev-widg__summary,
+  .pdp-reviews__live--compact .jdgm-histogram,
+  .pdp-reviews__live--compact .jdgm-widget-actions,
+  .pdp-reviews__live--compact .jdgm-write-rev-link,
+  .pdp-reviews__live--compact .jdgm-sort-dropdown,
+  .pdp-reviews__live--compact .jdgm-row-search,
+  .pdp-reviews__live--compact .jdgm-paginate-all-reviews,
+  .pdp-reviews__live--compact .jdgm-rev__pics,
+  .pdp-reviews__live--compact .jdgm-rev__vids,
+  .pdp-reviews__live--compact .jdgm-gallery,
+  .pdp-reviews__live--compact .jdgm-rev__custom-form,
+  .pdp-reviews__live--compact .jdgm-form-wrapper,
+  .pdp-reviews__live--compact .jdgm-rev-widg__header {
+    display: none !important;
+  }
+
+  .pdp-reviews__live--compact .jdgm-rev-widg__reviews,
+  .pdp-reviews__live--compact .jdgm-all-rev-widg__reviews {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .pdp-reviews__live--compact .jdgm-rev,
+  .pdp-reviews__live--compact .jdgm-rev.jdgm-divider-top {
+    background: #fff;
+    border: 1px solid #e6e6e6;
+    border-radius: 12px;
+    padding: 24px;
+    margin: 0;
+  }
+
+  .pdp-reviews__live--compact .jdgm-rev:nth-child(n + 4) {
+    display: none !important;
+  }
+
+  /* Full store page: keep Judge.me pagination / Load more visible */
+  .pdp-reviews--full .jdgm-paginate,
+  .pdp-reviews--full .jdgm-paginate-all-reviews {
+    display: block !important;
+    margin-top: 28px;
+  }
+
+  /* One list only — hide Product Reviews / Shop Reviews tabs */
+  .pdp-reviews--full .jdgm-subtab {
+    display: none !important;
+  }
+
+  /* When JS builds the 3 text cards, park the raw Judge.me source off-screen */
+  .pdp-reviews__live--source.is-cardified {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+  }
+
+  .pdp-reviews__jm-cards:not([hidden]) {
+    margin-top: 8px;
+  }
+
+  .pdp-reviews__standin {
+    border: 2px dashed #c9a227;
+    background: #fffdf5;
+    padding: var(--space-6);
+    text-align: center;
+  }
+
+  .pdp-reviews__standin-flag {
+    display: inline-block;
+    margin: 0 0 12px;
+    padding: 6px 12px;
+    background: #f6e7b8;
+    color: #8a6d3b;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .pdp-reviews__standin-copy {
+    margin: 0 auto;
+    max-width: 70ch;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #6b645a;
   }
 
   @media (max-width: 1024px) {
-    .pdp-review-featured {
-      grid-template-columns: 1fr;
+    .pdp-reviews__photo-grid {
+      justify-content: center;
     }
 
-    .pdp-review-featured:nth-child(even) .pdp-review-featured__media {
-      order: 0;
+    .pdp-reviews__photo-card {
+      flex: 0 1 calc(50% - 10px);
+      max-width: calc(50% - 10px);
     }
 
-    .pdp-reviews__compact-grid {
+    .pdp-reviews__text-grid,
+    .pdp-reviews__live--compact .jdgm-rev-widg__reviews,
+    .pdp-reviews__live--compact .jdgm-all-rev-widg__reviews {
       grid-template-columns: repeat(2, 1fr);
+      justify-items: stretch;
     }
   }
 
   @media (max-width: 768px) {
-    .pdp-reviews {
-      padding: var(--section-padding-y-mobile) var(--section-padding-x-mobile);
+    #shopify-section-{{ section.id }} .pdp-reviews {
+      padding: var(--section-padding-y-mobile, 48px) 16px;
+      overflow-x: hidden;
+      text-align: center;
     }
 
-    .pdp-reviews__compact-grid {
+    #shopify-section-{{ section.id }} .pdp-reviews__inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    #shopify-section-{{ section.id }} .pdp-reviews__head,
+    #shopify-section-{{ section.id }} .pdp-reviews__head > div {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 100%;
+      text-align: center;
+    }
+
+    #shopify-section-{{ section.id }} .pdp-reviews__title {
+      width: 100%;
+      text-align: center;
+    }
+
+    #shopify-section-{{ section.id }} .pdp-reviews__body {
+      max-width: none;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    #shopify-section-{{ section.id }} .pdp-reviews__photo-grid,
+    #shopify-section-{{ section.id }} .pdp-reviews__text-grid,
+    #shopify-section-{{ section.id }} .pdp-reviews__live--compact .jdgm-rev-widg__reviews,
+    #shopify-section-{{ section.id }} .pdp-reviews__live--compact .jdgm-all-rev-widg__reviews {
+      display: grid;
       grid-template-columns: 1fr;
+      justify-content: center;
+      justify-items: stretch;
+      width: 100%;
+      max-width: 100%;
+      margin-inline: auto;
+      gap: 16px;
     }
 
-    .pdp-review-featured__content {
-      padding: var(--space-7) var(--space-5);
+    #shopify-section-{{ section.id }} .pdp-reviews__photo-card,
+    #shopify-section-{{ section.id }} .pdp-reviews__text-card,
+    #shopify-section-{{ section.id }} .pdp-reviews__live--compact .jdgm-rev {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      margin-inline: auto;
+      box-sizing: border-box;
+    }
+
+    .pdp-reviews__photo-pad {
+      padding: 18px 18px 20px;
+    }
+
+    .pdp-reviews__photo-body {
+      font-size: 14px;
+    }
+
+    .pdp-reviews__community-label {
+      margin: 36px 0 20px;
     }
   }
 </style>
 
 <script>
-  (function() {
-    var container = document.getElementById('jm-reviews-container');
-    var loading = document.getElementById('jm-reviews-loading');
-    var handle = document.querySelector('[data-product-handle]');
-    if (!container || !handle) return;
+  (function () {
+    // Compact mode: copy first 3 Judge.me reviews into our text-card grid
+    // so the row always looks like Closed/Open community cards (dynamic).
+    var roots = document.querySelectorAll('.pdp-reviews--compact');
+    if (!roots.length) return;
 
-    var productHandle = handle.getAttribute('data-product-handle');
+    function starsHtml(score) {
+      var n = Math.max(1, Math.min(5, parseInt(score, 10) || 5));
+      var out = '';
+      for (var i = 1; i <= 5; i++) out += i <= n ? '★' : '☆';
+      return out;
+    }
 
-    function fetchReviews() {
-      var url = 'https://judge.me/api/v1/reviews?shop_domain={{ shop.permanent_domain }}&product_handle=' + productHandle + '&per_page=6';
+    function textOf(el) {
+      return el ? String(el.textContent || '').replace(/\s+/g, ' ').trim() : '';
+    }
 
-      fetch(url)
-        .then(function(res) {
-          if (!res.ok) throw new Error('judge-me-unavailable');
-          return res.json();
-        })
-        .then(function(data) {
-          if (loading) loading.remove();
+    function build(section) {
+      var target = section.querySelector('[data-jm-card-target]');
+      var source = section.querySelector('.pdp-reviews__live--source');
+      if (!target || !source) return false;
 
-          var reviews = data.reviews || [];
-          if (reviews.length === 0) {
-            container.innerHTML = '<div class="pdp-reviews__empty"><p>No community reviews yet. Be the first to share your experience!</p></div>';
-            return;
-          }
+      var revs = Array.prototype.slice.call(source.querySelectorAll('.jdgm-rev'));
+      if (!revs.length) return false;
 
-          var html = '';
-          reviews.forEach(function(review) {
-            html += buildReviewCard(review);
-          });
-          container.innerHTML = html;
-        })
-        .catch(function() {
-          if (loading) loading.remove();
-          container.innerHTML = '<div class="pdp-reviews__error"><p>Reviews are temporarily unavailable. Please check back soon.</p></div>';
+      // Soft preference only — Judge.me still owns the feed. When pictures_first
+      // is on, surface reviews that include media before text-only ones.
+      var picsFirst = section.getAttribute('data-jm-pictures-first') === 'true';
+      if (picsFirst) {
+        revs.sort(function (a, b) {
+          var ap = a.querySelector('.jdgm-rev__pics, .jdgm-rev__vids, .jdgm-gallery') ? 0 : 1;
+          var bp = b.querySelector('.jdgm-rev__pics, .jdgm-rev__vids, .jdgm-gallery') ? 0 : 1;
+          return ap - bp;
         });
-    }
-
-    function buildReviewCard(review) {
-      var stars = '';
-      for (var i = 1; i <= 5; i++) {
-        if (i <= review.rating) {
-          stars += '<span class="review-card__star review-card__star--filled" aria-hidden="true">★</span>';
-        } else {
-          stars += '<span class="review-card__star review-card__star--empty" aria-hidden="true">☆</span>';
-        }
       }
 
-      var photo = '';
-      if (review.picture_urls && review.picture_urls.length > 0) {
-        photo = '<div class="review-card__photo"><img src="' + escapeAttr(review.picture_urls[0]) + '" alt="Review photo" loading="lazy" width="200" height="200"></div>';
-      }
+      var max = parseInt(target.getAttribute('data-jm-card-count') || '3', 10) || 3;
+      var html = '';
+      var count = 0;
 
-      var verified = review.verified === 'buyer' ? '<span class="review-card__verified">Verified Purchase ✓</span>' : '';
-      var date = review.created_at ? '<time class="review-card__date">' + formatDate(review.created_at) + '</time>' : '';
+      revs.forEach(function (rev) {
+        if (count >= max) return;
+        var bodyEl = rev.querySelector('.jdgm-rev__body');
+        var body = textOf(bodyEl);
+        if (!body) return;
 
-      return '<article class="review-card">' +
-        '<div class="review-card__stars" aria-label="' + review.rating + ' out of 5 stars">' + stars + '</div>' +
-        (review.title ? '<h4 class="review-card__title">' + escapeHtml(review.title) + '</h4>' : '') +
-        '<p class="review-card__body">' + escapeHtml(review.body) + '</p>' +
-        photo +
-        '<footer class="review-card__footer">' +
-          '<span class="review-card__author">' + escapeHtml(review.reviewer.name || 'Anonymous') + '</span>' +
-          verified + date +
-        '</footer>' +
-      '</article>';
+        var author =
+          textOf(rev.querySelector('.jdgm-rev__author')) ||
+          textOf(rev.querySelector('.jdgm-rev__author-wrapper')) ||
+          '';
+        var loc = textOf(rev.querySelector('.jdgm-rev__location'));
+        var score =
+          (rev.querySelector('.jdgm-rev__rating') &&
+            rev.querySelector('.jdgm-rev__rating').getAttribute('data-score')) ||
+          '5';
+
+        // Strip wrapping quotes if Judge.me already includes them
+        body = body.replace(/^[“"]+|[”"]+$/g, '');
+
+        html +=
+          '<article class="pdp-reviews__text-card">' +
+          '<div class="pdp-reviews__text-stars" aria-label="' +
+          score +
+          ' out of 5 stars">' +
+          starsHtml(score) +
+          '</div>' +
+          '<p class="pdp-reviews__text-body">“' +
+          body.replace(/</g, '&lt;') +
+          '”</p>' +
+          '<footer class="pdp-reviews__text-footer">' +
+          (author
+            ? '<span class="pdp-reviews__text-author">' + author.replace(/</g, '&lt;') + '</span>'
+            : '') +
+          (loc
+            ? '<span class="pdp-reviews__text-loc">' + loc.replace(/</g, '&lt;') + '</span>'
+            : '') +
+          '</footer></article>';
+        count += 1;
+      });
+
+      if (!count) return false;
+
+      target.innerHTML = html;
+      target.hidden = false;
+      target.removeAttribute('hidden');
+      source.classList.add('is-cardified');
+      return true;
     }
 
-    function escapeHtml(str) {
-      if (!str) return '';
-      var div = document.createElement('div');
-      div.appendChild(document.createTextNode(str));
-      return div.innerHTML;
-    }
+    roots.forEach(function (section) {
+      if (build(section)) return;
 
-    function escapeAttr(str) {
-      return (str || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-    }
+      var source = section.querySelector('.pdp-reviews__live--source');
+      if (!source) return;
+      var tries = 0;
+      var timer = setInterval(function () {
+        tries += 1;
+        if (build(section) || tries > 40) clearInterval(timer);
+      }, 250);
 
-    function formatDate(dateStr) {
-      try {
-        var d = new Date(dateStr);
-        return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-      } catch(e) {
-        return '';
-      }
-    }
-
-    fetchReviews();
+      var obs = new MutationObserver(function () {
+        if (build(section)) obs.disconnect();
+      });
+      obs.observe(source, { childList: true, subtree: true });
+    });
   })();
 </script>
 
 {% schema %}
 {
-  "name": "PDP Reviews",
-  "settings": [],
+  "name": "Reviews",
+  "settings": [
+    { "type": "header", "content": "Shared — Content" },
+    {
+      "type": "paragraph",
+      "content": "Top: up to 3 curated photo cards. Under: up to 6 curated text cards (original community row). Optional full Judge.me on /pages/reviews. Quotes must be production-ready — never invent names or alter wording."
+    },
+    {
+      "type": "select",
+      "id": "scope",
+      "label": "Live reviews source",
+      "options": [
+        { "value": "product", "label": "This product (product pages)" },
+        { "value": "store", "label": "Whole store (home, collection, /pages/reviews)" }
+      ],
+      "default": "product"
+    },
+    {
+      "type": "select",
+      "id": "live_mode",
+      "label": "Live row style",
+      "options": [
+        { "value": "compact", "label": "Compact text cards (PDP / home / collection)" },
+        { "value": "full", "label": "Full Judge.me widget (/pages/reviews)" }
+      ],
+      "default": "compact",
+      "info": "Compact hides histogram, photos, and write-review chrome. Juicer owns the visual wall."
+    },
+    { "type": "text", "id": "title", "label": "Heading", "default": "Real people. Real results." },
+    { "type": "text", "id": "body", "label": "Body", "default": "See the difference. Feel the grip." },
+    {
+      "type": "text",
+      "id": "all_reviews_label",
+      "label": "CTA label",
+      "default": "More stories →",
+      "info": "Leave blank to hide."
+    },
+    { "type": "url", "id": "all_reviews_url", "label": "CTA link" },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#ffffff",
+      "info": "Home / collection cream is #f5f2ec. PDP uses white."
+    },
+    { "type": "header", "content": "Section — Reviews" },
+    {
+      "type": "checkbox",
+      "id": "show_photo_cards",
+      "label": "Show curated photo cards",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_text_cards",
+      "label": "Show curated text cards (6)",
+      "default": true,
+      "info": "Original community row under the photo cards."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_live_text",
+      "label": "Show live Judge.me row",
+      "default": true,
+      "info": "Always mounts Judge.me when checked (compact or full). Compact hides chrome + review media via CSS only — text cards still show."
+    },
+    {
+      "type": "text",
+      "id": "community_label",
+      "label": "Label above text cards",
+      "default": "More from the community",
+      "info": "Leave blank to hide."
+    },
+    {
+      "type": "checkbox",
+      "id": "pictures_first",
+      "label": "Prefer reviews with photos first",
+      "default": true,
+      "info": "Soft preference only. Compact text cards: prefer Judge.me reviews that include media. Full widget: Judge.me photo-first when supported. Cannot reorder Judge.me’s whole catalog — no inventing sort."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_aggregate",
+      "label": "Show aggregate rating",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor id",
+      "default": "reviews",
+      "info": "Buy-box and CTA jumps target #reviews."
+    },
+    { "type": "header", "content": "Shared — Section frame" },
+    {
+      "type": "checkbox",
+      "id": "inset_custom_mobile",
+      "label": "Custom mobile inset",
+      "default": false
+    },
+    { "type": "range", "id": "inset_top", "label": "Inset top", "min": 0, "max": 96, "step": 4, "unit": "px", "default": 0 },
+    { "type": "range", "id": "inset_bottom", "label": "Inset bottom", "min": 0, "max": 96, "step": 4, "unit": "px", "default": 0 },
+    { "type": "range", "id": "inset_x", "label": "Inset left & right", "min": 0, "max": 96, "step": 4, "unit": "px", "default": 0 },
+    { "type": "range", "id": "inset_top_mobile", "label": "Inset top — mobile", "min": 0, "max": 64, "step": 4, "unit": "px", "default": 0 },
+    { "type": "range", "id": "inset_bottom_mobile", "label": "Inset bottom — mobile", "min": 0, "max": 64, "step": 4, "unit": "px", "default": 0 },
+    { "type": "range", "id": "inset_x_mobile", "label": "Inset left & right — mobile", "min": 0, "max": 64, "step": 4, "unit": "px", "default": 0 },
+    { "type": "checkbox", "id": "hide_on_mobile", "label": "Hide on mobile", "default": false },
+    { "type": "checkbox", "id": "hide_on_desktop", "label": "Hide on desktop", "default": false }
+  ],
   "blocks": [
     {
-      "type": "featured_review",
-      "name": "Featured Review",
+      "type": "photo_review",
+      "name": "Photo review card",
+      "limit": 3,
       "settings": [
-        { "type": "text", "id": "title", "label": "Title" },
-        { "type": "textarea", "id": "body", "label": "Review body" },
-        { "type": "text", "id": "author", "label": "Author" },
-        { "type": "checkbox", "id": "verified", "label": "Verified purchase", "default": false },
-        { "type": "text", "id": "bg_gradient", "label": "Media gradient", "default": "linear-gradient(135deg, #c9c5b8, #e6e0d4)" }
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Customer photo",
+          "info": "Leave blank for Add image placeholder. Prefer a real Judge.me customer photo."
+        },
+        {
+          "type": "text",
+          "id": "image_url",
+          "label": "Photo URL fallback",
+          "info": "CDN URL when Theme Editor image picker is empty (e.g. Outdoor water/beach product shots)."
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Review quote",
+          "info": "Verbatim from a real review. Do not invent or splice."
+        },
+        { "type": "text", "id": "author", "label": "Name" },
+        { "type": "text", "id": "location", "label": "Location / meta" },
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Stars",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        }
+      ]
+    },
+    {
+      "type": "text_review",
+      "name": "Text review",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Review quote",
+          "info": "Verbatim from a real review. Do not invent or splice."
+        },
+        { "type": "text", "id": "author", "label": "Name" },
+        { "type": "text", "id": "location", "label": "Location / meta" },
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Stars",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        }
       ]
     }
   ],
-  "presets": [{ "name": "PDP Reviews" }]
+  "presets": [
+    {
+      "name": "Reviews",
+      "blocks": [
+        {
+          "type": "photo_review",
+          "settings": {
+            "body": "My love-hate relationship with the sock has finally come to a ceremonial end. The vast improvement during the first minute of barre class, with my new Barreletics performance skin shoes, is beyond words.",
+            "author": "Mia Evans",
+            "location": "Verified Purchase",
+            "rating": 5
+          }
+        },
+        {
+          "type": "photo_review",
+          "settings": {
+            "body": "This pair is my second purchased — my first having been purchased almost 4 years ago. The reason for the second pair is purely color! I must say these are truly valuable to my Pilates practice — I refuse to wear anything else — the security is unmatched.",
+            "author": "Kimberly",
+            "location": "Knoxville, US",
+            "rating": 5
+          }
+        },
+        {
+          "type": "photo_review",
+          "settings": {
+            "body": "The best invention known to Pilates devotees. I am 70 years old and I am able to accomplish several advanced moves on the Cadillac apparatus. Namely, the parakeet, the complete parakeet. If you know anything about Pilates, you know that your foot has to be gripping the bar without fail.",
+            "author": "Dvorah S.",
+            "location": "Fairfield, US",
+            "rating": 5
+          }
+        }
+      ]
+    }
+  ]
 }
 {% endschema %}

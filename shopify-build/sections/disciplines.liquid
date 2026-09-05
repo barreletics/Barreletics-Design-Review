@@ -1,103 +1,110 @@
 {% comment %}
-  Disciplines + Proof — Line-divider strip
-  Source: Approved Home + Collection prototypes
+  Disciplines — cream typographic band (Home WORKING).
 {% endcomment %}
+{% liquid
+  assign heading_role = section.settings.heading_role | default: 'display'
+  assign title_size = section.settings.title_size | default: 'default'
+  assign title_weight = section.settings.title_weight | default: 'default'
+  assign pad_y = section.settings.pad_y | default: 64
+%}
 
-<section class="disciplines-proof" aria-label="Disciplines">
-  <div class="disciplines-proof__inner">
-    <p class="disciplines-proof__headline">{{ section.settings.headline }}</p>
-    <div class="disciplines-proof__grid">
-      {% for block in section.blocks %}
-        <div class="dp-item{% if block.settings.secondary %} dp-item--secondary{% endif %}" {{ block.shopify_attributes }}>
-          <p class="dp-item__discipline">{{ block.settings.discipline }}</p>
-          <p class="dp-item__proof">{{ block.settings.proof }}</p>
-        </div>
-      {% endfor %}
-    </div>
+<section class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} discipline-film{% if section.settings.headline == blank %} discipline-film--tags-only{% endif %}" aria-label="{{ section.settings.aria_label | default: 'Built for every studio discipline' | escape }}" style="--df-bg: {{ section.settings.bg_color | default: '#f5f2ec' }}; --df-pad-y: {{ pad_y }}px;{% if title_size != 'default' %} --df-title-size: {{ title_size }}px;{% endif %}{% if title_weight != 'default' %} --df-title-weight: {{ title_weight }};{% endif %} {% render 'section-inset-vars' %}">
+  <div class="discipline-film__inner">
+    {% if section.settings.headline != blank %}
+      <p class="discipline-film__line {% if heading_role == 'statement' %}type-statement{% else %}h2-display{% endif %}">{{ section.settings.headline | newline_to_br }}</p>
+    {% endif %}
+    {% if section.settings.subhead != blank %}
+      <p class="discipline-film__sub">{{ section.settings.subhead }}</p>
+    {% endif %}
+    {% if section.blocks.size > 0 %}
+      <div class="discipline-film__moves">
+        {% for block in section.blocks %}
+          {% unless forloop.first %}
+            <span aria-hidden="true"><em>·</em></span>
+          {% endunless %}
+          <span {{ block.shopify_attributes }}>{{ block.settings.discipline }}</span>
+        {% endfor %}
+      </div>
+    {% endif %}
   </div>
 </section>
 
 <style>
-  .disciplines-proof {
-    padding: var(--space-10) var(--section-padding-x);
-    background: var(--bg-primary);
+  .discipline-film {
+    position: relative;
+    overflow: hidden;
+    background: var(--df-bg, #f5f2ec);
     border-top: 1px solid #e8e2d8;
     border-bottom: 1px solid #e8e2d8;
   }
-
-  .disciplines-proof__inner {
+  .discipline-film__inner {
+    width: 100%;
     max-width: 1100px;
     margin: 0 auto;
-  }
-
-  .disciplines-proof__headline {
+    padding: var(--df-pad-y, var(--section-padding-y, 64px)) var(--section-padding-x, 40px);
     text-align: center;
-    font-size: var(--text-sm);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-widest);
-    color: var(--accent-primary);
-    font-weight: var(--weight-bold);
-    margin: 0 0 var(--space-8);
   }
-
-  .disciplines-proof__grid {
-    display: flex;
-  }
-
-  .dp-item {
-    flex: 1;
-    text-align: center;
-    padding: 0 var(--space-5);
-    border-right: 1px solid #e8e2d8;
-  }
-
-  .dp-item:last-child {
-    border-right: none;
-  }
-
-  .dp-item--secondary {
-    opacity: 0.65;
-  }
-
-  .dp-item__discipline {
-    font-size: 12px;
-    font-weight: var(--weight-bold);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-widest);
+  /* Same H2 Display as 50/50 “Never loses…” — desktop size token on all widths (not the smaller mobile shrink). */
+  .discipline-film__line.h2-display {
     color: var(--text-primary);
-    margin: 0 0 6px;
+    max-width: none;
+    margin: 0 0 var(--gap-b);
+    font-size: var(--df-title-size, var(--type-h2-display-size));
+    font-weight: var(--df-title-weight, var(--type-h2-display-weight));
+    line-height: var(--type-h2-display-leading);
+    letter-spacing: var(--type-h2-display-tracking);
   }
-
-  .dp-item__proof {
-    font-size: 13px;
+  .discipline-film__line.type-statement {
+    color: var(--text-primary);
+    max-width: none;
+    margin: 0 0 var(--gap-b);
+    font-size: var(--df-title-size, var(--type-statement-size));
+    font-weight: var(--df-title-weight, var(--type-statement-weight));
+    line-height: var(--type-statement-leading);
+    letter-spacing: var(--type-statement-tracking);
+  }
+  .discipline-film__sub {
+    font-size: var(--type-body-size);
+    font-weight: var(--type-body-weight);
+    line-height: var(--type-body-leading);
     color: var(--text-body);
-    line-height: 1.4;
-    margin: 0;
+    margin: 0 0 var(--gap-c);
   }
-
-  @media (max-width: 1024px) {
-    .disciplines-proof__grid {
-      flex-wrap: wrap;
-    }
+  .discipline-film__moves {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 8px;
+    align-items: center;
+    justify-content: center;
+    border-top: 1px solid #d6cfc0;
+    padding-top: 24px;
   }
-
+  .discipline-film__moves span {
+    font-size: clamp(12px, 1.3vw, 14px);
+    font-weight: 500;
+    color: #4a4a4a;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .discipline-film__moves span em {
+    font-style: normal;
+    color: #c45c3f;
+    margin: 0 14px;
+    font-weight: 400;
+  }
+  .discipline-film--tags-only .discipline-film__inner {
+    padding: 28px var(--section-padding-x, 40px);
+  }
+  .discipline-film--tags-only .discipline-film__moves {
+    border-top: none;
+    padding-top: 0;
+  }
   @media (max-width: 768px) {
-    .disciplines-proof {
-      padding: var(--space-9) var(--section-padding-x-mobile);
+    .discipline-film__inner {
+      padding: var(--df-pad-y, var(--section-padding-y-mobile, 48px)) var(--section-padding-x-mobile, 16px);
     }
-
-    .disciplines-proof__grid {
-      flex-direction: column;
-    }
-
-    .dp-item {
-      border-right: none;
-      border-bottom: 1px solid #e8e2d8;
-      padding: var(--space-4) 0;
-    }
-
-    .dp-item:last-child {
-      border-bottom: none;
+    .discipline-film__line.type-statement {
+      font-size: var(--df-title-size, var(--type-statement-size-mobile));
     }
   }
 </style>
@@ -106,28 +113,234 @@
 {
   "name": "Disciplines",
   "settings": [
-    { "type": "text", "id": "headline", "label": "Headline", "default": "Grip That Holds Where It Matters Most" }
+    {
+      "type": "header",
+      "content": "Shared — Content"
+    },
+    {
+      "type": "textarea",
+      "id": "headline",
+      "label": "Heading",
+      "default": "Upgrade your grip.\nUpgrade your workout.",
+      "info": "Use a line break for two lines. Type OS owns size/weight."
+    },
+    {
+      "type": "select",
+      "id": "heading_role",
+      "label": "Heading Type OS role",
+      "options": [
+        { "value": "display", "label": "H2 Display" },
+        { "value": "statement", "label": "Statement" }
+      ],
+      "default": "display",
+      "info": "H2 Display keeps Home weight. Use Title size to land between Statement and full Display."
+    },
+    {
+      "type": "select",
+      "id": "title_size",
+      "label": "Title size",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "32", "label": "32px" },
+        { "value": "36", "label": "36px" },
+        { "value": "40", "label": "40px" },
+        { "value": "44", "label": "44px" },
+        { "value": "48", "label": "48px" },
+        { "value": "52", "label": "52px" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" }
+      ],
+      "default": "default",
+      "info": "Leave Default on Home. Collection Upgrade uses 400 to match PDP 40/400."
+    },
+    {
+      "type": "textarea",
+      "id": "subhead",
+      "label": "Supporting line",
+      "info": "Optional. Under the heading. Leave blank on Home."
+    },
+    {
+      "type": "range",
+      "id": "pad_y",
+      "label": "Section padding",
+      "min": 48,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#f5f2ec"
+    },
+    {
+      "type": "header",
+      "content": "Section — Disciplines"
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Aria label",
+      "default": "Built for every studio discipline"
+    },
+    {
+      "type": "header",
+      "content": "Shared — Section frame"
+    },
+    {
+      "type": "paragraph",
+      "content": "OUTER inset from the page edges (margin). Top and bottom are independent; left & right = one control. Custom mobile OFF = mobile uses the same inset as desktop. Defaults 0 = full bleed."
+    },
+    {
+      "type": "checkbox",
+      "id": "inset_custom_mobile",
+      "label": "Custom mobile inset",
+      "default": false,
+      "info": "OFF (default): ignore the mobile inset sliders — mobile uses desktop Inset top / bottom / left & right. ON: use the mobile inset sliders instead."
+    },
+    {
+      "type": "range",
+      "id": "inset_top",
+      "label": "Inset top",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom",
+      "label": "Inset bottom",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x",
+      "label": "Inset left & right",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Same value on both sides."
+    },
+    {
+      "type": "range",
+      "id": "inset_top_mobile",
+      "label": "Inset top — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom_mobile",
+      "label": "Inset bottom — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x_mobile",
+      "label": "Inset left & right — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_desktop",
+      "label": "Hide on desktop",
+      "default": false
+    }
   ],
   "blocks": [
     {
       "type": "discipline",
       "name": "Discipline",
       "settings": [
-        { "type": "text", "id": "discipline", "label": "Discipline name", "default": "Barre" },
-        { "type": "text", "id": "proof", "label": "Proof statement", "default": "Never slip in flat back chair" },
-        { "type": "checkbox", "id": "secondary", "label": "Secondary (dimmed)", "default": false }
+        {
+          "type": "text",
+          "id": "discipline",
+          "label": "Discipline name",
+          "default": "Barre"
+        }
       ]
     }
   ],
-  "presets": [{
-    "name": "Disciplines",
-    "blocks": [
-      { "type": "discipline", "settings": { "discipline": "Barre", "proof": "Never slip in flat back chair" } },
-      { "type": "discipline", "settings": { "discipline": "Reformer", "proof": "Locked in through footwork series" } },
-      { "type": "discipline", "settings": { "discipline": "Lagree & Mega", "proof": "Grip through every Super Lunge" } },
-      { "type": "discipline", "settings": { "discipline": "Cadillac", "proof": "Secure on the push-through bar" } },
-      { "type": "discipline", "settings": { "discipline": "Yoga", "proof": "Grip through every flow", "secondary": true } }
-    ]
-  }]
+  "presets": [
+    {
+      "name": "Disciplines",
+      "blocks": [
+        {
+          "type": "discipline",
+          "settings": {
+            "discipline": "Barre"
+          }
+        },
+        {
+          "type": "discipline",
+          "settings": {
+            "discipline": "Reformer"
+          }
+        },
+        {
+          "type": "discipline",
+          "settings": {
+            "discipline": "Megaformer"
+          }
+        },
+        {
+          "type": "discipline",
+          "settings": {
+            "discipline": "Lagree"
+          }
+        },
+        {
+          "type": "discipline",
+          "settings": {
+            "discipline": "Pilates"
+          }
+        },
+        {
+          "type": "discipline",
+          "settings": {
+            "discipline": "Yoga"
+          }
+        }
+      ]
+    }
+  ]
 }
 {% endschema %}

@@ -11,8 +11,9 @@
 ## Discounts
 
 - **Buy 2+ save 15%** — automatically applied at checkout
-- **New customers get 10%** — sign up for our newsletter
 - **Shop Pay** — split into 4 interest-free payments of $18.50
+
+> **Retired:** the newsletter "10% off your first order" offer is no longer available. Do not quote it. Newsletter signup = **Join the list** (new drops and studio stories first, early access, studio partner discounts and events, care tips) — no discount promise.
 
 ## Shipping
 

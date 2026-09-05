@@ -1,0 +1,78 @@
+---
+description: HARD — Barreletics Design System section library; GitHub master; visual approval via Shopify preview
+alwaysApply: true
+---
+
+# Barreletics Design System — section library (HARD)
+
+**The repository is the Design System.** GitHub / `shopify-build/` = master. Shopify = disposable QA runtime for **visual approval**. Brian integrates production from the approved repo.
+
+**GitHub is NOT a review environment.** Implementation/code review alone is insufficient. Every completed section must be deployed to a disposable draft with a **preview URL** before Andrew can approve.
+
+> I can't review a Shopify section from GitHub source files alone. Every completed section must be deployed to the Shopify development theme and accompanied by a preview URL. I will review the implementation visually in the Theme Editor and on the storefront (desktop + mobile), verify all settings and controls work correctly, then approve or request revisions. GitHub remains the source of truth for code, but visual approval happens in Shopify—not from the repository.
+
+## Contract (authority)
+
+- **Frozen inventory:** `planning/m4-section-library-CONTRACT.md` (ARCHITECTURE APPROVED 2026-07-26)
+- Proposal history: `planning/m4-section-library-architecture.md` (superseded)
+- Final theme = **only** the approved production library — replace legacy; no duplicate generations
+
+## Source of truth + QA
+
+1. Build section in repository  
+2. Commit (GitHub master)  
+3. Deploy to disposable draft — push **only** when Andrew names a theme ID in that message  
+4. Send **preview URL** + Theme Editor URL  
+5. Andrew reviews visually (desktop + mobile, spacing, type, breakpoints, settings/schema, TE controls, image crop, performance)  
+6. Revise in repository (never Theme Editor as master) → redeploy → repeat  
+7. Approve → freeze in repo → next  
+8. Brian pulls approved repo → production  
+
+See `.cursor/rules/shopify-draft-theme-only.mdc`.
+
+## Locked decisions (abbrev)
+
+| Rule | Detail |
+|------|--------|
+| Heroes | **No artificial hero cap** — distinct capabilities only |
+| Naming | `home-split-hero` → **`split-hero`**; collection → **`collection-split`** |
+| Companions | **`sole-cards`** = own section (not permanently coupled) |
+| Statement | **`statement-band`** standalone; full-bleed = separate sections |
+| PDP | **`pdp-features` kept** — not merged into `fifty-fifty` |
+| Reviews | One **`reviews`** section |
+| GEO | Inside **`studio-trust`** |
+| Newsletter | Footer **and** standalone `newsletter` |
+| **Footer** | See `planning/m4-section-freeze.md` (current: light Join the list + TE checklist; NO blurb · NO 10%). **CURRENT MESSAGE WINS** over stale charcoal A+ — `.cursor/rules/anti-revert-fail-closed.mdc` |
+| Campaign | `campaign-stage` **deferred** |
+| variant-grid | KEEP logic non-negotiable |
+
+## Build gate
+
+1. No production section code until CONTRACT acknowledged  
+2. **First after contract:** `split-hero` only until frozen  
+3. One section at a time thereafter  
+4. No freeze without visual QA on a Shopify draft preview  
+
+## Architecture (every major component)
+
+| Requirement | Rule |
+|-------------|------|
+| File | Own `sections/*.liquid` |
+| Schema | Complete + `presets` |
+| Editor | Independently draggable / removable / reusable |
+| Shared | `snippets/` + shared assets only |
+| Coupling | No section depends on another |
+| Scope | No monolithic `page-*` long-term |
+
+## Anti-patterns
+
+- Multiple new sections in one pass  
+- Developing in Shopify as primary source  
+- Treating Theme Editor / remote theme as master  
+- Approving / freezing from GitHub source or PR alone  
+- Homepage-only Liquid/CSS; sibling hard dependencies  
+- Building past `split-hero` before it is frozen  
+
+## Shopify
+
+QA theme: **`187144929571` (M4 Visual QA)** — unpublished only; never publish. `187143618851` retired. Never live/production. Push only when Andrew names this ID (or another disposable ID) in-message.

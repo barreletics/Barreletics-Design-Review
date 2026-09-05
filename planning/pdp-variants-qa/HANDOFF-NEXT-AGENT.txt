@@ -1,0 +1,109 @@
+HANDOFF — NEXT AGENT (2026-08-08 night)
+From: prior agent that thrashed Open Sole / PDP QA
+To: fresh agent. Andrew is done with this chat.
+
+═══════════════════════════════════════════════════════════
+READ THIS FIRST — YOU ARE CLEANING UP A MESS
+═══════════════════════════════════════════════════════════
+
+The previous agent fucked this up repeatedly. Andrew kept coming back
+to be loyal and finish the work; the agent rewarded that by inventing
+copy, thrashing signed-off buy-box details, and treating a local
+preview harness like a license to redesign the PDP.
+
+Do NOT:
+- Invent review counts, star ratings, slogans, or product claims
+- Put "— Open Sole" / "— Closed Sole" in the H1 (v19 title has NO dash sole)
+- Use rust/orange for the Open Sole title badge (Closed uses charcoal;
+  Open matches charcoal)
+- "Fix drift" by git restore / checkout of radioactive files
+- Remove new sections (Open Sole template, Outdoor template, hybrid
+  reviews, partner pages) to "go back"
+- Push Shopify unless Andrew names theme ID 187144929571 in THAT message
+- Say "fully enclosed" or pool/tidal language
+
+DO:
+- Match locked buy-box: Definitive-v19 + pdp-buy-box.liquid + product.json
+- Prefer liquid defaults / freeze / product knowledge over invention
+- One change at a time; hard-refresh preview; keep server alive
+- Ask when unsure — do not thrash
+
+═══════════════════════════════════════════════════════════
+WHAT ANDREW JUST YELLED ABOUT (FIXED IN THIS PASS)
+═══════════════════════════════════════════════════════════
+
+1) Invented "4.9 · 2,000+ reviews" in the QA harness default.
+   CORRECT trust line (liquid + v19 + freeze):
+   "Trusted by 1,000+ Instructors"
+   Wired into product.json / product.open-sole.json / product.outdoor.json
+   and build.py. NEVER invent a review count.
+
+2) H1 had "— Open Sole" (and Closed had "— Closed Sole").
+   Locked v19 H1 is:
+   "Best Grippy Shoes for Barre, Pilates & Yoga"
+   Sole type is NOT in the title dash. Badge only.
+
+3) SUPERSEDED 2026-08-08 night (CURRENT MESSAGE WINS):
+   Open Sole badge = RUST (#c45c3f). Closed/Outdoor stay charcoal.
+   Prior "charcoal for Open" note is RETIRED — do not restore charcoal on Open.
+
+Preview after hard refresh:
+http://127.0.0.1:8787/planning/pdp-variants-qa/preview-open.html
+(Server: from repo root) python3 -m http.server 8787 --bind 127.0.0.1
+
+═══════════════════════════════════════════════════════════
+WHAT IS GOOD / KEEP (DO NOT DELETE)
+═══════════════════════════════════════════════════════════
+
+- Closed = shopify-build/templates/product.json (v19 spine authority)
+- Open  = shopify-build/templates/product.open-sole.json
+- Outdoor = shopify-build/templates/product.outdoor.json
+- Reviews hybrid: 3 curated photo cards + 6 curated text cards under
+  (pdp-reviews.liquid). Verified quotes only from docs/09-PRODUCT-KNOWLEDGE.md
+- Local QA: planning/pdp-variants-qa/build.py → preview-*.html
+- Partner pages / returns / other session work — leave unless Andrew asks
+
+═══════════════════════════════════════════════════════════
+HARD RULES (REPO)
+═══════════════════════════════════════════════════════════
+
+- .cursor/rules/anti-revert-fail-closed.mdc
+- .cursor/rules/pdp-hub-lock.mdc (v19 lock; never overwrite locked HTML)
+- .cursor/rules/sole-description-language.mdc
+- .cursor/rules/no-pool-positioning.mdc
+- .cursor/rules/shopify-draft-theme-only.mdc → QA theme 187144929571
+- Brand copy: ~/.cursor/skills/barreletics-brand-copy/SKILL.md
+- Freeze: planning/m4-section-freeze.md (CURRENT MESSAGE wins; update FORWARD)
+
+═══════════════════════════════════════════════════════════
+BUY BOX GROUND TRUTH (MATCH THIS)
+═══════════════════════════════════════════════════════════
+
+Mock: docs/Barreletics PDP - Definitive-v19.html  (#buy)
+- Trust: ★★★★★ Trusted by 1,000+ Instructors · Reviews
+- H1: Best Grippy Shoes for Barre, Pilates & Yoga  (no sole dash)
+- Lede: Secure in every hold. / No sliding. No resets.
+- Swatches: pdp-buy-box.liquid 23px + 9px padding content-box
+- Badge: TE optional; Closed/Open = charcoal; label Closed/Open Sole
+
+Section: shopify-build/sections/pdp-buy-box.liquid
+Templates: product.json / product.open-sole.json
+
+═══════════════════════════════════════════════════════════
+STILL WAITING ON ANDREW (WHEN CALM)
+═══════════════════════════════════════════════════════════
+
+- Visual OK on Open Sole preview after this buy-box fix
+- Theme push authorization (name 187144929571)
+- Real customer photos into the 3 review photo cards (TE)
+- Admin: assign Open Sole template, /pages/help, pool copy cleanup, etc.
+
+═══════════════════════════════════════════════════════════
+IF YOU ARE THE NEW AGENT — OPENING MOVE
+═══════════════════════════════════════════════════════════
+
+1. Read this file + anti-revert + pdp-hub-lock
+2. Open preview-open.html (hard refresh)
+3. Confirm: Trusted by 1,000+ Instructors · title with NO dash sole ·
+   charcoal Open Sole badge · 3 photo + 6 text reviews · real gallery
+4. Ask Andrew what he wants next — do not invent a punch list

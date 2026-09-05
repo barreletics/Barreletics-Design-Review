@@ -1,0 +1,198 @@
+{% comment %}
+  Recently Viewed Products Section
+  Tracks recently viewed products in localStorage and renders them in a grid.
+  On PDP: saves current product. On render: displays up to 4 recent products (excluding current).
+  Uses product-card styling rendered client-side from localStorage data.
+
+  Usage: Include in product template JSON or any page where recently viewed should appear.
+{% endcomment %}
+
+<section
+  class="section recently-viewed"
+  data-recently-viewed
+  {% if product %}data-current-handle="{{ product.handle }}"{% endif %}
+  {% if product %}data-current-product='{{ product | json | escape }}'{% endif %}
+  aria-labelledby="recently-viewed-heading"
+  style="display:none;"
+>
+  <div class="section__inner">
+    <h2 class="recently-viewed__heading" id="recently-viewed-heading">
+      {{ section.settings.heading | default: 'Recently Viewed' }}
+    </h2>
+    <div class="recently-viewed__grid grid grid--4" data-recently-viewed-grid>
+    </div>
+  </div>
+</section>
+
+<style>
+  .recently-viewed {
+    padding: var(--section-padding-y) var(--section-padding-x);
+    border-top: 1px solid var(--color-warm-border);
+  }
+  .recently-viewed__heading {
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    text-align: center;
+    margin-bottom: var(--space-8);
+  }
+  .recently-viewed__card {
+    display: block;
+    text-decoration: none;
+    color: var(--text-body);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    transition: transform var(--transition-fast);
+  }
+  .recently-viewed__card:hover {
+    transform: translateY(-2px);
+    text-decoration: none;
+  }
+  .recently-viewed__card:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+  }
+  .recently-viewed__card-media {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: var(--radius-card);
+    background: var(--color-warm-cream);
+  }
+  .recently-viewed__card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .recently-viewed__card-info {
+    padding: var(--space-3) 0 0;
+  }
+  .recently-viewed__card-title {
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+    color: var(--text-primary);
+    margin-bottom: var(--space-1);
+    line-height: var(--leading-snug);
+  }
+  .recently-viewed__card-price {
+    font-size: var(--text-sm);
+    color: var(--text-body);
+    font-weight: var(--weight-medium);
+  }
+
+  @media (max-width: 768px) {
+    .recently-viewed {
+      padding: var(--section-padding-y-mobile) var(--section-padding-x-mobile);
+    }
+    .recently-viewed__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .recently-viewed__heading {
+      font-size: var(--text-xl);
+      margin-bottom: var(--space-6);
+    }
+  }
+</style>
+
+<script>
+  (function() {
+    var STORAGE_KEY = 'barreletics_recently_viewed';
+    var MAX_ITEMS = 8;
+    var DISPLAY_LIMIT = 4;
+
+    var section = document.querySelector('[data-recently-viewed]');
+    if (!section) return;
+
+    var grid = section.querySelector('[data-recently-viewed-grid]');
+    var currentHandle = section.getAttribute('data-current-handle') || '';
+
+    function getItems() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveItems(items) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+      } catch (e) {}
+    }
+
+    function trackCurrentProduct() {
+      var productData = section.getAttribute('data-current-product');
+      if (!productData) return;
+
+      try {
+        var product = JSON.parse(productData);
+        var item = {
+          handle: product.handle,
+          title: product.title,
+          url: product.url,
+          price: product.price,
+          image: product.featured_image || (product.images && product.images[0]) || ''
+        };
+
+        var items = getItems();
+        items = items.filter(function(i) { return i.handle !== item.handle; });
+        items.unshift(item);
+        if (items.length > MAX_ITEMS) items = items.slice(0, MAX_ITEMS);
+        saveItems(items);
+      } catch (e) {}
+    }
+
+    function renderGrid() {
+      var items = getItems();
+      items = items.filter(function(i) { return i.handle !== currentHandle; });
+      items = items.slice(0, DISPLAY_LIMIT);
+
+      if (items.length === 0) return;
+
+      section.style.display = '';
+
+      var html = '';
+      items.forEach(function(item) {
+        var priceFormatted = typeof item.price === 'number'
+          ? '$' + (item.price / 100).toFixed(2)
+          : item.price;
+
+        html += '<a href="' + item.url + '" class="recently-viewed__card">';
+        html += '<div class="recently-viewed__card-media">';
+        if (item.image) {
+          html += '<img src="' + item.image + '" alt="' + item.title.replace(/"/g, '&quot;') + '" loading="lazy" width="400" height="400" class="recently-viewed__card-img" />';
+        }
+        html += '</div>';
+        html += '<div class="recently-viewed__card-info">';
+        html += '<h3 class="recently-viewed__card-title">' + item.title + '</h3>';
+        html += '<p class="recently-viewed__card-price">' + priceFormatted + '</p>';
+        html += '</div></a>';
+      });
+
+      grid.innerHTML = html;
+    }
+
+    trackCurrentProduct();
+    renderGrid();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Recently Viewed",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Recently Viewed"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Recently Viewed"
+    }
+  ]
+}
+{% endschema %}

@@ -2,14 +2,17 @@
 
 ---
 document: M4B Tidio AI Knowledge Base
-status: 🟡 Ready for Owner Implementation
+status: CURRENT · 2026-08-24 — rewritten from canonical answers
 created: 2026-07-18
-depends_on: [07-product-knowledge-base]
+updated: 2026-08-24
+depends_on: [docs/11-CANONICAL-ANSWERS.md]
 ---
 
 ## Purpose
 
-Q&A pairs extracted from Doc 07 (Product Knowledge Base), formatted for Tidio AI training. Each answer uses the exact approved language from Doc 07 — no unapproved claims.
+Q&A pairs for Lyro **data sources**. Behavior rules live in `planning/tidio-lyro-guidance.md`. Answers copy `docs/11-CANONICAL-ANSWERS.md` — do not invent claims.
+
+**Upload this file** in Tidio → Lyro → Data sources (replace the old import). Do not paste this into Guidance.
 
 ---
 
@@ -18,193 +21,206 @@ Q&A pairs extracted from Doc 07 (Product Knowledge Base), formatted for Tidio AI
 ### Category: Product Basics
 
 **Q: What are Performance Skins?**
-A: Performance Skins are the world's first all-over grip studio footwear. Unlike grip socks that use silicone dots glued onto fabric, Performance Skins feature 360° injection-molded grip built directly into the material. They're designed for barre, Pilates, Lagree, Reformer, and yoga — replacing grip socks entirely.
+A: Performance Skins are grippy studio footwear — a new category, not socks. 360° all-over grip is injection-molded into the sole itself, not dots glued onto fabric. Built for barre, Pilates, Lagree, reformer, Megaformer, and yoga.
 
 **Q: What makes Barreletics different from grip socks?**
-A: Three fundamental differences: (1) Grip socks use silicone dots that peel, flatten, and wear off. Performance Skins have injection-molded grip that IS the sole — it can't peel or flake. (2) Grip socks provide partial coverage where dots are placed. Performance Skins give 360° full-contact traction. (3) Grip socks need replacing every few months. Performance Skins last from months to years — customers report using them for over 1,000 classes.
+A: Grip socks use silicone dots that peel, flatten, and wear off. Performance Skins have injection-molded grip that is the sole — nothing to peel or flake. Grip socks give partial coverage. Performance Skins give 360° full-contact traction. One pair at $74 vs grip socks at $18–28, 8–12 pairs a year ($144–$336).
 
 **Q: Are Performance Skins socks?**
-A: No. Performance Skins are a new category of studio footwear. They look and feel different from socks. The grip isn't added on top — it's the actual material of the sole. Think of them as the studio equivalent of what running shoes did for running: purpose-built performance footwear.
+A: No. They are studio footwear. The grip isn’t added on top — it is the sole. Purpose-built for class, not a sock with dots.
 
-**Q: What disciplines are Performance Skins made for?**
-A: Performance Skins are designed primarily for studio workouts: Barre, Pilates (mat and Reformer), Lagree/Megaformer, and Yoga. The Outdoor model is also suitable for paddleboarding, beach workouts, and water activities.
+**Q: What disciplines are they made for?**
+A: Built for studio training: barre, Pilates, Lagree, reformer, Megaformer, and yoga. Also great for weight lifting, outdoor volleyball, martial arts, barefoot running, boating, paddleboarding, outdoor yoga, beach, and resortwear — anywhere you’d go barefoot. Certain wet tile and stone areas are inherently slippery for any footwear.
 
 ---
 
 ### Category: Sizing & Fit
 
 **Q: What size should I order?**
-A: Order your regular shoe size. Performance Skins are designed to fit snugly for maximum grip contact. If you're between sizes, size up. They stretch slightly with wear and conform to your foot shape.
+A: Medium is Women’s 5.5–7.5 and Kids’ 2–5. Large is Women’s 7.5–11 and Men up to 10.5. 7.5 sits in both rows on purpose — width decides. Wide foot at 7 or 7.5 → Large. Narrow foot at 7.5 or 8 → Medium. 8.5 and above → Large, regardless of width. Below 7 → Medium. Full chart: https://barreletics.com/pages/performance-skins-size-chart
+
+**Q: I’m between sizes — should I size up?**
+A: No blanket size-up. Width is the tiebreaker at 7.5. Wide at 7 or 7.5 → Large. Narrow at 7.5 or 8 → Medium. 8.5 and above → Large always.
+
+**Q: Do they stretch or break in?**
+A: The material stretches and conforms to your foot. There is no break-in period — how they feel on day one is how they feel. Never loses shape. Never loses grip.
 
 **Q: Should I wear socks underneath?**
-A: Performance Skins are designed to be worn barefoot for the best grip and connection. However, three reasons to wear a thin sock underneath are perfectly fine: perspiration management, personal hygiene preference, or if you have narrower feet and want a slightly tighter fit.
+A: Either way works. Many prefer the barefoot feel; others like a thin toeless or individual-toe sock for warmth or moisture. Skip thick or full-toe socks — they reduce the natural toe splay that makes them work. Too loose in Medium? A thin sock underneath gives a snugger fit without affecting grip.
 
-**Q: Do they stretch?**
-A: Yes, slightly. They conform to your foot shape over the first few wears. This is intentional — it creates a custom, secure fit. The grip performance is unaffected by stretch.
+**Q: Do colors fit differently?**
+A: Dark Grey, Hot Coral, and Blue run slightly snugger. Black and Light Grey are the most forgiving, especially for wider feet.
 
-**Q: Do you have a size chart?**
-A: Yes! Visit our Size Guide at barreletics.com/pages/size-guide for detailed measurements. If you're still unsure, our standard recommendation is your regular shoe size, size up if between sizes.
+**Q: They’re too tight or too loose.**
+A: Too tight or toe pressure → likely too small; move up one size. Too loose or shifting → likely too large; move down one size. Already in Medium and a bit loose? A thin sock underneath gives a snugger fit. Size exchanges are free: https://barreletics.com/pages/returns-portal
 
 ---
 
 ### Category: Product Styles
 
-**Q: What's the difference between Open Sole and Closed Sole?**
-A: Open Sole has an open-toe design for maximum ventilation and a barefoot-like feel — best for barre, hot yoga, and heated studios. Closed Sole covers the entire foot for more protection — best for Reformer Pilates, Lagree, and colder studios where you want full foot coverage on equipment (foot bars, springs, straps). Both have the same 360° grip technology.
+**Q: What’s the difference between Open Sole and Closed Sole?**
+A: Open Sole: heel exposed, mid-foot breathing hole. More grounded, barefoot feel. Natural toe splay. Closed Sole: heel and foot fully covered. Both perform identically — same grip, same stability, same studio uses. Choice is preference and feel only. Both $74.
 
 **Q: Which style should I get?**
-A: It depends on your primary activity. For barre and yoga where breathability matters, try Open Sole. For Reformer and Lagree where foot protection on equipment matters, try Closed Sole. Many customers end up with both! See our comparison page for details.
+A: Choice is preference and feel only. Both perform identically across barre, Pilates, reformer, Lagree, Megaformer, and yoga. Pick Open Sole for the more grounded, barefoot feel. Pick Closed Sole if you want the heel and foot fully covered. Do not pick a sole by discipline.
 
 **Q: Do you have different colors?**
-A: Yes! We offer multiple colorways across our styles. Check our collection pages for current availability. New colorways are released periodically.
+A: Yes — colorways change. Check the collection for what’s in stock: https://barreletics.com/collections/barre-pilates-yoga-shoe-sock-footwear
 
 ---
 
 ### Category: Grip & Performance
 
 **Q: How does the grip work?**
-A: The grip is injection-molded directly into the material — it IS the sole, not something added on top. This creates 360° full-contact traction on any studio surface (hardwood, rubber mats, Reformer carriage, Pilates equipment). It can't peel, flake, or wear off because it's the material itself.
+A: 360° all-over grip — not dots, not patches. It covers the entire sole, heel, and edges. Injection-molded into the sole itself, so there is nothing to peel, flake, or separate.
 
 **Q: Will the grip wear off?**
-A: No. Unlike silicone dots that peel and flatten, the injection-molded grip maintains full-contact traction throughout the life of the product. It can't separate from the material because it IS the material. Customers report consistent grip performance after over 1,000 classes.
+A: No. The grip is molded into the sole, so there’s nothing to peel or flake off. Never loses grip. Same performance on class 1 as on class 1,000.
 
-**Q: Do they work on all studio surfaces?**
-A: Yes. The 360° grip provides traction on hardwood floors, rubber mats, Reformer carriages, Megaformer platforms, barre surfaces, and yoga mats. The full-contact design means grip is consistent regardless of foot position or angle.
+**Q: How long do they last?**
+A: It depends on how you wear them — how often, how hard you go, and how you care for them. Used for Pilates, barre, reformer, Lagree, yoga, they hold up beautifully. One customer recently passed 1,000 classes on a single pair. Another is on year four.
 
 ---
 
 ### Category: Materials & Quality
 
-**Q: Where are Performance Skins made?**
+**Q: Where are they made?**
 A: Made in the USA.
 
-**Q: Are they antimicrobial?**
-A: Yes. Performance Skins include antimicrobial treatment to prevent odor and bacteria buildup — important for barefoot studio wear.
+**Q: What are they made of?**
+A: A proprietary grip material — skin-safe and non-toxic, with no latex and no silicone. Made in the USA. Patented.
 
-**Q: How long do they last?**
-A: Performance Skins last from months to years, from dozens of classes to over 1,000 — it varies person to person based on frequency of use and care. Customers report 3-4 years of use. The injection-molded grip maintains full-contact traction throughout the product's life.
+**Q: Are they antimicrobial? Do they trap bacteria?**
+A: We don’t make bacteria claims. They are non-porous, so they wipe clean. Nothing soaks in and lingers the way it does in fabric.
 
-**Q: Are they safe for sensitive skin?**
-A: Yes. The materials are skin-safe and non-toxic.
+**Q: Are they hypoallergenic?**
+A: We say skin-safe and non-toxic, with no latex and no silicone. We don’t claim hypoallergenic or guarantee no reaction. There’s always the 30-day return window.
 
 ---
 
-### Category: Care & Maintenance
+### Category: Care
 
 **Q: How do I wash them?**
-A: Machine wash cold on gentle cycle, in a mesh laundry bag. Air dry only — avoid the dryer. Use mild detergent, no bleach or fabric softener.
+A: Hand wash with warm soapy water. That's it. After class, a quick wipe with the same cloth you use on equipment is enough.
 
-**Q: Can I put them in the dryer?**
-A: We recommend air drying. Heat from a dryer can affect the fit over time. Lay flat or hang to dry after washing.
-
-**Q: How should I store them?**
-A: Store flat or loosely rolled. Keep away from direct heat or sunlight. Don't leave balled up in a gym bag for extended periods.
+**Q: How do I put them on?**
+A: Pull from the top of the foot, not the straps. Pulling the straps puts stress on the attachment points.
 
 ---
 
 ### Category: Shipping & Delivery
 
 **Q: How much is shipping?**
-A: Free shipping on orders over $150. Standard shipping rates apply for orders under $150.
+A: Free shipping on Continental US orders over $150. $9.95 flat rate under $150. Expedited and overnight at checkout. We ship worldwide.
 
 **Q: How long does shipping take?**
-A: Most orders ship within 1-2 business days. Standard delivery is 3-7 business days within the US.
+A: Orders process within 24–48 hours and typically ship the next business day. Expedited orders placed before 12 PM Eastern ship the same business day. No shipping on weekends or holidays.
 
 **Q: Do you ship internationally?**
-A: Yes, we ship internationally through our checkout. Delivery times vary by destination (typically 7-14 business days). International customers are responsible for any customs or duties.
+A: Yes — 195 countries via FedEx International Connect Plus, typically 7–14 business days. Duties and taxes are charged at checkout — nothing extra to pay when your order arrives.
 
 **Q: Where is my order?**
-A: Check your order status by logging into your account at barreletics.com/account, or use the tracking link in your shipping confirmation email. Tracking can take 24-48 hours to update after a label is created.
+A: Use the tracking link in your shipping confirmation, or look up the order if you have the order number or email. Tracking can take 24–48 hours to update after a label is created. Once tracking shows delivered, check with building staff if you are in an apartment.
 
 ---
 
 ### Category: Returns & Warranty
 
-**Q: What's your return policy?**
-A: 30-day returns. Items must be in sellable condition (unworn, unwashed, with tags). Email us with your order number to start a return — we'll send a prepaid label.
+**Q: What’s your return policy?**
+A: Try them indoors for 30 days. If they don’t perform, return for a full refund. Items must be clean and like new — no outdoor wear, no sole damage. This is a fit trial, not a studio trial. Start here: https://barreletics.com/pages/returns-portal US return shipping is $7.95, deducted from the refund. Refunds process within 72 hours of inspection.
 
 **Q: Can I exchange for a different size?**
-A: We recommend returning the original order and placing a new order for the correct size. This ensures the size you need is in stock.
+A: Yes. Not the right size? Exchange for a different size free. We ship the exchange at no cost once we receive and inspect the return — often faster than a refund. Start here: https://barreletics.com/pages/returns-portal
 
 **Q: Do you have a warranty?**
-A: Yes — 90-day warranty against manufacturing defects. This covers defects in materials or construction, grip delamination, and seam failures under normal use. It does not cover normal wear from use or damage from improper care.
+A: 90-day warranty against manufacturing defects. Return of the defective item usually isn’t required. It does not cover normal wear. International: send a photo of the defect. If approved, the customer covers shipping and duties on the replacement.
 
-**Q: How do I make a warranty claim?**
-A: Email us with: (1) your order number, (2) photos of the issue, and (3) a brief description. We'll review and respond within 2-3 business days.
-
----
-
-### Category: Pricing & Promotions
-
-**Q: What's the price?**
-A: Performance Skins are $74 per pair. Check our current promotions for multi-pair savings.
-
-**Q: Do you have any discounts?**
-A: Current offers: Buy 2, Save 15% with code SAVE15. Free shipping on orders over $150. 10% off your first order when you join our newsletter.
-
-**Q: Is there a subscription or auto-ship?**
-A: Not currently. Performance Skins last so long that most customers don't need frequent replacements.
+**Q: How do I start a return or warranty claim?**
+A: Returns and exchanges: https://barreletics.com/pages/returns-portal Warranty: share your order number, photos of the issue, and a short description — a teammate will take it from there.
 
 ---
 
-### Category: Sock Math (Value Proposition)
+### Category: Pricing
 
-**Q: Are they worth the price compared to grip socks?**
-A: Here's the math: Grip socks cost $14-18/pair and need replacing every 2-4 months. At 2 pairs per year minimum, that's $28-36/year — and they degrade continuously. One pair of Performance Skins at $74 lasts from months to years (customers report 3-4 years). Over 2 years: grip socks cost $56-72+ with declining performance. One Performance Skin pair: $74 with consistent performance throughout.
+**Q: What’s the price?**
+A: $74 per pair. Buy 2 or more and save 15%, applied automatically at checkout. Shop Pay splits it into 4 interest-free payments of $18.50.
 
----
+**Q: Do you have a discount code or 10% off?**
+A: Buy 2+ save 15% is automatic at checkout. Free shipping over $150. There is no 10% newsletter code. Join the list for new drops and studio stories — it is not a discount offer.
 
-## Conversation Flow Recommendations
-
-### Flow 1: Sizing Help
-```
-Trigger: Customer mentions "size" or "fit"
-→ Ask: "What shoe size do you normally wear?"
-→ Recommend: "We suggest ordering [their size]. Performance Skins fit true to size. If you're between sizes, go up."
-→ Offer: "Would you like to see our full Size Guide?"
-```
-
-### Flow 2: Style Recommendation
-```
-Trigger: Customer mentions "which style" or "open vs closed"
-→ Ask: "What's your primary studio activity? (Barre, Pilates, Reformer, Lagree, Yoga)"
-→ If barre/yoga: Recommend Open Sole
-→ If Reformer/Lagree: Recommend Closed Sole
-→ Offer: "Would you like to see our side-by-side comparison?"
-```
-
-### Flow 3: Returns Process
-```
-Trigger: Customer mentions "return" or "exchange"
-→ Confirm: "I can help with that! Do you have your order number?"
-→ Check: "Were the items unworn and with tags?"
-→ If yes: "Great! I'll connect you with our team to get a return label sent over."
-→ Escalate to Help Scout
-```
+**Q: Are they worth it vs grip socks?**
+A: Grip socks run $18–28 a pair, 8–12 pairs a year = $144–$336/year. Barreletics is $74 once. The grip is molded in, so it doesn’t peel like sock dots.
 
 ---
 
-## Human Handoff Rules
+### Category: Tidio suggestions (website bot — 2026-08-24)
 
-Escalate to Help Scout (human agent) when:
-1. Customer has a warranty claim (requires photos/investigation)
-2. Customer is upset or frustrated (emotional support needed)
-3. Order issue requires Shopify admin access (cancellation, modification)
-4. Question is about wholesale/partnership terms (business decision)
-5. Customer asks something not in the Knowledge Base
-6. Customer explicitly asks to speak to a person
-7. Payment or billing dispute
-8. International shipping issue with customs/duties
+**Q: What should I do if I receive the wrong items in my order?**
+A: Sorry to hear this. When you have a moment, send your order number and a photo of what arrived: https://barreletics.com/pages/contact-us-form
+
+We'll get the right pair on the way as soon as we have those.
+
+**Q: When will out of stock colors for outdoor styles be available again?**
+A: We don’t publish restock dates. Outdoor colors come back in production batches. Check the Outdoor page for what’s in stock now, or join the list for new drops. A teammate can note the color you want. https://barreletics.com/products/aquatic-performance-skins
+
+**Q: What is the weight of the shoes?**
+A: We don’t publish a scale weight. They’re ultra-light studio footwear — second-skin feel, not a shoe you weigh. If you need a shipping weight for a carrier, a teammate can pull it.
+
+**Q: Is it possible to order Pilates shoes in larger men's sizes, such as size 13/14?**
+A: Our largest is Large — men's up to 10.5. We don't currently offer 13 or 14, but we're tracking the request as we plan future sizes.
+
+Size chart: https://barreletics.com/pages/performance-skins-size-chart
 
 ---
 
-## Owner Implementation Steps
+### Category: Sensitive & medical
 
-1. Log into Tidio admin
-2. Go to AI Chatbot > Knowledge Base
-3. Import Q&A pairs above (copy each pair)
-4. Configure conversation flows
-5. Set handoff rules (Tidio → Help Scout)
-6. Style widget: primary color `#1c1916`, accent `#c45c3f`
-7. Test: Ask each category of question → verify accuracy
-8. Enable on all pages except checkout
+**Q: Will these help with [specific condition]?**
+A: We can’t guarantee outcomes for specific conditions. Many customers come to us for stability and confidence, and they can be worn with orthotics for extra support. There’s always the 30-day return window so you can test them yourself. For a personal answer, a teammate should follow up.
+
+---
+
+## Conversation flows
+
+### Sizing
+Trigger: size / fit  
+→ Ask usual shoe size and whether the foot is wide, average, or narrow.  
+→ Apply the 7.5 width rule. Do not say “size up if between.”  
+→ Link Size Chart. Offer a free size exchange if they already bought.
+
+### Open vs Closed
+Trigger: which style / open vs closed  
+→ Both perform identically. Choice is preference and feel only.  
+→ Ask: heel and foot fully covered, or heel exposed for a more grounded, barefoot feel?  
+→ Never recommend a sole by discipline.
+
+### Returns
+Trigger: return / exchange  
+→ Point to https://barreletics.com/pages/returns-portal  
+→ Size exchange if fit; refund if they don’t perform.  
+→ Warranty / damaged / missing → hand off.
+
+---
+
+## Human handoff
+
+Hand off when:
+1. Warranty claim (photos)
+2. Upset or frustrated
+3. Order change, cancellation, payment, account access, **wrong items**, or damaged shipment
+4. Wholesale / studio partnership / press
+5. Not in this knowledge base
+6. They ask for a person
+7. Billing dispute
+8. International customs exception (duties billed on arrival despite checkout)
+9. Shipping-weight request for a carrier (after saying we don’t publish a scale weight)
+
+Before handoff: collect email if missing. Do not promise a callback time.
+
+---
+
+## Owner paste steps
+
+1. Tidio → Lyro → Guidance → paste the three blocks in `planning/tidio-lyro-guidance.md`
+2. Lyro → Data sources → replace the old knowledge file with this file
+3. Ask Lyro: Open vs Closed, size 7.5 wide, wash, pool, 10% off, antimicrobial — confirm the banned answers are gone

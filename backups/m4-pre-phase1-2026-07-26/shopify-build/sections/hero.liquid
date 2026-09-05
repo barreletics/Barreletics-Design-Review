@@ -1,0 +1,190 @@
+{% comment %}
+  Homepage Hero — 50/50 Split (Copy + Image)
+  Source: Approved Home July 17
+{% endcomment %}
+
+{% render 'section-wrapper', id: 'hero', class: 'hero-section', tag: 'section', aria_label: 'Hero' %}
+
+<div class="hero">
+  <div class="hero__copy">
+    {% if section.settings.eyebrow != blank %}
+      <p class="hero__eyebrow">{{ section.settings.eyebrow }}</p>
+    {% endif %}
+    <h1 class="hero__title">{{ section.settings.title }}</h1>
+    <p class="hero__body">{{ section.settings.body }}</p>
+    {% assign hero_primary_url = section.settings.cta_primary_url | default: '/collections/grippy-shoes' %}
+    {% assign hero_secondary_url = section.settings.cta_secondary_url | default: '#problem' %}
+    <div class="hero__ctas">
+      {% if section.settings.cta_primary_text != blank %}
+        <a href="{{ hero_primary_url }}" class="btn btn--primary hero__cta">
+          {{ section.settings.cta_primary_text }}
+        </a>
+      {% endif %}
+      {% if section.settings.cta_secondary_text != blank %}
+        <a href="{{ hero_secondary_url }}" class="btn btn--outline hero__cta hero__cta--outline">
+          {{ section.settings.cta_secondary_text }}
+        </a>
+      {% endif %}
+    </div>
+    {% if section.settings.trust_line != blank %}
+      <p class="hero__trust">{{ section.settings.trust_line }}</p>
+    {% endif %}
+  </div>
+  <div class="hero__image">
+    {% if section.settings.image != blank %}
+      <img
+        src="{{ section.settings.image | image_url: width: 1200 }}"
+        srcset="{{ section.settings.image | image_url: width: 600 }} 600w,
+                {{ section.settings.image | image_url: width: 900 }} 900w,
+                {{ section.settings.image | image_url: width: 1200 }} 1200w"
+        sizes="(max-width: 768px) 100vw, 50vw"
+        alt="{{ section.settings.image_alt | escape }}"
+        width="{{ section.settings.image.width }}"
+        height="{{ section.settings.image.height }}"
+        loading="eager"
+        fetchpriority="high"
+      >
+    {% else %}
+      <div class="hero__image-placeholder">
+        {{ section.settings.image_alt | default: 'Hero lifestyle image' }}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% render 'section-wrapper', close: true %}
+
+<style>
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 75vh;
+  }
+
+  .hero__copy {
+    background: var(--bg-primary);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: var(--space-12) 56px;
+  }
+
+  .hero__eyebrow {
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-widest);
+    color: var(--accent-primary);
+    font-weight: var(--weight-bold);
+    margin: 0 0 var(--space-5);
+  }
+
+  .hero__title {
+    font-size: var(--text-7xl);
+    font-weight: var(--weight-bold);
+    line-height: var(--leading-tight);
+    color: var(--text-primary);
+    margin: 0 0 var(--space-4);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .hero__body {
+    font-size: var(--text-md);
+    color: var(--text-body);
+    line-height: var(--leading-relaxed);
+    margin: 0 0 var(--space-7);
+    max-width: 38ch;
+  }
+
+  .hero__ctas {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  .hero__trust {
+    margin-top: var(--space-8);
+    font-size: 12px;
+    color: #9a9182;
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.02em;
+  }
+
+  .hero__image {
+    position: relative;
+    overflow: hidden;
+    min-height: 500px;
+  }
+
+  .hero__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    position: absolute;
+    inset: 0;
+  }
+
+  .hero__image-placeholder {
+    width: 100%;
+    height: 100%;
+    min-height: 500px;
+    background: linear-gradient(135deg, var(--color-warm-cream) 0%, #ece8e0 50%, #e5e0d6 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #9a9182;
+    text-align: center;
+    padding: var(--space-9);
+    line-height: 1.5;
+  }
+
+  @media (max-width: 768px) {
+    .hero {
+      grid-template-columns: 1fr;
+      min-height: auto;
+    }
+
+    .hero__copy {
+      padding: var(--section-padding-y-mobile) var(--section-padding-x-mobile) var(--space-9);
+      align-items: center;
+      text-align: center;
+    }
+
+    .hero__title {
+      font-size: 34px;
+    }
+
+    .hero__body {
+      max-width: none;
+    }
+
+    .hero__ctas {
+      justify-content: center;
+    }
+
+    .hero__image {
+      min-height: 400px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Hero",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Barre · Reformer · Megaformer · Pilates · Yoga" },
+    { "type": "text", "id": "title", "label": "Headline", "default": "The Pilates Sock Era Is Over" },
+    { "type": "textarea", "id": "body", "label": "Body copy", "default": "360° grip performance skins for barre, reformer, Lagree & Pilates. One pair. Done. $74." },
+    { "type": "text", "id": "cta_primary_text", "label": "Primary CTA text", "default": "Shop Now" },
+    { "type": "url", "id": "cta_primary_url", "label": "Primary CTA link" },
+    { "type": "text", "id": "cta_secondary_text", "label": "Secondary CTA text", "default": "See Why →" },
+    { "type": "url", "id": "cta_secondary_url", "label": "Secondary CTA link" },
+    { "type": "text", "id": "trust_line", "label": "Trust line", "default": "Trusted by 1,000's of instructors · Made in USA" },
+    { "type": "image_picker", "id": "image", "label": "Hero image" },
+    { "type": "text", "id": "image_alt", "label": "Image alt text", "default": "Studio session with Barreletics performance skins" }
+  ],
+  "presets": [{ "name": "Hero" }]
+}
+{% endschema %}

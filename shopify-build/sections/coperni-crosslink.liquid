@@ -1,0 +1,266 @@
+{% comment %}
+  Coperni crosslink banner — live br-coperni-closed-sole-crosslink authority.
+  Full-bleed collab identity band. Place FIRST on product.coperni with the story.
+{% endcomment %}
+
+{% liquid
+  assign banner_height = section.settings.banner_height | default: 480
+  assign shoe_y = section.settings.shoe_position_y | default: 0
+  assign shoe_size = section.settings.shoe_size | default: 100
+  assign overlay = section.settings.overlay_opacity | default: 55
+  assign overlay_mob = section.settings.overlay_opacity_mobile | default: 40
+  assign btn_label = section.settings.btn_label | default: 'Shop the collaboration'
+  assign btn_url = section.settings.btn_url
+  assign bg_url = section.settings.bg_image_url
+  if section.settings.bg_image != blank
+    assign bg_url = section.settings.bg_image | image_url: width: 2000
+  endif
+  if bg_url == blank
+    assign bg_url = 'https://cdn.shopify.com/s/files/1/0045/0612/4391/files/yellow_tone_mix.png?v=1770580561'
+  endif
+  assign shoe_url = section.settings.shoe_image_url
+  if section.settings.shoe_image != blank
+    assign shoe_url = section.settings.shoe_image | image_url: width: 1600
+  endif
+  if shoe_url == blank
+    assign shoe_url = 'https://cdn.shopify.com/s/files/1/0045/0612/4391/files/Copreni_Final_More_grey.png?v=1774119812'
+  endif
+  assign overlay_f = overlay | times: 1.0 | divided_by: 100
+  assign overlay_mid = overlay | times: 0.4 | divided_by: 100.0
+  assign overlay_mob_f = overlay_mob | times: 1.0 | divided_by: 100
+%}
+
+<section
+  id="{{ section.settings.anchor_id | default: 'coperni' | handleize }}"
+  class="coperni-crosslink section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %}"
+  style="{% render 'section-inset-vars' %}"
+  aria-label="{{ section.settings.aria_label | default: 'Barreletics × Coperni' | escape }}"
+>
+  <div class="csb" style="--csb-height: {{ banner_height }}px; --csb-shoe-size: {{ shoe_size }}%; --csb-shoe-y: {{ shoe_y }}%;">
+    <div class="csb-bg" style="background-image:url('{{ bg_url | escape }}');"></div>
+    <div class="csb-shoe" style="background-image:url('{{ shoe_url | escape }}');"></div>
+    <div
+      class="csb-fade"
+      style="background:linear-gradient(to right, rgba(0,0,0,{{ overlay_f }}) 0%, rgba(0,0,0,{{ overlay_mid }}) 45%, rgba(0,0,0,0) 70%);"
+      data-mob-overlay="{{ overlay_mob_f }}"
+    ></div>
+    <div class="csb-content">
+      {% if section.settings.eyebrow != blank %}
+        <p class="csb-eye">{{ section.settings.eyebrow | escape }}</p>
+      {% endif %}
+      {% if section.settings.title != blank %}
+        <p class="csb-title">{{ section.settings.title }}</p>
+      {% endif %}
+      {% if section.settings.body != blank %}
+        <p class="csb-sub">{{ section.settings.body | escape }}</p>
+      {% endif %}
+      {% if btn_label != blank %}
+        {% if btn_url != blank %}
+          <a href="{{ btn_url }}" class="csb-btn"{% if section.settings.btn_new_tab %} target="_blank" rel="noopener noreferrer"{% endif %}>{{ btn_label | escape }}</a>
+        {% else %}
+          <a href="#buy" class="csb-btn">{{ btn_label | escape }}</a>
+        {% endif %}
+      {% endif %}
+      {% if section.settings.meta != blank %}
+        <p class="csb-meta">{{ section.settings.meta | escape }}</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<style>
+  #shopify-section-{{ section.id }} .csb {
+    position: relative;
+    width: 100%;
+    height: var(--csb-height, 480px);
+    overflow: hidden;
+    display: block;
+  }
+  #shopify-section-{{ section.id }} .csb * { box-sizing: border-box; }
+  #shopify-section-{{ section.id }} .csb-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center center;
+    z-index: 0;
+  }
+  #shopify-section-{{ section.id }} .csb-shoe {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 60%;
+    background-color: #f2f0ed;
+    background-size: var(--csb-shoe-size, 100%);
+    background-repeat: no-repeat;
+    background-position: center var(--csb-shoe-y, 0%);
+    z-index: 1;
+  }
+  #shopify-section-{{ section.id }} .csb-fade {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+  }
+  #shopify-section-{{ section.id }} .csb-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 50%;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 24px 40px 32px 48px;
+  }
+  #shopify-section-{{ section.id }} .csb-eye {
+    font-family: var(--font-body), Roboto, sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: #fff;
+    margin: 0 0 14px;
+  }
+  #shopify-section-{{ section.id }} .csb-title {
+    font-family: inherit;
+    font-size: var(--type-h2-display-size);
+    font-weight: var(--type-h2-display-weight);
+    font-style: normal;
+    color: #fff;
+    margin: 0 0 14px;
+    line-height: var(--type-h2-display-leading);
+    letter-spacing: var(--type-h2-display-tracking);
+  }
+  #shopify-section-{{ section.id }} .csb-sub {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(14px, 1.4vw, 19px);
+    font-style: italic;
+    color: #fff;
+    margin: 0 0 24px;
+    line-height: 1.6;
+  }
+  #shopify-section-{{ section.id }} .csb-btn {
+    display: inline-block;
+    font-family: var(--font-body), Roboto, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #1c1916;
+    background: #fff;
+    border: none;
+    padding: 14px 32px;
+    text-decoration: none;
+    align-self: flex-start;
+    margin: 0 0 16px;
+  }
+  #shopify-section-{{ section.id }} .csb-btn:hover {
+    background: #c45c3f;
+    color: #fff;
+  }
+  #shopify-section-{{ section.id }} .csb-meta {
+    font-family: var(--font-body), Roboto, sans-serif;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #fff;
+    margin: 0;
+  }
+  @media (max-width: 749px) {
+    #shopify-section-{{ section.id }} .csb { height: 420px !important; }
+    #shopify-section-{{ section.id }} .csb-shoe {
+      width: 55%;
+      background-size: cover;
+      background-position: center top;
+    }
+    #shopify-section-{{ section.id }} .csb-fade {
+      background: rgba(0, 0, 0, {{ overlay_mob_f }}) !important;
+    }
+    #shopify-section-{{ section.id }} .csb-content {
+      width: 62%;
+      padding: 16px 12px 20px 20px;
+    }
+    #shopify-section-{{ section.id }} .csb-eye {
+      font-size: 7px;
+      letter-spacing: 0.16em;
+      margin-bottom: 8px;
+    }
+    #shopify-section-{{ section.id }} .csb-title {
+      font-size: var(--type-h2-display-size-mobile);
+      margin-bottom: 8px;
+    }
+    #shopify-section-{{ section.id }} .csb-sub {
+      font-size: 11px;
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+    #shopify-section-{{ section.id }} .csb-btn {
+      padding: 10px 16px;
+      font-size: 8px;
+      margin-bottom: 12px;
+    }
+    #shopify-section-{{ section.id }} .csb-meta {
+      font-size: 6px;
+      letter-spacing: 0.12em;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Coperni crosslink",
+  "tag": "section",
+  "class": "section-coperni-crosslink",
+  "settings": [
+    { "type": "text", "id": "anchor_id", "label": "Anchor ID", "default": "coperni" },
+    { "type": "text", "id": "aria_label", "label": "Accessibility label", "default": "Barreletics × Coperni" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "This style has a limited edition · 2026" },
+    {
+      "type": "html",
+      "id": "title",
+      "label": "Title",
+      "default": "Barreletics<br>&times; Coperni"
+    },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Body",
+      "default": "The Closed Sole, as seen on the Coperni 2026 runway in Paris. One run, limited release."
+    },
+    { "type": "text", "id": "meta", "label": "Meta line", "default": "Closed Sole · Special Release · One Run" },
+    { "type": "text", "id": "btn_label", "label": "Button label", "default": "Shop the collaboration" },
+    { "type": "url", "id": "btn_url", "label": "Button link", "info": "Leave empty to jump to #buy on this PDP." },
+    { "type": "checkbox", "id": "btn_new_tab", "label": "Open link in new tab", "default": false },
+    { "type": "header", "content": "Media" },
+    { "type": "image_picker", "id": "bg_image", "label": "Background image" },
+    {
+      "type": "text",
+      "id": "bg_image_url",
+      "label": "Background image URL",
+      "default": "https://cdn.shopify.com/s/files/1/0045/0612/4391/files/yellow_tone_mix.png?v=1770580561"
+    },
+    { "type": "image_picker", "id": "shoe_image", "label": "Product image" },
+    {
+      "type": "text",
+      "id": "shoe_image_url",
+      "label": "Product image URL",
+      "default": "https://cdn.shopify.com/s/files/1/0045/0612/4391/files/Copreni_Final_More_grey.png?v=1774119812"
+    },
+    { "type": "header", "content": "Layout" },
+    { "type": "range", "id": "banner_height", "label": "Banner height", "min": 300, "max": 700, "step": 10, "unit": "px", "default": 480 },
+    { "type": "range", "id": "shoe_size", "label": "Shoe image size", "min": 50, "max": 120, "step": 5, "unit": "%", "default": 100 },
+    { "type": "range", "id": "shoe_position_y", "label": "Shoe vertical position", "min": 0, "max": 100, "step": 5, "unit": "%", "default": 0 },
+    { "type": "range", "id": "overlay_opacity", "label": "Desktop overlay strength", "min": 0, "max": 80, "step": 5, "unit": "%", "default": 55 },
+    { "type": "range", "id": "overlay_opacity_mobile", "label": "Mobile overlay strength", "min": 0, "max": 80, "step": 5, "unit": "%", "default": 40 },
+    { "type": "checkbox", "id": "hide_on_mobile", "label": "Hide on mobile", "default": false },
+    { "type": "checkbox", "id": "hide_on_desktop", "label": "Hide on desktop", "default": false },
+    { "type": "range", "id": "inset_top", "label": "Inset top", "min": 0, "max": 96, "step": 4, "unit": "px", "default": 0 },
+    { "type": "range", "id": "inset_bottom", "label": "Inset bottom", "min": 0, "max": 96, "step": 4, "unit": "px", "default": 0 },
+    { "type": "range", "id": "inset_x", "label": "Inset left & right", "min": 0, "max": 96, "step": 4, "unit": "px", "default": 0 }
+  ],
+  "presets": [{ "name": "Coperni crosslink" }]
+}
+{% endschema %}

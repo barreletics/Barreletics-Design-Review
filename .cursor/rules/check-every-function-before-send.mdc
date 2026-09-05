@@ -1,0 +1,26 @@
+---
+description: Never send Andrew a link until every clickable on that surface is tested
+alwaysApply: true
+---
+
+# Check every function before sending (HARD)
+
+**Owner 2026-08-21:** *"stop sending me anything until you check everything. Make a rule that you check every function before sending to me."*
+
+## Before ANY reply with a preview / Editor / Pages URL
+
+1. List every clickable on the changed surface (footer, header, tiles, CTAs, Help ▾).
+2. `curl -sI -L` each href on `barreletics.com` with the preview cookie. Final status must be **200**.
+3. If a label is a hub (Collaborations, Partner programs, Help), the href must be that **hub page** — not a single product, not `/`, not a 404.
+4. Open the hub HTML and confirm the tiles/CTAs on **that** page also 200.
+5. **No URL in chat** until the full list is 200. A 404 = fix first, then re-test the whole list.
+
+## Forbidden
+
+- Sending a link after checking only the one you just made
+- HTTP 200 on a product when the label is a category/hub
+- Assuming Admin menus exist — verify the **rendered** href in the HTML
+
+## Hub pages look like Help
+
+Tile cards (`page-help`) → real existing destinations. Do not invent a different landing layout.

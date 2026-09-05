@@ -28,7 +28,7 @@ Inventory of all production content required for launch. Each item is cross-refe
 | Social proof — Reviews | Customer testimonials with name/city | Doc 07 (quotes throughout) | ✅ Ready |
 | Sock Math section | Cost comparison data ($74 vs $112-144/yr) | Doc 07 §11 | ✅ Ready |
 | Disciplines section | Barre, Pilates, Lagree, Reformer, Yoga | Doc 07 §7 | ✅ Ready |
-| Newsletter section | "Sign up for 10% off" | Doc 07 §16 | ✅ Ready |
+| Newsletter section | "Join the list" + benefit checkmarks (NO 10%) | `specs/frozen/footer.md` | ✅ Ready |
 | GEO section | City/state-specific editorial content | Doc 12 | ⚠️ Needs Review |
 
 ## Collection Pages
@@ -65,10 +65,20 @@ Inventory of all production content required for launch. Each item is cross-refe
 | `/pages/compare-open-closed-sole` | Open vs Closed Sole comparison | Doc 07 §2 | ✅ Ready |
 | `/pages/grip-comparison` | Barreletics vs Grip Socks | Doc 07 §11 | ✅ Ready |
 | `/pages/technology` | Materials, manufacturing, performance | Doc 07 §12 | ✅ Ready |
-| `/pages/partners` | Consolidated Partner Programs (Wholesale + Studio + Ambassador) | D-042 | ✅ Built |
-| ~~`/pages/wholesale`~~ | ~~Wholesale inquiry~~ → Superseded by `/pages/partners` (D-042) | — | 🔄 Redirected |
-| ~~`/pages/ambassador`~~ | ~~Ambassador program~~ → Superseded by `/pages/partners` (D-042) | — | 🔄 Redirected |
-| ~~`/pages/studio-program`~~ | ~~Studio partnership~~ → Superseded by `/pages/partners` (D-042) | — | 🔄 Redirected |
+| `/pages/partners` | Partner Programs **routing hub** — three cards + general-inquiry fallback form | **D-048** | ✅ Built |
+| `/pages/wholesale` | Wholesale inquiry — dedicated page + own qualification form (`BL-PARTNER-WHOLESALE`) | **D-048** | ✅ Built |
+| `/pages/ambassador` | Ambassador program — dedicated page + own qualification form (`BL-PARTNER-AMBASSADOR`) | **D-048** | ✅ Built |
+| `/pages/studio-program` | Studio partnership — dedicated page + own qualification form (`BL-PARTNER-STUDIO`) | **D-048** | ✅ Built |
+
+> **UPDATED 2026-08-08 — the four partner rows above.** They previously read:
+> `/pages/partners` = "Consolidated Partner Programs (Wholesale + Studio + Ambassador)" (D-042), with
+> ~~`/pages/wholesale`~~, ~~`/pages/ambassador`~~ and ~~`/pages/studio-program`~~ struck as
+> "🔄 Redirected — superseded by `/pages/partners`". Owner direction 2026-08-08 reversed the fold:
+> **three dedicated program pages plus `/pages/partners` as a routing hub**. Recorded as **D-048** in
+> `planning/10-decision-log.md`, superseding D-042. All four templates are built, type-corrected and
+> mobile-QA'd (`planning/partner-programs.md` §5, `planning/partner-pages-qa/`). The three folding
+> 301s are **retired** in `planning/m4a-redirect-map.md` — they would make the new pages unreachable.
+> `/pages/become-an-affiliate` and `/pages/wholesale-calculator` still point at the hub and are unaffected.
 
 ## Navigation
 
@@ -82,7 +92,7 @@ Inventory of all production content required for launch. Each item is cross-refe
 | Footer — Shop column | All Grippy Shoes, Open Sole, Closed Sole, Outdoor, Apparel | Doc 11 | ✅ Ready |
 | Footer — Support column | FAQ, Shipping, Returns, Warranty, Contact Us | Doc 11 | ✅ Ready |
 | Footer — Company column | About Us, Journal, Collaborations, Compare Styles | Doc 11 | ✅ Ready |
-| Footer — Newsletter | "Sign up for 10% off your first order." | Doc 07 §16 | ✅ Ready |
+| Footer — Newsletter | "Join the list" + benefit checkmarks (NO 10%) | `specs/frozen/footer.md` | ✅ Ready |
 
 ## Content Requiring Owner Approval
 
@@ -91,7 +101,7 @@ Inventory of all production content required for launch. Each item is cross-refe
 | Homepage hero headline/subheadline | D-041: TWO concepts built for side-by-side comparison — Owner must choose before lock | Critical |
 | About page — founder story & mission | Personal/brand narrative | High |
 | Contact page — business hours & email | Operational detail | Medium |
-| Partners page — wholesale/studio/ambassador terms | D-042: Consolidated page built. Internal pricing never public. | Medium |
+| Partner program terms — wholesale / studio / ambassador | **D-048** (2026-08-08, supersedes D-042 "consolidated page built"): three dedicated pages + `/pages/partners` hub, all built. Terms are Theme Editor settings. Internal pricing never public. Ambassador 10/15/30/15 numbers are a proposal, not approved. | Medium |
 | New Arrivals/Limited Editions/One-Offs descriptions | Merchandising tone | Low |
 | GEO content blocks | Location-specific claims | Low |
 | Collection hero headlines (pillar pages) | Editorial voice approval | Medium |
@@ -116,8 +126,16 @@ All "Ready" content is directly sourceable from locked Foundation documents. "Ne
 |------|----------|-----------|----------------|---------|
 | Newsletter signup | Footer, Newsletter section | Shopify customer create | Email | Shopify (tag: "newsletter") |
 | Contact form | `/pages/contact` | Shopify form endpoint | Name, Email, Subject, Message | Help Scout forwarding |
-| Partner inquiry (unified) | `/pages/partners` | Shopify form endpoint | Name, Email, Program interest (dropdown), Message | Help Scout forwarding |
+| Wholesale application | `/pages/wholesale` | Shopify form endpoint (`BL-PARTNER-WHOLESALE`) | Business name, business type, website, resale cert, first order size, contact name, email, ship-to, about, consent | Help Scout — Partners inbox |
+| Studio Program application | `/pages/studio-program` | Shopify form endpoint (`BL-PARTNER-STUDIO`) | Studio name, website, city/state, locations, primary discipline, contact name, role, email, background | Help Scout — Partners inbox |
+| Ambassador application | `/pages/ambassador` | Shopify form endpoint (`BL-PARTNER-AMBASSADOR`) | First/last name, email, city/state, discipline, stocking question, about, consent | Help Scout — Partners inbox |
+| Partner general inquiry (hub fallback) | `/pages/partners` | Shopify form endpoint | Name, Email, Program interest, Message | Help Scout — Partners inbox |
 | Review submission | PDP (via Judge.me) | Judge.me API | Rating, Title, Body, Name, Email | Judge.me |
+
+> **UPDATED 2026-08-08 (D-048 supersedes D-042).** The four partner rows above replace a single
+> *"Partner inquiry (unified) — `/pages/partners`"* row. There is no unified partner form: each program
+> has its own qualification form on its own page, and the hub form is the fallback for people who don't
+> know which program fits. Field lists and Help Scout routing: `planning/partner-programs.md` §3–§4.
 
 ### Form Configuration Notes
 

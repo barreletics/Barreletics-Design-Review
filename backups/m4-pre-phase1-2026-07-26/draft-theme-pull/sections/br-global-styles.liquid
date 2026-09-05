@@ -1,0 +1,181 @@
+{% comment %}
+  Barreletics global styles — Streamline by Archetype.
+  Theme-update safe: this is a custom section. Add it once in the theme (e.g. at top of body).
+  Do NOT add this code into theme.liquid or any Streamline core file.
+{% endcomment %}
+<link rel="preconnect" href="https://cdn.shopify.com">
+<style>
+  :root {
+    /* Buttons (compact) */
+    --br-btn-compact-font-size-desktop: 14px;
+    --br-btn-compact-font-size-mobile: 14px;
+    --br-btn-compact-pad-v: 12px;
+    --br-btn-compact-pad-h: 24px;
+    --br-btn-compact-radius: 4px;
+    /* Typography – see BARRELETICS-TYPOGRAPHY-GUIDE.md */
+    --br-section-heading-size-desktop: 28px;
+    --br-section-heading-size-mobile: 22px;
+    --br-subheading-size-desktop: 18px;
+    --br-subheading-size-mobile: 16px;
+    --br-hero-title-size-desktop: 40px;
+    --br-hero-title-size-mobile: 28px;
+    --br-hero-subheading-size: 18px;
+    --br-heading-weight: 600;
+    --br-heading-transform: none;
+  }
+
+  /* Mobile nav button: faster tap response, no 300ms delay, immediate feedback */
+  .js-toggle-slide-nav,
+  .site-nav__thumb-button.js-toggle-slide-nav {
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.08);
+    min-height: 44px;
+    min-width: 44px;
+  }
+  .js-toggle-slide-nav:active,
+  .site-nav__thumb-button.js-toggle-slide-nav:active {
+    opacity: 0.9;
+  }
+  /* Hint for menu overlay so browser can optimize the open animation */
+  .slide-nav__overflow {
+    will-change: transform;
+  }
+  .slide-nav__overflow.js-menu--is-open {
+    will-change: auto;
+  }
+
+  /* Breadcrumbs: light grey, small text at bottom of page */
+  .br-breadcrumbs {
+    font-size: 0.75rem;
+  }
+  .br-breadcrumbs a {
+    color: #a5a5a5;
+    text-decoration: none;
+  }
+  .br-breadcrumbs a:hover {
+    color: #888;
+    text-decoration: underline;
+  }
+  .br-breadcrumbs a:focus {
+    outline: 1px dotted currentColor;
+  }
+
+  /* Announcement bar: "Click for details →" as blue link (main text stays black) */
+  .announcement__details-link {
+    color: #2563eb !important;
+    text-decoration: underline;
+    font-weight: 500;
+  }
+  .announcement__details-link:hover {
+    color: #1d4ed8 !important;
+  }
+  .announcement__text-sep {
+    margin: 0 0.35em;
+  }
+
+</style>
+<script>
+(function() {
+  /* Mobile nav: open on touchend so menu responds on finger lift instead of 300ms later */
+  var touchedEl = null;
+  function onTouchEnd(evt) {
+    var el = evt.target && evt.target.closest && evt.target.closest('.js-toggle-slide-nav');
+    if (!el) return;
+    evt.preventDefault();
+    el.click();
+    touchedEl = el;
+  }
+  function onClickCapture(evt) {
+    if (!touchedEl) return;
+    var el = evt.target && evt.target.closest && evt.target.closest('.js-toggle-slide-nav');
+    if (el === touchedEl) {
+      evt.preventDefault();
+      evt.stopImmediatePropagation();
+    }
+    touchedEl = null;
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      document.body.addEventListener('touchend', onTouchEnd, { passive: false });
+      document.addEventListener('click', onClickCapture, true);
+    });
+  } else {
+    document.body.addEventListener('touchend', onTouchEnd, { passive: false });
+    document.addEventListener('click', onClickCapture, true);
+  }
+})();
+</script>
+<script>
+(function() {
+  /* Prefetch in-site links on hover (desktop) / touchstart (mobile) so next page loads faster */
+  var host = window.location.hostname;
+  var prefetched = {};
+  var timer = null;
+  var currentLink = null;
+
+  function isInternal(href) {
+    if (!href || href.indexOf('#') === 0) return false;
+    try {
+      var u = new URL(href, window.location.origin);
+      return u.origin === window.location.origin && u.pathname !== window.location.pathname;
+    } catch (e) { return false; }
+  }
+
+  function doPrefetch(url) {
+    if (prefetched[url]) return;
+    prefetched[url] = true;
+    var link = document.createElement('link');
+    link.rel = 'prefetch';
+    link.href = url;
+    link.as = 'document';
+    document.head.appendChild(link);
+  }
+
+  function schedulePrefetch(url) {
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(function() {
+      timer = null;
+      if (currentLink && isInternal(currentLink.href)) doPrefetch(currentLink.href);
+    }, 65);
+  }
+
+  function onPointer(evt) {
+    var a = evt.target && evt.target.closest && evt.target.closest('a[href]');
+    if (!a || !isInternal(a.href)) { currentLink = null; if (timer) clearTimeout(timer); return; }
+    currentLink = a;
+    schedulePrefetch(a.href);
+  }
+
+  function cancelPrefetch() {
+    currentLink = null;
+    if (timer) clearTimeout(timer);
+    timer = null;
+  }
+
+  function init() {
+    document.body.addEventListener('mouseenter', onPointer, { capture: true, passive: true });
+    document.body.addEventListener('touchstart', onPointer, { capture: true, passive: true });
+    document.body.addEventListener('mouseleave', cancelPrefetch, { capture: true, passive: true });
+    document.body.addEventListener('touchend', cancelPrefetch, { capture: true, passive: true });
+    document.body.addEventListener('touchcancel', cancelPrefetch, { capture: true, passive: true });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+<div class="br-global-styles-wrapper" style="height:0;overflow:hidden;margin:0;padding:0;position:absolute;left:-9999px;width:1px;" aria-hidden="true"></div>
+
+{% schema %}
+{
+  "name": "Barreletics global styles",
+  "tag": "section",
+  "class": "br-global-styles-section",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Barreletics global styles"
+    }
+  ]
+}
+{% endschema %}

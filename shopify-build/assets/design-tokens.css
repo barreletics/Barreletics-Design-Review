@@ -1,7 +1,8 @@
 /* =============================================================================
-   BARRELETICS DESIGN TOKENS — v49 Canonical
-   Source: planning/03-design-system.md + Design System Skill (locked)
-   Decision Log: D-001 through D-007 govern these values
+   BARRELETICS DESIGN TOKENS — Type OS SETTLED 2026-07-29
+   Authority: SETTLED (TYPE-OS-v2 + Display/Standard audit + hero max 72)
+   Governing rule: weight falls as size rises · Roboto
+   See: planning/m4-type-hierarchy.md
    ============================================================================= */
 
 :root {
@@ -14,6 +15,11 @@
   --color-warm-muted: #6b645a;
   --color-warm-border: #d6cfc0;
   --color-warm-cream: #f5f2ec;
+  /* Warm cream at half strength over white. Owner pick 2026-08-08 (variant B of
+     planning/partner-pages-qa/form-band-compare.html) for secondary-page form bands:
+     the band still reads warm, the step down from white is halved. Additive — no
+     existing surface changes. */
+  --color-warm-cream-soft: #faf8f6;
   --color-light-bg: #f9f9f9;
   --color-white: #ffffff;
   --color-coral: #e8927c; /* cart badge only */
@@ -25,28 +31,215 @@
   --text-warm-muted: var(--color-warm-muted);
   --bg-primary: var(--color-white);
   --bg-alternate: var(--color-warm-cream);
+  --bg-alternate-soft: var(--color-warm-cream-soft);
   --bg-card: var(--color-light-bg);
   --bg-dark: var(--color-charcoal);
   --border-default: var(--color-warm-border);
   --accent-primary: var(--color-rust);
+  /* Stars — one accent everywhere (v2 carry-over) */
   --accent-stars: var(--color-gold);
+  --accent-stars-marketing: var(--color-gold);
 
-  /* --- Typography --- */
+  /* --- Typography family --- */
   --font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
-  /* Font weights */
+  /* Weights — named scale (type roles use --fw-* below) */
   --weight-light: 300;
   --weight-regular: 400;
   --weight-medium: 500;
   --weight-semibold: 600;
   --weight-bold: 700;
+  --weight-extrabold: 800;
 
-  /* Font sizes */
-  --text-xs: 10px;
-  --text-sm: 11px;
-  --text-base: 15px;
-  --text-md: 16px;
+  /* =========================================================================
+     Type OS SETTLED 2026-07-29 — planning/m4-type-hierarchy.md
+     Weight falls as size rises. Cadence: --gap-a / --gap-b / --gap-c only.
+     Do NOT weaken these for one page. Sitewide cohesion.
+     ========================================================================= */
+
+  --fw-hero: 700;
+  --fw-h2-display: 500;
+  --fw-h2-supporting: 400;
+  --fw-h2-standard: 600;
+  --fw-statement: 500;
+  --fw-body: 400;
+  --fw-label: 600;
+  --fw-emphasis: 700;
+
+  --fs-hero: clamp(50px, 6.4vw, 72px);
+  --fs-h2-display: clamp(38px, 4.6vw, 52px);
+  --fs-h2-supporting: 40px;
+  --fs-h2-standard: clamp(26px, 2.9vw, 32px);
+  --fs-statement: clamp(28px, 3vw, 36px);
+  --fs-lede: 17px;
+  --fs-body: 16px;
+  --fs-label: 11px;
+  --fs-value-strip: 12px;
+
+  --ls-hero: -0.028em;
+  --ls-h2-display: -0.028em;
+  --ls-h2-supporting: -0.02em;
+  --ls-h2-standard: -0.012em;
+  --ls-statement: -0.022em;
+  --ls-label: 0.08em;
+  --ls-value-strip: 0.08em;
+
+  --lh-hero: 1.06;
+  --lh-h2-display: 1.10;
+  --lh-h2-supporting: 1.10;
+  --lh-h2-standard: 1.22;
+  --lh-lede: 1.60;
+  --lh-body: 1.72;
+
+  --measure-h2-display: 15ch;
+
+  /* Cadence — eyebrow→headline / headline→body / body→CTA */
+  --gap-a: 16px;
+  --gap-b: 20px;
+  --gap-c: 32px;
+
+  /* Legacy brief aliases → standard H2 (wayfinding default) */
+  --fw-h2: var(--fw-h2-standard);
+  --fs-h2: var(--fs-h2-standard);
+  --ls-h2: var(--ls-h2-standard);
+  --lh-h2: var(--lh-h2-standard);
+
+  /* --- Hero (`--type-hero`) — page-opening only --- */
+  --type-hero-size: var(--fs-hero);
+  --type-hero-size-mobile: clamp(34px, 9vw, 44px);
+  --type-hero-weight: var(--fw-hero);
+  --type-hero-leading: var(--lh-hero);
+  --type-hero-tracking: var(--ls-hero);
+  --type-hero-margin: 0 0 var(--gap-b);
+
+  /* Legacy aliases → hero */
+  --type-opening-size: var(--type-hero-size);
+  --type-opening-size-mobile: var(--type-hero-size-mobile);
+  --type-opening-weight: var(--type-hero-weight);
+  --type-opening-leading: var(--type-hero-leading);
+  --type-opening-tracking: var(--type-hero-tracking);
+
+  /* --- H2 Display — brand statements (.h2-display) --- */
+  --type-h2-display-size: var(--fs-h2-display);
+  --type-h2-display-size-mobile: clamp(26px, 7vw, 32px);
+  --type-h2-display-weight: var(--fw-h2-display);
+  --type-h2-display-leading: var(--lh-h2-display);
+  --type-h2-display-tracking: var(--ls-h2-display);
+  --type-h2-display-measure: var(--measure-h2-display);
+  --type-h2-display-margin: 0 0 var(--gap-b);
+
+  /* --- H2 Supporting — compact editorial (.h2-supporting) · PDP 40/400 --- */
+  --type-h2-supporting-size: var(--fs-h2-supporting);
+  --type-h2-supporting-size-mobile: clamp(28px, 3.5vw, 40px);
+  --type-h2-supporting-weight: var(--fw-h2-supporting);
+  --type-h2-supporting-leading: var(--lh-h2-supporting);
+  --type-h2-supporting-tracking: var(--ls-h2-supporting);
+  --type-h2-supporting-margin: 0 0 var(--gap-b);
+
+  /* --- Value strip — 12 / 500 / uppercase (existing scan labels) --- */
+  --type-value-strip-size: var(--fs-value-strip);
+  --type-value-strip-weight: 500;
+  --type-value-strip-tracking: var(--ls-value-strip);
+
+  /* --- H2 Standard — wayfinding (.h2-standard / .type-section) --- */
+  --type-section-size: var(--fs-h2-standard);
+  --type-section-size-mobile: clamp(24px, 5vw, 28px);
+  --type-section-weight: var(--fw-h2-standard);
+  --type-section-leading: var(--lh-h2-standard);
+  --type-section-tracking: var(--ls-h2-standard);
+  --type-section-margin: 0 0 var(--gap-b);
+  --type-section-measure: 28ch;
+  --type-section-measure-wide: 36ch;
+
+  /* Statement — lightens with size */
+  --type-statement-size: var(--fs-statement);
+  --type-statement-size-mobile: clamp(28px, 7vw, 36px);
+  --type-statement-weight: var(--fw-statement);
+  --type-statement-leading: 1.12;
+  --type-statement-tracking: var(--ls-statement);
+
+  /* Dark-band support (tier 2) — contrast ≥4.5:1 on charcoal */
+  --type-dark-support-size: 16px;
+  --type-dark-support-weight: 400;
+  --type-dark-support-color: #d6d2cb;
+
+  /* Legacy aliases — former "campaign" tier → H2 Standard */
+  --type-campaign-size: var(--type-section-size);
+  --type-campaign-size-mobile: var(--type-section-size-mobile);
+  --type-campaign-weight: var(--type-section-weight);
+  --type-campaign-leading: var(--type-section-leading);
+  --type-campaign-tracking: var(--type-section-tracking);
+  --type-campaign-margin: var(--type-section-margin);
+  --type-campaign-measure: var(--type-section-measure);
+  --type-campaign-measure-wide: var(--type-section-measure-wide);
+
+  /* H3 — firm enough vs body (v2 carry-over) */
+  --type-h3-size: clamp(18px, 2vw, 22px);
+  --type-h3-weight: 600;
+  --type-h3-leading: 1.25;
+  --type-h3-tracking: -0.01em;
+
+  /* --- Body / supporting --- */
+  --type-lede-size: var(--fs-lede);
+  --type-lede-size-mobile: 16px;
+  --type-lede-weight: var(--fw-body);
+  --type-lede-leading: var(--lh-lede);
+
+  --type-body-size: var(--fs-body);
+  --type-body-size-sm: var(--fs-body);
+  --type-body-weight: var(--fw-body);
+  --type-body-leading: var(--lh-body);
+
+  /* Labels / eyebrows — 11 / 600 / 0.08em / #6b645a */
+  --type-label-size: var(--fs-label);
+  --type-label-weight: var(--fw-label);
+  --type-label-tracking: var(--ls-label);
+  --type-label-color: #6b645a;
+
+  /* Navigation — header-only tokens, matched to measured production (barreletics.com,
+     theme 185687998755 "Live Barreletics - Brian Go Live", Streamline 7.0). Computed nav
+     link there: Roboto 400 · 21.96px at rest / 18.96px once sticky · 0.45px = 0.025em ·
+     text-transform none (labels are authored in title case) · 1.6 leading · 7.5px 15px
+     padding, i.e. 30px between labels. We sit at the sticky size because our bar is
+     permanently sticky and shorter than Streamline's.
+     See planning/header-type-qa/live-desktop-1440px.json. */
+  /* v20d LOCKED nav #2 (2026-08-11) — supersedes Aug 8 18px */
+  --type-nav-size: 13px;
+  --type-nav-weight: 500;
+  --type-nav-tracking: 0.01em;
+  --type-nav-gap: 26px;
+  --type-brand-size: 14px;
+  --type-brand-weight: 700;
+  --type-brand-tracking: 0.16em;
+
+  /* CTA — marketing + commerce buttons (global; chrome matches Variant Grid Quick Add) */
+  --type-cta-size: 15px;
+  --type-cta-weight: 500;
+  --type-cta-tracking: 0.12em;
+  --type-cta-leading: 1; /* anchors inherit body 1.72 without this — keeps height at 44px */
+  --type-cta-min-height: 44px;
+  --type-cta-pad-y: 12px;
+  --type-cta-pad-x: 20px;
+
+  /* Trust / caption / tag */
+  --type-trust-size: 13px;
+  --type-trust-weight: 400;
+  --type-caption-size: 13px;
+  --type-caption-weight: 600;
+  --type-caption-tracking: 0.02em;
+
+  /* Announcement */
+  --type-announce-size: 12px;
+  --type-announce-weight: 600;
+  --type-announce-tracking: 0.08em;
+
+  /* Legacy aliases (existing sections) — never below 11px */
+  --font-body: var(--font-family);
+  --text-xs: 11px;
+  --text-sm: var(--type-label-size);
+  --text-base: var(--type-body-size-sm);
+  --text-md: var(--type-body-size);
   --text-lg: 18px;
   --text-xl: 21px;
   --text-2xl: 28px;
@@ -56,9 +249,12 @@
   --text-6xl: 44px;
   --text-7xl: 48px;
   --text-8xl: 52px;
+  --type-opening-h1: var(--type-hero-size);
+  --type-opening-h1-mobile: var(--type-hero-size-mobile);
+  --type-section: var(--type-section-size);
 
   /* Line heights */
-  --leading-tight: 1.08;
+  --leading-tight: 1.05;
   --leading-snug: 1.12;
   --leading-heading: 1.15;
   --leading-normal: 1.5;
@@ -66,16 +262,25 @@
   --leading-loose: 1.7;
 
   /* Letter spacing */
-  --tracking-tight: -0.02em;
+  --tracking-tight: -0.028em;
+  --tracking-tighter: -0.042em;
   --tracking-normal: 0;
   --tracking-wide: 0.04em;
   --tracking-wider: 0.06em;
   --tracking-widest: 0.08em;
-  --tracking-eyebrow: 0.08em;
+  --tracking-eyebrow: var(--ls-label);
+  --tracking-nav: 0.12em;
+  --tracking-cta: 0.1em;
   --tracking-manifesto: 0.18em;
-  --tracking-brand: 0.14em;
+  --tracking-brand: 0.16em;
 
-  /* --- Spacing --- */
+  /* --- Alignment roles (text-align intent) --- */
+  --align-hero: left;
+  --align-campaign: left;
+  --align-editorial: left;
+  --align-band: center;
+
+  /* --- Spacing scale --- */
   --space-0: 0;
   --space-1: 4px;
   --space-2: 8px;
@@ -94,11 +299,34 @@
   --space-15: 88px;
   --space-16: 96px;
 
-  /* Section padding */
-  --section-padding-y: 64px;
+  /* Stack aliases → three-gap cadence (v2). Prefer --gap-a/b/c in new CSS. */
+  --stack-trust-to-title: var(--gap-a);
+  --stack-title-to-body: var(--gap-b);
+  --stack-body-to-cta: var(--gap-c);
+  --stack-cta-to-meta: var(--gap-c);
+  --stack-eyebrow-to-title: var(--gap-a);
+  --stack-section-after-title: var(--gap-b);
+  --stack-campaign-after-title: var(--gap-b);
+  --stack-campaign-eyebrow: var(--gap-a);
+  --stack-campaign-to-body: var(--gap-b);
+  --stack-campaign-to-cta: var(--gap-c);
+
+  /* Section padding — Theme Settings → Layout → Section gap overrides (default 32 / 24). */
+  --section-padding-y: 32px;
   --section-padding-x: 40px;
-  --section-padding-y-mobile: 48px;
-  --section-padding-x-mobile: 16px;
+  --section-padding-y-mobile: 24px;
+  --section-padding-x-mobile: 20px;
+  --section-padding-y-campaign: 96px;
+  --section-padding-y-campaign-mobile: 72px;
+
+  /* Hero copy column */
+  --hero-copy-max: 560px;
+  --hero-copy-pad-y: 88px;
+  --hero-copy-pad-x: 64px;
+  --hero-copy-pad-y-mobile: 52px;
+  --hero-copy-pad-x-mobile: 24px;
+  --hero-body-measure: 30ch;
+  --hero-min-height: 92vh;
 
   /* --- Layout --- */
   --max-width: 1200px;
@@ -109,9 +337,9 @@
   --grid-gap-sm: 20px;
   --grid-gap-lg: 40px;
 
-  /* --- Border Radius (D-003, D-006) --- */
+  /* --- Radius --- */
   --radius-badge: 3px;
-  --radius-button: 6px;
+  --radius-button: 4px;
   --radius-card-sm: 6px;
   --radius-gallery: 8px;
   --radius-card: 12px;
@@ -129,7 +357,7 @@
   --transition-slow: 0.4s ease;
   --transition-ticker: 0.32s ease;
 
-  /* --- Z-index Scale --- */
+  /* --- Z-index --- */
   --z-base: 0;
   --z-dropdown: 10;
   --z-sticky: 20;
@@ -138,16 +366,8 @@
   --z-nav: 50;
   --z-modal: 60;
   --z-toast: 70;
-
-  /* --- Breakpoints (reference only — use @media) --- */
-  /* --bp-sm: 480px; */
-  /* --bp-md: 768px; */
-  /* --bp-lg: 1024px; */
-  /* --bp-xl: 1200px; */
-  /* --bp-2xl: 1400px; */
 }
 
-/* Dark section overrides */
 [data-theme="dark"] {
   --text-primary: var(--color-white);
   --text-body: rgba(255, 255, 255, 0.85);

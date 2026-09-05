@@ -1,0 +1,298 @@
+{% comment %}
+  Full-page cart (R-06 / D-024)
+  Parity with cart drawer: shipping bar, line items, qty, checkout.
+  SSR uses data-line-key + data-qty-change to match assets/cart.js.
+{% endcomment %}
+
+<section class="main-cart" aria-label="Shopping cart">
+  <div class="main-cart__inner">
+    <header class="main-cart__header">
+      <h1 class="main-cart__title h2-standard">Your Cart</h1>
+      {% if cart.item_count > 0 %}
+        <p class="main-cart__count">{{ cart.item_count }} {% if cart.item_count == 1 %}item{% else %}items{% endif %}</p>
+      {% endif %}
+    </header>
+
+    {% if cart.item_count == 0 %}
+      <div class="main-cart__empty">
+        <p>Your cart is empty</p>
+        <a href="/collections/barre-pilates-yoga-shoe-sock-footwear" class="btn btn--primary">Shop Grippy Shoes</a>
+      </div>
+    {% else %}
+      <div class="main-cart__shipping-bar">
+        {% assign threshold_cents = settings.free_shipping_threshold | default: 150 | times: 100 %}
+        {% assign progress = cart.total_price | times: 100 | divided_by: threshold_cents %}
+        {% if progress > 100 %}{% assign progress = 100 %}{% endif %}
+        <div class="main-cart__shipping-progress">
+          <div class="main-cart__shipping-fill" style="width: {{ progress }}%"></div>
+        </div>
+        <p class="main-cart__shipping-text">
+          {% if cart.total_price >= threshold_cents %}
+            You qualify for free shipping!
+          {% else %}
+            {{ threshold_cents | minus: cart.total_price | money }} away from free shipping
+          {% endif %}
+        </p>
+      </div>
+
+      <div class="main-cart__items" id="main-cart-items">
+        {% for item in cart.items %}
+          <div class="main-cart__item" data-line-key="{{ item.key }}">
+            <a href="{{ item.url }}" class="main-cart__item-img">
+              {% if item.image %}
+                <img
+                  src="{{ item.image | image_url: width: 160 }}"
+                  alt="{{ item.title | escape }}"
+                  width="96"
+                  height="96"
+                  loading="lazy"
+                >
+              {% endif %}
+            </a>
+            <div class="main-cart__item-details">
+              <a href="{{ item.url }}" class="main-cart__item-title">{{ item.product.title }}</a>
+              <p class="main-cart__item-variant">{{ item.variant.title }}</p>
+              <div class="main-cart__item-qty cart-drawer__item-qty">
+                <button type="button" data-qty-change="-1" aria-label="Decrease quantity">−</button>
+                <span>{{ item.quantity }}</span>
+                <button type="button" data-qty-change="1" aria-label="Increase quantity">+</button>
+              </div>
+              <button type="button" class="main-cart__item-remove" data-remove-item aria-label="Remove {{ item.title }}">Remove</button>
+            </div>
+            <div class="main-cart__item-price">{{ item.final_line_price | money }}</div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <aside class="main-cart__summary">
+        <div class="main-cart__subtotal">
+          <span>Subtotal</span>
+          <span>{{ cart.total_price | money }}</span>
+        </div>
+        <p class="main-cart__note">Shipping and taxes calculated at checkout. Free shipping on orders over $150.</p>
+        <a href="/checkout" class="btn btn--primary main-cart__checkout">Checkout</a>
+        <a href="/collections/barre-pilates-yoga-shoe-sock-footwear" class="main-cart__continue">Continue shopping</a>
+      </aside>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  .main-cart {
+    padding: var(--space-13, 64px) var(--section-padding-x, 40px);
+  }
+  .main-cart__inner {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  .main-cart__header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .main-cart__title {
+    font-size: var(--type-section-size);
+    font-weight: var(--type-section-weight);
+    line-height: var(--type-section-leading);
+    letter-spacing: var(--type-section-tracking);
+    text-transform: none;
+    margin: 0;
+    color: var(--text-primary, #1c1916);
+  }
+  .main-cart__count {
+    margin: 0;
+    font-size: 14px;
+    color: var(--text-muted, #8a8a8a);
+  }
+  .main-cart__empty {
+    text-align: center;
+    padding: 64px 16px;
+  }
+  .main-cart__empty p {
+    margin: 0 0 24px;
+    font-size: 16px;
+    color: var(--text-body, #4a4a4a);
+  }
+  .main-cart__shipping-bar {
+    margin-bottom: 28px;
+  }
+  .main-cart__shipping-progress {
+    height: 4px;
+    background: var(--border-default, #d6cfc0);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .main-cart__shipping-fill {
+    height: 100%;
+    background: var(--accent-primary, #c45c3f);
+    transition: width 200ms ease;
+  }
+  .main-cart__shipping-text {
+    margin: 0;
+    font-size: 13px;
+    color: var(--text-body, #4a4a4a);
+  }
+  .main-cart__items {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border-top: 1px solid var(--border-default, #d6cfc0);
+  }
+  .main-cart__item {
+    display: grid;
+    grid-template-columns: 96px 1fr auto;
+    gap: 20px;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--border-default, #d6cfc0);
+    align-items: start;
+  }
+  .main-cart__item-img img {
+    width: 96px;
+    height: 96px;
+    object-fit: cover;
+    border-radius: 8px;
+    background: #f9f9f9;
+  }
+  .main-cart__item-title {
+    display: block;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary, #1c1916);
+    text-decoration: none;
+    margin-bottom: 4px;
+  }
+  .main-cart__item-variant {
+    margin: 0 0 12px;
+    font-size: 13px;
+    color: var(--text-muted, #8a8a8a);
+  }
+  .main-cart__item-qty {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .main-cart__item-qty button {
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--border-default, #d6cfc0);
+    background: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  .main-cart__item-remove {
+    display: block;
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 12px;
+    color: var(--text-muted, #8a8a8a);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .main-cart__item-price {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary, #1c1916);
+  }
+  .main-cart__summary {
+    margin-top: 32px;
+    padding-top: 24px;
+    max-width: 360px;
+    margin-left: auto;
+  }
+  .main-cart__subtotal {
+    display: flex;
+    justify-content: space-between;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary, #1c1916);
+    margin-bottom: 12px;
+  }
+  .main-cart__note {
+    margin: 0 0 20px;
+    font-size: 13px;
+    color: var(--text-muted, #8a8a8a);
+    line-height: 1.5;
+  }
+  .main-cart__checkout {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .main-cart__continue {
+    display: block;
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-body, #4a4a4a);
+  }
+  @media (max-width: 768px) {
+    .main-cart {
+      padding: 48px 16px;
+    }
+    .main-cart__item {
+      grid-template-columns: 72px 1fr;
+    }
+    .main-cart__item-price {
+      grid-column: 2;
+    }
+    .main-cart__summary {
+      max-width: none;
+    }
+  }
+</style>
+
+<script>
+  (function () {
+    var root = document.getElementById('main-cart-items');
+    if (!root || typeof fetch !== 'function') return;
+
+    function money(cents) {
+      return '$' + (cents / 100).toFixed(2);
+    }
+
+    function changeItem(key, quantity) {
+      return fetch('/cart/change.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ id: key, quantity: quantity })
+      }).then(function (r) { return r.json(); }).then(function () {
+        window.location.reload();
+      });
+    }
+
+    root.querySelectorAll('[data-qty-change]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var item = btn.closest('[data-line-key]');
+        if (!item) return;
+        var key = item.getAttribute('data-line-key');
+        var qtySpan = item.querySelector('.main-cart__item-qty span');
+        var current = parseInt(qtySpan.textContent, 10) || 1;
+        var delta = parseInt(btn.getAttribute('data-qty-change'), 10);
+        changeItem(key, Math.max(0, current + delta));
+      });
+    });
+
+    root.querySelectorAll('[data-remove-item]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var item = btn.closest('[data-line-key]');
+        if (!item) return;
+        changeItem(item.getAttribute('data-line-key'), 0);
+      });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Main Cart",
+  "settings": [],
+  "presets": [{ "name": "Main Cart" }]
+}
+{% endschema %}

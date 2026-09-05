@@ -1,0 +1,103 @@
+{% comment %}
+  Collection FAQ (DP-06) — abbreviated accordion + FAQPage schema
+{% endcomment %}
+
+{% render 'faq-accordion',
+  items: section.blocks,
+  heading: section.settings.heading,
+  bg_class: section.settings.bg_class,
+  include_schema: true,
+  studio_core: section.settings.use_studio_bank
+%}
+{% if template == 'collection' %}
+<style>
+  /* Shop All — cream stays light #faf8f6. Heading = Type OS H2 Section. */
+  #shopify-section-{{ section.id }} .faq--cream {
+    background: #faf8f6;
+  }
+</style>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Collection FAQ",
+  "settings": [
+    { "type": "header", "content": "Shared — Content" },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Everything you need to know.",
+      "info": "Family is brand Type OS — no font family picker."
+    },
+    { "type": "header", "content": "Section — FAQ" },
+    {
+      "type": "select",
+      "id": "bg_class",
+      "label": "Background",
+      "options": [
+        { "value": "cream", "label": "Cream" },
+        { "value": "white", "label": "White" }
+      ],
+      "default": "cream"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_studio_bank",
+      "label": "Use shared studio FAQ",
+      "default": false,
+      "info": "On = Theme settings → Studio FAQ (Closed, Open, One-Offs, Coperni). Extra blocks below appear first. Leave off for Outdoor and Shop All."
+    },
+    {
+      "type": "paragraph",
+      "content": "When shared studio FAQ is off, items are the blocks below."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "FAQ item",
+      "settings": [
+        { "type": "header", "content": "Shared — Content" },
+        { "type": "text", "id": "question", "label": "Heading", "info": "Question line." },
+        { "type": "richtext", "id": "answer", "label": "Body" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection FAQ",
+      "blocks": [
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "What’s the difference between Open Sole and Closed Sole?",
+            "answer": "<p><strong>Closed Sole</strong> — heel and foot fully covered. <strong>Open Sole</strong> — heel exposed, mid-foot breathing hole. More grounded, barefoot feel. Natural toe splay. Both perform identically — same grip, same stability. Choice is preference and feel only. Same $74.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Are Performance Skins just expensive grip socks?",
+            "answer": "<p>No. Traditional grip socks use silicone dots that wear off and fabric that absorbs sweat. Barreletics use a full-contact injection-molded grip surface you rinse and reuse — built as performance footwear, not disposable socks.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "How long do they last?",
+            "answer": "<p>The shoe may wear. The grip does not — it's molded into the sole, so there's nothing to peel or flake. How long a pair lasts depends on how you wear them. Used for Pilates, barre, reformer, Lagree, and yoga, they hold up. One customer recently passed 1,000 classes on a single pair. Another is on year four.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "What’s your return policy?",
+            "answer": "<p>30-day returns on items in new, sellable condition. 90-day warranty against manufacturing defects. Complimentary shipping on orders over $150.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

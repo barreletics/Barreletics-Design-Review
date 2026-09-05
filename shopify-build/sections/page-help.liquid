@@ -1,0 +1,315 @@
+{% comment %}
+  Help hub — from docs/Barreletics Help - Definitive-v8.html
+  Clickable tiles · no taxonomy eyebrows · support page H1.
+  Destinations: FAQ · Shipping & returns · Start a return (ReturnZap) · Size · Contact.
+  No Track Order. planning/help-family-type-law.md
+{% endcomment %}
+
+<section
+  class="page-help section"
+  id="shopify-section-{{ section.id }}"
+  style="{% render 'type-override-vars', title_size: section.settings.title_size, title_weight: section.settings.title_weight, body_size: section.settings.body_size, body_weight: section.settings.body_weight, sub_size: section.settings.card_title_size, sub_weight: section.settings.card_title_weight %}"
+  {{ section.shopify_attributes }}
+>
+  <div class="section__inner section__inner--narrow page-help__head">
+    <h1 class="page-help__title">{{ section.settings.title | default: 'How Can We Help?' }}</h1>
+    {% if section.settings.lede != blank %}
+      <p class="page-help__lede">{{ section.settings.lede }}</p>
+    {% endif %}
+  </div>
+
+  <div class="page-help__grid-wrap">
+    <div class="page-help__grid" aria-label="Help destinations">
+      {% for block in section.blocks %}
+        {% if block.type == 'destination' %}
+          {% assign href = block.settings.url | default: '#' %}
+          <a class="page-help__card" href="{{ href }}" {{ block.shopify_attributes }}>
+            <span class="page-help__card-title">{{ block.settings.title }}</span>
+            {% if block.settings.body != blank %}
+              <span class="page-help__card-body">{{ block.settings.body }}</span>
+            {% endif %}
+          </a>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .page-help__head {
+    text-align: center;
+    padding-bottom: var(--space-6, 24px);
+  }
+  .page-help__title {
+    font-size: var(--te-title-size, clamp(32px, 4vw, 44px));
+    font-weight: var(--te-title-weight, 400);
+    line-height: 1.15;
+    letter-spacing: -0.028em;
+    text-transform: none;
+    color: var(--text-primary, #1c1916);
+    margin: 0 0 var(--gap-b, 20px);
+  }
+  .page-help__lede {
+    font-size: var(--te-body-size, 16px);
+    font-weight: var(--te-body-weight, 400);
+    line-height: 1.6;
+    color: var(--text-body, #4a4a4a);
+    margin: 0 auto;
+    max-width: 46ch;
+  }
+  @media (max-width: 768px) {
+    .page-help__title { font-size: var(--te-title-size, clamp(28px, 8vw, 36px)); }
+  }
+
+  .page-help__grid-wrap {
+    background: #f5f2ec;
+    padding: 48px 0 64px;
+  }
+  .page-help__grid {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 var(--space-6, 24px);
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 16px;
+  }
+  .page-help__grid > .page-help__card { grid-column: span 2; }
+  .page-help__grid > .page-help__card:nth-child(4) { grid-column: 2 / span 2; }
+  .page-help__grid > .page-help__card:nth-child(5) { grid-column: 4 / span 2; }
+  .page-help__grid:has(> .page-help__card:nth-child(2):last-child) {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 640px;
+  }
+  .page-help__grid:has(> .page-help__card:nth-child(3):last-child) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .page-help__grid:has(> .page-help__card:nth-child(2):last-child) > .page-help__card,
+  .page-help__grid:has(> .page-help__card:nth-child(3):last-child) > .page-help__card {
+    grid-column: auto;
+  }
+
+  .page-help__card {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    column-gap: 12px;
+    align-items: start;
+    padding: 26px 22px;
+    background: #fff;
+    border: 1px solid #d6cfc0;
+    border-radius: 8px;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .page-help__card:hover {
+    border-color: #1c1916;
+    text-decoration: none;
+    box-shadow: 0 2px 12px rgba(28, 25, 22, 0.06);
+  }
+  .page-help__card-title {
+    grid-column: 1;
+    font-size: var(--te-sub-size, 18px);
+    font-weight: var(--te-sub-weight, 500);
+    color: #1c1916;
+    margin: 0 0 8px;
+    letter-spacing: -0.02em;
+  }
+  .page-help__card-body {
+    grid-column: 1;
+    font-size: 14px;
+    color: #6b645a;
+    line-height: 1.5;
+  }
+  .page-help__card::after {
+    content: "→";
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: center;
+    font-size: 18px;
+    font-weight: 400;
+    color: #9a9182;
+    line-height: 1;
+  }
+  .page-help__card:hover::after { color: #1c1916; }
+
+  @media (max-width: 1024px) {
+    .page-help__grid { grid-template-columns: repeat(2, 1fr); }
+    .page-help__grid > .page-help__card,
+    .page-help__grid > .page-help__card:nth-child(4),
+    .page-help__grid > .page-help__card:nth-child(5) {
+      grid-column: span 1;
+    }
+  }
+  @media (max-width: 768px) {
+    .page-help__grid-wrap { padding: 36px 0 48px; }
+    .page-help__grid { grid-template-columns: 1fr; padding: 0 16px; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Help hub",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "How Can We Help?"
+    },
+    {
+      "type": "textarea",
+      "id": "lede",
+      "label": "Lede",
+      "default": "Answers, policy, sizing, and contact — pick a destination. Full FAQ lives on its own page."
+    },
+    { "type": "header", "content": "Type — size & weight", "info": "Family is brand Type OS. Default keeps the approved Help page type. Title caps at 56px — support pages never use the homepage hero size." },
+    {
+      "type": "select",
+      "id": "title_size",
+      "label": "Title size",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "24", "label": "24px" },
+        { "value": "26", "label": "26px" },
+        { "value": "28", "label": "28px" },
+        { "value": "30", "label": "30px" },
+        { "value": "32", "label": "32px" },
+        { "value": "36", "label": "36px" },
+        { "value": "40", "label": "40px" },
+        { "value": "44", "label": "44px" },
+        { "value": "48", "label": "48px" },
+        { "value": "56", "label": "56px" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" },
+        { "value": "700", "label": "700" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "body_size",
+      "label": "Lede size",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "14", "label": "14px" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" },
+        { "value": "18", "label": "18px" },
+        { "value": "20", "label": "20px" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "body_weight",
+      "label": "Lede weight",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "card_title_size",
+      "label": "Card title size",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "14", "label": "14px" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" },
+        { "value": "18", "label": "18px" },
+        { "value": "20", "label": "20px" },
+        { "value": "22", "label": "22px" },
+        { "value": "24", "label": "24px" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "card_title_weight",
+      "label": "Card title weight",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "destination",
+      "name": "Destination",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "FAQ" },
+        { "type": "textarea", "id": "body", "label": "Body" },
+        { "type": "url", "id": "url", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Help hub",
+      "blocks": [
+        {
+          "type": "destination",
+          "settings": {
+            "title": "FAQ",
+            "body": "Questions from the studio — orders, product, fit, care, policies.",
+            "url": "/pages/faq"
+          }
+        },
+        {
+          "type": "destination",
+          "settings": {
+            "title": "Shipping & returns",
+            "body": "30-day returns · 90-day warranty · free shipping over $150 · exchanges.",
+            "url": "/pages/returns"
+          }
+        },
+        {
+          "type": "destination",
+          "settings": {
+            "title": "Start a return",
+            "body": "Open the returns portal — refund or exchange with order # and email.",
+            "url": "/pages/returns-portal"
+          }
+        },
+        {
+          "type": "destination",
+          "settings": {
+            "title": "Size chart",
+            "body": "M / L ranges · color fit notes.",
+            "url": "/pages/performance-skins-size-chart"
+          }
+        },
+        {
+          "type": "destination",
+          "settings": {
+            "title": "Contact",
+            "body": "Sizing help, claims, or stuck returns — usually within 24 hours.",
+            "url": "/pages/contact-us-form"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

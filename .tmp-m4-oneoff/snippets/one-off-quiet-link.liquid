@@ -1,0 +1,18 @@
+{% comment %}
+  One-off colors — quiet text link under PDP ATC.
+  Gate: Theme settings → One-off product is set. Clear picker to hide.
+  Hidden on the one-off PDP itself.
+{% endcomment %}
+{%- liquid
+  assign oo_product = settings.one_off_product
+  assign oo_self = false
+  if current_product != blank and oo_product != blank
+    if current_product.id == oo_product.id or current_product.handle == oo_product.handle
+      assign oo_self = true
+    endif
+  endif
+  assign oo_label = settings.one_off_link_label | default: "This week’s one-off color →"
+-%}
+{%- if oo_product != blank and oo_self == false and oo_label != blank -%}
+  <a class="pdp-buy__oneoff-link" href="{{ oo_product.url }}">{{ oo_label | escape }}</a>
+{%- endif -%}

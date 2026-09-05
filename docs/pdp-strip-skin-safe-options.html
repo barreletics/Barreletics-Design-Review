@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PDP Trust — Content Options (current chrome)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #1c1916;
+      --body: #4a4a4a;
+      --muted: #8a8a8a;
+      --warm: #6b645a;
+      --border: #d6cfc0;
+      --cream: #f5f2ec;
+      --rust: #c45c3f;
+      --white: #fff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Roboto, system-ui, sans-serif;
+      background: #ebe6dc;
+      color: var(--ink);
+      padding: 28px 16px 96px;
+    }
+    .wrap { max-width: 720px; margin: 0 auto; }
+    .back {
+      font-size: 12px; color: var(--warm); text-decoration: none;
+      display: inline-block; margin-bottom: 14px;
+    }
+    h1 {
+      font-size: 26px; font-weight: 400; letter-spacing: -0.03em; margin: 0 0 8px;
+    }
+    .lede {
+      font-size: 14px; color: var(--body); line-height: 1.5; margin: 0 0 28px; max-width: 52ch;
+    }
+    .note {
+      background: var(--white); border-left: 3px solid var(--rust);
+      padding: 12px 14px; font-size: 13px; color: var(--body); line-height: 1.45; margin-bottom: 28px;
+    }
+
+    .opt {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 22px;
+      overflow: hidden;
+    }
+    .opt__head {
+      padding: 14px 16px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .letter {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--rust); margin: 0 0 4px;
+    }
+    .opt h2 { font-size: 17px; font-weight: 500; margin: 0 0 4px; }
+    .opt__idea { font-size: 13px; color: var(--body); margin: 0; line-height: 1.4; }
+
+    .opt__stage { padding: 0; }
+
+    /* ——— Exact-ish current buy chrome ——— */
+    .buy {
+      padding: 20px 18px 8px;
+      max-width: 400px;
+    }
+    .buy__title-row {
+      display: flex; justify-content: space-between; align-items: center; gap: 10px;
+      margin-bottom: 10px;
+    }
+    .buy__seo {
+      font-size: 13px; font-weight: 600; color: #2d2926; margin: 0;
+    }
+    .badge {
+      background: var(--rust); color: #fff;
+      font-size: 9px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; padding: 4px 8px; border-radius: 3px; flex-shrink: 0;
+    }
+    .buy__lede {
+      font-size: 28px; font-weight: 400; line-height: 1.1; margin: 0 0 14px; letter-spacing: -0.02em;
+    }
+    .buy__price {
+      font-size: 18px; font-weight: 500; margin: 0 0 14px;
+      padding: 12px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    }
+    .buy__price span { font-size: 12px; font-weight: 400; color: var(--muted); margin-left: 8px; }
+    .atc {
+      display: block; width: 100%; border: 0; border-radius: 4px;
+      background: var(--ink); color: #fff;
+      font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 14px; margin: 0;
+    }
+
+    /* Current trust row under ATC */
+    .trust {
+      display: flex; gap: 16px; flex-wrap: wrap;
+      font-size: 12px; color: var(--muted);
+      padding: 12px 0 4px;
+      border-top: 1px solid var(--border);
+      margin-top: 12px;
+    }
+    .trust strong { color: var(--ink); font-weight: 700; }
+    .trust--empty {
+      font-size: 12px; color: var(--muted); font-style: italic;
+      padding: 12px 0 4px; margin-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+    .zone {
+      font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--muted); margin: 0 0 6px; padding: 0 18px;
+    }
+    .zone--buy { padding-top: 14px; }
+
+    /* Current value strip chrome */
+    .strip-wrap {
+      background: #f5f2ec;
+      border-top: 1px solid #d6cfc0;
+      border-bottom: 1px solid #d6cfc0;
+      padding: 16px 18px;
+      margin-top: 16px;
+    }
+    .strip {
+      text-align: center;
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #6b645a;
+      line-height: 1.55;
+    }
+    .sep { color: #9a9182; margin: 0 4px; }
+
+    .opt__foot {
+      padding: 10px 16px;
+      font-size: 12px; color: var(--warm);
+      border-top: 1px solid var(--border);
+      background: #faf8f4;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <a class="back" href="index.html">← Hub</a>
+    <h1>Trust content options</h1>
+    <p class="lede">
+      Same design as now — cream · strip · Add to cart · quiet ✓ row under ATC.
+      Only the words change. Pick a letter.
+    </p>
+    <div class="note">
+      Every option shows <strong>both</strong> zones: under Add to cart, then the value strip below (as on the live PDP).
+    </div>
+
+    <!-- A -->
+    <article class="opt" id="A">
+      <div class="opt__head">
+        <p class="letter">A · Current spine</p>
+        <h2>Empty under ATC · strip without Skin-safe</h2>
+        <p class="opt__idea">What you have today.</p>
+      </div>
+      <div class="opt__stage">
+        <p class="zone zone--buy">Buy box</p>
+        <div class="buy">
+          <div class="buy__title-row">
+            <p class="buy__seo">Best Grippy Shoes for Barre, Pilates &amp; Yoga</p>
+            <span class="badge">Closed Sole</span>
+          </div>
+          <p class="buy__lede">Secure in every hold.<br>No sliding. No resets.</p>
+          <p class="buy__price">$74 <span>or 4 × $18.50</span></p>
+          <button class="atc" type="button">Add to cart</button>
+          <div class="trust--empty">Under ATC: empty</div>
+        </div>
+        <p class="zone">Value strip</p>
+        <div class="strip-wrap">
+          <div class="strip">
+            Made in USA<span class="sep">·</span>Free shipping over $150<span class="sep">·</span>30-day returns<span class="sep">·</span>90-day warranty
+          </div>
+        </div>
+      </div>
+      <div class="opt__foot">Miss: Skin-safe not on scan</div>
+    </article>
+
+    <!-- B -->
+    <article class="opt" id="B">
+      <div class="opt__head">
+        <p class="letter">B</p>
+        <h2>Empty under ATC · strip + Skin-safe</h2>
+        <p class="opt__idea">Keep empty ATC. Add Skin-safe to the cream strip (v19 mock had No latex · No silicone).</p>
+      </div>
+      <div class="opt__stage">
+        <p class="zone zone--buy">Buy box</p>
+        <div class="buy">
+          <div class="buy__title-row">
+            <p class="buy__seo">Best Grippy Shoes for Barre, Pilates &amp; Yoga</p>
+            <span class="badge">Closed Sole</span>
+          </div>
+          <p class="buy__lede">Secure in every hold.<br>No sliding. No resets.</p>
+          <p class="buy__price">$74 <span>or 4 × $18.50</span></p>
+          <button class="atc" type="button">Add to cart</button>
+          <div class="trust--empty">Under ATC: empty</div>
+        </div>
+        <p class="zone">Value strip</p>
+        <div class="strip-wrap">
+          <div class="strip">
+            Made in USA<span class="sep">·</span>Free shipping over $150<span class="sep">·</span>30-day returns<span class="sep">·</span>90-day warranty<span class="sep">·</span>Skin-safe — no latex · no silicone
+          </div>
+        </div>
+      </div>
+      <div class="opt__foot">All trust on strip · premium empty button</div>
+    </article>
+
+    <!-- C -->
+    <article class="opt" id="C">
+      <div class="opt__head">
+        <p class="letter">C</p>
+        <h2>Quiet under ATC · strip stays policy four</h2>
+        <p class="opt__idea">Turn on the ✓ row under Add to cart. Strip unchanged (no Skin-safe on strip — it lives under ATC).</p>
+      </div>
+      <div class="opt__stage">
+        <p class="zone zone--buy">Buy box</p>
+        <div class="buy">
+          <div class="buy__title-row">
+            <p class="buy__seo">Best Grippy Shoes for Barre, Pilates &amp; Yoga</p>
+            <span class="badge">Closed Sole</span>
+          </div>
+          <p class="buy__lede">Secure in every hold.<br>No sliding. No resets.</p>
+          <p class="buy__price">$74 <span>or 4 × $18.50</span></p>
+          <button class="atc" type="button">Add to cart</button>
+          <div class="trust">
+            <span><strong>✓</strong> Ships 1–2 days</span>
+            <span><strong>✓</strong> Free shipping over $150</span>
+            <span><strong>✓</strong> Skin-safe — no latex / silicone</span>
+            <span><strong>✓</strong> Made in USA</span>
+          </div>
+        </div>
+        <p class="zone">Value strip</p>
+        <div class="strip-wrap">
+          <div class="strip">
+            Made in USA<span class="sep">·</span>Free shipping over $150<span class="sep">·</span>30-day returns<span class="sep">·</span>90-day warranty
+          </div>
+        </div>
+      </div>
+      <div class="opt__foot">Overlap: USA + Free ship on strip AND under ATC</div>
+    </article>
+
+    <!-- D -->
+    <article class="opt" id="D">
+      <div class="opt__head">
+        <p class="letter">D · No overlap</p>
+        <h2>Quiet under ATC = ship · strip = trust + Skin-safe</h2>
+        <p class="opt__idea">Under ATC: ship confidence only. Strip: USA · 30 · 90 · Skin-safe (Free ship not repeated on strip).</p>
+      </div>
+      <div class="opt__stage">
+        <p class="zone zone--buy">Buy box</p>
+        <div class="buy">
+          <div class="buy__title-row">
+            <p class="buy__seo">Best Grippy Shoes for Barre, Pilates &amp; Yoga</p>
+            <span class="badge">Closed Sole</span>
+          </div>
+          <p class="buy__lede">Secure in every hold.<br>No sliding. No resets.</p>
+          <p class="buy__price">$74 <span>or 4 × $18.50</span></p>
+          <button class="atc" type="button">Add to cart</button>
+          <div class="trust">
+            <span><strong>✓</strong> Free shipping over $150</span>
+            <span><strong>✓</strong> Ships in 1–2 days</span>
+          </div>
+        </div>
+        <p class="zone">Value strip</p>
+        <div class="strip-wrap">
+          <div class="strip">
+            Made in USA<span class="sep">·</span>30-day returns<span class="sep">·</span>90-day warranty<span class="sep">·</span>Skin-safe — no latex · no silicone
+          </div>
+        </div>
+      </div>
+      <div class="opt__foot">Split jobs · no duplicate lines</div>
+    </article>
+
+    <!-- E -->
+    <article class="opt" id="E">
+      <div class="opt__head">
+        <p class="letter">E</p>
+        <h2>Quiet under ATC = full confidence · strip + Skin-safe</h2>
+        <p class="opt__idea">✓ row = short confidence. Strip = full band including Skin-safe. Accept light echo of USA.</p>
+      </div>
+      <div class="opt__stage">
+        <p class="zone zone--buy">Buy box</p>
+        <div class="buy">
+          <div class="buy__title-row">
+            <p class="buy__seo">Best Grippy Shoes for Barre, Pilates &amp; Yoga</p>
+            <span class="badge">Closed Sole</span>
+          </div>
+          <p class="buy__lede">Secure in every hold.<br>No sliding. No resets.</p>
+          <p class="buy__price">$74 <span>or 4 × $18.50</span></p>
+          <button class="atc" type="button">Add to cart</button>
+          <div class="trust">
+            <span><strong>✓</strong> Ships 1–2 days</span>
+            <span><strong>✓</strong> Free shipping over $150</span>
+            <span><strong>✓</strong> Made in USA</span>
+            <span><strong>✓</strong> Skin-safe</span>
+          </div>
+        </div>
+        <p class="zone">Value strip</p>
+        <div class="strip-wrap">
+          <div class="strip">
+            Made in USA<span class="sep">·</span>Free shipping over $150<span class="sep">·</span>30-day returns<span class="sep">·</span>90-day warranty<span class="sep">·</span>Skin-safe — no latex · no silicone
+          </div>
+        </div>
+      </div>
+      <div class="opt__foot">Loudest · some repeat by design</div>
+    </article>
+
+    <!-- F -->
+    <article class="opt" id="F">
+      <div class="opt__head">
+        <p class="letter">F</p>
+        <h2>Quiet under ATC = Skin-safe only · strip = policy four</h2>
+        <p class="opt__idea">One product truth under the button. Strip stays today’s four.</p>
+      </div>
+      <div class="opt__stage">
+        <p class="zone zone--buy">Buy box</p>
+        <div class="buy">
+          <div class="buy__title-row">
+            <p class="buy__seo">Best Grippy Shoes for Barre, Pilates &amp; Yoga</p>
+            <span class="badge">Closed Sole</span>
+          </div>
+          <p class="buy__lede">Secure in every hold.<br>No sliding. No resets.</p>
+          <p class="buy__price">$74 <span>or 4 × $18.50</span></p>
+          <button class="atc" type="button">Add to cart</button>
+          <div class="trust">
+            <span><strong>✓</strong> Skin-safe — no latex · no silicone</span>
+          </div>
+        </div>
+        <p class="zone">Value strip</p>
+        <div class="strip-wrap">
+          <div class="strip">
+            Made in USA<span class="sep">·</span>Free shipping over $150<span class="sep">·</span>30-day returns<span class="sep">·</span>90-day warranty
+          </div>
+        </div>
+      </div>
+      <div class="opt__foot">Minimal under ATC · Skin-safe at the click</div>
+    </article>
+
+    <p class="lede" style="margin-top:8px;">
+      Reply <strong>A–F</strong>. Chrome stays. Content only.
+    </p>
+  </div>
+</body>
+</html>

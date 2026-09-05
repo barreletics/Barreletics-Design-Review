@@ -1,0 +1,625 @@
+{% comment %}
+  PDP Buy Box — Product Gallery + Purchase Module
+  Source: Approved PDP July 17 (v49 Enhanced)
+{% endcomment %}
+
+<section class="pdp-hero" aria-label="Product details" data-buy-box>
+  <div class="pdp-gallery">
+    <div class="pdp-gallery__hero">
+      {% if product.featured_image %}
+        <img
+          id="pdp-main-img"
+          src="{{ product.featured_image | image_url: width: 800 }}"
+          srcset="{{ product.featured_image | image_url: width: 400 }} 400w,
+                  {{ product.featured_image | image_url: width: 600 }} 600w,
+                  {{ product.featured_image | image_url: width: 800 }} 800w"
+          sizes="(max-width: 768px) 100vw, 50vw"
+          alt="{{ product.featured_image.alt | default: product.title | escape }}"
+          loading="eager"
+          fetchpriority="high"
+        >
+      {% endif %}
+    </div>
+    {% if product.images.size > 1 %}
+      <div class="pdp-gallery__thumbs">
+        {% for image in product.images limit: 5 %}
+          <button
+            class="pdp-gallery__thumb{% if forloop.first %} is-active{% endif %}"
+            data-thumb-src="{{ image | image_url: width: 800 }}"
+            aria-label="View image {{ forloop.index }}"
+          >
+            <img src="{{ image | image_url: width: 160 }}" alt="View {{ forloop.index }}" width="72" height="72" loading="lazy">
+          </button>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="pdp-buy">
+    <div class="pdp-buy__rating">
+      <span class="pdp-buy__stars" aria-hidden="true">★★★★★</span>
+      <span class="pdp-buy__rating-text">Trusted by 1,000+ Instructors</span>
+      <a href="#reviews" class="pdp-buy__reviews-link">Reviews →</a>
+    </div>
+
+    <div class="pdp-buy__header">
+      <h1 class="pdp-buy__seo-title">{{ product.title }}</h1>
+      {% assign current_variant = product.selected_or_first_available_variant %}
+      {% if current_variant.metafields.custom.sole_type %}
+        <span class="pdp-buy__badge">{{ current_variant.metafields.custom.sole_type }}</span>
+      {% endif %}
+    </div>
+
+    <p class="pdp-buy__name">
+      <span style="font-weight: 300;">Secure in every hold.</span><br>
+      <span style="font-weight: 700;">No sliding. No resets.</span>
+    </p>
+    <p class="pdp-buy__desc">{{ product.description | strip_html | truncate: 180 }}</p>
+
+    <div class="pdp-buy__price-block">
+      <span class="pdp-buy__price-now">{{ current_variant.price | money }}</span>
+      <span class="pdp-buy__price-meta">or 4 payments · free shipping over $150</span>
+    </div>
+
+    {% if product.has_only_default_variant == false %}
+      {% for option in product.options_with_values %}
+        <div class="pdp-buy__option" data-option-position="{{ option.position }}">
+          <div class="pdp-buy__option-header">
+            <span class="pdp-buy__option-label">{{ option.name }}{% if option.name == 'Color' %} · <span id="selected-color">{{ option.selected_value }}</span>{% endif %}</span>
+            {% if option.name == 'Size' %}
+              <a href="/pages/size-chart" class="pdp-buy__size-link">Size Chart →</a>
+            {% endif %}
+          </div>
+
+          {% if option.name == 'Color' %}
+            <div class="pdp-buy__swatches">
+              {% for value in option.values %}
+                <button
+                  class="pdp-buy__swatch{% if value == option.selected_value %} is-active{% endif %}"
+                  aria-label="{{ value }}"
+                  aria-selected="{% if value == option.selected_value %}true{% else %}false{% endif %}"
+                  data-color="{{ value }}"
+                  style="background: {{ value | handleize | replace: 'onyx', '#050505' | replace: 'dusty-rose', '#e9d3cb' | replace: 'stone', '#c9c5b8' | replace: 'sage', '#7b8c84' | replace: 'espresso', '#3d3530' | replace: 'mist', '#b8c4c0' }};"
+                >
+                </button>
+              {% endfor %}
+            </div>
+          {% elsif option.name == 'Size' %}
+            <div class="pdp-buy__sizes">
+              {% for value in option.values %}
+                <button
+                  class="pdp-buy__size-btn{% if value == option.selected_value %} is-active{% endif %}"
+                  data-size="{{ value }}"
+                >
+                  {{ value }}
+                  {% if value == 'M' %}
+                    <span class="pdp-buy__size-range">Women 5–7.5 · Men 6–8</span>
+                  {% elsif value == 'L' %}
+                    <span class="pdp-buy__size-range">Women 8–10 · Men 8.5–11</span>
+                  {% endif %}
+                </button>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <form action="/cart/add" method="post" id="pdp-form">
+      <input type="hidden" name="id" value="{{ current_variant.id }}">
+      <button type="submit" class="pdp-buy__cta btn btn--primary">
+        Add to Cart — {{ current_variant.price | money }}
+      </button>
+    </form>
+
+    <div class="pdp-buy__trust">
+      <span><strong>✓</strong> Ships 1–2 days</span>
+      <span><strong>✓</strong> 30-day returns</span>
+      <span><strong>✓</strong> 90-day warranty</span>
+      <span><strong>✓</strong> Latex- & silicone-free</span>
+      <span><strong>✓</strong> Made in USA</span>
+    </div>
+
+    {% if section.settings.micro_quote_1 != blank or section.settings.micro_quote_2 != blank %}
+      <div class="pdp-buy__micro-quotes" aria-label="Customer quotes">
+        {% if section.settings.micro_quote_1 != blank %}
+          <blockquote class="pdp-buy__micro-quote">
+            <p>“{{ section.settings.micro_quote_1 }}”</p>
+            {% if section.settings.micro_quote_1_attr != blank %}
+              <cite>{{ section.settings.micro_quote_1_attr }}</cite>
+            {% endif %}
+          </blockquote>
+        {% endif %}
+        {% if section.settings.micro_quote_2 != blank %}
+          <blockquote class="pdp-buy__micro-quote">
+            <p>“{{ section.settings.micro_quote_2 }}”</p>
+            {% if section.settings.micro_quote_2_attr != blank %}
+              <cite>{{ section.settings.micro_quote_2_attr }}</cite>
+            {% endif %}
+          </blockquote>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="pdp-buy__accordions">
+      <details class="pdp-accordion" data-pdp-accordion>
+        <summary class="pdp-accordion__trigger" aria-expanded="false">Description <span>+</span></summary>
+        <div class="pdp-accordion__body">{{ product.description }}</div>
+      </details>
+      <details class="pdp-accordion" data-pdp-accordion>
+        <summary class="pdp-accordion__trigger" aria-expanded="false">Care & how to wear <span>+</span></summary>
+        <div class="pdp-accordion__body">
+          <p><strong>How to put on:</strong> pull from the top of the foot — not the straps — to help extend their lifespan.</p>
+          <p><strong>Cleaning:</strong> warm soapy water, rinse well, air dry. No machine washing.</p>
+        </div>
+      </details>
+      <details class="pdp-accordion" data-pdp-accordion>
+        <summary class="pdp-accordion__trigger" aria-expanded="false">Shipping <span>+</span></summary>
+        <div class="pdp-accordion__body">Free shipping on orders over $150. Standard 3–5 days. Express 1–2 days at checkout.</div>
+      </details>
+      <details class="pdp-accordion" data-pdp-accordion>
+        <summary class="pdp-accordion__trigger" aria-expanded="false">30-day returns + 90-day warranty <span>+</span></summary>
+        <div class="pdp-accordion__body">30-day returns on items in new, sellable condition — try on for fit at home. 90-day warranty covers manufacturing defects only.</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+{% assign jm_rating_schema = product.metafields.judgeme.average_rating %}
+{% assign jm_count_schema  = product.metafields.judgeme.review_count | plus: 0 %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": {{ product.title | json }},
+  "description": {{ product.description | strip_html | truncate: 200 | json }},
+  "brand": { "@type": "Brand", "name": "Barreletics" },
+  "image": {{ product.featured_image | image_url: width: 800 | json }},
+  "url": {{ shop.url | append: product.url | json }},
+  {% if current_variant.sku != blank %}"sku": {{ current_variant.sku | json }},{% endif %}
+  "offers": {
+    "@type": "Offer",
+    "price": {{ current_variant.price | money_without_currency | json }},
+    "priceCurrency": "USD",
+    "availability": "{% if current_variant.available %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}",
+    "url": {{ shop.url | append: product.url | json }},
+    "seller": {
+      "@type": "Organization",
+      "name": "Barreletics"
+    }
+  }{% if jm_rating_schema and jm_count_schema > 0 %},
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": {{ jm_rating_schema | json }},
+    "reviewCount": {{ jm_count_schema | json }}
+  }{% endif %}
+}
+</script>
+
+<style>
+  .pdp-hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-12);
+    max-width: var(--max-width-hero);
+    margin: 0 auto;
+    padding: var(--space-12) var(--space-14) var(--space-12) var(--section-padding-x);
+    align-items: flex-start;
+  }
+
+  .pdp-gallery {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    position: sticky;
+    top: var(--space-12);
+  }
+
+  .pdp-gallery__hero {
+    aspect-ratio: 1;
+    background: var(--bg-card);
+    overflow: hidden;
+    border-radius: var(--radius-gallery);
+  }
+
+  .pdp-gallery__hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .pdp-gallery__thumbs {
+    display: flex;
+    gap: 6px;
+  }
+
+  .pdp-gallery__thumb {
+    width: 72px;
+    height: 72px;
+    border: 1px solid var(--border-default);
+    background: var(--bg-card);
+    padding: 0;
+    cursor: pointer;
+    overflow: hidden;
+    flex-shrink: 0;
+    border-radius: var(--radius-button);
+  }
+
+  .pdp-gallery__thumb.is-active {
+    border: 2px solid var(--text-primary);
+  }
+
+  .pdp-gallery__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .pdp-buy {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .pdp-buy__rating {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .pdp-buy__stars {
+    font-size: 14px;
+    color: var(--accent-stars);
+    letter-spacing: 1px;
+  }
+
+  .pdp-buy__rating-text {
+    font-size: 13px;
+    color: var(--text-body);
+  }
+
+  .pdp-buy__reviews-link {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .pdp-buy__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .pdp-buy__seo-title {
+    font-size: var(--text-lg);
+    font-weight: var(--weight-semibold);
+    color: #2d2926;
+    margin: 0;
+  }
+
+  .pdp-buy__badge {
+    display: inline-block;
+    background: var(--accent-primary);
+    color: #fff;
+    padding: 4px 10px;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-widest);
+    border-radius: var(--radius-badge);
+  }
+
+  .pdp-buy__name {
+    font-size: var(--text-6xl);
+    font-weight: var(--weight-bold);
+    line-height: var(--leading-tight);
+    color: var(--text-primary);
+    margin: 0;
+  }
+
+  .pdp-buy__desc {
+    font-size: var(--text-md);
+    color: #5a5248;
+    line-height: 1.65;
+    max-width: 40ch;
+    margin: 0;
+  }
+
+  .pdp-buy__price-block {
+    padding: var(--space-4) 0;
+    border-top: 1px solid var(--border-default);
+    border-bottom: 1px solid var(--border-default);
+  }
+
+  .pdp-buy__price-now {
+    font-size: var(--text-4xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+  }
+
+  .pdp-buy__price-meta {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-left: var(--space-2);
+  }
+
+  .pdp-buy__option {
+    padding: var(--space-4) 0;
+    border-bottom: 1px solid var(--border-default);
+  }
+
+  .pdp-buy__option-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 14px;
+  }
+
+  .pdp-buy__option-label {
+    font-size: 12px;
+    font-weight: var(--weight-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wider);
+  }
+
+  .pdp-buy__size-link {
+    font-size: 12px;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--text-primary);
+    padding-bottom: 1px;
+    text-decoration: none;
+  }
+
+  .pdp-buy__swatches {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .pdp-buy__swatch {
+    width: 23px;
+    height: 23px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    padding: 9px;
+    box-sizing: content-box;
+    background-clip: content-box;
+  }
+
+  .pdp-buy__swatch:hover {
+    border-color: #9a9182;
+  }
+
+  .pdp-buy__swatch.is-active {
+    border-color: var(--text-primary);
+  }
+
+  .pdp-buy__sizes {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+  }
+
+  .pdp-buy__size-btn {
+    padding: 14px;
+    border: 1px solid var(--border-default);
+    background: var(--bg-card);
+    text-align: center;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: var(--weight-semibold);
+    border-radius: var(--radius-card-sm);
+    font-family: inherit;
+    transition: border-color var(--transition-fast);
+  }
+
+  .pdp-buy__size-btn.is-active {
+    border: 2px solid var(--text-primary);
+  }
+
+  .pdp-buy__size-range {
+    display: block;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    font-weight: var(--weight-regular);
+    margin-top: 4px;
+  }
+
+  .pdp-buy__cta {
+    width: 100%;
+    padding: 18px;
+    font-size: var(--text-base);
+  }
+
+  .pdp-buy__cta.btn--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .pdp-buy__size-btn.is-unavailable {
+    opacity: 0.35;
+    cursor: not-allowed;
+    text-decoration: line-through;
+  }
+
+  .pdp-buy__error {
+    color: #c45c3f;
+    font-size: var(--text-sm);
+    margin: var(--space-2) 0 0;
+  }
+
+  .pdp-buy__trust {
+    display: flex;
+    gap: var(--space-5);
+    flex-wrap: wrap;
+    font-size: 12px;
+    color: var(--text-muted);
+    padding: var(--space-3) 0;
+    border-top: 1px solid var(--border-default);
+  }
+
+  .pdp-buy__trust strong {
+    color: var(--text-primary);
+  }
+
+  .pdp-buy__micro-quotes {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 0 0 var(--space-5);
+  }
+
+  .pdp-buy__micro-quote {
+    margin: 0;
+    padding: 12px 14px;
+    border-left: 3px solid var(--accent-primary, #c45c3f);
+    background: var(--bg-alternate, #f5f2ec);
+  }
+
+  .pdp-buy__micro-quote p {
+    margin: 0 0 6px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-body);
+  }
+
+  .pdp-buy__micro-quote cite {
+    font-size: 11px;
+    font-style: normal;
+    font-weight: var(--weight-semibold);
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .pdp-accordion {
+    border-bottom: 1px solid var(--border-default);
+  }
+
+  .pdp-accordion__trigger {
+    padding: 14px 0;
+    font-size: 14px;
+    font-weight: var(--weight-semibold);
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    font-family: inherit;
+  }
+
+  .pdp-accordion__trigger::-webkit-details-marker {
+    display: none;
+  }
+
+  .pdp-accordion__trigger span {
+    color: var(--text-muted);
+    font-size: 20px;
+    font-weight: var(--weight-light);
+    transition: transform var(--transition-fast);
+  }
+
+  .pdp-accordion[open] .pdp-accordion__trigger span {
+    display: none;
+  }
+
+  .pdp-accordion[open] .pdp-accordion__trigger::after {
+    content: "\2212";
+    color: var(--text-muted);
+    font-size: 20px;
+    font-weight: var(--weight-light);
+  }
+
+  .pdp-accordion__body {
+    padding: 0 0 16px;
+    font-size: 14px;
+    color: var(--text-body);
+    line-height: var(--leading-loose);
+  }
+
+  .pdp-accordion__body p {
+    margin: 0 0 10px;
+  }
+
+  .pdp-accordion__body p:last-child {
+    margin: 0;
+  }
+
+  @media (max-width: 1024px) {
+    .pdp-hero {
+      gap: var(--space-9);
+      padding: var(--space-10) var(--space-8);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .pdp-hero {
+      grid-template-columns: 1fr;
+      gap: var(--space-8);
+      padding: var(--space-8) var(--section-padding-x-mobile);
+    }
+
+    .pdp-gallery {
+      position: static;
+    }
+
+    .pdp-buy__name {
+      font-size: var(--text-3xl);
+    }
+  }
+</style>
+
+<script>
+  (function() {
+    document.querySelectorAll('[data-pdp-accordion]').forEach(function(item) {
+      item.addEventListener('toggle', function() {
+        var summary = item.querySelector('.pdp-accordion__trigger');
+        if (summary) summary.setAttribute('aria-expanded', item.open ? 'true' : 'false');
+      });
+    });
+  })();
+</script>
+
+{%- comment -%} Product JSON for variant selector {%- endcomment -%}
+<script>
+  window.__pdpProduct = {{ product | json }};
+</script>
+
+{%- comment -%} Variant selector + AJAX cart (PDP only) {%- endcomment -%}
+{{ 'variant-selector.js' | asset_url | script_tag }}
+{{ 'cart.js' | asset_url | script_tag }}
+
+{% schema %}
+{
+  "name": "PDP Buy Box",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "micro_quote_1",
+      "label": "Micro-quote 1",
+      "default": "Secure on the carriage through the entire footwork series. No more adjusting between sets."
+    },
+    {
+      "type": "text",
+      "id": "micro_quote_1_attr",
+      "label": "Micro-quote 1 attribution",
+      "default": "Lauren T. · Reformer"
+    },
+    {
+      "type": "textarea",
+      "id": "micro_quote_2",
+      "label": "Micro-quote 2",
+      "default": "I refuse to wear anything else. Your foot has to be gripping without fail."
+    },
+    {
+      "type": "text",
+      "id": "micro_quote_2_attr",
+      "label": "Micro-quote 2 attribution",
+      "default": "Dvorah S. · Pilates"
+    }
+  ],
+  "presets": [{ "name": "PDP Buy Box" }]
+}
+{% endschema %}

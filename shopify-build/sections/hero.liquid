@@ -5,21 +5,23 @@
 
 {% render 'section-wrapper', id: 'hero', class: 'hero-section', tag: 'section', aria_label: 'Hero' %}
 
-<div class="hero">
+<div class="hero{% render 'split-mobile-stack-class', mobile_stack_order: section.settings.mobile_stack_order %}">
   <div class="hero__copy">
     {% if section.settings.eyebrow != blank %}
       <p class="hero__eyebrow">{{ section.settings.eyebrow }}</p>
     {% endif %}
-    <h1 class="hero__title">{{ section.settings.title }}</h1>
+    <h1 class="hero__title type-hero">{{ section.settings.title }}</h1>
     <p class="hero__body">{{ section.settings.body }}</p>
+    {% assign hero_primary_url = section.settings.cta_primary_url | default: '/collections/barre-pilates-yoga-shoe-sock-footwear' %}
+    {% assign hero_secondary_url = section.settings.cta_secondary_url | default: '#problem' %}
     <div class="hero__ctas">
       {% if section.settings.cta_primary_text != blank %}
-        <a href="{{ section.settings.cta_primary_url }}" class="btn btn--primary hero__cta">
+        <a href="{{ hero_primary_url }}" class="btn btn--primary hero__cta">
           {{ section.settings.cta_primary_text }}
         </a>
       {% endif %}
       {% if section.settings.cta_secondary_text != blank %}
-        <a href="{{ section.settings.cta_secondary_url }}" class="btn btn--outline hero__cta hero__cta--outline">
+        <a href="{{ hero_secondary_url }}" class="btn btn--outline hero__cta hero__cta--outline">
           {{ section.settings.cta_secondary_text }}
         </a>
       {% endif %}
@@ -69,28 +71,30 @@
   }
 
   .hero__eyebrow {
-    font-size: var(--text-sm);
+    font-size: var(--type-label-size);
     text-transform: uppercase;
-    letter-spacing: var(--tracking-widest);
-    color: var(--accent-primary);
-    font-weight: var(--weight-bold);
-    margin: 0 0 var(--space-5);
+    letter-spacing: var(--type-label-tracking);
+    color: var(--type-label-color);
+    font-weight: var(--type-label-weight);
+    margin: 0 0 var(--gap-a);
   }
 
   .hero__title {
-    font-size: var(--text-7xl);
-    font-weight: var(--weight-bold);
-    line-height: var(--leading-tight);
+    font-size: var(--type-hero-size);
+    font-weight: var(--type-hero-weight);
+    line-height: var(--type-hero-leading);
+    letter-spacing: var(--type-hero-tracking);
+    text-transform: none;
     color: var(--text-primary);
-    margin: 0 0 var(--space-4);
-    letter-spacing: var(--tracking-tight);
+    margin: 0 0 var(--gap-b);
   }
 
   .hero__body {
-    font-size: var(--text-md);
+    font-size: var(--type-lede-size);
+    font-weight: var(--type-lede-weight);
     color: var(--text-body);
-    line-height: var(--leading-relaxed);
-    margin: 0 0 var(--space-7);
+    line-height: var(--type-lede-leading);
+    margin: 0 0 var(--gap-c);
     max-width: 38ch;
   }
 
@@ -151,7 +155,7 @@
     }
 
     .hero__title {
-      font-size: 34px;
+      font-size: var(--type-hero-size-mobile);
     }
 
     .hero__body {
@@ -181,7 +185,18 @@
     { "type": "url", "id": "cta_secondary_url", "label": "Secondary CTA link" },
     { "type": "text", "id": "trust_line", "label": "Trust line", "default": "Trusted by 1,000's of instructors · Made in USA" },
     { "type": "image_picker", "id": "image", "label": "Hero image" },
-    { "type": "text", "id": "image_alt", "label": "Image alt text", "default": "Studio session with Barreletics performance skins" }
+    { "type": "text", "id": "image_alt", "label": "Image alt text", "default": "Studio session with Barreletics performance skins" },
+    {
+      "type": "select",
+      "id": "mobile_stack_order",
+      "label": "Mobile stack order",
+      "default": "media_first",
+      "options": [
+        { "value": "media_first", "label": "Image above copy" },
+        { "value": "copy_first", "label": "Copy above image" }
+      ],
+      "info": "Below 768px only."
+    }
   ],
   "presets": [{ "name": "Hero" }]
 }

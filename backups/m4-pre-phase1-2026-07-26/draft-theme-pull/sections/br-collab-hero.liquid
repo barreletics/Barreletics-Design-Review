@@ -1,0 +1,2256 @@
+
+{% assign ai_gen_id = section.id | handleize | replace: '-', '' | replace: '_', '' %}
+{% assign html_id = 'br-collab-hero-' | append: section.id | handleize %}
+{% assign br_collab_heading_id = 'br-collab-h-' | append: ai_gen_id %}
+{% liquid
+  assign col_n = section.settings.desktop_columns | plus: 0
+  assign max_rows = section.settings.product_grid_max_rows | default: 2 | plus: 0
+  assign max_grid_items = max_rows | times: col_n
+  if max_grid_items > 6
+    assign max_grid_items = 6
+  endif
+  if max_grid_items < 1
+    assign max_grid_items = 1
+  endif
+  assign hero_vh = section.settings.hero_area_height_vh | default: 100 | plus: 0
+  assign hero_zoom_s = section.settings.hero_video_zoom_percent | default: 100 | times: 0.01
+
+  assign hero_scrim_on = true
+  if section.settings.hero_collab_readability_scrim == false
+    assign hero_scrim_on = false
+  endif
+  assign tile4_scrim_on = true
+  if section.settings.tile4_collab_readability_scrim == false
+    assign tile4_scrim_on = false
+  endif
+
+  assign hero_s_top = section.settings.hero_scrim_top_opacity | default: 22 | plus: 0 | times: 0.01
+  assign hero_s_bot = section.settings.hero_scrim_bottom_opacity | default: 72 | plus: 0 | times: 0.01
+  assign t4_s_top = section.settings.tile4_scrim_top_opacity | default: 18 | plus: 0 | times: 0.01
+  assign t4_s_bot = section.settings.tile4_scrim_bottom_opacity | default: 78 | plus: 0 | times: 0.01
+%}
+
+{% style %}
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Syne:wght@400;500;700&display=swap');
+
+  .br-ctb-hero-overlay-{{ ai_gen_id }} {
+    position: absolute;
+    inset: 0;
+    z-index: 12;
+    display: flex;
+    flex-direction: column;
+    padding: 52px;
+    pointer-events: none;
+    box-sizing: border-box;
+  }
+
+  .br-ctb-hero--align-bl-{{ ai_gen_id }} {
+    justify-content: flex-end;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .br-ctb-hero--align-c-{{ ai_gen_id }} {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  {% if hero_scrim_on %}
+    .br-ctb-hero-overlay-{{ ai_gen_id }}.br-ctb-hero--readability-{{ ai_gen_id }} {
+      background: linear-gradient(to bottom, rgba(0, 0, 0, {{ hero_s_top }}), rgba(0, 0, 0, {{ hero_s_bot }}));
+    }
+  {% endif %}
+
+  .br-tile4-collab-overlay-{{ ai_gen_id }} {
+    position: absolute;
+    inset: 0;
+    z-index: 8;
+    display: flex;
+    flex-direction: column;
+    pointer-events: none;
+    box-sizing: border-box;
+  }
+
+  .br-tile4--align-bl-{{ ai_gen_id }} {
+    justify-content: flex-end;
+    align-items: flex-start;
+    text-align: left;
+    padding: 18px 14px 22px 14px;
+  }
+
+  .br-tile4--align-c-{{ ai_gen_id }} {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px 16px;
+  }
+
+  .br-tile4-eye-{{ ai_gen_id }} {
+    font-family: 'Syne', sans-serif;
+    font-size: {{ section.settings.tile4_collab_font_eyebrow | default: 8 }}px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin: 0 0 10px 0;
+    max-width: 100%;
+    color: {{ section.settings.grid_tile_4_eyebrow_color | default: '#2a2a2a' }};
+  }
+
+  .br-tile4-title-{{ ai_gen_id }} {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: {{ section.settings.tile4_collab_font_title | default: 20 }}px;
+    font-weight: 300;
+    font-style: italic;
+    margin: 0 0 10px 0;
+    line-height: 1.15;
+    max-width: 28em;
+    color: {{ section.settings.grid_tile_4_title_color | default: '#1a1a1a' }};
+  }
+
+  .br-tile4-body-{{ ai_gen_id }} {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: {{ section.settings.tile4_collab_font_body | default: 12 }}px;
+    font-style: italic;
+    line-height: 1.5;
+    max-width: 26em;
+    margin: 0 0 10px 0;
+    color: {{ section.settings.grid_tile_4_body_color | default: '#333333' }};
+  }
+
+  .br-tile4-body-{{ ai_gen_id }} p {
+    margin: 0;
+  }
+
+  .br-tile4-meta-{{ ai_gen_id }} {
+    font-family: 'Syne', sans-serif;
+    font-size: {{ section.settings.tile4_collab_font_meta | default: 7 }}px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin: 0;
+    color: {{ section.settings.grid_tile_4_meta_color | default: '#555555' }};
+  }
+
+  {% if tile4_scrim_on %}
+    .br-tile4-collab-overlay-{{ ai_gen_id }}.br-tile4--readability-{{ ai_gen_id }} {
+      background: linear-gradient(to bottom, rgba(0, 0, 0, {{ t4_s_top }}), rgba(0, 0, 0, {{ t4_s_bot }}));
+    }
+
+    .br-tile4--readability-{{ ai_gen_id }} .br-tile4-eye-{{ ai_gen_id }} {
+      color: rgba(255, 255, 255, 0.62) !important;
+    }
+
+    .br-tile4--readability-{{ ai_gen_id }} .br-tile4-title-{{ ai_gen_id }} {
+      color: #ffffff !important;
+    }
+
+    .br-tile4--readability-{{ ai_gen_id }} .br-tile4-body-{{ ai_gen_id }} {
+      color: rgba(255, 255, 255, 0.78) !important;
+    }
+
+    .br-tile4--readability-{{ ai_gen_id }} .br-tile4-meta-{{ ai_gen_id }} {
+      color: rgba(255, 255, 255, 0.42) !important;
+    }
+  {% endif %}
+
+  .br-ctb-eye-{{ ai_gen_id }} {
+    font-family: 'Syne', sans-serif;
+    font-size: {{ section.settings.hero_collab_font_eyebrow | default: 9 }}px;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: {{ section.settings.hero_collab_text_color | default: '#ffffff' }};
+    margin: 0 0 10px 0;
+  }
+
+  .br-ctb-title-{{ ai_gen_id }} {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: {{ section.settings.hero_collab_font_title | default: 48 }}px;
+    font-weight: 300;
+    font-style: italic;
+    color: {{ section.settings.hero_collab_text_color | default: '#ffffff' }};
+    margin: 0 0 10px 0;
+    line-height: 1.05;
+    max-width: 560px;
+  }
+
+  .br-ctb-sub-{{ ai_gen_id }} {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: {{ section.settings.hero_collab_font_body | default: 15 }}px;
+    font-style: italic;
+    color: {{ section.settings.hero_collab_text_color | default: '#ffffff' }};
+    margin: 0 0 18px 0;
+    line-height: 1.55;
+    max-width: 420px;
+  }
+
+  .br-ctb-sub-{{ ai_gen_id }} p {
+    margin: 0;
+    color: inherit;
+  }
+
+  .br-ctb-cta-{{ ai_gen_id }} {
+    display: inline-block;
+    box-sizing: border-box;
+    font-family: 'Syne', sans-serif;
+    font-size: {{ section.settings.hero_collab_cta_font_size | default: 10 }}px;
+    font-weight: {{ section.settings.hero_collab_cta_font_weight | default: 700 }};
+    letter-spacing: {{ section.settings.hero_collab_cta_letter_spacing | default: 18 | times: 0.01 }}em;
+    text-transform: uppercase;
+    color: {{ section.settings.hero_collab_cta_text_color | default: '#000000' }};
+    background: {{ section.settings.hero_collab_cta_bg_color | default: '#ffffff' }};
+    padding: {{ section.settings.hero_collab_cta_pad_v | default: 14 }}px {{ section.settings.hero_collab_cta_pad_h | default: 32 }}px;
+    text-decoration: none;
+    border: none !important;
+    margin: 0 0 20px 0;
+    pointer-events: auto;
+    text-align: center;
+    line-height: 1.2;
+  }
+
+  .br-ctb-cta-{{ ai_gen_id }}:hover,
+  .br-ctb-cta-{{ ai_gen_id }}:focus {
+    opacity: 0.92;
+  }
+
+  .br-ctb-hero--align-bl-{{ ai_gen_id }} .br-ctb-cta-{{ ai_gen_id }} {
+    align-self: flex-start;
+  }
+
+  .br-ctb-hero--align-c-{{ ai_gen_id }} .br-ctb-cta-{{ ai_gen_id }} {
+    align-self: center;
+  }
+
+  .br-ctb-meta-{{ ai_gen_id }} {
+    font-family: 'Syne', sans-serif;
+    font-size: {{ section.settings.hero_collab_font_meta | default: 9 }}px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: {{ section.settings.hero_collab_text_color | default: '#ffffff' }};
+    margin: 0;
+  }
+
+  @media screen and (max-width: 749px) {
+    .br-ctb-hero-overlay-{{ ai_gen_id }} {
+      padding: 32px 28px;
+    }
+
+    .br-ctb-title-{{ ai_gen_id }} {
+      font-size: max(22px, calc({{ section.settings.hero_collab_font_title | default: 48 }}px * 0.55));
+    }
+
+    .br-tile4-title-{{ ai_gen_id }} {
+      font-size: max(14px, calc({{ section.settings.tile4_collab_font_title | default: 20 }}px * 0.85));
+    }
+  }
+
+  .ai-collab-hero-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    min-height: {{ hero_vh }}vh;
+    background-color: {{ section.settings.background_color }};
+    overflow: hidden;
+    display: block;
+  }
+
+  {% if section.settings.hero_edge_to_edge %}
+    .ai-collab-hero-{{ ai_gen_id }}.ai-collab-hero--edge-{{ ai_gen_id }} {
+      width: 100vw;
+      max-width: 100vw;
+      margin-left: calc(50% - 50vw);
+      margin-right: calc(50% - 50vw);
+      position: relative;
+      left: 0;
+      right: 0;
+    }
+  {% endif %}
+
+  .ai-collab-hero__video-container-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    height: {{ hero_vh }}vh;
+    min-height: {{ hero_vh }}vh;
+    overflow: hidden;
+    background-color: {{ section.settings.background_color }};
+  }
+
+  .ai-collab-hero__video-media-{{ ai_gen_id }} {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  .ai-collab-hero__video-media-{{ ai_gen_id }} video,
+  .ai-collab-hero__video-media-{{ ai_gen_id }} img.ai-collab-hero__poster-image-{{ ai_gen_id }} {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    min-width: 100%;
+    min-height: 100%;
+    transform: translate(-50%, -50%) scale({{ hero_zoom_s }});
+    object-fit: {{ section.settings.hero_video_object_fit | default: 'cover' }};
+    object-position: {{ section.settings.hero_video_object_position | default: 'center' }};
+  }
+
+  .ai-collab-hero__video-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #f8f8f8 0%, #e8e8e8 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #999999;
+    font-size: 16px;
+    gap: 20px;
+  }
+
+  .ai-collab-hero__video-placeholder-icon-{{ ai_gen_id }} {
+    width: 80px;
+    height: 80px;
+    opacity: 0.4;
+  }
+
+  .ai-collab-hero__content-overlay-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    z-index: 10;
+  }
+
+  .ai-collab-hero__title-{{ ai_gen_id }} {
+    font-size: {{ section.settings.title_size }}px;
+    font-weight: {{ section.settings.title_weight }};
+    color: {{ section.settings.title_color }};
+    text-align: center;
+    line-height: 1;
+    letter-spacing: {{ section.settings.title_letter_spacing }}px;
+    margin: 0 0 {{ section.settings.title_spacing }}px 0;
+    text-transform: {{ section.settings.title_transform }};
+    max-width: 1200px;
+  }
+
+  .ai-collab-hero__subtitle-{{ ai_gen_id }} {
+    font-size: {{ section.settings.subtitle_size }}px;
+    color: {{ section.settings.subtitle_color }};
+    text-align: center;
+    line-height: 1.4;
+    margin: 0 0 {{ section.settings.subtitle_spacing }}px 0;
+    max-width: 600px;
+    font-weight: {{ section.settings.subtitle_weight }};
+    letter-spacing: {{ section.settings.subtitle_letter_spacing }}px;
+  }
+
+  .ai-collab-hero__product-subtitle-{{ ai_gen_id }} {
+    margin-top: 10px;
+    text-align: center;
+    line-height: 1.35;
+    font-weight: 400;
+  }
+
+  .ai-collab-hero__cta-{{ ai_gen_id }} {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: {{ section.settings.button_padding_vertical }}px {{ section.settings.button_padding_horizontal }}px;
+    background-color: {{ section.settings.button_bg_color }};
+    color: {{ section.settings.button_text_color }};
+    text-decoration: none;
+    font-size: {{ section.settings.button_text_size }}px;
+    font-weight: {{ section.settings.button_weight }};
+    border-radius: {{ section.settings.button_border_radius }}px;
+    transition: all 0.3s ease;
+    text-transform: {{ section.settings.button_transform }};
+    letter-spacing: {{ section.settings.button_letter_spacing }}px;
+    border: {{ section.settings.button_border_width }}px solid {{ section.settings.button_border_color }};
+  }
+
+  .ai-collab-hero__cta-{{ ai_gen_id }}:hover {
+    background-color: {{ section.settings.button_hover_bg_color }};
+    color: {{ section.settings.button_hover_text_color }};
+    border-color: {{ section.settings.button_hover_border_color }};
+  }
+
+  .ai-collab-hero__product-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.desktop_columns }}, 1fr);
+    gap: {{ section.settings.grid_gap }}px;
+    padding: {{ section.settings.section_padding }}px 40px;
+    max-width: {{ section.settings.max_width }}px;
+    margin: 0 auto;
+  }
+
+  .ai-collab-hero__product-item-{{ ai_gen_id }} {
+    position: relative;
+    aspect-ratio: {{ section.settings.image_aspect_ratio }};
+    overflow: hidden;
+    background-color: #f8f8f8;
+  }
+
+  .ai-collab-hero__product-item-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+  }
+
+  .ai-collab-hero__product-item-{{ ai_gen_id }} video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-collab-hero__product-item-{{ ai_gen_id }}:hover img {
+    transform: scale(1.05);
+  }
+
+  .ai-collab-hero__product-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #f8f8f8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-collab-hero__product-placeholder-{{ ai_gen_id }} svg {
+    width: 40%;
+    height: 40%;
+    opacity: 0.2;
+  }
+
+  .ai-collab-hero__product-text-overlay-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 20px;
+    z-index: 5;
+    pointer-events: none;
+  }
+
+  .ai-collab-hero__overlay-text-{{ ai_gen_id }} {
+    text-align: center;
+    line-height: 1.2;
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-collab-hero__product-grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat({{ section.settings.tablet_columns }}, 1fr);
+      gap: {{ section.settings.grid_gap | times: 0.75 }}px;
+      padding: {{ section.settings.section_padding | times: 0.75 }}px 30px;
+    }
+
+    .ai-collab-hero__title-{{ ai_gen_id }} {
+      font-size: calc({{ section.settings.title_size }}px * 0.6);
+    }
+
+    .ai-collab-hero__subtitle-{{ ai_gen_id }} {
+      font-size: calc({{ section.settings.subtitle_size }}px * 0.85);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-collab-hero__product-grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat({{ section.settings.mobile_columns }}, 1fr);
+      gap: {{ section.settings.grid_gap | times: 0.5 }}px;
+      padding: {{ section.settings.section_padding | times: 0.5 }}px 20px;
+    }
+
+    .ai-collab-hero__title-{{ ai_gen_id }} {
+      font-size: calc({{ section.settings.title_size }}px * 0.45);
+      letter-spacing: calc({{ section.settings.title_letter_spacing }}px * 0.5);
+    }
+
+    .ai-collab-hero__subtitle-{{ ai_gen_id }} {
+      font-size: calc({{ section.settings.subtitle_size }}px * 0.75);
+    }
+
+    .ai-collab-hero__cta-{{ ai_gen_id }} {
+      padding: {{ section.settings.button_padding_vertical | times: 0.8 }}px {{ section.settings.button_padding_horizontal | times: 0.8 }}px;
+      font-size: calc({{ section.settings.button_text_size }}px * 0.9);
+    }
+  }
+{% endstyle %}
+
+{% liquid
+  assign br_collab_def_eye = 'Limited Edition × Paris SS26'
+  assign br_collab_def_hero_title = '<p>Barreletics × Coperni.</p><p>Built for the body in motion.</p>'
+  assign br_collab_def_hero_body = '<p>A Pilates shoe designed for comfort, grounding, and athletic poise — introduced on the Coperni runway, Spring–Summer 2026.</p>'
+  assign br_collab_def_tile4_title = '<p>Where the runway meets real movement.</p>'
+  assign br_collab_def_tile4_body = '<p>Developed for the Coperni Spring–Summer 2026 collection in Paris — a Pilates shoe built for stability, grip, and athletic poise.</p>'
+
+  assign co_eye = section.settings.coperni_overlay_eyebrow | default: br_collab_def_eye
+  assign co_title_rt = section.settings.coperni_overlay_title | default: br_collab_def_hero_title
+  assign co_sub_rt = section.settings.coperni_overlay_subtitle | default: br_collab_def_hero_body
+  assign co_meta = section.settings.coperni_overlay_meta
+  assign co_title_plain = co_title_rt | strip_html | strip
+  assign co_sub_plain = co_sub_rt | strip_html | strip
+
+  assign t4_eye = section.settings.grid_tile_4_eyebrow | default: br_collab_def_eye
+  assign t4_title_rt = section.settings.grid_tile_4_title | default: br_collab_def_tile4_title
+  assign t4_body_rt = section.settings.grid_tile_4_body | default: br_collab_def_tile4_body
+  assign t4_meta = section.settings.grid_tile_4_meta
+  assign t4_title_plain = t4_title_rt | strip_html | strip
+  assign t4_body_plain = t4_body_rt | strip_html | strip
+
+  assign hero_collab_align_c = false
+  if section.settings.hero_collab_text_position == 'center'
+    assign hero_collab_align_c = true
+  endif
+  assign tile4_collab_align_c = false
+  if section.settings.tile4_collab_text_position == 'center'
+    assign tile4_collab_align_c = true
+  endif
+
+  assign coperni_hero_active = section.settings.coperni_overlay_show_hero
+  assign tile4_collab_active = section.settings.coperni_overlay_show_slot4
+
+  assign br_collab_has_heading = false
+  if section.settings.coperni_overlay_show_hero and section.settings.coperni_overlay_hide_centered_hero and co_title_plain != blank
+    assign br_collab_has_heading = true
+  elsif section.settings.title != blank
+    assign br_collab_has_heading = true
+  endif
+%}
+
+<section
+  id="{{ html_id }}"
+  data-br-collab-root
+  class="ai-collab-hero-{{ ai_gen_id }}{% if section.settings.hero_edge_to_edge %} ai-collab-hero--edge-{{ ai_gen_id }}{% endif %}"
+  {% if br_collab_has_heading %}
+    aria-labelledby="{{ br_collab_heading_id }}"
+  {% else %}
+    aria-label="{{ section.settings.section_accessible_name | default: 'Collaboration campaign' | escape }}"
+  {% endif %}
+  {{ section.shopify_attributes }}
+>
+  <div class="ai-collab-hero__video-container-{{ ai_gen_id }}">
+    {% liquid
+      assign has_video = false
+      if section.settings.runway_video_file != blank or section.settings.runway_video_url != blank
+        assign has_video = true
+      endif
+    %}
+
+    {% if has_video %}
+      <div class="ai-collab-hero__video-media-{{ ai_gen_id }}">
+        <video
+          autoplay
+          muted
+          loop
+          playsinline
+          aria-hidden="true"
+          {% if section.settings.video_poster %}
+            poster="{{ section.settings.video_poster | image_url: width: 2400 }}"
+          {% endif %}
+        >
+          {% if section.settings.runway_video_file != blank %}
+            {% for source in section.settings.runway_video_file.sources %}
+              <source src="{{ source.url }}" type="{{ source.mime_type }}">
+            {% endfor %}
+          {% elsif section.settings.runway_video_url != blank %}
+            <source src="{{ section.settings.runway_video_url }}" type="video/mp4">
+          {% endif %}
+        </video>
+      </div>
+    {% elsif section.settings.video_poster %}
+      <div class="ai-collab-hero__video-media-{{ ai_gen_id }}">
+        <img
+          src="{{ section.settings.video_poster | image_url: width: 2400 }}"
+          alt="{{ section.settings.video_poster.alt | default: section.settings.section_accessible_name | default: 'Collaboration campaign' | escape }}"
+          class="ai-collab-hero__poster-image-{{ ai_gen_id }}"
+          loading="eager"
+          fetchpriority="high"
+          width="{{ section.settings.video_poster.width }}"
+          height="{{ section.settings.video_poster.height }}"
+        >
+      </div>
+    {% else %}
+      <div class="ai-collab-hero__video-placeholder-{{ ai_gen_id }}">
+        <svg class="ai-collab-hero__video-placeholder-icon-{{ ai_gen_id }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+          <polygon points="5 3 19 12 5 21 5 3"></polygon>
+        </svg>
+        <span>Add video or poster image</span>
+      </div>
+    {% endif %}
+
+    {% if coperni_hero_active %}
+      <div class="br-ctb-hero-overlay-{{ ai_gen_id }}{% if hero_scrim_on %} br-ctb-hero--readability-{{ ai_gen_id }}{% endif %}{% if hero_collab_align_c %} br-ctb-hero--align-c-{{ ai_gen_id }}{% else %} br-ctb-hero--align-bl-{{ ai_gen_id }}{% endif %}">
+        <p class="br-ctb-eye-{{ ai_gen_id }}">{{ co_eye | escape }}</p>
+        {% if section.settings.coperni_overlay_hide_centered_hero %}
+          <h1 id="{{ br_collab_heading_id }}" class="br-ctb-title-{{ ai_gen_id }}">{{ co_title_plain }}</h1>
+        {% else %}
+          <h2 class="br-ctb-title-{{ ai_gen_id }}">{{ co_title_plain }}</h2>
+        {% endif %}
+        <div class="br-ctb-sub-{{ ai_gen_id }}">{{ co_sub_rt }}</div>
+        {% liquid
+          assign co_cta_label = section.settings.hero_collab_cta_label | strip
+          assign co_cta_href = section.settings.hero_collab_cta_link
+        %}
+        {% if co_cta_label != blank and co_cta_href != blank %}
+          <a
+            href="{{ co_cta_href }}"
+            class="br-ctb-cta-{{ ai_gen_id }}"
+            {% if section.settings.hero_collab_cta_new_tab %}
+              target="_blank"
+              rel="noopener noreferrer"
+            {% endif %}
+          >
+            {{- co_cta_label | escape -}}
+          </a>
+        {% endif %}
+        {% if co_meta != blank %}
+          <p class="br-ctb-meta-{{ ai_gen_id }}">{{ co_meta | escape }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="ai-collab-hero__content-overlay-{{ ai_gen_id }}">
+      {% if section.settings.title != blank %}
+        {% unless section.settings.coperni_overlay_show_hero and section.settings.coperni_overlay_hide_centered_hero %}
+          <h1 id="{{ br_collab_heading_id }}" class="ai-collab-hero__title-{{ ai_gen_id }}">{{ section.settings.title }}</h1>
+        {% endunless %}
+      {% endif %}
+
+      {% if section.settings.subtitle != blank %}
+        {% unless section.settings.coperni_overlay_show_hero and section.settings.coperni_overlay_hide_centered_hero %}
+          <div class="ai-collab-hero__subtitle-{{ ai_gen_id }}">{{ section.settings.subtitle }}</div>
+        {% endunless %}
+      {% endif %}
+
+      {% if section.settings.cta_text != blank and section.settings.cta_link != blank %}
+        <a
+          href="{{ section.settings.cta_link }}"
+          class="ai-collab-hero__cta-{{ ai_gen_id }}"
+          {% if section.settings.cta_open_new_tab %}
+            target="_blank"
+            rel="noopener noreferrer"
+          {% endif %}
+        >
+          {{ section.settings.cta_text | escape }}
+        </a>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if section.settings.show_product_grid %}
+    <div
+      class="ai-collab-hero__product-grid-{{ ai_gen_id }}"
+      role="region"
+      aria-label="{{ section.settings.product_grid_aria_label | default: 'Featured campaign products' | escape }}"
+    >
+      {% for i in (1..max_grid_items) %}
+        {% liquid
+          assign image_key = 'product_image_' | append: i
+          assign video_key = 'product_video_' | append: i
+          assign text_key = 'product_text_' | append: i
+          assign text_size_key = 'product_text_size_' | append: i
+          assign text_weight_key = 'product_text_weight_' | append: i
+          assign text_color_key = 'product_text_color_' | append: i
+          assign text_transform_key = 'product_text_transform_' | append: i
+          assign text_spacing_key = 'product_text_spacing_' | append: i
+          
+          assign product_image = section.settings[image_key]
+          assign product_video = section.settings[video_key]
+          assign product_text = section.settings[text_key]
+          assign text_size = section.settings[text_size_key]
+          assign text_weight = section.settings[text_weight_key]
+          assign text_color = section.settings[text_color_key]
+          assign text_transform = section.settings[text_transform_key]
+          assign text_spacing = section.settings[text_spacing_key]
+          
+          assign has_product_video = false
+          if i <= 2 and product_video != blank
+            assign has_product_video = true
+          endif
+
+        %}
+        
+        <div class="ai-collab-hero__product-item-{{ ai_gen_id }}">
+          {% if has_product_video %}
+            <video
+              autoplay
+              muted
+              loop
+              playsinline
+              aria-hidden="true"
+            >
+              {% for source in product_video.sources %}
+                <source src="{{ source.url }}" type="{{ source.mime_type }}">
+              {% endfor %}
+            </video>
+          {% elsif product_image %}
+            <img
+              src="{{ product_image | image_url: width: 800 }}"
+              alt="{{ product_image.alt | default: 'Campaign image' | escape }}"
+              loading="lazy"
+              decoding="async"
+              width="800"
+              height="800"
+            >
+          {% else %}
+            <div class="ai-collab-hero__product-placeholder-{{ ai_gen_id }}">
+              {{ 'product-1' | placeholder_svg_tag }}
+            </div>
+          {% endif %}
+
+          {% unless i == 4 and tile4_collab_active %}
+          {% if product_text != blank or i == 2 and section.settings.product_subtitle_2 != blank or i == 4 and section.settings.product_subtitle_4 != blank %}
+            <div class="ai-collab-hero__product-text-overlay-{{ ai_gen_id }}">
+              {% if product_text != blank %}
+                <div 
+                  class="ai-collab-hero__overlay-text-{{ ai_gen_id }}"
+                  style="
+                    font-size: {{ text_size }}px;
+                    font-weight: {{ text_weight }};
+                    color: {{ text_color }};
+                    text-transform: {{ text_transform }};
+                    letter-spacing: {{ text_spacing }}px;
+                  "
+                >
+                  {{ product_text }}
+                </div>
+              {% endif %}
+              {% if i == 2 and section.settings.product_subtitle_2 != blank %}
+                <div
+                  class="ai-collab-hero__product-subtitle-{{ ai_gen_id }}"
+                  style="color: {{ section.settings.product_subtitle_2_color }}; font-size: {{ section.settings.product_subtitle_2_size }}px;"
+                >
+                  {{ section.settings.product_subtitle_2 }}
+                </div>
+              {% elsif i == 4 and section.settings.product_subtitle_4 != blank %}
+                <div
+                  class="ai-collab-hero__product-subtitle-{{ ai_gen_id }}"
+                  style="color: {{ section.settings.product_subtitle_4_color }}; font-size: {{ section.settings.product_subtitle_4_size }}px;"
+                >
+                  {{ section.settings.product_subtitle_4 }}
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
+          {% endunless %}
+
+          {% if i == 4 and tile4_collab_active %}
+            <article
+              class="br-tile4-collab-overlay-{{ ai_gen_id }}{% if tile4_scrim_on %} br-tile4--readability-{{ ai_gen_id }}{% endif %}{% if tile4_collab_align_c %} br-tile4--align-c-{{ ai_gen_id }}{% else %} br-tile4--align-bl-{{ ai_gen_id }}{% endif %}"
+              aria-labelledby="br-tile4-h-{{ ai_gen_id }}"
+            >
+              <p class="br-tile4-eye-{{ ai_gen_id }}">{{ t4_eye | escape }}</p>
+              <h2 id="br-tile4-h-{{ ai_gen_id }}" class="br-tile4-title-{{ ai_gen_id }}">{{ t4_title_plain }}</h2>
+              <div class="br-tile4-body-{{ ai_gen_id }}">{{ t4_body_rt }}</div>
+              {% if t4_meta != blank %}
+                <p class="br-tile4-meta-{{ ai_gen_id }}">{{ t4_meta | escape }}</p>
+              {% endif %}
+            </article>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% liquid
+    assign br_ld_name = ''
+    if section.settings.title != blank
+      if section.settings.coperni_overlay_show_hero == false or section.settings.coperni_overlay_hide_centered_hero == false
+        assign br_ld_name = section.settings.title | strip_html | strip
+      endif
+    endif
+    if br_ld_name == blank and coperni_hero_active
+      assign br_ld_name = co_title_plain
+    endif
+    if br_ld_name == blank and tile4_collab_active
+      assign br_ld_name = t4_title_plain
+    endif
+    if br_ld_name == blank
+      assign br_ld_name = section.settings.section_accessible_name | default: 'Collaboration campaign'
+    endif
+
+    assign br_ld_desc = ''
+    if coperni_hero_active
+      assign br_ld_desc = co_sub_plain
+      if co_meta != blank
+        if br_ld_desc != blank
+          assign br_ld_desc = br_ld_desc | append: ' ' | append: co_meta
+        else
+          assign br_ld_desc = co_meta
+        endif
+      endif
+    endif
+    if br_ld_desc == blank and section.settings.subtitle != blank
+      if section.settings.coperni_overlay_show_hero == false or section.settings.coperni_overlay_hide_centered_hero == false
+        assign br_ld_desc = section.settings.subtitle | strip_html | strip
+      endif
+    endif
+    if tile4_collab_active and t4_body_plain != blank
+      if br_ld_desc != blank
+        assign br_ld_desc = br_ld_desc | append: ' ' | append: t4_body_plain
+      else
+        assign br_ld_desc = t4_body_plain
+      endif
+    endif
+    if tile4_collab_active and t4_meta != blank
+      if br_ld_desc != blank
+        assign br_ld_desc = br_ld_desc | append: ' ' | append: t4_meta
+      else
+        assign br_ld_desc = t4_meta
+      endif
+    endif
+  %}
+  {% if br_ld_name != blank %}
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "CreativeWork",
+        "name": {{ br_ld_name | json }},
+        "description": {{ br_ld_desc | strip | truncate: 500 | json }}
+      }
+    </script>
+  {% endif %}
+</section>
+
+<script>
+  (function() {
+    var elId = {{ html_id | json }};
+    var root = document.getElementById(elId);
+    if (!root) return;
+    root.querySelectorAll('video').forEach(function(video) {
+      video.play().catch(function() {
+        video.muted = true;
+        video.play();
+      });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "BR Collaboration hero",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "section_accessible_name",
+      "label": "Section name (accessibility & SEO)",
+      "default": "Collaboration campaign",
+      "info": "Used when the title is empty (screen readers) and as a fallback for poster image alt text."
+    },
+    {
+      "type": "header",
+      "content": "Hero video"
+    },
+    {
+      "type": "video",
+      "id": "runway_video_file",
+      "label": "Video file"
+    },
+    {
+      "type": "url",
+      "id": "runway_video_url",
+      "label": "Video URL"
+    },
+    {
+      "type": "image_picker",
+      "id": "video_poster",
+      "label": "Poster image"
+    },
+    {
+      "type": "paragraph",
+      "content": "Poster image displays as fallback when no video is added, or as thumbnail before video loads."
+    },
+    {
+      "type": "range",
+      "id": "hero_area_height_vh",
+      "label": "Hero height (viewport)",
+      "min": 50,
+      "max": 130,
+      "step": 5,
+      "unit": "vh",
+      "default": 100,
+      "info": "100 = one screen tall. Increase to make the hero taller (e.g. 110–120)."
+    },
+    {
+      "type": "select",
+      "id": "hero_video_object_fit",
+      "label": "Video & poster fill",
+      "options": [
+        {
+          "value": "cover",
+          "label": "Full bleed (cover) — fills frame, may crop edges"
+        },
+        {
+          "value": "contain",
+          "label": "Show whole frame (contain) — may show empty bands"
+        }
+      ],
+      "default": "cover",
+      "info": "Use Cover to avoid side bars. Black bars baked into the video file may need Zoom below."
+    },
+    {
+      "type": "select",
+      "id": "hero_video_object_position",
+      "label": "Crop position (when using cover)",
+      "options": [
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "center top",
+          "label": "Top"
+        },
+        {
+          "value": "center bottom",
+          "label": "Bottom"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "hero_video_zoom_percent",
+      "label": "Zoom (remove edge bars)",
+      "min": 100,
+      "max": 130,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "info": "If black bars are part of the video file, try 105–115% to crop them. Re-exporting the video without letterboxing is the cleanest fix."
+    },
+    {
+      "type": "checkbox",
+      "id": "hero_edge_to_edge",
+      "label": "Edge-to-edge hero (full browser width)",
+      "default": true,
+      "info": "Video and hero span the full viewport width. Turn off if your theme already makes sections full width."
+    },
+    {
+      "type": "header",
+      "content": "Hero collaboration overlay"
+    },
+    {
+      "type": "paragraph",
+      "content": "This block includes gradient sliders (top + bottom darkness), text position, Coperni text sizes in px, copy fields, “Hero video — shop button” (set Button link or the button stays hidden), and meta. Tile 4: same under “Grid tile 4” — gradient sliders + “Tile 4 text sizes.”"
+    },
+    {
+      "type": "checkbox",
+      "id": "coperni_overlay_show_hero",
+      "label": "Show text on hero video",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "hero_collab_readability_scrim",
+      "label": "Gradient behind hero text (readability)",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "hero_scrim_top_opacity",
+      "label": "Hero gradient — top darkness",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 22,
+      "info": "0 = transparent at top of overlay. Higher = stronger fade."
+    },
+    {
+      "type": "range",
+      "id": "hero_scrim_bottom_opacity",
+      "label": "Hero gradient — bottom darkness",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 72,
+      "info": "Strength of the dark band behind text at the bottom."
+    },
+    {
+      "type": "select",
+      "id": "hero_collab_text_position",
+      "label": "Hero collaboration text position",
+      "options": [
+        {
+          "value": "bottom_left",
+          "label": "Lower left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "bottom_left"
+    },
+    {
+      "type": "header",
+      "content": "Hero collaboration text sizes (px)"
+    },
+    {
+      "type": "range",
+      "id": "hero_collab_font_eyebrow",
+      "label": "Eyebrow",
+      "min": 6,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 9
+    },
+    {
+      "type": "range",
+      "id": "hero_collab_font_title",
+      "label": "Title",
+      "min": 22,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "hero_collab_font_body",
+      "label": "Body",
+      "min": 10,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "hero_collab_font_meta",
+      "label": "Meta line",
+      "min": 6,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 9
+    },
+    {
+      "type": "color",
+      "id": "hero_collab_text_color",
+      "label": "Coperni overlay text color (all lines)",
+      "default": "#ffffff",
+      "info": "Applies to eyebrow, title, body, and meta on the hero video. Shop button uses its own colors below."
+    },
+    {
+      "type": "checkbox",
+      "id": "coperni_overlay_hide_centered_hero",
+      "label": "Hide centered title & subtitle when hero overlay is on",
+      "default": true,
+      "info": "Turn off to keep the original centered headline and add this strip as an extra layer."
+    },
+    {
+      "type": "text",
+      "id": "coperni_overlay_eyebrow",
+      "label": "Hero video — eyebrow",
+      "default": "Limited Edition × Paris SS26"
+    },
+    {
+      "type": "richtext",
+      "id": "coperni_overlay_title",
+      "label": "Hero video — title",
+      "default": "<p>Barreletics × Coperni.</p><p>Built for the body in motion.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "coperni_overlay_subtitle",
+      "label": "Hero video — body",
+      "default": "<p>A Pilates shoe designed for comfort, grounding, and athletic poise — introduced on the Coperni runway, Spring–Summer 2026.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Hero video — shop button"
+    },
+    {
+      "type": "paragraph",
+      "content": "Shown between body and meta (like the reference layout). Leave label or link empty to hide."
+    },
+    {
+      "type": "text",
+      "id": "hero_collab_cta_label",
+      "label": "Button label",
+      "default": "Shop the collaboration"
+    },
+    {
+      "type": "url",
+      "id": "hero_collab_cta_link",
+      "label": "Button link",
+      "info": "e.g. /products/your-collab-handle or full URL."
+    },
+    {
+      "type": "checkbox",
+      "id": "hero_collab_cta_new_tab",
+      "label": "Open link in new tab",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "hero_collab_cta_font_size",
+      "label": "Button font size",
+      "min": 8,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "hero_collab_cta_font_weight",
+      "label": "Button font weight",
+      "min": 400,
+      "max": 900,
+      "step": 100,
+      "default": 700
+    },
+    {
+      "type": "range",
+      "id": "hero_collab_cta_letter_spacing",
+      "label": "Button letter-spacing (×0.01 em)",
+      "min": 8,
+      "max": 28,
+      "step": 1,
+      "default": 18,
+      "info": "18 ≈ 0.18em (reference style)."
+    },
+    {
+      "type": "range",
+      "id": "hero_collab_cta_pad_v",
+      "label": "Button padding vertical",
+      "min": 8,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "hero_collab_cta_pad_h",
+      "label": "Button padding horizontal",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "color",
+      "id": "hero_collab_cta_text_color",
+      "label": "Button text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "hero_collab_cta_bg_color",
+      "label": "Button background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "coperni_overlay_meta",
+      "label": "Hero video — meta line",
+      "default": "Closed Sole · Special Release · One Run",
+      "info": "Clear to hide this line."
+    },
+    {
+      "type": "header",
+      "content": "Grid tile 4 (collaboration)"
+    },
+    {
+      "type": "paragraph",
+      "content": "Fourth grid cell: eyebrow, title, body, optional meta (like the hero strip). Empty fields use the runway SS26 defaults. Adjust gradient strength and text position below."
+    },
+    {
+      "type": "checkbox",
+      "id": "coperni_overlay_show_slot4",
+      "label": "Show text on tile 4",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "tile4_collab_readability_scrim",
+      "label": "Gradient behind tile 4 text (readability)",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "tile4_scrim_top_opacity",
+      "label": "Tile 4 gradient — top darkness",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "tile4_scrim_bottom_opacity",
+      "label": "Tile 4 gradient — bottom darkness",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 78
+    },
+    {
+      "type": "select",
+      "id": "tile4_collab_text_position",
+      "label": "Tile 4 text position",
+      "options": [
+        {
+          "value": "bottom_left",
+          "label": "Lower left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "bottom_left"
+    },
+    {
+      "type": "text",
+      "id": "grid_tile_4_eyebrow",
+      "label": "Tile 4 eyebrow",
+      "default": "Limited Edition × Paris SS26"
+    },
+    {
+      "type": "richtext",
+      "id": "grid_tile_4_title",
+      "label": "Tile 4 title",
+      "default": "<p>Where the runway meets real movement.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "grid_tile_4_body",
+      "label": "Tile 4 body",
+      "default": "<p>Developed for the Coperni Spring–Summer 2026 collection in Paris — a Pilates shoe built for stability, grip, and athletic poise.</p>"
+    },
+    {
+      "type": "text",
+      "id": "grid_tile_4_meta",
+      "label": "Tile 4 meta line",
+      "info": "Optional. Same role as hero meta. Leave empty to hide."
+    },
+    {
+      "type": "header",
+      "content": "Tile 4 text sizes (px)"
+    },
+    {
+      "type": "range",
+      "id": "tile4_collab_font_eyebrow",
+      "label": "Eyebrow",
+      "min": 5,
+      "max": 14,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "tile4_collab_font_title",
+      "label": "Title",
+      "min": 12,
+      "max": 36,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "tile4_collab_font_body",
+      "label": "Body",
+      "min": 9,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "tile4_collab_font_meta",
+      "label": "Meta line",
+      "min": 5,
+      "max": 12,
+      "step": 1,
+      "unit": "px",
+      "default": 7
+    },
+    {
+      "type": "color",
+      "id": "grid_tile_4_eyebrow_color",
+      "label": "Tile 4 eyebrow color",
+      "default": "#2a2a2a"
+    },
+    {
+      "type": "color",
+      "id": "grid_tile_4_title_color",
+      "label": "Tile 4 title color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "grid_tile_4_body_color",
+      "label": "Tile 4 body color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "grid_tile_4_meta_color",
+      "label": "Tile 4 meta line color",
+      "default": "#555555"
+    },
+    {
+      "type": "header",
+      "content": "Centered hero (secondary layer)"
+    },
+    {
+      "type": "paragraph",
+      "content": "Large centered text over the video. Shown when the collaboration strip above does not replace it (turn off “Hide centered title & subtitle when hero overlay is on” to show both layers)."
+    },
+    {
+      "type": "richtext",
+      "id": "title",
+      "label": "Centered headline",
+      "default": "<p>BARRELETICS × COPERNI</p>"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Size",
+      "min": 40,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "title_weight",
+      "label": "Weight",
+      "min": 100,
+      "max": 900,
+      "step": 100,
+      "default": 400
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Color",
+      "default": "#000000"
+    },
+    {
+      "type": "select",
+      "id": "title_transform",
+      "label": "Text transform",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "uppercase",
+          "label": "Uppercase"
+        },
+        {
+          "value": "lowercase",
+          "label": "Lowercase"
+        }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "range",
+      "id": "title_letter_spacing",
+      "label": "Letter spacing",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "title_spacing",
+      "label": "Bottom spacing",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Subtitle"
+    },
+    {
+      "type": "richtext",
+      "id": "subtitle",
+      "label": "Centered subtext",
+      "default": "<p>Performance meets haute couture</p>"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "label": "Size",
+      "min": 14,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "subtitle_weight",
+      "label": "Weight",
+      "min": 100,
+      "max": 900,
+      "step": 100,
+      "default": 300
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_letter_spacing",
+      "label": "Letter spacing",
+      "min": 0,
+      "max": 10,
+      "step": 0.5,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "subtitle_spacing",
+      "label": "Bottom spacing",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Text",
+      "default": "Discover the collection"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Link"
+    },
+    {
+      "type": "checkbox",
+      "id": "cta_open_new_tab",
+      "label": "Open CTA link in a new tab",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "button_text_size",
+      "label": "Text size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "button_weight",
+      "label": "Weight",
+      "min": 100,
+      "max": 900,
+      "step": 100,
+      "default": 400
+    },
+    {
+      "type": "select",
+      "id": "button_transform",
+      "label": "Text transform",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "uppercase",
+          "label": "Uppercase"
+        },
+        {
+          "value": "lowercase",
+          "label": "Lowercase"
+        }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "range",
+      "id": "button_letter_spacing",
+      "label": "Letter spacing",
+      "min": 0,
+      "max": 6,
+      "step": 0.5,
+      "unit": "px",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "button_padding_vertical",
+      "label": "Vertical padding",
+      "min": 8,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "button_padding_horizontal",
+      "label": "Horizontal padding",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_border_color",
+      "label": "Border",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "button_border_width",
+      "label": "Border width",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "button_hover_bg_color",
+      "label": "Hover background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_text_color",
+      "label": "Hover text",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_border_color",
+      "label": "Hover border",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Product grid"
+    },
+    {
+      "type": "select",
+      "id": "product_grid_max_rows",
+      "label": "Number of rows (under the hero)",
+      "options": [
+        {
+          "value": "1",
+          "label": "1 row"
+        },
+        {
+          "value": "2",
+          "label": "2 rows"
+        },
+        {
+          "value": "3",
+          "label": "3 rows"
+        },
+        {
+          "value": "4",
+          "label": "4 rows"
+        }
+      ],
+      "default": "2",
+      "info": "Tiles shown = rows × desktop columns (max 6 tiles). Example: 1 row and 3 columns = 3 tiles."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_product_grid",
+      "label": "Show product grid",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "product_grid_aria_label",
+      "label": "Product grid label (accessibility)",
+      "default": "Featured campaign products",
+      "info": "Describes the grid for screen readers."
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 1200,
+      "max": 2000,
+      "step": 100,
+      "unit": "px",
+      "default": 1600
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "label": "Section padding",
+      "min": 40,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "label": "Grid gap",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "select",
+      "id": "desktop_columns",
+      "label": "Desktop columns",
+      "options": [
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "3",
+          "label": "3"
+        },
+        {
+          "value": "4",
+          "label": "4"
+        },
+        {
+          "value": "6",
+          "label": "6"
+        }
+      ],
+      "default": "3"
+    },
+    {
+      "type": "select",
+      "id": "tablet_columns",
+      "label": "Tablet columns",
+      "options": [
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "3",
+          "label": "3"
+        }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "select",
+      "id": "mobile_columns",
+      "label": "Mobile columns",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "select",
+      "id": "image_aspect_ratio",
+      "label": "Image aspect ratio",
+      "options": [
+        {
+          "value": "1 / 1",
+          "label": "Square"
+        },
+        {
+          "value": "3 / 4",
+          "label": "Portrait"
+        },
+        {
+          "value": "4 / 5",
+          "label": "Tall"
+        },
+        {
+          "value": "16 / 9",
+          "label": "Landscape"
+        }
+      ],
+      "default": "3 / 4"
+    },
+    {
+      "type": "header",
+      "content": "Product 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image_1",
+      "label": "Image"
+    },
+    {
+      "type": "video",
+      "id": "product_video_1",
+      "label": "Video"
+    },
+    {
+      "type": "richtext",
+      "id": "product_text_1",
+      "label": "Text overlay"
+    },
+    {
+      "type": "range",
+      "id": "product_text_size_1",
+      "label": "Text size",
+      "min": 16,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "product_text_weight_1",
+      "label": "Text weight",
+      "min": 100,
+      "max": 900,
+      "step": 100,
+      "default": 400
+    },
+    {
+      "type": "color",
+      "id": "product_text_color_1",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "select",
+      "id": "product_text_transform_1",
+      "label": "Text transform",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "uppercase",
+          "label": "Uppercase"
+        },
+        {
+          "value": "lowercase",
+          "label": "Lowercase"
+        }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "range",
+      "id": "product_text_spacing_1",
+      "label": "Letter spacing",
+      "min": 0,
+      "max": 10,
+      "step": 0.5,
+      "unit": "px",
+      "default": 2
+    },
+    {
+      "type": "header",
+      "content": "Product 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image_2",
+      "label": "Image"
+    },
+    {
+      "type": "video",
+      "id": "product_video_2",
+      "label": "Video"
+    },
+    {
+      "type": "richtext",
+      "id": "product_text_2",
+      "label": "Text overlay"
+    },
+    {
+      "type": "range",
+      "id": "product_text_size_2",
+      "label": "Text size",
+      "min": 16,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "product_text_weight_2",
+      "label": "Text weight",
+      "min": 100,
+      "max": 900,
+      "step": 100,
+      "default": 400
+    },
+    {
+      "type": "color",
+      "id": "product_text_color_2",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "select",
+      "id": "product_text_transform_2",
+      "label": "Text transform",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "uppercase",
+          "label": "Uppercase"
+        },
+        {
+          "value": "lowercase",
+          "label": "Lowercase"
+        }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "range",
+      "id": "product_text_spacing_2",
+      "label": "Letter spacing",
+      "min": 0,
+      "max": 10,
+      "step": 0.5,
+      "unit": "px",
+      "default": 2
+    },
+    {
+      "type": "richtext",
+      "id": "product_subtitle_2",
+      "label": "Subtitle (tile 2 only)",
+      "info": "Second line under the main overlay on product image 2. Black or white only."
+    },
+    {
+      "type": "select",
+      "id": "product_subtitle_2_color",
+      "label": "Product 2 subtitle color",
+      "options": [
+        {
+          "value": "#000000",
+          "label": "Black"
+        },
+        {
+          "value": "#ffffff",
+          "label": "White"
+        }
+      ],
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "product_subtitle_2_size",
+      "label": "Product 2 subtitle size",
+      "min": 10,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Product 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image_3",
+      "label": "Image"
+    },
+    {
+      "type": "richtext",
+      "id": "product_text_3",
+      "label": "Text overlay"
+    },
+    {
+      "type": "range",
+      "id": "product_text_size_3",
+      "label": "Text size",
+      "min": 16,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "product_text_weight_3",
+      "label": "Text weight",
+      "min": 100,
+      "max": 900,
+      "step": 100,
+      "default": 400
+    },
+    {
+      "type": "color",
+      "id": "product_text_color_3",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "select",
+      "id": "product_text_transform_3",
+      "label": "Text transform",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "uppercase",
+          "label": "Uppercase"
+        },
+        {
+          "value": "lowercase",
+          "label": "Lowercase"
+        }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "range",
+      "id": "product_text_spacing_3",
+      "label": "Letter spacing",
+      "min": 0,
+      "max": 10,
+      "step": 0.5,
+      "unit": "px",
+      "default": 2
+    },
+    {
+      "type": "header",
+      "content": "Product 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image_4",
+      "label": "Image"
+    },
+    {
+      "type": "richtext",
+      "id": "product_text_4",
+      "label": "Text overlay"
+    },
+    {
+      "type": "range",
+      "id": "product_text_size_4",
+      "label": "Text size",
+      "min": 16,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "product_text_weight_4",
+      "label": "Text weight",
+      "min": 100,
+      "max": 900,
+      "step": 100,
+      "default": 400
+    },
+    {
+      "type": "color",
+      "id": "product_text_color_4",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "select",
+      "id": "product_text_transform_4",
+      "label": "Text transform",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "uppercase",
+          "label": "Uppercase"
+        },
+        {
+          "value": "lowercase",
+          "label": "Lowercase"
+        }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "range",
+      "id": "product_text_spacing_4",
+      "label": "Letter spacing",
+      "min": 0,
+      "max": 10,
+      "step": 0.5,
+      "unit": "px",
+      "default": 2
+    },
+    {
+      "type": "richtext",
+      "id": "product_subtitle_4",
+      "label": "Subtitle (tile 4 only)",
+      "info": "Second line under the main overlay on product image 4. Black or white only."
+    },
+    {
+      "type": "select",
+      "id": "product_subtitle_4_color",
+      "label": "Product 4 subtitle color",
+      "options": [
+        {
+          "value": "#000000",
+          "label": "Black"
+        },
+        {
+          "value": "#ffffff",
+          "label": "White"
+        }
+      ],
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "product_subtitle_4_size",
+      "label": "Product 4 subtitle size",
+      "min": 10,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Product 5"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image_5",
+      "label": "Image"
+    },
+    {
+      "type": "richtext",
+      "id": "product_text_5",
+      "label": "Text overlay"
+    },
+    {
+      "type": "range",
+      "id": "product_text_size_5",
+      "label": "Text size",
+      "min": 16,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "product_text_weight_5",
+      "label": "Text weight",
+      "min": 100,
+      "max": 900,
+      "step": 100,
+      "default": 400
+    },
+    {
+      "type": "color",
+      "id": "product_text_color_5",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "select",
+      "id": "product_text_transform_5",
+      "label": "Text transform",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "uppercase",
+          "label": "Uppercase"
+        },
+        {
+          "value": "lowercase",
+          "label": "Lowercase"
+        }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "range",
+      "id": "product_text_spacing_5",
+      "label": "Letter spacing",
+      "min": 0,
+      "max": 10,
+      "step": 0.5,
+      "unit": "px",
+      "default": 2
+    },
+    {
+      "type": "header",
+      "content": "Product 6"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image_6",
+      "label": "Image"
+    },
+    {
+      "type": "richtext",
+      "id": "product_text_6",
+      "label": "Text overlay"
+    },
+    {
+      "type": "range",
+      "id": "product_text_size_6",
+      "label": "Text size",
+      "min": 16,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "product_text_weight_6",
+      "label": "Text weight",
+      "min": 100,
+      "max": 900,
+      "step": 100,
+      "default": 400
+    },
+    {
+      "type": "color",
+      "id": "product_text_color_6",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "select",
+      "id": "product_text_transform_6",
+      "label": "Text transform",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "uppercase",
+          "label": "Uppercase"
+        },
+        {
+          "value": "lowercase",
+          "label": "Lowercase"
+        }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "range",
+      "id": "product_text_spacing_6",
+      "label": "Letter spacing",
+      "min": 0,
+      "max": 10,
+      "step": 0.5,
+      "unit": "px",
+      "default": 2
+    }
+  ],
+  "presets": [
+    {
+      "name": "BR Collaboration hero"
+    }
+  ]
+}
+{% endschema %}

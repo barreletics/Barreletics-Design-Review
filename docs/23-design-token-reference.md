@@ -159,6 +159,48 @@ Mobile overrides are applied via `@media (max-width: 768px)` in `barreletics-bas
 }
 ```
 
+### Section rhythm — three tiers (LAW, 2026-08-08)
+
+Andrew, on the PDP variants: *"you have some spacing issues with breathers… on one of
+the 50-50s. From one section to the other, it looks like it needs some space. Take a
+look and it needs to be standardized."* Measured gaps on the three PDPs ranged from
+0px to 162px with no repeated value. The rule below replaced every hardcoded section
+padding with tokens, so a boundary can now only ever be one of four numbers.
+
+**Never hardcode vertical section padding again. Pick a tier.**
+
+| Tier | Sections | Vertical padding | Why |
+|------|----------|------------------|-----|
+| **Content** | `pdp-features` · `disciplines` · `variant-grid` · `pdp-sock-math` · `social-proof` · `guarantee-band` · `home-juicer` · `collection-faq` · `fifty-fifty` | `--section-padding-y` / `--section-padding-y-mobile` | The default. Owns its own air on both edges. |
+| **Strip** | `value-strip` | `--gap-a` (16px, both breakpoints) | A scan line, not a section. Stays welded under the buy box. |
+| **Band** | `fullbleed-statement` | `0` | Edge-to-edge by design. Contributes nothing. |
+
+Because every section owns its own padding and never its neighbour's, the resulting
+boundary gaps are fully determined:
+
+| Boundary | Desktop | Mobile |
+|----------|---------|--------|
+| content ↔ content | **128px** | **96px** |
+| content ↔ band | **64px** | **48px** |
+| band ↔ band | **0px** | **0px** — an intentional diptych, leave it |
+| buy box ↔ strip ↔ content | 64 + 16, then 16 + 64 | hero keeps its own tighter inset |
+
+**`pdp-buy-box` is the one exception.** It is the hero, it sets its own inset
+(`--space-12` desktop / `--space-8` mobile), and it is not part of the rhythm.
+
+**`fifty-fifty` is content, not a band.** Its media column runs edge to edge inside its
+own column (the full-bleed media law of 2026-08-08 is intact — no padding or margin on
+`.split-media`), but the *section* carries a `padding-block` rhythm band via
+`--ff-band` / `--ff-band-mobile`. Without it the media column welded itself to the next
+full-bleed breather at a literal 0px gap, which is what Andrew was looking at. The text
+column subtracts the band with `calc()`, so the `Inner vertical padding` Theme Editor
+control still means *distance from the section's outer edge* — the 88px default is
+unchanged in effect.
+
+Scope: these are shared library sections, so the rhythm applies everywhere they are
+used — homepage (`index.json`), all `collection.*.json`, and `page.about.json` — not
+only the PDPs. That is intended; the rule is site-wide.
+
 ---
 
 ## Layout

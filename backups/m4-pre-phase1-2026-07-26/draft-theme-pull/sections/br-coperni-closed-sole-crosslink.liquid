@@ -1,0 +1,62 @@
+{% comment %}BR Coperni Closed Sole Crosslink{% endcomment %}
+{%- liquid
+  assign csb_height = section.settings.banner_height | default: 480
+  assign csb_shoe_y = section.settings.shoe_position_y | default: 0
+  assign csb_shoe_size = section.settings.shoe_size | default: 100
+  assign csb_eye_size = section.settings.eye_font_size | default: 9
+  assign csb_title_size = section.settings.title_font_size | default: 50
+  assign csb_sub_size = section.settings.sub_font_size | default: 19
+  assign csb_overlay = section.settings.overlay_opacity | default: 55
+  assign csb_overlay_mob = section.settings.overlay_opacity_mobile | default: 40
+-%}
+{% style %}
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Syne:wght@400;500;700&display=swap');
+  #shopify-section-{{ section.id }} .csb { position:relative; width:100%; height:{{ csb_height }}px; overflow:hidden; display:block; }
+  #shopify-section-{{ section.id }} .csb * { box-sizing:border-box; }
+  #shopify-section-{{ section.id }} .csb-bg { position:absolute; top:0; left:0; right:0; bottom:0; background-image:url('https://cdn.shopify.com/s/files/1/0045/0612/4391/files/yellow_tone_mix.png?v=1770580561'); background-size:cover; background-position:center center; z-index:0; }
+  #shopify-section-{{ section.id }} .csb-shoe { position:absolute; top:0; right:0; bottom:0; width:60%; background-color:#f2f0ed; background-image:url('https://cdn.shopify.com/s/files/1/0045/0612/4391/files/Copreni_Final_More_grey.png?v=1774119812'); background-size:{{ csb_shoe_size }}%; background-repeat:no-repeat; background-position:center {{ csb_shoe_y }}%; z-index:1; }
+  #shopify-section-{{ section.id }} .csb-fade { position:absolute; top:0; left:0; right:0; bottom:0; background:linear-gradient(to right, rgba(0,0,0,{{ csb_overlay | divided_by: 100.0 }}) 0%, rgba(0,0,0,{{ csb_overlay | divided_by: 100.0 | times: 0.4 | round: 2 }}) 45%, rgba(0,0,0,0) 70%); z-index:2; pointer-events:none; }
+  #shopify-section-{{ section.id }} .csb-content { position:absolute; top:0; left:0; bottom:0; width:50%; z-index:3; display:flex; flex-direction:column; justify-content:flex-end; padding:24px 40px 32px 48px; }
+  #shopify-section-{{ section.id }} .csb-eye { font-family:'Syne',sans-serif; font-size:{{ csb_eye_size }}px; font-weight:700; letter-spacing:.26em; text-transform:uppercase; color:#fff; margin:0 0 14px 0; }
+  #shopify-section-{{ section.id }} .csb-title { font-family:'Cormorant Garamond',serif; font-size:{{ csb_title_size }}px; font-weight:400; font-style:italic; color:#fff; margin:0 0 14px 0; line-height:1.05; }
+  #shopify-section-{{ section.id }} .csb-sub { font-family:'Cormorant Garamond',serif; font-size:{{ csb_sub_size }}px; font-style:italic; color:#fff; margin:0 0 24px 0; line-height:1.6; }
+  #shopify-section-{{ section.id }} .csb-btn { display:inline-block; font-family:'Syne',sans-serif; font-size:10px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:#000; background:#fff; border:none; padding:14px 32px; text-decoration:none; align-self:flex-start; margin:0 0 16px 0; cursor:pointer; }
+  #shopify-section-{{ section.id }} .csb-btn--static { cursor:default; pointer-events:none; }
+  #shopify-section-{{ section.id }} .csb-meta { font-family:'Syne',sans-serif; font-size:8px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:#fff; margin:0; }
+  @media (max-width: 749px) {
+    #shopify-section-{{ section.id }} .csb { height:420px !important; }
+    #shopify-section-{{ section.id }} .csb-shoe { width:55%; background-size:cover; background-position:center top; z-index:1; }
+    #shopify-section-{{ section.id }} .csb-fade { z-index:2; background:rgba(0,0,0,{{ csb_overlay_mob | divided_by: 100.0 }}) !important; }
+    #shopify-section-{{ section.id }} .csb-content { width:60%; padding:16px 12px 20px 20px; z-index:3; }
+    #shopify-section-{{ section.id }} .csb-eye { font-size:7px; letter-spacing:.16em; margin:0 0 8px 0; }
+    #shopify-section-{{ section.id }} .csb-title { font-size:26px; margin:0 0 8px 0; }
+    #shopify-section-{{ section.id }} .csb-sub { font-size:11px; margin:0 0 14px 0; line-height:1.5; }
+    #shopify-section-{{ section.id }} .csb-btn { padding:10px 16px; font-size:8px; margin:0 0 12px 0; }
+    #shopify-section-{{ section.id }} .csb-meta { font-size:6px; letter-spacing:.12em; }
+  }
+{% endstyle %}
+{% render 'br-coperni-closed-sole-crosslink', btn_label: section.settings.btn_label, btn_url: section.settings.btn_url, btn_new_tab: section.settings.btn_new_tab %}
+{% schema %}
+{
+  "name": "BR Coperni crosslink",
+  "class": "section-br-coperni-closed-sole-crosslink",
+  "settings": [
+    { "type": "header", "content": "Layout" },
+    { "type": "range", "id": "banner_height", "label": "Banner height", "min": 300, "max": 700, "step": 10, "unit": "px", "default": 480 },
+    { "type": "range", "id": "shoe_size", "label": "Shoe image size", "min": 50, "max": 120, "step": 5, "unit": "%", "default": 100, "info": "Desktop only." },
+    { "type": "range", "id": "shoe_position_y", "label": "Shoe vertical position", "min": 0, "max": 100, "step": 5, "unit": "%", "default": 0, "info": "0% = top, 100% = bottom. Desktop only." },
+    { "type": "header", "content": "Overlay" },
+    { "type": "range", "id": "overlay_opacity", "label": "Desktop overlay strength", "min": 0, "max": 80, "step": 5, "unit": "%", "default": 55 },
+    { "type": "range", "id": "overlay_opacity_mobile", "label": "Mobile overlay strength", "min": 0, "max": 80, "step": 5, "unit": "%", "default": 40 },
+    { "type": "header", "content": "Button" },
+    { "type": "text", "id": "btn_label", "label": "Button label", "default": "Join the Waitlist" },
+    { "type": "url", "id": "btn_url", "label": "Button link", "info": "Leave empty for non-clickable button." },
+    { "type": "checkbox", "id": "btn_new_tab", "label": "Open link in new tab", "default": false },
+    { "type": "header", "content": "Font sizes" },
+    { "type": "range", "id": "eye_font_size", "label": "Eyebrow font size", "min": 7, "max": 14, "step": 1, "unit": "px", "default": 9 },
+    { "type": "range", "id": "title_font_size", "label": "Title font size", "min": 24, "max": 80, "step": 2, "unit": "px", "default": 50 },
+    { "type": "range", "id": "sub_font_size", "label": "Body font size", "min": 10, "max": 26, "step": 1, "unit": "px", "default": 19 }
+  ],
+  "presets": [{ "name": "BR Coperni crosslink" }]
+}
+{% endschema %}

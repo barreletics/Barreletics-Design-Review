@@ -21,7 +21,9 @@
 - **[07-COPY-GUIDE.md](07-COPY-GUIDE.md)** — Copywriting standards, tone, and editorial guidelines
 - **[08-CREATIVE-PLAYBOOK.md](08-CREATIVE-PLAYBOOK.md)** — Creative direction, campaigns, and asset specifications
 - **[09-PRODUCT-KNOWLEDGE.md](09-PRODUCT-KNOWLEDGE.md)** — Product features, benefits, and unique selling points
+- **[11-CANONICAL-ANSWERS.md](11-CANONICAL-ANSWERS.md)** — One global source for customer-facing answers (website, Tidio, Help Scout, ManyChat)
 
 ## Reference
 
 - **[10-DECISIONS.md](10-DECISIONS.md)** — Architectural decisions, rationale, and changelog
+- **[19-tidio-architecture.md](19-tidio-architecture.md)** — Website chatbot OS home (Lyro Guidance + Tidio Q&A)

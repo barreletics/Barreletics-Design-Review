@@ -1,0 +1,99 @@
+{% comment %}
+  Trust / announcement strip — Home WORKING cream bar.
+  All messages shown inline with separators (not a dark rotator).
+{% endcomment %}
+
+{% if section.settings.enabled %}
+  {% assign slides = section.blocks %}
+  {% if slides.size > 0 %}
+    <div
+      class="announcement-strip"
+      role="region"
+      aria-label="Promotional messages"
+      {{ section.shopify_attributes }}
+    >
+      <div class="announcement-strip__inner">
+        {% for block in slides %}
+          {% unless forloop.first %}
+            <span class="announcement-strip__sep" aria-hidden="true">·</span>
+          {% endunless %}
+          <span class="announcement-strip__item" {{ block.shopify_attributes }}>
+            {% if block.settings.link_url != blank %}
+              <a href="{{ block.settings.link_url }}" class="announcement-strip__link">
+                {{ block.settings.text }}
+              </a>
+            {% elsif block.settings.text contains 'SAVE2' or block.settings.text contains 'SAVE15' %}
+              Buy 2, Save 10% — Code <strong style="color:#1c1916;">SAVE2</strong>
+            {% else %}
+              {{ block.settings.text }}
+            {% endif %}
+          </span>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+{% endif %}
+
+{% schema %}
+{
+  "name": "Announcement strip",
+  "class": "announcement-strip-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Shared — Content"
+    },
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Show announcement / trust bar",
+      "default": true,
+      "info": "Toggle the cream trust strip above the header."
+    },
+    {
+      "type": "header",
+      "content": "Section — Header"
+    },
+    {
+      "type": "range",
+      "id": "rotation_speed",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "Rotation speed (unused — static strip)",
+      "default": 4,
+      "info": "Kept for schema compatibility. Strip shows all messages at once like the Home mock."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "message",
+      "name": "Message",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Free Shipping Over $150"
+        },
+        {
+          "type": "url",
+          "id": "link_url",
+          "label": "Optional link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement strip",
+      "blocks": [
+        { "type": "message", "settings": { "text": "Buy 2, Save 10% — Code SAVE2" } },
+        { "type": "message", "settings": { "text": "Free Shipping Over $150" } },
+        { "type": "message", "settings": { "text": "30-Day Returns · Made in USA" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

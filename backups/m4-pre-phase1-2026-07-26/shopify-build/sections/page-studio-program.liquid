@@ -1,0 +1,430 @@
+{% comment %}
+  DEPRECATED (D-042 / R-01 / R-02) — Do not assign this template in Shopify Admin.
+  Canonical surface: /pages/partners#studio-partners via page-partners.liquid
+  NotesFromStudio UGC is a separate editorial track — not this program page.
+{% endcomment %}
+
+{% comment %}
+  Page Studio Program Section (orphaned)
+  Studio partnership / instructor program overview with benefits and application form.
+  Used on: page.studio-program.json — DEPRECATED
+{% endcomment %}
+
+<section class="section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
+  <div class="section__inner section__inner--narrow">
+    {% if section.settings.eyebrow != blank %}
+      <p class="eyebrow eyebrow--accent">{{ section.settings.eyebrow }}</p>
+    {% endif %}
+    <h1 class="page-studio__title">{{ section.settings.title }}</h1>
+    {% if section.settings.subtitle != blank %}
+      <p class="page-studio__subtitle">{{ section.settings.subtitle }}</p>
+    {% endif %}
+  </div>
+</section>
+
+<section class="section section--cream">
+  <div class="section__inner">
+    <h2 class="page-studio__section-title">{{ section.settings.benefits_heading }}</h2>
+    <div class="page-studio__benefits-grid">
+      {% for block in section.blocks %}
+        {% if block.type == 'benefit' %}
+          <div class="page-studio__benefit-card" {{ block.shopify_attributes }}>
+            <h3 class="page-studio__benefit-title">{{ block.settings.title }}</h3>
+            <p class="page-studio__benefit-desc">{{ block.settings.description }}</p>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% assign testimonial_count = 0 %}
+{% for block in section.blocks %}
+  {% if block.type == 'testimonial' %}
+    {% assign testimonial_count = testimonial_count | plus: 1 %}
+  {% endif %}
+{% endfor %}
+
+{% if testimonial_count > 0 %}
+<section class="section">
+  <div class="section__inner">
+    <h2 class="page-studio__section-title">What Studios Say</h2>
+    <div class="page-studio__testimonials">
+      {% for block in section.blocks %}
+        {% if block.type == 'testimonial' %}
+          <div class="page-studio__testimonial" {{ block.shopify_attributes }}>
+            <blockquote class="page-studio__quote">{{ block.settings.quote }}</blockquote>
+            <p class="page-studio__attribution">
+              <strong>{{ block.settings.name }}</strong>
+              {% if block.settings.studio != blank %}<br>{{ block.settings.studio }}{% endif %}
+            </p>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section class="section section--cream">
+  <div class="section__inner section__inner--narrow">
+    <h2 class="page-studio__form-title">{{ section.settings.form_heading }}</h2>
+    <p class="page-studio__form-subtitle">{{ section.settings.form_subtitle }}</p>
+
+    {% form 'contact' %}
+      {% if form.posted_successfully? %}
+        <div class="page-studio__success" role="alert">
+          <p>{{ section.settings.success_message }}</p>
+        </div>
+      {% endif %}
+
+      {% if form.errors %}
+        <div class="page-studio__errors" role="alert">
+          {{ form.errors | default_errors }}
+        </div>
+      {% endif %}
+
+      <input type="hidden" name="contact[subject]" value="Studio Program Application">
+
+      <div class="page-studio__fields">
+        <div class="page-studio__field-row">
+          <div class="page-studio__field">
+            <label for="studio-name" class="page-studio__label">Studio Name</label>
+            <input type="text" id="studio-name" name="contact[studio_name]" class="page-studio__input" required>
+          </div>
+          <div class="page-studio__field">
+            <label for="studio-contact" class="page-studio__label">Your Name</label>
+            <input type="text" id="studio-contact" name="contact[name]" class="page-studio__input" required autocomplete="name">
+          </div>
+        </div>
+
+        <div class="page-studio__field-row">
+          <div class="page-studio__field">
+            <label for="studio-email" class="page-studio__label">Email</label>
+            <input type="email" id="studio-email" name="contact[email]" class="page-studio__input" required autocomplete="email">
+          </div>
+          <div class="page-studio__field">
+            <label for="studio-location" class="page-studio__label">Studio Location</label>
+            <input type="text" id="studio-location" name="contact[location]" class="page-studio__input" placeholder="City, State">
+          </div>
+        </div>
+
+        <div class="page-studio__field">
+          <label for="studio-discipline" class="page-studio__label">Primary Discipline</label>
+          <select id="studio-discipline" name="contact[discipline]" class="page-studio__select">
+            <option value="" disabled selected>Select discipline</option>
+            <option value="Barre">Barre</option>
+            <option value="Reformer Pilates">Reformer Pilates</option>
+            <option value="Lagree / Megaformer">Lagree / Megaformer</option>
+            <option value="Mat Pilates">Mat Pilates</option>
+            <option value="Yoga">Yoga</option>
+            <option value="Multiple">Multiple Disciplines</option>
+          </select>
+        </div>
+
+        <div class="page-studio__field">
+          <label for="studio-message" class="page-studio__label">Tell us about your studio</label>
+          <textarea id="studio-message" name="contact[body]" class="page-studio__textarea" rows="4" placeholder="Number of instructors, class volume, current grip solution..."></textarea>
+        </div>
+
+        <div class="page-studio__field">
+          {% render 'button', label: section.settings.submit_text, type: 'submit', style: 'primary', size: 'lg' %}
+        </div>
+      </div>
+    {% endform %}
+  </div>
+</section>
+
+<style>
+  .page-studio__title {
+    font-size: var(--text-5xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    text-align: center;
+    margin: 0 0 var(--space-3);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .page-studio__subtitle {
+    font-size: var(--text-md);
+    color: var(--text-body);
+    text-align: center;
+    line-height: var(--leading-relaxed);
+    margin: 0;
+    max-width: var(--max-width-copy);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .page-studio__section-title {
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    text-align: center;
+    margin: 0 0 var(--space-8);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .page-studio__benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--grid-gap);
+  }
+
+  .page-studio__benefit-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-card);
+    padding: var(--space-6);
+    text-align: center;
+  }
+
+  .page-studio__benefit-title {
+    font-size: var(--text-lg);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    margin: 0 0 var(--space-2);
+  }
+
+  .page-studio__benefit-desc {
+    font-size: var(--text-base);
+    color: var(--text-body);
+    line-height: var(--leading-relaxed);
+    margin: 0;
+  }
+
+  .page-studio__testimonials {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--grid-gap);
+  }
+
+  .page-studio__testimonial {
+    padding: var(--space-6);
+    background: var(--bg-alternate);
+    border-radius: var(--radius-card);
+  }
+
+  .page-studio__quote {
+    font-size: var(--text-base);
+    color: var(--text-body);
+    line-height: var(--leading-loose);
+    font-style: italic;
+    margin: 0 0 var(--space-4);
+    padding: 0;
+    border: none;
+  }
+
+  .page-studio__attribution {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  .page-studio__form-title {
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    text-align: center;
+    margin: 0 0 var(--space-2);
+  }
+
+  .page-studio__form-subtitle {
+    font-size: var(--text-base);
+    color: var(--text-body);
+    text-align: center;
+    margin: 0 0 var(--space-8);
+  }
+
+  .page-studio__fields {
+    display: grid;
+    gap: var(--space-4);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .page-studio__field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+  }
+
+  .page-studio__label {
+    display: block;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    margin-bottom: var(--space-1);
+  }
+
+  .page-studio__input,
+  .page-studio__select,
+  .page-studio__textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--border-default);
+    background: var(--bg-primary);
+    font-size: var(--text-base);
+    font-family: var(--font-family);
+    color: var(--text-primary);
+    border-radius: var(--radius-button);
+    transition: border-color var(--transition-fast);
+    min-height: 44px;
+  }
+
+  .page-studio__input:focus,
+  .page-studio__select:focus,
+  .page-studio__textarea:focus {
+    outline: none;
+    border-color: var(--text-primary);
+    box-shadow: 0 0 0 1px var(--text-primary);
+  }
+
+  .page-studio__textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  .page-studio__select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath fill='%234a4a4a' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+  }
+
+  .page-studio__success {
+    padding: var(--space-4);
+    background: var(--bg-alternate);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-button);
+    margin-bottom: var(--space-5);
+    color: var(--text-primary);
+    text-align: center;
+  }
+
+  .page-studio__errors {
+    padding: var(--space-4);
+    background: rgba(196, 92, 63, 0.08);
+    border: 1px solid var(--accent-primary);
+    border-radius: var(--radius-button);
+    margin-bottom: var(--space-5);
+    color: var(--accent-primary);
+  }
+
+  @media (max-width: 768px) {
+    .page-studio__title {
+      font-size: var(--text-3xl);
+    }
+
+    .page-studio__field-row {
+      grid-template-columns: 1fr;
+    }
+
+    .page-studio__benefits-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Studio Program Page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Studio Program"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Studio & Instructor Program"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Join the studios and instructors upgrading their grip. Special pricing, dedicated support, and marketing materials for qualified partners."
+    },
+    {
+      "type": "text",
+      "id": "benefits_heading",
+      "label": "Benefits heading",
+      "default": "Program Benefits"
+    },
+    {
+      "type": "text",
+      "id": "form_heading",
+      "label": "Form heading",
+      "default": "Apply to Join"
+    },
+    {
+      "type": "text",
+      "id": "form_subtitle",
+      "label": "Form subtitle",
+      "default": "Tell us about your studio. We'll review your application within 3-5 business days."
+    },
+    {
+      "type": "text",
+      "id": "submit_text",
+      "label": "Submit button text",
+      "default": "Submit Application"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Success message",
+      "default": "Application received. We'll review and get back to you within 3-5 business days."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Benefit",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description"
+        }
+      ]
+    },
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Quote"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name"
+        },
+        {
+          "type": "text",
+          "id": "studio",
+          "label": "Studio name"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Studio Program Page"
+    }
+  ]
+}
+{% endschema %}

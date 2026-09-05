@@ -500,17 +500,19 @@ Decision: "Both perform identically with the same grip and stability. The differ
 ```
 Source: manychat-kb/02-open-vs-closed-sole.md
 
-### P-004: First-Time Buyer → Open Sole
+### P-004: First-Time Buyer → Open Sole — SUPERSEDED 2026-08-02
 ```
-Decision: "Most first-time buyers start with Open Sole — the barefoot feel is where they shine."
+OLD (DO NOT USE): "Most first-time buyers start with Open Sole — the barefoot feel is where they shine."
+SUPERSEDED: Do not recommend first-timers toward either sole. Choice = preference / feel only (P-003).
 ```
-Source: manychat-kb/02-open-vs-closed-sole.md
+Source: Owner letter 2026-08-02; manychat-kb/02-open-vs-closed-sole.md (updated)
 
-### P-005: No Machine Washing
+### P-005: Care — hand wash only (updated 2026-08-26)
 ```
-Decision: "Warm soapy water, air dry. No machine washing."
+Decision: "Hand wash with warm soapy water. That's it."
+Never write dishwasher, washing machine, or “no machine washing” — on any platform.
 ```
-Source: manychat-kb/06-care-and-cleaning.md
+Source: owner letters 2026-08-21 / 2026-08-26 · `.cursor/rules/no-dishwasher-washing-machine.mdc` · manychat-kb/06-care-and-cleaning.md
 
 ### P-006: Made in USA — Every Pair
 ```
@@ -537,18 +539,137 @@ Decision: Structured, injection-molded sole (not printed dots on fabric).
 ```
 Source: docs/09-PRODUCT-KNOWLEDGE.md, Shopify product descriptions
 
-### P-010: Kids Size — Undocumented
+### P-010: Kids Size — Partly resolved 2026-08-12
 ```
-Decision: Water Shoes has 6 Kids variants in Shopify at 0 inventory. Not documented anywhere on live site or in any copy.
+Decision: Water Shoes has 6 dedicated Kids variants in Shopify at 0 inventory. Not documented anywhere on live site or in any copy.
 Status: Data quality flag — likely discontinued or placeholder.
-```
-Source: docs/09-PRODUCT-KNOWLEDGE.md (Data Quality Flags)
 
-### P-011: "One Off Colors" — Future Pricing Tier
+UPDATED 2026-08-12 (owner): Distinct from the dedicated variants, Kids' US 2–5
+fit MEDIUM, and that column has always been published on the live size chart.
+It belongs on the size chart. See P-015 / D-053.
+STILL OPEN: 09-PRODUCT-KNOWLEDGE.md line 84 says "Youth 4–6 wear Medium," which
+does not match Kids' 2–5. Do not quote a youth number until Andrew resolves it.
 ```
-Decision: Two DRAFT products at $82.00 (Purple Blue, Grey Swirl, Turquoise & Purple). Not live.
+Source: docs/09-PRODUCT-KNOWLEDGE.md (Data Quality Flags), owner letter 2026-08-12
+
+### P-015: Canonical Answers Source — sizing, cleanliness, longevity (2026-08-12)
 ```
-Source: docs/09-PRODUCT-KNOWLEDGE.md (Products Not on Live Storefront)
+AUTHORITY: docs/11-CANONICAL-ANSWERS.md is the single source for customer-facing
+answers. Pages, email, ManyChat, and ads copy from it verbatim. Change it there
+first, then propagate. Full record: planning/10-decision-log.md → D-053.
+
+SIZE CHART (publish all four columns):
+  M = Women's 5.5–7.5 · Kids' 2–5
+  L = Women's 7.5–11 · Men's up to 10.5
+  Large starts at 7.5, NOT 8. 7.5 sits in both rows; width is the tiebreaker.
+
+BETWEEN SIZES — width decides, never "size up":
+  Wide foot at 7 or 7.5 → L
+  Narrow foot at 7.5 or 8 → M
+  8.5 and above → L always, regardless of width (length governs)
+
+APPROVED: "patented" (accurate — do not purge) · non-porous / wipes clean ·
+  skin-safe and non-toxic, no latex, no silicone · 195 countries via FedEx
+  International Connect Plus (real) · longevity = expectation first, then
+  1,000 classes and year four
+
+RETIRED — never reintroduce:
+  antimicrobial (any form) · any claim our material resists/repels/kills
+  bacteria · "hygienic" · hypoallergenic (D-019) · "conforms over the first few
+  wears" and all break-in variants · Foot Length column · M 5–8 / L 8.5–11 ·
+  L 8–11 · M W 5–7.5 Men 6–8 / L W 8–10 Men 8.5–11 · blanket "size up" ·
+  "Small is coming soon" · "18+ months" (internal floor only) ·
+  "gentle environment" · antimicrobial fabric on the Apparel tee
+
+SUPPORT-ONLY: the blow dryer heat-stretch tip is a HelpScout saved reply
+  (template 2.7). Never on a page, never in ManyChat. Offer the exchange first.
+```
+Source: owner letters 2026-08-12 · docs/11-CANONICAL-ANSWERS.md · planning/10-decision-log.md D-053
+
+### P-011: One-Off Colors — Surfaces + Lean PDP (updated 2026-08-10)
+```
+Decision: One-off colors are separate products (Closed + Open), not metafield-driven nav.
+
+Gate: Theme settings → One-off colors → product picker.
+  Set → header nav under Grippy + quiet PDP link under ATC + All Variants One-Offs tab.
+  Empty → all hide. Theme setting wins over section product_oneoffs.
+  Do not add One-off colors in Online Store → Navigation.
+
+Products / Admin templates:
+  one-off-colors-closed-sole → theme template one-off-closed
+  one-off-colors-open-sole   → theme template one-off-open
+
+Buy box (one-off PDPs): shoe-photo color pickers; hide sold-out options.
+All Variants One-Offs tab: single grid — available first, then sold-out (no separate Earlier band).
+
+PDP spine: Closed Sole quality twin (no sock-era / TRANSFORM / sock-math). See planning/one-off-surfaces.md.
+
+Pricing remains $82.00 tier.
+Featured-drop strategy → **P-014** / **D-052** (one picker at a time).
+Cross-ref: D-051 · planning/one-off-surfaces.md · page-template-registry.md
+```
+Source: Owner direction 2026-08-10 (M4 QA); planning/one-off-surfaces.md
+
+### P-014: One-Off Featured Drop — Single Theme Picker (2026-08-10)
+```
+Decision: Feature ONE one-off at a time via Theme settings → One-off colors → product picker.
+
+RULES:
+  - Featured = the single `one_off_product` picker (nav + quiet ATC link + core PDP One-Offs tab).
+  - Both sole products may exist in Admin (Closed + Open one-off). Only the featured one appears in nav.
+  - Flip the picker when the drop changes (Open OR Closed — not both in nav).
+  - Do NOT mix Open + Closed variants into one Shopify product for now
+    (inventory, template suffix, ATC, and sole badge all get messier).
+  - Do NOT build a third-level nav (Grippy → One-off → Open/Closed) — messy on mobile.
+
+FUTURE (not built — needs Andrew confirm before Liquid):
+  If both drops must be live in the menu at once → two sibling links under Grippy
+  ("One-off · Open" / "One-off · Closed"), each with its own picker. No third layer.
+  Quiet link stays a single "this week’s" featured product.
+
+Cross-ref: P-011 · D-051 · D-052 · planning/one-off-surfaces.md
+```
+Source: Owner direction 2026-08-10 (strategy lock after M4 one-off QA)
+
+### P-012: Pool Positioning RETIRED — 2026-08-07
+```
+Decision: Remove all pool positioning from every surface.
+
+BANNED: pool, poolside, pool deck, "around the pool", "in the pool",
+        water park, tidal pool / tidepool, spa visits, aqua barre, water aerobics
+
+USE INSTEAD: resortwear, paddleboarding, beach, outdoor yoga
+             (plus boating, boat deck, hot sand, travel)
+
+Do not invent scenery. No rocky coves, rocky coastline, rocky shorelines,
+tidepools, shell-covered beaches, pebbly lake beds. Beach covers it.
+
+Reason: customers bought for pool use and slipped on wet tile.
+        Pool language attracts the wrong buyer and creates liability.
+
+Scope: FAQ, GEO, product descriptions, SEO tags, collection copy,
+       blog, email, ManyChat, ads, and all operating-system docs.
+```
+Source: Owner letter 2026-08-07; `.cursor/rules/no-pool-positioning.mdc`
+
+### P-013: "Fully enclosed" RETIRED — 2026-08-08
+```
+Decision: Drop "Sleek, fully enclosed feel." from the P-003 Closed Sole answer.
+
+BANNED: "fully enclosed", "fully-enclosed", "fully enclosed heel", "fully enclosed feel"
+
+SURVIVING APPROVED LINE:
+  Closed Sole: Heel and foot fully covered. Same grip, same stability.
+
+Reason: Owner letter — "quit saying fully enclosed heel - dont make shit up".
+        Supersedes the older approved P-003 wording. Historical record kept,
+        marked RETIRED, in docs/09-PRODUCT-KNOWLEDGE.md and
+        manychat-kb/02-open-vs-closed-sole.md — not reusable as source copy.
+
+Scope: PDP + variant templates, collection copy, studio/wholesale/partner
+       pages, FAQ, GEO, ManyChat KB, and all operating-system docs.
+```
+Source: Owner letter 2026-08-08; P-003 (`manychat-kb/02-open-vs-closed-sole.md`)
 
 ---
 
@@ -595,11 +716,15 @@ Rationale: Instructor market buys 2–3 pairs.
 ```
 Source: manychat-kb/04-pricing.md
 
-### BZ-007: Newsletter 10% Off First Order
+### BZ-007: Newsletter 10% Off First Order — RETIRED
 ```
-Decision: 10% off via newsletter signup.
+Original decision: 10% off via newsletter signup.
+Superseded 2026-07-31 (Footer LOCK): newsletter offer is "Join the list" with benefit
+checkmarks — NO 10%, NO discount promise. Do not reintroduce in any surface
+(footer, page newsletter, email, ManyChat, ads).
+Authority: specs/frozen/footer.md · planning/m4-section-freeze.md (Footer row)
 ```
-Source: manychat-kb/04-pricing.md
+Source: manychat-kb/04-pricing.md · retired per Footer LOCK 2026-07-31
 
 ### BZ-008: Shop Pay — 4 Installments
 ```
@@ -627,17 +752,88 @@ Decision: "Never collect [personal data] in DM" — address, payment, account in
 ```
 Source: manychat-kb/14-escalation-and-handoff.md
 
-### BZ-012: Lost Package Policy
+### BZ-012: Lost Package Policy → **AMENDED by P-018 (2026-08-14)**
 ```
-Decision: "Once tracking shows delivered, order considered fulfilled. Cannot issue refunds for packages shown as delivered."
-```
-Source: manychat-kb/08-shipping.md, docs/09-PRODUCT-KNOWLEDGE.md
+Was: "Once tracking shows delivered, order considered fulfilled. Cannot issue refunds
+for packages shown as delivered."
 
-### BZ-013: International — Customer Covers Duties
+Now: "Once tracking shows delivered, order considered fulfilled" stays. The absolute
+"cannot issue refunds" is RETIRED — it was an internal backstop that agents began
+quoting at customers as policy, and it was never on the site.
 ```
-Decision: International customers responsible for duties, taxes, customs. Return shipping costs are customer's.
+Source: manychat-kb/08-shipping.md, docs/09-PRODUCT-KNOWLEDGE.md · see **P-018** below
+
+### BZ-013: International — Customer Covers Duties → **SUPERSEDED by P-016**
+```
+RETIRED 2026-08-12. Was: "International customers responsible for duties, taxes, customs."
+That is backwards — duties are prepaid.
 ```
 Source: manychat-kb/08-shipping.md
+
+### P-016: International duties are charged at checkout *(Andrew 2026-08-12)*
+```
+Duties and taxes are charged at checkout ("at time of purchase").
+Orders clear customs with nothing further to pay.
+State it plainly as an advantage — never as a warning.
+
+Customer-paid, and ONLY here:
+  · international RETURN shipping
+  · international WARRANTY REPLACEMENTS — shipping AND duties
+
+KEEP the HelpScout 5.3 hedge (customs handling varies by country).
+Andrew: "it says this as a backup to cover ourselves." An agent deleted it
+on 2026-08-12 and restored it the same day. Accurate fact leads, hedge
+follows. Never "be prepared to pay them on delivery."
+Hedge belongs in HelpScout + the Shipping policy page only — never FAQ,
+ManyChat, PDP, or marketing.
+```
+The duties-responsibility line originated on **warranty replacements**, where it is correct, and leaked onto outbound-order copy across eight surfaces.
+Supersedes: BZ-013 · Canonical: `docs/11-CANONICAL-ANSWERS.md` CA-18 and CA-21
+✅ Verified 2026-08-12 — Andrew: "we are collecting DDP." Checkout collects duties and import taxes; the copy matches the setting. The 5.3 hedge stays for the rare destination that bills anyway.
+
+### P-017: No arrival deadline on defects *(Andrew 2026-08-14)*
+```
+RETIRED: "Item arrived defective? Contact within 24 hours."
+
+The 90-day warranty already covers a defect present on arrival. There is no
+clock, and there never was an enforced one.
+
+The line survived only on the Returns page and in the product KB — CA-21 and
+the FAQ never carried it. A customer reading FAQ saw no deadline; a customer
+reading Returns saw 24 hours and assumed they had missed it.
+```
+Removed from `page.shipping-retruns.json`, `page.returns.json`, and the `page-returns` schema default (warranty Covered list now reads "Item arrives defective").
+Canonical: `docs/11-CANONICAL-ANSWERS.md` CA-21 · Amends the warranty block in `docs/09-PRODUCT-KNOWLEDGE.md`
+
+### P-018: Lost packages — discretion, not an absolute *(Andrew 2026-08-14)*
+```
+KEEP customer-facing: CA-22 only. "Once tracking shows delivered, the order is
+considered fulfilled. In an apartment or multi-unit building, check with
+building staff or the shared mail area first." It stops there.
+
+RETIRED: "Cannot issue refunds for packages shown as delivered."
+
+Reason: that sentence was an internal backstop, never site copy, and agents
+began pasting it at customers as if it were policy. It also left no room to
+keep a good first-time customer over a $60 order.
+
+INTERNAL guidance replaces it — delivered means fulfilled, NOT an automatic
+refund and NOT an automatic denial. Work the causes, wait 48 hours, then use
+judgment. Escalate repeat claims, repeat addresses, and high-value orders.
+```
+Amends: BZ-012 (absolute retired; "considered fulfilled" stands)
+Canonical customer wording: `docs/11-CANONICAL-ANSWERS.md` CA-22 · Internal rule: `docs/09-PRODUCT-KNOWLEDGE.md` Lost Packages block
+**Never** promote the internal guidance into FAQ, ManyChat, PDP, or marketing.
+
+### P-019: Optional sock kit — buy-box J *(Andrew 2026-08-27)*
+```
+Complete the kit
+Optional sock kit →
+A sock made for Performance Skins with grip around the toes.
+Does your studio require a sock? Need help with sweat, warmth, or comfort?
+```
+One link. Not a Hot Pilates kit. Not a grippy sock. Theme settings → **Sock kit** is the one place. Buy-box checkbox only shows/hides. Layout / fold untouched.
+Source: `docs/pdp-sock-kit-v21.html` option J · `planning/m4-section-freeze.md`
 
 ---
 

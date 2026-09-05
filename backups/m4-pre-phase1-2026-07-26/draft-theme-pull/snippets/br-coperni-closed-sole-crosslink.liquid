@@ -1,0 +1,22 @@
+{% comment %}br-coperni-closed-sole-crosslink snippet{% endcomment %}
+{%- liquid
+  assign csb_btn_label = btn_label | default: 'Join the Waitlist'
+  assign csb_btn_url = btn_url | strip
+  assign csb_new_tab = btn_new_tab | default: false
+-%}
+<div class="csb">
+  <div class="csb-bg"></div>
+  <div class="csb-shoe"></div>
+  <div class="csb-fade"></div>
+  <div class="csb-content">
+    <p class="csb-eye">This style has a limited edition &middot; 2026</p>
+    <p class="csb-title">Barreletics<br>&times; Coperni</p>
+    <p class="csb-sub">The Closed Sole, as seen on the Coperni 2026 runway in Paris. One run, limited release.</p>
+    {% if csb_btn_url != blank %}
+      <a href="{{ csb_btn_url | escape }}" class="csb-btn" {% if csb_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}>{{ csb_btn_label | escape }}</a>
+    {% else %}
+      <span class="csb-btn csb-btn--static">{{ csb_btn_label | escape }}</span>
+    {% endif %}
+    <p class="csb-meta">Closed Sole &nbsp;&middot;&nbsp; Special Release &nbsp;&middot;&nbsp; One Run</p>
+  </div>
+</div>

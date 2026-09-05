@@ -5,6 +5,22 @@
 **Method:** Lossless extraction from repository sources + live Shopify catalog  
 **Conflicts:** Where repository and production differ, BOTH versions are preserved and labeled
 
+> ## ⛔ BANNED COPY — pool positioning (Owner letter 2026-08-07)
+> **Never write:** pool · poolside · pool deck · around the pool · water park · tidal pool / tidepool · spa visits · aqua barre · water aerobics · "in the pool"
+> **Why:** customers bought for the pool, then slipped on wet tile. Pool positioning attracts the wrong buyer and creates liability.
+> **Use instead:** **resortwear · paddleboarding · beach · outdoor yoga** (plus boating, boat deck, hot sand, travel).
+> Applies to FAQ, GEO, product descriptions, SEO tags, blog, email, ManyChat, and every OS doc.
+
+> ## ⛔ BANNED COPY — dishwasher / washing machine (Owner letters 2026-08-21 / 2026-08-26, P-005)
+> **Never write:** dishwasher · washing machine · machine wash · machine washing · “no machine washing” · “some customers use the dishwasher”
+> **Say instead:** **Hand wash with warm soapy water. That's it.**
+> Applies to PDP buy-box, FAQ, Care, warranty, ManyChat, Tidio, Help Scout, ads, email, and every OS doc.
+
+> ## ⛔ BANNED COPY — "fully enclosed" (Owner letter 2026-08-08, P-013)
+> **Never write:** fully enclosed · fully-enclosed · fully enclosed heel · fully enclosed feel
+> **Say instead:** **Heel and foot fully covered. Same grip, same stability.** (surviving P-003 wording)
+> This supersedes the older approved P-003 sentence *"Sleek, fully enclosed feel."* — see the RETIRED note under Product 2 → Key Differentiator.
+
 ---
 
 ## PRODUCT CATALOG
@@ -23,7 +39,7 @@ CURRENT PRODUCTION: $74.00 (standard) / $78.00 (limited edition colorways)
 Shop Pay: 4 interest-free installments of $18.50
 Shipping: Free over $150 / $9.95 flat rate under $150
 Discount: Buy 2+ save 15% (code: save15)
-Newsletter signup: 10% off first order
+Newsletter signup: RETIRED — no discount offer. "Join the list" only (no 10%).
 ```
 Source: docs/08-LIVE-SITE-COPY-AUDIT.md (URL 02), manychat-kb/04-pricing.md
 
@@ -98,7 +114,7 @@ Source: docs/05-PDP-ARCHITECTURE.md (line 251), docs/08-LIVE-SITE-COPY-AUDIT.md 
 - Skin-Safe — No latex. No silicone.
 - Natural toe splay — better balance and control
 - Second-skin fit — ultra-light, flexible, durable
-- Antimicrobial & sweat-resistant
+- Non-porous — wipes clean, nothing soaks in like fabric *(replaced "Antimicrobial & sweat-resistant" 2026-08-12)*
 - Made in USA
 - Injection-molded/structured sole
 - Full-bottom coverage (heel and foot fully covered)
@@ -109,8 +125,8 @@ Source: docs/08-LIVE-SITE-COPY-AUDIT.md (Global Benefit Pills, URL 02), manychat
 ```
 01 · Reformer-ready — Tested on Megaformer & reformer carriages, hardwood barre studios, and yoga mats.
 02 · No twist — Your foot can't move inside it. No bunch, no reset.
-03 · Sweat-ready — Antimicrobial, sweat-resistant material stays fresh.
-04 · Rinse & reuse — Warm soapy water, air dry. No machine washing. No grip degradation.
+03 · Sweat-ready — Non-porous surface wipes clean; nothing soaks in like fabric.
+04 · Rinse & reuse — Hand wash with warm soapy water. That's it.
 05 · Skin-safe — No latex, no silicone. Proprietary grip material. Made in USA.
 06 · Barefoot feel — Natural toe articulation. Move freely — without the slip.
 ```
@@ -122,11 +138,11 @@ How to Put On: Pull from the top of the foot — not the straps — to help exte
 
 After Class: When you wipe down your equipment, give your Barreletics a quick wipe with the same cloth. Takes 5 seconds.
 
-Regular Cleaning: Warm soapy water. Rinse thoroughly. Air dry. No machine washing. No special treatment needed.
+Regular Cleaning: Hand wash with warm soapy water. That's it.
 
-Why So Easy: Unlike grip socks that absorb sweat and hold bacteria, the material is antimicrobial and sweat-resistant. A damp cloth or quick rinse keeps them fresh between washes.
+Why So Easy: The material is non-porous, so it wipes clean — nothing soaks in and lingers the way it does in fabric. Hand wash with warm soapy water. That's it.
 
-Lifespan: Most customers use the same pair for years — some 6+ days/week for over 3 years with zero issues. Never loses shape. Never loses grip.
+Lifespan: It depends on how you wear them — how often, how hard you go, how you care for them. Just like shoes, some people are harder on them than others. Used for what they're designed for — Pilates, barre, reformer, Lagree, yoga — they hold up beautifully. One customer recently passed 1,000 classes on a single pair. Another is on year four. Never loses shape. Never loses grip.
 ```
 Source: manychat-kb/06-care-and-cleaning.md, docs/08-LIVE-SITE-COPY-AUDIT.md (URL 07)
 
@@ -148,7 +164,7 @@ Exchanges:
 - All purchases covered against manufacturing defects.
 - If something isn't right within 90 days, contact us — we'll take care of it.
 - Return of defective item not required in most cases.
-- Item arrived defective? Contact within 24 hours.
+- 🚫 RETIRED 2026-08-14 (Andrew): ~~"Item arrived defective? Contact within 24 hours."~~ — never enforced, absent from CA-21 and the FAQ, and it read as a trap on the Returns page. The 90-day warranty covers arrival defects with no clock. Removed from `page.shipping-retruns.json`, `page.returns.json`, and the `page-returns` schema default.
 - International: Photo proof within 90 days → replacement shipped (customer covers shipping/duties).
 ```
 Source: manychat-kb/07-returns-and-exchanges.md, docs/08-LIVE-SITE-COPY-AUDIT.md (URL 30)
@@ -167,8 +183,8 @@ Secondary (Also Great For):
 - Outdoor volleyball — grip on sand and grass without bulk
 - Martial arts — Tai Chi, Qi Gong, Karate (barefoot feel + floor connection)
 - Barefoot running — natural gait with protective layer
-- Boating and poolside — grip where bare feet slip
-- Beach and hot surfaces — protection without losing ground feel
+- Boating and paddleboarding — grip where bare feet slip
+- Beach, resortwear, and hot surfaces — protection without losing ground feel
 - Rock climbing (barefoot enthusiasts)
 ```
 Source: manychat-kb/10-faq-general.md, docs/08-LIVE-SITE-COPY-AUDIT.md (URL 30 FAQ)
@@ -188,7 +204,7 @@ Caution (inherently slippery for any footwear):
 - Wet polished marble
 - Certain wet tiles
 - Oiled or waxed floors
-- Certain spa/pool/tile areas
+- Certain wet tile and stone areas
 ```
 Source: docs/08-LIVE-SITE-COPY-AUDIT.md (URL 30 FAQ — Durability & Performance)
 
@@ -239,11 +255,12 @@ Source: docs/08-LIVE-SITE-COPY-AUDIT.md (URL 03)
 Both perform identically with the same grip and stability. The difference is feel and coverage.
 
 Open Sole: Heel exposed, mid-foot breathing hole. More grounded, barefoot feel. Natural toe splay.
-Closed Sole: Heel and foot fully covered. Sleek, fully enclosed feel. Same grip, same stability.
+Closed Sole: Heel and foot fully covered. Same grip, same stability.
 
-Most first-time buyers start with Open Sole — the barefoot feel is where they shine.
+Choice = preference / feel only. Do not recommend first-timers toward Open (P-004 superseded 2026-08-02). Do not assign disciplines to either sole.
 ```
-Source: manychat-kb/02-open-vs-closed-sole.md
+> ⛔ **RETIRED 2026-08-08 (owner letter — "quit saying fully enclosed heel"):** the Closed Sole line previously read *"Heel and foot fully covered. **Sleek, fully enclosed feel.** Same grip, same stability."* The phrase **"fully enclosed"** / **"fully enclosed heel"** is retired from all customer-facing copy. Kept here as historical record of the original P-003 wording only — do not reuse as source copy.
+Source: manychat-kb/02-open-vs-closed-sole.md (updated 2026-08-02)
 
 #### Bullet Points (from PDP)
 ```
@@ -275,9 +292,11 @@ CURRENT PRODUCTION: $74.00
 Source: docs/08-LIVE-SITE-COPY-AUDIT.md (URL 06)
 
 #### Variants
-**Sizes:** M (W 5.5–7.5) / L (W 8–11) / Kids
+**Sizes:** M (W 5.5–7.5, Kids' 2–5) / L (W 7.5–11, Men's up to 10.5) / Kids variants
 
-**CONFLICT:** The live site and all documentation reference only M and L sizes. However, Shopify contains 6 Kids variants (DarkGrey, Black, Blue, Bright Yellow, White, LightGrey) — all at 0 inventory. Kids size is undocumented in any site copy or size chart.
+**RESOLVED 2026-08-12 (Andrew):** Large starts at **7.5**, not 8. Kids' 2–5 fit Medium and that column belongs on the published size chart — it has always been on the live site.
+
+**REMAINING CONFLICT:** Shopify carries 6 separate Kids variants for this product (DarkGrey, Black, Blue, Bright Yellow, White, LightGrey), all at 0 inventory. That's distinct from "kids' 2–5 wear Medium." Unclear whether the Kids variants are a discontinued dedicated size or a duplicate of Medium. Also unresolved: line 84 of this doc says "Youth 4–6 wear Medium," which does not match Kids' 2–5.
 
 **Colors:** DarkGrey, Black, Blue, Bright Yellow, White, LightGrey, Coral  
 Source: Shopify catalog (gid://shopify/Product/4556276858983)
@@ -289,21 +308,18 @@ Closed Sole design for outdoor/water use. Provides grip, stability, and protecti
 Great for:
 - Beach workouts & beach volleyball
 - Paddleboarding & boating
-- Climbing rocks & navigating tidal pools
-- Outdoor & poolside yoga
-- Rocky shorelines & shell-covered beaches
-- Pool decks & water parks
-- Spa visits
+- Outdoor yoga
+- Resortwear & travel
 - Hot sand & sun-baked pavement
 - Anywhere you'd go barefoot — but better
 
-Barreletics hug your feet like a second skin, giving you the confidence to move naturally over rocky shorelines, hot sand, and uneven surfaces — without the bulk of shoes or the unpredictability of flip flops.
+Barreletics hug your feet like a second skin, giving you the confidence to move naturally over hot sand and uneven surfaces — without the bulk of shoes or the unpredictability of flip flops.
 
 The open-toe design lets your toes spread naturally, giving you better balance, better grip, and a more connected feel underfoot.
 
-A barrier where it matters: hot sand, sun-baked pavement, pebbly lake beds, shell-covered shorelines. The sole creates just enough separation to keep you comfortable — without losing ground feel.
+A barrier where it matters: hot sand and sun-baked pavement. The sole creates just enough separation to keep you comfortable — without losing ground feel.
 
-Better than barefoot on wet terrain: climbing on rocks at the ocean's edge, navigating a slippery boat deck, stepping across tidal pools.
+Better than barefoot on wet terrain: a slippery boat deck, a wet paddleboard, the walk back from the beach.
 
 Also a great alternative to water shoes — far less bulky, far more versatile, don't trap sand or water inside.
 ```
@@ -496,14 +512,13 @@ Source: docs/08-LIVE-SITE-COPY-AUDIT.md (URL 04, URL 11 product cards)
 
 #### Description
 ```
-Performance meets poetry. A footwear story for free spirits — rooted in movement, made to wander. Available exclusively at Free People.
+Performance meets poetry. A footwear story for free spirits — rooted in movement, made to wander. The Free People exclusive is sold only at Free People.
 Spring 2026 · Stay wild
 ```
-Source: docs/08-LIVE-SITE-COPY-AUDIT.md (URL 15)
+**Stay on Barreletics.com.** Do not send shoppers to freepeople.com. CTA = Shop styles below. Grid = our Performance Skins. (Andrew 2026-08-21)
 
 #### Products Available
-Same Performance Skin product grid (Open Sole, Closed Sole, Outdoor) at same pricing ($74–$78).  
-Source: docs/08-LIVE-SITE-COPY-AUDIT.md (URL 15)
+Story page + our color grid (Open / Closed / Outdoor / Coperni). The **Free People exclusive** itself is sold only at Free People — say that on the page. Do not outbound.
 
 ---
 
@@ -513,8 +528,8 @@ Source: docs/08-LIVE-SITE-COPY-AUDIT.md (URL 15)
 ```
 - Made in USA — every pair
 - Injection-molded / structured sole
-- Proprietary grip material (not silicone, not latex)
-- Antimicrobial
+- Patented / proprietary grip material (not silicone, not latex) — "patented" confirmed accurate 2026-08-12
+- Non-porous — wipes clean, nothing soaks in like fabric *(replaced "Antimicrobial" 2026-08-12)*
 - Sweat-resistant
 - Performance Skin material — stretches and conforms to foot
 - Durable — customers report 3–4+ years of daily use
@@ -557,7 +572,7 @@ BARRELETICS:
 - Grip after 6 months: Identical to day 1
 - Full-bottom coverage, structured sole
 - Moves with foot, never bunches
-- Antimicrobial, sweat-resistant
+- Non-porous, sweat-resistant — wipes clean *(replaced "Antimicrobial" 2026-08-12)*
 ```
 Source: docs/04-COMPONENT-LIBRARY.md (lines 412–458), manychat-kb/04-pricing.md, Barreletics_Research_Bible.md
 
@@ -572,15 +587,17 @@ Source: docs/04-COMPONENT-LIBRARY.md (lines 412–458), manychat-kb/04-pricing.m
 ```
 Source: manychat-kb/10-faq-general.md, docs/08-LIVE-SITE-COPY-AUDIT.md (URL 30 FAQ)
 
-### Hygiene Claims
+### Cleanliness Claims — REWRITTEN 2026-08-12 (owner letter)
 ```
-- Antimicrobial, sweat-resistant material
-- Does not hold onto moisture or bacteria like fabric
+- Non-porous — wipes clean; nothing soaks in and lingers the way it does in fabric
+- Sweat-resistant — sweat sits on the surface rather than absorbing
 - Latex- and silicone-free — no residue on shared equipment (Reformers, Megaformers)
-- Significantly more hygienic than grip socks
-- Grip socks absorb sweat and trap bacteria against foot with every workout
+- Contrast with fabric does the persuading: a sock absorbs and holds moisture; this doesn't
 ```
-Source: docs/08-LIVE-SITE-COPY-AUDIT.md (URL 30 FAQ — Beyond Grip Socks)
+
+> ⛔ **RETIRED — never reuse as source copy:** ~~"Antimicrobial"~~ · ~~"does not hold onto bacteria"~~ · ~~"significantly more hygienic than grip socks"~~ · ~~"grip socks trap bacteria against the foot"~~. The claim is about the **surface being wipeable**, never about the material acting on bacteria. Andrew 2026-08-12: "we might be able to say resist bacteria, but we just say because it's easy to wipe down."
+
+Source: docs/08-LIVE-SITE-COPY-AUDIT.md (URL 30 FAQ — Beyond Grip Socks), superseded by `docs/11-CANONICAL-ANSWERS.md` CA-02
 
 ### Medical & Sensitive Use Cases
 ```
@@ -950,7 +967,9 @@ Source: Barreletics_Research_Bible.md (Section 5)
 | Coperni product grey | barreletics.com/cdn/shop/files/Copreni_Final_More_grey.png |
 | Coperni runway SS26 | barreletics.com/cdn/shop/files/Screenshot_2026-03-20_at_6.53.30_PM.png |
 | Blue bg studio | cdn.shopify.com/s/files/1/0045/0612/4391/files/P5A7000_blue_background_2.jpg |
-| IMG_5051 (progress) | cdn.shopify.com/s/files/1/0045/0612/4391/files/IMG_5051.jpg |
+| IMG_5051 (yellow Open, blue court) — **KEEP Open / collections** | barreletics.com/cdn/shop/files/IMG_5051.jpg · local `docs/keep-open-collections/IMG_5051.jpg` |
+| Square_Pink (pink Open, blue bg) — **KEEP Open / collections** | barreletics.com/cdn/shop/files/Square_Pink.png?v=1764627088 · local `docs/keep-open-collections/Square_Pink.png` |
+| IMG_3158 (orange Open, red mat) — **KEEP Open / collections** | barreletics.com/cdn/shop/files/IMG_3158.jpg · local `docs/keep-open-collections/IMG_3158.jpg` |
 | Yellow shoe | cdn.shopify.com/s/files/1/0045/0612/4391/files/Yellow.jpg |
 | Blue pants lifestyle | cdn.shopify.com/s/files/1/0045/0612/4391/files/barrletixx_blue_pants_FINAL...jpg |
 
@@ -971,15 +990,24 @@ Domestic (Continental US):
 - Peak periods: allow 48–72 hours for processing
 
 International:
-- Worldwide shipping available
-- Customers responsible for duties, taxes, customs fees
-- Return/exchange shipping costs are customer's responsibility
+- Worldwide shipping — 195 countries via FedEx International Connect Plus, typically 7–14 business days
+- **Duties and taxes are charged at checkout** — nothing to pay on delivery *(Andrew 2026-08-12: "charged at time of purchase")*
+- Customer-paid exceptions, narrow: international **return** shipping · international **warranty replacements**, where the customer covers shipping **and duties**
+- HelpScout 5.3 keeps a deliberate hedge that customs handling varies by country — Andrew's liability backstop. Do not delete it. Appropriate on the Shipping policy page too; never in FAQ, ManyChat, or marketing
+- 🚫 RETIRED on outbound-order copy: ~~"customers responsible for duties, taxes, customs fees"~~ — the buyer pays at purchase, so this is both wrong and a deterrent. See `docs/11-CANONICAL-ANSWERS.md` CA-18
 
 Lost Packages:
 - Once tracking shows delivered, order considered fulfilled
-- Cannot issue refunds for packages shown as delivered
 - Apartment/multi-unit: check with building/mail area first
 ```
+
+**Lost-package handling — INTERNAL AGENT GUIDANCE, never customer-facing copy (Andrew 2026-08-14).** Customers get CA-22 wording only (`docs/11-CANONICAL-ANSWERS.md`), which stops at "considered fulfilled." The rule below decides the case; it is never pasted at a customer.
+
+- Tracking shows delivered = **fulfilled. Not an automatic refund**, and not an automatic denial either.
+- Work the likely causes first: building staff or shared mail area, other doors/side entrances, neighbors, a carrier marking early with delivery later that day.
+- If it still hasn't surfaced after 48 hours, treat it as a judgment call. First-time customer, modest order, clean history → replace and keep the customer.
+- Escalate to Andrew: repeat claims from the same customer or address, high-value orders, anything that smells like abuse.
+- 🚫 RETIRED 2026-08-14: ~~"Cannot issue refunds for packages shown as delivered"~~ — agents were quoting an internal backstop at customers as if it were policy. It was never on the site. Keep the discretion; do not restore the absolute.
 Source: manychat-kb/08-shipping.md, docs/08-LIVE-SITE-COPY-AUDIT.md (URL 30)
 
 ---
@@ -1002,8 +1030,8 @@ Source: manychat-kb/08-shipping.md, docs/08-LIVE-SITE-COPY-AUDIT.md (URL 30)
 | Yoga Tight | gid://shopify/Product/4406966648935 | lightly-padded-knee-yoga-pant-black | ACTIVE | 49 |
 | Coperni | gid://shopify/Product/10137256886563 | barreletics-x-coperni-closed-sole | ACTIVE | 36 |
 | Gift Card | gid://shopify/Product/4015747203175 | gift-card | DRAFT | 0 |
-| One Off Colors (Open) | gid://shopify/Product/10121206137123 | one-off-colors-open-sole | DRAFT | 0 |
-| One Off Colors (Closed) | gid://shopify/Product/10121290776867 | one-off-colors-closed-sole | DRAFT | 0 |
+| One Off Colors (Open) | gid://shopify/Product/10121206137123 | one-off-colors-open-sole | DRAFT (template `one-off-open`) | 0 |
+| One Off Colors (Closed) | gid://shopify/Product/10121290776867 | one-off-colors-closed-sole | ACTIVE when stocked (template `one-off-closed`; M4 QA) | varies |
 
 ### Complete SKU Taxonomy
 
@@ -1120,22 +1148,26 @@ Description: "Shopping for someone else but not sure what to give them? Give the
 #### One Off Colors — Open Sole
 ```
 GID: gid://shopify/Product/10121206137123
-Status: DRAFT
+Status: DRAFT until stocked + Online Store
 Price: $82.00
-Colors: Purple Blue (M/L)
-SKUs: (null)
-Inventory: 0
+Handle: one-off-colors-open-sole
+Theme template: one-off-open → product.one-off-open.json
+Colors: Purple Blue (M/L) as of last audit
+Surfaces: Theme settings → One-off colors (when this product is the picker)
+OS: P-011 / D-051 · planning/one-off-surfaces.md
 ```
 
 #### One Off Colors — Closed Sole
 ```
 GID: gid://shopify/Product/10121290776867
-Status: DRAFT
+Status: ACTIVE when published + stocked (M4 QA 2026-08-10)
 Price: $82.00
-Colors: Grey Swirl (M/L), Purple Blue (M/L), Turquoise & Purple (M/L)
-SKUs: (null)
-Inventory: 0
-Note: Option1 is mislabeled as "Grey Swirl" instead of "Color" — configuration error.
+Handle: one-off-colors-closed-sole
+Theme template: one-off-closed → product.one-off-closed.json
+Colors: Grey Swirl, Purple Blue, Turquoise & Purple (M/L) — buy box hides OOS
+Note: Option1 may be mislabeled "Grey Swirl" instead of "Color"; theme treats option position 1 as color on one-offs.
+Surfaces: Theme settings gate → nav + quiet link + All Variants One-Offs tab
+OS: P-011 / D-051 · planning/one-off-surfaces.md
 ```
 
 ### Shopify Collections Mapping
@@ -1158,7 +1190,8 @@ Open Sole additional:
 Best Grippy Shoes for Barre, Pilates & Yoga – Smarter Than Grip Socks
 
 Water Shoes:
-Aqua Shoes, Aquatic Water Shoes, boat shoes that don't slip, boating shoes, grippy shoes for boats, grippy shoes for pools, grippy water shoes, jet ski shoes, jet ski water shoe, kids water shoe, paddle board shoes, paddle board water sock, sexy water shoe, surf shoe, surf shoes, surf sock, water clogs, Water Shoes, water shoes like barefoot, water sock, womens water shoe
+Aqua Shoes, Aquatic Water Shoes, beach shoes, boat shoes that don't slip, boating shoes, grippy shoes for boats, grippy water shoes, jet ski shoes, jet ski water shoe, kids water shoe, paddle board shoes, paddle board water sock, resort shoes, surf shoe, surf shoes, surf sock, water clogs, Water Shoes, water shoes like barefoot, water sock, womens water shoe
+⚠ RETIRED KEYWORDS (do not re-add): grippy shoes for pools, pool shoes, pool deck shoes — remove from live Shopify SEO tags.
 
 T-Shirt/Tank:
 anti microbial yoga shirt, Apparel, ethically sourced women's yoga shirt, Light and airy yoga shirt, moisture wicking yoga shirt, under amour yoga shirt, women's yoga shirt, Yoga Pants & Shirts, yoga shirt made in USA
@@ -1181,8 +1214,8 @@ Yoga Tight:
 **Yoga Tight:**
 > Our founder, Stefanie Miller, was inspired to create the perfect pair of yoga pants to compliment her Performance Skin Footwear while modeling around the world. She fell in love with textiles while working for some of the best fashion designers throughout her career. Made with super-soft fabric, these compression pants are comfortable and flattering whether you're practicing at home or on the go. Comfort and durability for an exceptional workout experience. No expense spared! Detailed Quality Down To Every Stitch. Made in the USA!
 
-**Water Shoes:**
-> Perfect for outdoor adventures, the closed sole provides grip, stability, and protection from hot sand. Ideal for paddle-boarding, boating and poolside activities. Always check wet surfaces for slippage.
+**Water Shoes:** *(Admin description cleaned 2026-08-20 — no poolside)*
+> Perfect for outdoor adventures, the closed sole provides grip, stability, and protection from hot sand. Ideal for paddleboarding, boating, beach, and resortwear. Always check wet surfaces for slippage.
 
 **Coperni:**
 > *(empty — no Shopify body HTML)*

@@ -29,7 +29,7 @@ This Knowledge Base owns authoritative information across the following domains.
 | **Brand** | → Doc 02 | Voice, positioning, category creation, slogans |
 | **Policies** | ✅ Populated | Returns, warranty, shipping, pricing (Sections 13–16) |
 | **Manufacturing** | 🔲 Placeholder | Partner specs, QC process, materials sourcing, production timelines |
-| **Customer Support** | 🔲 Placeholder | Help Scout saved replies, macros, workflows, escalation rules |
+| **Customer Support** | ✅ Active | Help Scout saved replies: `helpscout-kb/Barreletics_Email_Template_Master.md` (incl. **2.6** torn-on-first-use save). Macros/workflows still owner-configured in Help Scout admin. Stub: `planning/m4b-helpscout-alignment.md` (not master). |
 | **Tidio AI** | 🔲 Placeholder | Chatbot Q&A pairs, intent routing, handoff rules |
 | **Wholesale** | 🔲 Placeholder | Partner terms, pitch materials, buyer education, MOQs |
 | **Partnerships** | 🔲 Placeholder | Studio partnerships, brand collaborations, co-marketing |
@@ -141,16 +141,20 @@ Studio Performance Skins with 360° grip, antimicrobial materials, and barefoot 
 | Barefoot connection | More barefoot feel, naturally grounded | More protection everywhere |
 | Ball of foot | Protected | Protected |
 | Toe splay | Natural toe splay | Natural toe splay |
-| Ventilation | Mid-foot vent for airflow | Fully enclosed |
+| Ventilation | Mid-foot vent for airflow | Fully covered |
 | Best for | Practitioners who want maximum ground feel | Practitioners who want full coverage and protection |
 | Price | $74 | $74 |
 
-**Messaging guidance:**
-- Open Sole: Use "naturally grounded" — stronger than "barefoot feel"
-- Closed Sole: Use "full coverage" and "more protection"
-- Both protect balls of feet and allow natural toe splay
+**Messaging guidance (P-003 / P-013 — `.cursor/rules/sole-description-language.mdc`):**
+- Open Sole: "Heel exposed, mid-foot breathing hole. More grounded, barefoot feel. Natural toe splay."
+- Closed Sole: "Heel and foot fully covered."
+- Both: "Both perform identically — same grip, same stability."
+- Choosing: "Choice is preference and feel only."
+- Never write "fully enclosed" in any form, and never assign a discipline to a sole.
 
 ### Key Customer Quotes
+> ⛔ **Do not reuse as source copy (2026-08-08).** The second quote assigns disciplines to soles, which P-003 retired. Kept here as a verbatim customer record only — awaiting owner decision on whether to annotate or drop it.
+
 - "I went with open sole for the barefoot connection and love it." — Studio instructor
 - "Closed sole for reformer, open sole for barre — I own both." — Frequent buyer
 
@@ -158,7 +162,7 @@ Studio Performance Skins with 360° grip, antimicrobial materials, and barefoot 
 PDP (accordion: Description) · Collection (compare section) · Compare page · FAQ page · Help Scout (which style?) · Tidio AI · Wholesale education
 
 ### Abbreviated Version
-Open Sole: heel grounded, more barefoot feel, mid-foot vent. Closed Sole: full coverage, more protection. Both: 360° grip, toe splay, $74.
+Open Sole: heel exposed, mid-foot breathing hole, more grounded barefoot feel, natural toe splay. Closed Sole: heel and foot fully covered. Both perform identically — same grip, same stability. Choice is preference and feel only. $74.
 
 ---
 
@@ -252,14 +256,12 @@ Injection-molded grip never peels or flakes. Longevity varies: months to years, 
 ### Canonical Answer
 
 **After class:**
-- Warm soapy water, rinse, air dry
+- Hand wash with warm soapy water. That's it.
 - Or wipe with equipment wipes post-class
 
 **Key care points:**
-- Non-porous material — doesn't absorb sweat or bacteria like fabric socks
-- Antimicrobial properties — rinses clean, doesn't hold odor
-- Air dry recommended (no machine dryer)
-- No machine washing required (but not harmful if gentle cycle)
+- Hand wash with warm soapy water. That's it.
+- Never mention dishwasher or washing machine.
 
 **Putting on / taking off:**
 - Pull from the top of the foot, not the straps
@@ -374,7 +376,7 @@ This is the core category-creation comparison. Every mention should move the cus
 | Material | Fabric — absorbs sweat, harbors bacteria, stretches | Non-porous — rinse clean, antimicrobial, maintains shape |
 | Cost | $14–$18/pair × 6–8 pairs/year = $112–$144/year | $74 one-time |
 | Lifespan | 6–8 weeks per pair | 18+ months (many report 3–4 years) |
-| Hygiene | Bacterial buildup, odor, machine wash required | Rinse and reuse, no bacterial absorption |
+| Hygiene | Bacterial buildup, odor, must be laundered | Hand wash with warm soapy water. That's it. |
 | Fit | Stretches out, bunches, requires frequent replacement | Second-skin fit, maintains shape |
 
 **The Double Failure:** Grip socks fail in two ways simultaneously — silicone dots that wear off (grip failure) AND fabric that absorbs sweat and bacteria (material failure). Barreletics solves both.
@@ -470,7 +472,8 @@ PDP (trust row + accordion) · FAQ page · Help Scout (warranty macro) · Tidio 
 **International:**
 - FedEx International Connect Plus
 - 195 countries and territories
-- Customer responsible for duties/taxes/customs
+- **Duties and taxes charged at checkout** — nothing to pay on delivery *(Andrew 2026-08-12; retires "customer responsible for duties")*
+- Customer-paid only for international returns, and warranty replacements where the customer covers shipping **and** duties
 
 ### Surface Map
 PDP (trust row) · Announcement ticker · Cart drawer (progress bar) · FAQ page · Help Scout (shipping macro) · Tidio AI · Policy page
@@ -493,7 +496,7 @@ Ships 1–2 days. Free shipping over $150. International: FedEx to 195 countries
 
 **Promotional messaging:**
 - Announcement ticker: "Buy 2, Save 15% — Code SAVE15"
-- Newsletter: 10% off for email signup (separate from SAVE15)
+- Newsletter: **no discount offer** — "Join the list" only (the prior 10% first-order offer is retired)
 
 ### Surface Map
 PDP (buy box) · Collection · Announcement ticker · Help Scout · Tidio AI

@@ -1,88 +1,107 @@
 {% comment %}
-  Newsletter / Email Signup Section
-  Source: Approved Home + PDP prototypes
+  Newsletter / Email Signup — light band + rust checkmarks (aligned with footer).
+  NO 10% / discount claims.
 {% endcomment %}
 
 <section class="newsletter-section" aria-label="Newsletter signup">
   <div class="newsletter-inner">
-    {% if section.settings.eyebrow != blank %}
-      <p class="newsletter-eyebrow">{{ section.settings.eyebrow }}</p>
+    <div class="newsletter-signup">
+      {% if section.settings.eyebrow != blank %}
+        <p class="newsletter-eyebrow type-label">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+      <h2 class="newsletter-title h2-standard">{{ section.settings.title }}</h2>
+      {% if section.settings.body != blank %}
+        <p class="newsletter-body type-body">{{ section.settings.body }}</p>
+      {% endif %}
+
+      <form class="newsletter-form" action="/contact#contact_form" method="post" accept-charset="UTF-8">
+        <input type="hidden" name="form_type" value="customer">
+        <input type="hidden" name="utf8" value="✓">
+        <label for="newsletter-email-{{ section.id }}" class="visually-hidden">Email address</label>
+        <input
+          class="newsletter-input"
+          type="email"
+          name="contact[email]"
+          id="newsletter-email-{{ section.id }}"
+          placeholder="{{ section.settings.placeholder }}"
+          required
+          autocomplete="email"
+        >
+        <button class="newsletter-btn btn btn--primary" type="submit">
+          {{ section.settings.button_text }}
+        </button>
+      </form>
+
+      {% if section.settings.legal != blank %}
+        <p class="newsletter-legal">{{ section.settings.legal }}</p>
+      {% endif %}
+    </div>
+
+    {% if section.settings.show_checklist %}
+      <ul class="newsletter-checks" aria-label="List benefits">
+        {% if section.settings.check_1 != blank %}
+          <li><span class="newsletter-check" aria-hidden="true">✓</span>{{ section.settings.check_1 }}</li>
+        {% endif %}
+        {% if section.settings.check_2 != blank %}
+          <li><span class="newsletter-check" aria-hidden="true">✓</span>{{ section.settings.check_2 }}</li>
+        {% endif %}
+        {% if section.settings.check_3 != blank %}
+          <li><span class="newsletter-check" aria-hidden="true">✓</span>{{ section.settings.check_3 }}</li>
+        {% endif %}
+        {% if section.settings.check_4 != blank %}
+          <li><span class="newsletter-check" aria-hidden="true">✓</span>{{ section.settings.check_4 }}</li>
+        {% endif %}
+      </ul>
     {% endif %}
-    <h2 class="newsletter-title">{{ section.settings.title }}</h2>
-    <p class="newsletter-body">{{ section.settings.body }}</p>
-
-    <form class="newsletter-form" action="/contact#contact_form" method="post" accept-charset="UTF-8">
-      <input type="hidden" name="form_type" value="customer">
-      <input type="hidden" name="utf8" value="✓">
-      <label for="newsletter-email" class="visually-hidden">Email address</label>
-      <input
-        class="newsletter-input"
-        type="email"
-        name="contact[email]"
-        id="newsletter-email"
-        placeholder="{{ section.settings.placeholder }}"
-        required
-        autocomplete="email"
-      >
-      <button class="newsletter-btn btn btn--primary" type="submit">
-        {{ section.settings.button_text }}
-      </button>
-    </form>
-
-    <p class="newsletter-legal">{{ section.settings.legal }}</p>
   </div>
 </section>
 
 <style>
   .newsletter-section {
-    padding: var(--space-13) var(--section-padding-x);
-    border-top: 1px solid var(--border-default);
+    padding: 56px var(--section-padding-x, 40px);
+    background: #f5f2ec;
+    border-top: 1px solid var(--border-default, #d6cfc0);
   }
 
   .newsletter-inner {
-    max-width: var(--max-width-copy);
+    max-width: 1200px;
     margin: 0 auto;
-    text-align: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+    text-align: left;
   }
 
   .newsletter-eyebrow {
-    font-size: var(--text-sm);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-widest);
-    color: var(--text-muted);
-    font-weight: var(--weight-bold);
-    margin: 0 0 var(--space-3);
+    margin: 0 0 var(--gap-a, 16px);
+    color: var(--type-label-color, #6b645a);
   }
 
   .newsletter-title {
-    font-size: var(--text-4xl);
-    font-weight: var(--weight-medium);
-    color: var(--text-primary);
-    margin: 0 0 var(--space-2);
+    margin: 0 0 var(--gap-b, 20px);
   }
 
   .newsletter-body {
-    font-size: var(--text-base);
-    color: var(--text-body);
-    line-height: var(--leading-relaxed);
     margin: 0;
+    color: var(--text-body, #4a4a4a);
   }
 
   .newsletter-form {
     display: flex;
-    gap: var(--space-2);
-    margin-top: var(--space-6);
+    gap: var(--space-2, 8px);
+    margin-top: var(--space-6, 24px);
   }
 
   .newsletter-input {
     flex: 1;
     padding: 14px 16px;
-    border: 1px solid var(--border-default);
-    background: var(--bg-primary);
+    border: 1px solid var(--border-default, #d6cfc0);
+    background: #fff;
     font-size: 14px;
-    color: var(--text-primary);
-    border-radius: var(--radius-button);
-    font-family: var(--font-family);
+    color: var(--text-primary, #1c1916);
+    border-radius: var(--radius-button, 4px);
+    font-family: var(--font-family, inherit);
   }
 
   .newsletter-input::placeholder {
@@ -96,14 +115,47 @@
   }
 
   .newsletter-legal {
-    font-size: var(--text-sm);
-    color: var(--text-muted);
+    font-size: var(--text-sm, 12px);
+    color: var(--text-muted, #8a8a8a);
     margin: 10px 0 0;
+  }
+
+  .newsletter-checks {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .newsletter-checks li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 15px;
+    line-height: 1.45;
+    color: #4a4a4a;
+  }
+
+  .newsletter-check {
+    flex: 0 0 auto;
+    color: #c45c3f;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1.35;
+  }
+
+  @media (max-width: 900px) {
+    .newsletter-inner {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
   }
 
   @media (max-width: 768px) {
     .newsletter-section {
-      padding: var(--section-padding-y-mobile) var(--section-padding-x-mobile);
+      padding: var(--section-padding-y-mobile, 48px) var(--section-padding-x-mobile, 16px);
     }
 
     .newsletter-form {
@@ -117,11 +169,16 @@
   "name": "Newsletter",
   "settings": [
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Join the list" },
-    { "type": "text", "id": "title", "label": "Title", "default": "10% off your first pair." },
-    { "type": "text", "id": "body", "label": "Body", "default": "New drops, studio stories, care tips. Once or twice a quarter." },
+    { "type": "text", "id": "title", "label": "Title", "default": "Join the list" },
+    { "type": "text", "id": "body", "label": "Body", "default": "New drops and studio stories. Once or twice a quarter — never spam." },
     { "type": "text", "id": "placeholder", "label": "Input placeholder", "default": "Email address" },
-    { "type": "text", "id": "button_text", "label": "Button text", "default": "Get 10% off" },
-    { "type": "text", "id": "legal", "label": "Legal text", "default": "By subscribing you agree to receive marketing emails. Unsubscribe anytime." }
+    { "type": "text", "id": "button_text", "label": "Button text", "default": "Subscribe" },
+    { "type": "text", "id": "legal", "label": "Legal text", "default": "By subscribing you agree to receive marketing emails. Unsubscribe anytime." },
+    { "type": "checkbox", "id": "show_checklist", "label": "Show value checkmarks", "default": true },
+    { "type": "text", "id": "check_1", "label": "Check 1", "default": "New drops and studio stories first" },
+    { "type": "text", "id": "check_2", "label": "Check 2", "default": "Early access to new colorways and limited editions" },
+    { "type": "text", "id": "check_3", "label": "Check 3", "default": "Studio partner discounts and events" },
+    { "type": "text", "id": "check_4", "label": "Check 4", "default": "Care tips to extend the life of your performance skins" }
   ],
   "presets": [{ "name": "Newsletter" }]
 }

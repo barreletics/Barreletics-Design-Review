@@ -1,35 +1,72 @@
 {% comment %}
   Page About Section
-  Brand story, values, category creation narrative.
-  Used on: page.about.json
+  Founder story (live our-story), values, Made in USA.
+  Used on: page.about.json (assigned to /pages/our-story)
 {% endcomment %}
 
 <section class="section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
   <div class="section__inner section__inner--narrow">
     {% if section.settings.eyebrow != blank %}
-      <p class="eyebrow eyebrow--accent">{{ section.settings.eyebrow }}</p>
+      <p class="eyebrow eyebrow--accent page-about__eyebrow">{{ section.settings.eyebrow }}</p>
     {% endif %}
-    <h1 class="page-about__title">{{ section.settings.title }}</h1>
+    <h1 class="page-about__title type-hero">{{ section.settings.title }}</h1>
+    {% if section.settings.byline != blank %}
+      <p class="page-about__byline">{{ section.settings.byline }}</p>
+    {% endif %}
     <div class="page-about__intro">
       {{ section.settings.intro_text }}
     </div>
   </div>
 </section>
 
+{% assign story_count = 0 %}
+{% for block in section.blocks %}
+  {% if block.type == 'story_chapter' %}
+    {% assign story_count = story_count | plus: 1 %}
+  {% endif %}
+{% endfor %}
+
+{% if story_count > 0 %}
+<section class="section section--cream page-about-story" aria-label="Founder story">
+  <div class="section__inner section__inner--narrow">
+    {% for block in section.blocks %}
+      {% if block.type == 'story_chapter' %}
+        <article class="page-about-story__chapter" {{ block.shopify_attributes }}>
+          {% if block.settings.eyebrow != blank %}
+            <p class="eyebrow">{{ block.settings.eyebrow }}</p>
+          {% endif %}
+          <h2 class="page-about-story__title h2-standard">{{ block.settings.title }}</h2>
+          <div class="page-about-story__body type-body">
+            {{ block.settings.body }}
+          </div>
+        </article>
+      {% endif %}
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
 {% if section.settings.manifesto != blank %}
 <section class="section section--dark">
   <div class="section__inner section__inner--narrow">
-    <blockquote class="page-about__manifesto">
+    <blockquote class="page-about__manifesto type-statement">
       {{ section.settings.manifesto }}
     </blockquote>
   </div>
 </section>
 {% endif %}
 
-{% if section.blocks.size > 0 %}
-<section class="section section--cream">
+{% assign value_count = 0 %}
+{% for block in section.blocks %}
+  {% if block.type == 'value' %}
+    {% assign value_count = value_count | plus: 1 %}
+  {% endif %}
+{% endfor %}
+
+{% if value_count > 0 %}
+<section class="section">
   <div class="section__inner">
-    <h2 class="page-about__values-title">{{ section.settings.values_heading }}</h2>
+    <h2 class="page-about__values-title h2-standard">{{ section.settings.values_heading }}</h2>
     <div class="page-about__values-grid">
       {% for block in section.blocks %}
         {% if block.type == 'value' %}
@@ -49,7 +86,7 @@
   <div class="section__inner section__inner--narrow">
     <div class="page-about__usa">
       <p class="eyebrow">Made in USA</p>
-      <h2 class="page-about__usa-title">{{ section.settings.made_in_usa_heading }}</h2>
+      <h2 class="page-about__usa-title h2-standard">{{ section.settings.made_in_usa_heading }}</h2>
       <div class="page-about__usa-body">
         {{ section.settings.made_in_usa_text }}
       </div>
@@ -75,43 +112,57 @@
 </script>
 
 <style>
+  .page-about__eyebrow {
+    margin: 0 0 var(--gap-a);
+  }
+
+  /* Size/weight/tracking come from .type-hero — cadence only here */
   .page-about__title {
-    font-size: var(--text-5xl);
-    font-weight: var(--weight-bold);
     color: var(--text-primary);
+    margin: 0 0 var(--gap-b);
+  }
+
+  .page-about__byline {
+    font-size: 14px;
+    color: var(--text-muted);
     margin: 0 0 var(--space-6);
-    letter-spacing: var(--tracking-tight);
   }
 
   .page-about__intro {
-    font-size: var(--text-md);
+    font-size: var(--type-lede-size);
+    font-weight: var(--type-lede-weight);
     color: var(--text-body);
-    line-height: var(--leading-loose);
+    line-height: var(--type-lede-leading);
   }
 
   .page-about__intro p {
     margin-bottom: var(--space-4);
   }
 
+  .page-about-story__chapter {
+    padding: var(--space-8) 0;
+    border-bottom: 1px solid var(--border-default);
+  }
+  .page-about-story__chapter:first-child { padding-top: 0; }
+  .page-about-story__chapter:last-child { border-bottom: none; padding-bottom: 0; }
+  .page-about-story__title { margin: var(--gap-a) 0 var(--gap-b); }
+  .page-about-story__body p { margin: 0 0 var(--space-4); }
+  .page-about-story__body p:last-child { margin-bottom: 0; }
+
+  /* Dark-band tier 1 — size/weight/tracking come from .type-statement */
   .page-about__manifesto {
-    font-size: var(--text-2xl);
-    font-weight: var(--weight-medium);
     color: var(--color-white);
-    line-height: var(--leading-relaxed);
     text-align: center;
     margin: 0;
     padding: 0;
     border: none;
-    letter-spacing: var(--tracking-tight);
   }
 
+  /* Size/weight/tracking come from .h2-standard */
   .page-about__values-title {
-    font-size: var(--text-3xl);
-    font-weight: var(--weight-bold);
     color: var(--text-primary);
     text-align: center;
     margin: 0 0 var(--space-9);
-    letter-spacing: var(--tracking-tight);
   }
 
   .page-about__values-grid {
@@ -127,17 +178,21 @@
     border: 1px solid var(--border-default);
   }
 
+  /* Card titles take the H3 role */
   .page-about__value-title {
-    font-size: var(--text-lg);
-    font-weight: var(--weight-bold);
+    font-size: var(--type-h3-size);
+    font-weight: var(--type-h3-weight);
+    line-height: var(--type-h3-leading);
+    letter-spacing: var(--type-h3-tracking);
     color: var(--text-primary);
     margin: 0 0 var(--space-2);
   }
 
   .page-about__value-body {
-    font-size: var(--text-base);
+    font-size: var(--type-body-size);
+    font-weight: var(--type-body-weight);
     color: var(--text-body);
-    line-height: var(--leading-relaxed);
+    line-height: var(--type-body-leading);
     margin: 0;
   }
 
@@ -145,37 +200,24 @@
     text-align: center;
   }
 
+  /* Size/weight/tracking come from .h2-standard */
   .page-about__usa-title {
-    font-size: var(--text-3xl);
-    font-weight: var(--weight-bold);
     color: var(--text-primary);
-    margin: var(--space-3) 0 var(--space-4);
-    letter-spacing: var(--tracking-tight);
+    margin: var(--gap-a) 0 var(--gap-b);
   }
 
   .page-about__usa-body {
-    font-size: var(--text-md);
+    font-size: var(--type-body-size);
+    font-weight: var(--type-body-weight);
     color: var(--text-body);
-    line-height: var(--leading-loose);
+    line-height: var(--type-body-leading);
     max-width: var(--max-width-copy);
     margin: 0 auto;
   }
 
   @media (max-width: 768px) {
-    .page-about__title {
-      font-size: var(--text-3xl);
-    }
-
-    .page-about__manifesto {
-      font-size: var(--text-xl);
-    }
-
     .page-about__values-grid {
       grid-template-columns: 1fr;
-    }
-
-    .page-about__usa-title {
-      font-size: var(--text-2xl);
     }
   }
 </style>
@@ -187,20 +229,25 @@
     {
       "type": "text",
       "id": "eyebrow",
-      "label": "Eyebrow",
-      "default": "Our Story"
+      "label": "Eyebrow"
     },
     {
       "type": "text",
       "id": "title",
       "label": "Page title",
-      "default": "Redefining Grip"
+      "default": "Our Story"
+    },
+    {
+      "type": "text",
+      "id": "byline",
+      "label": "Byline",
+      "default": "By Stefanie Miller, Founder"
     },
     {
       "type": "richtext",
       "id": "intro_text",
       "label": "Intro text",
-      "default": "<p>Barreletics is replacing the grip sock category with Performance Skins — injection-molded grippy shoes engineered for barre, reformer, Lagree, and Pilates. Instead of asking 'which grip sock?' we want you asking 'why grip socks at all?'</p>"
+      "default": "<p>Patented Performance Skins for barre, Pilates, reformer, Megaformer, and studio fitness — born from a founder who was done slipping mid-class.</p>"
     },
     {
       "type": "richtext",
@@ -228,6 +275,15 @@
     }
   ],
   "blocks": [
+    {
+      "type": "story_chapter",
+      "name": "Story chapter",
+      "settings": [
+        { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+        { "type": "text", "id": "title", "label": "Chapter title" },
+        { "type": "richtext", "id": "body", "label": "Chapter body" }
+      ]
+    },
     {
       "type": "value",
       "name": "Brand Value",

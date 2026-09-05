@@ -2,21 +2,37 @@
 
 ## Template Composition
 
-Defined in `templates/product.json`. Section order:
+**Status:** INDEX LOCK = **APPROVED July 17** @ `646dc30` (Andrew htmlpreview).  
+**v16** = prior / not closest — do not restore over July 17.  
+**Gallery:** `docs/pdp-version-gallery.html` → **A / July 17**  
+**Authority mock:** `docs/Barreletics PDP - APPROVED July 17.html`  
+**htmlpreview:** https://htmlpreview.github.io/?https://raw.githubusercontent.com/barreletics/Barreletics-Design-Review/646dc30f56cd8b026c19bd3bfcb7c0704ea7f52e/docs/Barreletics%20PDP%20-%20APPROVED%20July%2017.html  
+**Working entry:** `planning/PDP-WORKING-ENTRY.md`  
+**HARD:** Never overwrite Andrew-pasted htmlpreview authority without new `LOCK THIS` + URL.
+
+Defined in `templates/product.json`. Section order (July 17 spine):
 
 ```
-pdp-buy-box          ← Gallery + purchase module + product schema
-value-strip          ← Trust/value proposition bar
-pdp-features         ← "Built around one obsession: Grip." + discipline icons
-fifty-fifty (video)  ← "Yoga Socks Are Useless." + video embed
-variant-grid         ← Cross-sell: "Shop all colors & styles." (8 products)
-fifty-fifty (lifestyle) ← Customer quote on cream bg, reversed layout
-pdp-sock-math        ← Cost comparison: $74 vs $144/yr
-pdp-reviews          ← Judge.me reviews (featured + community)
-geo-section          ← "Trusted by studios near you" Q&A accordion
-newsletter           ← "10% off your first pair." email signup
-pdp-sticky-atc       ← Fixed bottom bar (appears when buy box scrolls away)
+pdp-buy-box            ← Gallery + purchase · short grip desc
+value-strip            ← Trust strip
+pdp-features           ← "Built around one obsession: Grip."
+disciplines            ← "Upgrade your grip. Upgrade your workout."
+fifty-fifty (video)    ← "Yoga Socks Are Useless." + Shop now
+variant-grid           ← Closed/Open/Outdoor/One-Off tabs
+fifty-fifty (lifestyle)← Customer quote / cream
+fullbleed-statement    ← "One pair. No more socks."
+pdp-sock-math          ← "One pair. Done."
+fifty-fifty (commit)   ← Commit to the gear
+problem-section        ← Think outside the sock.
+pdp-reviews            ← Quote-led reviews
+guarantee-band         ← 30-day / 90-day / Built to Last
+home-juicer            ← @barreletics Juicer feed
+geo-section            ← Trusted by studios near you
+newsletter             ← Join the list — NO 10%
+pdp-sticky-atc         ← Fixed bottom bar when buy box scrolls away
 ```
+
+**Not the buy box:** Theme Editor “Use current product” on `variant-grid` only affects the lower All Variants grid.
 
 ---
 
