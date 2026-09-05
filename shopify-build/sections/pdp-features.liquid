@@ -6,13 +6,17 @@
   assign title_size = section.settings.title_size | default: 'default'
   assign title_weight = section.settings.title_weight | default: 'default'
   assign body_size = section.settings.body_size | default: 'default'
+  assign pad_top = section.settings.pad_top | default: 32
+  assign pad_bottom = section.settings.pad_bottom | default: 32
+  assign pad_top_mobile = section.settings.pad_top_mobile | default: 24
+  assign pad_bottom_mobile = section.settings.pad_bottom_mobile | default: 24
 %}
 
 <section
   class="pdp-features"
   {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | handleize }}"{% endif %}
   aria-label="{{ section.settings.aria_label | default: 'Product features' | escape }}"
-  style="{% if title_size != 'default' %}--pf-title-size: {{ title_size }}px;{% endif %}{% if title_weight != 'default' %}--pf-title-weight: {{ title_weight }};{% endif %}{% if body_size != 'default' %}--pf-body-size: {{ body_size }}px;{% endif %}"
+  style="{% if title_size != 'default' %}--pf-title-size: {{ title_size }}px;{% endif %}{% if title_weight != 'default' %}--pf-title-weight: {{ title_weight }};{% endif %}{% if body_size != 'default' %}--pf-body-size: {{ body_size }}px;{% endif %}--pf-pad-top: {{ pad_top }}px;--pf-pad-bottom: {{ pad_bottom }}px;--pf-pad-top-m: {{ pad_top_mobile }}px;--pf-pad-bottom-m: {{ pad_bottom_mobile }}px;"
 >
   <div class="pdp-features__inner">
     <header class="pdp-features__header">
@@ -41,12 +45,12 @@
       <div class="pdp-disciplines">
         <p class="pdp-disciplines__label">Built for every discipline</p>
         <div class="pdp-disciplines__strip">
-          {% assign disciplines = 'Barre,Pilates,Reformer,Megaformer,Lagree,Yoga,Mat Work' | split: ',' %}
+          {% assign disciplines = 'Barre,Reformer,Megaformer,Lagree,Pilates,Yoga' | split: ',' %}
           {% for d in disciplines %}
-            <div class="pdp-disciplines__item">
-              <div class="pdp-disciplines__icon" aria-hidden="true"></div>
-              <span class="pdp-disciplines__name">{{ d }}</span>
-            </div>
+            {% unless forloop.first %}
+              <span class="pdp-disciplines__dot" aria-hidden="true">·</span>
+            {% endunless %}
+            <span class="pdp-disciplines__name">{{ d }}</span>
           {% endfor %}
         </div>
       </div>
@@ -56,7 +60,7 @@
 
 <style>
   .pdp-features {
-    padding: var(--section-padding-y) var(--section-padding-x);
+    padding: var(--pf-pad-top, var(--section-padding-y)) var(--section-padding-x) var(--pf-pad-bottom, var(--section-padding-y));
     background: var(--bg-primary);
     border-top: 1px solid var(--border-default);
     border-bottom: 1px solid var(--border-default);
@@ -151,35 +155,30 @@
 
   .pdp-disciplines__strip {
     display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-  }
-
-  .pdp-disciplines__item {
-    display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 10px;
-  }
-
-  .pdp-disciplines__icon {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    border: 1px solid var(--border-default);
+    justify-content: center;
+    gap: 12px 8px;
   }
 
   .pdp-disciplines__name {
-    font-size: var(--text-sm);
-    font-weight: var(--weight-bold);
+    font-size: clamp(12px, 1.3vw, 14px);
+    font-weight: 500;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    letter-spacing: var(--tracking-wider);
-    color: var(--text-primary);
+    color: #4a4a4a;
+  }
+
+  .pdp-disciplines__dot {
+    font-style: normal;
+    font-weight: 400;
+    color: #c45c3f;
+    margin: 0 6px;
   }
 
   @media (max-width: 768px) {
     .pdp-features {
-      padding: var(--section-padding-y-mobile) var(--section-padding-x-mobile);
+      padding: var(--pf-pad-top-m, var(--section-padding-y-mobile)) var(--section-padding-x-mobile) var(--pf-pad-bottom-m, var(--section-padding-y-mobile));
     }
 
     .pdp-features__grid {
@@ -200,9 +199,7 @@
     }
 
     .pdp-disciplines__strip {
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: var(--space-6) var(--space-8);
+      gap: 10px 4px;
     }
   }
 </style>
@@ -267,6 +264,47 @@
       "default": "default",
       "info": "Applies to feature descriptions."
     },
+    { "type": "header", "content": "Padding" },
+    {
+      "type": "range",
+      "id": "pad_top",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top — desktop",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "pad_bottom",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom — desktop",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "pad_top_mobile",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top — phone",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "pad_bottom_mobile",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom — phone",
+      "default": 24
+    },
     { "type": "header", "content": "Section — PDP features" },
     {
       "type": "textarea",
@@ -277,9 +315,9 @@
     {
       "type": "checkbox",
       "id": "show_disciplines",
-      "label": "Show inline discipline icons",
+      "label": "Show discipline tags",
       "default": false,
-      "info": "v19 uses standalone Disciplines section below — leave OFF on PDP."
+      "info": "Barre · Reformer · Megaformer · Lagree · Pilates · Yoga. Leave OFF on PDP."
     },
     {
       "type": "text",

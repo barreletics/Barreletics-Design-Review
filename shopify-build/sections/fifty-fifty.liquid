@@ -33,7 +33,11 @@
   assign text_pct = 100 | minus: media_pct
 
   assign min_height = section.settings.min_height | default: 640
-  assign mobile_media_height = section.settings.mobile_media_height | default: 320
+  assign mobile_media_height = section.settings.mobile_media_height | default: 680
+  assign mobile_text_height = section.settings.mobile_text_height | default: 0
+  assign aspect_ratio_mobile = section.settings.aspect_ratio_mobile | default: 'portrait'
+  assign image_fit_mobile = section.settings.image_fit_mobile | default: 'cover'
+  assign video_fit_mobile = section.settings.video_fit_mobile | default: 'cover'
   assign image_position = section.settings.image_position | default: 'center'
   if image_position == 'custom'
     assign focal_x = section.settings.focal_x | default: 50
@@ -167,6 +171,8 @@
         sizes="(max-width: 768px) 100vw, 50vw"
         alt="{{ section.settings.image_alt | escape }}"
         loading="lazy"
+        width="{{ section.settings.image.width }}"
+        height="{{ section.settings.image.height }}"
       >
     {% elsif section.settings.image_asset != blank %}
       <img
@@ -615,6 +621,14 @@
       font-size: var(--ff-title-size, 34px);
       line-height: 1.10;
     }
+    {%- if mobile_text_height > 0 %}
+    #shopify-section-{{ section.id }} .split-text {
+      min-height: {{ mobile_text_height }}px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    {%- endif %}
   }
 
   /* Quote composition — Cormorant ~28px default; Title size/weight scale quote */
@@ -920,14 +934,60 @@
       "info": "Desktop only. Text column = 100 − media %. Default 50/50."
     },
     {
+      "type": "select",
+      "id": "aspect_ratio_mobile",
+      "label": "Aspect ratio mobile",
+      "default": "portrait",
+      "options": [
+        { "value": "square", "label": "Square" },
+        { "value": "portrait", "label": "Portrait" },
+        { "value": "landscape", "label": "Landscape" },
+        { "value": "widescreen", "label": "Widescreen" }
+      ],
+      "info": "Collection page only. Same as live."
+    },
+    {
+      "type": "select",
+      "id": "image_fit_mobile",
+      "label": "Image fit mobile",
+      "default": "cover",
+      "options": [
+        { "value": "cover", "label": "Cover" },
+        { "value": "contain", "label": "Contain" },
+        { "value": "fill", "label": "Fill" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "video_fit_mobile",
+      "label": "Video fit mobile",
+      "default": "cover",
+      "options": [
+        { "value": "cover", "label": "Cover" },
+        { "value": "contain", "label": "Contain" },
+        { "value": "fill", "label": "Fill" }
+      ]
+    },
+    {
       "type": "range",
       "id": "mobile_media_height",
-      "label": "Mobile media height",
+      "label": "Mobile media height (other pages)",
       "min": 220,
-      "max": 640,
+      "max": 700,
       "step": 10,
       "unit": "px",
-      "default": 320
+      "default": 680
+    },
+    {
+      "type": "range",
+      "id": "mobile_text_height",
+      "label": "Mobile text frame height",
+      "min": 0,
+      "max": 700,
+      "step": 10,
+      "unit": "px",
+      "default": 0,
+      "info": "0 = fits the copy. Drag to make the text frame taller. Type size never changes."
     },
     {
       "type": "select",

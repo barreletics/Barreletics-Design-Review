@@ -16,6 +16,9 @@
   endif
   assign height_desktop = section.settings.height_desktop | default: '64'
   assign height_mobile = section.settings.height_mobile | default: '52'
+  assign aspect_ratio_mobile = section.settings.aspect_ratio_mobile | default: 'portrait'
+  assign image_fit_mobile = section.settings.image_fit_mobile | default: 'cover'
+  assign video_fit_mobile = section.settings.video_fit_mobile | default: 'cover'
   assign overlay_opacity = section.settings.overlay_opacity | default: 55
   assign overlay_alpha = overlay_opacity | times: 0.01
   assign show_overlay = section.settings.show_overlay
@@ -28,9 +31,6 @@
   assign focal_x = section.settings.focal_x | default: 50
   assign focal_y = section.settings.focal_y | default: 50
   assign media_fit = section.settings.media_fit | default: 'cover'
-  assign water_tint = section.settings.water_tint | default: 'none'
-  assign water_tint_strength = section.settings.water_tint_strength | default: 40
-  assign water_tint_alpha = water_tint_strength | times: 0.01
 
   assign cta_target = section.settings.cta_link_target | default: 'custom'
   if cta_target != blank and cta_target != 'custom'
@@ -49,14 +49,13 @@
 %}
 
 <section
-  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} fullbleed-statement{% unless show_text %} fullbleed-statement--media-only{% endunless %}{% if media_fit == 'contain' %} fullbleed-statement--contain{% endif %}{% if water_tint != 'none' %} fullbleed-statement--tint-{{ water_tint }}{% endif %}"
+  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} fullbleed-statement{% unless show_text %} fullbleed-statement--media-only{% endunless %}{% if media_fit == 'contain' %} fullbleed-statement--contain{% endif %}"
   style="{% render 'section-inset-vars' %} 
     --fb-media-radius: {{ media_radius }}px;
     --fb-height-desktop: {{ height_desktop }}vh;
     --fb-height-mobile: {{ height_mobile }}vh;
     --fb-overlay: rgba(28, 25, 22, {{ overlay_alpha }});
     --fb-focal: {{ focal_x }}% {{ focal_y }}%;
-    --fb-tint-alpha: {{ water_tint_alpha }};
     --fb-cta-bg: {{ cta_bg }};
     --fb-cta-border: {{ cta_border }};
     --fb-cta-text: {{ cta_text_color }};
@@ -177,41 +176,6 @@
     position: absolute;
     inset: 0;
   }
-  /* Water tint: stronger in lower frame so paddle/dock water shifts Caribbean/lagoon */
-  #shopify-section-{{ section.id }} .fullbleed-statement__bg::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    pointer-events: none;
-    opacity: 0;
-    mix-blend-mode: color;
-    background: transparent;
-  }
-  #shopify-section-{{ section.id }} .fullbleed-statement--tint-caribbean .fullbleed-statement__bg::before {
-    opacity: 1;
-    background: linear-gradient(
-      to top,
-      rgba(32, 178, 170, var(--fb-tint-alpha, 0.4)) 0%,
-      rgba(64, 196, 210, calc(var(--fb-tint-alpha, 0.4) * 0.75)) 42%,
-      rgba(120, 210, 230, calc(var(--fb-tint-alpha, 0.4) * 0.25)) 68%,
-      transparent 88%
-    );
-  }
-  #shopify-section-{{ section.id }} .fullbleed-statement--tint-lagoon .fullbleed-statement__bg::before {
-    opacity: 1;
-    background: linear-gradient(
-      to top,
-      rgba(46, 160, 140, var(--fb-tint-alpha, 0.4)) 0%,
-      rgba(64, 180, 150, calc(var(--fb-tint-alpha, 0.4) * 0.75)) 42%,
-      rgba(120, 200, 170, calc(var(--fb-tint-alpha, 0.4) * 0.25)) 68%,
-      transparent 88%
-    );
-  }
-  #shopify-section-{{ section.id }} .fullbleed-statement--tint-caribbean .fullbleed-statement__bg img,
-  #shopify-section-{{ section.id }} .fullbleed-statement--tint-lagoon .fullbleed-statement__bg img {
-    filter: saturate(1.22) contrast(1.04) brightness(1.03);
-  }
   #shopify-section-{{ section.id }} {
     --fb-overlay: rgba(28, 25, 22, {{ overlay_alpha }});
   }
@@ -243,7 +207,6 @@
     letter-spacing: {% if title_role == 'display' %}var(--type-h2-display-tracking){% else %}var(--type-statement-tracking){% endif %};
     line-height: {% if title_role == 'display' %}var(--type-h2-display-leading){% else %}var(--type-statement-leading){% endif %};
     color: #fff;
-    text-shadow: 0 2px 28px rgba(0, 0, 0, 0.55), 0 1px 2px rgba(0, 0, 0, 0.4);
     margin: 0 0 var(--gap-c);
   }
   #shopify-section-{{ section.id }} .fullbleed-statement__sub {
@@ -540,6 +503,41 @@
       "default": "52"
     },
     {
+      "type": "select",
+      "id": "aspect_ratio_mobile",
+      "label": "Aspect ratio mobile",
+      "default": "portrait",
+      "options": [
+        { "value": "square", "label": "Square" },
+        { "value": "portrait", "label": "Portrait" },
+        { "value": "landscape", "label": "Landscape" },
+        { "value": "widescreen", "label": "Widescreen" }
+      ],
+      "info": "Collection page only. Same as live."
+    },
+    {
+      "type": "select",
+      "id": "image_fit_mobile",
+      "label": "Image fit mobile",
+      "default": "cover",
+      "options": [
+        { "value": "cover", "label": "Cover" },
+        { "value": "contain", "label": "Contain" },
+        { "value": "fill", "label": "Fill" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "video_fit_mobile",
+      "label": "Video fit mobile",
+      "default": "cover",
+      "options": [
+        { "value": "cover", "label": "Cover" },
+        { "value": "contain", "label": "Contain" },
+        { "value": "fill", "label": "Fill" }
+      ]
+    },
+    {
       "type": "checkbox",
       "id": "show_overlay",
       "label": "Dark overlay",
@@ -594,30 +592,6 @@
       "unit": "%",
       "default": 50,
       "info": "Raise toward 75–90% to keep feet visible on dock / paddle shots."
-    },
-    { "type": "header", "content": "Water tint (optional)" },
-    {
-      "type": "select",
-      "id": "water_tint",
-      "label": "Water color grade",
-      "options": [
-        { "value": "none", "label": "None — natural photo" },
-        { "value": "caribbean", "label": "Caribbean blue / turquoise" },
-        { "value": "lagoon", "label": "Lagoon green" }
-      ],
-      "default": "none",
-      "info": "Soft tint stronger on the lower frame (water). Toggle here — no global code."
-    },
-    {
-      "type": "range",
-      "id": "water_tint_strength",
-      "label": "Tint strength",
-      "min": 15,
-      "max": 70,
-      "step": 5,
-      "unit": "%",
-      "default": 40,
-      "info": "Only applies when Water color grade is not None."
     },
     {
       "type": "range",

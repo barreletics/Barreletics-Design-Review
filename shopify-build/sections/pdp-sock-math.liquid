@@ -25,10 +25,10 @@
   elsif section.settings.image_url != blank
     assign editorial_img = section.settings.image_url
   endif
-  assign image_fit = section.settings.image_fit | default: 'cover'
-  assign image_scale = section.settings.image_scale | default: 100 | times: 0.01
   assign image_frame = section.settings.image_frame | default: 480
+  assign image_frame_mobile = section.settings.image_frame_mobile | default: 360
   assign image_unframed = section.settings.image_unframed
+  assign image_pos = section.settings.image_crop | default: 'center center'
   assign pad_top = section.settings.pad_top | default: 0
   assign pad_bottom = section.settings.pad_bottom | default: 0
 %}
@@ -36,7 +36,7 @@
 <section
   class="sock-math sock-math--{{ layout }}{% if image_unframed %} sock-math--unframed{% endif %}"
   aria-label="{{ section.settings.aria_label | default: 'One pair' | escape }}"
-  style="{% if title_size != 'default' %}--sm-title-size: {{ title_size }}px;{% endif %}{% if title_weight != 'default' %}--sm-title-weight: {{ title_weight }};{% endif %}{% if body_size != 'default' %}--sm-body-size: {{ body_size }}px;{% endif %}--sm-fit: {{ image_fit }};--sm-scale: {{ image_scale }};--sm-frame: {{ image_frame }}px;--sm-pad-top: {{ pad_top }}px;--sm-pad-bottom: {{ pad_bottom }}px;"
+  style="{% if title_size != 'default' %}--sm-title-size: {{ title_size }}px;{% endif %}{% if title_weight != 'default' %}--sm-title-weight: {{ title_weight }};{% endif %}{% if body_size != 'default' %}--sm-body-size: {{ body_size }}px;{% endif %}--sm-pos: {{ image_pos }};--sm-frame: {{ image_frame }}px;--sm-frame-m: {{ image_frame_mobile }}px;--sm-pad-top: {{ pad_top }}px;--sm-pad-bottom: {{ pad_bottom }}px;"
 >
   {% if layout == 'editorial' %}
     <div class="sock-math__split">
@@ -223,8 +223,8 @@
     height: 100%;
     max-width: none;
     max-height: none;
-    object-fit: var(--sm-fit, cover);
-    object-position: center center;
+    object-fit: cover;
+    object-position: var(--sm-pos, center center);
     display: block;
   }
   .sock-math--editorial.sock-math--unframed .sock-math__visual {
@@ -426,15 +426,22 @@
     .sock-math__grid { grid-template-columns: 1fr; }
     .sock-math__col--theirs { border-right: none; border-bottom: 1px solid #d6cfc0; }
     .sock-math__col { padding: 28px 24px; }
-    .sock-math--editorial { padding: var(--sm-pad-top, 0) 0 var(--sm-pad-bottom, 0); }
+    .sock-math--editorial {
+      padding: var(--sm-pad-top, 0) 0 calc(var(--sm-pad-bottom, 0px) + 48px);
+      background: linear-gradient(to bottom, #f5f2ec 0, #f5f2ec calc(100% - 48px), #faf8f6 calc(100% - 48px));
+    }
     .sock-math--editorial .sock-math__split { grid-template-columns: 1fr; }
-    .sock-math--editorial .sock-math__copy { padding: 48px 24px; }
+    .sock-math--editorial .sock-math__copy { padding: 28px 20px 20px; }
+    .sock-math--editorial h2.sock-math__headline {
+      font-size: clamp(32px, 9vw, 40px);
+    }
+    .sock-math--editorial .sock-math__end { margin: 16px 0 0; }
     .sock-math--editorial .sock-math__visual,
     .sock-math--editorial .sock-math__visual img {
-      height: 360px;
-      min-height: 360px;
-      max-height: 360px;
-      flex-basis: 360px;
+      height: var(--sm-frame-m, 360px);
+      min-height: var(--sm-frame-m, 360px);
+      max-height: var(--sm-frame-m, 360px);
+      flex-basis: var(--sm-frame-m, 360px);
     }
     .sock-math--editorial.sock-math--unframed .sock-math__visual,
     .sock-math--editorial.sock-math--unframed .sock-math__visual img {
@@ -443,14 +450,20 @@
       max-height: 320px;
       flex-basis: 320px;
     }
-    .sock-math--editorial .sock-math__cycle { grid-template-columns: 1fr; padding: 40px 24px; }
-    .sock-math--editorial .sock-math__cycle-item + .sock-math__cycle-item {
-      border-left: 0;
-      border-top: 1px solid #d6cfc0;
-      padding-top: 24px;
-      margin-top: 24px;
+    .sock-math--editorial .sock-math__cycle {
+      grid-template-columns: 1fr 1fr;
+      padding: 20px 12px 16px;
     }
-    .sock-math--editorial .sock-math__cycle-foot { margin: 24px 0 0; }
+    .sock-math--editorial .sock-math__cycle-item { padding: 0 10px; }
+    .sock-math--editorial .sock-math__cycle-item + .sock-math__cycle-item {
+      border-left: 1px solid #d6cfc0;
+      border-top: 0;
+      padding-top: 0;
+      margin-top: 0;
+    }
+    .sock-math--editorial .sock-math__cycle-item p.sock-math__cycle-price { font-size: 26px; }
+    .sock-math--editorial .sock-math__cycle-item > p:not(.sock-math__cycle-price) { display: none; }
+    .sock-math--editorial .sock-math__cycle-foot { display: none; }
   }
 </style>
 
@@ -563,45 +576,48 @@
       "label": "Show prices (compact)",
       "default": true
     },
-    { "type": "image_picker", "id": "image", "label": "Editorial photo" },
-    { "type": "text", "id": "image_url", "label": "Editorial photo URL" },
-    { "type": "text", "id": "image_alt", "label": "Editorial photo alt" },
-    {
-      "type": "checkbox",
-      "id": "image_unframed",
-      "label": "No photo frame (fill column)",
-      "info": "Open only. Closed stays framed. Ignores Photo frame height.",
-      "default": false
-    },
+    { "type": "header", "content": "Editorial photo" },
+    { "type": "image_picker", "id": "image", "label": "Photo" },
+    { "type": "text", "id": "image_url", "label": "Photo URL fallback", "info": "Only if Photo is empty." },
+    { "type": "text", "id": "image_alt", "label": "Photo alt" },
     {
       "type": "select",
-      "id": "image_fit",
-      "label": "Photo fit",
+      "id": "image_crop",
+      "label": "Show",
+      "info": "This box is a short crop. Top / center / bottom is the useful move.",
       "options": [
-        { "value": "contain", "label": "Shrink to fit (whole photo)" },
-        { "value": "cover", "label": "Fill box (may crop)" }
+        { "value": "center top", "label": "Top of photo" },
+        { "value": "center center", "label": "Center" },
+        { "value": "center bottom", "label": "Bottom of photo" }
       ],
-      "default": "contain"
+      "default": "center center"
     },
     {
       "type": "range",
       "id": "image_frame",
-      "min": 360,
-      "max": 560,
+      "min": 280,
+      "max": 720,
       "step": 20,
       "unit": "px",
-      "label": "Photo frame height",
+      "label": "Photo height — desktop",
       "default": 480
     },
     {
       "type": "range",
-      "id": "image_scale",
-      "min": 50,
-      "max": 100,
-      "step": 5,
-      "unit": "%",
-      "label": "Photo size inside frame",
-      "default": 100
+      "id": "image_frame_mobile",
+      "min": 220,
+      "max": 560,
+      "step": 20,
+      "unit": "px",
+      "label": "Photo height — phone",
+      "default": 360
+    },
+    {
+      "type": "checkbox",
+      "id": "image_unframed",
+      "label": "No photo frame (fill column)",
+      "info": "Open PDP only. Leave off here.",
+      "default": false
     },
     {
       "type": "range",
