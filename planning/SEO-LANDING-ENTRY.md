@@ -1,5 +1,7 @@
 # SEO Landing Entry — Best Grippy Socks
 
+**M4 page SIGNED 2026-09-05:** `templates/page.best-grippy-socks.json` on draft `187144929571`. H1 = **Full-underfoot grip**. Do not overwrite this HTML mock.
+
 **Mock (authority):** `Barreletics SEO - Best Grippy Socks - Definitive-v36.html` ← **locked balance**  
 **Trial (soft size):** `Definitive-v35.html` — `clamp(36–52)` / **400** · compare vs v34  
 **Prior (keep for compare):** `Definitive-v33.html` — all sentence case (superseded by Title Case hero)  

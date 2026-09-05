@@ -1,5 +1,7 @@
 # M4 Section Freeze Registry — APPROVED / SETTLED
 
+> **Better Than Grippy Socks SIGNED 2026-09-05:** Handle `/pages/best-barre-pilates-yoga-grippy-socks` · Admin suffix **`best-grippy-socks`** · living spine `templates/page.best-grippy-socks.json` on M4 `187144929571`. Stack: **Full-underfoot grip** hero → Shop all 2 rows → value strip → **One pair. Done.** → We outgrew → Never loses → Upgrade → reviews → Juicer → FAQ. TE hero photo + overlay + default tab stay user-owned. Hub mock **SEO v36** stays — never overwrite that HTML. Do not assign this handle to default `page`. Do not swap this URL with Shop All.
+
 > ## ⛔ ANTI-REVERT (HARD)
 > **Agents must not silently restore older compositions.**  
 > **Law:** `.cursor/rules/anti-revert-fail-closed.mdc` (+ `.cursor/rules/section-freeze-no-drift.mdc`)  
@@ -303,6 +305,7 @@ No small size.
 | **PDP fold chrome** | Fold-judgment mock + sitewide nav sync | **LOCKED 2026-08-11** · nav font **#2** | Hub `docs/index.html` · `pdp-fold-v20d-chrome.html` | Logo **42px** on mock · nav **13px / 500 / sentence case** · sitewide header now matches nav #2 (logo TE 45 left alone). **Judge ATC above fold here.** Never thrash without chrome letter. | `docs/pdp-fold-v20d-chrome.html` · `docs/Barreletics PDP - Definitive-v20d-fold-with-chrome.html` · `.cursor/rules/pdp-fold-preview-from-m4.mdc` · hub Shop card |
 | **Juicer / Instagram** | Reusable library section (any page) | **LOCKED Jul 31 2026** · on PDP draft | v19 Juicer · PDP `product.json` includes `home-juicer` | Eyebrow / @barreletics / body · live Juicer (`barreletics`) · **max_height 0** · See more · Follow · TE add/omit · **on PDP after guarantee, before FAQ** | `sections/home-juicer.liquid` · `product.json` · `specs/frozen/juicer.md` · `Definitive-v19.html` `#instagram` |
 | **Brand / About** | `/pages/our-story` · `page.our-story.json` | **LOCKED 2026-08-13** · mock v25 | `docs/Barreletics Brand - Definitive-v25.html` | Hero → intro + pull → founder split → prototype split → 2-col values → Joseph cream mat → USA facts → letter close → GEO → dark close · **TE mobile stack** on splits + Joseph · v24 black museum prior | `page-about-*.liquid` · `page.our-story.json` · `specs/frozen/about.md` |
+| **Better Than Grippy Socks** | `/pages/best-barre-pilates-yoga-grippy-socks` | **SIGNED 2026-09-05** · mock v36 stays | Footer Learn only · M4 `187144929571` | **Full-underfoot grip** → shop 2 rows → strip → **One pair. Done.** → We outgrew → Never loses → Upgrade → reviews → Juicer → FAQ. TE media/tab user-owned. **SEO v36 HTML never overwrite.** Not Shop All. | `templates/page.best-grippy-socks.json` · Admin suffix `best-grippy-socks` · `docs/…Definitive-v36.html` |
 
 Update the **Fingerprint** column with the freeze commit SHA after each freeze ship.
 
