@@ -35,9 +35,10 @@
   assign min_height = section.settings.min_height | default: 640
   assign mobile_media_height = section.settings.mobile_media_height | default: 680
   assign mobile_text_height = section.settings.mobile_text_height | default: 0
-  assign aspect_ratio_mobile = section.settings.aspect_ratio_mobile | default: 'portrait'
-  assign image_fit_mobile = section.settings.image_fit_mobile | default: 'cover'
-  assign video_fit_mobile = section.settings.video_fit_mobile | default: 'cover'
+  if template.name == 'product'
+    assign mobile_media_height = 550
+    assign mobile_text_height = 0
+  endif
   assign image_position = section.settings.image_position | default: 'center'
   if image_position == 'custom'
     assign focal_x = section.settings.focal_x | default: 50
@@ -50,8 +51,21 @@
   assign column_gap = section.settings.column_gap | default: 0
   assign side_padding = section.settings.side_padding | default: 64
   assign vertical_padding = section.settings.vertical_padding | default: 88
-  assign section_gap = section.settings.section_gap | default: 32
-  assign section_gap_m = section.settings.section_gap_mobile | default: 24
+  assign section_gap = 32
+  if section.settings.section_gap == 0 or section.settings.section_gap != blank
+    assign section_gap = section.settings.section_gap
+  endif
+  assign section_gap_m = 0
+  if section.settings.section_gap_mobile == 0 or section.settings.section_gap_mobile != blank
+    assign section_gap_m = section.settings.section_gap_mobile
+  endif
+  if template.name == 'product'
+    assign section_gap_m = 0
+  endif
+  assign text_pad_m = 32
+  if template.name == 'product'
+    assign text_pad_m = 48
+  endif
 
   assign image_scale_ratio = image_scale | times: 1.0 | divided_by: 100.0
 
@@ -116,6 +130,8 @@
     --ff-vertical-padding: {{ vertical_padding }}px;
     --ff-section-gap: {{ section_gap }}px;
     --ff-section-gap-m: {{ section_gap_m }}px;
+    --ff-text-pad-top-m: {{ text_pad_m }}px;
+    --ff-text-pad-bottom-m: {{ text_pad_m }}px;
     --ff-cta-bg: {{ cta_bg }};
     --ff-cta-border: {{ cta_border }};
     --ff-cta-text: {{ cta_text_color }};
@@ -322,6 +338,10 @@
      insetting the media column. Prior padding-block on .split-section left
      64px empty bands above/below the image inside the section frame. */
   #shopify-section-{{ section.id }} {
+    --ff-section-gap: {{ section_gap }}px;
+    --ff-section-gap-m: {{ section_gap_m }}px;
+    --ff-text-pad-top-m: {{ text_pad_m }}px;
+    --ff-text-pad-bottom-m: {{ text_pad_m }}px;
     padding-block: var(--ff-section-gap, var(--section-padding-y, 32px));
     box-sizing: border-box;
     background: {{ section.settings.bg_color | default: '#ffffff' }};
@@ -586,7 +606,8 @@
   }
   @media (max-width: 768px) {
     #shopify-section-{{ section.id }} {
-      padding-block: var(--ff-section-gap-m, var(--section-padding-y-mobile, 24px));
+      padding-top: 0;
+      padding-bottom: var(--ff-section-gap-m, 0px);
     }
     #shopify-section-{{ section.id }} .split-section {
       grid-template-columns: 1fr;
@@ -613,9 +634,7 @@
       border-bottom-right-radius: 0;
     }
     #shopify-section-{{ section.id }} .split-text {
-      padding:
-        min(var(--ff-vertical-padding, 88px), var(--section-padding-y-mobile, 48px))
-        min(var(--ff-side-padding, 64px), var(--section-padding-x-mobile, 16px));
+      padding: var(--ff-text-pad-top-m, 32px) var(--section-padding-x-mobile, 16px) var(--ff-text-pad-bottom-m, 32px);
     }
     #shopify-section-{{ section.id }} .split-text__title.h2-supporting {
       font-size: var(--ff-title-size, 34px);
@@ -626,7 +645,7 @@
       min-height: {{ mobile_text_height }}px;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
     }
     {%- endif %}
   }
@@ -934,60 +953,26 @@
       "info": "Desktop only. Text column = 100 − media %. Default 50/50."
     },
     {
-      "type": "select",
-      "id": "aspect_ratio_mobile",
-      "label": "Aspect ratio mobile",
-      "default": "portrait",
-      "options": [
-        { "value": "square", "label": "Square" },
-        { "value": "portrait", "label": "Portrait" },
-        { "value": "landscape", "label": "Landscape" },
-        { "value": "widescreen", "label": "Widescreen" }
-      ],
-      "info": "Collection page only. Same as live."
-    },
-    {
-      "type": "select",
-      "id": "image_fit_mobile",
-      "label": "Image fit mobile",
-      "default": "cover",
-      "options": [
-        { "value": "cover", "label": "Cover" },
-        { "value": "contain", "label": "Contain" },
-        { "value": "fill", "label": "Fill" }
-      ]
-    },
-    {
-      "type": "select",
-      "id": "video_fit_mobile",
-      "label": "Video fit mobile",
-      "default": "cover",
-      "options": [
-        { "value": "cover", "label": "Cover" },
-        { "value": "contain", "label": "Contain" },
-        { "value": "fill", "label": "Fill" }
-      ]
-    },
-    {
       "type": "range",
       "id": "mobile_media_height",
-      "label": "Mobile media height (other pages)",
+      "label": "Photo height — phone",
       "min": 220,
       "max": 700,
       "step": 10,
       "unit": "px",
-      "default": 680
+      "default": 530,
+      "info": "How tall the photo is on phone."
     },
     {
       "type": "range",
-      "id": "mobile_text_height",
-      "label": "Mobile text frame height",
-      "min": 0,
-      "max": 700,
-      "step": 10,
+      "id": "text_pad_top_mobile",
+      "label": "Text pad — phone",
+      "min": 16,
+      "max": 120,
+      "step": 4,
       "unit": "px",
-      "default": 0,
-      "info": "0 = fits the copy. Drag to make the text frame taller. Type size never changes."
+      "default": 32,
+      "info": "Sitewide phone rhythm is 32. This slider is stored but phone uses 32."
     },
     {
       "type": "select",
@@ -1667,13 +1652,13 @@
     {
       "type": "range",
       "id": "vertical_padding",
-      "label": "Text panel — top & bottom pad",
+      "label": "Text pad — desktop",
       "min": 32,
       "max": 120,
       "step": 4,
       "unit": "px",
       "default": 88,
-      "info": "Inner vertical padding in the text column. WORKING default 88px."
+      "info": "Desktop only. Phone uses Space above / below text."
     },
     {
       "type": "range",
@@ -1711,107 +1696,28 @@
     },
     {
       "type": "paragraph",
-      "content": "Space above and below this block. Default 32 desktop / 24 phone — site standard."
+      "content": "Phone: photo is always flush at the top. The phone slider only adds space after the section."
     },
     {
       "type": "range",
       "id": "section_gap",
-      "label": "Gap — top & bottom",
+      "label": "Space above & below section — desktop",
       "min": 0,
       "max": 96,
       "step": 4,
       "unit": "px",
-      "default": 32,
-      "info": "Default 32. Site section gap."
+      "default": 32
     },
     {
       "type": "range",
       "id": "section_gap_mobile",
-      "label": "Gap — top & bottom (mobile)",
-      "min": 0,
-      "max": 80,
-      "step": 4,
-      "unit": "px",
-      "default": 24,
-      "info": "Default 24. Phone."
-    },
-    {
-      "type": "header",
-      "content": "8 — Insets"
-    },
-    {
-      "type": "paragraph",
-      "content": "Outer inset from the page edges. Defaults 0 = full bleed. Not the section gap."
-    },
-    {
-      "type": "checkbox",
-      "id": "inset_custom_mobile",
-      "label": "Custom mobile inset",
-      "default": false,
-      "info": "OFF (default): ignore the mobile inset sliders — mobile uses desktop Inset top / bottom / left & right. ON: use the mobile inset sliders instead."
-    },
-    {
-      "type": "range",
-      "id": "inset_top",
-      "label": "Inset top",
-      "min": 0,
-      "max": 96,
-      "step": 4,
-      "unit": "px",
-      "default": 0
-    },
-    {
-      "type": "range",
-      "id": "inset_bottom",
-      "label": "Inset bottom",
-      "min": 0,
-      "max": 96,
-      "step": 4,
-      "unit": "px",
-      "default": 0
-    },
-    {
-      "type": "range",
-      "id": "inset_x",
-      "label": "Inset left & right",
+      "label": "Space after section — phone",
       "min": 0,
       "max": 96,
       "step": 4,
       "unit": "px",
       "default": 0,
-      "info": "Same value on both sides."
-    },
-    {
-      "type": "range",
-      "id": "inset_top_mobile",
-      "label": "Inset top — mobile",
-      "min": 0,
-      "max": 64,
-      "step": 4,
-      "unit": "px",
-      "default": 0,
-      "info": "Only when Custom mobile inset is on."
-    },
-    {
-      "type": "range",
-      "id": "inset_bottom_mobile",
-      "label": "Inset bottom — mobile",
-      "min": 0,
-      "max": 64,
-      "step": 4,
-      "unit": "px",
-      "default": 0
-    },
-    {
-      "type": "range",
-      "id": "inset_x_mobile",
-      "label": "Inset left & right — mobile",
-      "min": 0,
-      "max": 64,
-      "step": 4,
-      "unit": "px",
-      "default": 0,
-      "info": "Only when Custom mobile inset is on."
+      "info": "Never pads above the photo. 0 = next section touches."
     },
     {
       "type": "checkbox",

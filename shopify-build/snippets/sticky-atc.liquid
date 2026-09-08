@@ -93,7 +93,7 @@
         data-variant-id="{{ product.selected_or_first_available_variant.id }}"
         aria-label="Add {{ product.title }} to cart"
       >
-        Add to Cart — {{ product.selected_or_first_available_variant.price | money }}
+        Add to Cart
       </button>
     </div>
   </div>
@@ -230,7 +230,7 @@
         stickyBtn.setAttribute('data-variant-id', variant.id);
         if (variant.available) {
           stickyBtn.disabled = false;
-          stickyBtn.textContent = 'Add to Cart \u2014 ' + formatMoney(variant.price);
+          stickyBtn.textContent = 'Add to Cart';
           stickyBtn.classList.remove('btn--disabled');
         } else {
           stickyBtn.disabled = true;
@@ -261,9 +261,9 @@
           stickyBtn.textContent = 'Adding\u2026';
           window.BarreleticsCart.add(vid, 1).finally(function() {
             stickyBtn.disabled = false;
-            stickyBtn.textContent = 'Add to Cart \u2014 ' + formatMoney(parseInt(stickyBtn.getAttribute('data-price') || '0', 10));
-            document.addEventListener('variant:changed', function handler(ev) {
-              stickyBtn.textContent = 'Add to Cart \u2014 ' + formatMoney(ev.detail.variant.price);
+            stickyBtn.textContent = 'Add to Cart';
+            document.addEventListener('variant:changed', function handler() {
+              stickyBtn.textContent = 'Add to Cart';
               document.removeEventListener('variant:changed', handler);
             });
           });

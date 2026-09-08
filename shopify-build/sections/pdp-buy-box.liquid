@@ -250,15 +250,10 @@
       <span style="font-weight:400;">{{ lede_line_1 | escape }}</span><br>
       <span style="font-weight:400;">{{ lede_line_2 | escape }}</span>
     </p>
-    {% if short_desc != blank %}
-      <p class="pdp-buy__desc">{{ short_desc | escape }}</p>
-    {% endif %}
+    {% comment %} Short description stays in TE + Description accordion only. Not above price. {% endcomment %}
 
     <div class="pdp-buy__price-block">
       <span class="pdp-buy__price-now">{{ current_variant.price | money }}</span>
-      {% if section.settings.show_payment_line != false %}
-        <span class="pdp-buy__price-meta">{{ payment_line | escape }}</span>
-      {% endif %}
     </div>
 
     {% if product.has_only_default_variant == false %}
@@ -278,7 +273,7 @@
         {% if is_color_opt %}
           <div class="pdp-buy__option" data-option-position="{{ option.position }}">
             <div class="pdp-buy__option-header">
-              <span class="pdp-buy__option-label">Color · <span id="selected-color">{{ option.selected_value }}</span></span>
+              <span class="pdp-buy__option-label" id="selected-color">{{ option.selected_value }}</span>
             </div>
             <div class="pdp-buy__swatches{% if _cat_oneoff %} pdp-buy__swatches--photos{% endif %}">
               {% for value in option.values %}
@@ -463,12 +458,15 @@
       {% endfor %}
     {% endif %}
 
-    <form action="/cart/add" method="post" id="pdp-form">
+    {% form 'product', product, id: 'pdp-form' %}
       <input type="hidden" name="id" value="{{ current_variant.id }}">
       <button type="submit" class="pdp-buy__cta btn btn--primary">
-        Add to Cart — {{ current_variant.price | money }}
+        Add to Cart
       </button>
-    </form>
+      <div class="pdp-buy__shop-pay">
+        {{ form | payment_terms }}
+      </div>
+    {% endform %}
 
     {% unless section.settings.show_oneoff_link == false %}
       {% render 'one-off-quiet-link', current_product: product %}
@@ -546,13 +544,14 @@
         </details>
       {% endif %}
       <details class="pdp-accordion" data-pdp-accordion>
-        <summary class="pdp-accordion__trigger" aria-expanded="false">Shipping <span>+</span></summary>
+        <summary class="pdp-accordion__trigger" aria-expanded="false">Shipping — free over $150 <span>+</span></summary>
         <div class="pdp-accordion__body">{{ shipping_body | escape }}</div>
       </details>
       <details class="pdp-accordion" data-pdp-accordion>
-        <summary class="pdp-accordion__trigger" aria-expanded="false">Returns &amp; warranty <span>+</span></summary>
+        <summary class="pdp-accordion__trigger" aria-expanded="false">Returns — 30-day returns · 90-day warranty <span>+</span></summary>
         <div class="pdp-accordion__body">{{ returns_body | escape }}</div>
       </details>
+      <p class="pdp-buy__origin">Made in the USA · No latex · No silicone</p>
     </div>
   </div>
 </section>
@@ -606,6 +605,7 @@
     gap: 12px;
     position: sticky;
     top: 92px;
+    min-width: 0;
   }
 
   .pdp-gallery__hero {
@@ -625,6 +625,8 @@
   .pdp-gallery__thumbs {
     display: flex;
     gap: 6px;
+    min-width: 0;
+    max-width: 100%;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
@@ -662,6 +664,7 @@
     flex-direction: column;
     /* v20c fold breathe — keep ATC above fold on desktop */
     gap: 14px;
+    padding-bottom: 32px;
   }
 
   .pdp-buy__rating {
@@ -742,9 +745,8 @@
   }
 
   .pdp-buy__price-block {
-    padding: 10px 0;
-    border-top: 1px solid var(--border-default);
-    border-bottom: 1px solid var(--border-default);
+    padding: 0;
+    border: 0;
   }
 
   .pdp-buy__price-now {
@@ -761,6 +763,16 @@
     margin-left: 0;
     font-size: 12px;
     color: var(--text-muted);
+  }
+
+  .pdp-buy__origin {
+    margin: 14px 0 0;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: 0;
+    color: var(--text-muted, #8a8a8a);
   }
 
   .pdp-buy__option {
@@ -791,6 +803,12 @@
     letter-spacing: var(--tracking-wider);
   }
 
+  #selected-color {
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 400;
+  }
+
   .pdp-buy__size-link {
     font-size: 12px;
     color: var(--text-primary);
@@ -806,13 +824,13 @@
   }
 
   .pdp-buy__swatch {
-    width: 23px;
-    height: 23px;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
     border: 2px solid transparent;
     cursor: pointer;
     transition: all var(--transition-fast);
-    padding: 9px;
+    padding: 5px;
     box-sizing: content-box;
     /* Fill color/image through the padded circle; border ring sits outside */
     background-clip: padding-box;
@@ -853,13 +871,13 @@
   }
 
   .pdp-buy__size-btn {
-    padding: 12px 8px;
-    border: 1px solid #d6cfc0;
-    background: #f9f9f9;
+    padding: 10px 8px;
+    border: 1px solid #e4ddd4;
+    background: #fff;
     text-align: center;
     cursor: pointer;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 500;
     border-radius: 6px;
     font-family: inherit;
     color: #1c1916;
@@ -868,7 +886,8 @@
   }
 
   .pdp-buy__size-btn.is-active {
-    border: 2px solid #1c1916;
+    border: 1px solid #9a9182;
+    font-weight: 600;
   }
 
   .pdp-buy__size-range {
@@ -888,6 +907,16 @@
     font-weight: var(--type-cta-weight);
     letter-spacing: var(--type-cta-tracking);
     line-height: var(--type-cta-leading, 1);
+  }
+
+  .pdp-buy__shop-pay {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-muted, #8a8a8a);
+  }
+  .pdp-buy__shop-pay shopify-payment-terms {
+    display: block;
   }
 
   .pdp-buy__oneoff-link {
@@ -1073,17 +1102,43 @@
 
   @media (max-width: 768px) {
     .pdp-hero {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
       gap: var(--space-8);
-      padding: var(--space-8) var(--section-padding-x-mobile);
+      padding: var(--space-8) var(--section-padding-x-mobile) 0;
+      min-width: 0;
+    }
+
+    .pdp-gallery,
+    .pdp-buy {
+      min-width: 0;
+      max-width: 100%;
     }
 
     .pdp-gallery {
       position: static;
     }
 
+    .pdp-buy__header {
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
     .pdp-buy__name {
       font-size: 32px;
+    }
+
+    .pdp-buy__swatches {
+      gap: 4px;
+    }
+
+    .pdp-buy__swatch:not(.pdp-buy__swatch--photo) {
+      width: 26px;
+      height: 26px;
+      padding: 0;
+      box-sizing: border-box;
     }
   }
 </style>
@@ -1196,13 +1251,13 @@
       "default": "#reviews",
       "info": "Anchor or URL for the Reviews → link."
     },
-    { "type": "checkbox", "id": "show_payment_line", "label": "Show payment / installment line", "default": true },
+    { "type": "checkbox", "id": "show_payment_line", "label": "Show payment / installment line", "default": false },
     {
       "type": "text",
       "id": "payment_line",
       "label": "Payment / installment line",
       "default": "or 4 × $18.50",
-      "info": "Muted line under price (v19). Update if product price changes."
+      "info": "Unused. Shop Pay under Add to Cart owns the split."
     },
     { "type": "checkbox", "id": "show_size_chart_link", "label": "Show size chart link", "default": true },
     { "type": "url", "id": "size_chart_url", "label": "Size chart URL" },

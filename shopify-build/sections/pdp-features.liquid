@@ -8,15 +8,15 @@
   assign body_size = section.settings.body_size | default: 'default'
   assign pad_top = section.settings.pad_top | default: 32
   assign pad_bottom = section.settings.pad_bottom | default: 32
-  assign pad_top_mobile = section.settings.pad_top_mobile | default: 24
-  assign pad_bottom_mobile = section.settings.pad_bottom_mobile | default: 24
+  assign pad_top_mobile = 32
+  assign pad_bottom_mobile = 32
 %}
 
 <section
   class="pdp-features"
   {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | handleize }}"{% endif %}
   aria-label="{{ section.settings.aria_label | default: 'Product features' | escape }}"
-  style="{% if title_size != 'default' %}--pf-title-size: {{ title_size }}px;{% endif %}{% if title_weight != 'default' %}--pf-title-weight: {{ title_weight }};{% endif %}{% if body_size != 'default' %}--pf-body-size: {{ body_size }}px;{% endif %}--pf-pad-top: {{ pad_top }}px;--pf-pad-bottom: {{ pad_bottom }}px;--pf-pad-top-m: {{ pad_top_mobile }}px;--pf-pad-bottom-m: {{ pad_bottom_mobile }}px;"
+  style="{% if title_size != 'default' %}--pf-title-size: {{ title_size }}px;{% endif %}{% if title_weight != 'default' %}--pf-title-weight: {{ title_weight }};{% endif %}{% if body_size != 'default' %}--pf-body-size: {{ body_size }}px;{% endif %}--pf-pad-top: {{ pad_top }}px;--pf-pad-bottom: {{ pad_bottom }}px;--pf-pad-top-m: {{ pad_top_mobile }}px;--pf-pad-bottom-m: {{ pad_bottom_mobile }}px;{% if section.settings.bg_color != blank %} background: {{ section.settings.bg_color }};{% endif %}"
 >
   <div class="pdp-features__inner">
     <header class="pdp-features__header">
@@ -263,6 +263,12 @@
       ],
       "default": "default",
       "info": "Applies to feature descriptions."
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#ffffff"
     },
     { "type": "header", "content": "Padding" },
     {

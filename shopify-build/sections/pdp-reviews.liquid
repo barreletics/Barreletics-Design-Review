@@ -64,6 +64,12 @@
   if show_live
     assign render_live = true
   endif
+
+  assign more_label = section.settings.all_reviews_label
+  assign more_url = section.settings.all_reviews_url | default: write_url
+  if template.name == 'product'
+    assign more_label = 'More reviews →'
+  endif
 %}
 {% comment %}
   HARD: show_live_text always mounts Judge.me. Compact CSS hides chrome +
@@ -96,11 +102,11 @@
             </p>
           {% endif %}
         </div>
-        {% if section.settings.all_reviews_label != blank %}
+        {% if more_label != blank and template.name != 'product' %}
           <a
             class="pdp-reviews__more"
-            href="{{ section.settings.all_reviews_url | default: write_url }}"
-          >{{ section.settings.all_reviews_label }}</a>
+            href="{{ more_url }}"
+          >{{ more_label }}</a>
         {% endif %}
         {% if live_mode == 'full' %}
           <a class="pdp-reviews__more pdp-reviews__write jdgm-write-rev-link" href="#judgeme_product_reviews">Write a Review</a>
@@ -297,6 +303,10 @@
         {% endunless %}
       </div>
     {% endif %}
+
+    {% if more_label != blank and template.name == 'product' %}
+      <a class="pdp-reviews__more pdp-reviews__more--after" href="{{ more_url }}">{{ more_label }}</a>
+    {% endif %}
   </div>
 </section>
 
@@ -358,6 +368,11 @@
 
   .pdp-reviews__more:hover {
     color: #c45c3f;
+  }
+  .pdp-reviews__more--after {
+    display: block;
+    text-align: center;
+    margin-top: 28px;
   }
 
   /* ---- Curated photo cards (3) ------------------------------------------- */
@@ -765,8 +780,13 @@
     }
 
     .pdp-reviews__community-label {
-      margin: 36px 0 20px;
+      margin: 24px 0 20px;
     }
+    {% if template.name == 'product' %}
+    #shopify-section-{{ section.id }} .pdp-reviews__text-card:nth-child(n + 5) {
+      display: none;
+    }
+    {% endif %}
   }
 </style>
 

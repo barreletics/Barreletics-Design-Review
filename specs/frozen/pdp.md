@@ -6,7 +6,7 @@ surface: Product (`templates/product.json` Closed · `product.open-sole.json` ·
 authority_mock: `docs/Barreletics PDP - Definitive-v19.html` (lineage — do not overwrite)
 authority_draft: theme `187144929571` (M4 Visual QA) ↔ current `shopify-build/templates/product.json`
 authority_locked_prior: `docs/Barreletics PDP - Definitive-v16.html` @ `691f03b`
-updated: 2026-08-16
+updated: 2026-09-08
 ---
 
 > ## ⛔ NEVER OVERWRITE LOCKED MOCK FILES
@@ -21,6 +21,8 @@ updated: 2026-08-16
 `pdp-buy-box` → `value-strip` → `pdp-features` → `disciplines` → `fifty-fifty-sock-era` → `variant-grid` → `fifty-fifty-lifestyle` (Kimberly quote) → `fullbleed-statement` (**TRANSFORM YOUR PRACTICE**) → `pdp-sock-math` (**editorial L**) → `fullbleed-lifestyle` (**media-only wow** · video · 80/60) → `fifty-fifty-commit` → `reviews` (`pdp-reviews`) → `fifty-fifty-numbers` (Think outside the sock!) → `guarantee-band` (centered 3-up) → `home-juicer` → `collection-faq` (FAQ+GEO) → `pdp-sticky-atc`
 
 **SIGNED 2026-08-16 (Closed only):** no extra wow section. Wow = `fullbleed-lifestyle` at 80vh / 60vh. Swap media in-slot only. Open / Outdoor not signed.
+
+**Forward 2026-09-08 — Closed phone QC (M4).** Buy-box: price under lede, no hairlines, ATC = Add to Cart, Shop Pay under button. 50/50 phone: photo 550, text pad 48/48, no 504 min-height. Features + guarantees 32/32. TRANSFORM phone: natural collage + 32 cream. Reviews phone: 4 cards + More reviews →. Upgrade off Closed. Home unchanged. Never overwrite v16/v19 HTML.
 
 **Absent on page (HARD):** `studio-trust` · page-level `newsletter`
 

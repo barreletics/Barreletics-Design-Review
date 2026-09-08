@@ -120,7 +120,7 @@
     if (els.ctaBtn) {
       if (variant.available) {
         els.ctaBtn.disabled = false;
-        els.ctaBtn.textContent = 'Add to Cart \u2014 ' + formatMoney(variant.price);
+        els.ctaBtn.textContent = 'Add to Cart';
         els.ctaBtn.classList.remove('btn--disabled');
       } else {
         els.ctaBtn.disabled = true;

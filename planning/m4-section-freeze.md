@@ -89,6 +89,17 @@
 
 Do **not** thrash `product.json` spine or `fifty-fifty.liquid` TE order without a letter. Open / Outdoor not included.
 
+**Forward 2026-09-08 — Closed phone QC (M4 `187144929571`).** Liquid only. Home unchanged. Do not restore the 504 text box.
+
+| Surface | Now |
+|---|---|
+| Buy-box | `$74` under lede · no hairlines · no typed 4× · ATC = **Add to Cart** · Shop Pay `payment_terms` under ATC · sticky same |
+| 50/50 phone | Photo **550** · text pad **48 / 48** · no min-height · section gap **0** · copy top-aligned |
+| Features · guarantees | **32 / 32** |
+| TRANSFORM | Phone photo = natural collage + **32 cream** |
+| Reviews | Phone **4** cards · **More reviews →** under the cards · `/pages/reviews` |
+| Upgrade | Off Closed (`disciplines` removed). Sock-era stays |
+
 **Forward 2026-08-21 — Closed reviews text only.** Andrew: Outdoor no-photo looks better → Closed match. `show_photo_cards: false` · `show_live_text: false` · 6 text cards stay · More stories → `/pages/reviews`. Photo blocks kept in JSON, hidden. Buy-box / spine untouched.
 
 **Forward 2026-08-21 — all PDPs + Shop All + Apparel + Home match.** Andrew: reviews page is great → same treatment everywhere else. Flags only: `show_photo_cards: false` · `show_live_text: false` · text cards stay · More stories → `/pages/reviews`. `/pages/reviews` keeps the full Judge.me list. Buy-box / spine / TE photos untouched.

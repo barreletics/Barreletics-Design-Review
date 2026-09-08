@@ -16,9 +16,11 @@
   endif
   assign height_desktop = section.settings.height_desktop | default: '64'
   assign height_mobile = section.settings.height_mobile | default: '52'
-  assign aspect_ratio_mobile = section.settings.aspect_ratio_mobile | default: 'portrait'
-  assign image_fit_mobile = section.settings.image_fit_mobile | default: 'cover'
-  assign video_fit_mobile = section.settings.video_fit_mobile | default: 'cover'
+  assign image_fit_mobile = section.settings.image_fit_mobile | default: section.settings.media_fit | default: 'cover'
+  if image_fit_mobile == blank
+    assign image_fit_mobile = 'cover'
+  endif
+  assign video_fit_mobile = image_fit_mobile
   assign overlay_opacity = section.settings.overlay_opacity | default: 55
   assign overlay_alpha = overlay_opacity | times: 0.01
   assign show_overlay = section.settings.show_overlay
@@ -31,6 +33,12 @@
   assign focal_x = section.settings.focal_x | default: 50
   assign focal_y = section.settings.focal_y | default: 50
   assign media_fit = section.settings.media_fit | default: 'cover'
+  assign phone_photo = false
+  if show_text == false and section.settings.video == blank and section.settings.video_url == blank
+    if section.settings.image != blank or section.settings.image_asset != blank or section.settings.image_url != blank
+      assign phone_photo = true
+    endif
+  endif
 
   assign cta_target = section.settings.cta_link_target | default: 'custom'
   if cta_target != blank and cta_target != 'custom'
@@ -49,11 +57,13 @@
 %}
 
 <section
-  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} fullbleed-statement{% unless show_text %} fullbleed-statement--media-only{% endunless %}{% if media_fit == 'contain' %} fullbleed-statement--contain{% endif %}"
+  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} fullbleed-statement{% unless show_text %} fullbleed-statement--media-only{% endunless %}{% if phone_photo %} fullbleed-statement--phone-photo{% endif %}{% if media_fit == 'contain' %} fullbleed-statement--contain{% endif %}{% if image_fit_mobile == 'contain' %} fullbleed-statement--fit-m-contain{% endif %}"
   style="{% render 'section-inset-vars' %} 
     --fb-media-radius: {{ media_radius }}px;
     --fb-height-desktop: {{ height_desktop }}vh;
     --fb-height-mobile: {{ height_mobile }}vh;
+    --fb-fit-mobile: {{ image_fit_mobile }};
+    --fb-video-fit-mobile: {{ video_fit_mobile }};
     --fb-overlay: rgba(28, 25, 22, {{ overlay_alpha }});
     --fb-focal: {{ focal_x }}% {{ focal_y }}%;
     --fb-cta-bg: {{ cta_bg }};
@@ -243,8 +253,42 @@
     opacity: 0.92;
   }
   @media (max-width: 768px) {
-    #shopify-section-{{ section.id }} .fullbleed-statement { min-height: var(--fb-height-mobile, 52vh); }
+    #shopify-section-{{ section.id }} .fullbleed-statement {
+      min-height: var(--fb-height-mobile, 52vh);
+      height: var(--fb-height-mobile, 52vh);
+    }
+    #shopify-section-{{ section.id }} .fullbleed-statement__bg img {
+      object-fit: var(--fb-fit-mobile, cover);
+    }
+    #shopify-section-{{ section.id }} .fullbleed-statement__video {
+      object-fit: var(--fb-video-fit-mobile, var(--fb-fit-mobile, cover));
+    }
     #shopify-section-{{ section.id }} .fullbleed-statement__content { padding: 56px 16px; }
+    /* Contain stays inside the Mobile height box. Do not zero height — slider must work. */
+    #shopify-section-{{ section.id }} .fullbleed-statement--fit-m-contain .fullbleed-statement__bg img,
+    #shopify-section-{{ section.id }} .fullbleed-statement--fit-m-contain .fullbleed-statement__video {
+      object-fit: contain;
+    }
+    /* Phone photo: full collage, 32 cream breath — taller section, no hard crop. Videos keep vh. */
+    #shopify-section-{{ section.id }} .fullbleed-statement--phone-photo {
+      height: auto;
+      min-height: 0;
+      {% if template.name == 'product' %}
+      padding: 32px;
+      background: #faf8f6;
+      box-sizing: border-box;
+      {% endif %}
+    }
+    #shopify-section-{{ section.id }} .fullbleed-statement--phone-photo .fullbleed-statement__bg {
+      position: relative;
+      inset: auto;
+    }
+    #shopify-section-{{ section.id }} .fullbleed-statement--phone-photo .fullbleed-statement__bg img {
+      position: relative;
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
   }
 </style>
 
@@ -489,53 +533,26 @@
       "info": "Existing PDP/Home instances keep 64vh unless you change this."
     },
     {
-      "type": "select",
+      "type": "range",
       "id": "height_mobile",
       "label": "Mobile height",
-      "options": [
-        { "value": "52", "label": "52vh — default" },
-        { "value": "60", "label": "60vh" },
-        { "value": "70", "label": "70vh" },
-        { "value": "80", "label": "80vh" },
-        { "value": "90", "label": "90vh" },
-        { "value": "100", "label": "100vh — full viewport" }
-      ],
-      "default": "52"
-    },
-    {
-      "type": "select",
-      "id": "aspect_ratio_mobile",
-      "label": "Aspect ratio mobile",
-      "default": "portrait",
-      "options": [
-        { "value": "square", "label": "Square" },
-        { "value": "portrait", "label": "Portrait" },
-        { "value": "landscape", "label": "Landscape" },
-        { "value": "widescreen", "label": "Widescreen" }
-      ],
-      "info": "Collection page only. Same as live."
+      "min": 40,
+      "max": 100,
+      "step": 2,
+      "unit": "vh",
+      "default": 52,
+      "info": "Phone only. Sets how tall this photo band is. Works with Cover or Contain."
     },
     {
       "type": "select",
       "id": "image_fit_mobile",
-      "label": "Image fit mobile",
+      "label": "Fit — phone",
       "default": "cover",
       "options": [
         { "value": "cover", "label": "Cover" },
-        { "value": "contain", "label": "Contain" },
-        { "value": "fill", "label": "Fill" }
-      ]
-    },
-    {
-      "type": "select",
-      "id": "video_fit_mobile",
-      "label": "Video fit mobile",
-      "default": "cover",
-      "options": [
-        { "value": "cover", "label": "Cover" },
-        { "value": "contain", "label": "Contain" },
-        { "value": "fill", "label": "Fill" }
-      ]
+        { "value": "contain", "label": "Contain" }
+      ],
+      "info": "Cover fills the height box. Contain shows the whole photo inside it."
     },
     {
       "type": "checkbox",
@@ -613,19 +630,12 @@
     { "type": "header", "content": "Shared — Section frame" },
     {
       "type": "paragraph",
-      "content": "OUTER inset from the page edges (margin). Top and bottom are independent; left & right = one control. Custom mobile OFF = mobile uses the same inset as desktop. Defaults 0 = full bleed."
-    },
-    {
-      "type": "checkbox",
-      "id": "inset_custom_mobile",
-      "label": "Custom mobile inset",
-      "default": false,
-      "info": "OFF (default): ignore the mobile inset sliders — mobile uses desktop Inset top / bottom / left & right. ON: use the mobile inset sliders instead."
+      "content": "Desktop only. Phone is always full bleed."
     },
     {
       "type": "range",
       "id": "inset_top",
-      "label": "Inset top",
+      "label": "Inset top — desktop",
       "min": 0,
       "max": 96,
       "step": 4,
@@ -635,7 +645,7 @@
     {
       "type": "range",
       "id": "inset_bottom",
-      "label": "Inset bottom",
+      "label": "Inset bottom — desktop",
       "min": 0,
       "max": 96,
       "step": 4,
@@ -645,45 +655,13 @@
     {
       "type": "range",
       "id": "inset_x",
-      "label": "Inset left & right",
+      "label": "Inset left & right — desktop",
       "min": 0,
       "max": 96,
       "step": 4,
       "unit": "px",
       "default": 0,
       "info": "Same value on both sides."
-    },
-    {
-      "type": "range",
-      "id": "inset_top_mobile",
-      "label": "Inset top — mobile",
-      "min": 0,
-      "max": 64,
-      "step": 4,
-      "unit": "px",
-      "default": 0,
-      "info": "Only when Custom mobile inset is on."
-    },
-    {
-      "type": "range",
-      "id": "inset_bottom_mobile",
-      "label": "Inset bottom — mobile",
-      "min": 0,
-      "max": 64,
-      "step": 4,
-      "unit": "px",
-      "default": 0
-    },
-    {
-      "type": "range",
-      "id": "inset_x_mobile",
-      "label": "Inset left & right — mobile",
-      "min": 0,
-      "max": 64,
-      "step": 4,
-      "unit": "px",
-      "default": 0,
-      "info": "Only when Custom mobile inset is on."
     },
     {
       "type": "checkbox",

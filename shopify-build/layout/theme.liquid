@@ -57,6 +57,11 @@
       --section-padding-y: {{ settings.section_gap | default: 32 }}px;
       --section-padding-y-mobile: {{ settings.section_gap_mobile | default: 24 }}px;
     }
+    {%- if template.name == 'product' -%}
+    @media (max-width: 768px) {
+      :root { --section-padding-y-mobile: 32px; }
+    }
+    {%- endif -%}
   </style>
 
   <script type="application/ld+json">
