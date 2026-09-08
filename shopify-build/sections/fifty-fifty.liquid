@@ -64,7 +64,7 @@
   endif
   assign text_pad_m = 32
   if template.name == 'product'
-    assign text_pad_m = 48
+    assign text_pad_m = 104
   endif
 
   assign image_scale_ratio = image_scale | times: 1.0 | divided_by: 100.0
@@ -613,6 +613,10 @@
       grid-template-columns: 1fr;
       min-height: auto;
       padding-block: 0;
+      {% if template.name == 'product' %}
+      gap: 0;
+      row-gap: 0;
+      {% endif %}
     }
     #shopify-section-{{ section.id }} .split-section--reverse .split-media,
     #shopify-section-{{ section.id }} .split-section--reverse .split-text { order: 0; }
