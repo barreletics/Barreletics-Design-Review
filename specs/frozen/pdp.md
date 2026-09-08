@@ -22,7 +22,7 @@ updated: 2026-09-08
 
 **SIGNED 2026-08-16 (Closed only):** no extra wow section. Wow = `fullbleed-lifestyle` at 80vh / 60vh. Swap media in-slot only. Open / Outdoor not signed.
 
-**Forward 2026-09-08 — Closed phone QC (M4).** Buy-box: price under lede, no hairlines, ATC = Add to Cart, Shop Pay under button. 50/50 phone: photo 550, text pad 48/48, no 504 min-height. Features + guarantees 32/32. TRANSFORM phone: natural collage + 32 cream. Reviews phone: 4 cards + More reviews →. Upgrade off Closed. Home unchanged. Never overwrite v16/v19 HTML.
+**Forward 2026-09-08 — Closed phone QC (M4).** Buy-box: price under lede, no hairlines, ATC = Add to Cart, Shop Pay under button. Phone thumbs: all 7 visible. 50/50 phone: photo 550, text pad **104/104 LOCKED**. Features + guarantees 48/48. TRANSFORM phone: natural collage + 32 cream. Reviews phone: 4 cards + More reviews →. Upgrade off Closed. Home unchanged. Never overwrite v16/v19 HTML.
 
 **Absent on page (HARD):** `studio-trust` · page-level `newsletter`
 

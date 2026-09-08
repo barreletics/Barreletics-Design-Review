@@ -19,7 +19,7 @@
 **Shopify draft QA:** `https://barreletics.myshopify.com?preview_theme_id=187144929571` — push only when Andrew names theme ID  
 **Spec:** `specs/frozen/pdp.md` · Freeze: `planning/m4-section-freeze.md`
 
-**Forward 2026-09-08 — Closed phone QC on M4 `187144929571`:** ATC without price · Shop Pay under ATC · 50/50 phone text **48/48** · photo **550** · reviews **4** + More reviews · TRANSFORM cream 32. Details: `planning/m4-section-freeze.md`.
+**Forward 2026-09-08 — Closed phone QC on M4 `187144929571`:** ATC without price · Shop Pay under ATC · 50/50 phone text **104/104 LOCKED** · photo **550** · 7 thumbs fit · reviews **4** + More reviews · TRANSFORM cream 32. Details: `planning/m4-section-freeze.md`.
 
 ## Which product each template serves — updated 2026-08-08 (Andrew CURRENT MESSAGE)
 
