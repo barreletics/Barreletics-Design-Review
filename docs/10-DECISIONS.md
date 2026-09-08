@@ -835,6 +835,18 @@ Does your studio require a sock? Need help with sweat, warmth, or comfort?
 One link. Not a Hot Pilates kit. Not a grippy sock. Theme settings → **Sock kit** is the one place. Buy-box checkbox only shows/hides. Layout / fold untouched.
 Source: `docs/pdp-sock-kit-v21.html` option J · `planning/m4-section-freeze.md`
 
+### P-020: Closed PDP phone QC LOCKED — 2026-09-08
+```
+M4 187144929571 · /products/best-reformer-pilates-legree-workout-shoes
+50/50 phone pad 104/104 · photo 550 · 7 thumbs fit
+ATC = Add to Cart (no price) · Shop Pay under ATC · no typed 4×
+Upgrade / disciplines OFF · reviews 4 + More reviews
+Features / guarantees phone 48/48
+Type OS unchanged — pad is layout, not type
+Never overwrite v16 / v19 HTML
+```
+Freeze: `planning/m4-section-freeze.md` · Type: `planning/m4-type-hierarchy.md`
+
 ---
 
 ## SECTION DECISIONS (CEO Review — 2026-07-09)

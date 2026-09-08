@@ -140,6 +140,8 @@ the single biggest correction the matured direction makes to the live site.
 
 ### Typography
 
+**Authority:** Type OS SETTLED — `planning/m4-type-hierarchy.md` · review `docs/type-os-specimen.html` + `docs/Barreletics Home - Type OS Preview.html`. Closed phone 50/50 pad **104/104** (2026-09-08) is **layout**, not type.
+
 One family, one ramp: **Roboto** (Google Fonts, weights 300/400/500/600/700),
 with `JetBrains Mono` reserved for technical eyebrows and grip-spec captions
 on the matured direction only.

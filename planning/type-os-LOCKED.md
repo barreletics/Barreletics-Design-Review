@@ -1,9 +1,11 @@
 # Type OS — owner + agent guide
 
-**Status:** WORKING — sign off after `docs/type-os-specimen.html` review  
+**Status:** SETTLED — Closed phone QC LOCKED 2026-09-08 did **not** change Type OS  
 **Code source:** `shopify-build/assets/design-tokens.css`  
 **Deep spec:** `planning/m4-type-hierarchy.md`  
-**Visual mock:** `docs/type-os-specimen.html` (quote 50/50 A/B added 2026-08-21)
+**Visual mock:** `docs/type-os-specimen.html`
+
+**Layout vs type (2026-09-08):** Closed 50/50 phone pad **104/104** is section pad, not a type size and not `--gap-a/b/c`. Roles stay Display on 50/50 · Supporting on features · buy lede 34–44 / 400.
 
 ---
 

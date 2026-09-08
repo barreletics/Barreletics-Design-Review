@@ -53,7 +53,7 @@ No arbitrary one-off font sizes or weights. Editorial copy stays sentence case u
 **Rollout is page-by-page. Do not retrofit the site.**
 
 - **Home is frozen.** Do not touch Home. It is the reference page.
-- **PDP:** do not change until we QC that page. Fix only mismatches then.
+- **Closed PDP phone QC LOCKED 2026-09-08.** Type roles unchanged: 50/50 = **H2 Display** · features = **H2 Supporting** · buy lede stays 34–44 / 400. Section pad (not type): 50/50 phone **104/104**. Do not invent new sizes.
 - **Collection (Shop All):** approved 2026-09-02 on M4 `187144929571`. Keep current Collection type + Hero Shop Now CTA. Knock band `#faf8f6`. 3-row All Variants.
 
 ---

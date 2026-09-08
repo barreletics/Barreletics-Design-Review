@@ -72,7 +72,7 @@ ANTI-REVERT GATE
 - H1: `Best Grippy Shoes for Barre, Pilates & Yoga` — **no** `— Open Sole` / `— Closed Sole`
 - Lede: `Secure in every hold.` / `No sliding. No resets.`
 - Badge: TE optional; **default rust** for Closed/Open/Outdoor. Explicit TE black/charcoal/rust/blue **honored** — never force over a TE pick. One-Off Closed = black · One-Off Open = rust · label **One-Off**
-- Copy split: `short_description` = above price only. Description accordion = TE `description_accordion_body` (SIGNED) · **NEVER** Admin `product.description` · blank → `short_description` only. **Never** blank/unify short_description across product*.json
+- Copy split: **Closed phone QC 2026-09-08** — short desc is **not** above price; it lives in Description accordion (closed). Description accordion = TE `description_accordion_body` (SIGNED) · **NEVER** Admin `product.description` · blank → `short_description` only. **Never** blank/unify short_description across product*.json
 - Authority: `docs/Barreletics PDP - Definitive-v19.html` + `pdp-buy-box.liquid` + current `product*.json`
 
 ## Keep unless Andrew deletes (CURRENT message)

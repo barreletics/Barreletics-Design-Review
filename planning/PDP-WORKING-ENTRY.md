@@ -49,15 +49,17 @@ Decision record: `planning/10-decision-log.md` → **D-049**. Freeze: `planning/
 
 ## Locked spine (`product.json` `order`) — 2026-08-01 (unchanged by the 2026-08-08 swap)
 
-`pdp-buy-box` → `value-strip` → `pdp-features` → `disciplines` → `fifty-fifty-*` → `variant-grid` → `fifty-fifty-lifestyle` (quote) → `fullbleed-statement` (**TRANSFORM**) → `pdp-sock-math` (compact) → `fullbleed-lifestyle` (**media-only wow**) → `fifty-fifty-commit` → **`pdp-reviews`** (hybrid) → `fifty-fifty-numbers` → `guarantee-band` → `home-juicer` → `collection-faq` (FAQ+GEO · cities last) → `pdp-sticky-atc`
+`pdp-buy-box` → `value-strip` → `pdp-features` → `fifty-fifty-sock-era` → `variant-grid` → `fifty-fifty-lifestyle` (quote) → `fullbleed-statement` (**TRANSFORM**) → `pdp-sock-math` (compact) → `fullbleed-lifestyle` (**media-only wow**) → `fifty-fifty-commit` → **`pdp-reviews`** → `fifty-fifty-numbers` → `guarantee-band` → `home-juicer` → `collection-faq` (FAQ+GEO · cities last) → `pdp-sticky-atc`
+
+**Forward 2026-09-08:** Upgrade / `disciplines` **OFF** Closed. Do not restore.
 
 ## Locked compositions (v19 + 2026-08-08 proportions)
 
 1. **Trust architecture** — under ATC empty · 4-up strip · accordion policy · no page `studio-trust`
 2. **Purchase stack** — living buy-box type · kit · badge Open=rust / Closed=charcoal · trust = Trusted by 1,000+ Instructors · H1 no sole dash
-3. **Proportions (PDP only)** — fifty-fifty **560** · fullbleed **80/60** · gallery 1:1 · thumbs 72 — **Home stays 640**
+3. **Proportions (PDP only)** — desktop fifty-fifty **560** / pad **80** · phone 50/50 photo **550** · pad **104/104** · fullbleed **80/60** · gallery 1:1 · **7 thumbs fit** — **Home stays 640**
 4. **Variants 4×** — under Quick Add · LE/Sold Out badges required
-5. **Reviews** — hybrid **`pdp-reviews`** (3 photo + 6 text)
+5. **Reviews** — **`pdp-reviews`** phone **4** cards + **More reviews →**
 6. **FAQ + GEO** — `collection-faq` · city items last
 7. **Juicer** — after guarantee / before FAQ
 8. **Footer** — Join the list (NO 10%) · no page newsletter

@@ -77,7 +77,7 @@
 | Handle | `/products/best-reformer-pilates-legree-workout-shoes` |
 | Template | `shopify-build/templates/product.json` |
 | QA | `187144929571` · [Closed preview](https://barreletics.com/products/best-reformer-pilates-legree-workout-shoes?preview_theme_id=187144929571) |
-| Spine | buy-box → value-strip → features → disciplines → sock-era → variant-grid → Kimberly quote → TRANSFORM → sock-math → **wow** → commit → reviews → numbers → guarantee → juicer → FAQ → sticky |
+| Spine | buy-box → value-strip → features → sock-era → variant-grid → Kimberly quote → TRANSFORM → sock-math → **wow** → commit → reviews → numbers → guarantee → juicer → FAQ → sticky · **Upgrade / `disciplines` OFF Closed (2026-09-08)** |
 | Wow | `fullbleed-lifestyle` · `show_text: false` · video · **80vh / 60vh** · after Sock Math / before Commit. Swap media in this slot only — never add another. |
 | TRANSFORM | `fullbleed-statement` · type-on-media · Multi_Image · 80 / 60 |
 | Sock Math | Editorial L · copy from `docs/pdp-sock-math-directions.html` (v8) · photo Juicer **5986441** (Q outdoor) · 480 frame · cover |
@@ -95,7 +95,7 @@ Do **not** thrash `product.json` spine or `fifty-fifty.liquid` TE order without 
 |---|---|
 | Buy-box | `$74` under lede · no hairlines · no typed 4× · ATC = **Add to Cart** · Shop Pay `payment_terms` under ATC · sticky same |
 | 50/50 phone | Photo **550** · text pad **104 / 104** LOCKED · no min-height · no column-gap leak · copy top-aligned |
-| Features · guarantees | **32 / 32** |
+| Features · guarantees | **48 / 48** |
 | TRANSFORM | Phone photo = natural collage + **32 cream** |
 | Reviews | Phone **4** cards · **More reviews →** under the cards · `/pages/reviews` |
 | Upgrade | Off Closed (`disciplines` removed). Sock-era stays |
@@ -308,8 +308,8 @@ No small size.
 | ID | Surface | Status | Fingerprint (lineage) | Locked composition | Files |
 |----|---------|--------|------------------------|--------------------|-------|
 | **Footer** | Sitewide footer (all pages via `footer-group`) | **SIGNED 2026-08-12** (Join the list A) · LOCKED Jul 31 2026 | WORKING layout + Join the list · Light/Dark TE | Trusted by (toggle) · Join the list **split** (headline left, form right, **checks OFF**) · columns · Light/Dark per band · size TE · SEO Learn link · **NO brand blurb** · **NO 10%** · **NO cadence / never-spam / nothing-else** · Andrew approved 2026-08-12 | `sections/footer.liquid`, `footer-group.json`, `assets/chrome.css` · `specs/frozen/footer.md` |
-| **PDP** | Product templates + buy-box | **Closed PDP SIGNED 2026-08-16** · **LOCKED Aug 1 2026** · **proportions LOCKED 2026-08-08 night** · **Closed badge rust LOCKED 2026-08-11** · v16 prior · Closed=`product.json` · Open=`product.open-sole.json` · Outdoor=`product.outdoor.json` | Mock **`Definitive-v19.html`** + current Closed `product.json` (QA **`187144929571`**) | **Closed SIGNED 2026-08-16** (see block above). **No extra wow.** Wow = `fullbleed-lifestyle` 80/60 video. **Proportions (PDP only):** fifty-fifty **560**/pad **80**/mobile **320** · fullbleed **80vh/60vh** · gallery 1:1 · thumbs 72 · **Closed + Open + Outdoor badges = rust** `#c45c3f` · city FAQ last · `pdp-reviews`. Home fifty-fifty stays **640**. v16 @ `691f03b` prior (NEVER overwrite). | `docs/…Definitive-v19.html` · `templates/product.json` · `product.open-sole.json` · `product.outdoor.json` · `pdp-buy-box.liquid` · `specs/frozen/pdp.md` |
-| **PDP purchase stack** | Buy-box commercial stack (`#buy`) | **LOCKED Aug 1 2026** · **Description accordion SIGNED 2026-08-11** · badge default rust + TE honor | Option A stack + kit Option A · on spine | price → muted `or 4 × $18.50` → color/size → qty+CTA → **empty under ATC** → quiet Complete the kit → accordion · **Description accordion = TE `description_accordion_body` (v19 Closed seeded) · NEVER Admin `product.description` · fallback `short_description` only** · sole badge TE default rust · `show_trust_row: false` | visual: `Definitive-v19.html` `#buy` · live: `product.json` `pdp-buy-box` · `specs/frozen/pdp.md` |
+| **PDP** | Product templates + buy-box | **Closed phone QC LOCKED 2026-09-08** · **Closed PDP SIGNED 2026-08-16** · **LOCKED Aug 1 2026** · **proportions LOCKED 2026-08-08 night** · **Closed badge rust LOCKED 2026-08-11** · v16 prior · Closed=`product.json` · Open=`product.open-sole.json` · Outdoor=`product.outdoor.json` | Mock **`Definitive-v19.html`** + current Closed `product.json` (QA **`187144929571`**) | **Closed SIGNED 2026-08-16** + **phone QC 2026-09-08.** **No extra wow.** Wow = `fullbleed-lifestyle` 80/60 video. Phone 50/50 pad **104/104** · photo **550** · 7 thumbs fit · ATC no price · Shop Pay under ATC · Upgrade off. Desktop fifty-fifty **560**/pad **80**. Home fifty-fifty stays **640**. v16 @ `691f03b` prior (NEVER overwrite). | `docs/…Definitive-v19.html` · `templates/product.json` · `product.open-sole.json` · `product.outdoor.json` · `pdp-buy-box.liquid` · `specs/frozen/pdp.md` |
+| **PDP purchase stack** | Buy-box commercial stack (`#buy`) | **LOCKED Aug 1 2026** · **Closed phone QC forward 2026-09-08** · **Description accordion SIGNED 2026-08-11** · badge default rust + TE honor | Option A stack + kit Option A · on spine | **Forward 2026-09-08:** `$74` under lede · **no typed 4×** · color (name only) / size → ATC = **Add to Cart** (no price, no qty) → Shop Pay under ATC → **empty under ATC** → accordion. Short desc in Description accordion (closed), not above price. **Description accordion = TE `description_accordion_body` · NEVER Admin `product.description`.** Sole badge TE default rust · `show_trust_row: false` | visual: `Definitive-v19.html` `#buy` · live: `product.json` `pdp-buy-box` · `specs/frozen/pdp.md` |
 | **PDP trust split** | Value strip + accordion policy | **LOCKED Aug 1 2026** (4-up strip refinement) · **band height forward 2026-08-10** | Scan strip · accordion detail · no under-ATC repeat | **Value strip (4-up, no links by default):** Made in USA · **Free shipping over $150** · 30-day returns · 90-day warranty · **Band height TE:** `padding_y` default **28** / mobile **24** (was 16/`--gap-a`) — type stays 12px · **Under ATC:** nothing · **Accordion:** Shipping + 30/90 · **no page `studio-trust`** · (Non-toxic / No latex / No silicone **removed** from strip) | `product.json` `value-strip` · `sections/value-strip.liquid` · `Definitive-v19.html` (mock prior) · `specs/frozen/pdp.md` |
 | **PDP variants 4×** | Shop-all / variants cards | **LOCKED Jul 31 2026** | Option A under Quick Add · on draft `variant-grid` | Name → meta pill → $74 → Quick Add → quiet `or 4 × $18.50` · **no dual pills** · **LE / Sold Out image badges REQUIRED** · Draft Home chrome | `product.json` `variant-grid` · `Definitive-v19.html` `#variants` · `specs/frozen/pdp.md` |
 | **Type OS** | Typography system | **SETTLED** | See `planning/m4-type-hierarchy.md` | Family/size/weight/tracking; no per-section `font_picker` | Type tokens + TE policy |
@@ -804,7 +804,9 @@ to re-skin `pdp-reviews` — **not** to restore `social-proof`.
 
 ### Locked spine order (`product.json` `order`)
 
-`pdp-buy-box` → `value-strip` → `pdp-features` → `disciplines` → `fifty-fifty-sock-era` → `variant-grid` → `fifty-fifty-lifestyle` (quote) → `fullbleed-statement` (**TRANSFORM YOUR PRACTICE** type-on-media) → `pdp-sock-math` (compact) → `fullbleed-lifestyle` (**media-only wow** · Stef running CDN · after sock-math / before commit) → `fifty-fifty-commit` → `reviews` (**`pdp-reviews`, live Judge.me — forward update 2026-08-08**; was `social-proof`, same index) → `fifty-fifty-numbers` (**Think outside the sock!**) → `guarantee-band` (centered 3-up) → `home-juicer` → `collection-faq` (FAQ+GEO) → `pdp-sticky-atc`
+`pdp-buy-box` → `value-strip` → `pdp-features` → `fifty-fifty-sock-era` → `variant-grid` → `fifty-fifty-lifestyle` (quote) → `fullbleed-statement` (**TRANSFORM YOUR PRACTICE** type-on-media) → `pdp-sock-math` (compact) → `fullbleed-lifestyle` (**media-only wow** · Stef running CDN · after sock-math / before commit) → `fifty-fifty-commit` → `reviews` (**`pdp-reviews`**) → `fifty-fifty-numbers` (**Think outside the sock!**) → `guarantee-band` (centered 3-up) → `home-juicer` → `collection-faq` (FAQ+GEO) → `pdp-sticky-atc`
+
+**Forward 2026-09-08:** Upgrade / `disciplines` **OFF** Closed. Do not restore.
 
 ### Locked deltas (`product.json` = source of truth for spine)
 
@@ -825,9 +827,9 @@ to re-skin `pdp-reviews` — **not** to restore `social-proof`.
 | Newsletter | **No page newsletter** — footer Join the list only (NO 10%) |
 
 - **Buy box:** lede calm 34–44 / 400 · quiet Complete the kit · Coming soon (S) · empty under ATC · `#buy` anchor · **title sole badge** (v16 quiet pill, TE optional)
-- **Purchase stack:** price → muted `or 4 × $18.50` → color/size → qty+CTA → kit → accordion. **Title sole badge:** TE show on/off + color select — Black/charcoal `#1c1916` · Rust `#c45c3f` · Blue (live strip) `#458CD9` (Open default rust · Closed default black); label from override → `sole_type` metafield → handle/title fallback.
+- **Purchase stack (forward 2026-09-08):** `$74` under lede → **no typed 4×** → color/size → ATC = **Add to Cart** (no price, no qty) → Shop Pay under ATC → empty under ATC → accordion. **Title sole badge:** TE show on/off + color select — Black/charcoal `#1c1916` · Rust `#c45c3f` · Blue `#458CD9` (Closed default rust); label from override → `sole_type` metafield → handle/title fallback.
 - **Variants 4×:** quiet `or 4 × $18.50` under Quick Add · LE/Sold Out badges REQUIRED · no sole image pills
-- **Gallery thumbs:** 4 visible · touch-scroll · **no arrow buttons**
+- **Gallery thumbs:** phone **all 7 visible** (grid) · no arrow buttons · desktop 72px row still scrolls if needed
 - **Archived:** `Definitive-v16-TypeOS-236a001.html` · backups in `docs/pdp-signed-backups/`
 
 ---
@@ -836,9 +838,9 @@ to re-skin `pdp-reviews` — **not** to restore `social-proof`.
 
 - **Surface:** Buy-box commercial composition on `Definitive-v19.html` `#buy` + `product.json` `pdp-buy-box`.
 - **Authority:** `docs/Barreletics PDP - Definitive-v19.html` `#buy` · `specs/frozen/pdp.md` · lineage `pdp-purchase-stack-options.html` A (stack) + kit Option A
-- **Order:** reviews trust → title + **optional sole badge** / lede → **PRICE** → muted `or 4 × $18.50` → [color + size] → [qty | CTA] → **empty under ATC** → quiet Complete the kit → accordion
-- **Hard:** no Affirm purple · no payment chips · no bordered widget panels · **title sole badge TE optional** (CURRENT MESSAGE Aug 2 — show default ON, color select, metafield/handle label) · **no trust repeat under ATC** (strip + accordion own guarantees)
-- **Do not** strip this stack from buy-box / `#buy` without Andrew letter.
+- **Order (forward 2026-09-08):** reviews trust → title + **optional sole badge** / lede → **PRICE $74** → [color name + size] → **Add to Cart** (no price on button · no qty) → Shop Pay (`payment_terms`) → **empty under ATC** → accordion. Short desc lives in Description accordion (closed), not above price.
+- **Hard:** no typed 4× under $74 · no Affirm purple · no fake payment chips · **title sole badge TE optional** · **no trust repeat under ATC**
+- **Do not** restore typed 4×, qty stepper, or Upgrade/`disciplines` on Closed without Andrew letter.
 
 ---
 

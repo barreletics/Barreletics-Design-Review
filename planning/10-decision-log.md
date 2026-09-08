@@ -727,6 +727,20 @@ New always-apply rules from this: `.cursor/rules/always-give-a-verified-link.mdc
 
 ---
 
+### D-056: Closed PDP Phone QC LOCKED
+
+**Resolved:** 2026-09-08 | **Owner:** Andrew · “lock it”
+
+**Decision:** Closed Sole on M4 `187144929571` is locked after phone QC. Living facts: 50/50 pad **104/104** · photo **550** · all **7** thumbs · ATC = **Add to Cart** (no price) · Shop Pay under ATC · no typed 4× · Upgrade/`disciplines` off · reviews 4 + More reviews · features/guarantees **48/48**. Type OS roles unchanged; 104 is section pad, not type.
+
+**Do not:** overwrite v16/v19 HTML · restore Upgrade · restore the 504 text box · restore typed 4× or qty under $74.
+
+**Impact:** `planning/m4-section-freeze.md` · `specs/frozen/pdp.md` · `planning/m4-type-hierarchy.md` · `docs/type-os-specimen.html` · `docs/index.html` · `docs/10-DECISIONS.md` P-020.
+
+**Status:** Locked.
+
+---
+
 ## ADR Archive
 
 The original ADR documents (ADR-01 through ADR-07) are preserved in `planning/` for historical reference. Their UNRESOLVED status is now superseded by the decisions above.
