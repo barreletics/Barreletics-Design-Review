@@ -34,6 +34,12 @@
 >
 > **Announcement SAVE2 2026-09-03 (Andrew letter):** Global bar on M4 `187144929571` is **Buy 2, Save 10% — Code SAVE2** (was SAVE15 / 15%). Liquid remap + header-group + FAQ price answer. Live theme not touched.
 
+> **INTERNI press — try 2026-09-08 (not signed):** Reusable `press-feature` on M4 `187144929571` only. Home after Coperni / before Knock. Shop All after Real people / before Chair Pose. Warm page art · `#F4EEE5` · contain. CTA → `/blogs/news/barreletics-in-interni`. Journal Featured is TE pin, not this section. Do not publish.
+
+> **Home Coperni pair LOCKED 2026-09-09 (Andrew: coperni is right lock it in).** `collab-hero` on M4 `187144929571`. Runway stage stays. Pair under it: **80% width · 2×2 squares · fill/cover · 16px gap · no cream mats**. Do not resize, contain-pad, or 400px-cap the pair. Do not touch Home `split-hero` while editing Coperni.
+
+> **Home split-hero columns LOCKED 2026-09-09.** **62/38** (`media_column_pct: 62`). Agents pushed Home JSON during Coperni work and drifted the split to 59. Restore 62. Photo + X/Y/Zoom stay TE-owned. Do not change hero while doing Coperni / INTERNI / cream.
+
 ---
 
 ## What “APPROVED / FROZEN” means
