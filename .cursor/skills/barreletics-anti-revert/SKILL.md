@@ -52,7 +52,7 @@ Exact restore phrase required in the **CURRENT** message: **`restore X`**.
 | Footer | `shopify-build/sections/footer.liquid` |
 | Buy box | `shopify-build/sections/pdp-buy-box.liquid` |
 | **One-off buy-box fold** | `product.one-off-*.json` buy-box + shared `pdp-buy-box.liquid` — **copy deltas only**; never rebuild from `product.json` or hide sold-out sizes (see `.cursor/rules/one-off-buy-box-lock.mdc`) |
-| Home / PDP spines | `templates/index.json`, `product.json`, `product.open-sole.json`, `product.outdoor.json` |
+| Home / PDP spines | `templates/index.json` (**Home LOCKED 2026-09-09**), `product.json`, `product.open-sole.json`, `product.outdoor.json` |
 | Locked mocks | `docs/Barreletics PDP - Definitive-v16.html`, `…-v19.html` |
 
 ## Mandatory gate (copy into your turn before editing guarded surfaces)

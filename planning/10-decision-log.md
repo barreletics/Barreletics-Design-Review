@@ -6,7 +6,7 @@ version: 1.0
 status: 🔒 Locked
 approved_by: Owner / Architect
 approval_date: 2026-07-18
-last_modified: 2026-08-08
+last_modified: 2026-09-09
 depends_on: [01, 02, 03, 04, 05, 06, 07, 08, 09]
 supersedes: [ADR-01 through ADR-07]
 ---
@@ -736,6 +736,20 @@ New always-apply rules from this: `.cursor/rules/always-give-a-verified-link.mdc
 **Do not:** overwrite v16/v19 HTML · restore Upgrade · restore the 504 text box · restore typed 4× or qty under $74.
 
 **Impact:** `planning/m4-section-freeze.md` · `specs/frozen/pdp.md` · `planning/m4-type-hierarchy.md` · `docs/type-os-specimen.html` · `docs/index.html` · `docs/10-DECISIONS.md` P-020.
+
+**Status:** Locked.
+
+---
+
+### D-057: Home + photo law LOCKED
+
+**Resolved:** 2026-09-09 | **Owner:** Andrew · “lock in the photo logic” · “lock in the home page”
+
+**Decision:** Homepage on M4 `187144929571` is locked. Living spine = `templates/index.json`. Photo law: **the frame stays; the photo fills the frame; if the photo is wrong, move the photo.** Home hero: **92vh** · **62/38** · trust **left** · cover · crop **50/22** desktop + phone. Coperni pair: 80% squares · cover · 16px. Do not rebuild frames to fit photos. Do not overwrite Home WORKING HTML.
+
+**Do not:** contain + cream/pink pad · swap 92vh ↔ photo-aspect ↔ 110% · invent an alternate homepage.
+
+**Impact:** `planning/m4-section-freeze.md` · `specs/frozen/homepage.md` · `planning/page-template-registry.md` · `docs/index.html` · `docs/10-DECISIONS.md` P-021 · skills `barreletics-images` · `barreletics-home-split-hero` · rules `.cursor/rules/barreletics-images.mdc` · `.cursor/rules/home-split-hero.mdc`.
 
 **Status:** Locked.
 

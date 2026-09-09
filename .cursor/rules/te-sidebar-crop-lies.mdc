@@ -30,16 +30,16 @@ alwaysApply: true
 - “Fixed” by changing only `object-position` and claiming TE-narrow = storefront
 - Circling contain ↔ cover ↔ pad without reading the **current** pattern below
 
-## Current approved pattern (Home split-hero) — 2026-09-01
+## Current locked pattern (Home split-hero) — 2026-09-09
 
-Files: `shopify-build/assets/split-hero.css` · `shopify-build/sections/split-hero.liquid`
+Files: `shopify-build/assets/split-hero.css` · `shopify-build/sections/split-hero.liquid` · `templates/index.json` `split_hero`
 
-- Layout: width split `--sh-media-pct` (e.g. 62/38). Height = photo aspect × `--sh-height-scale` (TE: Section height).
-- Photo: **`object-fit: cover`**. Full-bleed in the media box. **No contain. No fill bands.**
-- X/Y = `object-position` + `transform-origin` (TE: Image Position X / Y).
-- Zoom = `transform: scale(max(1, zoom))`. Liquid clamps TE zoom with `at_least: 100` so values below 100 stay fill (no cream gaps).
-- One **Corner radius** (`media_radius`) clips photo + text (`overflow: hidden` on `.split-hero`).
-- **Text panel background** (`bg_color` → `--sh-copy-bg`) fills the **text column only**. Not a photo studio fill.
+- Layout: width split **62/38**. Desktop height = **92vh** (not photo-aspect · not Section height 110).
+- Photo: **`object-fit: cover`**. Full-bleed in the 92vh box. **No contain. No fill bands.**
+- Locked crop: **50 / 22** desktop + phone · zoom **100**.
+- X/Y = `object-position` + `transform-origin`. Zoom = `scale(max(1, zoom))`. TE below 100 stays fill.
+- Trust **left**. Copy column white.
+- One **Corner radius** clips photo + text. Text panel background on the **copy column only**.
 - Media column `background: transparent`.
 - `split-hero` and `fifty-fifty` stay **separate**. Do not merge.
 

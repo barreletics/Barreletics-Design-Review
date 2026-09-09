@@ -43,15 +43,15 @@ TE↔FULLWIDTH CROP GATE
 - [ ] Only then send preview link
 ```
 
-## Current approved Home split-hero (2026-09-01)
+## Current locked Home split-hero (2026-09-09)
 
-Files: `shopify-build/assets/split-hero.css` · `shopify-build/sections/split-hero.liquid`
+Files: `shopify-build/assets/split-hero.css` · `shopify-build/sections/split-hero.liquid` · `templates/index.json` `split_hero`
 
-1. Grid column stays layout % (e.g. **62/38**). Height = photo aspect × Section height slider.
+1. Grid stays **62/38**. Desktop height = **92vh**. **Not** photo-aspect × Section height.
 2. Image **`object-fit: cover`**, `inset: 0`, 100% × 100%. **No contain. No fill bands.**
-3. X/Y = `object-position` + `transform-origin` (TE Image Position X / Y).
+3. Locked crop **50 / 22** desktop + phone · zoom **100**.
 4. Zoom = `scale(max(1, zoom))`. Liquid `at_least: 100` — TE below 100 stays fill (no gaps).
-5. One Corner radius clips photo + text. Text panel background shades the **copy column only**.
+5. Trust **left**. One Corner radius clips photo + text. Text panel background shades the **copy column only**.
 6. Media `background: transparent`. Do not add `media_fill_color` / studio fill.
 7. Dual-width verify before link. Crops will differ; compose at 1440, don’t “fix” with contain.
 

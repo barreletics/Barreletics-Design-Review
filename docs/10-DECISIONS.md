@@ -847,6 +847,19 @@ Never overwrite v16 / v19 HTML
 ```
 Freeze: `planning/m4-section-freeze.md` · Type: `planning/m4-type-hierarchy.md`
 
+### P-021: Home + photo law LOCKED — 2026-09-09
+```
+Frame stays. Photo fills with cover. If the photo is wrong, move X/Y/Zoom.
+Home / · templates/index.json on M4 187144929571
+Hero 92vh · 62/38 · trust left · crop 50/22 desktop + phone · zoom 100
+Coperni pair 80% squares · cover · 16px · no cream mats
+Never contain + cream/pink pad
+Never swap 92vh ↔ photo-aspect ↔ 110% ↔ 400px
+Never overwrite Home WORKING HTML
+```
+Skills: `barreletics-images` · `barreletics-home-split-hero`  
+Freeze: `planning/m4-section-freeze.md` · Spec: `specs/frozen/homepage.md`
+
 ---
 
 ## SECTION DECISIONS (CEO Review — 2026-07-09)

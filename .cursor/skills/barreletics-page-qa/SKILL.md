@@ -14,7 +14,8 @@ description: >-
 **Registry (single source):** `planning/page-template-registry.md`  
 **Freeze:** `planning/m4-section-freeze.md`  
 **Anti-revert:** `barreletics-anti-revert`  
-**Shopify:** push only when Andrew names theme ID in **this** message (default QA `187144929571`)
+**Shopify:** push only when Andrew names theme ID in **this** message (default QA `187144929571`)  
+**Home LOCKED 2026-09-09:** `/` → `templates/index.json` on M4. Hero 92vh · 62/38 · crop 50/22. Photo law: `barreletics-images`. Do not invent an alternate homepage.
 
 ## Sense it — STOP if any of these thoughts appear
 

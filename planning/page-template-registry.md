@@ -25,6 +25,14 @@ Theme Editor: `https://admin.shopify.com/store/barreletics/themes/187144929571/e
 
 ---
 
+## Home
+
+| Surface | Handle / URL | Repo template | Hub Locked mock | Admin suffix | QA preview path |
+|---------|--------------|---------------|-----------------|--------------|-----------------|
+| **Home** | `/` | `index.json` | **LOCKED 2026-09-09.** Living spine = current `templates/index.json` on M4 `187144929571`. Mock lineage `docs/Barreletics Home - Definitive-WORKING.html` — never overwrite that HTML. Hero **92vh / 62/38 / trust left / crop 50/22**. Photo law: frame stays, photo fills. Coperni pair 80% squares · cover · 16. Spec: `specs/frozen/homepage.md`. | *(default index)* | `/?preview_theme_id=187144929571` |
+
+---
+
 ## Collections
 
 | Surface | Handle / URL | Repo template | Hub Locked mock | Admin suffix | QA preview path |
