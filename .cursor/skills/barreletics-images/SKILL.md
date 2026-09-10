@@ -18,10 +18,12 @@ Andrew 2026-09-09: *lock in the photo logic.*
 **Law:** The **frame is locked. The photo fills the frame.**  
 If the photo looks wrong, move the photo. **Do not rebuild the frame.**
 
+**Open Never slip in chair pose (HARD):** `fit` · scale **100**. Whole photo in the frame. **Never cover.** Open mobile 50/50s match that size (`image_fit_mobile: fit`). `.cursor/rules/chair-pose-yellow-fit.mdc`.
+
 Read this before you write CSS. One pass. Then stop and ask.
 
-Companions: `barreletics-home-split-hero` · `barreletics-te-vs-fullwidth-crop` · `barreletics-anti-revert`  
-Rule: `.cursor/rules/barreletics-images.mdc`
+Companions: `barreletics-image-in-the-frame` · `barreletics-use-image-in-the-frame-lock` · `barreletics-home-split-hero`  
+Rules: `image-in-the-frame.mdc` · `use-image-in-the-frame-lock.mdc` · `barreletics-images.mdc`
 
 ## Sense it — STOP
 

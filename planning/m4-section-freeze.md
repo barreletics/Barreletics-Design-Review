@@ -1,5 +1,11 @@
 # M4 Section Freeze Registry — APPROVED / SETTLED
 
+> **ALL images LOCKED 2026-09-09:** Frame stays. One recipe — `fit`+100 if he said fit-inside / don’t crop; else `cover`+100. Image-led 50/50 = cover fills the panel (100% × 100%). Never flip cover↔fit↔zoom. Never neighbor. Rules: `image-in-the-frame.mdc` + `use-image-in-the-frame-lock.mdc`. Skills: `barreletics-image-in-the-frame` + `barreletics-use-image-in-the-frame-lock`.
+
+> **Open Sole rhythm + Chair Pose SIGNED 2026-09-09 (Andrew: its fixed. lock it in):** cream = Closed `#FAF8F6` only. Chair Pose `fifty-fifty-lifestyle` = `fit` · **100** · whole photo in the frame. **Never cover.** Never remap to Never loses. Open mobile 50/50s match Chair Pose size (`image_fit_mobile: fit`).
+
+> **Open Chair Pose yellow LOCKED 2026-09-09:** `fifty-fifty-lifestyle` · **Never slip in chair pose** · `fit` · scale **100**. Frame follows the photo. **Never flip to cover** — that is the loop. Rules: `chair-pose-yellow-fit.mdc` + `use-chair-pose-yellow-lock.mdc`. Skills: `barreletics-chair-pose-yellow-fit` + `barreletics-use-chair-pose-yellow-lock`.
+
 > **Better Than Grippy Socks SIGNED 2026-09-05:** Handle `/pages/best-barre-pilates-yoga-grippy-socks` · Admin suffix **`best-grippy-socks`** · living spine `templates/page.best-grippy-socks.json` on M4 `187144929571`. Stack: **Full-underfoot grip** hero → Shop all 2 rows → value strip → **One pair. Done.** → We outgrew → Never loses → Upgrade → reviews → Juicer → FAQ. TE hero photo + overlay + default tab stay user-owned. Hub mock **SEO v36** stays — never overwrite that HTML. Do not assign this handle to default `page`. Do not swap this URL with Shop All.
 
 > ## ⛔ ANTI-REVERT (HARD)
