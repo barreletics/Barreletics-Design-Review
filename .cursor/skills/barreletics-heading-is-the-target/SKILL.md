@@ -42,4 +42,4 @@ HEADING GATE
 - Chair Pose = `fifty-fifty-lifestyle` · title **Never slip in chair pose**
 - Yellow shoe on **Never loses** is a different section. Do not remap.
 - Display 50/50 + Tired of slipping = **400**. TRANSFORM = **500**.
-- **Never slip in chair pose** yellow = `fit` · **100**. Whole photo in the frame. **Never cover.** Open mobile 50/50s match that size. Skills: `barreletics-chair-pose-yellow-fit` + `barreletics-use-chair-pose-yellow-lock`.
+- **Never slip in chair pose** yellow = `fit` · **100**. Whole photo in the frame. **Never cover.** Do not change other 50/50s to match it. Skills: `barreletics-chair-pose-yellow-fit` + `barreletics-use-chair-pose-yellow-lock`.

@@ -28,7 +28,7 @@ Keep the locked frame.
 - **Open Never slip in chair pose** → `fit` · **100**. NEVER cover.
 - **Fill / image-led 50/50 / Stef / sock era desktop / Coperni** → `cover` · **100** · X/Y only
 
-Open mobile 50/50s match Chair Pose: `image_fit_mobile: fit`. Do not flip Chair Pose to cover.
+Do not flip Chair Pose to cover. Do not change other 50/50s to match Chair Pose.
 
 One heading. One pass. Then stop.
 

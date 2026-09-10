@@ -18,7 +18,7 @@ Andrew 2026-09-09: *lock in the photo logic.*
 **Law:** The **frame is locked. The photo fills the frame.**  
 If the photo looks wrong, move the photo. **Do not rebuild the frame.**
 
-**Open Never slip in chair pose (HARD):** `fit` · scale **100**. Whole photo in the frame. **Never cover.** Open mobile 50/50s match that size (`image_fit_mobile: fit`). `.cursor/rules/chair-pose-yellow-fit.mdc`.
+**Open Never slip in chair pose (HARD):** `fit` · scale **100**. Whole photo in the frame. **Never cover.** Do not change other 50/50s to match it. `.cursor/rules/chair-pose-yellow-fit.mdc`.
 
 Read this before you write CSS. One pass. Then stop and ask.
 

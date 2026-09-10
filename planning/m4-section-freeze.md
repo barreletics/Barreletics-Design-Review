@@ -2,7 +2,7 @@
 
 > **ALL images LOCKED 2026-09-09:** Frame stays. One recipe — `fit`+100 if he said fit-inside / don’t crop; else `cover`+100. Image-led 50/50 = cover fills the panel (100% × 100%). Never flip cover↔fit↔zoom. Never neighbor. Rules: `image-in-the-frame.mdc` + `use-image-in-the-frame-lock.mdc`. Skills: `barreletics-image-in-the-frame` + `barreletics-use-image-in-the-frame-lock`.
 
-> **Open Sole rhythm + Chair Pose SIGNED 2026-09-09 (Andrew: its fixed. lock it in):** cream = Closed `#FAF8F6` only. Chair Pose `fifty-fifty-lifestyle` = `fit` · **100** · whole photo in the frame. **Never cover.** Never remap to Never loses. Open mobile 50/50s match Chair Pose size (`image_fit_mobile: fit`).
+> **Open Sole rhythm + Chair Pose SIGNED 2026-09-09 (Andrew: its fixed. lock it in):** cream = Closed `#FAF8F6` only. Chair Pose `fifty-fifty-lifestyle` = `fit` · **100** · whole photo in the frame. **Never cover.** Never remap to Never loses. Do **not** force other 50/50s to match Chair Pose size.
 
 > **Open Chair Pose yellow LOCKED 2026-09-09:** `fifty-fifty-lifestyle` · **Never slip in chair pose** · `fit` · scale **100**. Frame follows the photo. **Never flip to cover** — that is the loop. Rules: `chair-pose-yellow-fit.mdc` + `use-chair-pose-yellow-lock.mdc`. Skills: `barreletics-chair-pose-yellow-fit` + `barreletics-use-chair-pose-yellow-lock`.
 

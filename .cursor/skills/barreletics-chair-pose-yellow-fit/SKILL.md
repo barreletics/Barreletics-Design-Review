@@ -32,7 +32,7 @@ image_fit_mobile: fit
 image_scale: 100
 ```
 
-Open mobile 50/50s match this size (`image_fit_mobile: fit`). Do not change Chair Pose.
+Do not change other 50/50s to match this size. Chair Pose only.
 
 ## Gate
 
