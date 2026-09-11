@@ -841,3 +841,9 @@ No bare “FAQ” as the on-page heading. Geo SEO blocks (compare / technology) 
 
 TODO when Andrew is at desktop. Draft HTML in `planning/draft-shopify-*.html`. Earmark: `planning/earmark-shopify-legal-policies-returns-warranty.md`. Live Admin only; backup first; no full Help dump into policies.
 
+## 2026-09-11 — Parked: cart drawer upsell + BIS notify (no apps if avoidable)
+
+- **Cart upsell:** build in our side cart after QC; 10% on add-on via native Shopify automatic discount. Earmark: `planning/earmark-cart-drawer-upsell.md`.
+- **Back in stock:** theme form OK; send needs Klaviyo (preferred) or Flow/custom — not theme-only. Earmark: `planning/earmark-back-in-stock-notify.md`.
+- Free-shipping meter stays theme-native (`cart.total_price` post-discount); meter app removed after QC.
+
