@@ -16,7 +16,7 @@
   assign lede_line_2 = section.settings.lede_line_2 | default: 'No sliding. No resets.'
   assign short_desc = section.settings.short_description | default: 'The premium grip system that replaces traditional grip socks—built for reformer, barre, Pilates and Megaformer.'
   assign shipping_body = section.settings.shipping_accordion | default: 'Complimentary shipping on orders over $150. Orders ship within 1–2 business days. Standard delivery 3–5 business days; express 1–2 business days available at checkout.'
-  assign returns_body = section.settings.returns_accordion | default: '30-day returns on items in new, sellable condition. 90-day warranty covers manufacturing defects only.'
+  assign returns_body = section.settings.returns_accordion | default: ''
   assign current_variant = product.selected_or_first_available_variant
   assign _title_d = product.title | downcase
   assign _handle_d = product.handle | downcase
@@ -41,12 +41,14 @@
 
   assign sole_badge = section.settings.sole_badge
   # Outdoor / water shoe must never show Closed Sole (wrong Default template or metafield)
-  # One-Off PDPs: keep One-Off badge — do NOT rewrite to Open Sole when handle contains open-sole.
+  # One-Off PDPs: same rust Open Sole / Closed Sole badge as core (sole in badge, drop voice in lede).
   if _cat_outdoor
     assign sole_badge = 'Outdoor'
   elsif _cat_oneoff
-    if sole_badge == blank or sole_badge == 'Closed Sole' or sole_badge == 'Open Sole'
-      assign sole_badge = 'One-Off'
+    if _cat_open
+      assign sole_badge = 'Open Sole'
+    else
+      assign sole_badge = 'Closed Sole'
     endif
   elsif _cat_open
     if sole_badge == blank or sole_badge == 'Closed Sole'
@@ -60,7 +62,11 @@
   endif
   if sole_badge == blank
     if _cat_oneoff
-      assign sole_badge = 'One-Off'
+      if _cat_open
+        assign sole_badge = 'Open Sole'
+      else
+        assign sole_badge = 'Closed Sole'
+      endif
     elsif _cat_open
       assign sole_badge = 'Open Sole'
     elsif _title_d contains 'closed sole' or _handle_d contains 'closed-sole' or _handle_d contains 'closed_sole' or _handle_d contains 'reformer' or _handle_d contains 'legree'
@@ -79,11 +85,7 @@
     if _cat_outdoor
       assign badge_color = 'charcoal'
     elsif _cat_oneoff
-      if _cat_open
-        assign badge_color = 'rust'
-      else
-        assign badge_color = 'charcoal'
-      endif
+      assign badge_color = 'rust'
     else
       assign badge_color = 'rust'
     endif
@@ -117,6 +119,19 @@
   endif
   if display_title contains ' - Closed Sole'
     assign display_title = display_title | remove: ' - Closed Sole'
+  endif
+  # One-off Admin titles use parentheses: One Off Colors (Open Sole)
+  if display_title contains ' (Open Sole)'
+    assign display_title = display_title | remove: ' (Open Sole)'
+  endif
+  if display_title contains '(Open Sole)'
+    assign display_title = display_title | remove: '(Open Sole)'
+  endif
+  if display_title contains ' (Closed Sole)'
+    assign display_title = display_title | remove: ' (Closed Sole)'
+  endif
+  if display_title contains '(Closed Sole)'
+    assign display_title = display_title | remove: '(Closed Sole)'
   endif
   assign display_title = display_title | strip
 
@@ -544,12 +559,28 @@
         </details>
       {% endif %}
       <details class="pdp-accordion" data-pdp-accordion>
-        <summary class="pdp-accordion__trigger" aria-expanded="false">Shipping — free over $150 <span>+</span></summary>
+        <summary class="pdp-accordion__trigger" aria-expanded="false">Shipping <span>+</span></summary>
         <div class="pdp-accordion__body">{{ shipping_body | escape }}</div>
       </details>
+      {%- comment -%}
+        LOCKED 2026-09-11 — PDP accordion returns/warranty (Andrew).
+        Short PDP copy; full policy at /pages/help#returns and #warranty.
+        Longer variants earmarked: planning/earmark-returns-warranty-long-copy.md
+      {%- endcomment -%}
       <details class="pdp-accordion" data-pdp-accordion>
-        <summary class="pdp-accordion__trigger" aria-expanded="false">Returns — 30-day returns · 90-day warranty <span>+</span></summary>
-        <div class="pdp-accordion__body">{{ returns_body | escape }}</div>
+        <summary class="pdp-accordion__trigger" aria-expanded="false">Returns & exchanges <span>+</span></summary>
+        <div class="pdp-accordion__body">
+          <p>30 days. Try on indoors for fit — like any shoe.</p>
+          <p>Items worn for a workout, class, or outdoors can&rsquo;t be returned or exchanged. Must be clean and like new.</p>
+          <p><a class="pdp-accordion__policy-link" href="/pages/help#returns">View full returns policy →</a></p>
+        </div>
+      </details>
+      <details class="pdp-accordion" data-pdp-accordion>
+        <summary class="pdp-accordion__trigger" aria-expanded="false">90-day warranty <span>+</span></summary>
+        <div class="pdp-accordion__body">
+          <p>Backed against manufacturing defects for 90 days. Normal wear, accidents, and damage from use or improper care aren&rsquo;t covered.</p>
+          <p><a class="pdp-accordion__policy-link" href="/pages/help#warranty">View full warranty policy →</a></p>
+        </div>
       </details>
       <p class="pdp-buy__origin">Made in the USA · No latex · No silicone</p>
     </div>
@@ -1084,6 +1115,23 @@
     margin: 0;
   }
 
+  /* Mobile: quieter accordion stack (Andrew trial 2026-09-10) */
+  @media (max-width: 768px) {
+    .pdp-accordion__trigger {
+      padding: 11px 0;
+      font-size: 13px;
+    }
+    .pdp-accordion__trigger span,
+    .pdp-accordion[open] .pdp-accordion__trigger::after {
+      font-size: 18px;
+    }
+    .pdp-accordion__body {
+      padding: 0 0 12px;
+      font-size: 13px;
+    }
+  }
+
+
   .pdp-buy__desc-footnote {
     margin-top: 1em;
     padding-top: 1em;
@@ -1294,14 +1342,14 @@
       "type": "text",
       "id": "sole_badge",
       "label": "Sole badge override",
-      "info": "Optional. Outdoor/water-shoe products always show Outdoor. Else: TE → metafield custom.sole_type → Open/Closed/One-Off from handle/title/template."
+      "info": "Optional. Outdoor always shows Outdoor. One-offs show Open Sole / Closed Sole (same as core). Else: TE → metafield → Open/Closed from identity."
     },
     {
       "type": "select",
       "id": "sole_badge_color",
       "label": "Sole badge color",
       "default": "rust",
-      "info": "Default rust for Closed/Open/Outdoor. TE black / charcoal / rust / blue are all honored — never forced. One-Off Closed = black · One-Off Open = rust.",
+      "info": "Default rust for Closed/Open/Outdoor/one-offs. TE black / charcoal / rust / blue are all honored — never forced.",
       "options": [
         { "value": "black", "label": "Black / charcoal" },
         { "value": "charcoal", "label": "Charcoal" },
@@ -1390,10 +1438,8 @@
       "default": "Complimentary shipping on orders over $150. Orders ship within 1–2 business days. Standard delivery 3–5 business days; express 1–2 business days available at checkout."
     },
     {
-      "type": "textarea",
-      "id": "returns_accordion",
-      "label": "Returns / warranty accordion body",
-      "default": "30-day returns on items in new, sellable condition. 90-day warranty covers manufacturing defects only."
+      "type": "paragraph",
+      "content": "Returns & exchanges + 90-day warranty accordion copy is LOCKED in Liquid (2026-09-11). Short PDP wording with links to /pages/help#returns and #warranty. Longer variants live in planning/earmark-returns-warranty-long-copy.md for FAQ/Help/policy surfaces."
     }
   ],
   "presets": [{ "name": "PDP Buy Box" }]

@@ -766,3 +766,78 @@ The original ADR documents (ADR-01 through ADR-07) are preserved in `planning/` 
 - Knowledge architecture → `13-knowledge-architecture.md`
 - Navigation rationale → `11-navigation-architecture.md`
 - Copy rules → `08-copy-guide.md`
+
+
+### 2026-09-10 — PDP 50/50 mobile text pad + footprint LOCKED
+
+- **Decision:** Phone text pad **96/96** on every PDP fifty-fifty (Coperni-approved). Lifestyle media **550** COVER; packshot FIT ~**400** phone frame with cream `media_bg`.
+- **Why:** Special-casing Grip pads + FIT letterbox in a 550 frame looked like “broken padding.”
+- **OS:** `planning/fifty-fifty-pdp-mobile-LOCKED.md` · `.cursor/rules/pdp-fifty-fifty-te-controls.mdc`
+- **Code:** `sections/fifty-fifty.liquid` defaults; all `product*.json` pads synced; Coperni Grip FIT 400.
+## 2026-09-10 — Coperni mobile top stack LOCKED (draft 187144929571)
+
+- Yellow coperni-crosslink mobile: ~58vh, white type + dark veil, no split shoe (desktop split unchanged).
+- coperni-pdp-story mobile: video → 1 large runway still → text → 2-up stills (desktop: text → video → 3-up).
+- Buy box short desc: one line only — On the Paris runway — Fashion Week 2026. Full copy in Description accordion.
+- Files: sections/coperni-crosslink.liquid, sections/coperni-pdp-story.liquid, templates/product.coperni.json.
+
+
+
+## 2026-09-11 — PDP buy-box Returns / Warranty accordion LOCKED (global)
+
+Two rows in `pdp-buy-box.liquid` (all PDPs):
+
+**Returns & exchanges**
+- 30 days. Try on indoors for fit — like any shoe.
+- Items worn for a workout, class, or outdoors can’t be returned or exchanged. Must be clean and like new.
+- Link: `/pages/returns#returns`
+
+**90-day warranty**
+- Backed against manufacturing defects for 90 days. Normal wear, accidents, and damage from use or improper care aren’t covered.
+- Link: `/pages/returns#warranty`
+
+Longer Andrew drafts earmarked: `planning/earmark-returns-warranty-long-copy.md` (FAQ/Help/KB next — not PDP).
+
+
+## 2026-09-11 — Returns policy page (draft) copy aligned to locked longer drafts
+
+Updated `page.shipping-retruns.json` + `page.returns.json` (draft theme only):
+
+- **Returns & exchanges:** Andrew longer lead (30 days; indoor try-on; workout/class/outdoors ineligible) + logistics bullets ($7.95, mesh bag, apparel).
+- **90-day warranty:** Andrew longer lead (defects only; normal wear / accidents / improper care not covered) + Covered / Not covered lists.
+- Live Admin HTML page left untouched (Brian / live theme).
+
+
+## 2026-09-11 — FAQ returns/warranty answers aligned to locked PDP + draft policy
+
+`page.faq.json` returns-1 / returns-2 / warranty-1 updated:
+- Removed “if they don’t perform” refund framing
+- Added workout/class/outdoors ineligibility
+- Warranty: defects only; normal wear / accidents / improper care not covered
+- Links to `/pages/returns#returns` and `#warranty`
+
+
+## 2026-09-11 — Consolidated Help page (draft)
+
+One Help/returns experience (no generic card hub):
+- `page-returns.liquid` simplified: top nav + one Start CTA + policy cards + short FAQ matching PDP buy-box blurbs
+- Templates `page.help.json`, `page.faq.json`, `page.returns.json`, `page.shipping-retruns.json` all render the same section
+- PDP accordion links → `/pages/help#returns` / `#warranty`
+- Title: Help (Type OS). Dropped separate Zero-risk marketing stack and How Can We Help? destination cards on draft.
+
+
+## 2026-09-11 — FAQ heading split LOCKED
+
+Not one generic name. Three jobs, three headings:
+
+1. On-page FAQ block (`collection-faq` on PDPs / collections / studio pages): **Questions from the studio**
+2. Help page short strip: **Quick answers**
+3. Full `/pages/faq`: **Frequently Asked Questions**
+
+No bare “FAQ” as the on-page heading. Geo SEO blocks (compare / technology) left topic-specific.
+
+
+## 2026-09-11 — Parked: live Shopify Refund/Shipping policy update
+
+TODO when Andrew is at desktop. Draft HTML in `planning/draft-shopify-*.html`. Earmark: `planning/earmark-shopify-legal-policies-returns-warranty.md`. Live Admin only; backup first; no full Help dump into policies.
+

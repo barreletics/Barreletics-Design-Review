@@ -513,3 +513,26 @@ h1, h2, h3, h4, h5, h6 {
     gap: 12px 20px;
   }
 }
+
+/* Ambient muted autoplay videos — hide native play overlay.
+   Safari/iOS/Chrome flash a big center play button until muted
+   autoplay actually starts (below-fold, slow network, tab resume).
+   Hide native chrome on videos that do NOT opt into controls.
+   split-hero with Show video controls keeps [controls] and is untouched. */
+video:not([controls])::-webkit-media-controls {
+  display: none !important;
+  -webkit-appearance: none !important;
+  opacity: 0 !important;
+}
+video:not([controls])::-webkit-media-controls-start-playback-button {
+  display: none !important;
+  -webkit-appearance: none !important;
+  opacity: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  pointer-events: none !important;
+}
+video:not([controls])::-webkit-media-controls-enclosure {
+  display: none !important;
+  -webkit-appearance: none !important;
+}

@@ -33,13 +33,13 @@
   assign media_pct = section.settings.media_column_pct | default: 50
   assign text_pct = 100 | minus: media_pct
 
-  assign min_height = section.settings.min_height | default: 640
-  assign mobile_media_height = section.settings.mobile_media_height | default: 680
+  assign min_height = section.settings.min_height | default: 560
+  assign mobile_media_height = section.settings.mobile_media_height | default: 550
   assign mobile_text_height = section.settings.mobile_text_height | default: 0
   if template.name == 'product'
-    assign mobile_media_height = 550
     assign mobile_text_height = 0
   endif
+  # mobile_media_height comes from section setting (default 550); landscape COVER may use ~360–400
   assign image_position = section.settings.image_position | default: 'center'
   if image_position == 'custom'
     assign focal_x = section.settings.focal_x | default: 50
@@ -63,22 +63,22 @@
   if template.name == 'product'
     assign section_gap_m = 0
   endif
-  assign text_pad_m = 32
-  if template.name == 'product'
-    assign text_pad_m = 104
+  # GLOBAL PDP text-pad LOCKED 2026-09-10 (Coperni QA → sitewide):
+  # 96 / 96 phone. TE overrides only for intentional exceptions.
+  assign text_pad_m = 96
+  if section.settings.text_pad_top_mobile != blank
+    assign text_pad_m = section.settings.text_pad_top_mobile
+  endif
+  assign text_pad_bottom_m = text_pad_m
+  if section.settings.text_pad_bottom_mobile != blank
+    assign text_pad_bottom_m = section.settings.text_pad_bottom_mobile
   endif
 
   assign image_scale_ratio = image_scale | times: 1.0 | divided_by: 100.0
-  assign open_chair_pose = false
-  if template.suffix == 'in-studio-template' or template.suffix == 'open-sole'
-    if section.settings.title == 'Never slip in chair pose'
-      assign open_chair_pose = true
-    endif
-  endif
 
   assign title_size = section.settings.title_size | default: 'default'
   assign body_size = section.settings.body_size | default: 'default'
-  assign title_weight = section.settings.title_weight | default: 'default'
+  assign title_weight = section.settings.title_weight | default: '400'
   assign body_weight = section.settings.body_weight | default: 'default'
   assign cta_size = section.settings.cta_size | default: 'default'
   assign cta_style = section.settings.cta_style | default: 'solid'
@@ -120,7 +120,7 @@
 
 <section
   {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | handleize }}"{% endif %}
-  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} split-section{% if section.settings.reverse %} split-section--reverse{% endif %}{% if media_fit == 'contain' %} split-section--contain{% endif %}{% if media_fit == 'fit' %} split-section--fit{% endif %}{% if image_fit_m == 'fit' %} split-section--fit-m{% endif %}{% if image_fit_m == 'contain' %} split-section--contain-m{% endif %}{% if media_aspect == 'square' %} split-section--media-square{% endif %}{% render 'split-mobile-stack-class', mobile_stack_order: section.settings.mobile_stack_order %}"
+  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} split-section{% if template.name == 'product' %} split-section--pdp{% endif %}{% if section.settings.reverse %} split-section--reverse{% endif %}{% if media_fit == 'contain' %} split-section--contain{% endif %}{% if media_fit == 'fit' %} split-section--fit{% endif %}{% if image_fit_m == 'fit' %} split-section--fit-m{% endif %}{% if image_fit_m == 'contain' %} split-section--contain-m{% endif %}{% if media_aspect == 'square' %} split-section--media-square{% endif %}{% render 'split-mobile-stack-class', mobile_stack_order: section.settings.mobile_stack_order %}"
   style="{% render 'section-inset-vars' %} 
     --ff-min-height: {{ min_height }}px;
     --ff-mobile-media-height: {{ mobile_media_height }}px;
@@ -138,7 +138,7 @@
     --ff-section-gap: {{ section_gap }}px;
     --ff-section-gap-m: {{ section_gap_m }}px;
     --ff-text-pad-top-m: {{ text_pad_m }}px;
-    --ff-text-pad-bottom-m: {{ text_pad_m }}px;
+    --ff-text-pad-bottom-m: {{ text_pad_bottom_m }}px;
     --ff-cta-bg: {{ cta_bg }};
     --ff-cta-border: {{ cta_border }};
     --ff-cta-text: {{ cta_text_color }};
@@ -357,7 +357,7 @@
     --ff-section-gap: {{ section_gap }}px;
     --ff-section-gap-m: {{ section_gap_m }}px;
     --ff-text-pad-top-m: {{ text_pad_m }}px;
-    --ff-text-pad-bottom-m: {{ text_pad_m }}px;
+    --ff-text-pad-bottom-m: {{ text_pad_bottom_m }}px;
     padding-block: var(--ff-section-gap, var(--section-padding-y, 32px));
     box-sizing: border-box;
     background: {{ section.settings.bg_color | default: '#ffffff' }};
@@ -374,7 +374,7 @@
     grid-template-columns: var(--ff-media-fr, 1fr) var(--ff-text-fr, 1fr);
     gap: var(--ff-column-gap, 0);
     align-items: stretch;
-    min-height: var(--ff-min-height, 640px);
+    min-height: var(--ff-min-height, 560px);
     padding-block: 0;
     box-sizing: border-box;
     overflow: hidden;
@@ -393,7 +393,7 @@
     contain: paint;
     align-self: stretch;
     height: 100%;
-    min-height: var(--ff-min-height, 640px);
+    min-height: var(--ff-min-height, 560px);
     border-radius: var(--ff-media-radius, 0);
     clip-path: inset(0 round var(--ff-media-radius, 0px));
     -webkit-clip-path: inset(0 round var(--ff-media-radius, 0px));
@@ -415,7 +415,7 @@
     aspect-ratio: 1 / 1;
     width: 100%;
     height: auto;
-    min-height: var(--ff-min-height, 640px);
+    min-height: var(--ff-min-height, 560px);
   }
   /* Round media only on the outer edge (away from the text column) */
   #shopify-section-{{ section.id }} .split-section--media-outer-radius .split-media {
@@ -440,24 +440,7 @@
     transform: scale(var(--ff-image-scale, 1));
     transform-origin: var(--ff-object-position, center);
   }
-  {% if open_chair_pose %}
-  /* Never slip in chair pose — fit · 100. Whole photo in the locked frame. */
-  #shopify-section-{{ section.id }} .split-section.split-section--fit .split-media,
-  #shopify-section-{{ section.id }} .split-section.split-section--fit-m .split-media {
-    height: auto;
-    min-height: 0;
-    overflow: hidden;
-  }
-  #shopify-section-{{ section.id }} .split-section.split-section--fit .split-media__img,
-  #shopify-section-{{ section.id }} .split-section.split-section--fit-m .split-media__img {
-    position: relative;
-    inset: auto;
-    width: 100%;
-    height: auto;
-    object-fit: unset;
-    transform: none;
-  }
-  {% endif %}
+  /* PDP fit-in-frame lives at the end of this tag — Home --fit still collapses. */
   /* Full-bleed media law (Andrew 2026-08-08): Cover mode only. Fit and
      packshot-contain are excluded — :not(contain) was winning over Fit
      and forcing object-fit: cover (2026-08-17). */
@@ -527,7 +510,7 @@
   #shopify-section-{{ section.id }} .split-media__placeholder {
     width: 100%;
     height: 100%;
-    min-height: var(--ff-min-height, 640px);
+    min-height: var(--ff-min-height, 560px);
     background: linear-gradient(135deg, #c9c5b8, #e9d3cb);
     display: flex;
     align-items: center;
@@ -576,7 +559,7 @@
   }
   #shopify-section-{{ section.id }} .split-text__title.h2-supporting {
     font-size: var(--ff-title-size, 40px);
-    font-weight: var(--ff-title-weight, 500);
+    font-weight: var(--ff-title-weight, 400);
     line-height: 1.10;
     letter-spacing: var(--type-h2-display-tracking);
   }
@@ -874,6 +857,66 @@
       object-position: var(--ff-object-position, center);
     }
   }
+  /* PDP 50/50 only (Andrew 2026-09-09). Closed is the standard:
+     mobile 550 · desktop min 560 · text may grow desktop.
+     cover / fit = image inside that frame. fit must not collapse it.
+     Home / Shop All / Apparel --fit still collapses. No JSON / crop change. */
+  {% if template.name == 'product' %}
+  #shopify-section-{{ section.id }} .split-section.split-section--pdp.split-section--fit {
+    min-height: var(--ff-min-height, 560px);
+  }
+  #shopify-section-{{ section.id }} .split-section.split-section--pdp.split-section--fit .split-media {
+    height: 100%;
+    min-height: var(--ff-min-height, 560px);
+    overflow: hidden;
+    background: {{ section.settings.media_bg | default: '#ffffff' }};
+  }
+  #shopify-section-{{ section.id }} .split-section.split-section--pdp.split-section--fit .split-media__clip {
+    position: absolute;
+    inset: 0;
+    height: auto;
+    min-height: 0;
+  }
+  #shopify-section-{{ section.id }} .split-section.split-section--pdp.split-section--fit .split-media__img,
+  #shopify-section-{{ section.id }} .split-section.split-section--pdp.split-section--fit .split-media__video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: contain;
+    object-position: var(--ff-object-position, center);
+    transform: scale(var(--ff-image-scale, 1));
+    transform-origin: var(--ff-object-position, center);
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .split-section.split-section--pdp.split-section--fit .split-media,
+    #shopify-section-{{ section.id }} .split-section.split-section--pdp.split-section--fit-m .split-media {
+      height: var(--ff-mobile-media-height, 550px);
+      min-height: var(--ff-mobile-media-height, 550px);
+      background: {{ section.settings.media_bg | default: section.settings.bg_color | default: '#f5f2ec' }};
+    }
+    #shopify-section-{{ section.id }} .split-section.split-section--pdp.split-section--fit-m .split-media__clip {
+      position: absolute;
+      inset: 0;
+      height: auto;
+      min-height: 0;
+    }
+    #shopify-section-{{ section.id }} .split-section.split-section--pdp.split-section--fit-m .split-media__img,
+    #shopify-section-{{ section.id }} .split-section.split-section--pdp.split-section--fit-m .split-media__video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      max-width: none;
+      object-fit: contain;
+      /* Top-anchor: keeps packshots flush under prior section — no cream band above the shoe */
+      object-position: center top;
+      transform: scale(var(--ff-image-scale, 1));
+      transform-origin: center top;
+    }
+  }
+  {% endif %}
 </style>
 
 {% schema %}
@@ -935,7 +978,7 @@
     },
     {
       "type": "paragraph",
-      "content": "Cover crops to fill a fixed height. Fit shows the natural photo — width fills the column, height follows the file. Contain is the small packshot inset."
+      "content": "LOCKED: 560 desktop / 550 phone footprint. Prefer COVER full bleed, scale 100. FIT only with explicit exception after media QC gate (wrong file / asset geometry → notify, do not “fix” with FIT). Product phone height uses the slider (default 550). Home may set a taller desktop min."
     },
     {
       "type": "select",
@@ -948,14 +991,15 @@
         },
         {
           "value": "fit",
-          "label": "Fit (natural photo)"
+          "label": "Fit (whole photo in the frame)"
         },
         {
           "value": "contain",
           "label": "Contain (packshot)"
         }
       ],
-      "default": "cover"
+      "default": "cover",
+      "info": "Cover = fill like Closed. Fit = whole photo inside the locked frame. Contain = packshot only."
     },
     {
       "type": "select",
@@ -1016,7 +1060,7 @@
         }
       ],
       "default": "center",
-      "info": "object-position for cover crops (and contain alignment). The nine presets snap to the edges; pick Custom when a packshot needs a few percent of nudge to stop the crop clipping it."
+      "info": "Set Custom, then use the two sliders. Presets ignore the sliders."
     },
     {
       "type": "range",
@@ -1076,8 +1120,8 @@
       "max": 1200,
       "step": 20,
       "unit": "px",
-      "default": 640,
-      "info": "Home WORKING default is 640px."
+      "default": 560,
+      "info": "Locked 560 desktop (PDP + default). Home may override higher. Do not use this to make a photo fit."
     },
     {
       "type": "range",
@@ -1098,19 +1142,30 @@
       "max": 700,
       "step": 10,
       "unit": "px",
-      "default": 530,
-      "info": "How tall the photo is on phone."
+      "default": 550,
+      "info": "Default 550. Product pages honor this slider — lower (~360–400) for landscape COVER to avoid zoom/crop."
     },
     {
       "type": "range",
       "id": "text_pad_top_mobile",
-      "label": "Text pad — phone",
+      "label": "Text pad top — phone",
       "min": 16,
       "max": 120,
       "step": 4,
       "unit": "px",
-      "default": 32,
-      "info": "Sitewide phone rhythm is 32. This slider is stored but phone uses 32."
+      "default": 96,
+      "info": "LOCKED global PDP standard: 96. Same on every 50/50. Do not special-case one block."
+    },
+    {
+      "type": "range",
+      "id": "text_pad_bottom_mobile",
+      "label": "Text pad bottom — phone",
+      "min": 16,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 96,
+      "info": "LOCKED global PDP standard: 96 (matches top). Packshot FIT letterbox is NOT text pad — fix media frame height instead."
     },
     {
       "type": "select",
@@ -1347,7 +1402,7 @@
           "label": "700"
         }
       ],
-      "default": "default"
+      "default": "400"
     },
     {
       "type": "textarea",
@@ -1796,7 +1851,7 @@
       "step": 4,
       "unit": "px",
       "default": 88,
-      "info": "Desktop only. Phone uses Space above / below text."
+      "info": "Desktop text column pad. Phone uses Text pad top/bottom — LOCKED 96/96."
     },
     {
       "type": "range",
@@ -1855,7 +1910,7 @@
       "step": 4,
       "unit": "px",
       "default": 0,
-      "info": "Never pads above the photo. 0 = next section touches."
+      "info": "Home / collections only. Product pages stay 0. Never pads above the photo."
     },
     {
       "type": "checkbox",

@@ -178,3 +178,7 @@ Type OS owns family, size, weight, tracking. Sections must **not** add `font_pic
 - `docs/Barreletics Home - Type OS Preview.html` — review surface
 - Authority mocks: Home WORKING · Collection v18 · SEO v36 · PDP v16 · Journal v5 · Help v3 · Pattern-v2 · FAQ/Contact/Returns/Size/Track
 - `planning/m4-te-controls.md` — TE tiers (A/B/C) + Shared/Section schema order
+
+## Sock Math lock (2026-09-10)
+
+`pdp-sock-math` editorial **One pair. Done.** = **56px / 400**. Do not apply to `pdp-features` Obsession (stays Supporting ~40/400).

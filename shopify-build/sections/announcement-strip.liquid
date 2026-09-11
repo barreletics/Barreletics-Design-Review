@@ -1,6 +1,6 @@
 {% comment %}
-  Trust / announcement strip — Home WORKING cream bar.
-  All messages shown inline with separators (not a dark rotator).
+  Cream trust strip — matches live second line.
+  Static messages, wrap to 2 lines. No scroll. No rotation.
 {% endcomment %}
 
 {% if section.settings.enabled %}
@@ -15,15 +15,13 @@
       <div class="announcement-strip__inner">
         {% for block in slides %}
           {% unless forloop.first %}
-            <span class="announcement-strip__sep" aria-hidden="true">·</span>
+            <span class="announcement-strip__sep" aria-hidden="true">|</span>
           {% endunless %}
           <span class="announcement-strip__item" {{ block.shopify_attributes }}>
             {% if block.settings.link_url != blank %}
               <a href="{{ block.settings.link_url }}" class="announcement-strip__link">
                 {{ block.settings.text }}
               </a>
-            {% elsif block.settings.text contains 'SAVE2' or block.settings.text contains 'SAVE15' %}
-              Buy 2, Save 10% — Code <strong style="color:#1c1916;">SAVE2</strong>
             {% else %}
               {{ block.settings.text }}
             {% endif %}
@@ -40,19 +38,11 @@
   "class": "announcement-strip-section",
   "settings": [
     {
-      "type": "header",
-      "content": "Shared — Content"
-    },
-    {
       "type": "checkbox",
       "id": "enabled",
       "label": "Show announcement / trust bar",
       "default": true,
-      "info": "Toggle the cream trust strip above the header."
-    },
-    {
-      "type": "header",
-      "content": "Section — Header"
+      "info": "Cream trust line under the sale banner. Wraps — no scroll, no rotate."
     },
     {
       "type": "range",
@@ -61,9 +51,9 @@
       "max": 10,
       "step": 1,
       "unit": "s",
-      "label": "Rotation speed (unused — static strip)",
+      "label": "Rotation speed (unused)",
       "default": 4,
-      "info": "Kept for schema compatibility. Strip shows all messages at once like the Home mock."
+      "info": "Schema compatibility only. Strip is static like live."
     }
   ],
   "blocks": [
@@ -89,9 +79,9 @@
     {
       "name": "Announcement strip",
       "blocks": [
-        { "type": "message", "settings": { "text": "Buy 2, Save 10% — Code SAVE2" } },
+        { "type": "message", "settings": { "text": "🇺🇸 Made in USA" } },
         { "type": "message", "settings": { "text": "Free Shipping Over $150" } },
-        { "type": "message", "settings": { "text": "30-Day Returns · Made in USA" } }
+        { "type": "message", "settings": { "text": "30 Day Returns", "link_url": "/pages/returns" } }
       ]
     }
   ]

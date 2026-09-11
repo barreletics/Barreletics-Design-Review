@@ -39,6 +39,9 @@
       assign phone_photo = true
     endif
   endif
+  if section.settings.mobile_full_bleed
+    assign phone_photo = false
+  endif
 
   assign cta_target = section.settings.cta_link_target | default: 'custom'
   if cta_target != blank and cta_target != 'custom'
@@ -89,7 +92,33 @@
           playsinline: true,
           class: 'fullbleed-statement__video'
       }}
+      {%- liquid
+        assign fb_poster_s = ''
+        if section.settings.image != blank
+          assign fb_poster_s = section.settings.image | image_url: width: 2000
+        elsif section.settings.poster_url != blank
+          assign fb_poster_s = section.settings.poster_url
+        endif
+      -%}
+      {% if fb_poster_s != blank %}
+        <img
+          class="fullbleed-statement__poster-cover"
+          src="{{ fb_poster_s | escape }}"
+          alt=""
+          aria-hidden="true"
+          width="2000"
+          height="1200"
+        >
+      {% endif %}
     {% elsif section.settings.video_url != blank %}
+      {%- liquid
+        assign fb_poster = ''
+        if section.settings.image != blank
+          assign fb_poster = section.settings.image | image_url: width: 2000
+        elsif section.settings.poster_url != blank
+          assign fb_poster = section.settings.poster_url
+        endif
+      -%}
       <video
         class="fullbleed-statement__video"
         autoplay
@@ -97,15 +126,25 @@
         loop
         playsinline
         webkit-playsinline
-        preload="metadata"
-        {% if section.settings.image != blank %}
-          poster="{{ section.settings.image | image_url: width: 2000 }}"
-        {% elsif section.settings.poster_url != blank %}
-          poster="{{ section.settings.poster_url | escape }}"
-        {% endif %}
+        preload="auto"
+        disablepictureinpicture
+        {% if fb_poster != blank %}poster="{{ fb_poster | escape }}"{% endif %}
       >
         <source src="{{ section.settings.video_url | escape }}" type="video/mp4">
       </video>
+      {% if fb_poster != blank %}
+        <img
+          class="fullbleed-statement__poster-cover"
+          src="{{ fb_poster | escape }}"
+          alt=""
+          aria-hidden="true"
+          decoding="async"
+          width="2000"
+          height="1200"
+        >
+      {% else %}
+        <div class="fullbleed-statement__poster-cover" aria-hidden="true"></div>
+      {% endif %}
     {% elsif section.settings.image != blank %}
       <img
         src="{{ section.settings.image | image_url: width: 2000 }}"
@@ -185,6 +224,39 @@
   #shopify-section-{{ section.id }} .fullbleed-statement__video {
     position: absolute;
     inset: 0;
+    z-index: 0;
+    /* Invisible until playing — prevents Safari refresh flash of native play button */
+    opacity: 0;
+  }
+  #shopify-section-{{ section.id }} .fullbleed-statement__bg.is-playing .fullbleed-statement__video {
+    opacity: 1;
+  }
+  /* Still image sits above video until playback starts */
+  #shopify-section-{{ section.id }} .fullbleed-statement__poster-cover {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--fb-focal, 50% 50%);
+    pointer-events: none;
+    opacity: 1;
+    background: #1c1916;
+    transition: opacity 0.25s ease;
+  }
+  #shopify-section-{{ section.id }} .fullbleed-statement__bg.is-playing .fullbleed-statement__poster-cover {
+    opacity: 0;
+    visibility: hidden;
+  }
+  #shopify-section-{{ section.id }} .fullbleed-statement__video:not([controls])::-webkit-media-controls,
+  #shopify-section-{{ section.id }} .fullbleed-statement__video:not([controls])::-webkit-media-controls-start-playback-button,
+  #shopify-section-{{ section.id }} .fullbleed-statement__video:not([controls])::-webkit-media-controls-enclosure {
+    display: none !important;
+    -webkit-appearance: none !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
   }
   #shopify-section-{{ section.id }} {
     --fb-overlay: rgba(28, 25, 22, {{ overlay_alpha }});
@@ -291,6 +363,46 @@
     }
   }
 </style>
+
+
+<script>
+  (function () {
+    var root = document.getElementById('shopify-section-{{ section.id }}');
+    if (!root) return;
+    var bg = root.querySelector('.fullbleed-statement__bg');
+    var video = root.querySelector('.fullbleed-statement__video');
+    if (!bg || !video || video.hasAttribute('controls')) return;
+    function markPlaying() {
+      if (video.paused || video.readyState < 2) return;
+      bg.classList.add('is-playing');
+    }
+    function kick() {
+      video.muted = true;
+      video.defaultMuted = true;
+      video.setAttribute('muted', '');
+      video.playsInline = true;
+      var p = video.play();
+      if (p && p.then) p.then(function () { markPlaying(); }).catch(function () {});
+      else markPlaying();
+    }
+    video.addEventListener('playing', markPlaying);
+    video.addEventListener('timeupdate', function onTime() {
+      if (video.currentTime > 0.05) {
+        markPlaying();
+        video.removeEventListener('timeupdate', onTime);
+      }
+    });
+    video.addEventListener('loadeddata', kick);
+    video.addEventListener('canplay', kick);
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) kick(); });
+      }, { rootMargin: '80px 0px' });
+      io.observe(video);
+    }
+    kick();
+  })();
+</script>
 
 {% schema %}
 {
@@ -527,10 +639,13 @@
         { "value": "70", "label": "70vh" },
         { "value": "80", "label": "80vh" },
         { "value": "90", "label": "90vh" },
-        { "value": "100", "label": "100vh — full viewport" }
+        { "value": "100", "label": "100vh — full viewport" },
+        { "value": "120", "label": "120vh — tall" },
+        { "value": "140", "label": "140vh — supersize" },
+        { "value": "160", "label": "160vh — full-body cover" }
       ],
       "default": "64",
-      "info": "Existing PDP/Home instances keep 64vh unless you change this."
+      "info": "Existing PDP/Home instances keep 64vh unless you change this. Use 140–160vh when a portrait lifestyle must show full body/feet under Cover."
     },
     {
       "type": "range",
@@ -553,6 +668,13 @@
         { "value": "contain", "label": "Contain" }
       ],
       "info": "Cover fills the height box. Contain shows the whole photo inside it."
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_full_bleed",
+      "label": "Mobile: edge-to-edge (no cream frame)",
+      "default": false,
+      "info": "ON = true full-bleed on phones. OFF keeps the 32px cream frame used for phone-style product photos."
     },
     {
       "type": "checkbox",

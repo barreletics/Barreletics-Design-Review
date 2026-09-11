@@ -3,12 +3,52 @@
    Extracted from Liquid for performance (Phase 1)
    ============================================================================= */
 
-/* Trust strip — Home WORKING cream bar (all messages inline) */
+/* Sale banner — top promo (live blue SAVE2 strip) */
+.sale-banner {
+  background: var(--sale-banner-bg, #faf8f6);
+  color: var(--sale-banner-color, #1c1916);
+  padding: 8px 20px;
+  text-align: center;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  z-index: calc(var(--z-header) + 2);
+}
+.sale-banner__inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sale-banner__text {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  text-transform: none;
+  color: inherit;
+  text-decoration: none;
+}
+a.sale-banner__text:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+@media (max-width: 768px) {
+  .sale-banner { padding: 6px 16px; }
+  .sale-banner__text {
+    font-size: 13px;
+    letter-spacing: 1.5px;
+  }
+}
+
+/* Trust strip — soft cream, static, wraps like live second line */
 .announcement-strip {
-  background: var(--color-warm-cream);
+  background: #ffffff;
   padding: 10px var(--section-padding-x);
-  border-bottom: 1px solid #e8e2d8;
-  overflow-x: auto;
+  border-bottom: none;
+  overflow: hidden;
   position: relative;
   z-index: calc(var(--z-header) + 1);
 }
@@ -18,16 +58,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-wrap: nowrap;
-  gap: 0;
+  flex-wrap: wrap;
+  gap: 2px 0;
   text-align: center;
-  white-space: nowrap;
-  font-size: 11px;
+  white-space: normal;
+  font-size: 12px;
   font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
+  text-transform: none;
+  letter-spacing: 0.06em;
   color: var(--color-warm-muted);
-  line-height: 1.4;
+  line-height: 1.45;
 }
 .announcement-strip__item {
   display: inline-flex;
@@ -35,14 +75,19 @@
 }
 .announcement-strip__sep {
   color: #9a9182;
-  margin: 0 8px;
+  margin: 0 0.35em;
+  opacity: 0.7;
 }
 .announcement-strip__link {
   color: inherit;
+  font-weight: 500;
   text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
 }
 .announcement-strip__link:hover {
   color: var(--text-primary);
+  text-decoration-thickness: 1.5px;
 }
 
 /* Shopify wraps each header-group member in its own <div id="shopify-section-…">, and a

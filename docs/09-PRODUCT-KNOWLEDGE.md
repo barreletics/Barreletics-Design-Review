@@ -524,6 +524,22 @@ Story page + our color grid (Open / Closed / Outdoor / Coperni). The **Free Peop
 
 ## CROSS-PRODUCT KNOWLEDGE
 
+### Studio pose glossary (website / content) — 2026-09-05
+Andrew letter. Use these names and meanings in collection, PDP, GEO, FAQ, journal, ads. Do **not** assign a sole to a pose. Both soles perform identically.
+
+**Not the same as the site slogan.** “Never slip in Chair Pose” = standing Chair / Utkatasana. **Flat Back Chair (Ski Position)** is a different move. Do not swap the names.
+
+| Pose | Also called | What it is |
+|---|---|---|
+| **Flat Back Chair** | Ski Position · water ski · flat back chair | Barre / Pilates chair staple. Hinge at the hips, flat back parallel to the floor, knees bent, weight in the heels. Often holding a barre or chair for balance. |
+| **Teaser** | — | Hard core work on the Pilates chair (Wunda Chair). Sit with legs extended at 45°, arms reaching forward, then lower the torso and legs toward the floor. |
+| **Seated Hundreds** | — | Sit tall, arms out to the sides, pulse them up and down while the abs stay on. |
+| **Seated Single-Leg Stretch** | — | Sit on the edge of a chair. One leg straight out, opposite knee to chest. Alternate sides. |
+| **Arabesque** | — | Ballet-inspired barre / Pilates hybrid. Stand on one leg, hinge forward, other leg straight behind with a pointed toe. |
+| **Press Down Series** | High Chair press-down | Pilates High Chair sequence. Stand on the pedals and press down — hip strength and balance. |
+
+Source: owner letter 2026-09-05.
+
 ### Manufacturing & Materials
 ```
 - Made in USA — every pair

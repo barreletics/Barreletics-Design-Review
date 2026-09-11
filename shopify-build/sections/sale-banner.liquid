@@ -1,0 +1,67 @@
+{% comment %}
+  Top promo strip — matches live blue Buy 2 / SAVE2 bar.
+  Sits above the cream trust announcement in header-group.
+{% endcomment %}
+
+{% if section.settings.enabled %}
+  <div
+    class="sale-banner"
+    role="region"
+    aria-label="Promotion"
+    style="--sale-banner-bg: {{ section.settings.bg_color | default: '#faf8f6' }}; --sale-banner-color: {{ section.settings.text_color | default: '#1c1916' }};"
+    {{ section.shopify_attributes }}
+  >
+    <div class="sale-banner__inner">
+      {% if section.settings.link_url != blank %}
+        <a href="{{ section.settings.link_url }}" class="sale-banner__text">
+          {{ section.settings.text }}
+        </a>
+      {% else %}
+        <p class="sale-banner__text">{{ section.settings.text }}</p>
+      {% endif %}
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Sale banner",
+  "class": "sale-banner-section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Show sale banner",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text",
+      "default": "Buy 2 save 10% | Use SAVE2"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Optional link"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#458cd9"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sale banner"
+    }
+  ]
+}
+{% endschema %}

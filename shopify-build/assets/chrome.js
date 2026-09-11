@@ -69,13 +69,63 @@
     });
   }
 
+
+  /* Kick muted autoplay videos so browsers don't sit on the native play button. */
+  function initAmbientVideos() {
+    var nodes = document.querySelectorAll('video');
+    if (!nodes.length) return;
+
+    function kick(video) {
+      if (!video || video.hasAttribute('controls')) return;
+      if (video.hasAttribute('data-ambient-kicked') && !video.paused) return;
+      video.muted = true;
+      video.setAttribute('muted', '');
+      video.setAttribute('playsinline', '');
+      video.setAttribute('webkit-playsinline', '');
+      var playPromise = video.play();
+      if (playPromise && typeof playPromise.then === 'function') {
+        playPromise
+          .then(function () { video.setAttribute('data-ambient-kicked', '1'); })
+          .catch(function () { /* autoplay still blocked — overlay CSS hides the button */ });
+      } else {
+        video.setAttribute('data-ambient-kicked', '1');
+      }
+    }
+
+    function watch(video) {
+      if (video.hasAttribute('controls')) return;
+      kick(video);
+      video.addEventListener('loadeddata', function () { kick(video); });
+      video.addEventListener('canplay', function () { kick(video); });
+      document.addEventListener('visibilitychange', function () {
+        if (!document.hidden) kick(video);
+      });
+    }
+
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) kick(entry.target);
+        });
+      }, { rootMargin: '120px 0px', threshold: 0.01 });
+      nodes.forEach(function (video) {
+        watch(video);
+        io.observe(video);
+      });
+    } else {
+      nodes.forEach(watch);
+    }
+  }
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function () {
       initAnnouncement();
       initHeader();
+      initAmbientVideos();
     });
   } else {
     initAnnouncement();
     initHeader();
+    initAmbientVideos();
   }
 })();

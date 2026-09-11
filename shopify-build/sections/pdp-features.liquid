@@ -1,10 +1,10 @@
 {% comment %}
-  PDP Features — Definitive-v19 authority · Title 40/400 · italic Grip · 2×2 grid
+  PDP Features — Definitive-v19 authority · Title 40/400 · italic Grip · 2×2 desk / stacked mobile
 {% endcomment %}
 
 {% liquid
-  assign title_size = section.settings.title_size | default: 'default'
-  assign title_weight = section.settings.title_weight | default: 'default'
+  assign title_size = section.settings.title_size | default: '56'
+  assign title_weight = section.settings.title_weight | default: '400'
   assign body_size = section.settings.body_size | default: 'default'
   assign pad_top = section.settings.pad_top | default: 32
   assign pad_bottom = section.settings.pad_bottom | default: 32
@@ -72,7 +72,7 @@
   }
 
   .pdp-features__header {
-    margin-bottom: 32px;
+    margin-bottom: 24px;
   }
 
   .pdp-features__eyebrow {
@@ -87,31 +87,38 @@
   /* H2 Supporting — 40/400 / 1.1 (Type OS). TE size/weight override via CSS vars */
   .pdp-features__title {
     margin: 0;
-    max-width: 18ch;
+    max-width: 22ch;
     font-size: var(--pf-title-size, var(--type-h2-supporting-size, 40px));
     font-weight: var(--pf-title-weight, var(--type-h2-supporting-weight, 400));
     line-height: var(--type-h2-supporting-leading, 1.1);
     letter-spacing: var(--type-h2-supporting-tracking, -0.02em);
     color: #1c1916;
   }
+  @media (max-width: 768px) {
+    .pdp-features__title {
+      /* Cap phone size when TE locks 56 desk — matches supporting mobile feel */
+      font-size: min(var(--pf-title-size, 40px), 34px);
+      max-width: 16ch;
+    }
+  }
 
   .pdp-features__title strong,
   .pdp-features__title .em {
-    font-weight: 400;
-    font-style: italic;
-    font-size: clamp(28px, 3.5vw, 40px);
-    color: #1c1916;
+    font-weight: inherit;
+    font-style: normal;
+    font-size: inherit;
+    color: inherit;
   }
 
   .pdp-features__grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 28px 56px;
+    gap: 24px 48px;
   }
 
   .pdp-feature {
     border-top: 1px solid #d6cfc0;
-    padding-top: 24px;
+    padding-top: 20px;
   }
 
   .pdp-feature__title {
@@ -181,21 +188,28 @@
       padding: var(--pf-pad-top-m, var(--section-padding-y-mobile)) var(--section-padding-x-mobile) var(--pf-pad-bottom-m, var(--section-padding-y-mobile));
     }
 
+    /* Mobile: stack features — 2-col wraps titles too hard (Andrew trial 2026-09-10) */
     .pdp-features__grid {
-      grid-template-columns: 1fr 1fr;
-      gap: 20px 16px;
+      grid-template-columns: 1fr;
+      gap: 18px;
     }
 
     .pdp-feature {
-      padding-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(28, 25, 22, 0.1);
+    }
+
+    .pdp-feature:first-child {
+      border-top: none;
+      padding-top: 0;
     }
 
     .pdp-feature__title {
-      font-size: 16px;
+      font-size: 17px;
     }
 
     .pdp-feature__desc {
-      font-size: 13px;
+      font-size: 14px;
     }
 
     .pdp-disciplines__strip {
@@ -232,8 +246,8 @@
         { "value": "48", "label": "48px" },
         { "value": "56", "label": "56px" }
       ],
-      "default": "default",
-      "info": "Family is brand Type OS — size only. Default keeps section baseline (40px)."
+      "default": "56",
+      "info": "Family is brand Type OS — size only. Default locked to 56px (PDP statement title)."
     },
     {
       "type": "select",
@@ -246,7 +260,7 @@
         { "value": "600", "label": "600" },
         { "value": "700", "label": "700" }
       ],
-      "default": "default"
+      "default": "400"
     },
     {
       "type": "select",

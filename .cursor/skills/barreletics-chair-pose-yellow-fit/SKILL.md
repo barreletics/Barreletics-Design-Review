@@ -32,7 +32,7 @@ image_fit_mobile: fit
 image_scale: 100
 ```
 
-Do not change other 50/50s to match this size. Chair Pose only.
+PDP frame = Closed standard (phone **550** · desktop **560 min**). `fit` stays inside that frame. Do not change other 50/50s. Chair Pose only. Home `fit` may still resize.
 
 ## Gate
 

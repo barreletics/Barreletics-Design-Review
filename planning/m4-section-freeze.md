@@ -4,7 +4,11 @@
 
 > **Open Sole rhythm + Chair Pose SIGNED 2026-09-09 (Andrew: its fixed. lock it in):** cream = Closed `#FAF8F6` only. Chair Pose `fifty-fifty-lifestyle` = `fit` · **100** · whole photo in the frame. **Never cover.** Never remap to Never loses. Do **not** force other 50/50s to match Chair Pose size.
 
-> **Open Chair Pose yellow LOCKED 2026-09-09:** `fifty-fifty-lifestyle` · **Never slip in chair pose** · `fit` · scale **100**. Frame follows the photo. **Never flip to cover** — that is the loop. Rules: `chair-pose-yellow-fit.mdc` + `use-chair-pose-yellow-lock.mdc`. Skills: `barreletics-chair-pose-yellow-fit` + `barreletics-use-chair-pose-yellow-lock`.
+> **PDP 50/50 frame FORWARD 2026-09-09 (Andrew):** Open + Closed only. Closed is the standard. Phone **550** · desktop **560 min** (text may grow). `cover` / `fit` = image inside that frame. PDP `fit` must **not** collapse the frame. Chair Pose stays `fit` · **100** · never cover. Home / Shop All / Apparel / One pair Done unchanged — Home `fit` may still resize. No JSON / crop change.
+
+> **PDP 50/50 TE controls FORWARD 2026-09-09 (Andrew):** Most size sliders do not work on product pages. Locked in Liquid: phone photo **550** · phone text **104/104** · phone gap **0**. Working: Cover vs Fit · Custom X/Y · Scale · desktop pad / gap. Do not tell Andrew to drag dead sliders. Rule: `pdp-fifty-fifty-te-controls.mdc`.
+
+> **Open 50/50 twins Closed FORWARD 2026-09-09 (Andrew: 2):** Copy Closed working pad/gap per twin. Sock era **64 / 32 / gap 0**. Chair Pose **64 / 80** + keep `fit` · **100**. Commit already **0 / 80**. Think **56 / 60 / 120**. Tired of slipping has no twin — left. Photos / copy / Chair Pose crop kept.
 
 > **Better Than Grippy Socks SIGNED 2026-09-05:** Handle `/pages/best-barre-pilates-yoga-grippy-socks` · Admin suffix **`best-grippy-socks`** · living spine `templates/page.best-grippy-socks.json` on M4 `187144929571`. Stack: **Full-underfoot grip** hero → Shop all 2 rows → value strip → **One pair. Done.** → We outgrew → Never loses → Upgrade → reviews → Juicer → FAQ. TE hero photo + overlay + default tab stay user-owned. Hub mock **SEO v36** stays — never overwrite that HTML. Do not assign this handle to default `page`. Do not swap this URL with Shop All.
 
@@ -951,3 +955,8 @@ Recorded **forward** at the time — **superseded 2026-08-11** by nav #2 lock ab
 3. Add/update row in this registry + CONTRACT §8.
 4. Add `APPROVED / FROZEN` banner comment at top of the section Liquid if useful.
 5. Commit + push; deploy draft only if code changed and ID named.
+
+
+## Forward — 2026-09-10 PDP 50/50 mobile lock
+
+Coperni QA → **global**: phone text pad **96/96**, footprint **560/550**, bg `#faf8f6`. Packshot FIT uses ~**400** phone frame (no fake cream pad). See `planning/fifty-fifty-pdp-mobile-LOCKED.md`. Liquid defaults + all `product*.json` fifty-fifty pads synced. Draft theme `187144929571`.

@@ -1,5 +1,6 @@
 {% comment %}
   Guarantee — white trust grid (Home WORKING 14).
+  LOCKED 2026-09-11 — column type + PDP copy: see .cursor/rules/guarantee-band-LOCKED.mdc
   Columns follow block count (max 4) so 3-up PDP compositions stay centered.
 {% endcomment %}
 
@@ -37,9 +38,9 @@
     <div class="guarantee-inner">
       {% for block in section.blocks %}
         <div class="guarantee-item" {{ block.shopify_attributes }}>
-          <h4>{{ block.settings.title | default: block.settings.text }}</h4>
+          <h4 class="guarantee-item__title">{{ block.settings.title | default: block.settings.text }}</h4>
           {% if block.settings.detail != blank %}
-            <p>{{ block.settings.detail }}</p>
+            <p class="guarantee-item__detail">{{ block.settings.detail }}</p>
           {% endif %}
         </div>
       {% endfor %}
@@ -59,6 +60,7 @@
     padding: var(--section-padding-y, 64px) var(--section-padding-x, 40px);
     background: #fff;
     border-top: 1px solid #d6cfc0;
+    border-bottom: 1px solid #d6cfc0;
     text-align: center;
   }
   #shopify-section-{{ section.id }} .guarantee-head {
@@ -100,10 +102,12 @@
   }
   #shopify-section-{{ section.id }} .guarantee-item:last-child { border-right: none; }
   #shopify-section-{{ section.id }} .guarantee-item h4 {
-    font-size: 14px;
-    font-weight: 700;
+    font-size: clamp(20px, 2.2vw, 26px);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
     color: #1c1916;
-    margin: 0 0 6px;
+    margin: 0 0 10px;
     text-align: center;
   }
   #shopify-section-{{ section.id }} .guarantee-item p {
@@ -161,6 +165,20 @@
     }
     #shopify-section-{{ section.id }} .guarantee-item:last-child { border-bottom: none; }
   }
+
+  #shopify-section-{{ section.id }} .guarantee-item__link {
+    display: inline-block;
+    margin-top: 6px;
+    color: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  #shopify-section-{{ section.id }} .guarantee-item__link:hover {
+    color: var(--text-primary, #1c1916);
+  }
+
 </style>
 
 {% schema %}

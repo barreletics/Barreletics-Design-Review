@@ -124,6 +124,10 @@
       elsif _vg_suffix == 'one-off-open' or _vg_suffix == 'one-off-closed' or _vg_suffix == 'one-off' or _vg_suffix == 'coperni' or _vg_title contains 'coperni' or _vg_handle contains 'coperni' or _vg_title contains 'one-off' or _vg_title contains 'one off' or _vg_handle contains 'one-off'
         if product_oneoffs != blank
           assign default_tab = 'oneoffs'
+        elsif _vg_suffix == 'one-off-open' or _vg_handle contains 'one-off-colors-open' or _vg_title contains 'open sole'
+          assign default_tab = 'open'
+        elsif _vg_suffix == 'one-off-closed' or _vg_handle contains 'one-off-colors-closed' or _vg_title contains 'closed sole'
+          assign default_tab = 'closed'
         else
           assign default_tab = 'closed'
         endif
@@ -745,6 +749,20 @@
   @media (max-width: 768px) {
     #shopify-section-{{ section.id }} .variants-section {
       padding: var(--section-padding-y-mobile) var(--section-padding-x-mobile);
+      /* Flush into the next 50/50 — no cream/white band under See all */
+      padding-bottom: 0;
+    }
+    #shopify-section-{{ section.id }} .variants-see-all {
+      margin-top: 24px;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    #shopify-section-{{ section.id }} .variants-inner {
+      padding-bottom: 0;
+      margin-bottom: 0;
+    }
+    #shopify-section-{{ section.id }}.shopify-section {
+      margin-bottom: 0;
     }
 
     #shopify-section-{{ section.id }} .variants-head {
@@ -759,6 +777,10 @@
       /* A wrapping column flex container sizes its cross axis to the widest item,
          which lets .variants-tabs grow past the viewport instead of scrolling. */
       flex-wrap: nowrap;
+    }
+
+    #shopify-section-{{ section.id }} .variants-tab[data-tab="all"] {
+      display: none;
     }
 
     #shopify-section-{{ section.id }} .variants-tabs {
@@ -917,7 +939,7 @@
       var btn = section.querySelector('[data-variants-see-all]');
       var grid = activeGrid();
       var oneoffs = isOneoffsGrid(grid);
-      var combineAll = {% if template == 'collection' %}true{% else %}false{% endif %};
+      var combineAll = true;
       var visibleGrids = Array.prototype.slice.call(grids()).filter(function (g) {
         return !g.classList.contains('is-grid-hidden');
       });
@@ -989,6 +1011,7 @@
 
     function switchTab(tab) {
       resetVisibleLimit();
+      section.setAttribute('data-active-tab', tab);
       grids().forEach(function (grid) {
         var key = grid.getAttribute('data-grid-tab');
         grid.classList.toggle('is-grid-hidden', !(tab === 'all' || key === tab));
@@ -999,6 +1022,20 @@
         t.setAttribute('aria-selected', on ? 'true' : 'false');
       });
       applyCollapse();
+    }
+
+    function phoneAllHidden() {
+      return window.matchMedia('(max-width: 768px)').matches;
+    }
+
+    function startTab() {
+      var def = section.getAttribute('data-default-tab') || 'closed';
+      if (phoneAllHidden() && def === 'all') {
+        var closed = section.querySelector('.variants-tab[data-tab="closed"]');
+        var open = section.querySelector('.variants-tab[data-tab="open"]');
+        return closed ? 'closed' : (open ? 'open' : def);
+      }
+      return def;
     }
 
     section.querySelectorAll('.variants-tab').forEach(function (tab) {
@@ -1036,15 +1073,20 @@
 
     resetVisibleLimit();
     applySizeFilter();
+    switchTab(startTab());
     applyCollapse();
     window.addEventListener('resize', function () {
       clearTimeout(resizeT);
       resizeT = setTimeout(function () {
+        var cur = section.getAttribute('data-active-tab') || startTab();
+        if (phoneAllHidden() && cur === 'all') {
+          switchTab(startTab());
+        }
         var grid = activeGrid();
         if (isOneoffsGrid(grid)) {
-          var cur = parseInt(section.getAttribute('data-visible-limit') || '0', 10) || 0;
+          var vis = parseInt(section.getAttribute('data-visible-limit') || '0', 10) || 0;
           var min = limitFor();
-          if (cur < min) section.setAttribute('data-visible-limit', String(min));
+          if (vis < min) section.setAttribute('data-visible-limit', String(min));
         }
         applyCollapse();
       }, 120);

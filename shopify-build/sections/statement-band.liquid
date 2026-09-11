@@ -22,6 +22,12 @@
   if region_label == blank
     assign region_label = section.settings.title
   endif
+  assign open_knock_join = false
+  if template.suffix == 'in-studio-template' or template.suffix == 'open-sole'
+    if section.settings.title == 'Let us knock your socks off'
+      assign open_knock_join = true
+    endif
+  endif
 %}
 
 <section
@@ -63,6 +69,14 @@
     border-bottom: 1px solid #e8e2d8;
     color: #1c1916;
   }
+  {% if open_knock_join %}
+  #shopify-section-{{ section.id }} {
+    background: {{ band_bg }};
+  }
+  #shopify-section-{{ section.id }} .statement-band {
+    border: none;
+  }
+  {% endif %}
   #shopify-section-{{ section.id }} .statement-band__inner {
     max-width: {% if title_role == 'display' %}1100px{% else %}820px{% endif %};
     margin: 0 auto;

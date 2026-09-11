@@ -285,7 +285,7 @@ Rinse with warm soapy water after class. Air dry. Non-porous, antimicrobial — 
 
 **Discipline-specific performance:**
 
-**Barre:** Flat back chair, water ski, relevés, seat work, arabesque — every position demands stable footing. Barreletics lock in through the shake.
+**Barre:** Flat Back Chair (Ski Position / water ski), relevés, seat work, arabesque — every position demands stable footing. Barreletics lock in through the shake.
 
 **Reformer Pilates:** Footwork series (toes, arches, heels, tendon stretch), elephant, knee stretches, bridging, pikes, long stretch — equipment demands 360° grip contact.
 
@@ -511,7 +511,7 @@ $74 per pair. 4 payments of $18.50 available. Buy 2, save 15% with code SAVE15.
 Use these exercise names in copy, SEO/GEO sections, FAQ, and journal content. Every name is verified from official sources (IBBFA, Balanced Body, Lagree Fit, Club Pilates).
 
 ### Barre
-**Floor/barre work:** plié, relevé, tendu, arabesque, flat back chair, water ski, narrow V, tuck/pelvic tilt, curtsy lunge, back attitude, battement, dégagé
+**Floor/barre work:** plié, relevé, tendu, arabesque, Flat Back Chair (Ski Position / water ski), narrow V, tuck/pelvic tilt, curtsy lunge, back attitude, battement, dégagé
 **Signature segments:** seat work (donkey kicks, fire hydrants, bridge), thigh work, pretzel, C-curve, fold-over stretch
 **Technique:** isometric holds, pulses, turnout, port de bras, "the shake"
 
@@ -530,6 +530,9 @@ Use these exercise names in copy, SEO/GEO sections, FAQ, and journal content. Ev
 **Common:** roll-down series, push-through (seated/lying), tower, leg spring series, arm spring series
 **Advanced:** parakeet, teaser with springs, monkey, candlestick, inversions, spread eagle
 
+### Pilates Chair (Wunda Chair / Stability Chair / High Chair)
+Teaser, Seated Hundreds, Seated Single-Leg Stretch, Press Down Series, Flat Back Chair (Ski Position), bridging, footwork, pike, push-down
+
 ### Yoga
 **Standing:** mountain pose, warrior I/II/III, tree pose, chair pose, triangle, reverse warrior
 **Floor:** downward dog, upward dog, plank, side plank, bridge, pigeon, cobra, boat pose
@@ -540,8 +543,18 @@ Use these exercise names in copy, SEO/GEO sections, FAQ, and journal content. Ev
 - "Flat back chair, water ski, and relevés at the barre"
 - "Super Lunges, Catfish, and Bear on the Megaformer"
 - "Parakeet and push-through on the Cadillac"
-- "No slipping in flat back chair or water ski"
+- "No slipping in Flat Back Chair or Ski Position"
 - "From warrior pose to downward dog — grip that holds through every flow"
+
+### Pose glossary (website / content) — 2026-09-05
+Owner letter. Full definitions: `docs/09-PRODUCT-KNOWLEDGE.md` → Studio pose glossary. Do not assign a sole to a pose. “Chair Pose” (site slogan) ≠ Flat Back Chair.
+
+- **Flat Back Chair (Ski Position / water ski):** Hinge at the hips, flat back parallel to the floor, knees bent, weight in the heels. Often holding a barre or chair.
+- **Teaser:** Wunda Chair. Legs at 45°, arms reaching forward, then lower torso and legs toward the floor.
+- **Seated Hundreds:** Sit tall, arms out to the sides, pulse up and down, abs on.
+- **Seated Single-Leg Stretch:** Sit on the chair edge. One leg straight, opposite knee to chest. Alternate.
+- **Arabesque:** Stand on one leg, hinge forward, other leg straight behind, pointed toe.
+- **Press Down Series:** Pilates High Chair. Stand on the pedals and press down — hips and balance.
 - "Elephant, knee stretches, and pikes — the long stretch series demands 360° grip"
 
 ---

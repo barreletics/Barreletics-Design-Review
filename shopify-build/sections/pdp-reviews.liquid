@@ -51,12 +51,16 @@
 
   assign photo_count = 0
   assign text_count = 0
+  assign featured_count = 0
   for block in section.blocks
     if block.type == 'photo_review'
       assign photo_count = photo_count | plus: 1
     endif
     if block.type == 'text_review'
       assign text_count = text_count | plus: 1
+    endif
+    if block.type == 'featured_review'
+      assign featured_count = featured_count | plus: 1
     endif
   endfor
 
@@ -114,6 +118,43 @@
       </header>
     {% endif %}
 
+    {% if featured_count > 0 %}
+      {% for block in section.blocks %}
+        {% if block.type == 'featured_review' %}
+          {% liquid
+            assign star_n = block.settings.rating | default: 5
+            if star_n < 1
+              assign star_n = 1
+            endif
+            if star_n > 5
+              assign star_n = 5
+            endif
+          %}
+          <figure class="pdp-reviews__featured" {{ block.shopify_attributes }}>
+            <div class="pdp-reviews__featured-stars" aria-label="{{ star_n }} out of 5 stars">
+              {% for i in (1..5) %}
+                {% if i <= star_n %}★{% else %}<span class="pdp-reviews__star--empty">☆</span>{% endif %}
+              {% endfor %}
+            </div>
+            {% if block.settings.body != blank %}
+              <blockquote class="pdp-reviews__featured-quote">“{{ block.settings.body | strip | remove: '"' | remove: '“' | remove: '”' }}”</blockquote>
+            {% endif %}
+            {% if block.settings.author != blank or block.settings.location != blank %}
+              <figcaption class="pdp-reviews__featured-meta">
+                {% if block.settings.author != blank %}
+                  <span class="pdp-reviews__featured-author">{{ block.settings.author }}</span>
+                {% endif %}
+                {% if block.settings.location != blank %}
+                  <span class="pdp-reviews__featured-loc">{{ block.settings.location }}</span>
+                {% endif %}
+              </figcaption>
+            {% endif %}
+          </figure>
+          {% break %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
     {% if show_photo and photo_count > 0 %}
       <div class="pdp-reviews__photo-grid">
         {% assign shown = 0 %}
@@ -161,6 +202,9 @@
                     {% if i <= star_n %}★{% else %}<span class="pdp-reviews__star--empty">☆</span>{% endif %}
                   {% endfor %}
                 </div>
+                {% if block.settings.title != blank %}
+                  <p class="pdp-reviews__photo-title">{{ block.settings.title | escape }}</p>
+                {% endif %}
                 {% if block.settings.body != blank %}
                   <p class="pdp-reviews__photo-body">“{{ block.settings.body | strip | remove: '"' | remove: '“' | remove: '”' }}”</p>
                 {% endif %}
@@ -203,6 +247,9 @@
                   {% if i <= star_n %}★{% else %}<span class="pdp-reviews__star--empty">☆</span>{% endif %}
                 {% endfor %}
               </div>
+              {% if block.settings.title != blank %}
+                <p class="pdp-reviews__text-title">{{ block.settings.title | escape }}</p>
+              {% endif %}
               {% if block.settings.body != blank %}
                 <p class="pdp-reviews__text-body">“{{ block.settings.body | strip | remove: '"' | remove: '“' | remove: '”' }}”</p>
               {% endif %}
@@ -470,8 +517,8 @@
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: #8a8a8a;
-    text-align: center;
-    margin: 48px 0 24px;
+    text-align: left;
+    margin: 20px 0 12px;
   }
 
   /* ---- Curated text cards (6) — original social-proof community row ------ */
@@ -536,6 +583,71 @@
     font-size: 12px;
     font-weight: 400;
     color: #8a8a8a;
+  }
+
+
+  /* ---- Featured quote (above cards) ------------------------------------ */
+  .pdp-reviews__featured {
+    margin: 0 0 24px;
+    padding: 16px 20px;
+    background: #fff;
+    border: 1px solid #e6e6e6;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 720px;
+    margin-inline: auto;
+  }
+  .pdp-reviews__featured-stars {
+    color: #d4af37;
+    font-size: 14px;
+    letter-spacing: 0.12em;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .pdp-reviews__featured-quote {
+    margin: 0;
+    font-family: inherit;
+    font-size: clamp(15px, 1.6vw, 18px);
+    font-weight: 500;
+    font-style: italic;
+    line-height: 1.4;
+    color: #1c1916;
+    quotes: none;
+  }
+  .pdp-reviews__featured-meta {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0;
+    font-size: 13px;
+  }
+  .pdp-reviews__featured-author {
+    font-weight: 700;
+    font-style: normal;
+    color: #1c1916;
+  }
+  .pdp-reviews__featured-loc {
+    color: #8a8a8a;
+    font-weight: 400;
+    font-style: italic;
+  }
+  .pdp-reviews__featured-author + .pdp-reviews__featured-loc::before {
+    content: "·";
+    margin: 0 8px 0 6px;
+    font-style: normal;
+    color: #c4c0ba;
+  }
+  @media (max-width: 768px) {
+    .pdp-reviews__featured {
+      padding: 22px 18px;
+      margin-bottom: 24px;
+      border-radius: 12px;
+    }
+    .pdp-reviews__featured-quote {
+      font-size: 17px;
+    }
   }
 
   /* ---- Judge.me skin ----------------------------------------------------- */
@@ -780,7 +892,8 @@
     }
 
     .pdp-reviews__community-label {
-      margin: 24px 0 20px;
+      margin: 16px 0 10px;
+      text-align: left;
     }
     {% if template.name == 'product' %}
     #shopify-section-{{ section.id }} .pdp-reviews__text-card:nth-child(n + 5) {
@@ -1011,7 +1124,42 @@
     { "type": "checkbox", "id": "hide_on_desktop", "label": "Hide on desktop", "default": false }
   ],
   "blocks": [
+    
     {
+      "type": "featured_review",
+      "name": "Featured quote",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Stars",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Quote",
+          "default": "Where have you been all my life? These grippy shoes have absolutely changed my Pilates practice."
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Name",
+          "default": "Verified buyer"
+        },
+        {
+          "type": "text",
+          "id": "location",
+          "label": "Detail",
+          "default": "Pilates"
+        }
+      ]
+    },
+{
       "type": "photo_review",
       "name": "Photo review card",
       "limit": 3,
@@ -1027,6 +1175,12 @@
           "id": "image_url",
           "label": "Photo URL fallback",
           "info": "CDN URL when Theme Editor image picker is empty (e.g. Outdoor water/beach product shots)."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Hook title",
+          "info": "Optional short hook above the quote. Leave blank to hide. Do not use product-name fluff."
         },
         {
           "type": "textarea",
@@ -1052,6 +1206,12 @@
       "name": "Text review",
       "limit": 6,
       "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Hook title",
+          "info": "Optional short hook above the quote. Leave blank to hide."
+        },
         {
           "type": "textarea",
           "id": "body",

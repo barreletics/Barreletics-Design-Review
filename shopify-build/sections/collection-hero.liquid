@@ -10,9 +10,18 @@
   assign image = section.settings.image
   assign image_url = section.settings.image_url
   assign image_mobile = section.settings.image_mobile
-  assign mobile_crop_enable = section.settings.mobile_crop_enable
-  assign media_height_mobile = section.settings.media_height_mobile | default: 320
-  assign media_fit_mobile = section.settings.media_fit_mobile | default: 'cover'
+  assign text_spacing_mobile = section.settings.text_spacing_mobile | default: 36
+  assign text_height_mobile = section.settings.text_height_mobile | default: 0
+  assign aspect_ratio_mobile = section.settings.aspect_ratio_mobile | default: 'natural'
+  assign image_fit_mobile = section.settings.image_fit_mobile | default: 'cover'
+  assign video_fit_mobile = section.settings.video_fit_mobile | default: 'cover'
+  comment
+    Collection hero mobile default is the photo’s own ratio — not 50/50 3:4.
+  endcomment
+  assign qa_frame = false
+  if template == 'collection'
+    assign qa_frame = true
+  endif
   assign video = section.settings.video
   assign video_url = section.settings.video_url
   assign image_alt = section.settings.image_alt | default: section.settings.title
@@ -83,7 +92,7 @@
   </div>
 
   {% if has_media %}
-    <div class="coll-hero__media" data-media-type="{{ media_type }}" data-media-fill="{{ media_fill }}">
+    <div class="coll-hero__media" data-media-type="{{ media_type }}" data-media-fill="{{ media_fill }}" data-mobile-ratio="{{ aspect_ratio_mobile }}">
       {%- if media_type == 'video' -%}
         {%- if video != blank -%}
           {{
@@ -93,6 +102,7 @@
               autoplay: true,
               loop: true,
               muted: true,
+              controls: false,
               playsinline: true,
               class: 'coll-hero__video'
           }}
@@ -448,7 +458,7 @@
 
   @media (max-width: 768px) {
     #shopify-section-{{ section.id }} .coll-hero {
-      padding: 36px 20px;
+      padding: {{ text_spacing_mobile }}px 20px {{ text_spacing_mobile }}px;
     }
     #shopify-section-{{ section.id }} .coll-hero--split {
       grid-template-columns: 1fr;
@@ -458,30 +468,148 @@
       gap: 0;
     }
     #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="bleed"] .coll-hero__copy {
-      padding: 36px 20px;
+      padding: {{ text_spacing_mobile }}px 20px {{ text_spacing_mobile }}px;
+      overflow: visible;
     }
+    {%- if qa_frame -%}
+    {%- comment -%} Mobile aspect ratio dropdown → wrapper. data-mobile-ratio = section.settings.aspect_ratio_mobile. {%- endcomment -%}
+    #shopify-section-{{ section.id }} .coll-hero--split .coll-hero__media,
+    #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="inset"] .coll-hero__media,
+    #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="bleed"] .coll-hero__media,
+    #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="column"] .coll-hero__media {
+      width: 100%;
+      height: auto;
+      min-height: 0;
+      max-height: none;
+      position: relative;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+    }
+    #shopify-section-{{ section.id }} .coll-hero--split .coll-hero__media[data-mobile-ratio="square"],
+    #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="inset"] .coll-hero__media[data-mobile-ratio="square"],
+    #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="bleed"] .coll-hero__media[data-mobile-ratio="square"],
+    #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="column"] .coll-hero__media[data-mobile-ratio="square"] {
+      aspect-ratio: 1 / 1;
+      height: auto;
+      min-height: 0;
+      max-height: none;
+    }
+    #shopify-section-{{ section.id }} .coll-hero--split .coll-hero__media[data-mobile-ratio="portrait"],
+    #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="inset"] .coll-hero__media[data-mobile-ratio="portrait"],
+    #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="bleed"] .coll-hero__media[data-mobile-ratio="portrait"],
+    #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="column"] .coll-hero__media[data-mobile-ratio="portrait"] {
+      aspect-ratio: 3 / 4;
+      height: auto;
+      min-height: 0;
+      max-height: none;
+    }
+    #shopify-section-{{ section.id }} .coll-hero--split .coll-hero__media[data-mobile-ratio="landscape"],
+    #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="inset"] .coll-hero__media[data-mobile-ratio="landscape"],
+    #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="bleed"] .coll-hero__media[data-mobile-ratio="landscape"],
+    #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="column"] .coll-hero__media[data-mobile-ratio="landscape"] {
+      aspect-ratio: 16 / 9;
+      height: auto;
+      min-height: 0;
+      max-height: none;
+    }
+    #shopify-section-{{ section.id }} .coll-hero--split .coll-hero__media[data-mobile-ratio="widescreen"],
+    #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="inset"] .coll-hero__media[data-mobile-ratio="widescreen"],
+    #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="bleed"] .coll-hero__media[data-mobile-ratio="widescreen"],
+    #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="column"] .coll-hero__media[data-mobile-ratio="widescreen"] {
+      aspect-ratio: 21 / 9;
+      height: auto;
+      min-height: 0;
+      max-height: none;
+    }
+    #shopify-section-{{ section.id }} .coll-hero--split .coll-hero__media[data-mobile-ratio="natural"] {
+      aspect-ratio: auto;
+    }
+    #shopify-section-{{ section.id }} .coll-hero__media[data-mobile-ratio="square"] picture,
+    #shopify-section-{{ section.id }} .coll-hero__media[data-mobile-ratio="portrait"] picture,
+    #shopify-section-{{ section.id }} .coll-hero__media[data-mobile-ratio="landscape"] picture,
+    #shopify-section-{{ section.id }} .coll-hero__media[data-mobile-ratio="widescreen"] picture,
+    #shopify-section-{{ section.id }} .coll-hero__media[data-mobile-ratio="square"] img,
+    #shopify-section-{{ section.id }} .coll-hero__media[data-mobile-ratio="portrait"] img,
+    #shopify-section-{{ section.id }} .coll-hero__media[data-mobile-ratio="landscape"] img,
+    #shopify-section-{{ section.id }} .coll-hero__media[data-mobile-ratio="widescreen"] img,
+    #shopify-section-{{ section.id }} .coll-hero__media[data-mobile-ratio="square"] video,
+    #shopify-section-{{ section.id }} .coll-hero__media[data-mobile-ratio="portrait"] video,
+    #shopify-section-{{ section.id }} .coll-hero__media[data-mobile-ratio="landscape"] video,
+    #shopify-section-{{ section.id }} .coll-hero__media[data-mobile-ratio="widescreen"] video,
+    #shopify-section-{{ section.id }} .coll-hero__media[data-mobile-ratio="square"] .coll-hero__video,
+    #shopify-section-{{ section.id }} .coll-hero__media[data-mobile-ratio="portrait"] .coll-hero__video,
+    #shopify-section-{{ section.id }} .coll-hero__media[data-mobile-ratio="landscape"] .coll-hero__video,
+    #shopify-section-{{ section.id }} .coll-hero__media[data-mobile-ratio="widescreen"] .coll-hero__video {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      inset: 0;
+      display: block;
+      object-position: center;
+      transform: none;
+      max-height: none;
+    }
+    #shopify-section-{{ section.id }} .coll-hero__media[data-mobile-ratio="square"] img,
+    #shopify-section-{{ section.id }} .coll-hero__media[data-mobile-ratio="portrait"] img,
+    #shopify-section-{{ section.id }} .coll-hero__media[data-mobile-ratio="landscape"] img,
+    #shopify-section-{{ section.id }} .coll-hero__media[data-mobile-ratio="widescreen"] img {
+      object-fit: {{ image_fit_mobile }};
+    }
+    #shopify-section-{{ section.id }} .coll-hero__media[data-mobile-ratio="square"] video,
+    #shopify-section-{{ section.id }} .coll-hero__media[data-mobile-ratio="portrait"] video,
+    #shopify-section-{{ section.id }} .coll-hero__media[data-mobile-ratio="landscape"] video,
+    #shopify-section-{{ section.id }} .coll-hero__media[data-mobile-ratio="widescreen"] video,
+    #shopify-section-{{ section.id }} .coll-hero__media[data-mobile-ratio="square"] .coll-hero__video,
+    #shopify-section-{{ section.id }} .coll-hero__media[data-mobile-ratio="portrait"] .coll-hero__video,
+    #shopify-section-{{ section.id }} .coll-hero__media[data-mobile-ratio="landscape"] .coll-hero__video,
+    #shopify-section-{{ section.id }} .coll-hero__media[data-mobile-ratio="widescreen"] .coll-hero__video {
+      object-fit: {{ video_fit_mobile }};
+    }
+    #shopify-section-{{ section.id }} .coll-hero__media[data-mobile-ratio="natural"] picture {
+      display: block;
+      width: 100%;
+      height: auto;
+      position: static;
+    }
+    #shopify-section-{{ section.id }} .coll-hero__media[data-mobile-ratio="natural"] img,
+    #shopify-section-{{ section.id }} .coll-hero__media[data-mobile-ratio="natural"] video,
+    #shopify-section-{{ section.id }} .coll-hero__media[data-mobile-ratio="natural"] .coll-hero__video {
+      width: 100%;
+      height: auto;
+      position: static;
+      inset: auto;
+      display: block;
+      object-fit: unset;
+      transform: none;
+      max-height: none;
+    }
+    {%- if text_height_mobile > 0 %}
+    /* Text frame grows independently. Type size untouched. */
+    #shopify-section-{{ section.id }} .coll-hero--split .coll-hero__copy,
+    #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="bleed"] .coll-hero__copy {
+      min-height: {{ text_height_mobile }}px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    {%- endif %}
+    {%- else -%}
+    /* Existing behavior — every non-collection template */
     #shopify-section-{{ section.id }} .coll-hero--split .coll-hero__media {
       min-height: 0;
       max-height: 52vh;
+      overflow: hidden;
     }
     #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="bleed"] .coll-hero__media {
       max-height: none;
       min-height: 52vw;
+      overflow: hidden;
     }
+    {%- endif -%}
     #shopify-section-{{ section.id }} .sole-cards {
       grid-template-columns: 1fr;
     }
-    {%- if mobile_crop_enable -%}
-    #shopify-section-{{ section.id }} .coll-hero--split .coll-hero__media,
-    #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="bleed"] .coll-hero__media {
-      min-height: {{ media_height_mobile }}px;
-      max-height: none;
-      height: {{ media_height_mobile }}px;
-    }
-    #shopify-section-{{ section.id }} .coll-hero__media img {
-      object-fit: {{ media_fit_mobile }};
-    }
-    {%- endif -%}
   }
 </style>
 
@@ -530,30 +658,65 @@
     { "type": "image_picker", "id": "image", "label": "Desktop image" },
     { "type": "text", "id": "image_url", "label": "Image URL fallback", "info": "Used when Shopify image is empty. Leave blank for text-only hero (e.g. Apparel)." },
     { "type": "text", "id": "image_alt", "label": "Image alt" },
-    { "type": "header", "content": "Mobile image" },
+    { "type": "header", "content": "Mobile (phone only)" },
     { "type": "image_picker", "id": "image_mobile", "label": "Mobile image", "info": "Optional. Leave blank to keep the desktop image on phone." },
-    { "type": "checkbox", "id": "mobile_crop_enable", "label": "Enable custom mobile crop / size", "default": false, "info": "Off keeps the current phone height: 52vw bleed, 52vh inset/column." },
     {
-      "type": "range",
-      "id": "media_height_mobile",
-      "label": "Mobile image height",
-      "min": 180,
-      "max": 640,
-      "step": 10,
-      "unit": "px",
-      "default": 320,
-      "info": "Used only when custom mobile crop is on."
+      "type": "select",
+      "id": "aspect_ratio_mobile",
+      "label": "Aspect ratio mobile",
+      "default": "natural",
+      "options": [
+        { "value": "natural", "label": "Natural — photo’s own ratio" },
+        { "value": "square", "label": "Square" },
+        { "value": "portrait", "label": "Portrait" },
+        { "value": "landscape", "label": "Landscape" },
+        { "value": "widescreen", "label": "Widescreen" }
+      ],
+      "info": "Hero default is natural. Portrait 3:4 is for 50/50 cards, not this hero."
     },
     {
       "type": "select",
-      "id": "media_fit_mobile",
-      "label": "Mobile image fit",
+      "id": "image_fit_mobile",
+      "label": "Image fit mobile",
       "default": "cover",
       "options": [
         { "value": "cover", "label": "Cover" },
-        { "value": "contain", "label": "Contain" }
-      ],
-      "info": "Used only when custom mobile crop is on. Default Cover matches today."
+        { "value": "contain", "label": "Contain" },
+        { "value": "fill", "label": "Fill" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "video_fit_mobile",
+      "label": "Video fit mobile",
+      "default": "cover",
+      "options": [
+        { "value": "cover", "label": "Cover" },
+        { "value": "contain", "label": "Contain" },
+        { "value": "fill", "label": "Fill" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "text_height_mobile",
+      "label": "Mobile text frame height",
+      "min": 0,
+      "max": 700,
+      "step": 10,
+      "unit": "px",
+      "default": 0,
+      "info": "0 = fits the copy. Drag to make the text frame taller. Type size never changes."
+    },
+    {
+      "type": "range",
+      "id": "text_spacing_mobile",
+      "label": "Mobile text spacing",
+      "min": 16,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 36,
+      "info": "Higher = taller text area. Left/right stays 20px."
     },
     { "type": "video", "id": "video", "label": "Shopify video" },
     { "type": "text", "id": "video_url", "label": "Video URL (mp4)", "info": "Used when Media type = Video and Shopify video is empty." },

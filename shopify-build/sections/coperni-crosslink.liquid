@@ -40,9 +40,12 @@
     <div class="csb-bg" style="background-image:url('{{ bg_url | escape }}');"></div>
     <div class="csb-shoe" style="background-image:url('{{ shoe_url | escape }}');"></div>
     <div
-      class="csb-fade"
+      class="csb-fade csb-fade--desk"
       style="background:linear-gradient(to right, rgba(0,0,0,{{ overlay_f }}) 0%, rgba(0,0,0,{{ overlay_mid }}) 45%, rgba(0,0,0,0) 70%);"
-      data-mob-overlay="{{ overlay_mob_f }}"
+    ></div>
+    <div
+      class="csb-fade csb-fade--mob"
+      style="background:linear-gradient(to top, rgba(0,0,0,{{ overlay_f }}) 0%, rgba(0,0,0,{{ overlay_mid }}) 55%, rgba(0,0,0,{{ overlay_mob_f }}) 100%);"
     ></div>
     <div class="csb-content">
       {% if section.settings.eyebrow != blank %}
@@ -89,12 +92,21 @@
     top: 0;
     right: 0;
     bottom: 0;
-    width: 60%;
+    width: 62%;
     background-color: #f2f0ed;
-    background-size: var(--csb-shoe-size, 100%);
+    /* shoe_size / shoe_position_y were unused — wire them so desktop can show full figure */
+    background-size: cover;
     background-repeat: no-repeat;
-    background-position: center var(--csb-shoe-y, 0%);
+    background-position: center var(--csb-shoe-y, 50%);
     z-index: 1;
+  }
+  @media (min-width: 750px) {
+    #shopify-section-{{ section.id }} .csb-shoe {
+      width: 58%;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center bottom;
+    }
   }
   #shopify-section-{{ section.id }} .csb-fade {
     position: absolute;
@@ -169,42 +181,89 @@
     color: #fff;
     margin: 0;
   }
+  /* Desktop fade only on desk; mobile uses bottom-up dark veil */
+  #shopify-section-{{ section.id }} .csb-fade--mob { display: none; }
+  @media (min-width: 750px) {
+    #shopify-section-{{ section.id }} .csb-fade--mob { display: none; }
+    #shopify-section-{{ section.id }} .csb-fade--desk { display: block; }
+  }
+  /* Mobile: no split shoe — yellow + dark veil + white type (same as desktop look) */
   @media (max-width: 749px) {
-    #shopify-section-{{ section.id }} .csb { height: 420px !important; }
-    #shopify-section-{{ section.id }} .csb-shoe {
-      width: 55%;
-      background-size: cover;
-      background-position: center top;
+    #shopify-section-{{ section.id }} .csb {
+      height: auto !important;
+      min-height: 58vh;
+      padding: 0;
+      overflow: hidden;
     }
-    #shopify-section-{{ section.id }} .csb-fade {
-      background: rgba(0, 0, 0, {{ overlay_mob_f }}) !important;
+    #shopify-section-{{ section.id }} .csb-shoe {
+      display: none;
+    }
+    #shopify-section-{{ section.id }} .csb-fade--desk {
+      display: none;
+    }
+    #shopify-section-{{ section.id }} .csb-fade--mob {
+      display: block;
+      inset: 0;
+      z-index: 2;
+    }
+    #shopify-section-{{ section.id }} .csb-bg {
+      opacity: 1;
     }
     #shopify-section-{{ section.id }} .csb-content {
-      width: 62%;
-      padding: 16px 12px 20px 20px;
+      position: relative;
+      width: 100%;
+      max-width: 100%;
+      min-height: 58vh;
+      inset: auto;
+      padding: 56px 28px 52px;
+      justify-content: flex-end;
+      box-sizing: border-box;
     }
     #shopify-section-{{ section.id }} .csb-eye {
-      font-size: 7px;
-      letter-spacing: 0.16em;
-      margin-bottom: 8px;
+      font-size: 9px;
+      letter-spacing: 0.26em;
+      margin: 0 0 14px;
+      color: #fff;
     }
     #shopify-section-{{ section.id }} .csb-title {
-      font-size: var(--type-h2-display-size-mobile);
-      margin-bottom: 8px;
+      font-family: inherit;
+      font-size: clamp(28px, 8vw, 36px);
+      font-weight: var(--type-h2-display-weight);
+      font-style: normal;
+      line-height: var(--type-h2-display-leading);
+      letter-spacing: var(--type-h2-display-tracking);
+      margin: 0 0 16px;
+      color: #fff;
+      max-width: 100%;
+      overflow-wrap: break-word;
     }
     #shopify-section-{{ section.id }} .csb-sub {
-      font-size: 11px;
-      margin-bottom: 14px;
-      line-height: 1.5;
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: clamp(14px, 3.8vw, 17px);
+      font-style: italic;
+      font-weight: 400;
+      margin: 0 0 24px;
+      line-height: 1.6;
+      color: #fff;
+      max-width: 100%;
     }
     #shopify-section-{{ section.id }} .csb-btn {
-      padding: 10px 16px;
-      font-size: 8px;
-      margin-bottom: 12px;
+      padding: 14px 32px;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      margin: 0 0 16px;
+      background: #fff;
+      color: #1c1916;
+    }
+    #shopify-section-{{ section.id }} .csb-btn:hover {
+      background: #c45c3f;
+      color: #fff;
     }
     #shopify-section-{{ section.id }} .csb-meta {
-      font-size: 6px;
-      letter-spacing: 0.12em;
+      font-size: 8px;
+      letter-spacing: 0.16em;
+      color: #fff;
+      margin: 0;
     }
   }
 </style>
@@ -250,8 +309,8 @@
       "default": "https://cdn.shopify.com/s/files/1/0045/0612/4391/files/Copreni_Final_More_grey.png?v=1774119812"
     },
     { "type": "header", "content": "Layout" },
-    { "type": "range", "id": "banner_height", "label": "Banner height", "min": 300, "max": 700, "step": 10, "unit": "px", "default": 480 },
-    { "type": "range", "id": "shoe_size", "label": "Shoe image size", "min": 50, "max": 120, "step": 5, "unit": "%", "default": 100 },
+    { "type": "range", "id": "banner_height", "label": "Banner height (desktop)", "min": 300, "max": 1200, "step": 10, "unit": "px", "default": 480, "info": "Desktop only — mobile stays ~420px so the collab band keeps working on phones." },
+    { "type": "range", "id": "shoe_size", "label": "Product image size", "min": 50, "max": 140, "step": 5, "unit": "%", "default": 100, "info": "Desktop. Lower can help show full figure when height is already maxed; higher zooms in." },
     { "type": "range", "id": "shoe_position_y", "label": "Shoe vertical position", "min": 0, "max": 100, "step": 5, "unit": "%", "default": 0 },
     { "type": "range", "id": "overlay_opacity", "label": "Desktop overlay strength", "min": 0, "max": 80, "step": 5, "unit": "%", "default": 55 },
     { "type": "range", "id": "overlay_opacity_mobile", "label": "Mobile overlay strength", "min": 0, "max": 80, "step": 5, "unit": "%", "default": 40 },

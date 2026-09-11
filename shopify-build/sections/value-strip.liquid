@@ -27,9 +27,14 @@
       {% assign short_i = 0 %}
       {% for block in section.blocks %}
         {% if block.settings.text != blank and block.settings.show_on_mobile != false %}
-          {% if short_i > 0 %}<span class="value-strip__sep" aria-hidden="true"> · </span>{% endif %}
-          <span class="value-strip__text">{{ block.settings.text }}</span>
           {% assign short_i = short_i | plus: 1 %}
+          <span class="value-strip__item">
+            <span class="value-strip__text">{{ block.settings.text }}</span>
+            <span class="value-strip__sep" aria-hidden="true"> · </span>
+          </span>
+          {% if short_i == 2 %}
+            <span class="value-strip__break" aria-hidden="true"></span>
+          {% endif %}
         {% endif %}
       {% endfor %}
     </span>
@@ -67,7 +72,27 @@
     }
     .value-strip { white-space: normal; }
     .value-strip__full { display: none; }
-    .value-strip__short { display: inline; }
+    .value-strip__short {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      row-gap: 8px;
+    }
+    .value-strip__item {
+      display: inline-flex;
+      align-items: center;
+      white-space: nowrap;
+    }
+    .value-strip__item:last-of-type .value-strip__sep,
+    .value-strip__item:nth-of-type(2) .value-strip__sep {
+      display: none;
+    }
+    .value-strip__break {
+      flex-basis: 100%;
+      width: 100%;
+      height: 0;
+    }
   }
 </style>
 
