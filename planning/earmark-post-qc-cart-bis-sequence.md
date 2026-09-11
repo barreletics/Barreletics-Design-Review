@@ -9,9 +9,9 @@
 4. **Drawer upsell** — do before live if bandwidth; otherwise soft-launch immediately after (not a hard blocker if meter + drawer are solid)
 
 ## After go-live
-1. Back-in-stock notify: theme form + **Zapier** waitlist + inventory trigger + email (`earmark-back-in-stock-notify.md`)
+1. Back-in-stock notify: theme form + Shopify waitlist + **Shopify Flow** + **Shopify Email** (`earmark-back-in-stock-notify.md`) — **no Zapier, no Klaviyo**
 2. Upsell polish / more products / discount tuning if deferred
 3. Help Scout / ManyChat / Tidio returns copy; live Admin refund/shipping policies if not done at desktop before launch
 
 ## Opinion snapshot
-Cart **meter + drawer hygiene = before live**. Upsell = strongly prefer before live but acceptable right after. BIS + Zapier = after live.
+Cart **meter + drawer hygiene = before live**. Upsell = strongly prefer before live but acceptable right after. BIS + Flow = after live.
