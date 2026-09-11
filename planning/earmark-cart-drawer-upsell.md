@@ -1,22 +1,22 @@
-# Earmark — Cart drawer upsell (no app)
+# Earmark — Cart drawer upsell + free-shipping meter (no apps)
 
-**Status:** TODO after QC (parked 2026-09-11). Andrew approved direction.
+**Status:** Prefer **before go-live** for meter/app cleanup; upsell can be before or soft-launch after. Parked 2026-09-11.
+
+## Timing (Andrew + recommendation)
+| Item | When | Why |
+| --- | --- | --- |
+| Remove free-shipping **meter app** | **Before live** | Conflicts with our side cart; launch on one meter only |
+| QC theme shipping meter (`cart.total_price` post-discount / SAVE2) | **Before live** | Launch blocker if wrong |
+| Drawer upsell UI + Shopify automatic discount | **Before live if easy**, else right after | Conversion win; safer to ship on draft before Brian promotes |
+| Fancy upsell rules / A-B | After live | Not needed for launch |
 
 ## Goal
-Native upsells inside **our** side cart (`snippets/cart-drawer.liquid` + `assets/cart.js`) — not Shopify’s default drawer, not an upsell app.
-
-## Product idea
-When cart is open, offer add-on items (tee, yoga pants, another pair). Optional: **10% off the added item** via a real Shopify automatic discount (theme cannot invent checkout prices).
+Native upsells in **our** side cart + theme free-shipping meter. No upsell app, no meter app.
 
 ## Build split
-1. **Theme UI** — drawer strip: image, title, price, one-tap Add; refresh drawer + shipping meter after add.
-2. **Shopify Discounts (Admin)** — automatic rule for the offer (e.g. 10% off apparel when Skins in cart, or specific product IDs). Must coexist with SAVE2.
-3. **QC** — post-discount free-shipping meter still correct; no double-app meters.
-
-## Do NOT
-- Install an upsell / cart-drawer app for this
-- Depend on the free-shipping meter app (removing after QC; use theme meter)
+1. Theme UI in `cart-drawer` + `cart.js`
+2. Shopify automatic discount for any “10% off add-on”
+3. QC with SAVE2 + shipping threshold
 
 ## Related
-- Theme meter already uses `cart.total_price` (after discounts)
-- Full `/cart` has generic recommendations section — drawer upsell is separate, curated
+- BIS / Zapier: `planning/earmark-back-in-stock-notify.md` (after live)

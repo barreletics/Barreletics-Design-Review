@@ -847,3 +847,10 @@ TODO when Andrew is at desktop. Draft HTML in `planning/draft-shopify-*.html`. E
 - **Back in stock:** no Klaviyo. Theme form + Shopify waitlist (customer metafield/metaobject or tags) + Flow + Shopify Email (preferred). Earmark: `planning/earmark-back-in-stock-notify.md`.
 - Free-shipping meter stays theme-native (`cart.total_price` post-discount); meter app removed after QC.
 
+## 2026-09-11 — Sequence: cart before live; BIS+Zapier after
+
+- Free-shipping meter app off + theme meter QC **before live**
+- Drawer upsell: prefer before live; OK soft-launch after if needed
+- BIS: theme form + **Zapier** waitlist/send **after live** (no Klaviyo)
+- See `planning/earmark-post-qc-cart-bis-sequence.md`
+
