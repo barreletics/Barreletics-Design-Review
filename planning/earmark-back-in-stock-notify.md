@@ -1,30 +1,46 @@
-# Earmark — Email me when back in stock (no dedicated BIS app if possible)
+# Earmark — Email me when back in stock (no Klaviyo)
 
-**Status:** TODO / decide stack (parked 2026-09-11). Andrew asked if we can build ourselves.
+**Status:** TODO / decide stack (updated 2026-09-11).  
+**Andrew:** We do **not** use Klaviyo (trial only; not part of the stack). Prefer building without a dedicated BIS app if possible.
 
 ## Goal
-On OOS variants (PDP buy box / size pills): **Notify me when in stock** — capture email, email when that variant restocks.
+OOS variant on PDP → **Notify me when in stock** → capture email → email that person when *that* variant restocks.
 
-## What theme can do alone
-- Show the form when variant is sold out
-- Validate email + variant id
-- Submit somewhere
+## Theme vs backend
+| Layer | Who | What |
+| --- | --- | --- |
+| UI | Theme (us) | Sold-out → form (email + variant id); success state |
+| Store waitlist | Shopify | Where signups live (see workflow below) |
+| Detect restock | Shopify Flow (or lightweight custom) | Inventory 0 → >0 for that variant |
+| Send email | Shopify Email (or transactional ESP you already pay for) | “It’s back” + PDP link |
 
-Theme **cannot** by itself watch inventory and send email. Needs a backend.
+Theme alone cannot watch inventory or send mail.
 
-## Preferred paths (lightest first)
-1. **Klaviyo Back in Stock** (likely best if lifecycle email already on Klaviyo) — theme form → Klaviyo; they send on restock. Barreletics Email sibling owns lifecycle; coordinate there.
-2. **Shopify Flow + customer / metaobject waitlist** — more DIY; workable on higher plans; more glue.
-3. **Custom** webhook `inventory_levels/update` + store waitlist + send via ESP — heaviest; only if 1–2 fail.
+## Recommended workflow (no Klaviyo, no BIS app)
 
-## Do NOT (unless Andrew insists)
-- Another single-purpose BIS app if Klaviyo already covers it
-- Fake “we’ll email you” with no connected ESP
+### A — Preferred: Shopify-native waitlist
+1. **PDP form** (buy box): email + `variant_id` (+ product handle).
+2. **On submit:** create/find Customer by email; write waitlist entry, e.g.:
+   - Customer metafield list / metaobject `bis_waitlist` rows (`email`, `variant_id`, `product_url`, `created_at`), **or**
+   - Tag pattern `bis:<variant_id>` on the customer (simpler; messier at scale).
+3. **Shopify Flow:** trigger when inventory for a variant goes from 0 to available.
+4. **Flow action:** find waitlist rows/tags for that `variant_id` → send **Shopify Email** (or Admin notification → manual only as fallback) with deep link to the PDP/variant.
+5. **Cleanup:** remove that waitlist entry / tag after send (or after N days).
+
+Needs: Shopify Email (or another send channel Flow can use) + Flow. Confirm plan includes Flow + Shopify Email before building.
+
+### B — Fallback if Flow/Email missing
+- Form → webhook to a tiny automation (Make/Zapier) → Sheet + “send Gmail/transactional when inventory webhook fires.” More glue, still no Klaviyo/BIS app.
+- Or one focused BIS app only if A/B are blocked — last resort.
+
+### C — Not preferred
+- ManyChat/Tidio as primary BIS (chat-first; weak for “email me when in stock”).
+- Fake notify UI with no backend.
 
 ## PDP notes
-- Buy box already has sold-out / Coming soon size states — BIS CTA plugs in there
-- One-offs: do not hide sold-out sizes (existing lock)
+- Plug into buy box sold-out / Coming soon states.
+- One-offs: keep sold-out sizes visible (existing lock).
 
 ## Related
 - `planning/earmark-cart-drawer-upsell.md`
-- Barreletics Email agent for ESP / Klaviyo wiring
+- Do not assume Klaviyo in Email sibling work unless Andrew reinstate it

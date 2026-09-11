@@ -844,6 +844,6 @@ TODO when Andrew is at desktop. Draft HTML in `planning/draft-shopify-*.html`. E
 ## 2026-09-11 — Parked: cart drawer upsell + BIS notify (no apps if avoidable)
 
 - **Cart upsell:** build in our side cart after QC; 10% on add-on via native Shopify automatic discount. Earmark: `planning/earmark-cart-drawer-upsell.md`.
-- **Back in stock:** theme form OK; send needs Klaviyo (preferred) or Flow/custom — not theme-only. Earmark: `planning/earmark-back-in-stock-notify.md`.
+- **Back in stock:** no Klaviyo. Theme form + Shopify waitlist (customer metafield/metaobject or tags) + Flow + Shopify Email (preferred). Earmark: `planning/earmark-back-in-stock-notify.md`.
 - Free-shipping meter stays theme-native (`cart.total_price` post-discount); meter app removed after QC.
 
