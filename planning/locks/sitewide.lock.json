@@ -1,0 +1,112 @@
+{
+  "id": "sitewide",
+  "updated": "2026-09-12",
+  "description": "Catalog of locked design-system parameters. Scanner walks every template; page locks add spine/feature specifics.",
+  "tokens": {
+    "cream": "#faf8f6",
+    "section_gap_desk": 32,
+    "section_gap_mobile": 24,
+    "band_pad": 64,
+    "band_pad_mobile_features": 48,
+    "campaign_pad": 96,
+    "mosaic_pad": 16
+  },
+  "forbidden_pad_values": [
+    40
+  ],
+  "fifty_fifty_lifestyle": {
+    "text_pad_top_mobile": 96,
+    "text_pad_bottom_mobile": 96,
+    "vertical_padding": 80,
+    "side_padding": 64,
+    "min_height": 560,
+    "mobile_media_height": 550,
+    "image_fit_mobile": "cover",
+    "bg_color": "#faf8f6",
+    "applies_to_templates": [
+      "product*.json"
+    ],
+    "note": "Sitewide PDP 50/50 mobile lock 2026-09-10. Home/SEO get page locks when we refine those pages."
+  },
+  "fifty_fifty_packshot_exception": {
+    "image_fit_mobile": "fit",
+    "mobile_media_height_approx": 400,
+    "note": "FIT only after Andrew media QC gate \u2014 never default"
+  },
+  "sock_math_editorial": {
+    "section_type": "pdp-sock-math",
+    "title_size_px": 56,
+    "title_weight": 400
+  },
+  "features_obsession_title_role": "supporting",
+  "content_page_type": {
+    "h1_min": 32,
+    "h1_max": 44,
+    "h1_weight": 400,
+    "eyebrow_px": 11,
+    "body_px": 16,
+    "lede_px": 17,
+    "statement_min": 28,
+    "statement_max": 36,
+    "templates_glob": [
+      "page.help.json",
+      "page.faq.json",
+      "page.compare*.json",
+      "page.contact*.json",
+      "page.returns.json",
+      "page.shipping*.json",
+      "page.warranty.json",
+      "page.size*.json"
+    ]
+  },
+  "guarantee_band": {
+    "returns_detail_contains": "clean, unworn",
+    "warranty_detail_contains": "Defects only",
+    "forbidden_phrases": [
+      "try-on for fit",
+      "Not after"
+    ],
+    "cta_contains": "See details",
+    "cta_url_contains": "/pages/help"
+  },
+  "media_qc": {
+    "default_fit": "cover",
+    "default_scale": 100,
+    "footprint_desk": 560,
+    "footprint_mobile_lifestyle": 550,
+    "rule": "Before Liquid/CSS/FIT change: diagnose asset geometry. FIT never default."
+  },
+  "draft_theme_id": "187144929571",
+  "live_theme_id_never_touch": "185687998755",
+  "never_push_unless_named": [
+    "index.json",
+    "product.json",
+    "collection.json",
+    "settings_data.json"
+  ],
+  "scan_policy": {
+    "on_any_page_refine": "Run full lock-scan.py; report FAILs for that page family first",
+    "never_weaken": true,
+    "one_axis_after_clean": true
+  },
+  "variant_grid_page_open": {
+    "pad_top_desk": 72,
+    "pad_top_mobile": 56,
+    "rule": "When variant-grid is first visible section on a page.* template, settings.page_open_pad must be true. Collections get 72/56 in Liquid automatically.",
+    "applies_to_templates": [
+      "page*.json"
+    ]
+  },
+  "grid_page_open": {
+    "ruler": "Shop All \u2014 templates/collection.json variant-grid",
+    "editor": "https://admin.shopify.com/store/barreletics/themes/187144929571/editor?previewPath=%2Fcollections%2Fbarre-pilates-yoga-shoe-sock-footwear",
+    "pad_top_desk": 72,
+    "pad_top_mobile": 56,
+    "css_tokens": [
+      "--pad-grid-page-open",
+      "--pad-grid-page-open-mobile"
+    ],
+    "liquid_gate": "section.index == 1 OR template.name == collection OR page_open_pad",
+    "rule": "LOCKED. Copy Shop All. Never invent."
+  }
+}

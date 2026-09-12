@@ -10,6 +10,8 @@ Single index of parked work. Detail lives in the linked earmarks. Updated 2026-0
 5. **Live Admin Refund/Shipping policies** (desktop) — `earmark-shopify-legal-policies-returns-warranty.md`
 6. Optional: commit Coperni Paris theme assets (`coperni-paris-720.mp4`, `coperni-paris-poster.jpg`) if still untracked
 
+- **Hero → cream value strip → cream 50/50 flow** — earmarked from Best Grippy Socks; reuse on other pages when refining — `earmark-hero-value-strip-5050-flow.md`
+
 ## After go-live
 1. **Back in stock notify** — theme form + Shopify waitlist + **Flow + Shopify Email** (no Klaviyo/Zapier) — `earmark-back-in-stock-notify.md` (Brian Phase 1 Flow)
 2. Upsell polish if deferred

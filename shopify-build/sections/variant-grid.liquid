@@ -183,6 +183,12 @@
   endif
 -%}
 
+{%- liquid
+  assign vg_page_open = false
+  if template.name == 'collection' or section.settings.page_open_pad or section.index == 1 or section.index0 == 0 or template.suffix == 'best-grippy-socks'
+    assign vg_page_open = true
+  endif
+-%}
 <section
   class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} variants-section"
   id="{{ vg_anchor }}"
@@ -197,6 +203,8 @@
     {% if title_size != 'default' %}--vg-title-size: {{ title_size }}px;{% endif %}
     {% if body_size != 'default' %}--vg-body-size: {{ body_size }}px;{% endif %}
     {% if title_weight != 'default' %}--vg-title-weight: {{ title_weight }};{% endif %}
+  
+    {% if vg_page_open %}padding-top: var(--pad-grid-page-open, 72px);{% endif %}
   "
 >
   <div class="variants-inner">
@@ -345,8 +353,22 @@
 </section>
 
 <style>
+  {%- liquid
+    comment
+      RULER: Shop All collection grid-open — desk 72 / phone 56.
+      When this section is first in the template (section.index == 1), copy Shop All.
+      Also: collections, or TE checkbox page_open_pad.
+      Do NOT rely on page_open_pad alone — Shopify often strips unset checkboxes from JSON.
+    endcomment
+    assign page_open_pad = false
+    if template.name == 'collection' or section.settings.page_open_pad or section.index == 1 or section.index0 == 0 or template.suffix == 'best-grippy-socks'
+      assign page_open_pad = true
+    endif
+  -%}
   #shopify-section-{{ section.id }} .variants-section {
-    padding: var(--section-padding-y) var(--section-padding-x);
+    /* Shop All ruler — grid opens page: 72 desk / token bottom. */
+    padding: {% if page_open_pad %}var(--pad-grid-page-open, 72px){% else %}var(--section-padding-y){% endif %} var(--section-padding-x) var(--section-padding-y);
+    {% if page_open_pad %}padding-top: var(--pad-grid-page-open, 72px) !important;{% endif %}
     background: {% if section.settings.bg_color != blank %}{{ section.settings.bg_color }}{% else %}var(--bg-primary){% endif %};
   }
 
@@ -748,9 +770,8 @@
 
   @media (max-width: 768px) {
     #shopify-section-{{ section.id }} .variants-section {
-      padding: var(--section-padding-y-mobile) var(--section-padding-x-mobile);
-      /* Flush into the next 50/50 — no cream/white band under See all */
-      padding-bottom: 0;
+      padding: {% if page_open_pad %}var(--pad-grid-page-open-mobile, 56px){% else %}var(--section-padding-y-mobile){% endif %} var(--section-padding-x-mobile) 0;
+      {% if page_open_pad %}padding-top: var(--pad-grid-page-open-mobile, 56px) !important;{% endif %}
     }
     #shopify-section-{{ section.id }} .variants-see-all {
       margin-top: 24px;
