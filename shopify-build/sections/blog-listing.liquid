@@ -12,7 +12,8 @@
   assign has_featured = false
   assign featured_id = 0
 
-  if section.settings.show_featured and blog.articles.size > 0
+  # Featured is All-only. On /tagged/* it stays sticky and steals the top of every topic.
+  if section.settings.show_featured and blog.articles.size > 0 and current_tags.size == 0
     if section.settings.featured_article != blank
       assign featured = section.settings.featured_article
     else
