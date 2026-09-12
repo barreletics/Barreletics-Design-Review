@@ -37,3 +37,8 @@ Confirm plan has **Flow** + **Shopify Email** (or another Flow-send channel Andr
 ## Related
 - Sequence: `planning/earmark-post-qc-cart-bis-sequence.md`
 - Cart upsell: `planning/earmark-cart-drawer-upsell.md`
+
+## Handoff
+- **Brian:** Phase 1 Flow + waitlist + Shopify Email (prep/test). Andrew emailed ask.
+- **Theme (us):** PDP notify form after Flow side is solid.
+

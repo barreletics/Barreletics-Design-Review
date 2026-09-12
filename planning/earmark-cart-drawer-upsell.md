@@ -19,4 +19,5 @@ Native upsells in **our** side cart + theme free-shipping meter. No upsell app, 
 3. QC with SAVE2 + shipping threshold
 
 ## Related
-- BIS / Zapier: `planning/earmark-back-in-stock-notify.md` (after live)
+- BIS (Flow): `planning/earmark-back-in-stock-notify.md` (after live)
+- Sequence: `planning/earmark-post-qc-cart-bis-sequence.md`
