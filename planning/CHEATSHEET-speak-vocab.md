@@ -35,3 +35,18 @@ How Andrew talks to Grok / Cursor about the theme. Updated 2026-09-12.
 - Type OS: `planning/type-os-LOCKED.md`
 - 50/50 mobile: `planning/fifty-fifty-pdp-mobile-LOCKED.md`
 - Parked next: `planning/PARKED-NEXT.md`
+
+## Whole-system copy updates
+
+When Andrew says **whole system** / **everywhere** / **sitewide** for policy or FAQ lines, update **all surfaces that carry that line**:
+
+| Surface | Where |
+| --- | --- |
+| FAQ master | `/pages/faq` → `templates/page.faq.json` |
+| Help Quick answers | `/pages/help` (+ returns/shipping templates using it) → `sections/page-returns.liquid` |
+| PDP on-page FAQ | e.g. Outdoor `collection-faq` in product template JSON |
+| Good to know | PDP buy-box note accordion (per template, e.g. Outdoor) |
+| Buy-box Shipping & returns / warranty | Locked in `sections/pdp-buy-box.liquid` (all PDPs) |
+
+Say: **“Sync whole system”** or **“Update FAQ master + Help + Outdoor”**.
+
