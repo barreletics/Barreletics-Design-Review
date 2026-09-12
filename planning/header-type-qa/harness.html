@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Header type QA harness</title>
+
+<!-- Real Design System CSS, unmodified. Nothing here is shipped; this file only renders
+     sections/header.liquid's output so computed type can be measured and screenshotted. -->
+<link rel="stylesheet" href="../../shopify-build/assets/design-tokens.css">
+<link rel="stylesheet" href="../../shopify-build/assets/barreletics-base.css">
+<link rel="stylesheet" href="../../shopify-build/assets/chrome.css">
+
+<style>
+  body { margin: 0; }
+  .qa-note {
+    font: 12px/1.5 Roboto, sans-serif; color: #6b645a;
+    padding: 24px 40px; border-top: 1px solid #e8e2d8; margin-top: 320px;
+  }
+</style>
+
+<script>
+  var qaParams = new URLSearchParams(location.search);
+
+  // ?size=22 previews an alternate nav size without changing the committed default of 18.
+  // Both vars are set: --header-nav-size is what the nav_link_size setting emits, while
+  // --type-nav-size additionally drives the mobile drawer and utility actions.
+  // ?helpopen=1 forces the Help dropdown open. It normally opens on :hover / :focus-within,
+  // which a screenshot run cannot hold.
+  if (qaParams.has('helpopen')) {
+    document.write('<style id="qa-helpopen">.site-header__subnav--help{'
+      + 'opacity:1 !important;pointer-events:auto !important;transform:none !important}</style>');
+  }
+
+  // ?nostrip=1 drops the announcement bar so a composite can crop to the header bar alone.
+  if (qaParams.has('nostrip')) {
+    document.write('<style id="qa-nostrip">.announcement-strip{display:none}</style>');
+  }
+
+  if (qaParams.has('size')) {
+    var qaSize = parseInt(qaParams.get('size'), 10);
+    document.write('<style id="qa-size">:root{--type-nav-size:' + qaSize + 'px}'
+      + '.site-header{--header-nav-size:' + qaSize + 'px !important}</style>');
+  }
+
+  // ?before=1 replays the pre-fix values (design-tokens.css 11/600/0.14em + chrome.css
+  // uppercase + header-group.json nav_link_size "13") so before/after shots are
+  // comparable without reverting any tracked file.
+  if (qaParams.has('before')) {
+    document.write(`<style id="qa-before">
+      :root {
+        --type-nav-size: 11px;
+        --type-nav-weight: 600;
+        --type-nav-tracking: 0.14em;
+        --type-nav-gap: 32px;
+      }
+      .site-header { --header-nav-size: 13px !important; --header-nav-gap: 32px !important; }
+      .site-header__nav-item > a { text-transform: uppercase; line-height: normal; }
+      .site-header__subnav li a { font-size: 13px; letter-spacing: 0; }
+      .site-header__action--text {
+        font-size: 11px; font-weight: 500;
+        text-transform: uppercase; letter-spacing: 0.12em;
+      }
+      .site-header__cart-badge--inline { font-size: 10px; }
+      .mobile-menu__item > a, .mobile-menu__toggle {
+        font-size: 15px; font-weight: 600; letter-spacing: normal; line-height: normal;
+      }
+      .mobile-menu__sub li a { font-size: 14px; font-weight: 600; letter-spacing: normal; }
+      .mobile-menu__utility li a { font-size: 13px; font-weight: 600; letter-spacing: normal; }
+    </style>`);
+  }
+</script>
+</head>
+<body>
+
+<div class="announcement-strip">
+  <div class="announcement-strip__inner">
+    <span class="announcement-strip__item">Buy 2, Save 15% — Code SAVE15</span>
+    <span class="announcement-strip__sep"> · </span>
+    <span class="announcement-strip__item">Free Shipping Over $150</span>
+    <span class="announcement-strip__sep"> · </span>
+    <span class="announcement-strip__item"><a class="announcement-strip__link" href="#">30-Day Returns</a></span>
+    <span class="announcement-strip__sep"> · </span>
+    <span class="announcement-strip__item">Made in USA</span>
+  </div>
+</div>
+
+<!-- Mirrors sections/header.liquid: inline vars come from header-group.json
+     (logo_height 45 / logo_height_mobile 39 / nav_link_size / nav_gap). -->
+<header
+  class="site-header"
+  data-site-header
+  role="banner"
+  style="
+    --header-logo-height: 45px;
+    --header-logo-height-mobile: 39px;
+    --header-nav-gap: 30px;
+    --header-bg: #ffffff;
+    --header-text: #4a4a4a;
+    --header-nav-size: 18px;
+  "
+>
+  <div class="site-header__inner">
+    <button class="site-header__hamburger" data-mobile-menu-toggle aria-expanded="false"
+            aria-controls="mobile-menu" aria-label="Open menu" type="button">
+      <svg width="20" height="14" viewBox="0 0 20 14" fill="none" aria-hidden="true">
+        <path d="M0 1h20M0 7h20M0 13h20" stroke="currentColor" stroke-width="1.5"/>
+      </svg>
+    </button>
+
+    <a href="#" class="site-header__logo" aria-label="Barreletics">
+      <img class="site-header__logo-img" src="../../shopify-build/assets/barreletics-logo.png"
+           alt="Barreletics" width="138" height="45" decoding="async" loading="eager">
+    </a>
+
+    <nav class="site-header__nav" aria-label="Main navigation">
+      <ul class="site-header__nav-list" role="list">
+        <!-- Labels are the reconciled M4 Menu (planning/navigation-menu-spec.md §1),
+             not the legacy live-only set. -->
+        <li class="site-header__nav-item site-header__nav-item--has-sub">
+          <a href="#">Grippy Shoes</a>
+          <ul class="site-header__subnav" role="list">
+            <li><a href="#">Shop All Grippy Shoes</a></li>
+            <li><a href="#">Open Sole</a></li>
+            <li><a href="#">Closed Sole</a></li>
+            <li><a href="#">Outdoor</a></li>
+            <li><a href="#">Compare Styles</a></li>
+          </ul>
+        </li>
+        <li class="site-header__nav-item site-header__nav-item--has-sub">
+          <a href="#">Apparel</a>
+          <ul class="site-header__subnav" role="list">
+            <li><a href="#">Shop All Apparel</a></li>
+            <li><a href="#">Tops</a></li>
+            <li><a href="#">Bottoms</a></li>
+          </ul>
+        </li>
+        <li class="site-header__nav-item"><a href="#">Collaborations</a></li>
+        <li class="site-header__nav-item"><a href="#">Journal</a></li>
+      </ul>
+    </nav>
+
+    <div class="site-header__actions">
+      <!-- header-group.json assigns help_menu, so this is the real path: labelled Help +
+           caret + dropdown (desktop only). show_action_labels defaults on. -->
+      <div class="site-header__help site-header__nav-item--has-sub">
+        <a href="#" class="site-header__action site-header__action--help site-header__action--text" aria-label="Help" aria-haspopup="true">
+          Help <span class="site-header__caret" aria-hidden="true">▾</span>
+        </a>
+        <ul class="site-header__subnav site-header__subnav--help" role="list">
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Returns &amp; Exchanges</a></li>
+        </ul>
+      </div>
+      <a href="#" class="site-header__action site-header__action--text" aria-label="Account">Account</a>
+      <a href="#" class="site-header__action site-header__action--text site-header__cart" aria-label="Cart">
+        Cart <span class="site-header__cart-badge site-header__cart-badge--inline">0</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="mobile-menu" id="mobile-menu" data-mobile-menu aria-hidden="true">
+    <div class="mobile-menu__overlay" data-mobile-menu-close></div>
+    <div class="mobile-menu__drawer" role="dialog" aria-label="Navigation menu">
+      <button class="mobile-menu__close" data-mobile-menu-close aria-label="Close menu" type="button">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <nav class="mobile-menu__nav" aria-label="Mobile navigation">
+        <ul class="mobile-menu__list" role="list">
+          <!-- Grippy Shoes shown expanded so sub-item type is visible; Apparel collapsed,
+               which is how the drawer actually opens. -->
+          <li class="mobile-menu__item mobile-menu__item--parent" data-expanded="true">
+            <button class="mobile-menu__toggle" aria-expanded="true" type="button">Grippy Shoes</button>
+            <ul class="mobile-menu__sub" role="list">
+              <li><a href="#">Shop All Grippy Shoes</a></li>
+              <li><a href="#">Open Sole</a></li>
+              <li><a href="#">Closed Sole</a></li>
+              <li><a href="#">Outdoor</a></li>
+              <li><a href="#">Compare Styles</a></li>
+            </ul>
+          </li>
+          <li class="mobile-menu__item mobile-menu__item--parent">
+            <button class="mobile-menu__toggle" aria-expanded="false" type="button">Apparel</button>
+            <ul class="mobile-menu__sub" role="list">
+              <li><a href="#">Shop All Apparel</a></li>
+              <li><a href="#">Tops</a></li>
+              <li><a href="#">Bottoms</a></li>
+            </ul>
+          </li>
+          <li class="mobile-menu__item"><a href="#">Collaborations</a></li>
+          <li class="mobile-menu__item"><a href="#">Journal</a></li>
+        </ul>
+        <ul class="mobile-menu__utility" role="list">
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Returns &amp; Exchanges</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<p class="qa-note">
+  QA harness only — renders <code>sections/header.liquid</code> markup against the real
+  <code>design-tokens.css</code> + <code>chrome.css</code>, with the reconciled M4 Menu labels.
+  <code>?before=1</code> replays the pre-fix values, <code>?size=22</code> previews an
+  alternate nav size, <code>?drawer=1</code> opens the mobile drawer.
+</p>
+
+<script>
+  // The drawer is opened declaratively so the screenshot run needs no click timing.
+  if (qaParams.has('drawer')) {
+    document.querySelector('[data-mobile-menu]').classList.add('is-open');
+  }
+</script>
+</body>
+</html>

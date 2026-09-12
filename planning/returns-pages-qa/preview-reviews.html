@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>reviews — returns pages QA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../shopify-build/assets/design-tokens.css">
+<link rel="stylesheet" href="../../shopify-build/assets/barreletics-base.css">
+<link rel="stylesheet" href="../../shopify-build/assets/chrome.css">
+</head><body>
+<div class="header-section" data-qa-sticky>
+  <header class="site-header">
+    <div class="site-header__inner" style="max-width:var(--max-width);margin:0 auto;
+         display:flex;align-items:center;justify-content:space-between;
+         padding:18px var(--section-padding-x);">
+      <span class="type-label">Barreletics</span>
+      <span class="type-label">Shop &nbsp; Learn &nbsp; Journal &nbsp; Help</span>
+    </div>
+  </header>
+</div>
+<section
+  class="section section-frame page-content"
+  style="--section-inset-top: 0px; --section-inset-right: px; --section-inset-bottom: 0px; --section-inset-left: px; --section-inset-top-m: 0px; --section-inset-right-m: px; --section-inset-bottom-m: 0px; --section-inset-left-m: px;
+"
+  
+>
+  <div class="section__inner section__inner--narrow"><header class="page-content__head"><p class="eyebrow eyebrow--accent"></p><h1 class="page-content__title">REVIEWS</h1><p class="page-content__subtitle"></p></header><div class="page-content__body">
+      
+    </div>
+  </div>
+</section>
+
+<style>
+  .page-content__head {
+    text-align: center;
+    margin: 0 0 var(--space-8);
+  }
+
+  .page-content__title {
+    font-size: var(--type-hero-size);
+    font-weight: var(--type-hero-weight);
+    line-height: var(--type-hero-leading);
+    letter-spacing: var(--type-hero-tracking);
+    text-transform: none;
+    color: var(--text-primary);
+    margin: 0;
+  }
+
+  .page-content__subtitle {
+    font-size: var(--text-md);
+    color: var(--text-body);
+    line-height: var(--leading-relaxed);
+    margin: var(--space-3) 0 0;
+  }
+
+  .page-content__body {
+    font-size: var(--text-md);
+    color: var(--text-body);
+    line-height: var(--leading-loose);
+  }
+
+  /* Page bodies are hand-authored in Admin and arrive with their own markup and, on the
+     legacy pages, their own inline styles. Style only what the editor emits bare — do not
+     reach into nested elements, or a pasted layout gets overridden. */
+  .page-content__body > p,
+  .page-content__body > ul,
+  .page-content__body > ol,
+  .page-content__body > table {
+    margin: 0 0 var(--space-4);
+  }
+
+  .page-content__body > h2 {
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    letter-spacing: var(--tracking-tight);
+    margin: var(--space-8) 0 var(--space-4);
+  }
+
+  .page-content__body > h3 {
+    font-size: var(--text-lg);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    margin: var(--space-6) 0 var(--space-3);
+  }
+
+  .page-content__body a {
+    color: var(--text-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .page-content__body a:hover {
+    color: var(--color-rust);
+  }
+
+  /* Admin-authored bodies are inline text links ~16-18px tall. Grow the hit region to 44px
+     with a transparent overlay so nothing moves visually and pasted inline styles survive. */
+  .page-content__body a {
+    position: relative;
+  }
+
+  .page-content__body a::after {
+    content: '';
+    position: absolute;
+    inset: -14px -10px;
+  }
+
+  .page-content__body img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .page-content__body > *:last-child {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 768px) {
+    .page-content__title {
+      font-size: var(--text-3xl);
+    }
+  }
+</style>
+
+
+
+
+
+
+
+<section
+  class="section-frame reviews-section"
+  id="reviews"
+  aria-label="Customer reviews"
+  style="--section-inset-top: 0px; --section-inset-right: px; --section-inset-bottom: 0px; --section-inset-left: px; --section-inset-top-m: 0px; --section-inset-right-m: px; --section-inset-bottom-m: 0px; --section-inset-left-m: px;
+ background: ;"
+>
+  <div class="reviews-inner">
+    <div class="reviews-head">
+      <div>
+        
+          <h2 class="reviews-head__title h2-standard">Real people. Real results.</h2>
+        
+        
+          <p class="reviews-head__body">Verified reviews from the barre, Pilates, and Lagree floor.</p>
+        
+      </div>
+      
+    </div>
+
+    <div class="reviews-featured" id="reviews-featured-qa-social-proof" aria-live="polite">
+      <div class="reviews-featured__stars" aria-hidden="true">★★★★★</div>
+      <p class="reviews-featured__quote" id="reviews-featured-quote-qa-social-proof"></p>
+      <p class="reviews-featured__author" id="reviews-featured-author-qa-social-proof"></p>
+      <p class="reviews-featured__meta" id="reviews-featured-meta-qa-social-proof"></p>
+    </div>
+
+    <div class="reviews-grid" id="reviews-grid-qa-social-proof" aria-live="polite"></div>
+
+    <div class="reviews-nav">
+      <span class="reviews-nav__status" id="reviews-status-qa-social-proof" aria-live="polite"></span>
+      <button type="button" class="reviews-nav__btn" id="reviews-prev-qa-social-proof" aria-label="Previous reviews">←</button>
+      <button type="button" class="reviews-nav__btn" id="reviews-next-qa-social-proof" aria-label="Next reviews">→</button>
+    </div>
+
+    
+  </div>
+</section>
+
+<script type="application/json" id="reviews-data-qa-social-proof">
+[{
+    "quote": "My love-hate relationship with the sock has finally come to a ceremonial end. The vast improvement during the first minute of barre class, with my new Barreletics performance skin shoes, is beyond words.",
+    "author": "Mia Evans",
+    "meta": "Barre Instructor \u00b7 NYC \u00b7 Verified Purchase",
+    "img": "https://barreletics.com/cdn/shop/files/Square_Pink.png?v=1764627088&width=1200"
+  },{
+    "quote": "I looked at these for over a year thinking 'Way too expensive.' I can't tell you how much I spent on Pilates socks that got ruined in no time. Game changer.",
+    "author": "Gwen M.",
+    "meta": "Queens \u00b7 Verified purchase",
+    "img": "https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=600"
+  },{
+    "quote": "The best invention known to Pilates devotees. I am 70 years old and I am able to accomplish several advanced moves on the Cadillac apparatus. Namely, the parakeet, the complete parakeet. If you know anything about Pilates, you know that your foot has to be gripping the bar without fail.",
+    "author": "Dvorah S.",
+    "meta": "Fairfield \u00b7 Pilates 5x/week",
+    "img": "https://barreletics.com/cdn/shop/files/IMG_2917.jpg?v=1741040637&width=2000"
+  }]
+</script>
+
+<script>
+(function () {
+  var sid = "qa-social-proof";
+  var dataEl = document.getElementById('reviews-data-' + sid);
+  if (!dataEl) return;
+  var REVIEWS = [];
+  try { REVIEWS = JSON.parse(dataEl.textContent || '[]'); } catch (e) { REVIEWS = []; }
+  if (!REVIEWS.length) return;
+
+  var PAGE_SIZE = 3;
+  var page = 0;
+  var pageCount = Math.ceil(REVIEWS.length / PAGE_SIZE);
+  var gridEl = document.getElementById('reviews-grid-' + sid);
+  var quoteEl = document.getElementById('reviews-featured-quote-' + sid);
+  var authorEl = document.getElementById('reviews-featured-author-' + sid);
+  var metaEl = document.getElementById('reviews-featured-meta-' + sid);
+  var statusEl = document.getElementById('reviews-status-' + sid);
+  var prevBtn = document.getElementById('reviews-prev-' + sid);
+  var nextBtn = document.getElementById('reviews-next-' + sid);
+
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function renderReviews() {
+    if (!gridEl || !quoteEl) return;
+    var start = page * PAGE_SIZE;
+    var slice = REVIEWS.slice(start, start + PAGE_SIZE);
+    var featured = slice[0] || REVIEWS[0];
+    var q = featured.quote || '';
+    if (q && q.charAt(0) !== '"') q = '"' + q + '"';
+    quoteEl.textContent = q;
+    authorEl.textContent = featured.author || '';
+    metaEl.textContent = featured.meta || '';
+    gridEl.innerHTML = slice.map(function (r) {
+      var body = r.quote || '';
+      if (body && body.charAt(0) !== '"') body = '"' + body + '"';
+      var img = r.img
+        ? '<img class="review-card__img" src="' + esc(r.img) + '" alt="" loading="lazy">'
+        : '<div class="review-card__img review-card__img--empty" aria-hidden="true"></div>';
+      return (
+        '<div class="review-card">' +
+          img +
+          '<div class="review-card__pad">' +
+            '<div class="review-card__stars" aria-hidden="true">★★★★★</div>' +
+            '<p class="review-card__body">' + esc(body) + '</p>' +
+            '<span class="review-card__author">' + esc(r.author || '') + '</span>' +
+            '<span class="review-card__loc">' + esc(r.meta || '') + '</span>' +
+          '</div>' +
+        '</div>'
+      );
+    }).join('');
+    if (statusEl) statusEl.textContent = (page + 1) + ' / ' + pageCount;
+  }
+
+  if (prevBtn && nextBtn) {
+    prevBtn.addEventListener('click', function () {
+      page = (page - 1 + pageCount) % pageCount;
+      renderReviews();
+    });
+    nextBtn.addEventListener('click', function () {
+      page = (page + 1) % pageCount;
+      renderReviews();
+    });
+  }
+  renderReviews();
+})();
+</script>
+
+<style>
+  .reviews-section {
+    padding: var(--section-padding-y) var(--section-padding-x);
+    background: #f5f2ec;
+  }
+  .reviews-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .reviews-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 8px;
+  }
+  .reviews-head__title {
+    /* Type OS H2 Standard — class on element; no local clamp */
+    margin: 0 0 var(--gap-a);
+  }
+  .reviews-head__body {
+    font-size: var(--type-lede-size);
+    font-weight: var(--type-lede-weight);
+    color: var(--text-body);
+    margin: 0;
+    max-width: 28ch;
+    line-height: var(--type-lede-leading);
+  }
+  .reviews-head__more {
+    font-size: 13px;
+    font-weight: 500;
+    color: #1c1916;
+    text-decoration: none;
+  }
+  .reviews-head__more:hover { color: #c45c3f; }
+  .reviews-featured {
+    max-width: 640px;
+    margin: 36px 0 24px;
+    padding: 32px 0;
+    border-top: 1px solid #d6cfc0;
+    border-bottom: 1px solid #d6cfc0;
+  }
+  .reviews-featured__stars {
+    color: #c45c3f;
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+  }
+  .reviews-featured__quote {
+    font-size: 20px;
+    font-weight: 400;
+    font-style: normal;
+    line-height: 1.45;
+    color: #1c1916;
+    margin: 0 0 20px;
+    letter-spacing: -0.015em;
+  }
+  .reviews-featured__author {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1c1916;
+    margin: 0 0 4px;
+  }
+  .reviews-featured__meta {
+    font-size: 13px;
+    color: #6b645a;
+    margin: 0;
+  }
+  .reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 32px;
+  }
+  .reviews-nav {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 28px;
+  }
+  .reviews-nav__btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid #d6cfc0;
+    background: #fff;
+    color: #1c1916;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+  }
+  .reviews-nav__btn:hover { background: #1c1916; color: #fff; border-color: #1c1916; }
+  .reviews-nav__status {
+    font-size: 12px;
+    color: #8a8a8a;
+    letter-spacing: 0.04em;
+    margin-right: auto;
+  }
+  .reviews-section .review-card {
+    background: #fff;
+    border: none;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 0;
+  }
+  .reviews-section .review-card__img {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    display: block;
+  }
+  .reviews-section .review-card__img--empty {
+    background: #e8e2d8;
+  }
+  .reviews-section .review-card__pad {
+    padding: 22px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+  }
+  .reviews-section .review-card__stars {
+    color: #c45c3f;
+    font-size: 14px;
+    letter-spacing: 0.1em;
+  }
+  .reviews-section .review-card__body {
+    font-size: 15px;
+    font-style: normal;
+    color: #4a4a4a;
+    line-height: 1.55;
+    margin: 0;
+    flex: 1;
+  }
+  .reviews-section .review-card__author {
+    font-size: 13px;
+    font-weight: 500;
+    color: #1c1916;
+  }
+  .reviews-section .review-card__loc {
+    font-size: 12px;
+    color: #8a8a8a;
+  }
+
+  /* Compact text-card + stars row (community pattern under image cards) */
+  .reviews-community-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #8a8a8a;
+    text-align: center;
+    margin: 48px 0 24px;
+  }
+  .reviews-text-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .reviews-text-card {
+    background: #fff;
+    border: 1px solid #e6e6e6;
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .reviews-text-card__stars {
+    color: #d4af37;
+    font-size: 14px;
+    letter-spacing: 0.12em;
+    line-height: 1;
+  }
+  .reviews-text-card__star--empty { opacity: 0.3; }
+  .reviews-text-card__body {
+    font-size: 14px;
+    font-style: italic;
+    color: #4a4a4a;
+    line-height: 1.6;
+    margin: 0;
+    flex: 1;
+  }
+  .reviews-text-card__footer {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .reviews-text-card__author {
+    font-size: 12px;
+    font-weight: 700;
+    color: #1c1916;
+  }
+  .reviews-text-card__loc {
+    font-size: 12px;
+    font-weight: 400;
+    color: #8a8a8a;
+  }
+
+  @media (max-width: 1024px) {
+    .reviews-grid { grid-template-columns: repeat(2, 1fr); }
+    .reviews-text-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .reviews-section {
+      padding: var(--section-padding-y-mobile) var(--section-padding-x-mobile);
+    }
+    .reviews-grid { grid-template-columns: 1fr; gap: 16px; margin-top: 24px; }
+    .reviews-text-grid { grid-template-columns: 1fr; }
+    .reviews-nav { justify-content: space-between; }
+    .reviews-section .review-card__pad { padding: 18px 18px 20px; }
+    .reviews-section .review-card__body { font-size: 14px; }
+    .reviews-community-label { margin: 36px 0 20px; }
+  }
+</style>
+
+
+
+</body></html>

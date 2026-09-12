@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PDP Complete the kit — Options</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --charcoal: #1c1916;
+      --body: #4a4a4a;
+      --muted: #8a8a8a;
+      --warm: #6b645a;
+      --border: #d6cfc0;
+      --cream: #f5f2ec;
+      --light: #f9f9f9;
+      --rust: #c45c3f;
+      --white: #fff;
+      --g12: 12px;
+      --g24: 24px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--cream); color: var(--charcoal); margin: 0; padding: 40px 24px 96px;
+    }
+    .wrap { max-width: 960px; margin: 0 auto; }
+    h1 { font-size: 28px; font-weight: 400; letter-spacing: -0.03em; margin: 0 0 8px; }
+    .lede { color: var(--body); max-width: 68ch; line-height: 1.55; margin: 0 0 28px; font-size: 15px; }
+    .back { font-size: 13px; color: var(--warm); text-decoration: none; display: inline-block; margin-bottom: 20px; }
+    .back:hover { color: var(--charcoal); }
+    .context {
+      background: var(--white); border: 1px solid var(--border); border-left: 4px solid var(--rust);
+      border-radius: 6px; padding: 18px 20px; margin-bottom: 32px;
+    }
+    .context__tag {
+      display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--rust); margin-bottom: 8px;
+    }
+    .context h3 { font-size: 17px; font-weight: 500; margin: 0 0 8px; letter-spacing: -0.02em; }
+    .context p { margin: 0 0 10px; font-size: 14px; color: var(--body); line-height: 1.55; }
+    .context p:last-child { margin-bottom: 0; }
+    .rule {
+      margin: 0; padding: 10px 12px; background: var(--cream); border-radius: 4px;
+      font-size: 13px; color: var(--charcoal); line-height: 1.45;
+    }
+    .stack { display: flex; flex-direction: column; gap: 28px; }
+    .option {
+      background: var(--white); border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+    }
+    .option--rec { border-left: 4px solid var(--rust); }
+    .option--alt { border-left: 4px solid var(--border); }
+    .option__head { padding: 18px 20px 14px; }
+    .option__tag {
+      display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--rust); margin-bottom: 6px;
+    }
+    .option__tag--muted { color: var(--muted); }
+    .option h3 { font-size: 18px; font-weight: 500; margin: 0 0 6px; letter-spacing: -0.02em; }
+    .option__what { font-size: 13px; color: var(--body); line-height: 1.5; margin: 0; }
+    .option__preview {
+      background: #faf8f4; border-top: 1px solid var(--border); padding: 24px;
+    }
+    .option__preview-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--muted); margin: 0 0 14px;
+    }
+    .option__foot {
+      padding: 12px 20px 14px; border-top: 1px solid var(--border);
+      font-size: 12px; color: var(--body); line-height: 1.45;
+    }
+    .option__foot strong { color: var(--charcoal); }
+
+    /* Buy-box slice — trust + kit only (realistic tertiary context) */
+    .buy-slice {
+      max-width: 420px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px 24px;
+    }
+    .cta-stub {
+      width: 100%; padding: 16px; background: var(--charcoal); color: #fff;
+      font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+      border: none; border-radius: 4px; font-family: inherit; cursor: default; margin-bottom: var(--g12);
+    }
+    .assurances {
+      display: flex; gap: 16px; flex-wrap: wrap;
+      font-size: 12px; color: var(--muted);
+      padding: 12px 0; border-top: 1px solid var(--border);
+    }
+    .assurances b { color: var(--charcoal); font-weight: 700; }
+
+    /* Shared kit shell — 24px breathing room */
+    .kit {
+      margin: 24px 0 0;
+      padding: 14px 0 4px;
+      border-top: 1px solid var(--border);
+    }
+    .kit__label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #9a9182;
+      margin: 0 0 8px;
+    }
+
+    /* A — two links (current) */
+    .kit-a__row {
+      display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 18px;
+    }
+    .kit-a__row a {
+      font-size: 13px; font-weight: 500; color: var(--charcoal); text-decoration: none;
+      border-bottom: 1px solid var(--border); padding-bottom: 1px;
+    }
+    .kit-a__row a:hover { border-bottom-color: var(--charcoal); }
+    .kit-a__hint {
+      margin: 8px 0 0; font-size: 11px; color: var(--muted); line-height: 1.45;
+    }
+
+    /* B — one message + one CTA */
+    .kit-b__msg {
+      margin: 0 0 10px; font-size: 13px; color: var(--warm); line-height: 1.5;
+    }
+    .kit-b__cta {
+      display: inline; font-size: 13px; font-weight: 500; color: var(--charcoal);
+      text-decoration: none; border-bottom: 1px solid var(--border); padding-bottom: 1px;
+    }
+    .kit-b__cta:hover { border-bottom-color: var(--charcoal); }
+
+    /* C — one message, two quiet inline links */
+    .kit-c__msg {
+      margin: 0; font-size: 13px; color: var(--warm); line-height: 1.55;
+    }
+    .kit-c__msg a {
+      color: var(--charcoal); font-weight: 500; text-decoration: none;
+      border-bottom: 1px solid var(--border); padding-bottom: 1px;
+    }
+    .kit-c__msg a:hover { border-bottom-color: var(--charcoal); }
+
+    .note {
+      margin-top: 36px; font-size: 13px; color: var(--muted); line-height: 1.5; max-width: 68ch;
+    }
+    .note code { font-size: 12px; color: var(--warm); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <a class="back" href="index.html">← Hub</a>
+    <h1>Complete the kit — options</h1>
+    <p class="lede">
+      Tertiary under trust. Same job as v16/v18: quiet discovery for heated-studio kits —
+      not a second purchase stack. Copy stays brand-true (Performance Skin + thin liner).
+      <strong>v16 Locked untouched.</strong> Pick before applying to v18.
+    </p>
+
+    <div class="context">
+      <div class="context__tag">Question</div>
+      <h3>Do we consolidate the kit to one message?</h3>
+      <p>
+        Today: label + two equal product links + hint. The hint already carries the value;
+        the dual links ask for a fork at the quietest beat on the buy box.
+      </p>
+      <p class="rule">
+        <strong>Recommend: yes — explore B.</strong> One line owns the offer; one CTA owns the next step.
+        Keep Pilates / Yoga fork on a kit landing (or use C if both SKUs must stay on-PDP without a hub).
+      </p>
+    </div>
+
+    <div class="stack">
+
+      <!-- A -->
+      <section class="option option--alt" id="a">
+        <div class="option__head">
+          <div class="option__tag option__tag--muted">A · Current</div>
+          <h3>Two links</h3>
+          <p class="option__what">
+            Complete the kit · Hot Pilates Kit → · Hot Yoga Kit → · hint line.
+            Clear destinations; two competing CTAs at tertiary weight.
+          </p>
+        </div>
+        <div class="option__preview">
+          <p class="option__preview-label">Buy-box context · trust → kit</p>
+          <div class="buy-slice">
+            <button class="cta-stub" type="button">Add to cart · $74</button>
+            <div class="assurances">
+              <span><b>✓</b> Ships 1–2 days</span>
+              <span><b>✓</b> 30-day returns</span>
+              <span><b>✓</b> 90-day warranty</span>
+              <span><b>✓</b> Latex- &amp; silicone-free</span>
+            </div>
+            <div class="kit">
+              <span class="kit__label">Complete the kit</span>
+              <div class="kit-a__row">
+                <a href="#">Hot Pilates Kit →</a>
+                <a href="#">Hot Yoga Kit →</a>
+              </div>
+              <p class="kit-a__hint">Performance Skin + thin liner for heated studios.</p>
+            </div>
+          </div>
+        </div>
+        <div class="option__foot">
+          <strong>Keep if</strong> both kit PDPs are live soon and you want zero intermediate page.
+          Costs: choice friction + label/hint redundancy under premium quiet stacking.
+        </div>
+      </section>
+
+      <!-- B -->
+      <section class="option option--rec" id="b">
+        <div class="option__head">
+          <div class="option__tag">B · Recommended explore</div>
+          <h3>One message + one CTA</h3>
+          <p class="option__what">
+            Value line first (existing hint). Single quiet text CTA. Discipline fork lives off-PDP.
+          </p>
+        </div>
+        <div class="option__preview">
+          <p class="option__preview-label">Buy-box context · trust → kit</p>
+          <div class="buy-slice">
+            <button class="cta-stub" type="button">Add to cart · $74</button>
+            <div class="assurances">
+              <span><b>✓</b> Ships 1–2 days</span>
+              <span><b>✓</b> 30-day returns</span>
+              <span><b>✓</b> 90-day warranty</span>
+              <span><b>✓</b> Latex- &amp; silicone-free</span>
+            </div>
+            <div class="kit">
+              <span class="kit__label">Complete the kit</span>
+              <p class="kit-b__msg">Performance Skin + thin liner for heated studios.</p>
+              <a class="kit-b__cta" href="#">Shop hot kits →</a>
+            </div>
+          </div>
+        </div>
+        <div class="option__foot">
+          <strong>Why:</strong> Tertiary should not decide Pilates vs Yoga — it should invite the heated-studio kit.
+          One message, one next step; quieter under ATC; matches Alo/Lulu accessory underlines.
+          Needs a kit collection or chooser page (or one kit SKU) for the CTA target.
+        </div>
+      </section>
+
+      <!-- C -->
+      <section class="option option--alt" id="c">
+        <div class="option__head">
+          <div class="option__tag option__tag--muted">C · Quiet alternate</div>
+          <h3>One message, two inline links</h3>
+          <p class="option__what">
+            One supporting sentence; Pilates / Yoga as inline text links — no dual CTA row.
+          </p>
+        </div>
+        <div class="option__preview">
+          <p class="option__preview-label">Buy-box context · trust → kit</p>
+          <div class="buy-slice">
+            <button class="cta-stub" type="button">Add to cart · $74</button>
+            <div class="assurances">
+              <span><b>✓</b> Ships 1–2 days</span>
+              <span><b>✓</b> 30-day returns</span>
+              <span><b>✓</b> 90-day warranty</span>
+              <span><b>✓</b> Latex- &amp; silicone-free</span>
+            </div>
+            <div class="kit">
+              <span class="kit__label">Complete the kit</span>
+              <p class="kit-c__msg">
+                Performance Skin + thin liner for heated studios —
+                <a href="#">Hot Pilates</a> or <a href="#">Hot Yoga</a>.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="option__foot">
+          <strong>Use if</strong> both product URLs must stay on-PDP and you still want one message.
+          Softer than A; less decisive than B. Best compromise when no kit hub exists yet.
+        </div>
+      </section>
+
+    </div>
+
+    <p class="note">
+      Options only — not applied to <code>Definitive-v18.html</code>. v16 Locked remains authority fingerprint.
+      Copy source: existing kit hint + SEO heated-studio framing (Skin + thin liner). No Closed Sole badge. No Shopify push.
+    </p>
+  </div>
+</body>
+</html>

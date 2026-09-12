@@ -1,0 +1,133 @@
+{% comment %}
+  Guarantee / trust band — Home (July 17 parity)
+{% endcomment %}
+
+<section class="guarantee-band" aria-label="Guarantee">
+  <div class="guarantee-band__inner">
+    {% if section.settings.eyebrow != blank %}
+      <p class="guarantee-band__eyebrow">{{ section.settings.eyebrow }}</p>
+    {% endif %}
+    <h2 class="guarantee-band__title">{{ section.settings.title }}</h2>
+    {% if section.settings.body != blank %}
+      <p class="guarantee-band__body">{{ section.settings.body }}</p>
+    {% endif %}
+    <ul class="guarantee-band__list" role="list">
+      {% for block in section.blocks %}
+        <li {{ block.shopify_attributes }}>{{ block.settings.text }}</li>
+      {% endfor %}
+    </ul>
+    {% if section.settings.cta_text != blank %}
+      {% assign g_href = section.settings.cta_url | default: '/collections/grippy-shoes' %}
+      <a class="btn btn--primary guarantee-band__cta" href="{{ g_href }}">
+        {{ section.settings.cta_text }}
+      </a>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  .guarantee-band {
+    padding: var(--space-13, 64px) var(--section-padding-x, 40px);
+    background: #1c1916;
+    color: #fff;
+    text-align: center;
+  }
+  .guarantee-band__inner {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .guarantee-band__eyebrow {
+    margin: 0 0 8px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #e8927c;
+  }
+  .guarantee-band__title {
+    margin: 0 0 16px;
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .guarantee-band__body {
+    margin: 0 auto 28px;
+    font-size: 15px;
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.82);
+    max-width: 48ch;
+  }
+  .guarantee-band__list {
+    list-style: none;
+    margin: 0 0 28px;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px 24px;
+  }
+  .guarantee-band__list li {
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+  }
+  .guarantee-band__cta {
+    display: inline-block;
+    background: #fff;
+    color: #1c1916;
+    padding: 14px 28px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .guarantee-band__cta:hover {
+    background: #c45c3f;
+    color: #fff;
+  }
+  @media (max-width: 768px) {
+    .guarantee-band {
+      padding: 48px 16px;
+    }
+    .guarantee-band__title {
+      font-size: 28px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Guarantee Band",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The Barreletics Promise" },
+    { "type": "text", "id": "title", "label": "Title", "default": "Try them on. Keep them if they earn it." },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Body",
+      "default": "30-day returns on items in new, sellable condition. 90-day warranty against manufacturing defects. Free shipping on orders over $150."
+    },
+    { "type": "text", "id": "cta_text", "label": "CTA text", "default": "Shop Grippy Shoes" },
+    { "type": "url", "id": "cta_url", "label": "CTA URL" }
+  ],
+  "blocks": [
+    {
+      "type": "point",
+      "name": "Point",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Text", "default": "30-day returns" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Guarantee Band",
+      "blocks": [
+        { "type": "point", "settings": { "text": "30-day returns" } },
+        { "type": "point", "settings": { "text": "90-day warranty" } },
+        { "type": "point", "settings": { "text": "Made in USA" } },
+        { "type": "point", "settings": { "text": "Free shipping over $150" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

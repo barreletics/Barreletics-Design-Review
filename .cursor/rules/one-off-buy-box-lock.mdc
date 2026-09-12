@@ -1,0 +1,54 @@
+---
+description: One-off PDPs must use Closed Sole locked buy-box fold — agents must not rebuild or condense it
+alwaysApply: true
+---
+
+# One-off buy-box lock (HARD)
+
+**Owner 2026-08-11:** Agents broke the locked PDP top section while doing one-off copy/spine work. That must not recur.
+
+## Authority (buy column)
+
+1. Closed Sole on M4 + `shopify-build/templates/product.json` → `pdp-buy-box`
+2. `shopify-build/sections/pdp-buy-box.liquid` (shared — fix-forward only with Andrew letter)
+3. Fold proportions: `docs/Barreletics PDP - Definitive-v20c-fold-breathe-more.html`  
+4. Fold judgment (chrome): `docs/pdp-fold-v20d-chrome.html` — **LOCKED** nav #2 (13px mid Roboto) · logo 42px · see `.cursor/rules/pdp-fold-preview-from-m4.mdc`
+
+## Locked facts on one-off Open + Closed
+
+- Color → size buttons → ATC  
+- Size row header = **chart-only** (`Size Chart →` right-aligned) — **NO** visible “Size” label (v20c; that word = wrong fold)  
+- `show_soon_size: false` → M / L only (no Coming soon S)  
+- No quantity stepper · `thumb_count: 7`  
+- Empty under ATC · **kits OFF** on one-offs  
+- Fold breathing / gaps / type match Closed Sole buy column (ATC above fold)  
+- Badge **One-Off** only (Open one-off rust / Closed one-off black) — never rewrite to “Open Sole” from handle  
+- Core Closed Sole **default** badge = rust; TE may set black/charcoal/blue — honor picker. Do not force rust over explicit TE.  
+- Never replace `short_description` with Admin `product.description`.  
+- **Description accordion LOCKED 2026-08-11:** TE `description_accordion_body` only · **NEVER** Admin `product.description` · blank → `short_description` fallback only · never blank/unify `short_description` across product*.json  
+
+
+
+
+
+## FORBIDDEN without Andrew letter in CURRENT message
+
+- Edit `pdp-buy-box.liquid` **layout / CSS / option-row markup / fold spacing** for “one-off polish”
+- **Rebuild** `product.one-off-*.json` buy-box by copying `product.json` wholesale
+- Hide sold-out **sizes** on one-offs (strips L and looks like Size was removed) — colors may still hide OOS  
+- Reintroduce qty / Coming soon S / 4 thumbs / condensed stub buy column  
+- `git restore` / checkout of buy-box or one-off templates  
+
+## ALLOWED without re-approval (copy-only deltas in one-off JSON)
+
+- `lede_line_1` / `lede_line_2` / `short_description`  
+- `sole_badge: One-Off` + `sole_badge_color`  
+- `show_kit_links: false`  
+- Explicit keep: `show_size_chart_link: true`, `show_soon_size: false`, `thumb_count: 7`  
+
+## One-off story work (50/50, FAQ, reviews)
+
+Touch **only** those section settings in `product.one-off-open.json` / `product.one-off-closed.json`.  
+**Do not** open `pdp-buy-box.liquid` in the same turn unless Andrew’s letter is about the buy-box.
+
+Companion: `planning/one-off-surfaces.md` · `barreletics-anti-revert` skill.

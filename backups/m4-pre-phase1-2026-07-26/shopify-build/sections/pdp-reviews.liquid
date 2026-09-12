@@ -1,0 +1,395 @@
+{% comment %}
+  PDP Reviews Section — Judge.me Integration (D-025)
+  Hybrid approach: Liquid shell with metafield aggregate stats,
+  JS hydration for individual reviews via Judge.me API.
+  Uses review-card.liquid snippet for consistent rendering.
+{% endcomment %}
+
+{% assign jm_rating = product.metafields.judgeme.average_rating | default: nil %}
+{% assign jm_count  = product.metafields.judgeme.review_count | default: 0 %}
+{% assign has_reviews = false %}
+{% if jm_count > 0 and jm_rating %}
+  {% assign has_reviews = true %}
+{% endif %}
+
+<section class="pdp-reviews" id="reviews" aria-label="Customer reviews" data-product-handle="{{ product.handle }}">
+  <div class="pdp-reviews__inner">
+    <header class="pdp-reviews__head">
+      <div>
+        {% if has_reviews %}
+          <div class="pdp-reviews__stars" aria-hidden="true">★★★★★</div>
+          <p class="pdp-reviews__score"><strong>{{ jm_rating }}</strong> out of 5 · {{ jm_count }} reviews</p>
+        {% else %}
+          <p class="pdp-reviews__score">No reviews yet — be the first!</p>
+        {% endif %}
+      </div>
+      <a
+        href="https://judge.me/reviews/{{ product.handle }}/new"
+        target="_blank"
+        rel="noopener"
+        class="btn btn--primary pdp-reviews__write"
+      >Write a Review</a>
+    </header>
+
+    {%- comment -%} Featured reviews from section blocks (curated by merchant) {%- endcomment -%}
+    {% assign has_featured = false %}
+    {% for block in section.blocks %}
+      {% if block.type == 'featured_review' %}
+        {% assign has_featured = true %}
+        {% break %}
+      {% endif %}
+    {% endfor %}
+
+    {% if has_featured %}
+      <div class="pdp-reviews__featured">
+        {% for block in section.blocks %}
+          {% if block.type == 'featured_review' %}
+            <div class="pdp-review-featured" {{ block.shopify_attributes }}>
+              <div class="pdp-review-featured__media" style="background: {{ block.settings.bg_gradient | default: 'linear-gradient(135deg, #c9c5b8, #e6e0d4)' }};"></div>
+              <div class="pdp-review-featured__content">
+                <span class="pdp-review-featured__stars">★★★★★</span>
+                <h4 class="pdp-review-featured__title">{{ block.settings.title }}</h4>
+                <p class="pdp-review-featured__body">"{{ block.settings.body }}"</p>
+                <div class="pdp-review-featured__attr">
+                  <span class="pdp-review-featured__author">{{ block.settings.author }}</span>
+                  {% if block.settings.verified %}
+                    <span class="pdp-review-featured__badge">Verified Purchase ✓</span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {%- comment -%} Community reviews — hydrated via Judge.me JS API {%- endcomment -%}
+    <p class="pdp-reviews__community-label">More from the community</p>
+
+    <div class="pdp-reviews__compact-grid" id="jm-reviews-container">
+      <div class="pdp-reviews__loading" id="jm-reviews-loading">
+        <p>Loading reviews…</p>
+      </div>
+    </div>
+
+    <a
+      href="https://judge.me/reviews/{{ product.handle }}"
+      target="_blank"
+      rel="noopener"
+      class="pdp-reviews__all-link"
+    >Read all reviews →</a>
+  </div>
+</section>
+
+<style>
+  .pdp-reviews {
+    padding: var(--space-14) var(--section-padding-x);
+    background: var(--bg-primary);
+  }
+
+  .pdp-reviews__inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .pdp-reviews__head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: var(--space-9);
+    gap: var(--space-6);
+    flex-wrap: wrap;
+    padding-bottom: var(--space-6);
+    border-bottom: 1px solid var(--border-default);
+  }
+
+  .pdp-reviews__stars {
+    font-size: 22px;
+    color: var(--accent-stars);
+    letter-spacing: 0.16em;
+    line-height: 1;
+  }
+
+  .pdp-reviews__score {
+    font-size: 14px;
+    color: var(--text-body);
+    margin: 6px 0 0;
+  }
+
+  .pdp-reviews__write {
+    padding: 12px 20px;
+    font-size: 12px;
+  }
+
+  .pdp-reviews__featured {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .pdp-review-featured {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 1px solid #e6e6e6;
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    background: var(--bg-primary);
+  }
+
+  .pdp-review-featured:nth-child(even) .pdp-review-featured__media {
+    order: 2;
+  }
+
+  .pdp-review-featured:nth-child(even) .pdp-review-featured__content {
+    order: 1;
+  }
+
+  .pdp-review-featured__media {
+    aspect-ratio: 1;
+    min-height: 280px;
+  }
+
+  .pdp-review-featured__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: var(--space-9);
+    gap: var(--space-3);
+  }
+
+  .pdp-review-featured__stars {
+    color: var(--accent-stars);
+    letter-spacing: 0.16em;
+    font-size: 14px;
+  }
+
+  .pdp-review-featured__title {
+    font-size: var(--text-lg);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    margin: 0;
+  }
+
+  .pdp-review-featured__body {
+    font-size: var(--text-base);
+    line-height: var(--leading-loose);
+    color: var(--text-body);
+    font-style: italic;
+    margin: 0;
+  }
+
+  .pdp-review-featured__attr {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 4px;
+  }
+
+  .pdp-review-featured__author {
+    font-size: 13px;
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+  }
+
+  .pdp-review-featured__badge {
+    font-size: var(--text-sm);
+    color: #7b8c84;
+    letter-spacing: 0.04em;
+  }
+
+  .pdp-reviews__community-label {
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-widest);
+    color: var(--text-muted);
+    text-align: center;
+    margin: var(--space-10) 0 var(--space-6);
+  }
+
+  .pdp-reviews__compact-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-5);
+  }
+
+  .pdp-reviews__loading {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: var(--space-8) 0;
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .pdp-reviews__empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: var(--space-10) 0;
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .pdp-reviews__error {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: var(--space-8) 0;
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .pdp-reviews__all-link {
+    display: block;
+    text-align: center;
+    margin-top: var(--space-7);
+    font-size: 12px;
+    letter-spacing: var(--tracking-wider);
+    font-weight: var(--weight-semibold);
+    color: var(--text-primary);
+    text-decoration: none;
+    border-bottom: 1px solid var(--text-primary);
+    padding-bottom: 2px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  @media (max-width: 1024px) {
+    .pdp-review-featured {
+      grid-template-columns: 1fr;
+    }
+
+    .pdp-review-featured:nth-child(even) .pdp-review-featured__media {
+      order: 0;
+    }
+
+    .pdp-reviews__compact-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .pdp-reviews {
+      padding: var(--section-padding-y-mobile) var(--section-padding-x-mobile);
+    }
+
+    .pdp-reviews__compact-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .pdp-review-featured__content {
+      padding: var(--space-7) var(--space-5);
+    }
+  }
+</style>
+
+<script>
+  (function() {
+    var container = document.getElementById('jm-reviews-container');
+    var loading = document.getElementById('jm-reviews-loading');
+    var handle = document.querySelector('[data-product-handle]');
+    if (!container || !handle) return;
+
+    var productHandle = handle.getAttribute('data-product-handle');
+
+    function fetchReviews() {
+      var url = 'https://judge.me/api/v1/reviews?shop_domain={{ shop.permanent_domain }}&product_handle=' + productHandle + '&per_page=6';
+
+      fetch(url)
+        .then(function(res) {
+          if (!res.ok) throw new Error('judge-me-unavailable');
+          return res.json();
+        })
+        .then(function(data) {
+          if (loading) loading.remove();
+
+          var reviews = data.reviews || [];
+          if (reviews.length === 0) {
+            container.innerHTML = '<div class="pdp-reviews__empty"><p>No community reviews yet. Be the first to share your experience!</p></div>';
+            return;
+          }
+
+          var html = '';
+          reviews.forEach(function(review) {
+            html += buildReviewCard(review);
+          });
+          container.innerHTML = html;
+        })
+        .catch(function() {
+          if (loading) loading.remove();
+          container.innerHTML = '<div class="pdp-reviews__error"><p>Reviews are temporarily unavailable. Please check back soon.</p></div>';
+        });
+    }
+
+    function buildReviewCard(review) {
+      var stars = '';
+      for (var i = 1; i <= 5; i++) {
+        if (i <= review.rating) {
+          stars += '<span class="review-card__star review-card__star--filled" aria-hidden="true">★</span>';
+        } else {
+          stars += '<span class="review-card__star review-card__star--empty" aria-hidden="true">☆</span>';
+        }
+      }
+
+      var photo = '';
+      if (review.picture_urls && review.picture_urls.length > 0) {
+        photo = '<div class="review-card__photo"><img src="' + escapeAttr(review.picture_urls[0]) + '" alt="Review photo" loading="lazy" width="200" height="200"></div>';
+      }
+
+      var verified = review.verified === 'buyer' ? '<span class="review-card__verified">Verified Purchase ✓</span>' : '';
+      var date = review.created_at ? '<time class="review-card__date">' + formatDate(review.created_at) + '</time>' : '';
+
+      return '<article class="review-card">' +
+        '<div class="review-card__stars" aria-label="' + review.rating + ' out of 5 stars">' + stars + '</div>' +
+        (review.title ? '<h4 class="review-card__title">' + escapeHtml(review.title) + '</h4>' : '') +
+        '<p class="review-card__body">' + escapeHtml(review.body) + '</p>' +
+        photo +
+        '<footer class="review-card__footer">' +
+          '<span class="review-card__author">' + escapeHtml(review.reviewer.name || 'Anonymous') + '</span>' +
+          verified + date +
+        '</footer>' +
+      '</article>';
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      var div = document.createElement('div');
+      div.appendChild(document.createTextNode(str));
+      return div.innerHTML;
+    }
+
+    function escapeAttr(str) {
+      return (str || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    function formatDate(dateStr) {
+      try {
+        var d = new Date(dateStr);
+        return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      } catch(e) {
+        return '';
+      }
+    }
+
+    fetchReviews();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "PDP Reviews",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "featured_review",
+      "name": "Featured Review",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "textarea", "id": "body", "label": "Review body" },
+        { "type": "text", "id": "author", "label": "Author" },
+        { "type": "checkbox", "id": "verified", "label": "Verified purchase", "default": false },
+        { "type": "text", "id": "bg_gradient", "label": "Media gradient", "default": "linear-gradient(135deg, #c9c5b8, #e6e0d4)" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "PDP Reviews" }]
+}
+{% endschema %}

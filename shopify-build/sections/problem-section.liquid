@@ -1,0 +1,347 @@
+{% comment %}
+  Problem section — Home WORKING 12b. Cream text-only beat (not 50/50).
+{% endcomment %}
+
+{%- liquid
+  assign cta_style = section.settings.cta_style | default: 'solid'
+  assign cta_bg = section.settings.cta_bg_color | default: '#c45c3f'
+  assign cta_border = section.settings.cta_border_color | default: cta_bg
+  assign cta_text_color = section.settings.cta_text_color | default: '#ffffff'
+-%}
+<section
+  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} problem-section"
+  id="{{ section.settings.anchor_id | default: 'problem' | handleize }}"
+  aria-label="{{ section.settings.title | escape }}"
+  style="{% render 'section-inset-vars' %} --pr-cta-bg: {{ cta_bg }}; --pr-cta-border: {{ cta_border }}; --pr-cta-text: {{ cta_text_color }};"
+>
+  <div class="problem-shell">
+    <div class="problem-inner">
+      <div>
+        <h2 class="problem-title h2-display">{{ section.settings.title }}</h2>
+        {% if section.settings.body != blank %}
+          <p class="problem-body">{{ section.settings.body }}</p>
+        {% endif %}
+      </div>
+      <div>
+        {% if section.blocks.size > 0 %}
+          <ul class="problem-list">
+            {% for block in section.blocks %}
+              <li {{ block.shopify_attributes }}>
+                <span class="problem-list__x" aria-hidden="true">×</span>
+                <span>{{ block.settings.text }}</span>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+        {% if section.settings.cta_text != blank %}
+          <div class="problem-resolve">
+            <a class="problem-resolve__cta{% if cta_style == 'outline' %} problem-resolve__cta--outline{% endif %}" href="{{ section.settings.cta_url | default: '#variants' }}">
+              {{ section.settings.cta_text }}
+            </a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .problem-section {
+    padding: 72px 40px;
+    background: #f5f2ec;
+  }
+  {% if template.name == 'collection' %}
+  #shopify-section-{{ section.id }} .problem-section {
+    background: #faf8f6;
+  }
+  {% endif %}
+  .problem-shell {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .problem-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+  .problem-title {
+    max-width: none;
+    margin: 0 0 var(--gap-b);
+  }
+  .problem-body {
+    font-size: var(--type-body-size);
+    font-weight: var(--type-body-weight);
+    color: var(--text-body);
+    line-height: var(--type-body-leading);
+    margin: 0;
+    max-width: 38ch;
+  }
+  .problem-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .problem-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 0;
+    border-top: 1px solid #d6cfc0;
+    font-size: 15px;
+    color: #4a4a4a;
+    line-height: 1.45;
+  }
+  .problem-list li:last-child { border-bottom: 1px solid #d6cfc0; }
+  .problem-list__x {
+    color: #c45c3f;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .problem-resolve {
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid #d6cfc0;
+  }
+  .problem-resolve__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--type-cta-min-height);
+    padding: var(--type-cta-pad-y) var(--type-cta-pad-x);
+    background: var(--pr-cta-bg, #c45c3f);
+    color: var(--pr-cta-text, #fff);
+    font-size: var(--type-cta-size);
+    font-weight: var(--type-cta-weight);
+    letter-spacing: var(--type-cta-tracking);
+    line-height: var(--type-cta-leading, 1);
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 4px;
+    border: 1px solid var(--pr-cta-border, var(--pr-cta-bg, #c45c3f));
+    transition: opacity 0.15s ease;
+  }
+  .problem-resolve__cta--outline {
+    background: transparent;
+    color: var(--pr-cta-text, var(--pr-cta-border, #c45c3f));
+  }
+  .problem-resolve__cta:hover { opacity: 0.92; }
+  @media (max-width: 768px) {
+    .problem-section { padding: 48px 16px; }
+    .problem-inner {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Problem section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Shared — Content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Never slip in Chair Pose"
+    },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Body",
+      "default": "Never slip again in side plank or flat back chair. Try that in a barre grip sock."
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA label",
+      "default": "Shop Now"
+    },
+    
+    {
+      "type": "select",
+      "id": "cta_style",
+      "label": "CTA style",
+      "options": [
+        { "value": "solid", "label": "Solid fill" },
+        { "value": "outline", "label": "Outline only" }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "color",
+      "id": "cta_bg_color",
+      "label": "CTA background color",
+      "default": "#c45c3f",
+      "info": "Used for solid fill. Outline style uses transparent fill + border color."
+    },
+    {
+      "type": "color",
+      "id": "cta_border_color",
+      "label": "CTA outline / border color",
+      "default": "#c45c3f"
+    },
+    {
+      "type": "color",
+      "id": "cta_text_color",
+      "label": "CTA label color",
+      "default": "#ffffff",
+      "info": "Solid fill: usually white. Outline or light fill: charcoal/black."
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "CTA link"
+    },
+    {
+      "type": "header",
+      "content": "Section — Problem"
+    },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor ID",
+      "default": "problem"
+    },
+    {
+      "type": "header",
+      "content": "Shared — Section frame"
+    },
+    {
+      "type": "paragraph",
+      "content": "OUTER inset from the page edges (margin). Top and bottom are independent; left & right = one control. Custom mobile OFF = mobile uses the same inset as desktop. Defaults 0 = full bleed."
+    },
+    {
+      "type": "checkbox",
+      "id": "inset_custom_mobile",
+      "label": "Custom mobile inset",
+      "default": false,
+      "info": "OFF (default): ignore the mobile inset sliders — mobile uses desktop Inset top / bottom / left & right. ON: use the mobile inset sliders instead."
+    },
+    {
+      "type": "range",
+      "id": "inset_top",
+      "label": "Inset top",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom",
+      "label": "Inset bottom",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x",
+      "label": "Inset left & right",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Same value on both sides."
+    },
+    {
+      "type": "range",
+      "id": "inset_top_mobile",
+      "label": "Inset top — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom_mobile",
+      "label": "Inset bottom — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x_mobile",
+      "label": "Inset left & right — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_desktop",
+      "label": "Hide on desktop",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Pain point",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Grip socks that peel, stretch out, and quit"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Problem section",
+      "blocks": [
+        {
+          "type": "item",
+          "settings": {
+            "text": "Flat back chair & water ski — resetting mid-set"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "text": "Reformer footwork — adjusting between sets"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "text": "Deep lunges on barre, reformer & Megaformer"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "text": "Grip socks that peel, stretch out, and quit"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

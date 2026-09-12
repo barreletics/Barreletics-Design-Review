@@ -6,7 +6,7 @@ version: 1.0
 status: 🔒 Locked
 approved_by: Owner / Architect
 approval_date: 2026-07-18
-last_modified: 2026-07-18
+last_modified: 2026-09-08
 depends_on: [01, 02]
 supersedes: [QA-03-DESIGN-SYSTEM.md]
 ---
@@ -55,6 +55,8 @@ These values are canonical. All ADR conflicts from the prior planning phase are 
 - Star/rating color is `#d4af37` (antique gold), not `#fbc02d`. Matches v49 PDP. (Resolves ADR-07)
 
 ### Typography
+
+**Living authority:** Type OS SETTLED — `planning/m4-type-hierarchy.md` · `docs/type-os-specimen.html`. Closed phone 50/50 pad **104/104** (2026-09-08) is layout, not type. Table below is v49 history.
 
 - **Font family:** `'Roboto', -apple-system, BlinkMacSystemFont, sans-serif`
 - **Headings:** 42px / 700 / 1.2 → 32px mobile

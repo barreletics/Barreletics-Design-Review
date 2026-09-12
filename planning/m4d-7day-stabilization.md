@@ -119,4 +119,4 @@ ALL of the following must be true to declare stabilization complete:
 
 ## Next Step
 
-Upon sign-off → M4D Launch gate is locked. Update Decision Log with D-048 (or next number). Transition to M4E Stabilization gate per `MILESTONES-4-5-6-ROADMAP.md`.
+Upon sign-off → M4D Launch gate is locked. Update Decision Log with the next free number (D-048 is taken by the partner-pages decision). Transition to M4E Stabilization gate per `MILESTONES-4-5-6-ROADMAP.md`.

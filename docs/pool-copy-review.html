@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Barreletics — Pool copy review (2026-08-07)</title>
+<style>
+  :root{
+    --charcoal:#1c1916; --rust:#c45c3f; --body:#4a4a4a; --muted:#8a8a8a;
+    --warm-muted:#6b645a; --border:#d6cfc0; --cream:#f5f2ec; --light:#f9f9f9; --white:#fff;
+    --gap-a:16px; --gap-b:20px; --gap-c:32px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--white); color:var(--body);
+    font-family:'Roboto',-apple-system,BlinkMacSystemFont,sans-serif;
+    font-size:16px; line-height:1.72; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1200px; margin:0 auto; padding:64px 40px}
+  .type-label{font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--rust); margin:0 0 var(--gap-a)}
+  h1{font-size:clamp(38px,4.6vw,52px); font-weight:500; line-height:1.08; letter-spacing:-.02em; color:var(--charcoal); margin:0 0 var(--gap-b)}
+  h2{font-size:clamp(26px,2.9vw,32px); font-weight:600; line-height:1.2; color:var(--charcoal); margin:0 0 var(--gap-a)}
+  h3{font-size:19px; font-weight:600; color:var(--charcoal); margin:0 0 6px}
+  .lede{font-size:17px; line-height:1.60; color:var(--warm-muted); max-width:62ch; margin:0 0 var(--gap-c)}
+
+  header.page{border-bottom:1px solid var(--border); padding-bottom:var(--gap-c); margin-bottom:var(--gap-c)}
+  .meta{font-size:13px; color:var(--muted); margin:0}
+  .meta a{color:var(--rust)}
+
+  section.group{margin:0 0 56px}
+  .group__head{display:flex; align-items:baseline; justify-content:space-between; gap:var(--gap-b); flex-wrap:wrap; margin-bottom:6px}
+  .where{font-size:12px; color:var(--muted); margin:0 0 var(--gap-c)}
+  .where code{background:var(--light); padding:2px 6px; border-radius:3px; font-size:11px; color:var(--warm-muted)}
+  .pill{display:inline-block; font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; padding:4px 10px; border-radius:3px}
+  .pill--live{background:var(--charcoal); color:#fff}
+  .pill--repo{background:var(--rust); color:#fff}
+
+  .pair{display:grid; grid-template-columns:1fr 1fr; gap:var(--gap-b); margin-bottom:var(--gap-b)}
+  .card{border:1px solid var(--border); border-radius:12px; padding:24px 26px; background:var(--white)}
+  .card--old{background:var(--light); border-color:#e6e6e6}
+  .card--new{border-left:5px solid var(--rust)}
+  .card__tag{font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; margin:0 0 var(--gap-a)}
+  .card--old .card__tag{color:var(--muted)}
+  .card--new .card__tag{color:var(--rust)}
+  .card--old p, .card--old li{color:var(--muted)}
+  .card p{margin:0 0 10px}
+  .card p:last-child{margin-bottom:0}
+  .card ul{margin:0; padding-left:18px}
+  .card li{margin-bottom:4px}
+  .bad{color:#9a3412; font-weight:600}
+
+  .render{background:var(--cream); border-radius:12px; padding:32px 34px; margin-top:var(--gap-b)}
+  .render__label{font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--warm-muted); margin:0 0 var(--gap-b)}
+  .geo{border-bottom:1px solid var(--border); padding:18px 0}
+  .geo:last-child{border-bottom:none}
+  .geo h4{font-size:17px; font-weight:600; color:var(--charcoal); margin:0 0 6px}
+  .geo p{margin:0; color:var(--warm-muted); line-height:1.60}
+
+  .verdict{background:var(--charcoal); color:#fff; border-radius:12px; padding:32px 34px; margin-top:56px}
+  .verdict h2{color:#fff}
+  .verdict p{color:#cfc9c0; max-width:70ch}
+  .verdict ul{color:#cfc9c0; padding-left:18px}
+  .verdict strong{color:#fff}
+
+  @media (max-width:1024px){ .pair{grid-template-columns:1fr} }
+  @media (max-width:768px){ .wrap{padding:48px 16px} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="page">
+    <p class="type-label">Copy review · 2026-08-07</p>
+    <h1>Pool language — every line I changed</h1>
+    <p class="lede">Read the right-hand column. If a line is wrong, tell me the line and rewrite it — nothing here is locked. Rust bar = proposed new copy.</p>
+    <p class="meta"><span class="pill pill--repo">Repo</span> = changed, waiting on your approval → draft → Brian. &nbsp; <span class="pill pill--live">Live</span> = still on barreletics.com, needs Shopify Admin. &nbsp; Decision record: <strong>P-012</strong>.</p>
+  </header>
+
+  <!-- 1 -->
+  <section class="group">
+    <div class="group__head"><h2>Outdoor collection — GEO block</h2><span class="pill pill--repo">Repo</span></div>
+    <p class="where">Renders on the Outdoor collection page under “Where Outdoor grippy shoes perform.” File: <code>shopify-build/templates/collection.outdoor.json</code></p>
+
+    <div class="pair">
+      <div class="card card--old">
+        <p class="card__tag">Was</p>
+        <p><strong>Grippy shoes for beach and hot sand</strong></p>
+        <p>Hot sand, wet shoreline, <span class="bad">rocky tidepools</span> — Outdoor grippy shoes protect your feet while maintaining ground feel. Quick-drain design sheds water in seconds.</p>
+      </div>
+      <div class="card card--new">
+        <p class="card__tag">Now</p>
+        <p><strong>Grippy shoes for beach and hot sand</strong></p>
+        <p>Hot sand, wet sand, uneven ground — Outdoor grippy shoes protect your feet while maintaining ground feel. Quick-drain design sheds water in seconds.</p>
+      </div>
+    </div>
+
+    <div class="pair">
+      <div class="card card--old">
+        <p class="card__tag">Was</p>
+        <p><strong>Packable grippy shoes for travel and resorts</strong></p>
+        <p>Roll them flat, toss them in your bag. From <span class="bad">poolside</span> to <span class="bad">rocky coves</span> to hotel gym — one pair covers every surface your trip throws at you.</p>
+      </div>
+      <div class="card card--new">
+        <p class="card__tag">Now</p>
+        <p><strong>Packable grippy shoes for travel and resortwear</strong></p>
+        <p>Roll them flat, toss them in your bag. Beach, resort, hotel gym — one pair covers every surface your trip throws at you.</p>
+      </div>
+    </div>
+
+    <div class="pair">
+      <div class="card card--old">
+        <p class="card__tag">Was — hero body</p>
+        <p>Works on beach, paddleboard, <span class="bad">rocks</span>, hot sand, and boat decks.</p>
+      </div>
+      <div class="card card--new">
+        <p class="card__tag">Now — hero body</p>
+        <p>Works on beach, paddleboard, hot sand, and boat decks.</p>
+      </div>
+    </div>
+
+    <div class="render">
+      <p class="render__label">How the GEO block reads now, in order</p>
+      <div class="geo">
+        <h4>Grippy shoes for beach and hot sand</h4>
+        <p>Hot sand, wet sand, uneven ground — Outdoor grippy shoes protect your feet while maintaining ground feel. Quick-drain design sheds water in seconds.</p>
+      </div>
+      <div class="geo">
+        <h4>Grippy shoes for boat decks and paddleboarding</h4>
+        <p>Wet fiberglass, teak decking, inflatable SUP surfaces — injection-molded grip holds where rubber soles hydroplane. Lightweight enough to forget you’re wearing them. <em style="color:var(--muted)">(unchanged)</em></p>
+      </div>
+      <div class="geo">
+        <h4>Packable grippy shoes for travel and resortwear</h4>
+        <p>Roll them flat, toss them in your bag. Beach, resort, hotel gym — one pair covers every surface your trip throws at you.</p>
+      </div>
+      <div class="geo">
+        <h4>How do I care for Outdoor grippy shoes after water use?</h4>
+        <p>Rinse with fresh water, shake out excess, air dry. The injection-molded grip and performance knit are engineered for repeated water exposure — no degradation, no odor buildup. <em style="color:var(--muted)">(unchanged)</em></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section class="group">
+    <div class="group__head"><h2>FAQ page</h2><span class="pill pill--repo">Repo</span></div>
+    <p class="where">Mock: <code>docs/Barreletics FAQ - Definitive-v5.html</code> — v4 layout untouched, copy only. v4 stays locked until you say <strong>LOCK THIS</strong>.</p>
+
+    <div class="pair">
+      <div class="card card--old">
+        <p class="card__tag">Was</p>
+        <p>Closed Sole especially works beyond the studio — beach, paddleboarding, boat decks, <span class="bad">poolside</span>, <span class="bad">rocky shorelines</span>, hot sand — grip and ground feel without shoe bulk.</p>
+      </div>
+      <div class="card card--new">
+        <p class="card__tag">Now</p>
+        <p>Closed Sole especially works beyond the studio — beach, paddleboarding, outdoor yoga, boat decks, resortwear, hot sand — grip and ground feel without shoe bulk.</p>
+      </div>
+    </div>
+
+    <div class="pair">
+      <div class="card card--old">
+        <p class="card__tag">Was — slippery surface caution</p>
+        <p>Inherently slippery surfaces — no footwear wins: wet polished marble, certain wet tiles, oiled/waxed floors, <span class="bad">some spa/pool tile</span>.</p>
+      </div>
+      <div class="card card--new">
+        <p class="card__tag">Now — caution kept, venue dropped</p>
+        <p>Inherently slippery surfaces — no footwear wins: wet polished marble, certain wet tiles, oiled/waxed floors, wet stone.</p>
+      </div>
+    </div>
+
+    <div class="pair">
+      <div class="card card--old">
+        <p class="card__tag">Was — hot yoga</p>
+        <p>In hot yoga / hot Pilates, extra sweat <span class="bad">pools</span> at the feet.</p>
+      </div>
+      <div class="card card--new">
+        <p class="card__tag">Now</p>
+        <p>In hot yoga / hot Pilates, extra sweat collects at the feet.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section class="group">
+    <div class="group__head"><h2>Product “Great for” list</h2><span class="pill pill--live">Live</span></div>
+    <p class="where">This is the big one. Currently on the live Closed Sole product page and indexed by Google. Repo copy is fixed in <code>docs/09-PRODUCT-KNOWLEDGE.md</code> — <strong>the live page still shows the old list.</strong></p>
+
+    <div class="pair">
+      <div class="card card--old">
+        <p class="card__tag">Live right now — 9 items</p>
+        <ul>
+          <li>Beach workouts &amp; beach volleyball</li>
+          <li>Paddleboarding &amp; boating</li>
+          <li class="bad">Climbing rocks &amp; navigating tidal pools</li>
+          <li class="bad">Outdoor &amp; poolside yoga</li>
+          <li class="bad">Rocky shorelines &amp; shell-covered beaches</li>
+          <li class="bad">Pool decks &amp; water parks</li>
+          <li class="bad">Spa visits</li>
+          <li>Hot sand &amp; sun-baked pavement</li>
+          <li>Anywhere you’d go barefoot — but better</li>
+        </ul>
+      </div>
+      <div class="card card--new">
+        <p class="card__tag">Proposed — 6 items</p>
+        <ul>
+          <li>Beach workouts &amp; beach volleyball</li>
+          <li>Paddleboarding &amp; boating</li>
+          <li>Outdoor yoga</li>
+          <li>Resortwear &amp; travel</li>
+          <li>Hot sand &amp; sun-baked pavement</li>
+          <li>Anywhere you’d go barefoot — but better</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="pair">
+      <div class="card card--old">
+        <p class="card__tag">Was — narrative</p>
+        <p>…move naturally over <span class="bad">rocky shorelines</span>, hot sand, and uneven surfaces…</p>
+        <p>A barrier where it matters: hot sand, sun-baked pavement, <span class="bad">pebbly lake beds, shell-covered shorelines</span>.</p>
+        <p>Better than barefoot on wet terrain: climbing on rocks at the ocean’s edge, navigating a slippery boat deck, <span class="bad">stepping across tidal pools</span>.</p>
+      </div>
+      <div class="card card--new">
+        <p class="card__tag">Now</p>
+        <p>…move naturally over hot sand and uneven surfaces…</p>
+        <p>A barrier where it matters: hot sand and sun-baked pavement.</p>
+        <p>Better than barefoot on wet terrain: a slippery boat deck, a wet paddleboard, the walk back from the beach.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section class="group">
+    <div class="group__head"><h2>Water Shoe product description</h2><span class="pill pill--live">Live</span></div>
+    <p class="where">Shopify product body HTML. Repo record updated; live product still shows the old line.</p>
+    <div class="pair">
+      <div class="card card--old">
+        <p class="card__tag">Live right now</p>
+        <p>Perfect for outdoor adventures, the closed sole provides grip, stability, and protection from hot sand. Ideal for paddle-boarding, boating and <span class="bad">poolside activities</span>. Always check wet surfaces for slippage.</p>
+      </div>
+      <div class="card card--new">
+        <p class="card__tag">Proposed</p>
+        <p>Perfect for outdoor adventures, the closed sole provides grip, stability, and protection from hot sand. Ideal for paddleboarding, boating, beach, and resortwear. Always check wet surfaces for slippage.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section class="group">
+    <div class="group__head"><h2>ManyChat + SEO tags</h2><span class="pill pill--repo">Repo</span> <span class="pill pill--live">Live</span></div>
+    <div class="pair">
+      <div class="card card--old">
+        <p class="card__tag">Was — ManyChat “what workouts”</p>
+        <p>Also great for: Weight lifting, outdoor volleyball, martial arts, barefoot running, boating, beach, <span class="bad">pool decks</span>, anywhere you’d go barefoot.</p>
+        <p class="card__tag" style="margin-top:18px">Was — Shopify SEO tags</p>
+        <p><span class="bad">grippy shoes for pools</span>, aqua shoes, boat shoes that don’t slip, jet ski shoes…</p>
+      </div>
+      <div class="card card--new">
+        <p class="card__tag">Now — ManyChat</p>
+        <p>Also great for: Weight lifting, outdoor volleyball, martial arts, barefoot running, boating, paddleboarding, outdoor yoga, beach, resortwear, anywhere you’d go barefoot.</p>
+        <p class="card__tag" style="margin-top:18px">Now — SEO tags</p>
+        <p>beach shoes, resort shoes, aqua shoes, boat shoes that don’t slip, jet ski shoes… <em style="color:var(--muted)">(pool keywords retired — still need removing in Admin)</em></p>
+      </div>
+    </div>
+  </section>
+
+  <div class="verdict">
+    <h2>What still needs a human</h2>
+    <p>The repo lines above are done and reversible — say the word and I rewrite any of them. But three things can only be fixed inside Shopify Admin, because they’re product and blog records, not theme code. Brian deploying the repo will not touch them:</p>
+    <ul>
+      <li><strong>Closed Sole product page</strong> — the “Great for” list, the caution line, and the “poolside lounging” description</li>
+      <li><strong>SEO tags</strong> — “grippy shoes for pools” and friends</li>
+      <li><strong>Blog posts</strong> — the aqua barre and water aerobics articles are built entirely around pool workouts. These are the strongest pool signal on the whole site and no copy edit elsewhere offsets them.</li>
+    </ul>
+  </div>
+
+</div>
+</body>
+</html>

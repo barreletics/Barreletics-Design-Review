@@ -1,0 +1,4539 @@
+{% comment %}
+  All Variants Grid Section
+  Displays all variants of a product as individual cards with Quick Add
+{% endcomment %}
+
+{%- liquid
+  comment
+    Product loading: aligned with live theme.
+    Product 4/5 support handle fallback lookup when picker is empty.
+    Draft-only: _use_current, _hide_main_product (one-off pages), product_5.
+  endcomment
+  assign _p4_invalid_source = false
+  assign _p5_invalid_source = false
+  assign _use_current = false
+  if product != blank and section.settings.use_current_product
+    assign _use_current = true
+  endif
+  assign _hide_main_product = false
+  if _use_current and template.name == 'product' and product.handle != blank
+    assign _ph_down = product.handle | downcase
+    if _ph_down contains 'one-off' or _ph_down contains 'one_off' or _ph_down contains 'exclusive-colors'
+      assign _hide_main_product = true
+    endif
+  endif
+  if _use_current
+    assign target_product = product
+    assign target_product_2 = nil
+    assign target_product_3 = nil
+    assign target_product_4 = nil
+    assign target_product_5 = nil
+    assign use_filter_tabs = false
+  elsif section.settings.product != blank
+    assign target_product = section.settings.product
+    if section.settings.product_2 != blank
+      assign target_product_2 = section.settings.product_2
+    else
+      assign target_product_2 = nil
+    endif
+    if section.settings.product_3 != blank
+      assign target_product_3 = section.settings.product_3
+    else
+      assign target_product_3 = nil
+    endif
+    if section.settings.product_4 != blank
+      assign target_product_4 = section.settings.product_4
+    else
+      assign target_product_4 = nil
+    endif
+    if section.settings.product_5 != blank
+      assign target_product_5 = section.settings.product_5
+    else
+      assign target_product_5 = nil
+    endif
+    assign use_filter_tabs = section.settings.enable_filter_tabs
+  else
+    assign target_product = nil
+    assign target_product_2 = nil
+    assign target_product_3 = nil
+    assign target_product_4 = nil
+    assign target_product_5 = nil
+    assign use_filter_tabs = false
+  endif
+  if target_product == nil or target_product == blank
+    assign target_product_2 = nil
+    assign target_product_3 = nil
+    assign target_product_4 = nil
+    assign target_product_5 = nil
+  endif
+  if target_product_4 != nil and target_product_4.handle != blank
+    assign _p4h = target_product_4.handle | downcase
+    assign _p4_is_oneoff = false
+    if _p4h contains 'one-off' or _p4h contains 'one_off' or _p4h contains 'exclusive-colors'
+      assign _p4_is_oneoff = true
+    endif
+    unless _p4_is_oneoff
+      assign _p4_invalid_source = true
+      assign target_product_4 = nil
+    endunless
+  endif
+  if target_product_5 != nil and target_product_5.handle != blank
+    assign _p5h = target_product_5.handle | downcase
+    assign _p5_is_oneoff = false
+    if _p5h contains 'one-off' or _p5h contains 'one_off' or _p5h contains 'exclusive-colors'
+      assign _p5_is_oneoff = true
+    endif
+    unless _p5_is_oneoff
+      assign _p5_invalid_source = true
+      assign target_product_5 = nil
+    endunless
+  endif
+
+  assign desktop_cols = section.settings.desktop_columns
+  assign initial_rows = section.settings.initial_rows | default: 2
+  if initial_rows > 0
+    assign initial_count = initial_rows | times: desktop_cols
+  else
+    assign initial_count = section.settings.initial_variants | default: 8
+  endif
+  assign max_count = section.settings.max_variants
+  assign _oneoff_visible_total = 0
+  if target_product_4 != nil
+    for _ov4 in target_product_4.variants limit: max_count
+      assign _ov4_skip = false
+      assign _ov4_hidden = _ov4.metafields.custom.hide_from_storefront.value | append: '' | downcase
+      if _ov4_hidden == 'true'
+        assign _ov4_skip = true
+      endif
+      if section.settings.hide_sold_out_one_off and _ov4.available == false
+        assign _ov4_skip = true
+      endif
+      unless _ov4_skip
+        assign _oneoff_visible_total = _oneoff_visible_total | plus: 1
+      endunless
+    endfor
+  endif
+  if target_product_5 != nil
+    for _ov5 in target_product_5.variants limit: max_count
+      assign _ov5_skip = false
+      assign _ov5_hidden = _ov5.metafields.custom.hide_from_storefront.value | append: '' | downcase
+      if _ov5_hidden == 'true'
+        assign _ov5_skip = true
+      endif
+      if section.settings.hide_sold_out_one_off and _ov5.available == false
+        assign _ov5_skip = true
+      endif
+      unless _ov5_skip
+        assign _oneoff_visible_total = _oneoff_visible_total | plus: 1
+      endunless
+    endfor
+  endif
+  assign _show_oneoff_tab = false
+  if _oneoff_visible_total > 0
+    assign _show_oneoff_tab = true
+  endif
+  assign mobile_cols = section.settings.mobile_columns
+  assign show_product_labels = false
+  if target_product_2 != nil and use_filter_tabs == false
+    assign show_product_labels = true
+  endif
+  
+  assign has_multiple_products = false
+  if target_product_2 != nil or target_product_3 != nil or target_product_4 != nil or target_product_5 != nil
+    assign has_multiple_products = true
+  endif
+  assign kids_trigger_br = section.settings.kids_trigger | default: 'kids' | strip | downcase
+-%}
+
+<style>
+  #br-variants-{{ section.id }},
+  #shopify-section-{{ section.id }} {
+    --subtitle-line-size-desktop: {{ section.settings.subtitle_line_font_size_desktop | default: 18 }}px;
+    --subtitle-line-size-mobile: {{ section.settings.subtitle_line_font_size_mobile | default: 16 }}px;
+    --card-bg: {{ section.settings.card_background }};
+    --card-radius: {{ section.settings.card_radius }}px;
+    --card-padding: {{ section.settings.card_padding }}px;
+    --title-size: {{ section.settings.title_size }}px;
+    --subtitle-size: {{ section.settings.subtitle_size }}px;
+    --btn-bg: {{ section.settings.button_background }};
+    --btn-color: {{ section.settings.button_text_color }};
+    --btn-radius: {{ section.settings.button_radius }}px;
+    --btn-pad-v: {{ section.settings.button_padding_v }}px;
+    --btn-pad-h: {{ section.settings.button_padding_h }}px;
+    --btn-font-size-desktop: {{ section.settings.button_font_size_desktop | default: 14 }}px;
+    --btn-font-size-mobile: {{ section.settings.button_font_size_mobile | default: 14 }}px;
+    --sale-badge-bg: {{ section.settings.sale_badge_bg }};
+    --sale-badge-color: {{ section.settings.sale_badge_text_color }};
+    --sale-price-color: {{ section.settings.sale_price_color }};
+    --compare-color: {{ section.settings.compare_price_color }};
+    --le-badge-bg: #458CD9;
+    --le-badge-color: #ffffff;
+    --le-font-size: {{ section.settings.le_label_font_size | default: 13 }}px;
+    --le-font-weight: {{ section.settings.le_label_font_weight | default: 600 }};
+    --le-letter-spacing: {{ section.settings.le_label_letter_spacing | default: 0.1 }}em;
+    --le-text-color: {{ section.settings.le_label_color | default: '#000000' }};
+    --oneoff-badge-bg: {{ section.settings.oneoff_badge_bg | default: '#ffffff' }};
+    --oneoff-badge-color: {{ section.settings.oneoff_badge_text_color | default: '#000000' }};
+    --oneoff-font-size: {{ section.settings.oneoff_label_font_size | default: 13 }}px;
+    --oneoff-font-weight: {{ section.settings.oneoff_label_font_weight | default: 600 }};
+    --oneoff-letter-spacing: {{ section.settings.oneoff_label_letter_spacing | default: 0.1 }}em;
+    --oneoff-text-color: {{ section.settings.oneoff_label_color | default: '#000000' }};
+    --le-font-family: Roboto, sans-serif;
+    --section-pad-top-desktop: {{ section.settings.padding_top_desktop | default: 40 }}px;
+    --section-pad-bottom-desktop: {{ section.settings.padding_bottom_desktop | default: 40 }}px;
+    --section-pad-top-mobile: {{ section.settings.padding_top_mobile | default: 30 }}px;
+    --section-pad-bottom-mobile: {{ section.settings.padding_bottom_mobile | default: 30 }}px;
+  }
+
+  .br-variants-section {
+    padding-top: var(--section-pad-top-desktop);
+    padding-bottom: var(--section-pad-bottom-desktop);
+  }
+
+  @media (max-width: 749px) {
+    .br-variants-section {
+      padding-top: var(--section-pad-top-mobile);
+      padding-bottom: var(--section-pad-bottom-mobile);
+    }
+  }
+
+  .br-variants-container {
+    max-width: {{ section.settings.content_max_width_desktop | default: 1100 }}px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  @media (max-width: 749px) {
+    .br-variants-container {
+      max-width: max({{ section.settings.content_max_width_mobile | default: 360 }}px, {{ section.settings.heading_max_width_mobile | default: 420 }}px);
+    }
+  }
+
+  .br-variants-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  @media (max-width: 749px) {
+    .br-variants-header {
+      margin-bottom: 18px;
+    }
+  }
+
+  .br-variants-title.br-section-heading {
+    font-family: {{ section.settings.title_font.family }}, {{ section.settings.title_font.fallback_families }};
+    font-weight: var(--br-heading-weight, {{ section.settings.title_font.weight }});
+    font-size: var(--br-section-heading-size-desktop, {{ section.settings.section_heading_font_size_desktop | default: 28 }}px);
+    text-transform: var(--br-heading-transform, none);
+    color: {{ section.settings.heading_color }};
+    margin: 0 0 {{ section.settings.heading_margin_bottom_desktop | default: 10 }}px;
+  }
+
+  @media (max-width: 749px) {
+    .br-variants-title.br-section-heading {
+      font-size: var(--br-section-heading-size-mobile, {{ section.settings.section_heading_font_size_mobile | default: 22 }}px);
+      margin-bottom: {{ section.settings.heading_margin_bottom_mobile | default: 8 }}px;
+    }
+  }
+
+  @media (max-width: 749px) {
+    #br-variants-{{ section.id }} .br-section-heading {
+      line-height: 1.1;
+      max-width: {{ section.settings.heading_max_width_mobile | default: 420 }}px;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+    }
+  }
+
+  .br-variants-subtitle {
+    font-size: var(--subtitle-size);
+    color: #666;
+    margin: 0;
+  }
+
+  #br-variants-{{ section.id }} .br-grid-subtitle-line {
+    font-weight: 400 !important;
+    font-size: var(--subtitle-line-size-desktop) !important;
+    margin: 8px 0 {{ section.settings.subtitle_line_spacing | default: 10 }}px !important;
+  }
+  #br-variants-{{ section.id }} .br-grid-subtitle-line p,
+  #br-variants-{{ section.id }} .br-grid-subtitle-line h1,
+  #br-variants-{{ section.id }} .br-grid-subtitle-line h2,
+  #br-variants-{{ section.id }} .br-grid-subtitle-line h3 {
+    margin: 0 !important;
+    font-size: inherit !important;
+    font-weight: inherit !important;
+  }
+
+  @media (max-width: 749px) {
+    #shopify-section-{{ section.id }} #br-variants-{{ section.id }} .br-grid-subtitle-line.rte,
+    #shopify-section-{{ section.id }} #br-variants-{{ section.id }} .br-grid-subtitle-line.rte p,
+    #shopify-section-{{ section.id }} #br-variants-{{ section.id }} .br-grid-subtitle-line.rte h1,
+    #shopify-section-{{ section.id }} #br-variants-{{ section.id }} .br-grid-subtitle-line.rte h2,
+    #shopify-section-{{ section.id }} #br-variants-{{ section.id }} .br-grid-subtitle-line.rte h3 {
+      font-size: {{ section.settings.subtitle_line_font_size_mobile | default: 16 }}px !important;
+    }
+    #br-variants-{{ section.id }} .br-grid-subtitle-line {
+      margin-bottom: {{ section.settings.subtitle_line_spacing | default: 10 }}px !important;
+    }
+  }
+
+  #br-variants-{{ section.id }} .br-grid-subtitle {
+    margin: {{ section.settings.body_margin_top_desktop | default: 0 }}px 0 {{ section.settings.body_margin_bottom_desktop | default: 0 }}px !important;
+    font-size: {{ section.settings.body_font_size_desktop | default: 16 }}px;
+  }
+  #br-variants-{{ section.id }} .br-grid-subtitle p {
+    margin: 0 !important;
+  }
+
+  @media (max-width: 749px) {
+    #br-variants-{{ section.id }} .br-grid-subtitle {
+      font-size: {{ section.settings.body_font_size_mobile | default: 14 }}px;
+      margin-top: {{ section.settings.body_margin_top_mobile | default: 0 }}px !important;
+      margin-bottom: {{ section.settings.body_margin_bottom_mobile | default: 0 }}px !important;
+    }
+  }
+
+  .br-variants-grid {
+    display: grid;
+    grid-template-columns: repeat({{ desktop_cols }}, 1fr);
+    gap: 20px;
+  }
+
+  @media (max-width: 749px) {
+    .br-variants-grid {
+      grid-template-columns: repeat({{ mobile_cols }}, 1fr);
+      gap: 15px;
+    }
+  }
+
+  .br-variant-card {
+    background: var(--card-bg);
+    border-radius: var(--card-radius);
+    padding: {{ section.settings.card_padding }}px;
+    text-align: center;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    {% if section.settings.card_border_show %}
+    border: 1px solid {{ section.settings.card_border_color }};
+    {% endif %}
+  }
+
+  @media (max-width: 749px) {
+    .br-variant-card {
+      padding: {{ section.settings.card_padding_mobile }}px;
+    }
+  }
+
+  .br-variant-card.is-hidden {
+    display: none;
+  }
+
+  .br-variant-card.is-visible {
+    display: flex;
+  }
+
+  .br-variant-badges {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    z-index: 2;
+  }
+
+  .br-badge {
+    padding: 4px 8px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 3px;
+    width: fit-content;
+    max-width: 100%;
+  }
+
+  .br-badge--sale {
+    background: var(--sale-badge-bg);
+    color: var(--sale-badge-color);
+  }
+
+  #br-variants-{{ section.id }} .br-badge--le.br-le-av,
+  .br-le-av.br-badge {
+    background: #458CD9 !important;
+    color: #ffffff !important;
+    font-family: var(--le-font-family) !important;
+    font-size: var(--le-font-size) !important;
+    font-weight: var(--le-font-weight) !important;
+    letter-spacing: var(--le-letter-spacing) !important;
+    text-transform: uppercase;
+  }
+
+  #br-variants-{{ section.id }} .br-badge--oneoff {
+    background: var(--oneoff-badge-bg) !important;
+    color: var(--oneoff-badge-color) !important;
+    font-family: var(--le-font-family) !important;
+    font-size: var(--oneoff-font-size) !important;
+    font-weight: var(--oneoff-font-weight) !important;
+    letter-spacing: var(--oneoff-letter-spacing) !important;
+    color: var(--oneoff-text-color) !important;
+    text-transform: uppercase;
+  }
+
+  .br-variant-link {
+    text-decoration: none;
+    color: inherit;
+  }
+  .br-variant-link:hover {
+    text-decoration: underline;
+  }
+  .br-variant-link--image {
+    display: block;
+    line-height: 0;
+  }
+  .br-variant-link--image:hover {
+    text-decoration: none;
+  }
+  .br-variant-image {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: calc(var(--card-radius) - 4px);
+    margin-bottom: 15px;
+  }
+
+  .br-variant-images--dual {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 8px;
+    margin-bottom: 15px;
+    line-height: 0;
+    width: 100%;
+  }
+  .br-variant-images--dual .br-variant-link--image {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: calc(50% - 4px);
+    display: block;
+    overflow: hidden;
+    border-radius: calc(var(--card-radius) - 4px);
+  }
+  .br-variant-images--dual .br-variant-image {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 0;
+    margin: 0;
+    display: block;
+  }
+  #br-variants-{{ section.id }} .br-product-group[data-product-group="4"] .br-variant-card {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  #br-variants-{{ section.id }} .br-product-group[data-product-group="4"] .br-variant-info {
+    flex-grow: 1;
+    min-height: 0;
+  }
+  #br-variants-{{ section.id }} .br-product-group[data-product-group="4"] .br-variant-btn {
+    margin-top: auto;
+  }
+
+  .br-variant-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .br-variant-title {
+    font-size: var(--title-size);
+    font-weight: 600;
+    margin: 0 0 5px;
+  }
+
+  @media (max-width: 749px) {
+    .br-variant-title {
+      font-size: {{ section.settings.title_size_mobile }}px;
+    }
+  }
+
+  .br-variant-subtitle {
+    font-size: var(--subtitle-size);
+    color: #666;
+    margin: 0 0 5px;
+  }
+
+  @media (max-width: 749px) {
+    .br-variant-subtitle {
+      font-size: {{ section.settings.subtitle_size_mobile }}px;
+    }
+  }
+
+  .br-variant-option {
+    font-size: 14px;
+    color: #333;
+    margin: 0 0 10px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    overflow: visible;
+    white-space: normal;
+    min-width: 0;
+  }
+
+  @media (max-width: 749px) {
+    .br-variant-option {
+      font-size: {{ section.settings.variant_text_size_mobile }}px;
+    }
+  }
+
+  .br-variant-option-mobile {
+    display: none;
+  }
+
+  @media (max-width: 749px) {
+    .br-variant-option-desktop {
+      display: none;
+    }
+    .br-variant-option-mobile {
+      display: block;
+      font-size: {{ section.settings.variant_text_size_mobile }}px;
+      color: #333;
+      margin: 0 0 10px;
+    }
+  }
+
+  .br-variant-size-pill {
+    display: inline-block;
+    background: #eee;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: inherit;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+  .br-variant-opts-rest {
+    font-weight: 500;
+    color: #555;
+  }
+  @media (max-width: 749px) {
+    .br-variant-size-pill {
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+  }
+
+  .br-size-filter {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin: 0 0 16px;
+    font-size: 14px;
+    line-height: 1;
+  }
+  .br-size-filter__link {
+    all: unset;
+    cursor: pointer;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: 600;
+    background: #f5f5f5;
+    transition: background .15s, color .15s;
+  }
+  .br-size-filter__link:hover {
+    background: #e0e0e0;
+  }
+  .br-size-filter__link.is-active {
+    background: transparent;
+    color: #111;
+    box-shadow: inset 0 0 0 1px #111;
+  }
+  .br-size-filter__sep {
+    color: #ccc;
+    user-select: none;
+  }
+  .br-size-filter__divider {
+    color: #999;
+    user-select: none;
+    margin: 0 4px;
+    font-weight: 400;
+    font-size: 1.1em;
+  }
+  .br-size-filter__text-link,
+  .br-size-filter__text-link a,
+  .br-size-filter__text-link button {
+    font-size: inherit;
+    font-weight: 500;
+    color: #666;
+    text-decoration: none;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: color .15s;
+  }
+  .br-size-filter__text-link:hover,
+  .br-size-filter__text-link a:hover,
+  .br-size-filter__text-link button:hover {
+    color: #111;
+    text-decoration: underline;
+  }
+  @media (max-width: 749px) {
+    .br-size-filter {
+      gap: 3px;
+      font-size: 12px;
+      margin: 0 0 12px;
+    }
+    .br-size-filter__link {
+      padding: 3px 6px;
+    }
+    .br-size-filter__divider {
+      margin: 0 2px;
+    }
+  }
+
+  .br-variant-price {
+    margin: 0 0 15px;
+    font-size: 16px;
+  }
+
+  .br-price--sale {
+    color: var(--sale-price-color);
+    font-weight: 700;
+  }
+
+  .br-price--compare {
+    color: var(--compare-color);
+    text-decoration: line-through;
+    margin-left: 8px;
+    font-size: 14px;
+  }
+
+  .br-variant-btn {
+    margin-top: auto;
+    background: var(--btn-bg);
+    color: var(--btn-color);
+    border: 2px solid var(--btn-bg);
+    border-radius: var(--btn-radius);
+    padding: var(--btn-pad-v) var(--btn-pad-h);
+    font-size: var(--btn-font-size-desktop) !important;
+    font-weight: inherit;
+    cursor: pointer;
+    transition: opacity 0.2s, background 0.2s, color 0.2s;
+    width: 100%;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.08);
+  }
+
+  .br-variant-btn:hover {
+    opacity: 0.85;
+  }
+
+  .br-variant-btn:disabled {
+    background: #ccc;
+    border-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+    font-size: var(--btn-font-size-desktop) !important;
+  }
+  .br-variant-card--sold-out .br-variant-option,
+  .br-variant-card--sold-out .br-variant-option-desktop,
+  .br-variant-card--sold-out .br-variant-option-mobile {
+    text-decoration: line-through;
+    color: #666;
+  }
+
+  @media (max-width: 749px) {
+    .br-variant-btn,
+    .br-variant-btn:hover,
+    .br-variant-btn:disabled {
+      font-size: var(--btn-font-size-mobile) !important;
+    }
+  }
+
+  /* Outline style: desktop only (min-width 750px) */
+  @media (min-width: 750px) {
+    .br-variant-btn.br-variant-btn--outline-desktop {
+      background: transparent;
+      color: var(--btn-bg);
+    }
+    .br-variant-btn.br-variant-btn--outline-desktop:hover:not(:disabled) {
+      background: var(--btn-bg);
+      color: var(--btn-color);
+    }
+  }
+
+  @media (max-width: 749px) {
+    .br-variant-btn.br-variant-btn--outline-mobile {
+      background: transparent;
+      color: var(--btn-bg);
+    }
+    .br-variant-btn.br-variant-btn--outline-mobile:hover:not(:disabled) {
+      background: var(--btn-bg);
+      color: var(--btn-color);
+    }
+  }
+
+  .br-variants-toggle {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5em 1em;
+    margin-top: 12px;
+  }
+
+  .br-toggle-btn {
+    background: none !important;
+    border: none !important;
+    padding: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #222;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    cursor: pointer;
+    transition: color 0.2s ease, text-decoration-thickness 0.2s ease;
+  }
+
+  .br-toggle-btn:hover {
+    color: #000;
+    text-decoration-thickness: 2px;
+  }
+
+  .br-toggle-btn .br-toggle-arrow {
+    display: inline-block;
+    transition: transform 0.2s ease;
+  }
+
+  .br-toggle-btn:hover .br-toggle-arrow {
+    transform: translateX(3px);
+  }
+
+  .br-toggle-btn.is-hidden {
+    display: none;
+  }
+
+  /* Desktop/Mobile visibility */
+  .br-desktop-only { display: block; }
+  .br-mobile-only { display: none; }
+  .br-btn-desktop { display: inline; }
+  .br-btn-mobile { display: none; }
+  
+  @media (max-width: 749px) {
+    .br-desktop-only { display: none; }
+    .br-mobile-only { display: block; }
+    .br-btn-desktop { display: none; }
+    .br-btn-mobile { display: inline; }
+  }
+
+  /* Product Label/Divider */
+  .br-product-label {
+    grid-column: 1 / -1;
+    text-align: left;
+    padding: 20px 0 10px;
+    margin-top: 10px;
+  }
+
+  .br-product-label:first-child {
+    margin-top: 0;
+    padding-top: 0;
+  }
+
+  .br-product-label-text {
+    font-family: {{ section.settings.title_font.family }}, {{ section.settings.title_font.fallback_families }};
+    font-weight: 600;
+    font-size: {{ section.settings.product_label_size_desktop }}px;
+    color: {{ section.settings.product_label_color }};
+    margin: 0;
+  }
+
+  @media (max-width: 749px) {
+    .br-product-label-text {
+      font-size: {{ section.settings.product_label_size_mobile }}px;
+    }
+  }
+
+  .br-product-label.is-hidden {
+    display: none;
+  }
+
+  /* Filter Tabs */
+  .br-filter-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+  }
+
+  .br-filter-tab {
+    padding: 10px 24px;
+    min-height: 42px;
+    line-height: 1.3;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--btn-font-size-desktop) !important;
+    font-weight: inherit;
+    {% if section.settings.tab_inactive_border %}
+    border: {{ section.settings.tab_border_width }}px solid {{ section.settings.tab_border_color }};
+    {% else %}
+    border: {{ section.settings.tab_border_width }}px solid transparent;
+    {% endif %}
+    background: transparent;
+    color: {{ section.settings.tab_text_color }};
+    border-radius: {{ section.settings.tab_radius }}px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.08);
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+  }
+
+  /* Desktop hover only (avoid iOS sticky hover on touch) */
+  @media (hover: hover) and (pointer: fine) {
+    .br-filter-tab:hover {
+      background: {{ section.settings.tab_active_bg }};
+      color: {{ section.settings.tab_active_text }};
+      border-color: {{ section.settings.tab_active_bg }};
+    }
+  }
+  /* Explicitly neutralize sticky :hover on touch devices (including base .btn:hover styles) */
+  @media (hover: none) and (pointer: coarse) {
+    .br-filter-tab:hover:not(.is-active) {
+      background: transparent !important;
+      color: {{ section.settings.tab_text_color }} !important;
+      {% if section.settings.tab_inactive_border %}
+      border-color: {{ section.settings.tab_border_color }} !important;
+      {% else %}
+      border-color: transparent !important;
+      {% endif %}
+    }
+  }
+
+  .br-filter-tab.is-active {
+    background: {{ section.settings.tab_active_bg }};
+    color: {{ section.settings.tab_active_text }};
+    border: {{ section.settings.tab_border_width }}px solid {{ section.settings.tab_active_border }};
+  }
+
+  /* One off colors tab: gradient when not selected so it stands out; accent when active/hover */
+  #br-variants-{{ section.id }} .br-filter-tab[data-product="4"] {
+    background: linear-gradient(135deg, #e8eaef 0%, #e0e4ec 35%, #d8dce4 70%, #e4e8f0 100%);
+    border-color: {{ section.settings.exclusive_tab_accent_color | default: '#8c7b5c' }};
+    color: {{ section.settings.exclusive_tab_active_text | default: '#333333' }};
+  }
+  #br-variants-{{ section.id }} .br-filter-tab[data-product="4"].is-active {
+    background: {{ section.settings.exclusive_tab_active_bg | default: '#f0f0f0' }};
+    color: {{ section.settings.exclusive_tab_active_text | default: '#333333' }};
+    border-color: {{ section.settings.exclusive_tab_accent_color | default: '#8c7b5c' }};
+  }
+  @media (hover: hover) and (pointer: fine) {
+    #br-variants-{{ section.id }} .br-filter-tab[data-product="4"]:hover {
+      border-color: {{ section.settings.exclusive_tab_accent_color | default: '#8c7b5c' }};
+      background: {{ section.settings.exclusive_tab_active_bg | default: '#f0f0f0' }};
+      color: {{ section.settings.exclusive_tab_active_text | default: '#333333' }};
+    }
+  }
+  @media (hover: none) and (pointer: coarse) {
+    #br-variants-{{ section.id }} .br-filter-tab[data-product="4"]:hover:not(.is-active) {
+      background: linear-gradient(135deg, #e8eaef 0%, #e0e4ec 35%, #d8dce4 70%, #e4e8f0 100%) !important;
+      border-color: {{ section.settings.exclusive_tab_accent_color | default: '#8c7b5c' }} !important;
+      color: {{ section.settings.exclusive_tab_active_text | default: '#333333' }} !important;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .br-filter-tabs {
+      justify-content: flex-start;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .br-filter-tabs::-webkit-scrollbar { display: none; }
+    .br-filter-tab {
+      flex: 0 0 auto;
+      max-width: none;
+    }
+  }
+  @media (max-width: 768px) {
+    .br-filter-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .br-filter-tab {
+      width: 100%;
+      padding: 14px 10px;
+      min-height: 44px;
+      font-size: 14px !important;
+    }
+    .br-filter-tab:nth-child(3):last-child {
+      grid-column: 1 / -1;
+      justify-self: center;
+      max-width: 180px;
+    }
+  }
+
+  /* Product groups for filtering */
+  .br-product-group {
+    display: contents;
+  }
+
+  /* One off tab: own grid, 4 items per row by default */
+  #br-variants-{{ section.id }} .br-product-group[data-product-group="4"] {
+    display: block;
+    grid-column: 1 / -1;
+  }
+  #br-variants-{{ section.id }} .br-one-off-inner {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.one_off_columns | default: 3 }}, 1fr);
+    gap: 20px;
+    align-items: stretch;
+  }
+  #br-variants-{{ section.id }} .br-product-group[data-product-group="4"] .br-variant-card {
+    min-width: 0;
+  }
+  #br-variants-{{ section.id }} .br-product-group[data-product-group="4"] .br-variant-info {
+    min-width: 0;
+  }
+  /* One off: category titles span full width and don’t break layout */
+  #br-variants-{{ section.id }} .br-one-off-inner .br-product-label {
+    grid-column: 1 / -1;
+    margin-bottom: 0;
+    padding: 12px 0 8px;
+  }
+  #br-variants-{{ section.id }} .br-one-off-inner .br-product-label:first-child {
+    padding-top: 0;
+  }
+  #br-variants-{{ section.id }} .br-one-off-inner .br-product-label-text {
+    margin: 0;
+    font-weight: 600;
+    line-height: 1.25;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    color: #666666;
+  }
+  /* Product titles (Open Sole / Closed Sole) vs color sub-headings use same text style; both span full width */
+  @media (max-width: 749px) {
+    #br-variants-{{ section.id }} .br-one-off-inner {
+      grid-template-columns: repeat({{ mobile_cols }}, 1fr);
+      gap: 15px;
+    }
+  }
+
+  .br-product-group.is-hidden,
+  .br-product-group.is-hidden .br-variant-card,
+  .br-product-group.is-hidden .br-product-label {
+    display: none !important;
+  }
+  .br-product-group[data-product-group="4"].is-hidden .br-one-off-inner {
+    display: none !important;
+  }
+  /* One off image lightbox */
+  .br-oneoff-lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(0,0,0,0.85);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  .br-oneoff-lightbox.is-open {
+    display: flex;
+  }
+  .br-oneoff-lightbox__inner {
+    max-width: 90vw;
+    max-height: 90vh;
+    position: relative;
+  }
+  .br-oneoff-lightbox__inner img {
+    max-width: 100%;
+    max-height: 90vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+  }
+  .br-oneoff-lightbox--dual .br-oneoff-lightbox__images {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    align-items: center;
+    justify-content: center;
+    max-width: 95vw;
+  }
+  .br-oneoff-lightbox--dual .br-oneoff-lightbox__images img {
+    max-width: 45vw;
+    max-height: 85vh;
+  }
+  .br-oneoff-lightbox__close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    background: #fff;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 24px;
+    line-height: 1;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .br-oneoff-lightbox__close:hover {
+    background: #f0f0f0;
+  }
+</style>
+{%- comment -%} When "Use current product" is on and this is a one-off product page, hide the main product section so only the All Variants grid shows. Do not hide on other product pages (e.g. water shoe). {%- endcomment -%}
+{% if _hide_main_product %}
+<style>
+  body.br-hide-main-product-on-variants .shopify-section__product,
+  body.br-hide-main-product-on-variants main.main-content .shopify-section:first-of-type { display: none !important; }
+</style>
+<script>
+  (function() {
+    function hideMainProduct() {
+      if (document.body && !document.body.classList.contains('br-hide-main-product-on-variants')) {
+        document.body.classList.add('br-hide-main-product-on-variants');
+      }
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', hideMainProduct);
+    } else {
+      hideMainProduct();
+    }
+  })();
+</script>
+{% endif %}
+
+{% if target_product != nil %}
+{%- liquid
+  assign btn_class = 'btn br-variant-btn'
+  if section.settings.button_style_desktop == 'outline'
+    assign btn_class = btn_class | append: ' br-variant-btn--outline-desktop'
+  endif
+  if section.settings.button_style_mobile == 'outline'
+    assign btn_class = btn_class | append: ' br-variant-btn--outline-mobile'
+  endif
+-%}
+<section id="br-variants-{{ section.id }}" class="br-variants-section" data-section-id="{{ section.id }}">
+  <div id="shop-all-variants" aria-hidden="true" style="position: absolute; top: 0; left: 0; width: 1px; height: 1px; pointer-events: none; clip: rect(0,0,0,0);"></div>
+  <div class="br-variants-container">
+    
+    {% assign show_header = false %}
+    {% assign _section_heading = '' %}
+    {% assign _subtitle_line_content = section.settings.grid_subtitle_line | strip_html | strip %}
+    {% assign _body_content = section.settings.grid_subtitle | strip_html | strip %}
+    {% if _use_current == false %}
+    {% if section.settings.grid_title != blank %}
+      {% assign show_header = true %}
+    {% elsif section.settings.show_subtitle_line and section.settings.grid_subtitle_line != blank %}
+      {% assign show_header = true %}
+    {% elsif section.settings.show_grid_subtitle and section.settings.grid_subtitle != blank %}
+      {% assign show_header = true %}
+    {% endif %}
+    {% elsif _use_current %}
+    {% assign show_header = true %}
+    {% assign _ph = target_product.handle | default: '' %}
+    {% if _ph == 'studio-performance-skin-footwear' %}
+      {% assign _section_heading = 'Open Sole' %}
+    {% elsif _ph == 'best-reformer-pilates-legree-workout-shoes' %}
+      {% assign _section_heading = 'Closed Sole' %}
+    {% elsif _ph == 'aquatic-performance-skins' %}
+      {% assign _section_heading = 'Outdoor' %}
+    {% else %}
+      {% assign _section_heading = target_product.title %}
+    {% endif %}
+    {% endif %}
+    {% if show_header %}
+    <div class="br-variants-header">
+      {% if section.settings.grid_title != blank %}
+        <h2 class="br-variants-title br-section-heading">{{ section.settings.grid_title }}</h2>
+      {% elsif _use_current and _section_heading != blank %}
+        <h2 class="br-variants-title br-section-heading">{{ _section_heading }}</h2>
+      {% endif %}
+      {% if section.settings.show_subtitle_line and section.settings.grid_subtitle_line != blank %}
+        <div class="br-grid-subtitle-line rte">
+          {{ section.settings.grid_subtitle_line }}
+        </div>
+      {% endif %}
+      {% if section.settings.show_grid_subtitle and section.settings.grid_subtitle != blank %}
+        <div class="br-grid-subtitle rte">
+          {{ section.settings.grid_subtitle }}
+        </div>
+      {% endif %}
+    </div>
+    {% endif %}
+   
+    {% if use_filter_tabs and has_multiple_products %}
+    <div class="br-filter-tabs" id="br-tabs-{{ section.id }}">
+      <button type="button" class="btn br-filter-tab is-active" data-product="1">
+        {{ section.settings.tab_1_label | default: target_product.title }}
+      </button>
+      {% if target_product_2 != nil %}
+      <button type="button" class="btn br-filter-tab" data-product="2">
+        {{ section.settings.tab_2_label | default: target_product_2.title }}
+      </button>
+      {% endif %}
+      {% if target_product_3 != nil %}
+      <button type="button" class="btn br-filter-tab" data-product="3">
+        {{ section.settings.tab_3_label | default: target_product_3.title }}
+      </button>
+      {% endif %}
+      {% if _show_oneoff_tab %}
+      <button type="button" class="btn br-filter-tab" data-product="4">
+        {{ section.settings.tab_4_label | default: 'One off colors' }}
+      </button>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    {%- liquid
+      assign _br_sizes = '|'
+      if target_product != nil
+        assign _bp1_o0 = target_product.options_with_values[0].name | downcase
+        assign _bp1_o1 = target_product.options_with_values[1].name | downcase
+        assign _bp1_o2 = target_product.options_with_values[2].name | downcase
+        for _bsv in target_product.variants
+          assign _bsv_sz = ''
+          if _bp1_o0 == 'size'
+            assign _bsv_sz = _bsv.option1
+          elsif _bp1_o1 == 'size'
+            assign _bsv_sz = _bsv.option2
+          elsif _bp1_o2 == 'size'
+            assign _bsv_sz = _bsv.option3
+          endif
+          if _bsv_sz != blank
+            assign _bsv_sz = _bsv_sz | strip | split: ' (' | first | strip
+            assign _bsv_sz_down = _bsv_sz | downcase
+            unless _bsv_sz_down contains 'kid'
+              assign _check_sz = '|' | append: _bsv_sz | append: '|'
+              unless _br_sizes contains _check_sz
+                assign _br_sizes = _br_sizes | append: _bsv_sz | append: '|'
+              endunless
+            endunless
+          endif
+        endfor
+      endif
+      if target_product_2 != nil
+        assign _bp2_o0 = target_product_2.options_with_values[0].name | downcase
+        assign _bp2_o1 = target_product_2.options_with_values[1].name | downcase
+        assign _bp2_o2 = target_product_2.options_with_values[2].name | downcase
+        for _bsv in target_product_2.variants
+          assign _bsv_sz = ''
+          if _bp2_o0 == 'size'
+            assign _bsv_sz = _bsv.option1
+          elsif _bp2_o1 == 'size'
+            assign _bsv_sz = _bsv.option2
+          elsif _bp2_o2 == 'size'
+            assign _bsv_sz = _bsv.option3
+          endif
+          if _bsv_sz != blank
+            assign _bsv_sz = _bsv_sz | strip | split: ' (' | first | strip
+            assign _bsv_sz_down = _bsv_sz | downcase
+            unless _bsv_sz_down contains 'kid'
+              assign _check_sz = '|' | append: _bsv_sz | append: '|'
+              unless _br_sizes contains _check_sz
+                assign _br_sizes = _br_sizes | append: _bsv_sz | append: '|'
+              endunless
+            endunless
+          endif
+        endfor
+      endif
+      if target_product_3 != nil
+        assign _bp3_o0 = target_product_3.options_with_values[0].name | downcase
+        assign _bp3_o1 = target_product_3.options_with_values[1].name | downcase
+        assign _bp3_o2 = target_product_3.options_with_values[2].name | downcase
+        for _bsv in target_product_3.variants
+          assign _bsv_sz = ''
+          if _bp3_o0 == 'size'
+            assign _bsv_sz = _bsv.option1
+          elsif _bp3_o1 == 'size'
+            assign _bsv_sz = _bsv.option2
+          elsif _bp3_o2 == 'size'
+            assign _bsv_sz = _bsv.option3
+          endif
+          if _bsv_sz != blank
+            assign _bsv_sz = _bsv_sz | strip | split: ' (' | first | strip
+            assign _bsv_sz_down = _bsv_sz | downcase
+            unless _bsv_sz_down contains 'kid'
+              assign _check_sz = '|' | append: _bsv_sz | append: '|'
+              unless _br_sizes contains _check_sz
+                assign _br_sizes = _br_sizes | append: _bsv_sz | append: '|'
+              endunless
+            endunless
+          endif
+        endfor
+      endif
+      assign _br_sizes = _br_sizes | remove_first: '|'
+      assign _br_sizes_arr = _br_sizes | split: '|'
+    -%}
+    {%- unless _br_sizes == blank -%}
+    <div class="br-size-filter" data-br-size-filter>
+      {%- for _sz in _br_sizes_arr -%}
+        {%- unless _sz == blank -%}
+          <button type="button" class="br-size-filter__link" data-size="{{ _sz | strip | escape }}">{{ _sz | strip }}</button>
+        {%- endunless -%}
+      {%- endfor -%}
+      {%- if section.settings.show_compare_styles or section.settings.show_size_chart -%}
+        <span class="br-size-filter__divider">|</span>
+        {%- if section.settings.show_compare_styles -%}<a href="/pages/compare-open-closed-sole" class="br-size-filter__text-link">Compare Styles →</a>{%- endif -%}
+        {%- if section.settings.show_size_chart and section.settings.size_chart_page != blank and section.settings.size_chart_page.content != blank -%}
+          {%- capture br_sz_title -%}{{ section.settings.size_chart_label | default: 'Size Chart' }} →{%- endcapture -%}
+          <span class="br-size-filter__text-link">{%- render 'tool-tip-trigger', title: br_sz_title, content: section.settings.size_chart_page.content, context: 'size-chart' -%}</span>
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+    {%- endunless -%}
+    {{ section.settings.custom_html }}
+    <div class="br-variants-grid" id="br-grid-{{ section.id }}">
+      
+      {%- comment -%} PRODUCT 1: Kids always last. Pass 1 = non-kids, Pass 2 = kids. Hide variant when variant.metafields.custom.hide_from_storefront.value == true. LE badge from custom.limited_colors. Tab prefix for card subtitle (style removed from variants). Single product: derive short label from handle. {%- endcomment -%}
+      {%- if has_multiple_products -%}
+        {%- assign tab_prefix_1 = section.settings.tab_1_label | default: target_product.title -%}
+      {%- else -%}
+        {%- assign _ph = target_product.handle | default: '' -%}
+        {%- if _ph == 'studio-performance-skin-footwear' -%}
+          {%- assign tab_prefix_1 = 'Open Sole' -%}
+        {%- elsif _ph == 'best-reformer-pilates-legree-workout-shoes' -%}
+          {%- assign tab_prefix_1 = 'Closed Sole' -%}
+        {%- elsif _ph == 'aquatic-performance-skins' -%}
+          {%- assign tab_prefix_1 = 'Outdoor' -%}
+        {%- else -%}
+          {%- assign tab_prefix_1 = section.settings.tab_1_label | default: target_product.title -%}
+        {%- endif -%}
+      {%- endif -%}
+      {%- assign non_kids_seen = 0 -%}
+      {%- assign has_see_more_tier = false -%}
+      {%- assign has_kids_tier = false -%}
+      {%- assign show_kids_1 = true -%}
+      {%- assign _sk1 = target_product.metafields.custom.show_kids_sizes.value -%}
+      {%- if _sk1 == false or _sk1 == "false" or _sk1 == "False" -%}{%- assign show_kids_1 = false -%}{%- endif -%}
+      <div class="br-product-group" id="br-product-1-{{ section.id }}" data-product-group="1">
+      {% if show_product_labels and section.settings.product_1_label != blank %}
+        <div class="br-product-label">
+          <p class="br-product-label-text">{{ section.settings.product_1_label }}</p>
+        </div>
+      {% endif %}
+      
+      {%- comment -%} Pass 1: non-kids only (initial + see-more) {%- endcomment -%}
+      {%- assign le_badge_shown_1 = false -%}
+      {%- assign oneoff_badge_shown_1 = false -%}
+      {% for variant in target_product.variants limit: max_count %}
+        {%- liquid
+          assign is_on_sale = false
+          if variant.compare_at_price > variant.price
+            assign is_on_sale = true
+          endif
+          assign is_limited = false
+          assign opt_count = target_product.options_with_values.size
+          assign opt0_down = ''
+          assign opt1_down = ''
+          assign opt2_down = ''
+          if opt_count > 0
+            assign opt0_down = target_product.options_with_values[0].name | downcase
+          endif
+          if opt_count > 1
+            assign opt1_down = target_product.options_with_values[1].name | downcase
+          endif
+          if opt_count > 2
+            assign opt2_down = target_product.options_with_values[2].name | downcase
+          endif
+          assign color_value = blank
+          if opt_count > 0 and opt0_down == 'color'
+            assign color_value = variant.option1
+          elsif opt_count > 1 and opt1_down == 'color'
+            assign color_value = variant.option2
+          elsif opt_count > 2 and opt2_down == 'color'
+            assign color_value = variant.option3
+          endif
+          assign color_value_clean = color_value | strip | downcase
+          assign le_raw = ''
+          assign le_me = target_product.metafields.custom.limited_colors | default: target_product.metafields.custom.limited_edition_colors
+          if le_me != blank and le_me.value != blank
+            assign le_raw = le_me.value | strip
+          endif
+          if le_raw != blank
+            assign le_list = le_raw | split: ','
+            for le_c in le_list
+              assign le_clean = le_c | strip | downcase
+              if le_clean != blank and le_clean == color_value_clean
+                assign is_limited = true
+                break
+              endif
+            endfor
+          endif
+          assign is_kid_br = false
+          assign _o1 = variant.option1 | default: ''
+          assign _o2 = variant.option2 | default: ''
+          assign _o3 = variant.option3 | default: ''
+          assign _o1d = _o1 | downcase
+          assign _o2d = _o2 | downcase
+          assign _o3d = _o3 | downcase
+          if _o1 != blank and _o1d contains kids_trigger_br
+            assign is_kid_br = true
+          elsif _o2 != blank and _o2d contains kids_trigger_br
+            assign is_kid_br = true
+          elsif _o3 != blank and _o3d contains kids_trigger_br
+            assign is_kid_br = true
+          endif
+          assign skip_card = false
+          assign _v_hidden = variant.metafields.custom.hide_from_storefront.value
+          assign _v_hidden_str = _v_hidden | append: '' | downcase
+          if _v_hidden_str == 'true'
+            assign skip_card = true
+          endif
+          if skip_card == false and color_value_clean != blank
+            for _hv in target_product.variants
+              assign _hv_color = blank
+              if opt_count > 0 and opt0_down == 'color'
+                assign _hv_color = _hv.option1
+              elsif opt_count > 1 and opt1_down == 'color'
+                assign _hv_color = _hv.option2
+              elsif opt_count > 2 and opt2_down == 'color'
+                assign _hv_color = _hv.option3
+              endif
+              assign _hv_color_clean = _hv_color | strip | downcase
+              assign _hv_hidden = _hv.metafields.custom.hide_from_storefront.value
+              assign _hv_hidden_str = _hv_hidden | append: '' | downcase
+              if _hv_color_clean == color_value_clean and _hv_hidden_str == 'true'
+                assign skip_card = true
+                break
+              endif
+            endfor
+          endif
+        -%}
+        {%- if is_kid_br and variant.available and show_kids_1 -%}
+          {%- assign has_kids_tier = true -%}
+        {%- endif -%}
+        {%- unless skip_card or is_kid_br -%}
+        {%- liquid
+            assign tier_br = 'see-more'
+            if non_kids_seen < initial_count
+              assign tier_br = 'initial'
+              assign non_kids_seen = non_kids_seen | plus: 1
+            else
+              assign has_see_more_tier = true
+            endif
+            assign card_class = 'br-variant-card br-variant-card--' | append: tier_br
+            if tier_br != 'initial'
+              assign card_class = card_class | append: ' is-hidden'
+            endif
+            unless variant.available
+              assign card_class = card_class | append: ' br-variant-card--sold-out'
+            endunless
+        -%}
+        
+        {%- liquid
+          assign _br_sz_attr = ''
+          for _br_oa in target_product.options_with_values
+            if _br_oa.name == 'Size' or _br_oa.name == 'size'
+              case forloop.index0
+                when 0
+                  assign _br_sz_attr = variant.option1
+                when 1
+                  assign _br_sz_attr = variant.option2
+                when 2
+                  assign _br_sz_attr = variant.option3
+              endcase
+              break
+            endif
+          endfor
+          assign _br_sz_attr = _br_sz_attr | strip | split: ' (' | first | strip
+        -%}
+        <div class="{{ card_class }}" data-variant-index="{{ forloop.index }}" data-product="1" data-size-tier="{{ tier_br }}"{% if _br_sz_attr != blank %} data-br-size="{{ _br_sz_attr | escape }}"{% endif %}>
+          <div class="br-variant-badges">
+            {%- assign _show_sale = false -%}
+            {%- if variant.compare_at_price > variant.price -%}{%- assign _show_sale = true -%}{%- endif -%}
+            {%- assign _show_le = false -%}
+            {%- assign _le_me = target_product.metafields.custom.limited_colors | default: target_product.metafields.custom.limited_edition_colors -%}
+            {%- assign _le_raw_now = '' -%}
+            {%- if _le_me != blank and _le_me.value != blank -%}
+              {%- assign _le_val_now = _le_me.value -%}
+              {%- if _le_val_now contains ',' -%}
+                {%- assign _le_raw_now = _le_val_now | strip -%}
+              {%- else -%}
+                {%- assign _le_raw_now = _le_val_now | join: ',' -%}
+              {%- endif -%}
+            {%- endif -%}
+            {%- if _le_raw_now != blank -%}
+              {%- assign _cv = blank -%}
+              {%- if opt_count > 0 and opt0_down == 'color' -%}{%- assign _cv = variant.option1 -%}
+              {%- elsif opt_count > 1 and opt1_down == 'color' -%}{%- assign _cv = variant.option2 -%}
+              {%- elsif opt_count > 2 and opt2_down == 'color' -%}{%- assign _cv = variant.option3 -%}
+              {%- endif -%}
+              {%- assign _cv_clean = _cv | strip | downcase | handleize -%}
+              {%- assign _le_check = _le_raw_now | split: ',' -%}
+              {%- for _lec in _le_check -%}
+                {%- assign _lec_clean = _lec | strip | downcase | handleize -%}
+                {%- if _lec_clean != blank and _lec_clean == _cv_clean -%}
+                  {%- assign _show_le = true -%}
+                  {%- break -%}
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endif -%}
+            {%- assign _show_oneoff = false -%}
+            {%- assign _oo_me = target_product.metafields.custom.one_off_colors -%}
+            {%- assign _oo_raw = '' -%}
+            {%- if _oo_me != blank and _oo_me.value != blank -%}{%- assign _oo_raw = _oo_me.value | strip -%}{%- endif -%}
+            {%- if _oo_raw != blank -%}
+              {%- assign _cv = blank -%}
+              {%- if opt_count > 0 and opt0_down == 'color' -%}{%- assign _cv = variant.option1 -%}
+              {%- elsif opt_count > 1 and opt1_down == 'color' -%}{%- assign _cv = variant.option2 -%}
+              {%- elsif opt_count > 2 and opt2_down == 'color' -%}{%- assign _cv = variant.option3 -%}
+              {%- endif -%}
+              {%- assign _cv_clean = _cv | strip | downcase | handleize -%}
+              {%- assign _oo_check = _oo_raw | split: ',' -%}
+              {%- for _ooc in _oo_check -%}
+                {%- assign _ooc_clean = _ooc | strip | downcase | handleize -%}
+                {%- if _ooc_clean != blank and _ooc_clean == _cv_clean -%}
+                  {%- assign _show_oneoff = true -%}
+                  {%- break -%}
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endif -%}
+            {% if _show_sale and section.settings.show_sale_badge %}
+              <span class="br-badge br-badge--sale">{{ section.settings.sale_badge_text }}</span>
+            {% endif %}
+            {% if _show_oneoff and oneoff_badge_shown_1 == false and section.settings.show_oneoff_badge %}
+              {%- assign oneoff_badge_shown_1 = true -%}
+              <span class="br-badge br-badge--oneoff">{{ section.settings.oneoff_label_text | default: section.settings.oneoff_badge_text | default: 'One Off' }}</span>
+            {% elsif _show_le and section.settings.show_le_badge %}
+              {% render 'br-le-badge', label: section.settings.le_label_text | default: section.settings.le_badge_text | default: 'Limited Edition' %}
+            {% endif %}
+          </div>
+
+          {%- assign product_url_variant = target_product.url | append: '?variant=' | append: variant.id -%}
+          {% if variant.featured_image != blank %}
+            <a href="#" class="br-variant-link br-variant-link--image br-oneoff-lightbox-trigger" aria-label="{{ variant.title | escape }} – enlarge image" data-br-lightbox-src="{{ variant.featured_image | image_url: width: 1200 }}" data-br-lightbox-alt="{{ variant.title | escape }}">
+              <img 
+                src="{{ variant.featured_image | image_url: width: 400 }}"
+                alt="{{ variant.title | escape }}"
+                class="br-variant-image"
+                loading="lazy"
+                width="400"
+                height="400"
+              >
+            </a>
+          {% elsif target_product.featured_image != blank %}
+            <a href="#" class="br-variant-link br-variant-link--image br-oneoff-lightbox-trigger" aria-label="{{ variant.title | escape }} – enlarge image" data-br-lightbox-src="{{ target_product.featured_image | image_url: width: 1200 }}" data-br-lightbox-alt="{{ variant.title | escape }}">
+              <img 
+                src="{{ target_product.featured_image | image_url: width: 400 }}"
+                alt="{{ variant.title | escape }}"
+                class="br-variant-image"
+                loading="lazy"
+                width="400"
+                height="400"
+              >
+            </a>
+          {% endif %}
+
+          <div class="br-variant-info">
+            {%- liquid
+              assign title_desktop = target_product.title
+              assign title_mobile = target_product.title
+              if section.settings.card_title_desktop != blank
+                assign title_desktop = section.settings.card_title_desktop
+              endif
+              if section.settings.card_title_mobile != blank
+                assign title_mobile = section.settings.card_title_mobile
+              elsif section.settings.card_title_desktop != blank
+                assign title_mobile = section.settings.card_title_desktop
+              endif
+            -%}
+            <h3 class="br-variant-title br-desktop-only"><a href="{{ product_url_variant }}" class="br-variant-link">{{ title_desktop }}</a></h3>
+            <h3 class="br-variant-title br-mobile-only"><a href="{{ product_url_variant }}" class="br-variant-link">{{ title_mobile }}</a></h3>
+
+            {% if section.settings.card_subtitle_desktop != blank %}
+              <p class="br-variant-subtitle br-desktop-only">{{ section.settings.card_subtitle_desktop }}</p>
+            {% endif %}
+            {% if section.settings.card_subtitle_mobile != blank %}
+              <p class="br-variant-subtitle br-mobile-only">{{ section.settings.card_subtitle_mobile }}</p>
+            {% elsif section.settings.card_subtitle_desktop != blank %}
+              <p class="br-variant-subtitle br-mobile-only">{{ section.settings.card_subtitle_desktop }}</p>
+            {% endif %}
+
+            {%- liquid
+              assign show_short_variant = false
+              if section.settings.hide_product_name_in_variant and target_product_2 == nil
+                assign show_short_variant = true
+              endif
+              assign _variant_opts = ''
+              if opt_count > 0
+                assign _variant_opts = target_product.options_with_values[0].name | append: ': ' | append: variant.option1
+              endif
+              if opt_count > 1
+                if _variant_opts != ''
+                  assign _variant_opts = _variant_opts | append: ' / '
+                endif
+                assign _variant_opts = _variant_opts | append: target_product.options_with_values[1].name | append: ': ' | append: variant.option2
+              endif
+              if opt_count > 2
+                if _variant_opts != ''
+                  assign _variant_opts = _variant_opts | append: ' / '
+                endif
+                assign _variant_opts = _variant_opts | append: target_product.options_with_values[2].name | append: ': ' | append: variant.option3
+              endif
+              if _variant_opts == ''
+                assign _variant_opts = variant.title
+              endif
+              if _use_current
+                assign _card_variant_display = _variant_opts
+              else
+                assign _card_variant_display = tab_prefix_1 | append: ' / ' | append: _variant_opts
+              endif
+            -%}
+            {%- liquid
+              assign _br_size_val = ''
+              assign _br_other = ''
+              for _br_o in target_product.options_with_values
+                assign _br_oname = _br_o.name | downcase
+                if _br_oname == 'size'
+                  assign _br_size_idx = forloop.index0
+                  case _br_size_idx
+                    when 0
+                      assign _br_size_val = variant.option1
+                    when 1
+                      assign _br_size_val = variant.option2
+                    when 2
+                      assign _br_size_val = variant.option3
+                  endcase
+                else
+                  if _br_other != ''
+                    assign _br_other = _br_other | append: ' · '
+                  endif
+                  case forloop.index0
+                    when 0
+                      assign _br_other = _br_other | append: variant.option1
+                    when 1
+                      assign _br_other = _br_other | append: variant.option2
+                    when 2
+                      assign _br_other = _br_other | append: variant.option3
+                  endcase
+                endif
+              endfor
+            -%}
+            {% if show_short_variant %}
+              <p class="br-variant-option br-variant-option-desktop">{% if _br_size_val != blank %}<span class="br-variant-size-pill">Size {{ _br_size_val }}</span>{% if _br_other != blank %} <span class="br-variant-opts-rest">· {{ _br_other }}</span>{% endif %}{% else %}{{ _card_variant_display }}{% endif %}</p>
+              <p class="br-variant-option-mobile">{% if _br_size_val != blank %}<span class="br-variant-size-pill">Size {{ _br_size_val }}</span>{% if _br_other != blank %} <span class="br-variant-opts-rest">· {{ _br_other }}</span>{% endif %}{% else %}{{ _card_variant_display }}{% endif %}</p>
+            {% else %}
+              <p class="br-variant-option">{% if _br_size_val != blank %}<span class="br-variant-size-pill">Size {{ _br_size_val }}</span>{% if _br_other != blank %} <span class="br-variant-opts-rest">· {{ _br_other }}</span>{% endif %}{% else %}{{ _card_variant_display }}{% endif %}</p>
+            {% endif %}
+
+            <p class="br-variant-price">
+              {% if _show_sale %}
+                <span class="br-price--sale">{{ variant.price | money }}</span>
+                <span class="br-price--compare">{{ variant.compare_at_price | money }}</span>
+              {% else %}
+                <span>{{ variant.price | money }}</span>
+              {% endif %}
+            </p>
+
+            {% if variant.available %}
+              <button 
+                type="button" 
+                class="{{ btn_class }}"
+                data-variant-id="{{ variant.id }}"
+                onclick="addToCart{{ section.id | replace: '-', '' }}({{ variant.id }}, this)"
+              >
+                <span class="br-btn-desktop">{{ section.settings.btn_text_desktop }}</span>
+                <span class="br-btn-mobile">{{ section.settings.btn_text_mobile }}</span>
+              </button>
+            {% else %}
+              <button type="button" class="{{ btn_class }}" disabled>
+                {{ section.settings.btn_sold_out }}
+              </button>
+            {% endif %}
+          </div>
+        </div>
+        {%- endunless -%}
+      {% endfor %}
+
+      {%- comment -%} Pass 2: kids only (always last). Omit when show_kids_1 is false. {%- endcomment -%}
+      {%- if show_kids_1 -%}
+      {% for variant in target_product.variants limit: max_count %}
+        {%- liquid
+          assign is_on_sale = false
+          if variant.compare_at_price > variant.price
+            assign is_on_sale = true
+          endif
+          assign is_limited = false
+          assign opt_count = target_product.options_with_values.size
+          assign opt0_down = ''
+          assign opt1_down = ''
+          assign opt2_down = ''
+          if opt_count > 0
+            assign opt0_down = target_product.options_with_values[0].name | downcase
+          endif
+          if opt_count > 1
+            assign opt1_down = target_product.options_with_values[1].name | downcase
+          endif
+          if opt_count > 2
+            assign opt2_down = target_product.options_with_values[2].name | downcase
+          endif
+          assign color_value = blank
+          if opt_count > 0 and opt0_down == 'color'
+            assign color_value = variant.option1
+          elsif opt_count > 1 and opt1_down == 'color'
+            assign color_value = variant.option2
+          elsif opt_count > 2 and opt2_down == 'color'
+            assign color_value = variant.option3
+          endif
+          assign color_value_clean = color_value | strip | downcase
+          assign le_raw = ''
+          assign le_me = target_product.metafields.custom.limited_colors | default: target_product.metafields.custom.limited_edition_colors
+          if le_me != blank and le_me.value != blank
+            assign le_raw = le_me.value | strip
+          endif
+          if le_raw != blank
+            assign le_list = le_raw | split: ','
+            for le_c in le_list
+              assign le_clean = le_c | strip | downcase
+              if le_clean != blank and le_clean == color_value_clean
+                assign is_limited = true
+                break
+              endif
+            endfor
+          endif
+          assign is_kid_br = false
+          assign _o1 = variant.option1 | default: ''
+          assign _o2 = variant.option2 | default: ''
+          assign _o3 = variant.option3 | default: ''
+          assign _o1d = _o1 | downcase
+          assign _o2d = _o2 | downcase
+          assign _o3d = _o3 | downcase
+          if _o1 != blank and _o1d contains kids_trigger_br
+            assign is_kid_br = true
+          elsif _o2 != blank and _o2d contains kids_trigger_br
+            assign is_kid_br = true
+          elsif _o3 != blank and _o3d contains kids_trigger_br
+            assign is_kid_br = true
+          endif
+          assign skip_card = false
+          assign _v_hidden = variant.metafields.custom.hide_from_storefront.value
+          assign _v_hidden_str = _v_hidden | append: '' | downcase
+          if _v_hidden_str == 'true'
+            assign skip_card = true
+          endif
+          if skip_card == false and color_value_clean != blank
+            for _hv in target_product.variants
+              assign _hv_color = blank
+              if opt_count > 0 and opt0_down == 'color'
+                assign _hv_color = _hv.option1
+              elsif opt_count > 1 and opt1_down == 'color'
+                assign _hv_color = _hv.option2
+              elsif opt_count > 2 and opt2_down == 'color'
+                assign _hv_color = _hv.option3
+              endif
+              assign _hv_color_clean = _hv_color | strip | downcase
+              assign _hv_hidden = _hv.metafields.custom.hide_from_storefront.value
+              assign _hv_hidden_str = _hv_hidden | append: '' | downcase
+              if _hv_color_clean == color_value_clean and _hv_hidden_str == 'true'
+                assign skip_card = true
+                break
+              endif
+            endfor
+          endif
+        -%}
+          {%- unless skip_card or is_kid_br == false or variant.available == false -%}
+        {%- assign card_class = 'br-variant-card br-variant-card--kids is-hidden' -%}
+        <div class="{{ card_class }}" data-variant-index="{{ forloop.index }}" data-product="1" data-size-tier="kids">
+          <div class="br-variant-badges">
+            {%- assign _show_sale = false -%}
+            {%- if variant.compare_at_price > variant.price -%}{%- assign _show_sale = true -%}{%- endif -%}
+            {%- assign _show_le = false -%}
+            {%- assign _le_me = target_product.metafields.custom.limited_colors | default: target_product.metafields.custom.limited_edition_colors -%}
+            {%- assign _le_raw_now = '' -%}
+            {%- if _le_me != blank and _le_me.value != blank -%}
+              {%- assign _le_val_now = _le_me.value -%}
+              {%- if _le_val_now contains ',' -%}
+                {%- assign _le_raw_now = _le_val_now | strip -%}
+              {%- else -%}
+                {%- assign _le_raw_now = _le_val_now | join: ',' -%}
+              {%- endif -%}
+            {%- endif -%}
+            {%- if _le_raw_now != blank -%}
+              {%- assign _cv = blank -%}
+              {%- if opt_count > 0 and opt0_down == 'color' -%}{%- assign _cv = variant.option1 -%}
+              {%- elsif opt_count > 1 and opt1_down == 'color' -%}{%- assign _cv = variant.option2 -%}
+              {%- elsif opt_count > 2 and opt2_down == 'color' -%}{%- assign _cv = variant.option3 -%}
+              {%- endif -%}
+              {%- assign _cv_clean = _cv | strip | downcase | handleize -%}
+              {%- assign _le_check = _le_raw_now | split: ',' -%}
+              {%- for _lec in _le_check -%}
+                {%- assign _lec_clean = _lec | strip | downcase | handleize -%}
+                {%- if _lec_clean != blank and _lec_clean == _cv_clean -%}
+                  {%- assign _show_le = true -%}
+                  {%- break -%}
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endif -%}
+            {%- assign _show_oneoff = false -%}
+            {%- assign _oo_me = target_product.metafields.custom.one_off_colors -%}
+            {%- assign _oo_raw = '' -%}
+            {%- if _oo_me != blank and _oo_me.value != blank -%}{%- assign _oo_raw = _oo_me.value | strip -%}{%- endif -%}
+            {%- if _oo_raw != blank -%}
+              {%- assign _cv = blank -%}
+              {%- if opt_count > 0 and opt0_down == 'color' -%}{%- assign _cv = variant.option1 -%}
+              {%- elsif opt_count > 1 and opt1_down == 'color' -%}{%- assign _cv = variant.option2 -%}
+              {%- elsif opt_count > 2 and opt2_down == 'color' -%}{%- assign _cv = variant.option3 -%}
+              {%- endif -%}
+              {%- assign _cv_clean = _cv | strip | downcase | handleize -%}
+              {%- assign _oo_check = _oo_raw | split: ',' -%}
+              {%- for _ooc in _oo_check -%}
+                {%- assign _ooc_clean = _ooc | strip | downcase | handleize -%}
+                {%- if _ooc_clean != blank and _ooc_clean == _cv_clean -%}
+                  {%- assign _show_oneoff = true -%}
+                  {%- break -%}
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endif -%}
+            {% if _show_sale and section.settings.show_sale_badge %}
+              <span class="br-badge br-badge--sale">{{ section.settings.sale_badge_text }}</span>
+            {% endif %}
+            {% if _show_oneoff and oneoff_badge_shown_1 == false and section.settings.show_oneoff_badge %}
+              {%- assign oneoff_badge_shown_1 = true -%}
+              <span class="br-badge br-badge--oneoff">{{ section.settings.oneoff_label_text | default: section.settings.oneoff_badge_text | default: 'One Off' }}</span>
+            {% elsif _show_le and section.settings.show_le_badge %}
+              {% render 'br-le-badge', label: section.settings.le_label_text | default: section.settings.le_badge_text | default: 'Limited Edition' %}
+            {% endif %}
+          </div>
+          {%- assign product_url_variant = target_product.url | append: '?variant=' | append: variant.id -%}
+          {% if variant.featured_image != blank %}
+            <a href="#" class="br-variant-link br-variant-link--image br-oneoff-lightbox-trigger" aria-label="{{ variant.title | escape }} – enlarge image" data-br-lightbox-src="{{ variant.featured_image | image_url: width: 1200 }}" data-br-lightbox-alt="{{ variant.title | escape }}">
+              <img src="{{ variant.featured_image | image_url: width: 400 }}" alt="{{ variant.title | escape }}" class="br-variant-image" loading="lazy" width="400" height="400">
+            </a>
+          {% elsif target_product.featured_image != blank %}
+            <a href="#" class="br-variant-link br-variant-link--image br-oneoff-lightbox-trigger" aria-label="{{ variant.title | escape }} – enlarge image" data-br-lightbox-src="{{ target_product.featured_image | image_url: width: 1200 }}" data-br-lightbox-alt="{{ variant.title | escape }}">
+              <img src="{{ target_product.featured_image | image_url: width: 400 }}" alt="{{ variant.title | escape }}" class="br-variant-image" loading="lazy" width="400" height="400">
+            </a>
+          {% endif %}
+          <div class="br-variant-info">
+            {%- liquid
+              assign title_desktop = target_product.title
+              assign title_mobile = target_product.title
+              if section.settings.card_title_desktop != blank
+                assign title_desktop = section.settings.card_title_desktop
+              endif
+              if section.settings.card_title_mobile != blank
+                assign title_mobile = section.settings.card_title_mobile
+              elsif section.settings.card_title_desktop != blank
+                assign title_mobile = section.settings.card_title_desktop
+              endif
+            -%}
+            <h3 class="br-variant-title br-desktop-only"><a href="{{ product_url_variant }}" class="br-variant-link">{{ title_desktop }}</a></h3>
+            <h3 class="br-variant-title br-mobile-only"><a href="{{ product_url_variant }}" class="br-variant-link">{{ title_mobile }}</a></h3>
+            {% if section.settings.card_subtitle_desktop != blank %}
+              <p class="br-variant-subtitle br-desktop-only">{{ section.settings.card_subtitle_desktop }}</p>
+            {% endif %}
+            {% if section.settings.card_subtitle_mobile != blank %}
+              <p class="br-variant-subtitle br-mobile-only">{{ section.settings.card_subtitle_mobile }}</p>
+            {% elsif section.settings.card_subtitle_desktop != blank %}
+              <p class="br-variant-subtitle br-mobile-only">{{ section.settings.card_subtitle_desktop }}</p>
+            {% endif %}
+            {%- liquid
+              assign _variant_opts = ''
+              if opt_count > 0
+                assign _variant_opts = target_product.options_with_values[0].name | append: ': ' | append: variant.option1
+              endif
+              if opt_count > 1
+                if _variant_opts != ''
+                  assign _variant_opts = _variant_opts | append: ' / '
+                endif
+                assign _variant_opts = _variant_opts | append: target_product.options_with_values[1].name | append: ': ' | append: variant.option2
+              endif
+              if opt_count > 2
+                if _variant_opts != ''
+                  assign _variant_opts = _variant_opts | append: ' / '
+                endif
+                assign _variant_opts = _variant_opts | append: target_product.options_with_values[2].name | append: ': ' | append: variant.option3
+              endif
+              if _variant_opts == ''
+                assign _variant_opts = variant.title
+              endif
+              assign _card_variant_display = tab_prefix_1 | append: ' / ' | append: _variant_opts
+            -%}
+            {%- assign show_short_variant = false -%}
+            {%- if section.settings.hide_product_name_in_variant and target_product_2 == nil -%}
+              {%- assign show_short_variant = true -%}
+            {%- endif -%}
+            {%- liquid
+              assign _br_size_val = ''
+              assign _br_other = ''
+              for _br_o in target_product.options_with_values
+                assign _br_oname = _br_o.name | downcase
+                if _br_oname == 'size'
+                  assign _br_size_idx = forloop.index0
+                  case _br_size_idx
+                    when 0
+                      assign _br_size_val = variant.option1
+                    when 1
+                      assign _br_size_val = variant.option2
+                    when 2
+                      assign _br_size_val = variant.option3
+                  endcase
+                else
+                  if _br_other != ''
+                    assign _br_other = _br_other | append: ' · '
+                  endif
+                  case forloop.index0
+                    when 0
+                      assign _br_other = _br_other | append: variant.option1
+                    when 1
+                      assign _br_other = _br_other | append: variant.option2
+                    when 2
+                      assign _br_other = _br_other | append: variant.option3
+                  endcase
+                endif
+              endfor
+            -%}
+            {% if show_short_variant %}
+              <p class="br-variant-option br-variant-option-desktop">{% if _br_size_val != blank %}<span class="br-variant-size-pill">Size {{ _br_size_val }}</span>{% if _br_other != blank %} <span class="br-variant-opts-rest">· {{ _br_other }}</span>{% endif %}{% else %}{{ _card_variant_display }}{% endif %}</p>
+              <p class="br-variant-option-mobile">{% if _br_size_val != blank %}<span class="br-variant-size-pill">Size {{ _br_size_val }}</span>{% if _br_other != blank %} <span class="br-variant-opts-rest">· {{ _br_other }}</span>{% endif %}{% else %}{{ _card_variant_display }}{% endif %}</p>
+            {% else %}
+              <p class="br-variant-option">{% if _br_size_val != blank %}<span class="br-variant-size-pill">Size {{ _br_size_val }}</span>{% if _br_other != blank %} <span class="br-variant-opts-rest">· {{ _br_other }}</span>{% endif %}{% else %}{{ _card_variant_display }}{% endif %}</p>
+            {% endif %}
+            <p class="br-variant-price">
+              {% if _show_sale %}
+                <span class="br-price--sale">{{ variant.price | money }}</span>
+                <span class="br-price--compare">{{ variant.compare_at_price | money }}</span>
+              {% else %}
+                <span>{{ variant.price | money }}</span>
+              {% endif %}
+            </p>
+            {% if variant.available %}
+              <button type="button" class="{{ btn_class }}" data-variant-id="{{ variant.id }}" onclick="addToCart{{ section.id | replace: '-', '' }}({{ variant.id }}, this)">
+                <span class="br-btn-desktop">{{ section.settings.btn_text_desktop }}</span>
+                <span class="br-btn-mobile">{{ section.settings.btn_text_mobile }}</span>
+              </button>
+            {% else %}
+              <button type="button" class="{{ btn_class }}" disabled>{{ section.settings.btn_sold_out }}</button>
+            {% endif %}
+          </div>
+        </div>
+        {%- endunless -%}
+      {% endfor %}
+      {%- endif -%}
+      </div>{%- comment -%} End product group 1 {%- endcomment -%}
+
+      {%- comment -%} PRODUCT 2 (if selected). Hide variant when variant.metafields.custom.hide_from_storefront.value == true. LE badge from custom.limited_colors. Tab prefix for card subtitle. {%- endcomment -%}
+      {% if target_product_2 != nil %}
+      {%- assign tab_prefix_2 = section.settings.tab_2_label | default: target_product_2.title -%}
+      {%- if use_filter_tabs -%}{%- assign non_kids_seen = 0 -%}{%- endif -%}
+      {%- assign show_kids_2 = true -%}
+      {%- assign _sk2 = target_product_2.metafields.custom.show_kids_sizes.value -%}
+      {%- if _sk2 == false or _sk2 == "false" or _sk2 == "False" -%}{%- assign show_kids_2 = false -%}{%- endif -%}
+      <div class="br-product-group{% if use_filter_tabs %} is-hidden{% endif %}" id="br-product-2-{{ section.id }}" data-product-group="2">
+        {% if section.settings.product_2_label != blank %}
+          <div class="br-product-label is-hidden" id="br-product2-label-{{ section.id }}">
+            <p class="br-product-label-text">{{ section.settings.product_2_label }}</p>
+          </div>
+        {% endif %}
+        {%- assign le_badge_shown_2 = false -%}
+        {%- assign oneoff_badge_shown_2 = false -%}
+        {% for variant in target_product_2.variants limit: max_count %}
+          {%- liquid
+            assign is_on_sale = false
+            if variant.compare_at_price > variant.price
+              assign is_on_sale = true
+            endif
+            
+            assign is_limited = false
+            assign opt_count = target_product_2.options_with_values.size
+            assign opt0_down = ''
+            assign opt1_down = ''
+            assign opt2_down = ''
+            if opt_count > 0
+              assign opt0_down = target_product_2.options_with_values[0].name | downcase
+            endif
+            if opt_count > 1
+              assign opt1_down = target_product_2.options_with_values[1].name | downcase
+            endif
+            if opt_count > 2
+              assign opt2_down = target_product_2.options_with_values[2].name | downcase
+            endif
+            assign color_value = blank
+            if opt_count > 0 and opt0_down == 'color'
+              assign color_value = variant.option1
+            elsif opt_count > 1 and opt1_down == 'color'
+              assign color_value = variant.option2
+            elsif opt_count > 2 and opt2_down == 'color'
+              assign color_value = variant.option3
+            endif
+            assign color_value_clean = color_value | strip | downcase
+            assign le_raw = ''
+            assign le_me = target_product_2.metafields.custom.limited_colors | default: target_product_2.metafields.custom.limited_edition_colors
+            if le_me != blank and le_me.value != blank
+              assign le_raw = le_me.value | strip
+            endif
+            if le_raw != blank
+              assign le_list = le_raw | split: ','
+              for le_c in le_list
+                assign le_clean = le_c | strip | downcase
+                if le_clean != blank and le_clean == color_value_clean
+                  assign is_limited = true
+                  break
+                endif
+              endfor
+            endif
+            assign is_kid_br = false
+            assign _o1 = variant.option1 | default: ''
+            assign _o2 = variant.option2 | default: ''
+            assign _o3 = variant.option3 | default: ''
+            assign _o1d = _o1 | downcase
+            assign _o2d = _o2 | downcase
+            assign _o3d = _o3 | downcase
+            if _o1 != blank and _o1d contains kids_trigger_br
+              assign is_kid_br = true
+            elsif _o2 != blank and _o2d contains kids_trigger_br
+              assign is_kid_br = true
+            elsif _o3 != blank and _o3d contains kids_trigger_br
+              assign is_kid_br = true
+            endif
+            assign skip_card = false
+            assign _v_hidden = variant.metafields.custom.hide_from_storefront.value
+            assign _v_hidden_str = _v_hidden | append: '' | downcase
+            if _v_hidden_str == 'true'
+              assign skip_card = true
+            endif
+            if skip_card == false and color_value_clean != blank
+              for _hv in target_product_2.variants
+                assign _hv_color = blank
+                if opt_count > 0 and opt0_down == 'color'
+                  assign _hv_color = _hv.option1
+                elsif opt_count > 1 and opt1_down == 'color'
+                  assign _hv_color = _hv.option2
+                elsif opt_count > 2 and opt2_down == 'color'
+                  assign _hv_color = _hv.option3
+                endif
+                assign _hv_color_clean = _hv_color | strip | downcase
+                assign _hv_hidden = _hv.metafields.custom.hide_from_storefront.value
+                assign _hv_hidden_str = _hv_hidden | append: '' | downcase
+                if _hv_color_clean == color_value_clean and _hv_hidden_str == 'true'
+                  assign skip_card = true
+                  break
+                endif
+              endfor
+            endif
+        -%}
+        {%- if is_kid_br and variant.available and show_kids_2 -%}
+          {%- assign has_kids_tier = true -%}
+        {%- endif -%}
+        {%- unless skip_card or is_kid_br -%}
+        {%- liquid
+            assign tier_br = 'see-more'
+            if non_kids_seen < initial_count
+              assign tier_br = 'initial'
+              assign non_kids_seen = non_kids_seen | plus: 1
+            else
+              assign has_see_more_tier = true
+            endif
+            assign card_class = 'br-variant-card br-variant-card--' | append: tier_br
+            if tier_br != 'initial'
+              assign card_class = card_class | append: ' is-hidden'
+            endif
+            unless variant.available
+              assign card_class = card_class | append: ' br-variant-card--sold-out'
+            endunless
+        -%}
+        
+        {%- liquid
+          assign _br_sz_attr = ''
+          for _br_oa in target_product_2.options_with_values
+            if _br_oa.name == 'Size' or _br_oa.name == 'size'
+              case forloop.index0
+                when 0
+                  assign _br_sz_attr = variant.option1
+                when 1
+                  assign _br_sz_attr = variant.option2
+                when 2
+                  assign _br_sz_attr = variant.option3
+              endcase
+              break
+            endif
+          endfor
+          assign _br_sz_attr = _br_sz_attr | strip | split: ' (' | first | strip
+        -%}
+        <div class="{{ card_class }}" data-variant-index="{{ forloop.index }}" data-product="2" data-size-tier="{{ tier_br }}"{% if _br_sz_attr != blank %} data-br-size="{{ _br_sz_attr | escape }}"{% endif %}>
+            <div class="br-variant-badges">
+              {%- assign _show_sale = false -%}
+              {%- if variant.compare_at_price > variant.price -%}{%- assign _show_sale = true -%}{%- endif -%}
+              {%- assign _show_le = false -%}
+              {%- assign _le_me = target_product_2.metafields.custom.limited_colors | default: target_product_2.metafields.custom.limited_edition_colors -%}
+              {%- assign _le_raw_now = '' -%}
+              {%- if _le_me != blank and _le_me.value != blank -%}
+                {%- assign _le_val_now = _le_me.value -%}
+                {%- if _le_val_now contains ',' -%}
+                  {%- assign _le_raw_now = _le_val_now | strip -%}
+                {%- else -%}
+                  {%- assign _le_raw_now = _le_val_now | join: ',' -%}
+                {%- endif -%}
+              {%- endif -%}
+              {%- if _le_raw_now != blank -%}
+                {%- assign _cv = blank -%}
+                {%- if opt_count > 0 and opt0_down == 'color' -%}{%- assign _cv = variant.option1 -%}
+                {%- elsif opt_count > 1 and opt1_down == 'color' -%}{%- assign _cv = variant.option2 -%}
+                {%- elsif opt_count > 2 and opt2_down == 'color' -%}{%- assign _cv = variant.option3 -%}
+                {%- endif -%}
+                {%- assign _cv_clean = _cv | strip | downcase | handleize -%}
+                {%- assign _le_check = _le_raw_now | split: ',' -%}
+                {%- for _lec in _le_check -%}
+                  {%- assign _lec_clean = _lec | strip | downcase | handleize -%}
+                  {%- if _lec_clean != blank and _lec_clean == _cv_clean -%}
+                    {%- assign _show_le = true -%}
+                    {%- break -%}
+                  {%- endif -%}
+                {%- endfor -%}
+              {%- endif -%}
+              {%- assign _show_oneoff = false -%}
+              {%- assign _oo_me = target_product_2.metafields.custom.one_off_colors -%}
+              {%- assign _oo_raw = '' -%}
+              {%- if _oo_me != blank and _oo_me.value != blank -%}{%- assign _oo_raw = _oo_me.value | strip -%}{%- endif -%}
+              {%- if _oo_raw != blank -%}
+                {%- assign _cv = blank -%}
+                {%- if opt_count > 0 and opt0_down == 'color' -%}{%- assign _cv = variant.option1 -%}
+                {%- elsif opt_count > 1 and opt1_down == 'color' -%}{%- assign _cv = variant.option2 -%}
+                {%- elsif opt_count > 2 and opt2_down == 'color' -%}{%- assign _cv = variant.option3 -%}
+                {%- endif -%}
+                {%- assign _cv_clean = _cv | strip | downcase | handleize -%}
+                {%- assign _oo_check = _oo_raw | split: ',' -%}
+                {%- for _ooc in _oo_check -%}
+                  {%- assign _ooc_clean = _ooc | strip | downcase | handleize -%}
+                  {%- if _ooc_clean != blank and _ooc_clean == _cv_clean -%}
+                    {%- assign _show_oneoff = true -%}
+                    {%- break -%}
+                  {%- endif -%}
+                {%- endfor -%}
+              {%- endif -%}
+              {% if _show_sale and section.settings.show_sale_badge %}
+                <span class="br-badge br-badge--sale">{{ section.settings.sale_badge_text }}</span>
+              {% endif %}
+              {% if _show_oneoff and oneoff_badge_shown_2 == false and section.settings.show_oneoff_badge %}
+                {%- assign oneoff_badge_shown_2 = true -%}
+                <span class="br-badge br-badge--oneoff">{{ section.settings.oneoff_label_text | default: section.settings.oneoff_badge_text | default: 'One Off' }}</span>
+              {% elsif _show_le and section.settings.show_le_badge %}
+                {% render 'br-le-badge', label: section.settings.le_label_text | default: section.settings.le_badge_text | default: 'Limited Edition' %}
+              {% endif %}
+            </div>
+
+            {%- assign product_url_variant_2 = target_product_2.url | append: '?variant=' | append: variant.id -%}
+            {% if variant.featured_image != blank %}
+              <a href="#" class="br-variant-link br-variant-link--image br-oneoff-lightbox-trigger" aria-label="{{ variant.title | escape }} – enlarge image" data-br-lightbox-src="{{ variant.featured_image | image_url: width: 1200 }}" data-br-lightbox-alt="{{ variant.title | escape }}">
+                <img 
+                  src="{{ variant.featured_image | image_url: width: 400 }}"
+                  alt="{{ variant.title | escape }}"
+                  class="br-variant-image"
+                  loading="lazy"
+                  width="400"
+                  height="400"
+                >
+              </a>
+            {% elsif target_product_2.featured_image != blank %}
+              <a href="#" class="br-variant-link br-variant-link--image br-oneoff-lightbox-trigger" aria-label="{{ variant.title | escape }} – enlarge image" data-br-lightbox-src="{{ target_product_2.featured_image | image_url: width: 1200 }}" data-br-lightbox-alt="{{ variant.title | escape }}">
+                <img 
+                  src="{{ target_product_2.featured_image | image_url: width: 400 }}"
+                  alt="{{ variant.title | escape }}"
+                  class="br-variant-image"
+                  loading="lazy"
+                  width="400"
+                  height="400"
+                >
+              </a>
+            {% endif %}
+
+            <div class="br-variant-info">
+              {%- liquid
+                assign title2_desktop = target_product_2.title
+                assign title2_mobile = target_product_2.title
+                if section.settings.card_title_desktop != blank
+                  assign title2_desktop = section.settings.card_title_desktop
+                endif
+                if section.settings.card_title_mobile != blank
+                  assign title2_mobile = section.settings.card_title_mobile
+                elsif section.settings.card_title_desktop != blank
+                  assign title2_mobile = section.settings.card_title_desktop
+                endif
+              -%}
+              <h3 class="br-variant-title br-desktop-only"><a href="{{ product_url_variant_2 }}" class="br-variant-link">{{ title2_desktop }}</a></h3>
+              <h3 class="br-variant-title br-mobile-only"><a href="{{ product_url_variant_2 }}" class="br-variant-link">{{ title2_mobile }}</a></h3>
+
+              {% if section.settings.card_subtitle_desktop != blank %}
+                <p class="br-variant-subtitle br-desktop-only">{{ section.settings.card_subtitle_desktop }}</p>
+              {% endif %}
+              {% if section.settings.card_subtitle_mobile != blank %}
+                <p class="br-variant-subtitle br-mobile-only">{{ section.settings.card_subtitle_mobile }}</p>
+              {% elsif section.settings.card_subtitle_desktop != blank %}
+                <p class="br-variant-subtitle br-mobile-only">{{ section.settings.card_subtitle_desktop }}</p>
+              {% endif %}
+
+              {%- liquid
+                assign _variant_opts = ''
+                if opt_count > 0
+                  assign _variant_opts = target_product_2.options_with_values[0].name | append: ': ' | append: variant.option1
+                endif
+                if opt_count > 1
+                  if _variant_opts != ''
+                    assign _variant_opts = _variant_opts | append: ' / '
+                  endif
+                  assign _variant_opts = _variant_opts | append: target_product_2.options_with_values[1].name | append: ': ' | append: variant.option2
+                endif
+                if opt_count > 2
+                  if _variant_opts != ''
+                    assign _variant_opts = _variant_opts | append: ' / '
+                  endif
+                  assign _variant_opts = _variant_opts | append: target_product_2.options_with_values[2].name | append: ': ' | append: variant.option3
+                endif
+                if _variant_opts == ''
+                  assign _variant_opts = variant.title
+                endif
+                assign _card_variant_display = tab_prefix_2 | append: ' / ' | append: _variant_opts
+              -%}
+              {%- liquid
+                assign _br_size_val = ''
+                assign _br_other = ''
+                for _br_o in target_product_2.options_with_values
+                  assign _br_oname = _br_o.name | downcase
+                  if _br_oname == 'size'
+                    case forloop.index0
+                      when 0
+                        assign _br_size_val = variant.option1
+                      when 1
+                        assign _br_size_val = variant.option2
+                      when 2
+                        assign _br_size_val = variant.option3
+                    endcase
+                  else
+                    if _br_other != ''
+                      assign _br_other = _br_other | append: ' · '
+                    endif
+                    case forloop.index0
+                      when 0
+                        assign _br_other = _br_other | append: variant.option1
+                      when 1
+                        assign _br_other = _br_other | append: variant.option2
+                      when 2
+                        assign _br_other = _br_other | append: variant.option3
+                    endcase
+                  endif
+                endfor
+              -%}
+              <p class="br-variant-option">{% if _br_size_val != blank %}<span class="br-variant-size-pill">Size {{ _br_size_val }}</span>{% if _br_other != blank %} <span class="br-variant-opts-rest">· {{ _br_other }}</span>{% endif %}{% else %}{{ _card_variant_display }}{% endif %}</p>
+
+              <p class="br-variant-price">
+                {% if _show_sale %}
+                  <span class="br-price--sale">{{ variant.price | money }}</span>
+                  <span class="br-price--compare">{{ variant.compare_at_price | money }}</span>
+                {% else %}
+                  <span>{{ variant.price | money }}</span>
+                {% endif %}
+              </p>
+
+              {% if variant.available %}
+                <button 
+                  type="button" 
+                  class="{{ btn_class }}"
+                  data-variant-id="{{ variant.id }}"
+                  onclick="addToCart{{ section.id | replace: '-', '' }}({{ variant.id }}, this)"
+                >
+                  <span class="br-btn-desktop">{{ section.settings.btn_text_desktop }}</span>
+                  <span class="br-btn-mobile">{{ section.settings.btn_text_mobile }}</span>
+                </button>
+              {% else %}
+                <button type="button" class="{{ btn_class }}" disabled>
+                  {{ section.settings.btn_sold_out }}
+                </button>
+              {% endif %}
+            </div>
+          </div>
+        {%- endunless -%}
+        {% endfor %}
+
+        {%- comment -%} Pass 2: kids only (always last). Omit when show_kids_2 is false. {%- endcomment -%}
+        {%- if show_kids_2 -%}
+        {% for variant in target_product_2.variants limit: max_count %}
+          {%- liquid
+            assign is_on_sale = false
+            if variant.compare_at_price > variant.price
+              assign is_on_sale = true
+            endif
+            assign is_limited = false
+            assign opt_count = target_product_2.options_with_values.size
+            assign opt0_down = ''
+            assign opt1_down = ''
+            assign opt2_down = ''
+            if opt_count > 0
+              assign opt0_down = target_product_2.options_with_values[0].name | downcase
+            endif
+            if opt_count > 1
+              assign opt1_down = target_product_2.options_with_values[1].name | downcase
+            endif
+            if opt_count > 2
+              assign opt2_down = target_product_2.options_with_values[2].name | downcase
+            endif
+            assign color_value = blank
+            if opt_count > 0 and opt0_down == 'color'
+              assign color_value = variant.option1
+            elsif opt_count > 1 and opt1_down == 'color'
+              assign color_value = variant.option2
+            elsif opt_count > 2 and opt2_down == 'color'
+              assign color_value = variant.option3
+            endif
+            assign color_value_clean = color_value | strip | downcase
+            assign le_raw = ''
+            assign le_me = target_product_2.metafields.custom.limited_colors | default: target_product_2.metafields.custom.limited_edition_colors
+            if le_me != blank and le_me.value != blank
+              assign le_raw = le_me.value | strip
+            endif
+            if le_raw != blank
+              assign le_list = le_raw | split: ','
+              for le_c in le_list
+                assign le_clean = le_c | strip | downcase
+                if le_clean != blank and le_clean == color_value_clean
+                  assign is_limited = true
+                  break
+                endif
+              endfor
+            endif
+            assign is_kid_br = false
+            assign _o1 = variant.option1 | default: ''
+            assign _o2 = variant.option2 | default: ''
+            assign _o3 = variant.option3 | default: ''
+            assign _o1d = _o1 | downcase
+            assign _o2d = _o2 | downcase
+            assign _o3d = _o3 | downcase
+            if _o1 != blank and _o1d contains kids_trigger_br
+              assign is_kid_br = true
+            elsif _o2 != blank and _o2d contains kids_trigger_br
+              assign is_kid_br = true
+            elsif _o3 != blank and _o3d contains kids_trigger_br
+              assign is_kid_br = true
+            endif
+            assign skip_card = false
+            assign _v_hidden = variant.metafields.custom.hide_from_storefront.value
+            assign _v_hidden_str = _v_hidden | append: '' | downcase
+            if _v_hidden_str == 'true'
+              assign skip_card = true
+            endif
+            if skip_card == false and color_value_clean != blank
+              for _hv in target_product_2.variants
+                assign _hv_color = blank
+                if opt_count > 0 and opt0_down == 'color'
+                  assign _hv_color = _hv.option1
+                elsif opt_count > 1 and opt1_down == 'color'
+                  assign _hv_color = _hv.option2
+                elsif opt_count > 2 and opt2_down == 'color'
+                  assign _hv_color = _hv.option3
+                endif
+                assign _hv_color_clean = _hv_color | strip | downcase
+                assign _hv_hidden = _hv.metafields.custom.hide_from_storefront.value
+                assign _hv_hidden_str = _hv_hidden | append: '' | downcase
+                if _hv_color_clean == color_value_clean and _hv_hidden_str == 'true'
+                  assign skip_card = true
+                  break
+                endif
+              endfor
+            endif
+          -%}
+          {%- unless skip_card or is_kid_br == false or variant.available == false -%}
+          {%- assign card_class = 'br-variant-card br-variant-card--kids is-hidden' -%}
+          <div class="{{ card_class }}" data-variant-index="{{ forloop.index }}" data-product="2" data-size-tier="kids">
+            <div class="br-variant-badges">
+              {%- assign _show_sale = false -%}
+              {%- if variant.compare_at_price > variant.price -%}{%- assign _show_sale = true -%}{%- endif -%}
+              {%- assign _show_le = false -%}
+              {%- assign _le_me = target_product_2.metafields.custom.limited_colors | default: target_product_2.metafields.custom.limited_edition_colors -%}
+              {%- assign _le_raw_now = '' -%}
+              {%- if _le_me != blank and _le_me.value != blank -%}
+                {%- assign _le_val_now = _le_me.value -%}
+                {%- if _le_val_now contains ',' -%}
+                  {%- assign _le_raw_now = _le_val_now | strip -%}
+                {%- else -%}
+                  {%- assign _le_raw_now = _le_val_now | join: ',' -%}
+                {%- endif -%}
+              {%- endif -%}
+              {%- if _le_raw_now != blank -%}
+                {%- assign _cv = blank -%}
+                {%- if opt_count > 0 and opt0_down == 'color' -%}{%- assign _cv = variant.option1 -%}
+                {%- elsif opt_count > 1 and opt1_down == 'color' -%}{%- assign _cv = variant.option2 -%}
+                {%- elsif opt_count > 2 and opt2_down == 'color' -%}{%- assign _cv = variant.option3 -%}
+                {%- endif -%}
+                {%- assign _cv_clean = _cv | strip | downcase | handleize -%}
+                {%- assign _le_check = _le_raw_now | split: ',' -%}
+                {%- for _lec in _le_check -%}
+                  {%- assign _lec_clean = _lec | strip | downcase | handleize -%}
+                  {%- if _lec_clean != blank and _lec_clean == _cv_clean -%}
+                    {%- assign _show_le = true -%}
+                    {%- break -%}
+                  {%- endif -%}
+                {%- endfor -%}
+              {%- endif -%}
+              {%- assign _show_oneoff = false -%}
+              {%- assign _oo_me = target_product_2.metafields.custom.one_off_colors -%}
+              {%- assign _oo_raw = '' -%}
+              {%- if _oo_me != blank and _oo_me.value != blank -%}{%- assign _oo_raw = _oo_me.value | strip -%}{%- endif -%}
+              {%- if _oo_raw != blank -%}
+                {%- assign _cv = blank -%}
+                {%- if opt_count > 0 and opt0_down == 'color' -%}{%- assign _cv = variant.option1 -%}
+                {%- elsif opt_count > 1 and opt1_down == 'color' -%}{%- assign _cv = variant.option2 -%}
+                {%- elsif opt_count > 2 and opt2_down == 'color' -%}{%- assign _cv = variant.option3 -%}
+                {%- endif -%}
+                {%- assign _cv_clean = _cv | strip | downcase | handleize -%}
+                {%- assign _oo_check = _oo_raw | split: ',' -%}
+                {%- for _ooc in _oo_check -%}
+                  {%- assign _ooc_clean = _ooc | strip | downcase | handleize -%}
+                  {%- if _ooc_clean != blank and _ooc_clean == _cv_clean -%}
+                    {%- assign _show_oneoff = true -%}
+                    {%- break -%}
+                  {%- endif -%}
+                {%- endfor -%}
+              {%- endif -%}
+              {% if _show_sale and section.settings.show_sale_badge %}
+                <span class="br-badge br-badge--sale">{{ section.settings.sale_badge_text }}</span>
+              {% endif %}
+              {% if _show_oneoff and oneoff_badge_shown_2 == false and section.settings.show_oneoff_badge %}
+                {%- assign oneoff_badge_shown_2 = true -%}
+                <span class="br-badge br-badge--oneoff">{{ section.settings.oneoff_label_text | default: section.settings.oneoff_badge_text | default: 'One Off' }}</span>
+              {% elsif _show_le and section.settings.show_le_badge %}
+                {% render 'br-le-badge', label: section.settings.le_label_text | default: section.settings.le_badge_text | default: 'Limited Edition' %}
+              {% endif %}
+            </div>
+            {%- assign product_url_variant_2 = target_product_2.url | append: '?variant=' | append: variant.id -%}
+            {% if variant.featured_image != blank %}
+              <a href="#" class="br-variant-link br-variant-link--image br-oneoff-lightbox-trigger" aria-label="{{ variant.title | escape }} – enlarge image" data-br-lightbox-src="{{ variant.featured_image | image_url: width: 1200 }}" data-br-lightbox-alt="{{ variant.title | escape }}">
+                <img src="{{ variant.featured_image | image_url: width: 400 }}" alt="{{ variant.title | escape }}" class="br-variant-image" loading="lazy" width="400" height="400">
+              </a>
+            {% elsif target_product_2.featured_image != blank %}
+              <a href="#" class="br-variant-link br-variant-link--image br-oneoff-lightbox-trigger" aria-label="{{ variant.title | escape }} – enlarge image" data-br-lightbox-src="{{ target_product_2.featured_image | image_url: width: 1200 }}" data-br-lightbox-alt="{{ variant.title | escape }}">
+                <img src="{{ target_product_2.featured_image | image_url: width: 400 }}" alt="{{ variant.title | escape }}" class="br-variant-image" loading="lazy" width="400" height="400">
+              </a>
+            {% endif %}
+            <div class="br-variant-info">
+              <h3 class="br-variant-title"><a href="{{ product_url_variant_2 }}" class="br-variant-link">{{ target_product_2.title }}</a></h3>
+              {% if section.settings.card_subtitle_desktop != blank %}
+                <p class="br-variant-subtitle br-desktop-only">{{ section.settings.card_subtitle_desktop }}</p>
+              {% endif %}
+              {% if section.settings.card_subtitle_mobile != blank %}
+                <p class="br-variant-subtitle br-mobile-only">{{ section.settings.card_subtitle_mobile }}</p>
+              {% elsif section.settings.card_subtitle_desktop != blank %}
+                <p class="br-variant-subtitle br-mobile-only">{{ section.settings.card_subtitle_desktop }}</p>
+              {% endif %}
+              {%- liquid
+                assign _variant_opts = ''
+                if opt_count > 0
+                  assign _variant_opts = target_product_2.options_with_values[0].name | append: ': ' | append: variant.option1
+                endif
+                if opt_count > 1
+                  if _variant_opts != ''
+                    assign _variant_opts = _variant_opts | append: ' / '
+                  endif
+                  assign _variant_opts = _variant_opts | append: target_product_2.options_with_values[1].name | append: ': ' | append: variant.option2
+                endif
+                if opt_count > 2
+                  if _variant_opts != ''
+                    assign _variant_opts = _variant_opts | append: ' / '
+                  endif
+                  assign _variant_opts = _variant_opts | append: target_product_2.options_with_values[2].name | append: ': ' | append: variant.option3
+                endif
+                if _variant_opts == ''
+                  assign _variant_opts = variant.title
+                endif
+                assign _card_variant_display = tab_prefix_2 | append: ' / ' | append: _variant_opts
+              -%}
+              {%- liquid
+                assign _br_size_val = ''
+                assign _br_other = ''
+                for _br_o in target_product_2.options_with_values
+                  assign _br_oname = _br_o.name | downcase
+                  if _br_oname == 'size'
+                    case forloop.index0
+                      when 0
+                        assign _br_size_val = variant.option1
+                      when 1
+                        assign _br_size_val = variant.option2
+                      when 2
+                        assign _br_size_val = variant.option3
+                    endcase
+                  else
+                    if _br_other != ''
+                      assign _br_other = _br_other | append: ' · '
+                    endif
+                    case forloop.index0
+                      when 0
+                        assign _br_other = _br_other | append: variant.option1
+                      when 1
+                        assign _br_other = _br_other | append: variant.option2
+                      when 2
+                        assign _br_other = _br_other | append: variant.option3
+                    endcase
+                  endif
+                endfor
+              -%}
+              <p class="br-variant-option">{% if _br_size_val != blank %}<span class="br-variant-size-pill">Size {{ _br_size_val }}</span>{% if _br_other != blank %} <span class="br-variant-opts-rest">· {{ _br_other }}</span>{% endif %}{% else %}{{ _card_variant_display }}{% endif %}</p>
+              <p class="br-variant-price">
+                {% if _show_sale %}
+                  <span class="br-price--sale">{{ variant.price | money }}</span>
+                  <span class="br-price--compare">{{ variant.compare_at_price | money }}</span>
+                {% else %}
+                  <span>{{ variant.price | money }}</span>
+                {% endif %}
+              </p>
+              {% if variant.available %}
+                <button type="button" class="{{ btn_class }}" data-variant-id="{{ variant.id }}" onclick="addToCart{{ section.id | replace: '-', '' }}({{ variant.id }}, this)">
+                  <span class="br-btn-desktop">{{ section.settings.btn_text_desktop }}</span>
+                  <span class="br-btn-mobile">{{ section.settings.btn_text_mobile }}</span>
+                </button>
+              {% else %}
+                <button type="button" class="{{ btn_class }}" disabled>{{ section.settings.btn_sold_out }}</button>
+              {% endif %}
+            </div>
+          </div>
+          {%- endunless -%}
+        {% endfor %}
+        {%- endif -%}
+      </div>{%- comment -%} End product group 2 {%- endcomment -%}
+      {% endif %}
+
+      {%- comment -%} PRODUCT 3 (if selected). Hide variant when variant.metafields.custom.hide_from_storefront.value == true. LE badge from custom.limited_colors. Tab prefix for card subtitle. {%- endcomment -%}
+      {% if target_product_3 != nil %}
+      {%- assign tab_prefix_3 = section.settings.tab_3_label | default: target_product_3.title -%}
+      {%- if use_filter_tabs -%}{%- assign non_kids_seen = 0 -%}{%- endif -%}
+      {%- assign show_kids_3 = true -%}
+      {%- assign _sk3 = target_product_3.metafields.custom.show_kids_sizes.value -%}
+      {%- if _sk3 == false or _sk3 == "false" or _sk3 == "False" -%}{%- assign show_kids_3 = false -%}{%- endif -%}
+      <div class="br-product-group{% if use_filter_tabs %} is-hidden{% endif %}" id="br-product-3-{{ section.id }}" data-product-group="3">
+        {%- assign le_badge_shown_3 = false -%}
+        {%- assign oneoff_badge_shown_3 = false -%}
+        {% for variant in target_product_3.variants limit: max_count %}
+          {%- liquid
+            assign is_on_sale = false
+            if variant.compare_at_price > variant.price
+              assign is_on_sale = true
+            endif
+            
+            assign is_limited = false
+            assign opt_count = target_product_3.options_with_values.size
+            assign opt0_down = ''
+            assign opt1_down = ''
+            assign opt2_down = ''
+            if opt_count > 0
+              assign opt0_down = target_product_3.options_with_values[0].name | downcase
+            endif
+            if opt_count > 1
+              assign opt1_down = target_product_3.options_with_values[1].name | downcase
+            endif
+            if opt_count > 2
+              assign opt2_down = target_product_3.options_with_values[2].name | downcase
+            endif
+            assign color_value = blank
+            if opt_count > 0 and opt0_down == 'color'
+              assign color_value = variant.option1
+            elsif opt_count > 1 and opt1_down == 'color'
+              assign color_value = variant.option2
+            elsif opt_count > 2 and opt2_down == 'color'
+              assign color_value = variant.option3
+            endif
+            assign color_value_clean = color_value | strip | downcase
+            assign le_raw = ''
+            assign le_me = target_product_3.metafields.custom.limited_colors | default: target_product_3.metafields.custom.limited_edition_colors
+            if le_me != blank and le_me.value != blank
+              assign le_raw = le_me.value | strip
+            endif
+            if le_raw != blank
+              assign le_list = le_raw | split: ','
+              for le_c in le_list
+                assign le_clean = le_c | strip | downcase
+                if le_clean != blank and le_clean == color_value_clean
+                  assign is_limited = true
+                  break
+                endif
+              endfor
+            endif
+            assign is_kid_br = false
+            assign _o1 = variant.option1 | default: ''
+            assign _o2 = variant.option2 | default: ''
+            assign _o3 = variant.option3 | default: ''
+            assign _o1d = _o1 | downcase
+            assign _o2d = _o2 | downcase
+            assign _o3d = _o3 | downcase
+            if _o1 != blank and _o1d contains kids_trigger_br
+              assign is_kid_br = true
+            elsif _o2 != blank and _o2d contains kids_trigger_br
+              assign is_kid_br = true
+            elsif _o3 != blank and _o3d contains kids_trigger_br
+              assign is_kid_br = true
+            endif
+            assign skip_card = false
+            assign _v_hidden = variant.metafields.custom.hide_from_storefront.value
+            assign _v_hidden_str = _v_hidden | append: '' | downcase
+            if _v_hidden_str == 'true'
+              assign skip_card = true
+            endif
+            if skip_card == false and color_value_clean != blank
+              for _hv in target_product_3.variants
+                assign _hv_color = blank
+                if opt_count > 0 and opt0_down == 'color'
+                  assign _hv_color = _hv.option1
+                elsif opt_count > 1 and opt1_down == 'color'
+                  assign _hv_color = _hv.option2
+                elsif opt_count > 2 and opt2_down == 'color'
+                  assign _hv_color = _hv.option3
+                endif
+                assign _hv_color_clean = _hv_color | strip | downcase
+                assign _hv_hidden = _hv.metafields.custom.hide_from_storefront.value
+                assign _hv_hidden_str = _hv_hidden | append: '' | downcase
+                if _hv_color_clean == color_value_clean and _hv_hidden_str == 'true'
+                  assign skip_card = true
+                  break
+                endif
+              endfor
+            endif
+          -%}
+          {%- if is_kid_br and variant.available and show_kids_3 -%}
+            {%- assign has_kids_tier = true -%}
+          {%- endif -%}
+        {%- unless skip_card or is_kid_br -%}
+        {%- liquid
+            assign tier_br = 'see-more'
+            if non_kids_seen < initial_count
+              assign tier_br = 'initial'
+              assign non_kids_seen = non_kids_seen | plus: 1
+            else
+              assign has_see_more_tier = true
+            endif
+            assign card_class = 'br-variant-card br-variant-card--' | append: tier_br
+            if tier_br != 'initial'
+              assign card_class = card_class | append: ' is-hidden'
+            endif
+            unless variant.available
+              assign card_class = card_class | append: ' br-variant-card--sold-out'
+            endunless
+        -%}
+        
+        {%- liquid
+          assign _br_sz_attr = ''
+          for _br_oa in target_product_3.options_with_values
+            if _br_oa.name == 'Size' or _br_oa.name == 'size'
+              case forloop.index0
+                when 0
+                  assign _br_sz_attr = variant.option1
+                when 1
+                  assign _br_sz_attr = variant.option2
+                when 2
+                  assign _br_sz_attr = variant.option3
+              endcase
+              break
+            endif
+          endfor
+          assign _br_sz_attr = _br_sz_attr | strip | split: ' (' | first | strip
+        -%}
+        <div class="{{ card_class }}" data-variant-index="{{ forloop.index }}" data-product="3" data-size-tier="{{ tier_br }}"{% if _br_sz_attr != blank %} data-br-size="{{ _br_sz_attr | escape }}"{% endif %}>
+            <div class="br-variant-badges">
+              {%- assign _show_sale = false -%}
+              {%- if variant.compare_at_price > variant.price -%}{%- assign _show_sale = true -%}{%- endif -%}
+              {%- assign _show_le = false -%}
+              {%- assign _le_me = target_product_3.metafields.custom.limited_colors | default: target_product_3.metafields.custom.limited_edition_colors -%}
+              {%- assign _le_raw_now = '' -%}
+              {%- if _le_me != blank and _le_me.value != blank -%}
+                {%- assign _le_val_now = _le_me.value -%}
+                {%- if _le_val_now contains ',' -%}
+                  {%- assign _le_raw_now = _le_val_now | strip -%}
+                {%- else -%}
+                  {%- assign _le_raw_now = _le_val_now | join: ',' -%}
+                {%- endif -%}
+              {%- endif -%}
+              {%- if _le_raw_now != blank -%}
+                {%- assign _cv = blank -%}
+                {%- if opt_count > 0 and opt0_down == 'color' -%}{%- assign _cv = variant.option1 -%}
+                {%- elsif opt_count > 1 and opt1_down == 'color' -%}{%- assign _cv = variant.option2 -%}
+                {%- elsif opt_count > 2 and opt2_down == 'color' -%}{%- assign _cv = variant.option3 -%}
+                {%- endif -%}
+                {%- assign _cv_clean = _cv | strip | downcase | handleize -%}
+                {%- assign _le_check = _le_raw_now | split: ',' -%}
+                {%- for _lec in _le_check -%}
+                  {%- assign _lec_clean = _lec | strip | downcase | handleize -%}
+                  {%- if _lec_clean != blank and _lec_clean == _cv_clean -%}
+                    {%- assign _show_le = true -%}
+                    {%- break -%}
+                  {%- endif -%}
+                {%- endfor -%}
+              {%- endif -%}
+              {%- assign _show_oneoff = false -%}
+              {%- assign _oo_me = target_product_3.metafields.custom.one_off_colors -%}
+              {%- assign _oo_raw = '' -%}
+              {%- if _oo_me != blank and _oo_me.value != blank -%}{%- assign _oo_raw = _oo_me.value | strip -%}{%- endif -%}
+              {%- if _oo_raw != blank -%}
+                {%- assign _cv = blank -%}
+                {%- if opt_count > 0 and opt0_down == 'color' -%}{%- assign _cv = variant.option1 -%}
+                {%- elsif opt_count > 1 and opt1_down == 'color' -%}{%- assign _cv = variant.option2 -%}
+                {%- elsif opt_count > 2 and opt2_down == 'color' -%}{%- assign _cv = variant.option3 -%}
+                {%- endif -%}
+                {%- assign _cv_clean = _cv | strip | downcase | handleize -%}
+                {%- assign _oo_check = _oo_raw | split: ',' -%}
+                {%- for _ooc in _oo_check -%}
+                  {%- assign _ooc_clean = _ooc | strip | downcase | handleize -%}
+                  {%- if _ooc_clean != blank and _ooc_clean == _cv_clean -%}
+                    {%- assign _show_oneoff = true -%}
+                    {%- break -%}
+                  {%- endif -%}
+                {%- endfor -%}
+              {%- endif -%}
+              {% if _show_sale and section.settings.show_sale_badge %}
+                <span class="br-badge br-badge--sale">{{ section.settings.sale_badge_text }}</span>
+              {% endif %}
+              {% if _show_oneoff and oneoff_badge_shown_3 == false and section.settings.show_oneoff_badge %}
+                {%- assign oneoff_badge_shown_3 = true -%}
+                <span class="br-badge br-badge--oneoff">{{ section.settings.oneoff_label_text | default: section.settings.oneoff_badge_text | default: 'One Off' }}</span>
+              {% elsif _show_le and section.settings.show_le_badge %}
+                {% render 'br-le-badge', label: section.settings.le_label_text | default: section.settings.le_badge_text | default: 'Limited Edition' %}
+              {% endif %}
+            </div>
+
+            {%- assign product_url_variant_3 = target_product_3.url | append: '?variant=' | append: variant.id -%}
+            {% if variant.featured_image != blank %}
+              <a href="#" class="br-variant-link br-variant-link--image br-oneoff-lightbox-trigger" aria-label="{{ variant.title | escape }} – enlarge image" data-br-lightbox-src="{{ variant.featured_image | image_url: width: 1200 }}" data-br-lightbox-alt="{{ variant.title | escape }}">
+                <img 
+                  src="{{ variant.featured_image | image_url: width: 400 }}"
+                  alt="{{ variant.title | escape }}"
+                  class="br-variant-image"
+                  loading="lazy"
+                  width="400"
+                  height="400"
+                >
+              </a>
+            {% elsif target_product_3.featured_image != blank %}
+              <a href="#" class="br-variant-link br-variant-link--image br-oneoff-lightbox-trigger" aria-label="{{ variant.title | escape }} – enlarge image" data-br-lightbox-src="{{ target_product_3.featured_image | image_url: width: 1200 }}" data-br-lightbox-alt="{{ variant.title | escape }}">
+                <img 
+                  src="{{ target_product_3.featured_image | image_url: width: 400 }}"
+                  alt="{{ variant.title | escape }}"
+                  class="br-variant-image"
+                  loading="lazy"
+                  width="400"
+                  height="400"
+                >
+              </a>
+            {% endif %}
+
+            <div class="br-variant-info">
+              <h3 class="br-variant-title"><a href="{{ product_url_variant_3 }}" class="br-variant-link">{{ target_product_3.title }}</a></h3>
+
+              {% if section.settings.card_subtitle_desktop != blank %}
+                <p class="br-variant-subtitle">{{ section.settings.card_subtitle_desktop }}</p>
+              {% endif %}
+
+              {%- liquid
+                assign _variant_opts = ''
+                if opt_count > 0
+                  assign _variant_opts = target_product_3.options_with_values[0].name | append: ': ' | append: variant.option1
+                endif
+                if opt_count > 1
+                  if _variant_opts != ''
+                    assign _variant_opts = _variant_opts | append: ' / '
+                  endif
+                  assign _variant_opts = _variant_opts | append: target_product_3.options_with_values[1].name | append: ': ' | append: variant.option2
+                endif
+                if opt_count > 2
+                  if _variant_opts != ''
+                    assign _variant_opts = _variant_opts | append: ' / '
+                  endif
+                  assign _variant_opts = _variant_opts | append: target_product_3.options_with_values[2].name | append: ': ' | append: variant.option3
+                endif
+                if _variant_opts == ''
+                  assign _variant_opts = variant.title
+                endif
+                assign _card_variant_display = tab_prefix_3 | append: ' / ' | append: _variant_opts
+              -%}
+              {%- liquid
+                assign _br_size_val = ''
+                assign _br_other = ''
+                for _br_o in target_product_3.options_with_values
+                  assign _br_oname = _br_o.name | downcase
+                  if _br_oname == 'size'
+                    case forloop.index0
+                      when 0
+                        assign _br_size_val = variant.option1
+                      when 1
+                        assign _br_size_val = variant.option2
+                      when 2
+                        assign _br_size_val = variant.option3
+                    endcase
+                  else
+                    if _br_other != ''
+                      assign _br_other = _br_other | append: ' · '
+                    endif
+                    case forloop.index0
+                      when 0
+                        assign _br_other = _br_other | append: variant.option1
+                      when 1
+                        assign _br_other = _br_other | append: variant.option2
+                      when 2
+                        assign _br_other = _br_other | append: variant.option3
+                    endcase
+                  endif
+                endfor
+              -%}
+              <p class="br-variant-option">{% if _br_size_val != blank %}<span class="br-variant-size-pill">Size {{ _br_size_val }}</span>{% if _br_other != blank %} <span class="br-variant-opts-rest">· {{ _br_other }}</span>{% endif %}{% else %}{{ _card_variant_display }}{% endif %}</p>
+
+              <p class="br-variant-price">
+                {% if _show_sale %}
+                  <span class="br-price--sale">{{ variant.price | money }}</span>
+                  <span class="br-price--compare">{{ variant.compare_at_price | money }}</span>
+                {% else %}
+                  <span>{{ variant.price | money }}</span>
+                {% endif %}
+              </p>
+
+              {% if variant.available %}
+                <button 
+                  type="button" 
+                  class="{{ btn_class }}"
+                  data-variant-id="{{ variant.id }}"
+                  onclick="addToCart{{ section.id | replace: '-', '' }}({{ variant.id }}, this)"
+                >
+                  <span class="br-btn-desktop">{{ section.settings.btn_text_desktop }}</span>
+                  <span class="br-btn-mobile">{{ section.settings.btn_text_mobile }}</span>
+                </button>
+              {% else %}
+                <button type="button" class="{{ btn_class }}" disabled>
+                  {{ section.settings.btn_sold_out }}
+                </button>
+              {% endif %}
+            </div>
+          </div>
+        {%- endunless -%}
+        {% endfor %}
+
+        {%- comment -%} Pass 2: kids only (always last). Omit when show_kids_3 is false. {%- endcomment -%}
+        {%- if show_kids_3 -%}
+        {% for variant in target_product_3.variants limit: max_count %}
+          {%- liquid
+            assign is_on_sale = false
+            if variant.compare_at_price > variant.price
+              assign is_on_sale = true
+            endif
+            assign is_limited = false
+            assign opt_count = target_product_3.options_with_values.size
+            assign opt0_down = ''
+            assign opt1_down = ''
+            assign opt2_down = ''
+            if opt_count > 0
+              assign opt0_down = target_product_3.options_with_values[0].name | downcase
+            endif
+            if opt_count > 1
+              assign opt1_down = target_product_3.options_with_values[1].name | downcase
+            endif
+            if opt_count > 2
+              assign opt2_down = target_product_3.options_with_values[2].name | downcase
+            endif
+            assign color_value = blank
+            if opt_count > 0 and opt0_down == 'color'
+              assign color_value = variant.option1
+            elsif opt_count > 1 and opt1_down == 'color'
+              assign color_value = variant.option2
+            elsif opt_count > 2 and opt2_down == 'color'
+              assign color_value = variant.option3
+            endif
+            assign color_value_clean = color_value | strip | downcase
+            assign le_raw = ''
+            assign le_me = target_product_3.metafields.custom.limited_colors | default: target_product_3.metafields.custom.limited_edition_colors
+            if le_me != blank and le_me.value != blank
+              assign le_raw = le_me.value | strip
+            endif
+            if le_raw != blank
+              assign le_list = le_raw | split: ','
+              for le_c in le_list
+                assign le_clean = le_c | strip | downcase
+                if le_clean != blank and le_clean == color_value_clean
+                  assign is_limited = true
+                  break
+                endif
+              endfor
+            endif
+            assign is_kid_br = false
+            assign _o1 = variant.option1 | default: ''
+            assign _o2 = variant.option2 | default: ''
+            assign _o3 = variant.option3 | default: ''
+            assign _o1d = _o1 | downcase
+            assign _o2d = _o2 | downcase
+            assign _o3d = _o3 | downcase
+            if _o1 != blank and _o1d contains kids_trigger_br
+              assign is_kid_br = true
+            elsif _o2 != blank and _o2d contains kids_trigger_br
+              assign is_kid_br = true
+            elsif _o3 != blank and _o3d contains kids_trigger_br
+              assign is_kid_br = true
+            endif
+            assign skip_card = false
+            assign _v_hidden = variant.metafields.custom.hide_from_storefront.value
+            assign _v_hidden_str = _v_hidden | append: '' | downcase
+            if _v_hidden_str == 'true'
+              assign skip_card = true
+            endif
+            if skip_card == false and color_value_clean != blank
+              for _hv in target_product_3.variants
+                assign _hv_color = blank
+                if opt_count > 0 and opt0_down == 'color'
+                  assign _hv_color = _hv.option1
+                elsif opt_count > 1 and opt1_down == 'color'
+                  assign _hv_color = _hv.option2
+                elsif opt_count > 2 and opt2_down == 'color'
+                  assign _hv_color = _hv.option3
+                endif
+                assign _hv_color_clean = _hv_color | strip | downcase
+                assign _hv_hidden = _hv.metafields.custom.hide_from_storefront.value
+                assign _hv_hidden_str = _hv_hidden | append: '' | downcase
+                if _hv_color_clean == color_value_clean and _hv_hidden_str == 'true'
+                  assign skip_card = true
+                  break
+                endif
+              endfor
+            endif
+          -%}
+          {%- unless skip_card or is_kid_br == false or variant.available == false -%}
+          {%- assign card_class = 'br-variant-card br-variant-card--kids is-hidden' -%}
+          <div class="{{ card_class }}" data-variant-index="{{ forloop.index }}" data-product="3" data-size-tier="kids">
+            <div class="br-variant-badges">
+              {%- assign _show_sale = false -%}
+              {%- if variant.compare_at_price > variant.price -%}{%- assign _show_sale = true -%}{%- endif -%}
+              {%- assign _show_le = false -%}
+              {%- assign _le_me = target_product_3.metafields.custom.limited_colors | default: target_product_3.metafields.custom.limited_edition_colors -%}
+              {%- assign _le_raw_now = '' -%}
+              {%- if _le_me != blank and _le_me.value != blank -%}
+                {%- assign _le_val_now = _le_me.value -%}
+                {%- if _le_val_now contains ',' -%}
+                  {%- assign _le_raw_now = _le_val_now | strip -%}
+                {%- else -%}
+                  {%- assign _le_raw_now = _le_val_now | join: ',' -%}
+                {%- endif -%}
+              {%- endif -%}
+              {%- if _le_raw_now != blank -%}
+                {%- assign _cv = blank -%}
+                {%- if opt_count > 0 and opt0_down == 'color' -%}{%- assign _cv = variant.option1 -%}
+                {%- elsif opt_count > 1 and opt1_down == 'color' -%}{%- assign _cv = variant.option2 -%}
+                {%- elsif opt_count > 2 and opt2_down == 'color' -%}{%- assign _cv = variant.option3 -%}
+                {%- endif -%}
+                {%- assign _cv_clean = _cv | strip | downcase | handleize -%}
+                {%- assign _le_check = _le_raw_now | split: ',' -%}
+                {%- for _lec in _le_check -%}
+                  {%- assign _lec_clean = _lec | strip | downcase | handleize -%}
+                  {%- if _lec_clean != blank and _lec_clean == _cv_clean -%}
+                    {%- assign _show_le = true -%}
+                    {%- break -%}
+                  {%- endif -%}
+                {%- endfor -%}
+              {%- endif -%}
+              {% if _show_sale and section.settings.show_sale_badge %}
+                <span class="br-badge br-badge--sale">{{ section.settings.sale_badge_text }}</span>
+              {% endif %}
+              {% if _show_le and section.settings.show_le_badge %}
+                {% render 'br-le-badge', label: section.settings.le_label_text | default: section.settings.le_badge_text | default: 'Limited Edition' %}
+              {% endif %}
+            </div>
+            {%- assign product_url_variant_3 = target_product_3.url | append: '?variant=' | append: variant.id -%}
+            {% if variant.featured_image != blank %}
+              <a href="#" class="br-variant-link br-variant-link--image br-oneoff-lightbox-trigger" aria-label="{{ variant.title | escape }} – enlarge image" data-br-lightbox-src="{{ variant.featured_image | image_url: width: 1200 }}" data-br-lightbox-alt="{{ variant.title | escape }}">
+                <img src="{{ variant.featured_image | image_url: width: 400 }}" alt="{{ variant.title | escape }}" class="br-variant-image" loading="lazy" width="400" height="400">
+              </a>
+            {% elsif target_product_3.featured_image != blank %}
+              <a href="#" class="br-variant-link br-variant-link--image br-oneoff-lightbox-trigger" aria-label="{{ variant.title | escape }} – enlarge image" data-br-lightbox-src="{{ target_product_3.featured_image | image_url: width: 1200 }}" data-br-lightbox-alt="{{ variant.title | escape }}">
+                <img src="{{ target_product_3.featured_image | image_url: width: 400 }}" alt="{{ variant.title | escape }}" class="br-variant-image" loading="lazy" width="400" height="400">
+              </a>
+            {% endif %}
+            <div class="br-variant-info">
+              <h3 class="br-variant-title"><a href="{{ product_url_variant_3 }}" class="br-variant-link">{{ target_product_3.title }}</a></h3>
+              {% if section.settings.card_subtitle_desktop != blank %}
+                <p class="br-variant-subtitle">{{ section.settings.card_subtitle_desktop }}</p>
+              {% endif %}
+              {%- liquid
+                assign _variant_opts = ''
+                if opt_count > 0
+                  assign _variant_opts = target_product_3.options_with_values[0].name | append: ': ' | append: variant.option1
+                endif
+                if opt_count > 1
+                  if _variant_opts != ''
+                    assign _variant_opts = _variant_opts | append: ' / '
+                  endif
+                  assign _variant_opts = _variant_opts | append: target_product_3.options_with_values[1].name | append: ': ' | append: variant.option2
+                endif
+                if opt_count > 2
+                  if _variant_opts != ''
+                    assign _variant_opts = _variant_opts | append: ' / '
+                  endif
+                  assign _variant_opts = _variant_opts | append: target_product_3.options_with_values[2].name | append: ': ' | append: variant.option3
+                endif
+                if _variant_opts == ''
+                  assign _variant_opts = variant.title
+                endif
+                assign _card_variant_display = tab_prefix_3 | append: ' / ' | append: _variant_opts
+              -%}
+              {%- liquid
+                assign _br_size_val = ''
+                assign _br_other = ''
+                for _br_o in target_product_3.options_with_values
+                  assign _br_oname = _br_o.name | downcase
+                  if _br_oname == 'size'
+                    case forloop.index0
+                      when 0
+                        assign _br_size_val = variant.option1
+                      when 1
+                        assign _br_size_val = variant.option2
+                      when 2
+                        assign _br_size_val = variant.option3
+                    endcase
+                  else
+                    if _br_other != ''
+                      assign _br_other = _br_other | append: ' · '
+                    endif
+                    case forloop.index0
+                      when 0
+                        assign _br_other = _br_other | append: variant.option1
+                      when 1
+                        assign _br_other = _br_other | append: variant.option2
+                      when 2
+                        assign _br_other = _br_other | append: variant.option3
+                    endcase
+                  endif
+                endfor
+              -%}
+              <p class="br-variant-option">{% if _br_size_val != blank %}<span class="br-variant-size-pill">Size {{ _br_size_val }}</span>{% if _br_other != blank %} <span class="br-variant-opts-rest">· {{ _br_other }}</span>{% endif %}{% else %}{{ _card_variant_display }}{% endif %}</p>
+              <p class="br-variant-price">
+                {% if _show_sale %}
+                  <span class="br-price--sale">{{ variant.price | money }}</span>
+                  <span class="br-price--compare">{{ variant.compare_at_price | money }}</span>
+                {% else %}
+                  <span>{{ variant.price | money }}</span>
+                {% endif %}
+              </p>
+              {% if variant.available %}
+                <button type="button" class="{{ btn_class }}" data-variant-id="{{ variant.id }}" onclick="addToCart{{ section.id | replace: '-', '' }}({{ variant.id }}, this)">
+                  <span class="br-btn-desktop">{{ section.settings.btn_text_desktop }}</span>
+                  <span class="br-btn-mobile">{{ section.settings.btn_text_mobile }}</span>
+                </button>
+              {% else %}
+                <button type="button" class="{{ btn_class }}" disabled>{{ section.settings.btn_sold_out }}</button>
+              {% endif %}
+            </div>
+          </div>
+          {%- endunless -%}
+        {% endfor %}
+        {%- endif -%}
+      </div>{%- comment -%} End product group 3 {%- endcomment -%}
+      {% endif %}
+
+      {%- comment -%} PRODUCT 4 + 5 – One off tab (parent). One group shows both Open and Closed one-off products. {%- endcomment -%}
+      {% if _show_oneoff_tab %}
+      <div class="br-product-group{% if use_filter_tabs %} is-hidden{% endif %}" id="br-product-4-{{ section.id }}" data-product-group="4">
+        <div class="br-one-off-inner">
+        {%- comment -%} One off tab subtitle – only visible when this tab is selected (group is shown) {%- endcomment -%}
+        {% assign _exclusive_intro = section.settings.exclusive_intro | strip %}
+        {% if _exclusive_intro != '' %}
+        <p class="br-exclusive-intro" style="grid-column: 1 / -1; margin: 0 0 0.5em 0; padding: 0.5em 0.75em; font-size: 1em; font-weight: 500; color: #333; text-align: center; background: #f0f0f0; border-radius: 4px;">{{ section.settings.exclusive_intro }}</p>
+        {% endif %}
+        {%- comment -%} Product 4 (e.g. One off Open) – section title only when at least one visible card {%- endcomment -%}
+        {% if target_product_4 != nil %}
+        {% assign count_visible_4 = 0 %}
+        {% for v in target_product_4.variants limit: max_count %}
+          {% assign skip_4 = false %}
+          {% assign _hide4_str = v.metafields.custom.hide_from_storefront.value | append: '' | downcase %}
+          {% if _hide4_str == 'true' %}{% assign skip_4 = true %}{% endif %}
+          {% if section.settings.hide_sold_out_one_off and v.available == false %}{% assign skip_4 = true %}{% endif %}
+          {% unless skip_4 %}{% assign count_visible_4 = count_visible_4 | plus: 1 %}{% endunless %}
+        {% endfor %}
+        {% if count_visible_4 > 0 %}
+        <div class="br-product-label" style="margin-top: 1em;">
+          <p class="br-product-label-text">{{ section.settings.product_4_label | default: target_product_4.title }}</p>
+        </div>
+        {% endif %}
+        {% for variant in target_product_4.variants limit: max_count %}
+          {%- liquid
+            assign skip_card_4 = false
+            assign _hide4_variant = variant.metafields.custom.hide_from_storefront.value | append: '' | downcase
+            if _hide4_variant == 'true'
+              assign skip_card_4 = true
+            endif
+            if section.settings.hide_sold_out_one_off and variant.available == false
+              assign skip_card_4 = true
+            endif
+          -%}
+          {%- unless skip_card_4 -%}
+          {%- assign product_url_variant_4 = target_product_4.url | append: '?variant=' | append: variant.id -%}
+          {%- assign is_on_sale_4 = false -%}
+          {%- if variant.compare_at_price > variant.price -%}{%- assign is_on_sale_4 = true -%}{%- endif -%}
+          {%- assign second_image_4 = variant.metafields.custom.one_off_second_image.value -%}
+          {%- if second_image_4 == blank and variant.metafields.custom.one_off_second_image != blank -%}
+            {%- assign second_image_4 = variant.metafields.custom.one_off_second_image -%}
+          {%- endif -%}
+          {%- assign first_image_4 = variant.featured_image | default: target_product_4.featured_image -%}
+          <div class="br-variant-card br-variant-card--initial{% unless variant.available %} br-variant-card--sold-out{% endunless %}" data-variant-index="{{ forloop.index }}" data-product="4"{% if first_image_4 != blank and second_image_4 != blank %} data-br-lightbox-src1="{{ first_image_4 | image_url: width: 1200 }}" data-br-lightbox-alt1="{{ variant.title | escape }}" data-br-lightbox-src2="{{ second_image_4 | image_url: width: 1200 }}" data-br-lightbox-alt2="{{ variant.title | escape }} – view 2"{% endif %}>
+            <div class="br-variant-badges">
+              {% if is_on_sale_4 and section.settings.show_sale_badge %}
+                <span class="br-badge br-badge--sale">{{ section.settings.sale_badge_text }}</span>
+              {% endif %}
+            </div>
+            {% if first_image_4 != blank and second_image_4 != blank %}
+              <div class="br-variant-images--dual">
+                <a href="#" class="br-variant-link br-variant-link--image br-oneoff-lightbox-trigger" aria-label="{{ variant.title | escape }} – enlarge image">
+                  <img src="{{ first_image_4 | image_url: width: 400 }}" alt="{{ variant.title | escape }}" class="br-variant-image" loading="lazy" width="400" height="400">
+                </a>
+                <a href="#" class="br-variant-link br-variant-link--image br-oneoff-lightbox-trigger" aria-label="{{ variant.title | escape }} – view 2, enlarge">
+                  <img src="{{ second_image_4 | image_url: width: 400 }}" alt="{{ variant.title | escape }} – view 2" class="br-variant-image" loading="lazy" width="400" height="400">
+                </a>
+              </div>
+            {% elsif second_image_4 != blank %}
+              <a href="#" class="br-variant-link br-variant-link--image br-oneoff-lightbox-trigger" aria-label="{{ variant.title | escape }} – enlarge image" data-br-lightbox-src="{{ second_image_4 | image_url: width: 1200 }}" data-br-lightbox-alt="{{ variant.title | escape }}">
+                <img src="{{ second_image_4 | image_url: width: 400 }}" alt="{{ variant.title | escape }}" class="br-variant-image" loading="lazy" width="400" height="400">
+              </a>
+            {% elsif first_image_4 != blank %}
+              <a href="#" class="br-variant-link br-variant-link--image br-oneoff-lightbox-trigger" aria-label="{{ variant.title | escape }} – enlarge image" data-br-lightbox-src="{{ first_image_4 | image_url: width: 1200 }}" data-br-lightbox-alt="{{ variant.title | escape }}">
+                <img src="{{ first_image_4 | image_url: width: 400 }}" alt="{{ variant.title | escape }}" class="br-variant-image" loading="lazy" width="400" height="400">
+              </a>
+            {% endif %}
+            <div class="br-variant-info">
+              <h3 class="br-variant-title"><a href="{{ product_url_variant_4 }}" class="br-variant-link">{{ target_product_4.title }}</a></h3>
+              {%- liquid
+                assign _oo_opts = ''
+                assign _oo_opt_count = target_product_4.options_with_values.size
+                if _oo_opt_count > 0
+                  assign _oo_opts = target_product_4.options_with_values[0].name | append: ': ' | append: variant.option1
+                endif
+                if _oo_opt_count > 1
+                  if _oo_opts != ''
+                    assign _oo_opts = _oo_opts | append: ' / '
+                  endif
+                  assign _oo_opts = _oo_opts | append: target_product_4.options_with_values[1].name | append: ': ' | append: variant.option2
+                endif
+                if _oo_opt_count > 2
+                  if _oo_opts != ''
+                    assign _oo_opts = _oo_opts | append: ' / '
+                  endif
+                  assign _oo_opts = _oo_opts | append: target_product_4.options_with_values[2].name | append: ': ' | append: variant.option3
+                endif
+                if _oo_opts == ''
+                  assign _oo_opts = variant.title
+                endif
+              -%}
+              {%- liquid
+                assign _br_size_val = ''
+                assign _br_other = ''
+                for _br_o in target_product_4.options_with_values
+                  assign _br_oname = _br_o.name | downcase
+                  if _br_oname == 'size'
+                    case forloop.index0
+                      when 0
+                        assign _br_size_val = variant.option1
+                      when 1
+                        assign _br_size_val = variant.option2
+                      when 2
+                        assign _br_size_val = variant.option3
+                    endcase
+                  else
+                    if _br_other != ''
+                      assign _br_other = _br_other | append: ' · '
+                    endif
+                    case forloop.index0
+                      when 0
+                        assign _br_other = _br_other | append: variant.option1
+                      when 1
+                        assign _br_other = _br_other | append: variant.option2
+                      when 2
+                        assign _br_other = _br_other | append: variant.option3
+                    endcase
+                  endif
+                endfor
+              -%}
+              <p class="br-variant-option">{% if _br_size_val != blank %}<span class="br-variant-size-pill">Size {{ _br_size_val }}</span>{% if _br_other != blank %} <span class="br-variant-opts-rest">· {{ _br_other }}</span>{% endif %}{% else %}{{ _oo_opts }}{% endif %}</p>
+              <p class="br-variant-price">
+                {% if is_on_sale_4 %}
+                  <span class="br-price--sale">{{ variant.price | money }}</span>
+                  <span class="br-price--compare">{{ variant.compare_at_price | money }}</span>
+                {% else %}
+                  <span>{{ variant.price | money }}</span>
+                {% endif %}
+              </p>
+              {% if variant.available %}
+                <button type="button" class="{{ btn_class }}" data-variant-id="{{ variant.id }}" onclick="addToCart{{ section.id | replace: '-', '' }}({{ variant.id }}, this)">
+                  <span class="br-btn-desktop">{{ section.settings.btn_text_desktop }}</span>
+                  <span class="br-btn-mobile">{{ section.settings.btn_text_mobile }}</span>
+                </button>
+              {% else %}
+                <button type="button" class="{{ btn_class }}" disabled>{{ section.settings.btn_sold_out }}</button>
+              {% endif %}
+            </div>
+          </div>
+          {%- endunless -%}
+        {% endfor %}
+        {% endif %}
+        {%- comment -%} Product 5 (e.g. One off Closed) – section title only when at least one visible card {%- endcomment -%}
+        {% if target_product_5 != nil %}
+        {% assign count_visible_5 = 0 %}
+        {% for v in target_product_5.variants limit: max_count %}
+          {% assign skip_5 = false %}
+          {% assign _hide5_str = v.metafields.custom.hide_from_storefront.value | append: '' | downcase %}
+          {% if _hide5_str == 'true' %}{% assign skip_5 = true %}{% endif %}
+          {% if section.settings.hide_sold_out_one_off and v.available == false %}{% assign skip_5 = true %}{% endif %}
+          {% unless skip_5 %}{% assign count_visible_5 = count_visible_5 | plus: 1 %}{% endunless %}
+        {% endfor %}
+        {% if count_visible_5 > 0 %}
+        <div class="br-product-label" style="margin-top: 1em;">
+          <p class="br-product-label-text">{{ section.settings.product_5_label | default: target_product_5.title }}</p>
+        </div>
+        {% endif %}
+        {% for variant in target_product_5.variants limit: max_count %}
+          {%- liquid
+            assign skip_card_5 = false
+            assign _hide5_variant = variant.metafields.custom.hide_from_storefront.value | append: '' | downcase
+            if _hide5_variant == 'true'
+              assign skip_card_5 = true
+            endif
+            if section.settings.hide_sold_out_one_off and variant.available == false
+              assign skip_card_5 = true
+            endif
+          -%}
+          {%- unless skip_card_5 -%}
+          {%- assign product_url_variant_5 = target_product_5.url | append: '?variant=' | append: variant.id -%}
+          {%- assign is_on_sale_5 = false -%}
+          {%- if variant.compare_at_price > variant.price -%}{%- assign is_on_sale_5 = true -%}{%- endif -%}
+          {%- assign second_image_5 = variant.metafields.custom.one_off_second_image.value -%}
+          {%- if second_image_5 == blank and variant.metafields.custom.one_off_second_image != blank -%}
+            {%- assign second_image_5 = variant.metafields.custom.one_off_second_image -%}
+          {%- endif -%}
+          {%- assign first_image_5 = variant.featured_image | default: target_product_5.featured_image -%}
+          <div class="br-variant-card br-variant-card--initial{% unless variant.available %} br-variant-card--sold-out{% endunless %}" data-variant-index="{{ forloop.index }}" data-product="4"{% if first_image_5 != blank and second_image_5 != blank %} data-br-lightbox-src1="{{ first_image_5 | image_url: width: 1200 }}" data-br-lightbox-alt1="{{ variant.title | escape }}" data-br-lightbox-src2="{{ second_image_5 | image_url: width: 1200 }}" data-br-lightbox-alt2="{{ variant.title | escape }} – view 2"{% endif %}>
+            <div class="br-variant-badges">
+              {% if is_on_sale_5 and section.settings.show_sale_badge %}
+                <span class="br-badge br-badge--sale">{{ section.settings.sale_badge_text }}</span>
+              {% endif %}
+            </div>
+            {% if first_image_5 != blank and second_image_5 != blank %}
+              <div class="br-variant-images--dual">
+                <a href="#" class="br-variant-link br-variant-link--image br-oneoff-lightbox-trigger" aria-label="{{ variant.title | escape }} – enlarge image">
+                  <img src="{{ first_image_5 | image_url: width: 400 }}" alt="{{ variant.title | escape }}" class="br-variant-image" loading="lazy" width="400" height="400">
+                </a>
+                <a href="#" class="br-variant-link br-variant-link--image br-oneoff-lightbox-trigger" aria-label="{{ variant.title | escape }} – view 2, enlarge">
+                  <img src="{{ second_image_5 | image_url: width: 400 }}" alt="{{ variant.title | escape }} – view 2" class="br-variant-image" loading="lazy" width="400" height="400">
+                </a>
+              </div>
+            {% elsif second_image_5 != blank %}
+              <a href="#" class="br-variant-link br-variant-link--image br-oneoff-lightbox-trigger" aria-label="{{ variant.title | escape }} – enlarge image" data-br-lightbox-src="{{ second_image_5 | image_url: width: 1200 }}" data-br-lightbox-alt="{{ variant.title | escape }}">
+                <img src="{{ second_image_5 | image_url: width: 400 }}" alt="{{ variant.title | escape }}" class="br-variant-image" loading="lazy" width="400" height="400">
+              </a>
+            {% elsif first_image_5 != blank %}
+              <a href="#" class="br-variant-link br-variant-link--image br-oneoff-lightbox-trigger" aria-label="{{ variant.title | escape }} – enlarge image" data-br-lightbox-src="{{ first_image_5 | image_url: width: 1200 }}" data-br-lightbox-alt="{{ variant.title | escape }}">
+                <img src="{{ first_image_5 | image_url: width: 400 }}" alt="{{ variant.title | escape }}" class="br-variant-image" loading="lazy" width="400" height="400">
+              </a>
+            {% endif %}
+            <div class="br-variant-info">
+              <h3 class="br-variant-title"><a href="{{ product_url_variant_5 }}" class="br-variant-link">{{ target_product_5.title }}</a></h3>
+              {%- liquid
+                assign _oo_opts = ''
+                assign _oo_opt_count = target_product_5.options_with_values.size
+                if _oo_opt_count > 0
+                  assign _oo_opts = target_product_5.options_with_values[0].name | append: ': ' | append: variant.option1
+                endif
+                if _oo_opt_count > 1
+                  if _oo_opts != ''
+                    assign _oo_opts = _oo_opts | append: ' / '
+                  endif
+                  assign _oo_opts = _oo_opts | append: target_product_5.options_with_values[1].name | append: ': ' | append: variant.option2
+                endif
+                if _oo_opt_count > 2
+                  if _oo_opts != ''
+                    assign _oo_opts = _oo_opts | append: ' / '
+                  endif
+                  assign _oo_opts = _oo_opts | append: target_product_5.options_with_values[2].name | append: ': ' | append: variant.option3
+                endif
+                if _oo_opts == ''
+                  assign _oo_opts = variant.title
+                endif
+              -%}
+              {%- liquid
+                assign _br_size_val = ''
+                assign _br_other = ''
+                for _br_o in target_product_5.options_with_values
+                  assign _br_oname = _br_o.name | downcase
+                  if _br_oname == 'size'
+                    case forloop.index0
+                      when 0
+                        assign _br_size_val = variant.option1
+                      when 1
+                        assign _br_size_val = variant.option2
+                      when 2
+                        assign _br_size_val = variant.option3
+                    endcase
+                  else
+                    if _br_other != ''
+                      assign _br_other = _br_other | append: ' · '
+                    endif
+                    case forloop.index0
+                      when 0
+                        assign _br_other = _br_other | append: variant.option1
+                      when 1
+                        assign _br_other = _br_other | append: variant.option2
+                      when 2
+                        assign _br_other = _br_other | append: variant.option3
+                    endcase
+                  endif
+                endfor
+              -%}
+              <p class="br-variant-option">{% if _br_size_val != blank %}<span class="br-variant-size-pill">Size {{ _br_size_val }}</span>{% if _br_other != blank %} <span class="br-variant-opts-rest">· {{ _br_other }}</span>{% endif %}{% else %}{{ _oo_opts }}{% endif %}</p>
+              <p class="br-variant-price">
+                {% if is_on_sale_5 %}
+                  <span class="br-price--sale">{{ variant.price | money }}</span>
+                  <span class="br-price--compare">{{ variant.compare_at_price | money }}</span>
+                {% else %}
+                  <span>{{ variant.price | money }}</span>
+                {% endif %}
+              </p>
+              {% if variant.available %}
+                <button type="button" class="{{ btn_class }}" data-variant-id="{{ variant.id }}" onclick="addToCart{{ section.id | replace: '-', '' }}({{ variant.id }}, this)">
+                  <span class="br-btn-desktop">{{ section.settings.btn_text_desktop }}</span>
+                  <span class="br-btn-mobile">{{ section.settings.btn_text_mobile }}</span>
+                </button>
+              {% else %}
+                <button type="button" class="{{ btn_class }}" disabled>{{ section.settings.btn_sold_out }}</button>
+              {% endif %}
+            </div>
+          </div>
+          {%- endunless -%}
+        {% endfor %}
+        {% endif %}
+        </div>
+      </div>{%- comment -%} End product group 4 (One off parent) {%- endcomment -%}
+      {% endif %}
+
+    </div>
+
+    {%- comment -%} Total cards = sum of all products' variants when showing multiple products in one grid (no filter tabs) {%- endcomment -%}
+    {% assign total_variants = target_product.variants.size %}
+    {% if target_product_2 != nil and use_filter_tabs == false %}
+      {% assign total_variants = total_variants | plus: target_product_2.variants.size %}
+    {% endif %}
+    {% if target_product_3 != nil and use_filter_tabs == false %}
+      {% assign total_variants = total_variants | plus: target_product_3.variants.size %}
+    {% endif %}
+    {% if target_product_4 != nil and use_filter_tabs == false %}
+      {% assign total_variants = total_variants | plus: target_product_4.variants.size %}
+    {% endif %}
+    {% if target_product_5 != nil and use_filter_tabs == false %}
+      {% assign total_variants = total_variants | plus: target_product_5.variants.size %}
+    {% endif %}
+    {% if section.settings.enable_expand and has_see_more_tier or section.settings.enable_expand and has_kids_tier %}
+    <div class="br-variants-toggle" id="br-toggle-{{ section.id }}">
+      {% if has_see_more_tier %}
+      <button type="button" class="br-toggle-btn br-toggle-see-more" id="br-see-more-{{ section.id }}" data-tier="1" data-section="{{ section.id }}">{{ section.settings.see_all_text }} <span class="br-toggle-arrow">→</span></button>
+      {% endif %}
+      {% if has_kids_tier %}
+      <button type="button" class="br-toggle-btn br-toggle-see-more is-hidden" id="br-see-more-kids-{{ section.id }}" data-tier="2" data-section="{{ section.id }}">{{ section.settings.see_more_kids_text | default: 'See more sizes' }} <span class="br-toggle-arrow">→</span></button>
+      {% endif %}
+      <button type="button" class="br-toggle-btn is-hidden" id="br-show-less-{{ section.id }}" data-section="{{ section.id }}">{{ section.settings.show_less_text }}</button>
+    </div>
+    {% endif %}
+
+    {%- if target_product != nil -%}
+    <div id="br-oneoff-lightbox-{{ section.id }}" class="br-oneoff-lightbox" aria-hidden="true" role="dialog" aria-label="Enlarge image">
+      <div class="br-oneoff-lightbox__inner">
+        <button type="button" class="br-oneoff-lightbox__close" aria-label="Close">&times;</button>
+        <div class="br-oneoff-lightbox__images" id="br-oneoff-lightbox-images-{{ section.id }}">
+          <img src="" alt="" id="br-oneoff-lightbox-img-{{ section.id }}">
+          <img src="" alt="" id="br-oneoff-lightbox-img2-{{ section.id }}" class="br-oneoff-lightbox__img2" style="display: none;">
+        </div>
+      </div>
+    </div>
+    {%- endif -%}
+
+  </div>
+</section>
+
+<script>
+  function addToCart{{ section.id | replace: '-', '' }}(variantId, btnEl) {
+    if (btnEl && btnEl.getAttribute) {
+      btnEl.classList.add('btn--loading');
+      btnEl.setAttribute('aria-busy', 'true');
+      btnEl.disabled = true;
+    }
+
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: variantId,
+        quantity: 1
+      })
+    })
+    .then(function(response) {
+      return response.json().then(function(data) {
+        return { response: response, data: data };
+      });
+    })
+    .then(function(result) {
+      var ok = result.response.ok;
+      var data = result.data || {};
+      if (!ok || data.status === 422) {
+        var msg = '';
+        if (typeof data.description === 'string') {
+          msg = data.description;
+        } else if (data.message) {
+          msg = typeof data.message === 'string' ? data.message : '';
+        }
+        if (!msg) msg = {{ 'Unable to add this item — try refreshing the page.' | json }};
+        alert(msg);
+        return;
+      }
+      document.dispatchEvent(new CustomEvent('cart:updated'));
+      window.location.href = '/cart';
+    })
+    .catch(function(error) {
+      console.error('Error adding to cart:', error);
+    })
+    .finally(function() {
+      if (btnEl && btnEl.getAttribute) {
+        btnEl.classList.remove('btn--loading');
+        btnEl.removeAttribute('aria-busy');
+        btnEl.disabled = false;
+      }
+    });
+  }
+
+  function brFilterProduct(sectionId, productNum) {
+    // Find this section (our section has id br-variants-{sectionId})
+    let section = document.getElementById('br-variants-' + sectionId);
+    if (!section) {
+      section = document.querySelector('[data-section-id="' + sectionId + '"]');
+    }
+    if (!section) return;
+    
+    const tabs = section.querySelectorAll('.br-filter-tab');
+    const groups = section.querySelectorAll('.br-product-group');
+    // Update active tab
+    tabs.forEach(tab => {
+      if (parseInt(tab.dataset.product) === productNum) {
+        tab.classList.add('is-active');
+      } else {
+        tab.classList.remove('is-active');
+      }
+    });
+
+    // Show/hide product groups - use both class and inline style for reliability
+    groups.forEach(group => {
+      if (parseInt(group.dataset.productGroup) === productNum) {
+        group.classList.remove('is-hidden');
+        group.style.display = '';
+        group.querySelectorAll('.br-variant-card').forEach(card => { card.style.display = ''; });
+      } else {
+        group.classList.add('is-hidden');
+        group.style.display = 'none';
+        group.querySelectorAll('.br-variant-card').forEach(card => { card.style.display = 'none'; });
+      }
+    });
+  }
+
+  // iOS: ensure filter tabs respond on first tap (avoid delayed/suppressed click synthesis)
+  (function bindBrFilterTabs() {
+    const sectionId = {{ section.id | json }};
+    function bind() {
+      const section = document.getElementById('br-variants-' + sectionId) || document.querySelector('[data-section-id="' + sectionId + '"]');
+      if (!section || section.dataset.brTabsBound === '1') return;
+      section.dataset.brTabsBound = '1';
+
+      const tabs = section.querySelectorAll('.br-filter-tab');
+      if (!tabs.length) return;
+
+      let suppressEl = null;
+      let suppressUntil = 0;
+      const MOVE_THRESHOLD_PX = 12;
+      const MAX_TAP_DURATION_MS = 500;
+
+      function activate(tab, evt) {
+        if (evt) evt.preventDefault();
+        const num = parseInt(tab.dataset.product, 10);
+        if (!isNaN(num)) brFilterProduct(sectionId, num);
+        // clear iOS sticky focus/hover effects
+        try { tab.blur(); } catch (e) {}
+      }
+
+      tabs.forEach(tab => {
+        tab.addEventListener('touchstart', function(evt) {
+          if (evt.touches && evt.touches.length > 1) return;
+          const t = evt.touches && evt.touches[0];
+          if (!t) return;
+          tab.__brTapState = { x: t.clientX, y: t.clientY, at: Date.now(), moved: false };
+        }, { passive: true });
+
+        tab.addEventListener('touchmove', function(evt) {
+          const st = tab.__brTapState;
+          if (!st) return;
+          const t = evt.touches && evt.touches[0];
+          if (!t) return;
+          if (Math.abs(t.clientX - st.x) > MOVE_THRESHOLD_PX || Math.abs(t.clientY - st.y) > MOVE_THRESHOLD_PX) st.moved = true;
+        }, { passive: true });
+
+        tab.addEventListener('touchcancel', function() {
+          tab.__brTapState = null;
+        }, { passive: true });
+
+        tab.addEventListener('touchend', function(evt) {
+          if (evt.changedTouches && evt.changedTouches.length > 1) return;
+          const st = tab.__brTapState;
+          tab.__brTapState = null;
+          if (st && (st.moved || (Date.now() - st.at) > MAX_TAP_DURATION_MS)) return;
+          evt.preventDefault();
+          evt.stopPropagation();
+          suppressEl = tab;
+          suppressUntil = Date.now() + 750;
+          activate(tab, evt);
+        }, { passive: false });
+
+        tab.addEventListener('click', function(evt) {
+          if (suppressEl === tab && Date.now() < suppressUntil) {
+            evt.preventDefault();
+            evt.stopPropagation();
+            if (evt.stopImmediatePropagation) evt.stopImmediatePropagation();
+            suppressEl = null;
+            return;
+          }
+          activate(tab, evt);
+        }, false);
+      });
+    }
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bind);
+    else bind();
+  })();
+
+  // On load: ensure only the active tab’s group is visible (tab 1 = Open Sole)
+  (function initBrFilter() {
+    const sectionId = {{ section.id | json }};
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() { brFilterProduct(sectionId, 1); });
+    } else {
+      brFilterProduct(sectionId, 1);
+    }
+  })();
+
+  (function initOneoffLightbox() {
+    const sectionId = {{ section.id | json }};
+    const section = document.getElementById('br-variants-' + sectionId);
+    const modal = document.getElementById('br-oneoff-lightbox-' + sectionId);
+    const modalImg = document.getElementById('br-oneoff-lightbox-img-' + sectionId);
+    const modalImg2 = document.getElementById('br-oneoff-lightbox-img2-' + sectionId);
+    if (!section || !modal || !modalImg) return;
+    section.querySelectorAll('.br-oneoff-lightbox-trigger').forEach(function(trigger) {
+      trigger.addEventListener('click', function(e) {
+        e.preventDefault();
+        var card = this.closest('.br-variant-card');
+        var src1 = card && card.getAttribute('data-br-lightbox-src1');
+        var src2 = card && card.getAttribute('data-br-lightbox-src2');
+        if (src1 && src2) {
+          modalImg.src = src1;
+          modalImg.alt = card.getAttribute('data-br-lightbox-alt1') || '';
+          modalImg2.src = src2;
+          modalImg2.alt = card.getAttribute('data-br-lightbox-alt2') || '';
+          modalImg2.style.display = '';
+          modal.classList.add('br-oneoff-lightbox--dual', 'is-open');
+        } else {
+          var src = this.getAttribute('data-br-lightbox-src') || (this.querySelector('img') && this.querySelector('img').src);
+          var alt = this.getAttribute('data-br-lightbox-alt') || (this.querySelector('img') && this.querySelector('img').alt) || '';
+          if (src) {
+            modalImg.src = src;
+            modalImg.alt = alt;
+            modalImg2.style.display = 'none';
+            modalImg2.src = '';
+            modal.classList.remove('br-oneoff-lightbox--dual');
+            modal.classList.add('is-open');
+          }
+        }
+        if (modal.classList.contains('is-open')) {
+          modal.setAttribute('aria-hidden', 'false');
+          document.body.style.overflow = 'hidden';
+        }
+      });
+    });
+    function closeLightbox() {
+      modal.classList.remove('is-open', 'br-oneoff-lightbox--dual');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+    modal.querySelector('.br-oneoff-lightbox__close').addEventListener('click', closeLightbox);
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) closeLightbox();
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && modal.classList.contains('is-open')) closeLightbox();
+    });
+  })();
+
+  function brToggleVariants(sectionId, action) {
+    const grid = document.getElementById('br-grid-' + sectionId);
+    if (!grid) return;
+    const product2Label = document.getElementById('br-product2-label-' + sectionId);
+    if (action === 'expand') {
+      grid.querySelectorAll('.br-variant-card.is-hidden').forEach(function(card) {
+        card.classList.remove('is-hidden');
+        card.classList.add('is-visible');
+      });
+      if (product2Label) product2Label.classList.remove('is-hidden');
+    } else {
+      grid.querySelectorAll('.br-variant-card[data-size-tier="see-more"], .br-variant-card[data-size-tier="kids"]').forEach(function(card) {
+        card.classList.add('is-hidden');
+        card.classList.remove('is-visible');
+      });
+      if (product2Label) product2Label.classList.add('is-hidden');
+    }
+  }
+
+  (function() {
+    const sectionId = {{ section.id | json }};
+    const grid = document.getElementById('br-grid-' + sectionId);
+    const toggle = document.getElementById('br-toggle-' + sectionId);
+    if (!grid || !toggle) return;
+    const seeMore1 = document.getElementById('br-see-more-' + sectionId);
+    const seeMoreKids = document.getElementById('br-see-more-kids-' + sectionId);
+    const showLess = document.getElementById('br-show-less-' + sectionId);
+    const product2Label = document.getElementById('br-product2-label-' + sectionId);
+
+    function showTier(tier) {
+      grid.querySelectorAll('.br-variant-card[data-size-tier="' + tier + '"]').forEach(function(c) {
+        c.classList.remove('is-hidden');
+        c.classList.add('is-visible');
+      });
+    }
+    function hideTiers() {
+      grid.querySelectorAll('.br-variant-card[data-size-tier="see-more"], .br-variant-card[data-size-tier="kids"]').forEach(function(c) {
+        c.classList.add('is-hidden');
+        c.classList.remove('is-visible');
+      });
+    }
+
+    if (seeMore1) {
+      seeMore1.addEventListener('click', function() {
+        showTier('see-more');
+        seeMore1.classList.add('is-hidden');
+        if (seeMoreKids) seeMoreKids.classList.remove('is-hidden');
+        if (showLess) showLess.classList.remove('is-hidden');
+        if (product2Label) product2Label.classList.remove('is-hidden');
+      });
+    }
+    if (seeMoreKids) {
+      seeMoreKids.addEventListener('click', function() {
+        showTier('kids');
+        seeMoreKids.classList.add('is-hidden');
+        if (showLess) showLess.classList.remove('is-hidden');
+        if (product2Label) product2Label.classList.remove('is-hidden');
+      });
+    }
+    if (showLess) {
+      showLess.addEventListener('click', function() {
+        hideTiers();
+        showLess.classList.add('is-hidden');
+        if (seeMore1) seeMore1.classList.remove('is-hidden');
+        if (seeMoreKids) {
+          if (seeMore1) seeMoreKids.classList.add('is-hidden');
+          else seeMoreKids.classList.remove('is-hidden');
+        }
+        if (product2Label) product2Label.classList.add('is-hidden');
+        grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
+  })();
+</script>
+{% else %}
+  {% if request.design_mode %}
+    <div style="padding: 40px; text-align: center; background: #f5f5f5;">
+      <p>All Variants Grid: Please select a product in the section settings, or enable "Use current product" on a product page.</p>
+    </div>
+  {% endif %}
+{% endif %}
+
+{% schema %}
+{
+  "name": "All Variants Grid",
+  "tag": "section",
+  "class": "br-variants-section-wrapper",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Product Source"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_current_product",
+      "label": "Use current product",
+      "info": "On product pages only: use the page's product (no tabs). Off or on collection/home = show grid from Products 1–5 below.",
+      "default": false
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product 1"
+    },
+    {
+      "type": "header",
+      "content": "Collection Page Settings"
+    },
+    {
+      "type": "paragraph",
+      "content": "Use these settings for collection/landing pages with multiple products."
+    },
+    {
+      "type": "product",
+      "id": "product_2",
+      "label": "Product 2 (optional)"
+    },
+    {
+      "type": "product",
+      "id": "product_3",
+      "label": "Product 3 (optional)"
+    },
+    {
+      "type": "product",
+      "id": "product_4",
+      "label": "Product 4 – One off Open (optional)",
+      "info": "Use product picker. Choose your One Off Open product only."
+    },
+    {
+      "type": "product",
+      "id": "product_5",
+      "label": "Product 5 – One off Closed (optional)",
+      "info": "Use product picker. Choose your One Off Closed product only."
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_filter_tabs",
+      "label": "Enable filter tabs",
+      "info": "Show tabs to filter between products (recommended for 2+ products)",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "tab_1_label",
+      "label": "Tab 1 label (Product 1)",
+      "info": "Controls first tab text. Set Product 1 + this label together.",
+      "default": "Open Sole"
+    },
+    {
+      "type": "text",
+      "id": "tab_2_label",
+      "label": "Tab 2 label (Product 2)",
+      "default": "Closed Sole"
+    },
+    {
+      "type": "text",
+      "id": "tab_3_label",
+      "label": "Tab 3 label (Product 3)",
+      "default": "Outdoor"
+    },
+    {
+      "type": "text",
+      "id": "tab_4_label",
+      "label": "Tab 4 label (Product 4/5 One off)",
+      "default": "One off colors"
+    },
+    {
+      "type": "text",
+      "id": "product_4_label",
+      "label": "One off – Open Sole section title",
+      "info": "Shown only when at least one Open Sole variant card is visible. Leave blank to use the product title.",
+      "placeholder": "e.g. One Off Colors (Open Sole)"
+    },
+    {
+      "type": "text",
+      "id": "product_5_label",
+      "label": "One off – Closed Sole section title",
+      "info": "Shown only when at least one Closed Sole variant card is visible. Leave blank to use the product title.",
+      "placeholder": "e.g. One Off Colors (Closed Sole)"
+    },
+    {
+      "type": "text",
+      "id": "exclusive_intro",
+      "label": "One off tab subtitle (above Size Chart)",
+      "default": "One of a kind colors.",
+      "info": "Shown only when the One off colors tab is selected. Leave blank to hide."
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_sold_out_one_off",
+      "label": "Hide sold-out variants in One off tab",
+      "default": true,
+      "info": "ON = zero-inventory One Off variants are hidden. OFF = sold-out cards stay visible with disabled button."
+    },
+    {
+      "type": "select",
+      "id": "one_off_columns",
+      "label": "One off tab – cards per row",
+      "options": [
+        { "value": "2", "label": "2 (larger images)" },
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4 (smaller images)" }
+      ],
+      "default": "3",
+      "info": "Fewer columns = larger cards and images."
+    },
+    {
+      "type": "checkbox",
+      "id": "exclusive_tab_accent",
+      "label": "Subtle accent on One off colors tab",
+      "default": true,
+      "info": "When on, the One off colors tab gets a muted border when active."
+    },
+    {
+      "type": "color",
+      "id": "exclusive_tab_accent_color",
+      "label": "One off tab accent (border)",
+      "default": "#8c7b5c"
+    },
+    {
+      "type": "color",
+      "id": "exclusive_tab_active_bg",
+      "label": "One off tab active background",
+      "default": "#f0f0f0"
+    },
+    {
+      "type": "color",
+      "id": "exclusive_tab_active_text",
+      "label": "One off tab active text",
+      "default": "#333333"
+    },
+    {
+      "type": "header",
+      "content": "Tab Styling"
+    },
+    {
+      "type": "color",
+      "id": "tab_text_color",
+      "label": "Tab text color",
+      "default": "#333333"
+    },
+    {
+      "type": "checkbox",
+      "id": "tab_inactive_border",
+      "label": "Show border on inactive tabs",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "tab_border_color",
+      "label": "Tab border color",
+      "default": "#333333"
+    },
+    {
+      "type": "range",
+      "id": "tab_border_width",
+      "label": "Tab border width",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "default": 2
+    },
+    {
+      "type": "color",
+      "id": "tab_active_bg",
+      "label": "Active tab background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "tab_active_text",
+      "label": "Active tab text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "tab_active_border",
+      "label": "Active tab border color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "tab_radius",
+      "label": "Tab border radius",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 4,
+      "info": "Use 20-30 for pill shape"
+    },
+    {
+      "type": "header",
+      "content": "Utility links (Compare Styles, Size Chart)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_compare_styles",
+      "label": "Show Compare Styles link",
+      "info": "Turn off for collections where open/closed sole comparison isn't relevant (e.g. apparel).",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_compare_intro",
+      "label": "Show 'Not sure which sole...' intro text",
+      "info": "Desktop only; hidden on mobile. Applies when single product (no filter tabs).",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_size_chart",
+      "label": "Show Size Chart link",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "size_chart_label",
+      "label": "Size Chart link label",
+      "default": "Size Chart"
+    },
+    {
+      "type": "page",
+      "id": "size_chart_page",
+      "label": "Size Chart page",
+      "info": "Page to link to. Leave blank to hide."
+    },
+    {
+      "type": "checkbox",
+      "id": "larger_utility_links_mobile",
+      "label": "Larger utility links on mobile",
+      "info": "Compare Styles / Size Chart: 16px font and bigger tap target on phones. Turn off if you prefer smaller links for this section.",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Grid Settings"
+    },
+    {
+      "type": "text",
+      "id": "grid_title",
+      "label": "Section heading",
+      "default": "Shop All Styles"
+    },
+    {
+      "type": "range",
+      "id": "section_heading_font_size_desktop",
+      "label": "Section heading font size (desktop)",
+      "min": 12,
+      "max": 96,
+      "step": 1,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "section_heading_font_size_mobile",
+      "label": "Section heading font size (mobile)",
+      "min": 12,
+      "max": 56,
+      "step": 1,
+      "unit": "px",
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "heading_max_width_mobile",
+      "label": "Section heading max width (mobile)",
+      "min": 240,
+      "max": 600,
+      "step": 10,
+      "default": 420,
+      "unit": "px"
+    },
+    {
+      "type": "richtext",
+      "id": "grid_subtitle_line",
+      "label": "Subtitle line (bold)",
+      "default": "<p></p>",
+      "info": "Short bold line under heading. Only shown when toggle below is on."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_subtitle_line",
+      "label": "Show subtitle line",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "subtitle_line_font_size_desktop",
+      "label": "Subtitle line font size (desktop)",
+      "min": 12,
+      "max": 40,
+      "step": 1,
+      "default": 18,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_line_font_size_mobile",
+      "label": "Subtitle line font size (mobile)",
+      "min": 12,
+      "max": 28,
+      "step": 1,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_line_spacing",
+      "label": "Subtitle line bottom spacing",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "default": 10,
+      "unit": "px",
+      "info": "Space between subtitle line and body text"
+    },
+    {
+      "type": "richtext",
+      "id": "grid_subtitle",
+      "label": "Body text",
+      "default": "<p></p>",
+      "info": "Longer description under subtitle line. Only shown when toggle below is on."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_grid_subtitle",
+      "label": "Show body text",
+      "default": false,
+      "info": "Turn off to hide body text under heading."
+    },
+    {
+      "type": "range",
+      "id": "body_font_size_desktop",
+      "label": "Body text font size (desktop)",
+      "min": 12,
+      "max": 22,
+      "step": 1,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "body_font_size_mobile",
+      "label": "Body text font size (mobile)",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "default": 14,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "body_margin_top_desktop",
+      "label": "Body text margin top (desktop)",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "body_margin_bottom_desktop",
+      "label": "Body text margin bottom (desktop)",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "body_margin_top_mobile",
+      "label": "Body text margin top (mobile)",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "body_margin_bottom_mobile",
+      "label": "Body text margin bottom (mobile)",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "desktop_columns",
+      "label": "Desktop columns",
+      "min": 1,
+      "max": 8,
+      "step": 1,
+      "default": 8,
+      "info": "Use 8 for \"2 rows of 8\" layout (Open Sole, then Closed Sole, etc. flow left to right)."
+    },
+    {
+      "type": "select",
+      "id": "mobile_columns",
+      "label": "Mobile columns",
+      "options": [
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "range",
+      "id": "initial_rows",
+      "label": "Initial rows shown",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 2,
+      "info": "Rows before \"See more\". Combined with Open/Closed switcher: 2 rows, then See more (rest), then See more (Kids) below."
+    },
+    {
+      "type": "range",
+      "id": "initial_variants",
+      "label": "Initial variants (fallback)",
+      "min": 3,
+      "max": 30,
+      "step": 1,
+      "default": 8,
+      "info": "Used only when initial rows = 0."
+    },
+    {
+      "type": "range",
+      "id": "max_variants",
+      "label": "Maximum variants",
+      "min": 6,
+      "max": 30,
+      "step": 1,
+      "default": 30
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_expand",
+      "label": "Enable expand/collapse",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "see_all_text",
+      "label": "See all link text",
+      "default": "See all colors",
+      "info": "Link-style CTA. Arrow (→) added automatically. e.g. 'See all colors & styles' for collections."
+    },
+    {
+      "type": "text",
+      "id": "show_less_text",
+      "label": "Show less link text",
+      "default": "Show less"
+    },
+    {
+      "type": "text",
+      "id": "see_more_kids_text",
+      "label": "See more (Kids) link text",
+      "default": "See more sizes",
+      "info": "Second-tier expand; reveals Kids variants. Arrow (→) added automatically."
+    },
+    {
+      "type": "text",
+      "id": "kids_trigger",
+      "label": "Kids variant trigger (option value contains)",
+      "default": "kids"
+    },
+    {
+      "type": "header",
+      "content": "Card Settings"
+    },
+    {
+      "type": "text",
+      "id": "card_title_desktop",
+      "label": "Card title (desktop)",
+      "info": "Leave blank to use product title"
+    },
+    {
+      "type": "text",
+      "id": "card_title_mobile",
+      "label": "Card title (mobile)",
+      "info": "Leave blank to use desktop title"
+    },
+    {
+      "type": "text",
+      "id": "card_subtitle_desktop",
+      "label": "Card subtitle (desktop)"
+    },
+    {
+      "type": "text",
+      "id": "card_subtitle_mobile",
+      "label": "Card subtitle (mobile)",
+      "info": "Leave blank to use desktop subtitle"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "checkbox",
+      "id": "card_border_show",
+      "label": "Show card border",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Card border color",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card border radius",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "label": "Card padding (desktop)",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "card_padding_mobile",
+      "label": "Card padding (mobile)",
+      "min": 6,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "title_font",
+      "label": "Title font",
+      "default": "roboto_n4"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Section heading color",
+      "default": "#333333"
+    },
+    {
+      "type": "range",
+      "id": "heading_margin_bottom_desktop",
+      "label": "Heading margin bottom (desktop)",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "heading_margin_bottom_mobile",
+      "label": "Heading margin bottom (mobile)",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "color",
+      "id": "product_label_color",
+      "label": "Product label color",
+      "default": "#333333"
+    },
+    {
+      "type": "range",
+      "id": "product_label_size_desktop",
+      "label": "Product label size (desktop)",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "product_label_size_mobile",
+      "label": "Product label size (mobile)",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Card title size (desktop)",
+      "min": 14,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "label": "Card title size (mobile)",
+      "min": 12,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "label": "Subtitle size (desktop)",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size_mobile",
+      "label": "Subtitle size (mobile)",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "variant_text_size_mobile",
+      "label": "Variant text size (mobile)",
+      "min": 10,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_product_name_in_variant",
+      "label": "Hide product name in variant (mobile)",
+      "info": "Only applies to single-product pages. Collections with 2 products always show full name.",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Button Settings"
+    },
+    {
+      "type": "text",
+      "id": "btn_text_desktop",
+      "label": "Button text (desktop)",
+      "default": "Quick Add"
+    },
+    {
+      "type": "text",
+      "id": "btn_text_mobile",
+      "label": "Button text (mobile)",
+      "default": "Quick Add"
+    },
+    {
+      "type": "text",
+      "id": "btn_sold_out",
+      "label": "Sold out text",
+      "default": "Sold Out"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Button background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_radius",
+      "label": "Button border radius",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "button_padding_v",
+      "label": "Button padding (vertical)",
+      "min": 8,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "button_padding_h",
+      "label": "Button padding (horizontal)",
+      "min": 16,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "button_style_desktop",
+      "label": "Add to cart button style (desktop)",
+      "options": [
+        { "value": "filled", "label": "Filled (color inside)" },
+        { "value": "outline", "label": "Outline only" }
+      ],
+      "default": "filled"
+    },
+    {
+      "type": "select",
+      "id": "button_style_mobile",
+      "label": "Add to cart button style (mobile)",
+      "options": [
+        { "value": "filled", "label": "Filled (color inside)" },
+        { "value": "outline", "label": "Outline only" }
+      ],
+      "default": "filled"
+    },
+    {
+      "type": "range",
+      "id": "button_font_size_desktop",
+      "label": "Add to cart font size (desktop)",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "button_font_size_mobile",
+      "label": "Add to cart font size (mobile)",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Sale Styling"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sale_badge",
+      "label": "Show sale badge",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "sale_badge_text",
+      "label": "Sale badge text",
+      "default": "SALE"
+    },
+    {
+      "type": "color",
+      "id": "sale_badge_bg",
+      "label": "Sale badge background",
+      "default": "#990000"
+    },
+    {
+      "type": "color",
+      "id": "sale_badge_text_color",
+      "label": "Sale badge text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "sale_price_color",
+      "label": "Sale price color",
+      "default": "#cc0000"
+    },
+    {
+      "type": "color",
+      "id": "compare_price_color",
+      "label": "Compare-at price color",
+      "default": "#999999"
+    },
+    {
+      "type": "header",
+      "content": "Limited Edition Badge"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_le_badge",
+      "label": "Show Limited Edition badge",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "le_badge_text",
+      "label": "Badge text",
+      "default": "Limited Edition"
+    },
+    {
+      "type": "text",
+      "id": "le_label_text",
+      "label": "LE label text",
+      "default": "Limited Edition",
+      "info": "Matches product page variant picker. Falls back to Badge text above if blank."
+    },
+    {
+      "type": "range",
+      "id": "le_label_font_size",
+      "label": "LE label font size",
+      "min": 11,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "select",
+      "id": "le_label_font_weight",
+      "label": "LE label font weight",
+      "options": [
+        { "value": "400", "label": "Normal" },
+        { "value": "600", "label": "Semi-bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "range",
+      "id": "le_label_letter_spacing",
+      "label": "Label letter spacing",
+      "min": 0,
+      "max": 2,
+      "step": 0.1,
+      "default": 0.1
+    },
+    {
+      "type": "color",
+      "id": "le_label_color",
+      "label": "LE label text color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Section Layout"
+    },
+    {
+      "type": "range",
+      "id": "content_max_width_desktop",
+      "label": "Content max width (desktop)",
+      "min": 600,
+      "max": 1400,
+      "step": 50,
+      "unit": "px",
+      "default": 1100
+    },
+    {
+      "type": "range",
+      "id": "content_max_width_mobile",
+      "label": "Content max width (mobile)",
+      "min": 300,
+      "max": 420,
+      "step": 10,
+      "unit": "px",
+      "default": 360
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "label": "Padding top (desktop)",
+      "min": 0,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "label": "Padding bottom (desktop)",
+      "min": 0,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Padding top (mobile)",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Padding bottom (mobile)",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+        "default": 30
+    },
+    {
+     "type": "liquid",
+      "id": "custom_html",
+      "label": "Custom HTML block"
+    }
+  ],
+  "presets": [
+    {
+      "name": "All Variants Grid"
+    }
+  ]
+}
+{% endschema %}

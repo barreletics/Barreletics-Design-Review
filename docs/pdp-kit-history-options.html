@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PDP kit history — First iterations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --charcoal: #1c1916;
+      --body: #4a4a4a;
+      --muted: #8a8a8a;
+      --warm: #6b645a;
+      --border: #d6cfc0;
+      --cream: #f5f2ec;
+      --light: #f9f9f9;
+      --rust: #c45c3f;
+      --white: #fff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--cream); color: var(--charcoal); margin: 0; padding: 40px 24px 96px;
+    }
+    .wrap { max-width: 1120px; margin: 0 auto; }
+    h1 { font-size: 28px; font-weight: 400; letter-spacing: -0.03em; margin: 0 0 8px; }
+    .lede { color: var(--body); max-width: 72ch; line-height: 1.55; margin: 0 0 20px; font-size: 15px; }
+    .back { font-size: 13px; color: var(--warm); text-decoration: none; display: inline-block; margin-bottom: 20px; }
+    .back:hover { color: var(--charcoal); }
+    .find {
+      background: var(--white); border: 1px solid var(--border); border-left: 4px solid var(--rust);
+      border-radius: 6px; padding: 18px 20px; margin-bottom: 28px; font-size: 14px; color: var(--body); line-height: 1.55;
+    }
+    .find strong { color: var(--charcoal); }
+    .find code { font-size: 12px; color: var(--warm); }
+    .find ul { margin: 10px 0 0; padding-left: 18px; }
+    .find li { margin-bottom: 6px; }
+    .grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; align-items: start;
+    }
+    @media (max-width: 960px) { .grid { grid-template-columns: 1fr; } }
+    .option {
+      background: var(--white); border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+    }
+    .option--rec { border-left: 4px solid var(--rust); }
+    .option--alt { border-left: 4px solid var(--border); }
+    .option__head { padding: 16px 18px 12px; }
+    .option__tag {
+      display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--rust); margin-bottom: 6px;
+    }
+    .option__tag--muted { color: var(--muted); }
+    .option h3 { font-size: 17px; font-weight: 500; margin: 0 0 6px; letter-spacing: -0.02em; }
+    .option__what { font-size: 13px; color: var(--body); line-height: 1.5; margin: 0; }
+    .option__src {
+      margin: 8px 0 0; font-size: 11px; color: var(--muted); line-height: 1.45;
+    }
+    .option__src code { font-size: 11px; color: var(--warm); }
+    .option__preview {
+      background: #faf8f4; border-top: 1px solid var(--border); padding: 20px 16px;
+    }
+    .option__preview-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--muted); margin: 0 0 12px;
+    }
+    .option__foot {
+      padding: 12px 18px 14px; border-top: 1px solid var(--border);
+      font-size: 12px; color: var(--body); line-height: 1.45;
+    }
+    .option__foot strong { color: var(--charcoal); }
+
+    /* Shared slice chrome */
+    .buy-slice {
+      max-width: 100%;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px 20px 8px;
+    }
+    .cta-stub {
+      width: 100%; padding: 16px; background: var(--charcoal); color: #fff;
+      font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+      border: none; border-radius: 4px; font-family: inherit; cursor: default;
+    }
+
+    /* ── A: First iteration (v14 @ 0df90d5) — gap 24px ── */
+    .buy-a {
+      display: flex; flex-direction: column; gap: 24px;
+    }
+    .buy-a .cta-stub { margin: 0; }
+    .buy-a .assurances {
+      display: flex; gap: 16px; flex-wrap: wrap;
+      font-size: 12px; color: var(--muted);
+      padding: 12px 0; border-top: 1px solid var(--border);
+    }
+    .buy-a .assurances b { color: var(--charcoal); font-weight: 700; }
+    .buy-a .kit-links {
+      padding: 14px 0 4px;
+      border-top: 1px solid var(--border);
+    }
+    .buy-a .kit-links__label {
+      display: block; font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.1em; color: #9a9182; margin: 0 0 8px;
+    }
+    .buy-a .kit-links__row {
+      display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 18px;
+    }
+    .buy-a .kit-links__row a {
+      font-size: 13px; font-weight: 500; color: var(--charcoal); text-decoration: none;
+      border-bottom: 1px solid var(--border); padding-bottom: 1px;
+    }
+    .buy-a .kit-links__hint {
+      margin: 8px 0 0; font-size: 11px; color: var(--muted); line-height: 1.45;
+    }
+    .buy-a .accordion {
+      border-top: 1px solid var(--border);
+    }
+    .buy-a .accordion details {
+      border-bottom: 1px solid var(--border);
+    }
+    .buy-a .accordion summary {
+      padding: 14px 0; font-size: 14px; font-weight: 600; cursor: default;
+      list-style: none; display: flex; justify-content: space-between; font-family: inherit;
+    }
+    .buy-a .accordion summary::-webkit-details-marker { display: none; }
+    .buy-a .accordion summary span { color: var(--muted); font-weight: 400; }
+
+    /* ── B: v16 locked — same kit + gap 24px (reference) ── */
+    .buy-b {
+      display: flex; flex-direction: column; gap: 24px;
+    }
+    .buy-b .cta-stub { margin: 0; }
+    .buy-b .assurances {
+      display: flex; gap: 16px; flex-wrap: wrap;
+      font-size: 12px; color: var(--muted);
+      padding: 12px 0; border-top: 1px solid var(--border);
+    }
+    .buy-b .assurances b { color: var(--charcoal); font-weight: 700; }
+    .buy-b .kit-links {
+      padding: 14px 0 4px;
+      border-top: 1px solid var(--border);
+    }
+    .buy-b .kit-links__label {
+      display: block; font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.1em; color: #9a9182; margin: 0 0 8px;
+    }
+    .buy-b .kit-links__row {
+      display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 18px;
+    }
+    .buy-b .kit-links__row a {
+      font-size: 13px; font-weight: 500; color: var(--charcoal); text-decoration: none;
+      border-bottom: 1px solid var(--border); padding-bottom: 1px;
+    }
+    .buy-b .kit-links__hint {
+      margin: 8px 0 0; font-size: 11px; color: var(--muted); line-height: 1.45;
+    }
+    .buy-b .accordion { border-top: 1px solid var(--border); }
+    .buy-b .accordion details { border-bottom: 1px solid var(--border); }
+    .buy-b .accordion summary {
+      padding: 14px 0; font-size: 14px; font-weight: 600; cursor: default;
+      list-style: none; display: flex; justify-content: space-between; font-family: inherit;
+    }
+    .buy-b .accordion summary::-webkit-details-marker { display: none; }
+    .buy-b .accordion summary span { color: var(--muted); font-weight: 400; }
+
+    /* ── C: Current v18 — gap 0, hairlines stacked ── */
+    .buy-c {
+      display: flex; flex-direction: column; gap: 0;
+    }
+    .buy-c .cta-stub { margin: 0 0 12px; }
+    .buy-c .assurances {
+      display: flex; gap: 16px; flex-wrap: wrap;
+      font-size: 12px; color: var(--muted);
+      padding: 12px 0; border-top: 1px solid var(--border);
+    }
+    .buy-c .assurances b { color: var(--charcoal); font-weight: 700; }
+    .buy-c .kit-links {
+      padding: 14px 0 4px;
+      border-top: 1px solid var(--border);
+    }
+    .buy-c .kit-links__label {
+      display: block; font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.1em; color: #9a9182; margin: 0 0 8px;
+    }
+    .buy-c .kit-links__row {
+      display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 18px;
+    }
+    .buy-c .kit-links__row a {
+      font-size: 13px; font-weight: 500; color: var(--charcoal); text-decoration: none;
+      border-bottom: 1px solid var(--border); padding-bottom: 1px;
+    }
+    .buy-c .kit-links__hint {
+      margin: 8px 0 0; font-size: 11px; color: var(--muted); line-height: 1.45;
+    }
+    .buy-c .accordion {
+      margin-top: 0;
+      border-top: 1px solid var(--border);
+    }
+    .buy-c .accordion details { border-bottom: 1px solid var(--border); }
+    .buy-c .accordion summary {
+      padding: 14px 0; font-size: 14px; font-weight: 600; cursor: default;
+      list-style: none; display: flex; justify-content: space-between; font-family: inherit;
+    }
+    .buy-c .accordion summary::-webkit-details-marker { display: none; }
+    .buy-c .accordion summary span { color: var(--muted); font-weight: 400; }
+
+    /* Pre-kit note */
+    .prekit {
+      margin-top: 28px;
+      background: var(--white); border: 1px solid var(--border); border-radius: 8px;
+      padding: 18px 20px;
+    }
+    .prekit h2 { font-size: 16px; font-weight: 500; margin: 0 0 8px; }
+    .prekit p { margin: 0 0 14px; font-size: 13px; color: var(--body); line-height: 1.5; }
+    .prekit .buy-slice { max-width: 420px; }
+    .buy-pre {
+      display: flex; flex-direction: column; gap: 24px;
+    }
+    .buy-pre .assurances {
+      display: flex; gap: 16px; flex-wrap: wrap;
+      font-size: 12px; color: var(--muted);
+      padding: 12px 0; border-top: 1px solid var(--border);
+    }
+    .buy-pre .assurances b { color: var(--charcoal); font-weight: 700; }
+    .buy-pre .accordion { border-top: 1px solid var(--border); }
+    .buy-pre .accordion details { border-bottom: 1px solid var(--border); }
+    .buy-pre .accordion summary {
+      padding: 14px 0; font-size: 14px; font-weight: 600; cursor: default;
+      list-style: none; display: flex; justify-content: space-between; font-family: inherit;
+    }
+    .buy-pre .accordion summary::-webkit-details-marker { display: none; }
+    .buy-pre .accordion summary span { color: var(--muted); font-weight: 400; }
+
+    .note {
+      margin-top: 28px; font-size: 13px; color: var(--muted); line-height: 1.5; max-width: 72ch;
+    }
+    .note code { font-size: 12px; color: var(--warm); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <a class="back" href="index.html">← Hub</a>
+    <h1>Complete the kit — first iterations</h1>
+    <p class="lede">
+      Buy-column slice only: ATC stub → trust → kit → first accordion row.
+      Options page only — <strong>v16 untouched · v18 not changed</strong> until you pick.
+    </p>
+
+    <div class="find">
+      <strong>Search result — earliest “Complete the kit”</strong>
+      <ul>
+        <li><strong>First git intro:</strong> <code>0df90d5</code> · 2026-07-23 · <code>docs/Barreletics PDP - Definitive-v14.html</code></li>
+        <li>Earlier Definitive v1–v8 / July 17 / Matured / v49: <strong>no kit block</strong> (trust → accordion only).</li>
+        <li>Why it felt airier than v18: first design used <code>.pdp-buy { gap: 24px }</code>. v18 set <code>gap: 0</code>, so hairlines stack tight. Borders were already present in v14.</li>
+      </ul>
+    </div>
+
+    <div class="grid">
+
+      <!-- A — First iteration -->
+      <section class="option option--rec" id="a">
+        <div class="option__head">
+          <div class="option__tag">A · First iteration</div>
+          <h3>v14 kit + 24px buy gap</h3>
+          <p class="option__what">
+            Exact first kit treatment. Trust / kit / accordion keep hairlines, but
+            <strong>24px flex gap</strong> between them = breathing room.
+          </p>
+          <p class="option__src">
+            Source: <code>0df90d5</code> · Jul 23, 2026<br>
+            File: <code>docs/Barreletics PDP - Definitive-v14.html</code><br>
+            Differs: <code>.pdp-buy { gap: 24px }</code> · kit <code>padding: 14px 0 4px</code> + <code>border-top</code>
+          </p>
+        </div>
+        <div class="option__preview">
+          <p class="option__preview-label">ATC → trust → kit → accordion</p>
+          <div class="buy-slice buy-a">
+            <button class="cta-stub" type="button">Add to cart · $74</button>
+            <div class="assurances">
+              <span><b>✓</b> Ships 1–2 days</span>
+              <span><b>✓</b> 30-day returns</span>
+              <span><b>✓</b> 90-day warranty</span>
+              <span><b>✓</b> Latex- &amp; silicone-free</span>
+            </div>
+            <div class="kit-links">
+              <span class="kit-links__label">Complete the kit</span>
+              <div class="kit-links__row">
+                <a href="#">Hot Pilates Kit →</a>
+                <a href="#">Hot Yoga Kit →</a>
+              </div>
+              <p class="kit-links__hint">Performance Skin + thin liner for heated studios.</p>
+            </div>
+            <div class="accordion">
+              <details>
+                <summary>Description <span>+</span></summary>
+              </details>
+            </div>
+          </div>
+        </div>
+        <div class="option__foot">
+          <strong>Show him this.</strong> First designed form of Complete the kit.
+          Air comes from gap, not from deleting borders.
+        </div>
+      </section>
+
+      <!-- B — v16 locked -->
+      <section class="option option--alt" id="b">
+        <div class="option__head">
+          <div class="option__tag option__tag--muted">B · Intermediate / Locked</div>
+          <h3>v16 locked kit</h3>
+          <p class="option__what">
+            Same kit CSS + same 24px buy gap as v14/v15. Reference lock — do not overwrite.
+          </p>
+          <p class="option__src">
+            Source: <code>691f03b</code> · Jul 24, 2026<br>
+            File: <code>docs/Barreletics PDP - Definitive-v16.html</code><br>
+            Differs from A: essentially identical under-ATC kit stack
+          </p>
+        </div>
+        <div class="option__preview">
+          <p class="option__preview-label">ATC → trust → kit → accordion</p>
+          <div class="buy-slice buy-b">
+            <button class="cta-stub" type="button">Add to cart · $74</button>
+            <div class="assurances">
+              <span><b>✓</b> Ships 1–2 days</span>
+              <span><b>✓</b> 30-day returns</span>
+              <span><b>✓</b> 90-day warranty</span>
+              <span><b>✓</b> Latex- &amp; silicone-free</span>
+            </div>
+            <div class="kit-links">
+              <span class="kit-links__label">Complete the kit</span>
+              <div class="kit-links__row">
+                <a href="#">Hot Pilates Kit →</a>
+                <a href="#">Hot Yoga Kit →</a>
+              </div>
+              <p class="kit-links__hint">Performance Skin + thin liner for heated studios.</p>
+            </div>
+            <div class="accordion">
+              <details>
+                <summary>Description <span>+</span></summary>
+              </details>
+            </div>
+          </div>
+        </div>
+        <div class="option__foot">
+          <strong>Reference only.</strong> Hub Locked prior. Same airy gap as A.
+        </div>
+      </section>
+
+      <!-- C — Current v18 -->
+      <section class="option option--alt" id="c">
+        <div class="option__head">
+          <div class="option__tag option__tag--muted">C · Current</div>
+          <h3>v18 now (gap 0)</h3>
+          <p class="option__what">
+            Same kit markup/borders, but <strong>buy column gap is 0</strong> —
+            trust / kit / accordion hairlines stack with no breathing room.
+          </p>
+          <p class="option__src">
+            Source: working tree<br>
+            File: <code>docs/Barreletics PDP - Definitive-v18.html</code><br>
+            Differs: <code>.pdp-buy { gap: 0 }</code> · lines feel denser
+          </p>
+        </div>
+        <div class="option__preview">
+          <p class="option__preview-label">ATC → trust → kit → accordion</p>
+          <div class="buy-slice buy-c">
+            <button class="cta-stub" type="button">Add to cart · $74</button>
+            <div class="assurances">
+              <span><b>✓</b> Ships 1–2 days</span>
+              <span><b>✓</b> 30-day returns</span>
+              <span><b>✓</b> 90-day warranty</span>
+              <span><b>✓</b> Latex- &amp; silicone-free</span>
+            </div>
+            <div class="kit-links">
+              <span class="kit-links__label">Complete the kit</span>
+              <div class="kit-links__row">
+                <a href="#">Hot Pilates Kit →</a>
+                <a href="#">Hot Yoga Kit →</a>
+              </div>
+              <p class="kit-links__hint">Performance Skin + thin liner for heated studios.</p>
+            </div>
+            <div class="accordion">
+              <details>
+                <summary>Description <span>+</span></summary>
+              </details>
+            </div>
+          </div>
+        </div>
+        <div class="option__foot">
+          <strong>What he has now.</strong> Not applied from — leave until he picks A or a fewer-lines variant.
+        </div>
+      </section>
+
+    </div>
+
+    <div class="prekit">
+      <h2>Before kit existed (fewer lines)</h2>
+      <p>
+        Definitive v1–v8 + APPROVED July 17: ATC → trust → accordion only.
+        No Complete the kit. Two zone borders, 24px gap — airiest under-ATC, but not a kit design.
+        Source example: <code>docs/Barreletics PDP - APPROVED July 17.html</code> / handoff <code>Definitive-v1.html</code>.
+      </p>
+      <div class="buy-slice buy-pre">
+        <button class="cta-stub" type="button">Add to cart · $74</button>
+        <div class="assurances">
+          <span><b>✓</b> Ships 1–2 days</span>
+          <span><b>✓</b> 30-day returns</span>
+          <span><b>✓</b> 90-day warranty</span>
+          <span><b>✓</b> Latex- &amp; silicone-free</span>
+        </div>
+        <div class="accordion">
+          <details>
+            <summary>Description <span>+</span></summary>
+          </details>
+        </div>
+      </div>
+    </div>
+
+    <p class="note">
+      Options only. Not applied to <code>Definitive-v18.html</code>.
+      Never overwrite <code>Definitive-v16.html</code>. No Shopify.
+      If he wants A on v18: restore under-ATC <code>gap: 24px</code> (or space trust/kit/accordion with margin) — pick first.
+    </p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,254 @@
+{%- comment -%}
+  BR Debug HUD (temporary, opt-in)
+  Enabled only when URL contains `br_debug=1`.
+  Purpose: capture iOS-only “dead taps” by showing overlay/state and hit-tested element.
+{%- endcomment -%}
+
+<style>
+  #br-debug-hud {
+    display: none;
+    position: fixed;
+    left: 10px;
+    top: 10px;
+    z-index: 2147483647;
+    max-width: min(92vw, 520px);
+    background: rgba(0,0,0,0.85);
+    color: #fff;
+    font: 12px/1.35 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    border-radius: 10px;
+    padding: 10px 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    /* Never block taps on underlying UI */
+    pointer-events: none;
+  }
+  #br-debug-hud code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+  #br-debug-hud .br-row { margin: 6px 0; }
+  #br-debug-hud .br-label { opacity: 0.75; display:block; margin-bottom:2px; }
+  #br-debug-hud .br-val { word-break: break-word; }
+  #br-debug-hud .br-btns { display:flex; gap:8px; margin-top:8px; }
+  #br-debug-hud button {
+    appearance: none;
+    border: 1px solid rgba(255,255,255,0.25);
+    background: rgba(255,255,255,0.10);
+    color:#fff;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font: inherit;
+    pointer-events: auto;
+  }
+  #br-debug-hud button:active { transform: translateY(1px); }
+  #br-debug-hud .br-hint { opacity:0.7; margin-top:6px; }
+</style>
+
+<div id="br-debug-hud" role="region" aria-label="BR debug HUD">
+  <div class="br-row">
+    <span class="br-label">State</span>
+    <div class="br-val" id="br-debug-state">…</div>
+  </div>
+  <div class="br-row">
+    <span class="br-label">Tap hit-test (top element)</span>
+    <div class="br-val"><code id="br-debug-hit">…</code></div>
+  </div>
+  <div class="br-row">
+    <span class="br-label">Variant events</span>
+    <div class="br-val"><code id="br-debug-variant">…</code></div>
+  </div>
+  <div class="br-row">
+    <span class="br-label">Global events</span>
+    <div class="br-val"><code id="br-debug-global">…</code></div>
+  </div>
+  <div class="br-row">
+    <span class="br-label">Selection</span>
+    <div class="br-val"><code id="br-debug-sel">…</code></div>
+  </div>
+  <div class="br-btns">
+    <button type="button" id="br-debug-copy">Copy</button>
+    <button type="button" id="br-debug-hide">Hide</button>
+  </div>
+  <div class="br-hint">Enabled by <code>br_debug=1</code>. Tap around when it “gets stuck”.</div>
+</div>
+
+<script>
+(function() {
+  try {
+    var qs = new URLSearchParams(window.location.search || '');
+    var enabled = qs.get('br_debug') === '1';
+    if (enabled) {
+      try { sessionStorage.setItem('br_debug', '1'); } catch (e) {}
+    } else {
+      try { enabled = sessionStorage.getItem('br_debug') === '1'; } catch (e) {}
+    }
+    if (!enabled) {
+      var existing = document.getElementById('br-debug-hud');
+      if (existing) existing.remove();
+      return;
+    }
+  } catch (e) {
+    // If URLSearchParams isn't available, do nothing (HUD stays hidden)
+    return;
+  }
+
+  var hud = document.getElementById('br-debug-hud');
+  if (!hud) return;
+  hud.style.display = 'block';
+  var stateEl = document.getElementById('br-debug-state');
+  var hitEl = document.getElementById('br-debug-hit');
+  var variantEl = document.getElementById('br-debug-variant');
+  var globalEl = document.getElementById('br-debug-global');
+  var selEl = document.getElementById('br-debug-sel');
+  var variantCounts = { touchstart: 0, pointerdown: 0, click: 0 };
+  var lastVariant = { type: '-', prevented: '-', target: '-' };
+  var globalCounts = { touchstart: 0, pointerdown: 0, click: 0 };
+  var lastGlobal = { type: '-', prevented: '-', target: '-' };
+
+  function hasActiveScreenLayer() {
+    return !!document.querySelector('.screen-layer--is-active, .screen-layer--is-sliding');
+  }
+
+  function fmtClasses(el) {
+    if (!el) return '';
+    return (el.className || '').toString().trim().replace(/\s+/g, ' ');
+  }
+
+  function updateState() {
+    var html = document.documentElement;
+    var body = document.body;
+    var bits = [
+      'html: ' + fmtClasses(html),
+      'body: ' + fmtClasses(body),
+      'activeScreenLayer: ' + (hasActiveScreenLayer() ? 'yes' : 'no')
+    ];
+    stateEl.textContent = bits.join(' | ');
+  }
+
+  function fmtNode(node) {
+    if (!node) return '(none)';
+    var tag = node.tagName ? node.tagName.toLowerCase() : String(node);
+    var id = node.id ? ('#' + node.id) : '';
+    var cls = '';
+    if (node.className) {
+      var c = (typeof node.className === 'string') ? node.className : (node.className.baseVal || '');
+      c = (c || '').trim().split(/\s+/).slice(0, 3).join('.');
+      if (c) cls = '.' + c;
+    }
+    return tag + id + cls;
+  }
+
+  function onTouchOrPointer(evt) {
+    var x, y;
+    if (evt.touches && evt.touches[0]) {
+      x = evt.touches[0].clientX; y = evt.touches[0].clientY;
+    } else {
+      x = evt.clientX; y = evt.clientY;
+    }
+    var hit = document.elementFromPoint(x, y);
+    hitEl.textContent = fmtNode(hit);
+    updateState();
+  }
+
+  function getSelectionSummary() {
+    try {
+      var s = window.getSelection && window.getSelection();
+      if (!s) return '(n/a)';
+      var txt = (s.toString() || '').trim().replace(/\s+/g, ' ');
+      if (!txt) return '(none)';
+      return txt.slice(0, 60);
+    } catch (e) {
+      return '(error)';
+    }
+  }
+
+  function updateSelection() {
+    if (!selEl) return;
+    selEl.textContent = getSelectionSummary();
+  }
+
+  function fmtVariant() {
+    return [
+      'touchstart=' + variantCounts.touchstart,
+      'pointerdown=' + variantCounts.pointerdown,
+      'click=' + variantCounts.click,
+      'last=' + lastVariant.type + '(prevented=' + lastVariant.prevented + ')',
+      'target=' + lastVariant.target
+    ].join(' | ');
+  }
+
+  function fmtGlobal() {
+    return [
+      'touchstart=' + globalCounts.touchstart,
+      'pointerdown=' + globalCounts.pointerdown,
+      'click=' + globalCounts.click,
+      'last=' + lastGlobal.type + '(prevented=' + lastGlobal.prevented + ')',
+      'target=' + lastGlobal.target
+    ].join(' | ');
+  }
+
+  function isVariantTarget(node) {
+    if (!node || !node.closest) return false;
+    return !!node.closest('.variant-input-wrap label, label.variant-input-label');
+  }
+
+  function onVariantEvent(evt) {
+    if (!isVariantTarget(evt.target)) return;
+    if (variantCounts[evt.type] != null) variantCounts[evt.type] += 1;
+    lastVariant.type = evt.type;
+    lastVariant.prevented = evt.defaultPrevented ? 'yes' : 'no';
+    lastVariant.target = fmtNode(evt.target.closest('.variant-input-wrap label, label.variant-input-label'));
+    if (variantEl) variantEl.textContent = fmtVariant();
+    updateState();
+    updateSelection();
+  }
+
+  function onGlobalEvent(evt) {
+    if (globalCounts[evt.type] != null) globalCounts[evt.type] += 1;
+    lastGlobal.type = evt.type;
+    lastGlobal.prevented = evt.defaultPrevented ? 'yes' : 'no';
+    lastGlobal.target = fmtNode(evt.target);
+    if (globalEl) globalEl.textContent = fmtGlobal();
+    updateState();
+    updateSelection();
+  }
+
+  // capture phase so we see it even if something stops propagation
+  document.addEventListener('touchstart', onTouchOrPointer, true);
+  document.addEventListener('pointerdown', onTouchOrPointer, true);
+  document.addEventListener('touchstart', onVariantEvent, true);
+  document.addEventListener('pointerdown', onVariantEvent, true);
+  document.addEventListener('click', onVariantEvent, true);
+  document.addEventListener('touchstart', onGlobalEvent, true);
+  document.addEventListener('pointerdown', onGlobalEvent, true);
+  document.addEventListener('click', onGlobalEvent, true);
+  window.addEventListener('pageshow', function() { setTimeout(updateState, 0); });
+  window.addEventListener('load', function() { setTimeout(updateState, 0); });
+
+  document.getElementById('br-debug-hide').addEventListener('click', function() {
+    try { sessionStorage.removeItem('br_debug'); } catch (e) {}
+    hud.remove();
+  });
+
+  document.getElementById('br-debug-copy').addEventListener('click', async function() {
+    try {
+      var payload = [
+        'URL: ' + location.href,
+        'STATE: ' + stateEl.textContent,
+        'HIT: ' + hitEl.textContent,
+        'VARIANT: ' + (variantEl ? variantEl.textContent : '(n/a)'),
+        'GLOBAL: ' + (globalEl ? globalEl.textContent : '(n/a)'),
+        'SELECTION: ' + (selEl ? selEl.textContent : '(n/a)')
+      ].join('\\n');
+      await navigator.clipboard.writeText(payload);
+      this.textContent = 'Copied';
+      var btn = this;
+      setTimeout(function(){ btn.textContent = 'Copy'; }, 1200);
+    } catch (e) {
+      // ignore
+    }
+  });
+
+  updateState();
+  if (variantEl) variantEl.textContent = fmtVariant();
+  if (globalEl) globalEl.textContent = fmtGlobal();
+  updateSelection();
+})();
+</script>
+

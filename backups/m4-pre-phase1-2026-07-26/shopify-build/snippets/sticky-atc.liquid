@@ -1,0 +1,225 @@
+{% comment %}
+  Sticky Add-to-Cart Bar (D-023)
+  Hidden when native ATC is visible. Appears when purchase module scrolls out of view.
+  Include in PDP template via section wrapper.
+{% endcomment %}
+
+<div
+  id="sticky-atc"
+  class="sticky-atc"
+  aria-hidden="true"
+  role="complementary"
+  aria-label="Quick add to cart"
+>
+  <div class="sticky-atc__inner">
+    <div class="sticky-atc__product">
+      {% if product.featured_image %}
+        <img
+          class="sticky-atc__thumb"
+          src="{{ product.featured_image | image_url: width: 80 }}"
+          alt="{{ product.title | escape }}"
+          width="40"
+          height="40"
+          loading="lazy"
+        >
+      {% endif %}
+      <div class="sticky-atc__info">
+        <span class="sticky-atc__title">{{ product.title }}</span>
+        <span class="sticky-atc__price">{{ product.selected_or_first_available_variant.price | money }}</span>
+      </div>
+    </div>
+
+    <div class="sticky-atc__actions">
+      <span class="sticky-atc__size" id="sticky-atc-size">
+        Size: {{ product.selected_or_first_available_variant.title }}
+      </span>
+      <button
+        type="button"
+        class="sticky-atc__btn btn btn--primary"
+        id="sticky-atc-btn"
+        data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+        aria-label="Add {{ product.title }} to cart"
+      >
+        Add to Cart — {{ product.selected_or_first_available_variant.price | money }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .sticky-atc {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: var(--z-sticky);
+    background: var(--bg-primary);
+    border-top: 1px solid var(--border-default);
+    box-shadow: 0 -2px 12px rgba(28, 25, 22, 0.08);
+    transform: translateY(100%);
+    transition: transform var(--transition-base);
+    padding: 12px var(--section-padding-x);
+  }
+
+  .sticky-atc.is-visible {
+    transform: translateY(0);
+  }
+
+  .sticky-atc[aria-hidden="true"] {
+    pointer-events: none;
+  }
+
+  .sticky-atc__inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+
+  .sticky-atc__product {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .sticky-atc__thumb {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-badge);
+    object-fit: cover;
+  }
+
+  .sticky-atc__title {
+    font-size: var(--text-base);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+  }
+
+  .sticky-atc__price {
+    font-size: var(--text-base);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    margin-left: var(--space-2);
+  }
+
+  .sticky-atc__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .sticky-atc__size {
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wider);
+    color: var(--text-muted);
+  }
+
+  .sticky-atc__btn {
+    padding: 12px 24px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 768px) {
+    .sticky-atc {
+      padding: 10px var(--section-padding-x-mobile);
+    }
+
+    .sticky-atc__info {
+      display: none;
+    }
+
+    .sticky-atc__size {
+      font-size: 11px;
+    }
+
+    .sticky-atc__btn {
+      flex: 1;
+      text-align: center;
+    }
+  }
+</style>
+
+<script>
+  (function() {
+    var stickyBar = document.getElementById('sticky-atc');
+    var buyBox = document.querySelector('[data-buy-box]');
+    if (!stickyBar || !buyBox) return;
+
+    var stickyBtn = document.getElementById('sticky-atc-btn');
+    var stickySize = document.getElementById('sticky-atc-size');
+    var stickyPrice = stickyBar.querySelector('.sticky-atc__price');
+    var stickyThumb = stickyBar.querySelector('.sticky-atc__thumb');
+
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          stickyBar.classList.remove('is-visible');
+          stickyBar.setAttribute('aria-hidden', 'true');
+        } else {
+          stickyBar.classList.add('is-visible');
+          stickyBar.setAttribute('aria-hidden', 'false');
+        }
+      });
+    }, { threshold: 0 });
+
+    observer.observe(buyBox);
+
+    document.addEventListener('variant:changed', function(e) {
+      var variant = e.detail.variant;
+      if (!variant) return;
+
+      if (stickyBtn) {
+        stickyBtn.setAttribute('data-variant-id', variant.id);
+        if (variant.available) {
+          stickyBtn.disabled = false;
+          stickyBtn.textContent = 'Add to Cart \u2014 ' + formatMoney(variant.price);
+          stickyBtn.classList.remove('btn--disabled');
+        } else {
+          stickyBtn.disabled = true;
+          stickyBtn.textContent = 'Sold Out';
+          stickyBtn.classList.add('btn--disabled');
+        }
+      }
+
+      if (stickyPrice) {
+        stickyPrice.textContent = formatMoney(variant.price);
+      }
+
+      if (stickySize) {
+        stickySize.textContent = 'Size: ' + variant.title;
+      }
+
+      if (stickyThumb && variant.featured_image) {
+        stickyThumb.src = variant.featured_image.src.replace(/(\.[a-z]+)(\?|$)/, '_80x$1$2');
+      }
+    });
+
+    if (stickyBtn) {
+      stickyBtn.addEventListener('click', function() {
+        var vid = parseInt(stickyBtn.getAttribute('data-variant-id'), 10);
+        if (!vid || stickyBtn.disabled) return;
+        if (window.BarreleticsCart) {
+          stickyBtn.disabled = true;
+          stickyBtn.textContent = 'Adding\u2026';
+          window.BarreleticsCart.add(vid, 1).finally(function() {
+            stickyBtn.disabled = false;
+            stickyBtn.textContent = 'Add to Cart \u2014 ' + formatMoney(parseInt(stickyBtn.getAttribute('data-price') || '0', 10));
+            document.addEventListener('variant:changed', function handler(ev) {
+              stickyBtn.textContent = 'Add to Cart \u2014 ' + formatMoney(ev.detail.variant.price);
+              document.removeEventListener('variant:changed', handler);
+            });
+          });
+        }
+      });
+    }
+
+    function formatMoney(cents) {
+      return '$' + (cents / 100).toFixed(2).replace(/\.00$/, '');
+    }
+  })();
+</script>

@@ -30,8 +30,10 @@ Same performance on class 1 as on class 1,000.
 ## Real Benefits
 
 - **360° grip** — not dots or patches
-- **Antimicrobial & sweat-resistant** — stays fresh, doesn't trap bacteria
-- **No latex. No silicone.** — skin-safe, hygienic
+- **Non-porous** — wipes clean, nothing soaks in and lingers the way it does in fabric
+- **No latex. No silicone.** — skin-safe and non-toxic
+
+> ⛔ **RETIRED 2026-08-12 (owner letter):** ~~"Antimicrobial & sweat-resistant — stays fresh, doesn't trap bacteria"~~ and ~~"hygienic."~~ Never claim the material acts on bacteria. Describe the surface: non-porous, wipes clean. Historical record only — do not reuse as source copy.
 - **Natural toe splay** — better balance and control
 - **Second-skin fit** — ultra-light, flexible, durable
 

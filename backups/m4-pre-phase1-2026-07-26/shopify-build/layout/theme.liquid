@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="{{ request.locale.iso_code }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <title>
+    {%- case template.name -%}
+      {%- when 'index' -%}
+        Barreletics — Performance Skins for Barre, Pilates & Reformer
+      {%- when 'product' -%}
+        {{ product.title }} | Barreletics
+      {%- when 'collection' -%}
+        {{ collection.title }} | Barreletics Grippy Shoes
+      {%- when 'article' -%}
+        {{ article.title }} | Barreletics Journal
+      {%- when 'blog' -%}
+        {{ blog.title }} | Barreletics Journal
+      {%- when 'page' -%}
+        {{ page.title }} | Barreletics
+      {%- else -%}
+        {{ page_title }} | Barreletics
+    {%- endcase -%}
+  </title>
+
+  {%- if page_description -%}
+    <meta name="description" content="{{ page_description | escape }}">
+  {%- endif -%}
+
+  <link rel="canonical" href="{{ canonical_url }}">
+
+  {%- comment -%} Open Graph Meta Tags {%- endcomment -%}
+  <meta property="og:site_name" content="Barreletics">
+  <meta property="og:url" content="{{ canonical_url }}">
+
+  {%- case template.name -%}
+    {%- when 'product' -%}
+      <meta property="og:type" content="product">
+      <meta property="og:title" content="{{ product.title | escape }}">
+      <meta property="og:description" content="{{ product.description | strip_html | truncate: 200 | escape }}">
+      {%- if product.featured_image -%}
+        <meta property="og:image" content="https:{{ product.featured_image | image_url: width: 1200 }}">
+      {%- endif -%}
+      <meta property="og:price:amount" content="{{ product.price | money_without_currency }}">
+      <meta property="og:price:currency" content="{{ shop.currency }}">
+    {%- when 'article' -%}
+      <meta property="og:type" content="article">
+      <meta property="og:title" content="{{ article.title | escape }}">
+      <meta property="og:description" content="{{ article.excerpt_or_content | strip_html | truncate: 200 | escape }}">
+      {%- if article.image -%}
+        <meta property="og:image" content="https:{{ article.image | image_url: width: 1200 }}">
+      {%- endif -%}
+    {%- when 'collection' -%}
+      <meta property="og:type" content="website">
+      <meta property="og:title" content="{{ collection.title | escape }}">
+      <meta property="og:description" content="{{ collection.description | strip_html | truncate: 200 | escape }}">
+      {%- if collection.image -%}
+        <meta property="og:image" content="https:{{ collection.image | image_url: width: 1200 }}">
+      {%- endif -%}
+    {%- when 'blog' -%}
+      <meta property="og:type" content="blog">
+      <meta property="og:title" content="{{ blog.title | escape }}">
+      <meta property="og:description" content="{{ page_description | escape }}">
+    {%- else -%}
+      <meta property="og:type" content="website">
+      <meta property="og:title" content="{{ page_title | escape }}">
+      {%- if page_description -%}
+        <meta property="og:description" content="{{ page_description | escape }}">
+      {%- endif -%}
+  {%- endcase -%}
+
+  {%- comment -%} Fallback OG image {%- endcomment -%}
+  {%- unless template.name == 'product' or template.name == 'article' or template.name == 'collection' -%}
+    <meta property="og:image" content="{{ 'og-default.jpg' | asset_url }}">
+  {%- endunless -%}
+
+  {%- comment -%} Twitter Card {%- endcomment -%}
+  <meta name="twitter:card" content="summary_large_image">
+
+  {%- comment -%} Preconnects {%- endcomment -%}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+  <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+  <link rel="preconnect" href="https://connect.facebook.net" crossorigin>
+
+  {%- comment -%} Google Search Console verification {%- endcomment -%}
+  {% if settings.search_console_verification != blank %}
+    <meta name="google-site-verification" content="{{ settings.search_console_verification }}">
+  {% endif %}
+
+  {%- comment -%} Analytics — GA4 {%- endcomment -%}
+  {% render 'analytics-head' %}
+
+  {%- comment -%} Meta Pixel {%- endcomment -%}
+  {% render 'meta-pixel' %}
+
+  {%- comment -%} Pinterest Tag {%- endcomment -%}
+  {% render 'pinterest-tag' %}
+
+  {%- comment -%} Microsoft Clarity {%- endcomment -%}
+  {% render 'clarity' %}
+
+  {%- comment -%} Fonts {%- endcomment -%}
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  {%- comment -%} Design Tokens + Base CSS (critical) {%- endcomment -%}
+  {{ 'design-tokens.css' | asset_url | stylesheet_tag }}
+  {{ 'barreletics-base.css' | asset_url | stylesheet_tag }}
+
+  {%- comment -%} Organization Schema (all pages) {%- endcomment -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Barreletics",
+      "url": "{{ shop.url }}",
+      "logo": "{{ 'logo.png' | asset_url }}"
+    }
+  </script>
+
+  {%- comment -%} WebSite + SearchAction Schema (homepage only) {%- endcomment -%}
+  {%- if template.name == 'index' -%}
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Barreletics",
+        "url": "{{ shop.url }}",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "{{ shop.url }}/search?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
+  {%- endif -%}
+
+  {%- comment -%} Page-specific schema snippets {%- endcomment -%}
+  {%- if template.name == 'collection' -%}
+    {% render 'collection-schema' %}
+  {%- endif -%}
+  {%- if template.name == 'article' -%}
+    {% render 'article-schema' %}
+  {%- endif -%}
+
+  {{ content_for_header }}
+</head>
+<body class="template-{{ template.name }}{% if template.suffix %} template-{{ template.name }}-{{ template.suffix }}{% endif %}">
+
+  <a href="#main-content" class="skip-link">Skip to content</a>
+
+  {%- comment -%} Announcement Strip {%- endcomment -%}
+  {% render 'announcement-strip' %}
+
+  {%- comment -%} Header / Navigation {%- endcomment -%}
+  {% render 'header-nav' %}
+
+  {%- comment -%} Main Content {%- endcomment -%}
+  <main id="main-content" role="main" tabindex="-1">
+    {{ content_for_layout }}
+  </main>
+
+  {%- comment -%} Footer {%- endcomment -%}
+  {% render 'footer' %}
+
+  {%- comment -%} Cart Drawer (D-024) {%- endcomment -%}
+  {% render 'cart-drawer' %}
+
+  {%- comment -%} Analytics Events (enhanced ecommerce) {%- endcomment -%}
+  {% render 'analytics-events' %}
+
+  {%- comment -%} Help Scout Beacon {%- endcomment -%}
+  {% render 'helpscout-beacon' %}
+
+  {%- comment -%} Tidio AI Chat {%- endcomment -%}
+  {% render 'tidio-widget' %}
+
+  {%- comment -%} Skip link styles {%- endcomment -%}
+  <style>
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 16px;
+      z-index: 9999;
+      padding: 12px 24px;
+      background: var(--color-charcoal);
+      color: var(--color-white);
+      font-size: 14px;
+      font-weight: 700;
+      border-radius: var(--radius-button);
+      text-decoration: none;
+      transition: top 0.2s;
+    }
+
+    .skip-link:focus {
+      top: 16px;
+    }
+  </style>
+
+  {%- comment -%} Reduced motion preference {%- endcomment -%}
+  <style>
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+
+</body>
+</html>

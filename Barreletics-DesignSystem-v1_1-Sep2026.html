@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Barreletics Design System — v1.1 September 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Roboto', -apple-system, sans-serif; background: #ffffff; color: #1c1916; line-height: 1.6; }
+  a { color: #c45c3f; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Layout */
+  .ds-sidebar {
+    position: fixed; top: 0; left: 0; width: 240px; height: 100vh;
+    background: #1c1916; overflow-y: auto; z-index: 100; padding: 32px 0;
+  }
+  .ds-sidebar__logo {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    color: #fff; padding: 0 24px 24px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 16px;
+  }
+  .ds-sidebar__logo span { display: block; font-size: 10px; font-weight: 400; color: rgba(255,255,255,0.4); margin-top: 4px; letter-spacing: 0.06em; }
+  .ds-sidebar nav a {
+    display: block; font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.55);
+    padding: 8px 24px; letter-spacing: 0.03em; transition: color 0.15s;
+    text-decoration: none;
+  }
+  .ds-sidebar nav a:hover { color: #fff; }
+  .ds-sidebar nav a.active { color: #fff; border-left: 2px solid #c45c3f; }
+  .ds-sidebar__section { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.25); padding: 16px 24px 4px; }
+
+  .ds-main { margin-left: 240px; min-height: 100vh; }
+
+  /* Cover */
+  .ds-cover {
+    background: #1c1916; color: #fff; padding: 96px 80px;
+    border-bottom: 1px solid #333;
+  }
+  .ds-cover__eyebrow { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.4); margin-bottom: 20px; }
+  .ds-cover h1 { font-size: 56px; font-weight: 300; line-height: 1.05; margin-bottom: 8px; }
+  .ds-cover h1 strong { font-weight: 700; }
+  .ds-cover__meta { font-size: 13px; color: rgba(255,255,255,0.4); margin-top: 24px; display: flex; gap: 32px; }
+
+  /* Section layout */
+  .ds-section { padding: 72px 80px; border-bottom: 1px solid #e8e4de; }
+  .ds-section:last-child { border-bottom: none; }
+  .ds-section__header { margin-bottom: 48px; }
+  .ds-section__num { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #9a9182; margin-bottom: 10px; }
+  .ds-section__title { font-size: 32px; font-weight: 700; color: #1c1916; line-height: 1.1; margin-bottom: 12px; }
+  .ds-section__desc { font-size: 15px; color: #4a4a4a; max-width: 60ch; line-height: 1.7; }
+
+  /* Subsection */
+  .ds-sub { margin-bottom: 48px; }
+  .ds-sub:last-child { margin-bottom: 0; }
+  .ds-sub__title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #1c1916; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid #e8e4de; }
+
+  /* Spec table */
+  .ds-spec { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .ds-spec th { text-align: left; font-size: 11px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: #9a9182; padding: 8px 16px; background: #f5f2ec; border-bottom: 1px solid #e8e4de; }
+  .ds-spec td { padding: 12px 16px; border-bottom: 1px solid #f0ece6; vertical-align: top; line-height: 1.5; }
+  .ds-spec td:first-child { font-weight: 600; color: #1c1916; width: 220px; }
+  .ds-spec tr:last-child td { border-bottom: none; }
+  .ds-spec code { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px; background: #f0ece6; padding: 2px 6px; border-radius: 3px; color: #c45c3f; }
+
+  /* Color swatches */
+  .ds-colors { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
+  .ds-color { border-radius: 6px; overflow: hidden; border: 1px solid rgba(0,0,0,0.06); }
+  .ds-color__swatch { height: 80px; }
+  .ds-color__info { padding: 10px 12px; background: #fff; }
+  .ds-color__name { font-size: 12px; font-weight: 700; color: #1c1916; }
+  .ds-color__hex { font-size: 11px; color: #9a9182; font-family: monospace; margin-top: 2px; }
+  .ds-color__use { font-size: 11px; color: #9a9182; margin-top: 4px; line-height: 1.4; }
+
+  /* Typography specimens */
+  .ds-type-specimen { padding: 32px; background: #fff; border: 1px solid #e8e4de; border-radius: 4px; margin-bottom: 16px; }
+  .ds-type-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #9a9182; margin-bottom: 12px; }
+  .ds-type-meta { font-size: 11px; color: #b0a898; margin-top: 10px; font-family: monospace; }
+
+  /* Component demos */
+  .ds-demo { padding: 40px; background: #fff; border: 1px solid #e8e4de; border-radius: 4px; margin-bottom: 16px; }
+  .ds-demo__label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #9a9182; margin-bottom: 20px; }
+
+  /* Spacing scale */
+  .ds-spacing { display: flex; flex-direction: column; gap: 8px; }
+  .ds-spacing-row { display: flex; align-items: center; gap: 16px; }
+  .ds-spacing-bar { background: #c45c3f; height: 24px; border-radius: 2px; }
+  .ds-spacing-info { font-size: 13px; min-width: 180px; }
+  .ds-spacing-info strong { display: inline-block; width: 40px; font-family: monospace; color: #c45c3f; }
+
+  /* Audit table */
+  .ds-audit { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .ds-audit th { text-align: left; font-size: 11px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: #9a9182; padding: 10px 16px; background: #f5f2ec; border-bottom: 2px solid #e8e4de; }
+  .ds-audit td { padding: 14px 16px; border-bottom: 1px solid #f0ece6; vertical-align: top; line-height: 1.5; }
+  .ds-audit tr:last-child td { border-bottom: none; }
+  .ds-audit__section { font-weight: 600; }
+  .ds-audit__status { white-space: nowrap; }
+  .badge-pass { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; background: #d4f0d4; color: #1a6b1a; padding: 3px 8px; border-radius: 20px; }
+  .badge-fix { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; background: #fef0d4; color: #8a5a00; padding: 3px 8px; border-radius: 20px; }
+  .badge-minor { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; background: #f0f0f0; color: #5a5a5a; padding: 3px 8px; border-radius: 20px; }
+
+  /* Badge demos */
+  .ds-badge { display: inline-flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .badge { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 10px; border-radius: 2px; }
+  .badge-le { background: #c45c3f; color: #fff; }
+  .badge-sole { background: #1c1916; color: #fff; }
+  .badge-size { background: #ece9e3; color: #6b6459; font-size: 10px; border-radius: 20px; padding: 3px 9px; }
+  .badge-new { background: #d4eaf7; color: #1a5a8a; }
+  .badge-soldout { background: #e8e4de; color: #5a5248; }
+
+  /* Card demo */
+  .ds-card-demo { display: grid; grid-template-columns: repeat(4,1fr); gap: 28px; }
+  .ds-product-card { display: flex; flex-direction: column; }
+  .ds-product-card__img { aspect-ratio: 1; background: #f5f2ec; margin-bottom: 26px; overflow: hidden; position: relative; }
+  .ds-product-card__img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .ds-product-card__name { font-size: 22px; font-weight: 700; color: #1c1916; margin: 0 0 3px; line-height: 1.1; }
+  .ds-product-card__type { font-size: 11px; color: #9a9182; margin: 0 0 8px; font-weight: 300; }
+  .ds-product-card__size { display: inline-block; font-size: 10px; font-weight: 600; color: #6b6459; background: #ece9e3; padding: 3px 8px; border-radius: 20px; margin-bottom: 10px; }
+  .ds-product-card__price { font-size: 13px; font-weight: 700; color: #1c1916; margin: 0 0 12px; }
+  .ds-product-card__cta { font-size: 15px; font-weight: 600; color: #1c1916; cursor: pointer; border-bottom: 1.5px solid #9a9182; padding-bottom: 2px; width: fit-content; }
+
+  /* Responsive note */
+  .ds-note { background: #f5f2ec; border-left: 3px solid #c45c3f; padding: 14px 18px; font-size: 14px; color: #4a4a4a; margin: 16px 0; border-radius: 0 4px 4px 0; line-height: 1.7; }
+  .ds-note strong { color: #1c1916; }
+
+  /* Grid vis */
+  .ds-grid-vis { display: grid; gap: 2px; padding: 24px; background: #f5f2ec; border-radius: 4px; }
+  .ds-grid-col { background: rgba(196,92,63,0.12); border: 1px solid rgba(196,92,63,0.2); height: 40px; border-radius: 2px; }
+
+  @media (max-width: 900px) {
+    .ds-sidebar { display: none; }
+    .ds-main { margin-left: 0; }
+    .ds-section { padding: 48px 24px; }
+    .ds-cover { padding: 48px 24px; }
+    .ds-card-demo { grid-template-columns: repeat(2,1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="ds-sidebar">
+  <div class="ds-sidebar__logo">Barreletics<span>Design System v1.1</span></div>
+  <nav>
+    <div class="ds-sidebar__section">Foundation</div>
+    <a href="#colors">01 — Color System</a>
+    <a href="#typography">02 — Typography</a>
+    <a href="#spacing">03 — Spacing Scale</a>
+    <a href="#layout">04 — Layout & Grid</a>
+
+    <div class="ds-sidebar__section">Components</div>
+    <a href="#buttons">05 — Buttons & CTAs</a>
+    <a href="#badges">06 — Badges & Pills</a>
+    <a href="#cards">07 — Product Cards</a>
+    <a href="#tabs">08 — Tabs & Filters</a>
+    <a href="#accordion">09 — Accordion</a>
+
+    <div class="ds-sidebar__section">Patterns</div>
+    <a href="#sections">10 — Section Patterns</a>
+    <a href="#interactions">11 — Interactions</a>
+    <a href="#images">12 — Image Standards</a>
+
+    <div class="ds-sidebar__section">Audit</div>
+    <a href="#pdp-audit">13 — PDP Audit</a>
+  </nav>
+</aside>
+
+<!-- MAIN -->
+<main class="ds-main">
+
+  <!-- COVER -->
+  <div class="ds-cover">
+    <p class="ds-cover__eyebrow">Barreletics · Design System</p>
+    <h1><strong>The standard for</strong><br/>every pixel.</h1>
+    <p style="font-size:16px;color:rgba(255,255,255,0.55);margin-top:20px;max-width:52ch;line-height:1.7;">Current Color System authority. Taken from the finished redesign on draft 187144929571 (M4 QA), September 2026 — not from July v1.0. July v1.0 is the prior formal snapshot. Do not overwrite it. Later sections below may still show July component examples.</p>
+    <div class="ds-cover__meta">
+      <span>Version 1.1</span>
+      <span>September 2026</span>
+      <span>Roboto · White · Linen · Soft Warm · Charcoal · Rust</span>
+    </div>
+  </div>
+
+  <!-- 01 COLOR -->
+  <section class="ds-section" id="colors">
+    <div class="ds-section__header">
+      <p class="ds-section__num">01</p>
+      <h2 class="ds-section__title">Color System</h2>
+      <p class="ds-section__desc">The current Barreletics palette is what the redesign actually uses. Four surfaces + one accent. Partner and badge colors sit outside this set. No unlimited random backgrounds.</p>
+    </div>
+
+    <div class="ds-note"><strong>Authority 2026-09-01:</strong> Color audit of the live redesign (repo <code>finish-home-collections</code> + synced Theme Editor on draft <code>187144929571</code>). Tokens: <code>shopify-build/assets/design-tokens.css</code>. July Off-White <code>#faf9f7</code> is retired from the current palette — it is not used anywhere on the redesign. Do not put it back on the site.</div>
+
+    <div class="ds-sub">
+      <p class="ds-sub__title">Current section backgrounds</p>
+      <div class="ds-colors">
+        <div class="ds-color"><div class="ds-color__swatch" style="background:#ffffff;border-bottom:1px solid #eee;"></div><div class="ds-color__info"><p class="ds-color__name">White</p><p class="ds-color__hex">#ffffff · --color-white · --bg-primary</p><p class="ds-color__use">Page, header, white sections, TE default</p></div></div>
+        <div class="ds-color"><div class="ds-color__swatch" style="background:#f5f2ec;"></div><div class="ds-color__info"><p class="ds-color__name">Warm Linen</p><p class="ds-color__hex">#f5f2ec · --color-warm-cream · --bg-alternate</p><p class="ds-color__use">Announcement, cream bands, Home 50/50 grip, reviews</p></div></div>
+        <div class="ds-color"><div class="ds-color__swatch" style="background:#faf8f6;"></div><div class="ds-color__info"><p class="ds-color__name">Soft Warm</p><p class="ds-color__hex">#faf8f6 · --color-warm-cream-soft · --bg-alternate-soft</p><p class="ds-color__use">Partner / form bands. Owner pick 2026-08-08</p></div></div>
+        <div class="ds-color"><div class="ds-color__swatch" style="background:#1c1916;"></div><div class="ds-color__info"><p class="ds-color__name">Warm Charcoal</p><p class="ds-color__hex">#1c1916 · --color-charcoal · --bg-dark</p><p class="ds-color__use">Dark bands, primary text, dark CTAs</p></div></div>
+      </div>
+    </div>
+
+    <div class="ds-sub">
+      <p class="ds-sub__title">Barreletics accent — not a section background</p>
+      <div class="ds-colors">
+        <div class="ds-color"><div class="ds-color__swatch" style="background:#c45c3f;"></div><div class="ds-color__info"><p class="ds-color__name">Rust</p><p class="ds-color__hex">#c45c3f · --color-rust · --accent-primary</p><p class="ds-color__use">CTAs, links, default sole badge. Never a free-use section fill</p></div></div>
+      </div>
+    </div>
+
+    <div class="ds-sub">
+      <p class="ds-sub__title">Text Hierarchy</p>
+      <div class="ds-colors">
+        <div class="ds-color"><div class="ds-color__swatch" style="background:#1c1916;"></div><div class="ds-color__info"><p class="ds-color__name">Primary Text</p><p class="ds-color__hex">#1c1916</p><p class="ds-color__use">Headings, product names, prices</p></div></div>
+        <div class="ds-color"><div class="ds-color__swatch" style="background:#2d2926;"></div><div class="ds-color__info"><p class="ds-color__name">Title Text</p><p class="ds-color__hex">#2d2926</p><p class="ds-color__use">H1 product title / SEO titles</p></div></div>
+        <div class="ds-color"><div class="ds-color__swatch" style="background:#4a4a4a;"></div><div class="ds-color__info"><p class="ds-color__name">Secondary Text</p><p class="ds-color__hex">#4a4a4a</p><p class="ds-color__use">Body copy, descriptions</p></div></div>
+        <div class="ds-color"><div class="ds-color__swatch" style="background:#6b645a;"></div><div class="ds-color__info"><p class="ds-color__name">Supporting Text</p><p class="ds-color__hex">#6b645a · --color-warm-muted</p><p class="ds-color__use">Announcement, proof labels. Token (July had #6b6459)</p></div></div>
+        <div class="ds-color"><div class="ds-color__swatch" style="background:#9a9182;"></div><div class="ds-color__info"><p class="ds-color__name">Muted Text</p><p class="ds-color__hex">#9a9182</p><p class="ds-color__use">Product type, metadata, labels</p></div></div>
+        <div class="ds-color"><div class="ds-color__swatch" style="background:#b0a898;"></div><div class="ds-color__info"><p class="ds-color__name">Ultra-Muted</p><p class="ds-color__hex">#b0a898</p><p class="ds-color__use">Utility links, captions</p></div></div>
+      </div>
+    </div>
+
+    <div class="ds-sub">
+      <p class="ds-sub__title">UI & Structural</p>
+      <div class="ds-colors">
+        <div class="ds-color"><div class="ds-color__swatch" style="background:#e6e6e6;"></div><div class="ds-color__info"><p class="ds-color__name">Divider</p><p class="ds-color__hex">#e6e6e6</p><p class="ds-color__use">Section dividers, borders</p></div></div>
+        <div class="ds-color"><div class="ds-color__swatch" style="background:#e8e4de;"></div><div class="ds-color__info"><p class="ds-color__name">Warm Divider</p><p class="ds-color__hex">#e8e4de</p><p class="ds-color__use">Card borders, warm contexts</p></div></div>
+        <div class="ds-color"><div class="ds-color__swatch" style="background:#ece9e3;"></div><div class="ds-color__info"><p class="ds-color__name">Size Badge BG</p><p class="ds-color__hex">#ece9e3</p><p class="ds-color__use">Size pills, neutral badges</p></div></div>
+        <div class="ds-color"><div class="ds-color__swatch" style="background:#f0efec;"></div><div class="ds-color__info"><p class="ds-color__name">Inactive Button</p><p class="ds-color__hex">#f0efec</p><p class="ds-color__use">Inactive M/L size buttons</p></div></div>
+      </div>
+    </div>
+
+    <div class="ds-sub">
+      <p class="ds-sub__title">Special-use — not the core palette</p>
+      <p style="font-size:14px;color:#4a4a4a;margin-bottom:16px;max-width:70ch;">Named treatments. Do not mix these into everyday section backgrounds.</p>
+      <div class="ds-colors">
+        <div class="ds-color"><div class="ds-color__swatch" style="background:#FBF7F2;"></div><div class="ds-color__info"><p class="ds-color__name">Free People surface</p><p class="ds-color__hex">#FBF7F2</p><p class="ds-color__use">Current FP teaser fill only. Not a core token. Not Coperni.</p></div></div>
+        <div class="ds-color"><div class="ds-color__swatch" style="background:#C4859B;"></div><div class="ds-color__info"><p class="ds-color__name">Free People accent / badge</p><p class="ds-color__hex">#C4859B</p><p class="ds-color__use">Current FP teaser + film badge. Also a collab-hero default — not Coperni’s official color.</p></div></div>
+        <div class="ds-color"><div class="ds-color__swatch" style="background:#458CD9;"></div><div class="ds-color__info"><p class="ds-color__name">LE / sole badge blue</p><p class="ds-color__hex">#458CD9</p><p class="ds-color__use">Buy-box select: “Blue (live strip)”. Optional.</p></div></div>
+        <div class="ds-color"><div class="ds-color__swatch" style="background:#d4af37;"></div><div class="ds-color__info"><p class="ds-color__name">Stars (token default)</p><p class="ds-color__hex">#d4af37 · --accent-stars</p><p class="ds-color__use">Configurable. Do not force one star color. Home hero TE may differ.</p></div></div>
+      </div>
+      <table class="ds-spec" style="margin-top:24px;">
+        <tr><th>Treatment</th><th>What it is now</th><th>Rule</th></tr>
+        <tr><td>Free People</td><td>Teaser <code>#FBF7F2</code> + accent/badge <code>#C4859B</code>. Film is video + same pink badge. CTA charcoal saved but unused (empty label).</td><td>Named partner treatment. Not core White / Linen / Soft Warm.</td></tr>
+        <tr><td>Coperni</td><td>Home stage is video + white/charcoal CTA. PDP uses core cream/white. Badge: Limited Edition / charcoal.</td><td>Do not assign Free People pink as “the Coperni color.”</td></tr>
+        <tr><td>Sole / LE badges</td><td>TE select: rust <code>#c45c3f</code> · charcoal/black <code>#1c1916</code> · blue <code>#458CD9</code>.</td><td>Closed / Open / Outdoor default rust. One-Off Closed black. Coperni LE charcoal. Blue optional.</td></tr>
+        <tr><td>Stars</td><td>Token / PDP / reviews default <code>#d4af37</code>. Home hero picker is currently rust.</td><td>Stars remain configurable. Do not force one color sitewide.</td></tr>
+      </table>
+    </div>
+
+    <div class="ds-note"><strong>Rule:</strong> Never use pure orange on black or black on orange. All color combinations must pass WCAG AA contrast (4.5:1 for body text). Rust (#c45c3f) is the Barreletics accent — CTAs, links, default sole badge. Not a free-use section background. July Off-White #faf9f7 is retired from this current palette.</div>
+  </section>
+
+  <!-- 02 TYPOGRAPHY -->
+  <section class="ds-section" id="typography">
+    <div class="ds-section__header">
+      <p class="ds-section__num">02</p>
+      <h2 class="ds-section__title">Typography</h2>
+      <p class="ds-section__desc">One typeface. Roboto. Hierarchy is created through size, weight, and spacing — not through multiple fonts. Editorial headlines use mixed weight (light + bold) for premium contrast.</p>
+    </div>
+
+    <div class="ds-sub">
+      <p class="ds-sub__title">Typeface</p>
+      <table class="ds-spec">
+        <tr><th>Role</th><th>Family</th><th>Weights</th><th>Source</th></tr>
+        <tr><td>All text</td><td>Roboto</td><td>300, 400, 500, 600, 700</td><td>Google Fonts</td></tr>
+        <tr><td>Code/specs</td><td>SF Mono / Fira Code</td><td>400</td><td>System / fallback</td></tr>
+      </table>
+    </div>
+
+    <div class="ds-sub">
+      <p class="ds-sub__title">Type Scale</p>
+
+      <div class="ds-type-specimen">
+        <p class="ds-type-label">Eyebrow / Label</p>
+        <p style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:#9a9182;">Studio Performance Skin</p>
+        <p class="ds-type-meta">11px · 600 · UPPERCASE · 0.1em tracking · #9a9182</p>
+      </div>
+
+      <div class="ds-type-specimen">
+        <p class="ds-type-label">H1 — Shopify Product Title (SEO)</p>
+        <h1 style="font-size:18px;font-weight:600;color:#2d2926;letter-spacing:0;line-height:1.3;">Best Grippy Shoes for Barre, Pilates & Yoga</h1>
+        <p class="ds-type-meta">18px · 600 · Sentence Case · 0 tracking · #2d2926 — Renders as H1 for SEO, styled as secondary label</p>
+      </div>
+
+      <div class="ds-type-specimen">
+        <p class="ds-type-label">Hero Display — Marketing Headline (visually dominant)</p>
+        <p style="font-size:44px;line-height:1.08;color:#1c1916;"><span style="font-weight:300;">Secure in every hold.</span><br/><span style="font-weight:700;">No sliding. No resets.</span></p>
+        <p class="ds-type-meta">44px · 300 line 1 / 700 line 2 · 1.08 line-height · #1c1916 — Rendered as &lt;p&gt; not &lt;h1&gt;</p>
+      </div>
+
+      <div class="ds-type-specimen">
+        <p class="ds-type-label">H2 — Section Headline (editorial mixed weight)</p>
+        <h2 style="font-size:38px;line-height:1.08;color:#1c1916;"><span style="font-weight:300;">Confidence, from the</span><br/><span style="font-weight:700;">ground up.</span></h2>
+        <p class="ds-type-meta">38px · 300 phrase / 700 emphasis · 1.08 line-height · #1c1916</p>
+      </div>
+
+      <div class="ds-type-specimen">
+        <p class="ds-type-label">H3 — Value Block Title</p>
+        <h3 style="font-size:18px;font-weight:700;color:#1c1916;line-height:1.2;">360° grip — not patches.</h3>
+        <p class="ds-type-meta">18px · 700 · 1.2 line-height · #1c1916</p>
+      </div>
+
+      <div class="ds-type-specimen">
+        <p class="ds-type-label">Product Name — Collection Grid</p>
+        <p style="font-size:22px;font-weight:700;color:#1c1916;line-height:1.1;">Black</p>
+        <p class="ds-type-meta">22px · 700 · 1.1 line-height · #1c1916 — Color name is primary label</p>
+      </div>
+
+      <div class="ds-type-specimen">
+        <p class="ds-type-label">Body — Primary</p>
+        <p style="font-size:16px;color:#4a4a4a;line-height:1.65;max-width:52ch;">The premium grip system that replaces traditional grip socks — built for reformer, barre, Pilates and Megaformer.</p>
+        <p class="ds-type-meta">16px · 400 · 1.65 line-height · #4a4a4a · max-width 40–52ch</p>
+      </div>
+
+      <div class="ds-type-specimen">
+        <p class="ds-type-label">Body — Supporting / Editorial Intro</p>
+        <p style="font-size:15px;color:#6b6459;line-height:1.7;max-width:40ch;">Same patented 360° grip. Choose the build that fits your practice.</p>
+        <p class="ds-type-meta">15px · 400 · 1.7 line-height · #6b6459 · max-width 36–40ch</p>
+      </div>
+
+      <div class="ds-type-specimen">
+        <p class="ds-type-label">Product Type / Secondary Label</p>
+        <p style="font-size:11px;color:#9a9182;font-weight:300;letter-spacing:0.01em;">Closed Sole · Performance Skin</p>
+        <p class="ds-type-meta">11px · 300 · 0.01em tracking · #9a9182</p>
+      </div>
+
+      <div class="ds-type-specimen">
+        <p class="ds-type-label">Price</p>
+        <p style="font-size:13px;font-weight:700;color:#1c1916;">$74</p>
+        <p class="ds-type-meta">13px · 700 · #1c1916 — Always bold, always dark</p>
+      </div>
+
+      <div class="ds-type-specimen">
+        <p class="ds-type-label">Text CTA</p>
+        <span style="font-size:15px;font-weight:600;color:#1c1916;border-bottom:1.5px solid #9a9182;padding-bottom:2px;cursor:pointer;">Add to Cart →</span>
+        <p class="ds-type-meta">15px · 600 · #1c1916 · underline 1.5px #9a9182</p>
+      </div>
+
+      <div class="ds-type-specimen">
+        <p class="ds-type-label">Utility Links</p>
+        <span style="font-size:12px;color:#8a8a8a;border-bottom:1px solid #d0c8be;padding-bottom:1px;">Size Chart →</span>
+        &nbsp;&nbsp;&nbsp;
+        <span style="font-size:12px;color:#1c1916;font-weight:500;border-bottom:1px solid #1c1916;padding-bottom:1px;">Compare Open vs Closed →</span>
+        <p class="ds-type-meta">12px · 400 (muted) or 500 (primary) · underline border</p>
+      </div>
+
+      <div class="ds-type-specimen">
+        <p class="ds-type-label">Trust / Meta Row</p>
+        <div style="display:flex;align-items:center;gap:12px;"><span style="font-size:14px;color:#d4af37;">★★★★★</span><span style="font-size:13px;"><b>Trusted by 1000's of Instructors</b></span><span style="color:#d6cfc0;">·</span><a href="#" style="font-size:12px;color:#8a8a8a;font-weight:400;">Reviews →</a></div>
+        <p class="ds-type-meta">Stars 14px gold · Trust 13px/700 · Link 12px/400 #8a8a8a</p>
+      </div>
+    </div>
+
+    <div class="ds-note"><strong>Editorial Headline Rule:</strong> Section H2 headings use mixed weight — first phrase in 300 (light), key phrase in 700 (bold). This creates premium visual contrast without needing a second typeface. Example: <em style="font-weight:300;">"Confidence, from the"</em> + <strong>"ground up."</strong></div>
+  </section>
+
+  <!-- 03 SPACING -->
+  <section class="ds-section" id="spacing">
+    <div class="ds-section__header">
+      <p class="ds-section__num">03</p>
+      <h2 class="ds-section__title">Spacing Scale</h2>
+      <p class="ds-section__desc">An 8px base spacing system. All spacing values are multiples of 4px. Section padding uses larger values from the scale. Never use arbitrary pixel values.</p>
+    </div>
+
+    <div class="ds-sub">
+      <p class="ds-sub__title">Base Scale</p>
+      <table class="ds-spec">
+        <tr><th>Token</th><th>Value</th><th>Usage</th></tr>
+        <tr><td><code>space-1</code></td><td>4px</td><td>Micro spacing — icon gap, tight inline</td></tr>
+        <tr><td><code>space-2</code></td><td>8px</td><td>Badge padding, tight elements</td></tr>
+        <tr><td><code>space-3</code></td><td>12px</td><td>Button padding (vertical), small gaps</td></tr>
+        <tr><td><code>space-4</code></td><td>16px</td><td>Default gap — toolbar items, swatch gap</td></tr>
+        <tr><td><code>space-5</code></td><td>20px</td><td>Card text stack gap</td></tr>
+        <tr><td><code>space-6</code></td><td>24px</td><td>Component internal padding</td></tr>
+        <tr><td><code>space-8</code></td><td>32px</td><td>Column gap (desktop grid)</td></tr>
+        <tr><td><code>space-10</code></td><td>40px</td><td>Section header bottom margin (mobile)</td></tr>
+        <tr><td><code>space-12</code></td><td>48px</td><td>Section padding (mobile)</td></tr>
+        <tr><td><code>space-14</code></td><td>56px</td><td>Section header margin (desktop)</td></tr>
+        <tr><td><code>space-16</code></td><td>64px</td><td>Minor section padding</td></tr>
+        <tr><td><code>space-20</code></td><td>80px</td><td>Standard section padding</td></tr>
+        <tr><td><code>space-24</code></td><td>96px</td><td>Major section padding (hero, variants)</td></tr>
+      </table>
+    </div>
+
+    <div class="ds-sub">
+      <p class="ds-sub__title">Vertical Rhythm — Section Padding</p>
+      <table class="ds-spec">
+        <tr><th>Section Type</th><th>Top</th><th>Bottom</th><th>Notes</th></tr>
+        <tr><td>Hero</td><td>64px</td><td>64px</td><td>Grid gap between gallery and buy panel: 64px</td></tr>
+        <tr><td>Major brand section (Confidence, Variants)</td><td>96px</td><td>96px</td><td>Give these breathing room — they carry the brand</td></tr>
+        <tr><td>Standard section (Reviews, Benefits)</td><td>80px</td><td>80px</td><td>Default for most PDP sections</td></tr>
+        <tr><td>Minor section (Value strip, Newsletter)</td><td>40px</td><td>40px</td><td>Compact, transitional</td></tr>
+        <tr><td>Confidence section</td><td>40px</td><td>36px</td><td>Slightly compact — bridges hero to variants</td></tr>
+      </table>
+    </div>
+
+    <div class="ds-sub">
+      <p class="ds-sub__title">Product Card — Internal Spacing</p>
+      <table class="ds-spec">
+        <tr><th>Element</th><th>Margin Below</th></tr>
+        <tr><td>Product image</td><td>26px</td></tr>
+        <tr><td>Product name</td><td>3px</td></tr>
+        <tr><td>Product type</td><td>8px</td></tr>
+        <tr><td>Size badge</td><td>10px</td></tr>
+        <tr><td>Price</td><td>12px</td></tr>
+        <tr><td>CTA (Add to Cart →)</td><td>—</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- 04 LAYOUT -->
+  <section class="ds-section" id="layout">
+    <div class="ds-section__header">
+      <p class="ds-section__num">04</p>
+      <h2 class="ds-section__title">Layout & Grid</h2>
+      <p class="ds-section__desc">A responsive layout system built around a 1200px content max-width with comfortable side margins. No horizontal scrolling on any viewport.</p>
+    </div>
+
+    <div class="ds-sub">
+      <p class="ds-sub__title">Breakpoints</p>
+      <table class="ds-spec">
+        <tr><th>Name</th><th>Width</th><th>Columns</th><th>Side Margin</th><th>Max Content Width</th></tr>
+        <tr><td>Mobile</td><td>0–767px</td><td>4</td><td>16px</td><td>100% − 32px</td></tr>
+        <tr><td>Tablet</td><td>768–1023px</td><td>8</td><td>24px</td><td>100% − 48px</td></tr>
+        <tr><td>Laptop</td><td>1024–1279px</td><td>12</td><td>40px</td><td>100% − 80px</td></tr>
+        <tr><td>Desktop</td><td>1280px+</td><td>12</td><td>40px</td><td>1200px centered</td></tr>
+        <tr><td>Wide</td><td>1440px+</td><td>12</td><td>auto</td><td>1200px centered</td></tr>
+      </table>
+    </div>
+
+    <div class="ds-sub">
+      <p class="ds-sub__title">Column Grid</p>
+      <div class="ds-grid-vis" style="grid-template-columns: repeat(12, 1fr);">
+        <div class="ds-grid-col"></div><div class="ds-grid-col"></div><div class="ds-grid-col"></div><div class="ds-grid-col"></div>
+        <div class="ds-grid-col"></div><div class="ds-grid-col"></div><div class="ds-grid-col"></div><div class="ds-grid-col"></div>
+        <div class="ds-grid-col"></div><div class="ds-grid-col"></div><div class="ds-grid-col"></div><div class="ds-grid-col"></div>
+      </div>
+      <p style="font-size:12px;color:#9a9182;margin-top:8px;">12-column grid · 28px gutters · 40px side margins · max-width 1200px</p>
+    </div>
+
+    <div class="ds-sub">
+      <p class="ds-sub__title">Responsive Grid — Product Cards</p>
+      <table class="ds-spec">
+        <tr><th>Viewport</th><th>Columns</th><th>Gap</th></tr>
+        <tr><td>Mobile (&lt;768px)</td><td>2</td><td>16px</td></tr>
+        <tr><td>Tablet (768–1023px)</td><td>3</td><td>20px</td></tr>
+        <tr><td>Desktop (1024px+)</td><td>4</td><td>28px col / 60px row</td></tr>
+      </table>
+    </div>
+
+    <div class="ds-sub">
+      <p class="ds-sub__title">Hero Layout</p>
+      <table class="ds-spec">
+        <tr><th>Viewport</th><th>Layout</th></tr>
+        <tr><td>Mobile</td><td>Single column — image above, buy panel below</td></tr>
+        <tr><td>Tablet</td><td>Single column stacked</td></tr>
+        <tr><td>Desktop</td><td>50/50 grid — gallery left, buy panel right — 64px gap</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- 05 BUTTONS -->
+  <section class="ds-section" id="buttons">
+    <div class="ds-section__header">
+      <p class="ds-section__num">05</p>
+      <h2 class="ds-section__title">Buttons & CTAs</h2>
+      <p class="ds-section__desc">Barreletics uses a restrained button system. The primary CTA is a full-width dark button in the hero. All other CTAs are premium text links. No Shopify-default orange buttons.</p>
+    </div>
+
+    <div class="ds-demo">
+      <p class="ds-demo__label">Primary CTA — Add to Cart (Hero)</p>
+      <button style="width:100%;max-width:360px;padding:18px;background:#1c1916;color:#fff;font-size:16px;font-weight:600;border:none;cursor:pointer;border-radius:6px;font-family:inherit;letter-spacing:0.02em;">Add to cart · $74</button>
+      <p style="font-size:12px;color:#9a9182;margin-top:10px;font-family:monospace;">background:#1c1916 · hover:#c45c3f · 18px padding · 16px/600 · border-radius:6px · transition:background 0.2s</p>
+    </div>
+
+    <div class="ds-demo">
+      <p class="ds-demo__label">Text CTA — Collection Grid (Primary)</p>
+      <span style="font-size:15px;font-weight:600;color:#1c1916;border-bottom:1.5px solid #9a9182;padding-bottom:2px;cursor:pointer;">Add to Cart →</span>
+      <p style="font-size:12px;color:#9a9182;margin-top:10px;font-family:monospace;">15px · 600 · #1c1916 · border-bottom:1.5px solid #9a9182</p>
+    </div>
+
+    <div class="ds-demo">
+      <p class="ds-demo__label">Text CTA — Notify Me (Sold Out)</p>
+      <span style="font-size:13px;font-weight:500;color:#9a9182;border-bottom:1px solid #d0c8be;padding-bottom:2px;cursor:pointer;">Notify Me →</span>
+      <p style="font-size:12px;color:#9a9182;margin-top:10px;font-family:monospace;">13px · 500 · #9a9182 · border-bottom:1px solid #d0c8be</p>
+    </div>
+
+    <div class="ds-demo">
+      <p class="ds-demo__label">Utility Links</p>
+      <div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap;">
+        <a href="#" style="font-size:12px;color:#1c1916;font-weight:500;text-decoration:none;border-bottom:1px solid #1c1916;padding-bottom:1px;">Compare Open vs Closed →</a>
+        <a href="#" style="font-size:12px;color:#8a8a8a;text-decoration:none;border-bottom:1px solid #d0c8be;padding-bottom:1px;">Size Chart →</a>
+        <a href="#" style="font-size:12px;color:#8a8a8a;text-decoration:none;padding-bottom:1px;">Reviews →</a>
+      </div>
+    </div>
+
+    <div class="ds-sub" style="margin-top:32px;">
+      <p class="ds-sub__title">Button Specs</p>
+      <table class="ds-spec">
+        <tr><th>Type</th><th>Size</th><th>Weight</th><th>Color</th><th>Hover</th></tr>
+        <tr><td>Primary CTA</td><td>16px</td><td>600</td><td><code>#1c1916</code> bg, <code>#fff</code> text</td><td><code>#c45c3f</code> bg</td></tr>
+        <tr><td>Text CTA (primary)</td><td>15px</td><td>600</td><td><code>#1c1916</code></td><td>border-bottom darkens</td></tr>
+        <tr><td>Text CTA (notify)</td><td>13px</td><td>500</td><td><code>#9a9182</code></td><td>subtle</td></tr>
+        <tr><td>Utility link (primary)</td><td>12px</td><td>500</td><td><code>#1c1916</code></td><td>underline</td></tr>
+        <tr><td>Utility link (muted)</td><td>12px</td><td>400</td><td><code>#8a8a8a</code></td><td>underline</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- 06 BADGES -->
+  <section class="ds-section" id="badges">
+    <div class="ds-section__header">
+      <p class="ds-section__num">06</p>
+      <h2 class="ds-section__title">Badges & Pills</h2>
+      <p class="ds-section__desc">PDP sole / LE badge is a Theme Editor select — rust, charcoal/black, or blue. Color is not locked to one hex per label.</p>
+    </div>
+
+    <div class="ds-demo">
+      <p class="ds-demo__label">Current selectable badge colors</p>
+      <div class="ds-badge" style="margin-bottom:20px;">
+        <span class="badge" style="background:#c45c3f;color:#fff;">Rust — default Closed / Open / Outdoor</span>
+        <span class="badge" style="background:#1c1916;color:#fff;">Charcoal / black — Coperni LE · One-Off Closed</span>
+        <span class="badge" style="background:#458CD9;color:#fff;">Blue — live strip (optional)</span>
+        <span class="badge badge-size">Size M (W 5.5–7.5)</span>
+      </div>
+    </div>
+
+    <table class="ds-spec">
+      <tr><th>Badge</th><th>BG</th><th>Text</th><th>Font</th><th>Usage</th></tr>
+      <tr><td>Sole / LE (selectable)</td><td>rust <code>#c45c3f</code> · charcoal <code>#1c1916</code> · blue <code>#458CD9</code></td><td><code>#fff</code></td><td>8px/700/UPPERCASE/0.12em</td><td>PDP buy-box. TE pick honored. Default rust except One-Off Closed (black) and Coperni LE (charcoal).</td></tr>
+      <tr><td>Closed Sole (product)</td><td><code>#c45c3f</code></td><td><code>#fff</code></td><td>10px/700/UPPERCASE/0.08em</td><td>Hero buy panel — product type identifier</td></tr>
+      <tr><td>Open Sole</td><td><code>#4a4a4a</code></td><td><code>#fff</code></td><td>10px/700/UPPERCASE/0.08em</td><td>Hero buy panel</td></tr>
+      <tr><td>Size Pill</td><td><code>#ece9e3</code></td><td><code>#6b6459</code></td><td>10px/600/sentence/0.04em</td><td>Beneath product type on every card</td></tr>
+      <tr><td>New</td><td><code>#d4eaf7</code></td><td><code>#1a5a8a</code></td><td>10px/700/UPPERCASE/0.06em</td><td>New arrivals — overlay top-left</td></tr>
+      <tr><td>Sold Out</td><td><code>#e8e4de</code></td><td><code>#5a5248</code></td><td>10px/700/UPPERCASE/0.06em</td><td>Overlay bottom-left if needed (preferred: just show Notify Me →)</td></tr>
+    </table>
+
+    <div class="ds-note"><strong>Size Badge Rule:</strong> Every product card represents one Shopify variant (Color + Size). The size badge MUST display the actual variant size — <strong>not</strong> generic availability like "M · L". Correct format: <code>Size M (W 5.5–7.5)</code> or <code>Size L (W 8–10)</code>.</div>
+  </section>
+
+  <!-- 07 CARDS -->
+  <section class="ds-section" id="cards">
+    <div class="ds-section__header">
+      <p class="ds-section__num">07</p>
+      <h2 class="ds-section__title">Product Card System</h2>
+      <p class="ds-section__desc">The standard product card for the Studio Collection. No borders, no shadows. The product image and typography carry all the weight. Every card must feel like premium editorial merchandising.</p>
+    </div>
+
+    <div class="ds-demo">
+      <p class="ds-demo__label">Standard Card · Sold Out Card</p>
+      <div class="ds-card-demo">
+        <div class="ds-product-card">
+          <div class="ds-product-card__img"><img src="https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=400" alt="Black"/></div>
+          <p class="ds-product-card__name">Black</p>
+          <p class="ds-product-card__type">Closed Sole</p>
+          <span class="ds-product-card__size">Size M (W 5.5–7.5)</span>
+          <p class="ds-product-card__price">$74</p>
+          <span class="ds-product-card__cta">Add to Cart →</span>
+        </div>
+        <div class="ds-product-card">
+          <div class="ds-product-card__img" style="position:relative;">
+            <img src="https://barreletics.com/cdn/shop/files/Copreni_Final_More_grey.png?v=1774119812&width=400" alt="Coperni"/>
+            <span style="position:absolute;top:10px;left:10px;font-size:8px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;background:#c45c3f;color:#fff;padding:2px 9px;border-radius:1px;line-height:1.3;">Limited Edition</span>
+          </div>
+          <p class="ds-product-card__name">Coperni</p>
+          <p class="ds-product-card__type">Closed Sole · Limited Edition</p>
+          <span class="ds-product-card__size">Size M (W 5.5–7.5)</span>
+          <p class="ds-product-card__price">$115</p>
+          <span class="ds-product-card__cta">Add to Cart →</span>
+        </div>
+        <div class="ds-product-card">
+          <div class="ds-product-card__img"><img src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=400" alt="Dusty Rose"/></div>
+          <p class="ds-product-card__name">Dusty Rose</p>
+          <p class="ds-product-card__type">Closed Sole</p>
+          <span class="ds-product-card__size">Size L (W 8–10)</span>
+          <p class="ds-product-card__price">$74</p>
+          <span class="ds-product-card__cta">Add to Cart →</span>
+        </div>
+        <div class="ds-product-card">
+          <div class="ds-product-card__img"><img src="https://barreletics.com/cdn/shop/files/A14_TopBottom_LightGrey-1000x1000_d30b6fcb-229e-4af9-8062-e1c4901df31e.jpg?v=1773920300&width=400" alt="Stone"/></div>
+          <p class="ds-product-card__name" style="color:#5a5248;">Stone</p>
+          <p class="ds-product-card__type" style="color:#b0a898;">Closed Sole</p>
+          <span class="ds-product-card__size" style="color:#9a9182;">Size L (W 8–10)</span>
+          <p class="ds-product-card__price" style="color:#b0a898;font-weight:400;">$74</p>
+          <span style="font-size:13px;font-weight:500;color:#9a9182;cursor:pointer;border-bottom:1px solid #d0c8be;padding-bottom:2px;">Notify Me →</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-sub" style="margin-top:32px;">
+      <p class="ds-sub__title">Card Rules</p>
+      <table class="ds-spec">
+        <tr><th>Rule</th><th>Standard</th></tr>
+        <tr><td>Image aspect ratio</td><td>1:1 (square) — all products normalized to same visual footprint</td></tr>
+        <tr><td>Image background</td><td><code>#f5f2ec</code> (Warm Linen) — consistent across all cards</td></tr>
+        <tr><td>No borders/shadows</td><td>Whitespace and typography separate cards — no UI boxes</td></tr>
+        <tr><td>Sold out treatment</td><td>Full color image · muted name (#5a5248) · muted price · "Notify Me →" only</td></tr>
+        <tr><td>LE badge</td><td>Top-left overlay on image · terracotta · 8px/700 · high letter spacing</td></tr>
+        <tr><td>Hover</td><td>Image scale(1.04) with 0.45s ease transition — no border flash</td></tr>
+        <tr><td>Size badge</td><td>Required on every card · actual SKU size · not generic availability</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- 08 TABS -->
+  <section class="ds-section" id="tabs">
+    <div class="ds-section__header">
+      <p class="ds-section__num">08</p>
+      <h2 class="ds-section__title">Tabs & Filters</h2>
+      <p class="ds-section__desc">Premium underline tabs — not Shopify box buttons. Active state is bold + underline. Inactive states are visible but clearly secondary.</p>
+    </div>
+
+    <div class="ds-demo">
+      <p class="ds-demo__label">Collection Type Tabs</p>
+      <div style="display:flex;align-items:center;gap:24px;border-top:1px solid #e6e6e6;border-bottom:1px solid #e6e6e6;padding:13px 0;">
+        <button style="font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#1c1916;background:none;border:none;cursor:pointer;padding:0 0 2px;border-bottom:2px solid #1c1916;">Closed Sole</button>
+        <button style="font-size:12px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:#7a7268;background:none;border:none;cursor:pointer;padding:0 0 2px;border-bottom:2px solid transparent;">Open Sole</button>
+        <span style="font-size:12px;font-weight:400;letter-spacing:0.06em;text-transform:uppercase;color:#b0a898;">Outdoor</span>
+        <span style="font-size:12px;font-weight:400;letter-spacing:0.06em;text-transform:uppercase;color:#b0a898;">One-Off</span>
+      </div>
+      <p style="font-size:12px;color:#9a9182;margin-top:10px;font-family:monospace;">Active: 12px/700/#1c1916/border-bottom:2px solid · Inactive: 500/#7a7268 · Disabled: 400/#b0a898</p>
+    </div>
+
+    <div class="ds-demo">
+      <p class="ds-demo__label">Size Filter (M / L)</p>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:#4a4a4a;">Size</span>
+        <button style="font-size:11px;font-weight:700;color:#fff;background:#1c1916;padding:4px 10px;border:none;cursor:pointer;font-family:inherit;">M</button>
+        <button style="font-size:11px;font-weight:700;color:#8a8a8a;background:#f0efec;padding:4px 10px;border:none;cursor:pointer;font-family:inherit;">L</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 ACCORDION -->
+  <section class="ds-section" id="accordion">
+    <div class="ds-section__header">
+      <p class="ds-section__num">09</p>
+      <h2 class="ds-section__title">Accordion</h2>
+      <p class="ds-section__desc">Used in the PDP buy panel for Description, Care, Shipping, and Returns. Clean, text-only — no icons, no background fill.</p>
+    </div>
+
+    <div class="ds-demo">
+      <p class="ds-demo__label">Accordion — PDP Buy Panel</p>
+      <div style="max-width:480px;">
+        <details style="border-bottom:1px solid #e6e6e6;">
+          <summary style="padding:14px 0;font-size:14px;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;font-family:inherit;">Description <span>+</span></summary>
+          <div style="padding:0 0 16px;font-size:14px;color:#4a4a4a;line-height:1.7;">The Studio Performance Skin Closed Sole is the premium grip system that replaced traditional studio socks for thousands of reformer, barre, and Pilates practitioners.</div>
+        </details>
+        <details style="border-bottom:1px solid #e6e6e6;">
+          <summary style="padding:14px 0;font-size:14px;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;font-family:inherit;">30-day returns + 90-day warranty <span>+</span></summary>
+          <div style="padding:0 0 16px;font-size:14px;color:#4a4a4a;line-height:1.7;">30-day returns on items returned in new, unused condition. 90-day warranty covers grip-surface wear under normal use.</div>
+        </details>
+      </div>
+      <p style="font-size:12px;color:#9a9182;margin-top:12px;font-family:monospace;">summary: 14px/600 · border-bottom:1px solid #e6e6e6 · content: 14px/400/#4a4a4a · 1.7 line-height</p>
+    </div>
+  </section>
+
+  <!-- 10 SECTION PATTERNS -->
+  <section class="ds-section" id="sections">
+    <div class="ds-section__header">
+      <p class="ds-section__num">10</p>
+      <h2 class="ds-section__title">Section Patterns</h2>
+      <p class="ds-section__desc">Reusable section structures every page is built from. Each has a defined header pattern, spacing, and content layout.</p>
+    </div>
+
+    <div class="ds-sub">
+      <p class="ds-sub__title">Editorial Section Header (2-column)</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:flex-end;padding:40px;background:#f5f2ec;border-radius:4px;">
+        <div>
+          <p style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:#9a9182;margin-bottom:14px;">The Studio Collection</p>
+          <h2 style="font-size:38px;line-height:1.08;color:#1c1916;margin:0;"><span style="font-weight:300;">One Performance.</span><br/><span style="font-weight:700;">Every Style.</span></h2>
+        </div>
+        <p style="font-size:15px;color:#6b6459;line-height:1.7;margin:0;max-width:36ch;">Same patented 360° grip. Choose the build that fits your practice.</p>
+      </div>
+      <p style="font-size:12px;color:#9a9182;margin-top:10px;font-family:monospace;">grid-template-columns:1fr 1fr · gap:40px · align-items:flex-end · margin-bottom:56px</p>
+    </div>
+
+    <div class="ds-sub">
+      <p class="ds-sub__title">Value Block Grid (2×2)</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px 64px;padding:40px;background:#f5f2ec;border-radius:4px;">
+        <div style="border-top:1px solid #d6cfc0;padding-top:28px;">
+          <p style="font-size:18px;font-weight:700;color:#1c1916;margin:0 0 10px;line-height:1.2;">360° grip — not patches.</p>
+          <p style="font-size:15px;color:#4a4a4a;line-height:1.65;margin:0;">Full-contact underfoot grip across every surface.</p>
+        </div>
+        <div style="border-top:1px solid #d6cfc0;padding-top:28px;">
+          <p style="font-size:18px;font-weight:700;color:#1c1916;margin:0 0 10px;line-height:1.2;">One pair. 1,000+ classes.</p>
+          <p style="font-size:15px;color:#4a4a4a;line-height:1.65;margin:0;">Engineered to hold grip through a year of studio use.</p>
+        </div>
+      </div>
+      <p style="font-size:12px;color:#9a9182;margin-top:10px;font-family:monospace;">grid-template-columns:1fr 1fr · gap:48px 64px · border-top:1px solid #d6cfc0 · padding-top:28px</p>
+    </div>
+  </section>
+
+  <!-- 11 INTERACTIONS -->
+  <section class="ds-section" id="interactions">
+    <div class="ds-section__header">
+      <p class="ds-section__num">11</p>
+      <h2 class="ds-section__title">Interaction Standards</h2>
+      <p class="ds-section__desc">Restrained, premium interactions. Nothing bounces or spins. Transitions are subtle and directional. Every interaction should feel intentional.</p>
+    </div>
+
+    <table class="ds-spec">
+      <tr><th>Element</th><th>Interaction</th><th>Spec</th></tr>
+      <tr><td>Product card image</td><td>Hover scale</td><td><code>transform: scale(1.04)</code> · <code>transition: 0.45s ease</code></td></tr>
+      <tr><td>Primary CTA button</td><td>Background color</td><td><code>#1c1916</code> → <code>#c45c3f</code> · <code>transition: background 0.2s</code></td></tr>
+      <tr><td>Color swatches</td><td>Border ring on select</td><td><code>border: 2px solid #1c1916</code> · instant</td></tr>
+      <tr><td>Tab activation</td><td>Color + underline</td><td><code>color: #1c1916</code> · <code>border-bottom: 2px solid #1c1916</code> · instant</td></tr>
+      <tr><td>Accordion open</td><td>Native expand</td><td>Browser default <code>&lt;details&gt;</code> — no custom animation needed</td></tr>
+      <tr><td>Size buttons</td><td>Background swap</td><td><code>#1c1916</code>/#fff active ↔ <code>#f0efec</code>/#8a8a8a inactive · instant</td></tr>
+      <tr><td>Text CTA hover</td><td>Border darkens</td><td>Subtle — no movement</td></tr>
+      <tr><td>Page scroll</td><td>Smooth</td><td><code>scroll-behavior: smooth</code> on <code>html</code></td></tr>
+      <tr><td>Animations</td><td>None</td><td>No entrance animations, no infinite loops, no parallax</td></tr>
+    </table>
+  </section>
+
+  <!-- 12 IMAGE STANDARDS -->
+  <section class="ds-section" id="images">
+    <div class="ds-section__header">
+      <p class="ds-section__num">12</p>
+      <h2 class="ds-section__title">Image Standards</h2>
+      <p class="ds-section__desc">Every image must be normalized so the product occupies the same perceived visual footprint. No raw Shopify CDN images at inconsistent sizes.</p>
+    </div>
+
+    <table class="ds-spec">
+      <tr><th>Context</th><th>Aspect Ratio</th><th>Min Width</th><th>Background</th><th>Notes</th></tr>
+      <tr><td>PDP hero (main)</td><td>1:1</td><td>800px</td><td><code>#f5f2ec</code></td><td>Square, 4 thumbnails below at 72px</td></tr>
+      <tr><td>Collection card</td><td>1:1</td><td>600px</td><td><code>#f5f2ec</code></td><td>object-fit: cover · all products same visual weight</td></tr>
+      <tr><td>Editorial 50/50</td><td>Free</td><td>800px</td><td>—</td><td>Full bleed in column</td></tr>
+      <tr><td>Hero background</td><td>16:9</td><td>1440px</td><td>—</td><td>Lifestyle / studio imagery only</td></tr>
+      <tr><td>Lifestyle</td><td>3:4 or 1:1</td><td>800px</td><td>—</td><td>Real instructors, real studio environments</td></tr>
+    </table>
+
+    <div class="ds-note"><strong>No stock photography.</strong> All imagery should feature real Barreletics instructors in real studio environments. The brand aesthetic is warm, natural light — not white studio flash. Avoid dark/moody photography — the palette is warm charcoal, not black.</div>
+  </section>
+
+  <!-- 13 PDP AUDIT -->
+  <section class="ds-section" id="pdp-audit">
+    <div class="ds-section__header">
+      <p class="ds-section__num">13</p>
+      <h2 class="ds-section__title">PDP Audit — v36</h2>
+      <p class="ds-section__desc">Every section of PDP Complete v36 audited against this design system. Sections marked <span class="badge-pass">Pass</span> are approved. <span class="badge-fix">Needs Adjustment</span> requires engineering attention. <span class="badge-minor">Minor</span> items are polish-level.</p>
+    </div>
+
+    <table class="ds-audit">
+      <tr>
+        <th>Section</th>
+        <th>Status</th>
+        <th>Notes</th>
+      </tr>
+
+      <tr>
+        <td class="ds-audit__section">Ticker / Announcement Bar</td>
+        <td class="ds-audit__status"><span class="badge-minor">Minor</span></td>
+        <td>Confirm font matches Roboto. Verify promo codes are up to date before launch. Animation speed TBD.</td>
+      </tr>
+
+      <tr>
+        <td class="ds-audit__section">PDP Hero — Gallery</td>
+        <td class="ds-audit__status"><span class="badge-pass">Pass</span></td>
+        <td>1:1 images, warm linen background, 4 clickable thumbnails beneath. Color swatch selection updates main image. ✓</td>
+      </tr>
+
+      <tr>
+        <td class="ds-audit__section">PDP Hero — Buy Panel (Stars + Trust)</td>
+        <td class="ds-audit__status"><span class="badge-pass">Pass</span></td>
+        <td>Stars in gold, trust statement 13px/700, "Reviews →" link 12px/400 muted. Correct hierarchy. ✓</td>
+      </tr>
+
+      <tr>
+        <td class="ds-audit__section">PDP Hero — H1 (SEO Title)</td>
+        <td class="ds-audit__status"><span class="badge-pass">Pass</span></td>
+        <td>18px/600/#2d2926 · Sentence case · Visible but secondary. SEO-correct as H1 tag. ✓</td>
+      </tr>
+
+      <tr>
+        <td class="ds-audit__section">PDP Hero — Closed Sole Badge</td>
+        <td class="ds-audit__status"><span class="badge-pass">Pass</span></td>
+        <td>Rust terracotta (#c45c3f) · right-aligned with H1 · inline with title block. ✓</td>
+      </tr>
+
+      <tr>
+        <td class="ds-audit__section">PDP Hero — Marketing Headline</td>
+        <td class="ds-audit__status"><span class="badge-pass">Pass</span></td>
+        <td>44px · light/bold mixed weight · rendered as &lt;p&gt; not h1 · dominant visual element. ✓</td>
+      </tr>
+
+      <tr>
+        <td class="ds-audit__section">PDP Hero — Supporting Desc</td>
+        <td class="ds-audit__status"><span class="badge-pass">Pass</span></td>
+        <td>16px/400/#5a5248 · max-width 40ch · 1.65 line-height. Correctly subordinate to headline. ✓</td>
+      </tr>
+
+      <tr>
+        <td class="ds-audit__section">PDP Hero — Price Block</td>
+        <td class="ds-audit__status"><span class="badge-pass">Pass</span></td>
+        <td>32px/700 price inline with payment copy. Border-top/bottom separates it cleanly. ✓</td>
+      </tr>
+
+      <tr>
+        <td class="ds-audit__section">PDP Hero — Color Selector</td>
+        <td class="ds-audit__status"><span class="badge-pass">Pass</span></td>
+        <td>COLOR · ONYX dynamic · LE badge on Coperni swatch · 23px swatches with 44px tap target · "View all colors →" scrolls to variants. ✓</td>
+      </tr>
+
+      <tr>
+        <td class="ds-audit__section">PDP Hero — Size Selector</td>
+        <td class="ds-audit__status"><span class="badge-pass">Pass</span></td>
+        <td>SIZE · L dynamic · Men's sizing included · Size chart link present. ✓</td>
+      </tr>
+
+      <tr>
+        <td class="ds-audit__section">PDP Hero — CTA</td>
+        <td class="ds-audit__status"><span class="badge-pass">Pass</span></td>
+        <td>Full-width · #1c1916 bg · hover #c45c3f · 16px/600. ✓</td>
+      </tr>
+
+      <tr>
+        <td class="ds-audit__section">PDP Hero — Trust Row</td>
+        <td class="ds-audit__status"><span class="badge-pass">Pass</span></td>
+        <td>Ships 1–2 days · 30-day returns · 90-day warranty · Latex-free. 12px muted. ✓</td>
+      </tr>
+
+      <tr>
+        <td class="ds-audit__section">PDP Hero — Return Policy (Accordion)</td>
+        <td class="ds-audit__status"><span class="badge-pass">Pass</span></td>
+        <td>Updated to: "30-day returns on items returned in new, unused condition." Accurate copy. ✓</td>
+      </tr>
+
+      <tr>
+        <td class="ds-audit__section">Confidence Section — Header</td>
+        <td class="ds-audit__status"><span class="badge-pass">Pass</span></td>
+        <td>2-col layout · eyebrow 11px/600 · H2 mixed weight · intro sentence on right. ✓</td>
+      </tr>
+
+      <tr>
+        <td class="ds-audit__section">Confidence Section — Value Blocks</td>
+        <td class="ds-audit__status"><span class="badge-pass">Pass</span></td>
+        <td>2×2 grid · border-top rule · H3 18px/700 · body 15px/400/#4a4a4a. ✓</td>
+      </tr>
+
+      <tr>
+        <td class="ds-audit__section">Confidence Section — Padding</td>
+        <td class="ds-audit__status"><span class="badge-pass">Pass</span></td>
+        <td>40px top / 36px bottom. Bridges hero to collection cleanly. ✓</td>
+      </tr>
+
+      <tr>
+        <td class="ds-audit__section">Studio Collection — Editorial Header</td>
+        <td class="ds-audit__status"><span class="badge-pass">Pass</span></td>
+        <td>2-col layout · "One Performance. / Every Style." mixed weight · supporting copy right. ✓</td>
+      </tr>
+
+      <tr>
+        <td class="ds-audit__section">Studio Collection — Toolbar (Tabs)</td>
+        <td class="ds-audit__status"><span class="badge-pass">Pass</span></td>
+        <td>Underline tabs · active #1c1916/700 · inactive #7a7268/500 · disabled #b0a898. ✓</td>
+      </tr>
+
+      <tr>
+        <td class="ds-audit__section">Studio Collection — Toolbar (Size + Links)</td>
+        <td class="ds-audit__status"><span class="badge-pass">Pass</span></td>
+        <td>Size M/L buttons · Size Chart → · Compare Open vs Closed → — all on same baseline. ✓</td>
+      </tr>
+
+      <tr>
+        <td class="ds-audit__section">Studio Collection — Product Cards</td>
+        <td class="ds-audit__status"><span class="badge-pass">Pass</span></td>
+        <td>Color name primary (22px/700) · type secondary (11px/300) · size pill · price bold · Add to Cart → 15px/600. ✓</td>
+      </tr>
+
+      <tr>
+        <td class="ds-audit__section">Studio Collection — Size Badge</td>
+        <td class="ds-audit__status"><span class="badge-pass">Pass</span></td>
+        <td>Shows actual variant size (e.g. "Size M (W 5.5–7.5)") on every card. ✓</td>
+      </tr>
+
+      <tr>
+        <td class="ds-audit__section">Studio Collection — Sold Out Treatment</td>
+        <td class="ds-audit__status"><span class="badge-pass">Pass</span></td>
+        <td>Full color image · muted name/price · "Notify Me →" only · no Sold Out text. ✓</td>
+      </tr>
+
+      <tr>
+        <td class="ds-audit__section">Studio Collection — LE Badge</td>
+        <td class="ds-audit__status"><span class="badge-pass">Pass</span></td>
+        <td>Terracotta · 8px/700 · high letter-spacing · top-left overlay · refined size. ✓</td>
+      </tr>
+
+      <tr>
+        <td class="ds-audit__section">Reviews Section</td>
+        <td class="ds-audit__status"><span class="badge-minor">Minor</span></td>
+        <td>Verify Judgeme integration renders with Roboto (not system font). Image reviews preferred over text-only. Confirm gold star color matches DS (#d4af37).</td>
+      </tr>
+
+      <tr>
+        <td class="ds-audit__section">Core Benefits / 50-50 Sections</td>
+        <td class="ds-audit__status"><span class="badge-fix">Needs Adjustment</span></td>
+        <td>Verify section padding matches DS (80px top/bottom). Check H2 uses mixed-weight editorial treatment. Remove any black/orange combos. Ensure body copy max-width ≤52ch.</td>
+      </tr>
+
+      <tr>
+        <td class="ds-audit__section">Value Comparison (Sock Math)</td>
+        <td class="ds-audit__status"><span class="badge-fix">Needs Adjustment</span></td>
+        <td>Remove black/orange color combos. Compress section height. Replace any orange accent with terracotta (#c45c3f). Verify typography matches DS.</td>
+      </tr>
+
+      <tr>
+        <td class="ds-audit__section">Social/Juicer Feed</td>
+        <td class="ds-audit__status"><span class="badge-fix">Needs Adjustment</span></td>
+        <td>Design treatment TBD. Ensure section header uses DS eyebrow + H2 pattern. No orange. Section padding 80px.</td>
+      </tr>
+
+      <tr>
+        <td class="ds-audit__section">FAQ / Accordion Section</td>
+        <td class="ds-audit__status"><span class="badge-minor">Minor</span></td>
+        <td>Verify accordion follows DS spec (14px/600 summary, 14px/400 body). Confirm divider color is #e6e6e6.</td>
+      </tr>
+
+      <tr>
+        <td class="ds-audit__section">Newsletter / Footer CTA</td>
+        <td class="ds-audit__status"><span class="badge-minor">Minor</span></td>
+        <td>Verify input and button follow DS button specs. No orange/black combos. Warm background.</td>
+      </tr>
+    </table>
+
+    <div class="ds-note" style="margin-top:32px;"><strong>Summary:</strong> Hero (all panels), Confidence section, and Studio Collection are fully compliant with the Design System and approved for engineering handoff. Core Benefits, Value Comparison, and Social Feed sections require color and typography alignment before handoff. Reviews and FAQ require minor verification.</div>
+  </section>
+
+</main>
+
+</body>
+</html>

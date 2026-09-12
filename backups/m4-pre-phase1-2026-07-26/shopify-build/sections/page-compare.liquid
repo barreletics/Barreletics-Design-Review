@@ -1,0 +1,337 @@
+{% comment %}
+  Page Compare Section
+  Open Sole vs Closed Sole side-by-side comparison with feature table.
+  Used on: page.compare.json
+{% endcomment %}
+
+<section class="section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
+  <div class="section__inner section__inner--narrow">
+    {% if section.settings.eyebrow != blank %}
+      <p class="eyebrow eyebrow--accent">{{ section.settings.eyebrow }}</p>
+    {% endif %}
+    <h1 class="page-compare__title">{{ section.settings.title }}</h1>
+    {% if section.settings.subtitle != blank %}
+      <p class="page-compare__subtitle">{{ section.settings.subtitle }}</p>
+    {% endif %}
+  </div>
+</section>
+
+<section class="section section--cream">
+  <div class="section__inner">
+    <div class="page-compare__visual">
+      <div class="page-compare__product">
+        <div class="page-compare__product-image">
+          <div class="page-compare__placeholder">Open Sole</div>
+        </div>
+        <h2 class="page-compare__product-name">{{ section.settings.product_a_name }}</h2>
+        <p class="page-compare__product-desc">{{ section.settings.product_a_desc }}</p>
+        {% if section.settings.product_a_url != blank %}
+          {% render 'button', label: section.settings.product_a_cta, url: section.settings.product_a_url, style: 'primary' %}
+        {% endif %}
+      </div>
+      <div class="page-compare__vs">vs</div>
+      <div class="page-compare__product">
+        <div class="page-compare__product-image">
+          <div class="page-compare__placeholder">Closed Sole</div>
+        </div>
+        <h2 class="page-compare__product-name">{{ section.settings.product_b_name }}</h2>
+        <p class="page-compare__product-desc">{{ section.settings.product_b_desc }}</p>
+        {% if section.settings.product_b_url != blank %}
+          {% render 'button', label: section.settings.product_b_cta, url: section.settings.product_b_url, style: 'primary' %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section__inner">
+    <div class="page-compare__table-wrap">
+      <table class="page-compare__table" role="table" aria-label="Feature comparison: Open Sole vs Closed Sole">
+        <thead>
+          <tr>
+            <th scope="col" class="page-compare__th page-compare__th--feature">Feature</th>
+            <th scope="col" class="page-compare__th">{{ section.settings.product_a_name }}</th>
+            <th scope="col" class="page-compare__th">{{ section.settings.product_b_name }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for block in section.blocks %}
+            {% if block.type == 'feature_row' %}
+              <tr {{ block.shopify_attributes }}>
+                <td class="page-compare__td page-compare__td--feature">{{ block.settings.feature }}</td>
+                <td class="page-compare__td">{{ block.settings.value_a }}</td>
+                <td class="page-compare__td">{{ block.settings.value_b }}</td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% if section.settings.shared_note != blank %}
+      <div class="page-compare__shared">
+        <p class="page-compare__shared-text">{{ section.settings.shared_note }}</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  .page-compare__title {
+    font-size: var(--text-5xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    text-align: center;
+    margin: 0 0 var(--space-3);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .page-compare__subtitle {
+    font-size: var(--text-md);
+    color: var(--text-body);
+    text-align: center;
+    line-height: var(--leading-relaxed);
+    margin: 0;
+  }
+
+  .page-compare__visual {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: var(--space-6);
+    align-items: center;
+  }
+
+  .page-compare__product {
+    text-align: center;
+  }
+
+  .page-compare__product-image {
+    margin-bottom: var(--space-5);
+  }
+
+  .page-compare__placeholder {
+    aspect-ratio: 1;
+    max-width: 320px;
+    margin: 0 auto;
+    background: linear-gradient(135deg, var(--bg-primary), var(--border-default));
+    border-radius: var(--radius-card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+  }
+
+  .page-compare__vs {
+    font-size: var(--text-xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-widest);
+  }
+
+  .page-compare__product-name {
+    font-size: var(--text-xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    margin: 0 0 var(--space-2);
+  }
+
+  .page-compare__product-desc {
+    font-size: var(--text-base);
+    color: var(--text-body);
+    line-height: var(--leading-relaxed);
+    margin: 0 0 var(--space-5);
+    max-width: 32ch;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .page-compare__table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .page-compare__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-base);
+  }
+
+  .page-compare__th {
+    padding: var(--space-4) var(--space-5);
+    text-align: left;
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    border-bottom: 2px solid var(--text-primary);
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+  }
+
+  .page-compare__th--feature {
+    width: 30%;
+  }
+
+  .page-compare__td {
+    padding: var(--space-4) var(--space-5);
+    border-bottom: 1px solid var(--border-default);
+    color: var(--text-body);
+    line-height: var(--leading-relaxed);
+    vertical-align: top;
+  }
+
+  .page-compare__td--feature {
+    font-weight: var(--weight-medium);
+    color: var(--text-primary);
+  }
+
+  .page-compare__shared {
+    margin-top: var(--space-8);
+    text-align: center;
+    padding: var(--space-6);
+    background: var(--bg-alternate);
+    border-radius: var(--radius-card);
+  }
+
+  .page-compare__shared-text {
+    font-size: var(--text-md);
+    font-weight: var(--weight-medium);
+    color: var(--text-primary);
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .page-compare__title {
+      font-size: var(--text-3xl);
+    }
+
+    .page-compare__visual {
+      grid-template-columns: 1fr;
+      gap: var(--space-4);
+    }
+
+    .page-compare__vs {
+      text-align: center;
+    }
+
+    .page-compare__placeholder {
+      max-width: 200px;
+    }
+
+    .page-compare__th,
+    .page-compare__td {
+      padding: var(--space-3);
+      font-size: 14px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Compare Page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Two Versions. One Performance."
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Open Sole vs Closed Sole"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Same patented 360° grip. Same durability. Choose the build that fits your practice."
+    },
+    {
+      "type": "text",
+      "id": "product_a_name",
+      "label": "Product A name",
+      "default": "Open Sole"
+    },
+    {
+      "type": "textarea",
+      "id": "product_a_desc",
+      "label": "Product A description",
+      "default": "Heel grounded to the surface. Barefoot connection. Mid-foot ventilation."
+    },
+    {
+      "type": "text",
+      "id": "product_a_cta",
+      "label": "Product A CTA text",
+      "default": "Shop Open Sole"
+    },
+    {
+      "type": "url",
+      "id": "product_a_url",
+      "label": "Product A link"
+    },
+    {
+      "type": "text",
+      "id": "product_b_name",
+      "label": "Product B name",
+      "default": "Closed Sole"
+    },
+    {
+      "type": "textarea",
+      "id": "product_b_desc",
+      "label": "Product B description",
+      "default": "Full underfoot coverage. More protection. Slightly warmer."
+    },
+    {
+      "type": "text",
+      "id": "product_b_cta",
+      "label": "Product B CTA text",
+      "default": "Shop Closed Sole"
+    },
+    {
+      "type": "url",
+      "id": "product_b_url",
+      "label": "Product B link"
+    },
+    {
+      "type": "textarea",
+      "id": "shared_note",
+      "label": "Shared features note",
+      "default": "Both deliver the same patented 360° full-contact grip, full toe splay, and are priced at $74."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature_row",
+      "name": "Feature Row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "feature",
+          "label": "Feature name"
+        },
+        {
+          "type": "text",
+          "id": "value_a",
+          "label": "Product A value"
+        },
+        {
+          "type": "text",
+          "id": "value_b",
+          "label": "Product B value"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Compare Page"
+    }
+  ]
+}
+{% endschema %}

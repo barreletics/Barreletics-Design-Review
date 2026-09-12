@@ -4,7 +4,12 @@
   Used on: page.size-guide.json
 {% endcomment %}
 
-<section class="section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
+<section
+  class="section page-size__head"
+  id="shopify-section-{{ section.id }}"
+  style="{% render 'type-override-vars', title_size: section.settings.title_size, title_weight: section.settings.title_weight, body_size: section.settings.body_size, body_weight: section.settings.body_weight %}"
+  {{ section.shopify_attributes }}
+>
   <div class="section__inner section__inner--narrow">
     {% if section.settings.eyebrow != blank %}
       <p class="eyebrow eyebrow--accent">{{ section.settings.eyebrow }}</p>
@@ -16,41 +21,54 @@
   </div>
 </section>
 
-<section class="section section--cream">
+<section class="section page-size__body">
   <div class="section__inner section__inner--narrow">
-    <h2 class="page-size__section-title">Size Chart</h2>
+    <h2 class="page-size__section-title h2-standard">Size Chart</h2>
     <div class="page-size__table-wrap">
       <table class="page-size__table" role="table" aria-label="Size chart">
         <thead>
           <tr>
             <th scope="col">Size</th>
-            <th scope="col">US Women's</th>
-            <th scope="col">Foot Length</th>
-            <th scope="col">Best For</th>
+            <th scope="col">Women's (US)</th>
+            <th scope="col">Men's (US)</th>
+            <th scope="col">Kids' (US)</th>
           </tr>
         </thead>
         <tbody>
+          {%- assign size_rows = 0 -%}
           {% for block in section.blocks %}
             {% if block.type == 'size_row' %}
+              {%- assign size_rows = size_rows | plus: 1 -%}
               <tr {{ block.shopify_attributes }}>
                 <td class="page-size__td--size">{{ block.settings.size_name }}</td>
                 <td>{{ block.settings.us_size }}</td>
-                <td>{{ block.settings.foot_length }}</td>
-                <td>{{ block.settings.best_for }}</td>
+                <td>{{ block.settings.mens_size | default: '—' }}</td>
+                <td>{{ block.settings.kids_size | default: '—' }}</td>
               </tr>
             {% endif %}
           {% endfor %}
+          {%- comment -%} Fallback if TE cleared size_row blocks — chart must never be empty {%- endcomment -%}
+          {% if size_rows == 0 %}
+              <tr>
+                <td class="page-size__td--size">M</td>
+                <td>5.5–7.5</td>
+                <td>—</td>
+                <td>2–5</td>
+              </tr>
+              <tr>
+                <td class="page-size__td--size">L</td>
+                <td>7.5–11</td>
+                <td>Up to 10.5</td>
+                <td>—</td>
+              </tr>
+          {% endif %}
         </tbody>
       </table>
     </div>
-  </div>
-</section>
 
-<section class="section">
-  <div class="section__inner section__inner--narrow">
-    <h2 class="page-size__section-title">Fit Notes by Color</h2>
+    <h2 class="page-size__section-title page-size__section-title--stacked h2-standard">Fit Notes by Color</h2>
     <div class="page-size__notes">
-      <div class="page-size__note page-size__note--alert">
+      <div class="page-size__note">
         <h3 class="page-size__note-title">Dark Grey, Hot Coral & Blue</h3>
         <p class="page-size__note-text">{{ section.settings.snug_colors_note }}</p>
       </div>
@@ -59,12 +77,8 @@
         <p class="page-size__note-text">{{ section.settings.light_grey_note }}</p>
       </div>
     </div>
-  </div>
-</section>
 
-<section class="section section--cream">
-  <div class="section__inner section__inner--narrow">
-    <h2 class="page-size__section-title">Fit Tips</h2>
+    <h2 class="page-size__section-title page-size__section-title--stacked h2-standard">Fit Tips</h2>
     <div class="page-size__tips">
       {% for block in section.blocks %}
         {% if block.type == 'fit_tip' %}
@@ -79,7 +93,7 @@
 </section>
 
 {% if section.settings.cta_text != blank %}
-<section class="section">
+<section class="section page-size__cta">
   <div class="section__inner section__inner--narrow" style="text-align: center;">
     <p class="page-size__cta-text">{{ section.settings.cta_note }}</p>
     {% render 'button', label: section.settings.cta_text, url: section.settings.cta_url, style: 'primary', size: 'lg' %}
@@ -87,18 +101,26 @@
 </section>
 {% endif %}
 
+{% if section.settings.show_related %}
+  {% render 'help-links', title: section.settings.related_title %}
+{% endif %}
+
 <style>
+  /* Help-family page H1 — planning/help-family-type-law.md */
   .page-size__title {
-    font-size: var(--text-5xl);
-    font-weight: var(--weight-bold);
+    font-size: var(--te-title-size, clamp(32px, 4vw, 44px));
+    font-weight: var(--te-title-weight, 400);
+    line-height: 1.15;
+    letter-spacing: -0.028em;
+    text-transform: none;
     color: var(--text-primary);
     text-align: center;
     margin: 0 0 var(--space-3);
-    letter-spacing: var(--tracking-tight);
   }
 
   .page-size__subtitle {
-    font-size: var(--text-md);
+    font-size: var(--te-body-size, var(--text-md));
+    font-weight: var(--te-body-weight, 400);
     color: var(--text-body);
     text-align: center;
     line-height: var(--leading-relaxed);
@@ -106,102 +128,94 @@
   }
 
   .page-size__section-title {
-    font-size: var(--text-2xl);
-    font-weight: var(--weight-bold);
+    font-size: var(--type-section-size);
+    font-weight: var(--type-section-weight);
+    line-height: var(--type-section-leading);
+    letter-spacing: var(--type-section-tracking);
+    text-transform: none;
     color: var(--text-primary);
-    margin: 0 0 var(--space-6);
-    letter-spacing: var(--tracking-tight);
+    margin: 0 0 var(--space-5);
   }
 
+  /* One continuous white band — the chart, notes, and tips are one system,
+     not three striped sections. */
+  .page-size__section-title--stacked { margin-top: 56px; }
+
+  /* Calm chart system — docs/Barreletics Size Chart - Definitive-v1.html:
+     bordered wrap, cream header, hairline rows. No heavy rules, no tinted alerts. */
   .page-size__table-wrap {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    border: 1px solid #d6cfc0;
+    border-radius: 8px;
   }
 
   .page-size__table {
     width: 100%;
     border-collapse: collapse;
-    font-size: var(--text-base);
+    font-size: 14px;
   }
 
   .page-size__table th {
-    padding: var(--space-3) var(--space-4);
+    padding: 14px 16px;
     text-align: left;
-    font-weight: var(--weight-bold);
-    color: var(--text-primary);
-    border-bottom: 2px solid var(--text-primary);
-    font-size: var(--text-sm);
+    font-size: 11px;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: var(--tracking-wide);
+    letter-spacing: 0.08em;
+    color: #8a8a8a;
+    background: #f5f2ec;
+    border-bottom: 1px solid #d6cfc0;
   }
 
   .page-size__table td {
-    padding: var(--space-4);
-    border-bottom: 1px solid var(--border-default);
-    color: var(--text-body);
+    padding: 14px 16px;
+    border-bottom: 1px solid #e8e2d8;
+    color: var(--text-body, #4a4a4a);
   }
+  .page-size__table tr:last-child td { border-bottom: none; }
 
   .page-size__td--size {
-    font-weight: var(--weight-bold);
-    color: var(--text-primary);
+    font-weight: 500;
+    color: var(--text-primary, #1c1916);
   }
 
-  .page-size__notes {
-    display: grid;
-    gap: var(--space-4);
-  }
-
-  .page-size__note {
-    padding: var(--space-5);
-    background: var(--bg-alternate);
-    border-radius: var(--radius-card-sm);
-    border-left: 3px solid var(--border-default);
-  }
-
-  .page-size__note--alert {
-    border-left-color: var(--accent-primary);
-    background: rgba(196, 92, 63, 0.06);
-  }
-
-  .page-size__note-title {
-    font-size: var(--text-base);
-    font-weight: var(--weight-bold);
-    color: var(--text-primary);
-    margin: 0 0 var(--space-1);
-  }
-
-  .page-size__note-text {
-    font-size: var(--text-base);
-    color: var(--text-body);
-    line-height: var(--leading-relaxed);
-    margin: 0;
-  }
-
+  .page-size__notes,
   .page-size__tips {
     display: grid;
-    gap: var(--space-4);
+    gap: 16px;
   }
 
+  .page-size__note,
   .page-size__tip {
-    padding: var(--space-5);
-    background: var(--bg-primary);
-    border: 1px solid var(--border-default);
-    border-radius: var(--radius-card-sm);
+    padding: 20px 22px;
+    background: #f5f2ec;
+    border: 1px solid #e8e2d8;
+    border-radius: 8px;
   }
 
+  .page-size__note-title,
   .page-size__tip-title {
-    font-size: var(--text-base);
-    font-weight: var(--weight-bold);
-    color: var(--text-primary);
-    margin: 0 0 var(--space-1);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-primary, #1c1916);
+    margin: 0 0 8px;
   }
 
+  .page-size__note-text,
   .page-size__tip-text {
-    font-size: var(--text-base);
-    color: var(--text-body);
-    line-height: var(--leading-relaxed);
+    font-size: 14px;
+    color: var(--text-body, #4a4a4a);
+    line-height: 1.6;
     margin: 0;
   }
+
+  @media (min-width: 769px) {
+    .page-size__tips { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .page-size__head { border-bottom: 1px solid #e8e2d8; }
+  .page-size__cta { border-top: 1px solid #d6cfc0; }
 
   .page-size__cta-text {
     font-size: var(--text-md);
@@ -211,13 +225,15 @@
 
   @media (max-width: 768px) {
     .page-size__title {
-      font-size: var(--text-3xl);
+      font-size: var(--te-title-size, clamp(28px, 8vw, 36px));
     }
+
+    .page-size__section-title--stacked { margin-top: 44px; }
 
     .page-size__table th,
     .page-size__table td {
-      padding: var(--space-2) var(--space-3);
-      font-size: 14px;
+      padding: 12px 14px;
+      font-size: 13px;
     }
   }
 </style>
@@ -242,19 +258,79 @@
       "type": "textarea",
       "id": "subtitle",
       "label": "Subtitle",
-      "default": "Performance Skins are designed for a snug, second-skin fit. Here's how to find your perfect size."
+      "default": "Two sizes, and at the 7.5 overlap the width of your foot decides — here's how to find yours."
+    },
+    { "type": "header", "content": "Type — size & weight", "info": "Family is brand Type OS. Default keeps the approved Size Guide type. Title caps at 56px — support pages never use the homepage hero size." },
+    {
+      "type": "select",
+      "id": "title_size",
+      "label": "Title size",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "24", "label": "24px" },
+        { "value": "26", "label": "26px" },
+        { "value": "28", "label": "28px" },
+        { "value": "30", "label": "30px" },
+        { "value": "32", "label": "32px" },
+        { "value": "36", "label": "36px" },
+        { "value": "40", "label": "40px" },
+        { "value": "44", "label": "44px" },
+        { "value": "48", "label": "48px" },
+        { "value": "56", "label": "56px" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" },
+        { "value": "700", "label": "700" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "body_size",
+      "label": "Subtitle size",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "14", "label": "14px" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" },
+        { "value": "18", "label": "18px" },
+        { "value": "20", "label": "20px" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "body_weight",
+      "label": "Subtitle weight",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" }
+      ]
     },
     {
       "type": "textarea",
       "id": "snug_colors_note",
       "label": "Snug colors note",
-      "default": "These colors run slightly snugger than Light Grey. If you're between sizes in Dark Grey, Hot Coral, or Blue — size up."
+      "default": "Dark Grey, Hot Coral, and Blue run slightly snugger. Black and Light Grey are the most forgiving, especially for wider feet."
     },
     {
       "type": "textarea",
       "id": "light_grey_note",
       "label": "Light Grey note",
-      "default": "Light Grey offers a slightly more relaxed fit compared to other colors. True to size for most customers."
+      "default": "Black and Light Grey offer a slightly more relaxed fit. True to size for most customers."
     },
     {
       "type": "text",
@@ -272,7 +348,10 @@
       "id": "cta_note",
       "label": "CTA note",
       "default": "Still unsure? Contact us and we'll help you find the right fit."
-    }
+    },
+    { "type": "header", "content": "More help links" },
+    { "type": "checkbox", "id": "show_related", "label": "Show help links at the bottom", "default": true, "info": "Shared row across the support pages. The current page is left out automatically." },
+    { "type": "text", "id": "related_title", "label": "Links heading", "default": "More help" }
   ],
   "blocks": [
     {
@@ -287,17 +366,20 @@
         {
           "type": "text",
           "id": "us_size",
-          "label": "US size range"
+          "label": "Women's (US)",
+          "info": "M = 5.5–7.5 · L = 7.5–11. 7.5 sits in both rows on purpose — width is the tiebreaker."
         },
         {
           "type": "text",
-          "id": "foot_length",
-          "label": "Foot length"
+          "id": "mens_size",
+          "label": "Men's (US)",
+          "info": "L = Up to 10.5. Leave blank for M — Medium does not fit men's sizing."
         },
         {
           "type": "text",
-          "id": "best_for",
-          "label": "Best for"
+          "id": "kids_size",
+          "label": "Kids' (US)",
+          "info": "M = 2–5. Leave blank for L."
         }
       ]
     },

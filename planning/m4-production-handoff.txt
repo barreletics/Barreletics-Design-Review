@@ -1,0 +1,196 @@
+BARRELETICS M4 PRODUCTION — HANDOFF TO NEXT CHAT
+
+OPERATING MODEL (2026-07-26 RESET)
+Deliverable = production-ready sections in repo shopify-build/ → GitHub handoff to Brian.
+Draft theme abandoned (187143618851 retired). No agent Shopify push/pull/dev unless Andrew names a NEW theme ID in-message.
+Homepage / Theme Editor assembly is Brian’s (or later) job after sections are approved/frozen in repo.
+Live theme remains forbidden.
+
+WORKSPACE
+/Users/andrewnehra/Documents/GitHub/★ Barreletics-Design-Review
+
+DONOR LIVE THEME
+/Users/andrewnehra/barreletics-theme-live-apr2026
+
+SHELL TARGET
+shopify-build/
+
+PLAN
+~/.cursor/plans/m4_theme_production_44c3b5db.plan.md
+planning/m4-theme-master-directive-alignment.md
+
+HUB AUTHORITIES (docs/)
+Home WORKING · Collection v18 · SEO v36 · PDP v16 · Journal v5 · Help v3 · FAQ v4 · Returns v3 · Pattern-v2 (centered hero)
+
+LOCKED TYPE (do not reopen)
+Opening H1: clamp(40–64) / 400 / v6 title case (The Pilates Sock Era is Over · Secure in Every Hold)
+Sections: ~28–40 / 400 / sentence case
+CTAs: 700 ALL CAPS
+
+MISSION
+Execute Master Directive + hybrid plan. Do not redesign architecture. Performance foundation. Shopify-native content. Mobile-first.
+
+DESIGN SYSTEM DOCTRINE (LOCKED 2026-07-26)
+We build a reusable Shopify SECTION LIBRARY, not a homepage.
+Workflow: ONE section → QA → Andrew approve → freeze architecture → only then next section.
+Reference: home-split-hero (must meet library standards before any other section).
+Frozen only after Andrew architecture + code approval. Next sections blocked until freeze.
+Rule: .cursor/rules/barreletics-design-system-sections.mdc
+Audit: planning/m4-home-split-hero-ds-audit.md
+Do NOT start hero-fullbleed or collection-split-hero until freeze.
+
+---
+
+YOUR FIRST JOB FROM ANDREW
+
+1. Approve architecture (`planning/m4-section-library-architecture.md`) before building more sections.
+2. Build one section at a time in shopify-build/ from locked mocks; freeze in repo after Andrew approval.
+3. Do NOT push to Shopify. Do NOT publish. Do NOT touch live. Brian assembles homepage later from approved sections.
+
+THEN THIS AGENT
+
+Phase 1: Shell already in shopify-build (tokens, layout, header/footer) — polish in repo only.
+Phase 2a: Inventory KEEP vs DROP on the 3 br-* sections, then rebuild clean in repo (logic keep, controls strip, CSS/JS out of Liquid).
+Phase 2b: Page wiring / Theme Editor assembly = Brian (or later), not agents on a draft theme.
+Phase 3: Remaining pages (Help family, Journal) as library sections in repo after architecture approval.
+Phase 4: Lighthouse / a11y / metafields gate.
+
+---
+
+HOW TO TREAT THE OVERBUILT BR SECTIONS
+
+Do NOT raw-port 4,534 / 1,656 / 2,597 line files.
+
+Approach:
+1. Open live section → list KEEP logic (what must still work).
+2. List DROP (Theme Editor junk, hide-on-every-template toggles, unused layout modes, ai_gen_id CSS).
+3. Build a thin Liquid section that matches the locked mock markup/CSS.
+4. Re-attach only KEEP logic + preserve schema setting IDs where templates already reference them.
+5. Extract CSS/JS to assets. Cap settings: media, copy, CTA, reverse, collection/product pickers — not 100 controls.
+
+KEEP LOGIC FOR VARIANT GRID (br-variants) — non-negotiable
+Quick Add · Closed/Open/One-Offs/Outdoor tabs · size M/L · LE / Sold Out badges · product 1–N pickers · use_current_product on PDP · hide main product on one-off PDPs · inventory-aware sold-out · Compare + Size chart links · 2-row collapse + See all (VARIANTS-GRID.md)
+
+DROP / SIMPLIFY
+AI “show on cart/blog/policy…” matrix · unused mosaic merge modes beyond what Home WORKING needs · duplicate font pickers · anything not in the locked mock
+
+MULTI-SQUARE = visual-mosaic (from br-multi-box-hero)
+Home WORKING mosaic only first. Don’t port Black Friday grid modes unless still used.
+
+50/50 = fifty-fifty (from br-media-text-split)
+Image|video · reverse · eyebrow · H2 · body · CTA. Schema IDs preserved.
+
+---
+
+SECTION INVENTORY (rebuild set)
+
+COUNTS
+Chrome / global: 3
+Shared marketing sections: ~18
+Page-specific: ~6
+Custom REVISE from live: 3 (plus optional 4th campaign if Coperni stays)
+Build FROM SCRATCH: ~18–20
+Snippets (not full sections): product-card, button, cart-drawer, trust, sticky helpers
+
+A) GLOBAL CHROME (all pages) — rebuild presentation, Shopify menus
+1. announcement-strip / trust-strip
+2. header (Shopify menus)
+3. footer (+ newsletter block or section)
+
+B) CUSTOM REVISE (live → clean)
+1. variant-grid ← br-variants (MOST COMPLEX — do second after shell, first among ports)
+2. fifty-fifty ← br-media-text-split
+3. visual-mosaic ← br-multi-box-hero
+
+Optional later (not Phase 1):
+4. campaign-stage ← br-collab-hero (Coperni) generalized
+5. hide-kids-size-when-oos ← PDP behavior snippet
+
+C) BUILD FROM SCRATCH (from HTML authorities)
+1. home-split-hero
+2. hero-fullbleed (ONE section · setting alignment: start | center)
+3. collection-split-hero (media_fill: inset | column)
+4. disciplines
+5. statement-band
+6. fullbleed-statement (or statement-band variant)
+7. lifestyle-break (SEO mid-page video full-bleed)
+8. value-strip / mid-value
+9. sock-math
+10. problem-section
+11. reviews (quote-led · no aggregate on marketing pages)
+12. ig-section
+13. guarantee
+14. studio-trust
+15. faq (blocks)
+16. newsletter (if not in footer)
+17. pdp-buy-box
+18. pdp-sticky-atc
+19. page-head OR use hero-fullbleed center for Help/content
+20. help-hub-grid
+21. journal-index / blog-listing
+22. contact-cta (“Still have questions?”)
+
+Hero rule: left/center full-bleed = ONE section. Home split + Collection split = SEPARATE sections.
+
+---
+
+PAGE → SECTIONS MAP
+
+HOME WORKING
+chrome → home-split-hero → visual-mosaic → disciplines → variant-grid → fifty-fifty (Never Loses) → campaign (Coperni) → statement-band (Knock Socks) → fullbleed (Commit) → reviews → [hot-kits OFF skip] → fifty-fifty (One Pair) → problem → ig → guarantee → studio-trust → footer/newsletter
+
+COLLECTION v18
+chrome → collection-split-hero → value-strip → variant-grid → faq → footer
+
+SEO v36
+chrome → hero-fullbleed (start) → variant-grid → value-strip → sock-math → statement/pose → lifestyle-break → fifty-fifty → reviews → ig → faq → footer
+
+PDP v16
+chrome → pdp-buy-box (+ sticky ATC) → fifty-fifty(s) → variant-grid (related / all colors) → sock-math as needed → fullbleed → reviews → ig → faq → newsletter → footer
+KEEP one-off / LE / hide-main logic from br-variants + PDP rules
+
+HELP v3
+chrome → page-head or hero-fullbleed center → help-hub-grid → footer
+
+FAQ v4
+chrome → page-head → faq → contact-cta → footer
+
+JOURNAL v5
+chrome → journal-index → variant-grid (shop strip) → faq → footer
+
+RETURNS / Size Chart / Contact / Track
+chrome → page content (page-head + body modules) → footer — thin; after shop pages
+
+---
+
+BUILD ORDER (after draft theme exists)
+
+1. Shell + tokens + header/footer
+2. hero-fullbleed + home-split-hero + collection-split-hero (prove type OS)
+3. fifty-fifty (simplify br-media-text-split)
+4. visual-mosaic (simplify br-multi-box-hero to Home pattern)
+5. variant-grid (KEEP logic list above — biggest job)
+6. Wire Home JSON to match WORKING sequence
+7. Collection → SEO → PDP
+8. Help / FAQ / Journal
+9. Performance + a11y gate
+
+---
+
+DO NOT
+
+Gut live in place · Port all 251 sections · Raw-copy br-variants · Invent new sections not in mocks · Hardcode nav/products · Reopen type debates · Publish without owner OK
+
+---
+
+ANDREW NEXT STEP
+
+Create unpublished draft theme → open new chat in this project → paste this handoff → reply with theme name/ID.
+
+Agent: start Phase 1 only after draft theme is available. Before porting br-variants, produce KEEP/DROP control inventory for Andrew approval (30 min, no code).
+
+---
+
+Approach: Draft theme first → clean shell → strip the 3 custom sections to mock + KEEP logic → then assemble every inventoried section page-by-page. Rebuild clean beats porting the overbuilt Theme Editor surface.
+
+Totals: ~3 chrome · ~3 revise · ~18–22 from scratch · ~22–28 Shopify sections for the full OS set · pages = Home, Collection, SEO, PDP, Help, FAQ, Journal (+ thin support pages).

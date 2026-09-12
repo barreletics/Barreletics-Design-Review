@@ -1,0 +1,67 @@
+---
+description: HARD — GitHub/shopify-build is Design System master; visual approval only via Shopify draft preview
+alwaysApply: true
+---
+
+# Shopify vs repository (HARD — non-negotiable)
+
+## Source of truth
+
+**The repository is the Design System.** GitHub / **`shopify-build/`** owns sections, snippets, assets, CSS, JS, and docs.
+
+Shopify is **only the runtime** for visual QA — never the master. Do **not** develop primarily in Theme Editor. Do **not** treat a remote theme as source of truth. Any fix found in QA → revise in **repo first**, then re-deploy to draft if needed.
+
+**GitHub is NOT a review environment.** Andrew cannot approve sections from source/PR alone. Visual approval = Shopify preview (Theme Editor + storefront).
+
+> I can't review a Shopify section from GitHub source files alone. Every completed section must be deployed to the Shopify development theme and accompanied by a preview URL. I will review the implementation visually in the Theme Editor and on the storefront (desktop + mobile), verify all settings and controls work correctly, then approve or request revisions. GitHub remains the source of truth for code, but visual approval happens in Shopify—not from the repository.
+
+## Workflow
+
+1. Build section in repository  
+2. Commit (GitHub master)  
+3. Deploy to Shopify **development / disposable draft** — **only** when Andrew names a theme ID in that same message (ask if missing; never invent)  
+4. Send **preview URL** + Theme Editor URL for visual review  
+5. Andrew reviews visually: desktop + mobile, spacing, type, breakpoints, settings/schema, TE controls, image crop, performance  
+6. Revisions in repository → redeploy → repeat  
+7. When approved: **freeze in repo**, then next section  
+8. **Brian** pulls approved repo → production theme  
+
+Draft themes are temporary and may be deleted anytime.
+
+## Default: no Shopify mutations
+
+Agents **MUST NOT** run `shopify theme push`, `pull`, `dev`, `delete`, publish, rename, or Theme Editor API changes unless Andrew **explicitly names a theme ID in that same message**.
+
+## Persistent QA theme (M4 Visual QA)
+
+- **Theme ID:** `187144929571`
+- **Name:** `M4 Visual QA`
+- **Role:** unpublished only — **never publish**
+- **Store:** barreletics.myshopify.com
+- Preview: `https://barreletics.myshopify.com?preview_theme_id=187144929571`
+- Editor: `https://admin.shopify.com/store/barreletics/themes/187144929571/editor`
+- Redeploy from **`shopify-build/`** for visual QA when Andrew authorizes push to this ID.
+- GitHub / `shopify-build/` remains Design System master; Shopify is QA runtime only.
+
+**QA exception (config only):** Andrew’s approved Theme Editor picks on draft `187144929571` are user-owned. Never push stale `templates/*.json` / `settings_data.json` over them. After he approves, pull those files into the repo and commit — `.cursor/rules/te-user-state-sync.mdc`.
+
+## Retired / dead draft
+
+- Theme ID **`187143618851`** is **retired / deleted** — do **not** use it.
+- Fail closed for other IDs: do not invent replacements. Use **`187144929571` (M4 Visual QA)** for M4 section visual QA unless Andrew names a different disposable ID in-message.
+
+## Forbidden without explicit in-message approval
+
+- Live / published theme (any Current)
+- Any Theme library copy, backup, duplicate, or “backcopy” used as master
+- Local donor `/Users/andrewnehra/barreletics-theme-live-apr2026` as a push target (read-only reference only)
+- Publishing any theme
+- Any Shopify CLI theme command without a theme ID from Andrew in the current message
+
+## If ambiguous
+
+STOP and ask for a disposable draft theme ID. Never invent. Never push “to be safe.”
+
+## Production integration
+
+Homepage / Theme Editor assembly and production integration = **Brian** from the approved repository — not agents treating Shopify as the Design System.

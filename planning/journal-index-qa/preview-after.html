@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Journal index — after</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../shopify-build/assets/design-tokens.css">
+<link rel="stylesheet" href="../../shopify-build/assets/barreletics-base.css">
+<style>
+
+  .blog-listing__header {
+    text-align: center;
+    margin-bottom: var(--space-10);
+  }
+
+  .blog-listing__header .eyebrow {
+    margin: 0 0 var(--gap-a);
+  }
+
+  /* Size/weight/tracking come from .type-hero — cadence only here */
+  .blog-listing__title {
+    color: var(--text-primary);
+    margin: 0 0 var(--gap-b);
+  }
+
+  .blog-listing__subtitle {
+    font-size: var(--type-lede-size);
+    font-weight: var(--type-lede-weight);
+    line-height: var(--type-lede-leading);
+    color: var(--text-body);
+    margin: 0;
+  }
+
+  /* --- Topic filter — Journal v6: centred label row above a hairline rule --- */
+  .journal-topics {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-2) var(--space-5);
+    margin: 0 0 var(--space-11);
+    padding-bottom: var(--space-7);
+    border-bottom: 1px solid var(--border-default);
+  }
+
+  .journal-topics__link {
+    font-size: var(--type-label-size);
+    font-weight: var(--type-label-weight);
+    letter-spacing: var(--type-label-tracking);
+    text-transform: uppercase;
+    color: var(--type-label-color);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .journal-topics__link:hover,
+  .journal-topics__link.is-active {
+    color: var(--text-primary);
+  }
+
+  .journal-topics__link.is-active {
+    border-bottom: 1px solid var(--text-primary);
+    padding-bottom: 2px;
+  }
+
+  /* --- Featured article — image left, copy right --- */
+  .journal-feature {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: var(--space-10);
+    align-items: center;
+    margin-bottom: var(--space-13);
+  }
+
+  .journal-feature__media {
+    position: relative;
+    display: block;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: var(--radius-button);
+    background: var(--bg-alternate);
+  }
+
+  .journal-feature__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-slow);
+  }
+
+  .journal-feature:hover .journal-feature__image {
+    transform: scale(1.03);
+  }
+
+  .journal-feature__placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--bg-alternate), var(--border-default));
+  }
+
+  .journal-feature__meta {
+    font-size: var(--type-label-size);
+    font-weight: var(--type-label-weight);
+    letter-spacing: var(--type-label-tracking);
+    text-transform: uppercase;
+    color: var(--accent-primary);
+    margin: 0 0 var(--gap-a);
+  }
+
+  /* Size/weight/tracking come from .type-statement — cadence only here */
+  .journal-feature__title {
+    margin: 0 0 var(--gap-a);
+  }
+
+  .journal-feature__title a {
+    color: inherit;
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .journal-feature__title a:hover {
+    color: var(--accent-primary);
+  }
+
+  .journal-feature__dek {
+    font-size: var(--type-body-size);
+    font-weight: var(--type-body-weight);
+    line-height: var(--type-body-leading);
+    color: var(--text-body);
+    max-width: 36ch;
+    margin: 0 0 var(--gap-c);
+  }
+
+  .journal-feature__cta {
+    text-decoration: none;
+  }
+
+  .blog-listing__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--grid-gap);
+  }
+
+  .blog-card {
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-default);
+    transition: box-shadow var(--transition-fast);
+  }
+
+  .blog-card:hover {
+    box-shadow: var(--shadow-md);
+  }
+
+  .blog-card__link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .blog-card__image-wrap {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--bg-alternate);
+  }
+
+  .blog-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform var(--transition-base);
+  }
+
+  .blog-card:hover .blog-card__image {
+    transform: scale(1.03);
+  }
+
+  .blog-card__image-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--bg-alternate), var(--border-default));
+  }
+
+  .blog-card__tag {
+    position: absolute;
+    top: var(--space-3);
+    left: var(--space-3);
+    font-size: var(--type-label-size);
+    font-weight: var(--type-label-weight);
+    text-transform: uppercase;
+    letter-spacing: var(--type-label-tracking);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    padding: 4px 8px;
+    border-radius: var(--radius-badge);
+  }
+
+  .blog-card__content {
+    padding: var(--space-5);
+  }
+
+  /* Card titles take the H3 role — H2 Standard is reserved for section wayfinding */
+  .blog-card__title {
+    font-size: var(--type-h3-size);
+    font-weight: var(--type-h3-weight);
+    line-height: var(--type-h3-leading);
+    letter-spacing: var(--type-h3-tracking);
+    text-transform: none;
+    color: var(--text-primary);
+    margin: 0 0 var(--space-2);
+  }
+
+  .blog-card__excerpt {
+    font-size: var(--type-body-size);
+    font-weight: var(--type-body-weight);
+    color: var(--text-body);
+    line-height: var(--type-body-leading);
+    margin: 0 0 var(--space-3);
+  }
+
+  .blog-card__meta {
+    display: flex;
+    gap: var(--space-3);
+    font-size: var(--type-trust-size);
+    font-weight: var(--type-trust-weight);
+    color: var(--text-muted);
+  }
+
+  .blog-card__author {
+    font-weight: var(--type-caption-weight);
+  }
+
+  .blog-listing__pagination {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-4);
+    margin-top: var(--space-8);
+  }
+
+  .blog-listing__page-info {
+    font-size: var(--type-trust-size);
+    font-weight: var(--type-trust-weight);
+    color: var(--text-muted);
+  }
+
+  .blog-listing__empty {
+    text-align: center;
+    font-size: var(--type-body-size);
+    font-weight: var(--type-body-weight);
+    line-height: var(--type-body-leading);
+    color: var(--text-muted);
+    padding: var(--space-12) 0;
+  }
+
+  @media (max-width: 1024px) {
+    .blog-listing__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .journal-feature {
+      grid-template-columns: 1fr;
+      gap: var(--space-7);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .blog-listing__grid {
+      grid-template-columns: 1fr;
+      gap: var(--grid-gap-sm);
+    }
+
+    .journal-topics {
+      gap: var(--space-2) var(--space-4);
+      margin-bottom: var(--space-9);
+    }
+
+    /* Filter links are 11px labels — give them a 44px tap target on touch */
+    .journal-topics__link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
+
+    .journal-feature {
+      margin-bottom: var(--space-10);
+    }
+  }
+
+</style>
+</head><body>
+<section class="section">
+  <div class="section__inner">
+    <div class="blog-listing__header">
+      <p class="eyebrow eyebrow--accent">The Journal</p>
+      <h1 class="blog-listing__title type-hero">From the Studio</h1>
+      <p class="blog-listing__subtitle">Care that extends grip life, founder notes on why socks failed, and stories from instructors who dig into chair pose without resetting.</p>
+    </div>
+    <nav class="journal-topics" aria-label="Topics">
+        <a href="#" class="journal-topics__link is-active" aria-current="page">All</a>
+        <a href="#" class="journal-topics__link">Care</a>
+        <a href="#" class="journal-topics__link">Founder</a>
+        <a href="#" class="journal-topics__link">Movement</a>
+        <a href="#" class="journal-topics__link">Story</a>
+        <a href="#" class="journal-topics__link">Wellness</a>
+    </nav>
+    <article class="journal-feature">
+      <a class="journal-feature__media" href="#" aria-label="Read How to wash your Performance Skins" tabindex="-1">
+        <img src="https://barreletics.com/cdn/shop/files/Multi_Image.jpg?v=1768346625&width=1600" alt="Performance Skins — studio care" width="1200" height="900" class="journal-feature__image">
+      </a>
+      <div class="journal-feature__copy">
+        <p class="journal-feature__meta">Care · Featured · 3 min</p>
+        <h2 class="journal-feature__title type-statement"><a href="#">How to wash your Performance Skins</a></h2>
+        <p class="journal-feature__dek">A 60-second rinse that keeps molded grip working for years — and the dryer heat that kills traction faster than studio sweat.</p>
+        <a href="#" class="btn btn--primary journal-feature__cta">Read the guide</a>
+      </div>
+    </article>
+    <div class="blog-listing__grid">
+        <article class="blog-card">
+          <a href="#" class="blog-card__link" aria-label="Read Why we built a grip-sock replacement">
+            <div class="blog-card__image-wrap">
+              <img src="https://barreletics.com/cdn/shop/products/barreletixxjumpingtogether.jpg?v=1619360969&width=1200" alt="Why we built a grip-sock replacement" width="720" height="450" loading="lazy" class="blog-card__image">
+              <span class="blog-card__tag">Founder</span>
+            </div>
+            <div class="blog-card__content">
+              <h2 class="blog-card__title">Why we built a grip-sock replacement</h2>
+              <p class="blog-card__excerpt">Eight years of barre, three failed prototypes, and the studio conversation that started Barreletics.</p>
+              <div class="blog-card__meta">
+                <span class="blog-card__author">Barreletics Team</span>
+                <span class="blog-card__date"><time>March 12, 2026</time></span>
+              </div>
+            </div>
+          </a>
+        </article>
+        <article class="blog-card">
+          <a href="#" class="blog-card__link" aria-label="Read Coperni × Barreletics, in Paris">
+            <div class="blog-card__image-wrap">
+              <img src="https://barreletics.com/cdn/shop/files/Copreni_Final_More_grey.png?v=1774119812&width=1200" alt="Coperni × Barreletics, in Paris" width="720" height="450" loading="lazy" class="blog-card__image">
+              <span class="blog-card__tag">Story</span>
+            </div>
+            <div class="blog-card__content">
+              <h2 class="blog-card__title">Coperni × Barreletics, in Paris</h2>
+              <p class="blog-card__excerpt">Behind the SS26 runway — and what it means to build a Pilates shoe for haute couture.</p>
+              <div class="blog-card__meta">
+                <span class="blog-card__author">Barreletics Team</span>
+                <span class="blog-card__date"><time>March 4, 2026</time></span>
+              </div>
+            </div>
+          </a>
+        </article>
+        <article class="blog-card">
+          <a href="#" class="blog-card__link" aria-label="Read A barre teacher’s shoe routine">
+            <div class="blog-card__image-wrap">
+              <img src="https://barreletics.com/cdn/shop/files/IMG_2917.jpg?v=1741040637&width=1200" alt="A barre teacher’s shoe routine" width="720" height="450" loading="lazy" class="blog-card__image">
+              <span class="blog-card__tag">Movement</span>
+            </div>
+            <div class="blog-card__content">
+              <h2 class="blog-card__title">A barre teacher’s shoe routine</h2>
+              <p class="blog-card__excerpt">From morning Megaformer to evening recovery — what one instructor wears when flat back chair can’t slip.</p>
+              <div class="blog-card__meta">
+                <span class="blog-card__author">Barreletics Team</span>
+                <span class="blog-card__date"><time>February 22, 2026</time></span>
+              </div>
+            </div>
+          </a>
+        </article>
+        <article class="blog-card">
+          <a href="#" class="blog-card__link" aria-label="Read When to retire your Performance Skins">
+            <div class="blog-card__image-wrap">
+              <img src="https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=1200" alt="When to retire your Performance Skins" width="720" height="450" loading="lazy" class="blog-card__image">
+              <span class="blog-card__tag">Care</span>
+            </div>
+            <div class="blog-card__content">
+              <h2 class="blog-card__title">When to retire your Performance Skins</h2>
+              <p class="blog-card__excerpt">Three signs the grip is past its working life — and why one pair still beats eight of socks.</p>
+              <div class="blog-card__meta">
+                <span class="blog-card__author">Barreletics Team</span>
+                <span class="blog-card__date"><time>February 9, 2026</time></span>
+              </div>
+            </div>
+          </a>
+        </article>
+        <article class="blog-card">
+          <a href="#" class="blog-card__link" aria-label="Read Inside the SS26 runway">
+            <div class="blog-card__image-wrap">
+              <img src="https://barreletics.com/cdn/shop/files/Multi_Image.jpg?v=1768346625&width=1200" alt="Inside the SS26 runway" width="720" height="450" loading="lazy" class="blog-card__image">
+              <span class="blog-card__tag">Story</span>
+            </div>
+            <div class="blog-card__content">
+              <h2 class="blog-card__title">Inside the SS26 runway</h2>
+              <p class="blog-card__excerpt">A behind-the-scenes look at the night Barreletics walked the Coperni runway in Paris.</p>
+              <div class="blog-card__meta">
+                <span class="blog-card__author">Barreletics Team</span>
+                <span class="blog-card__date"><time>January 30, 2026</time></span>
+              </div>
+            </div>
+          </a>
+        </article>
+        <article class="blog-card">
+          <a href="#" class="blog-card__link" aria-label="Read Why barefoot still wins">
+            <div class="blog-card__image-wrap">
+              <img src="https://barreletics.com/cdn/shop/files/Square_Pink.png?v=1764627088&width=1200" alt="Why barefoot still wins" width="720" height="450" loading="lazy" class="blog-card__image">
+              <span class="blog-card__tag">Wellness</span>
+            </div>
+            <div class="blog-card__content">
+              <h2 class="blog-card__title">Why barefoot still wins</h2>
+              <p class="blog-card__excerpt">Open-toe freedom that still holds through water ski and lunges — smarter than grip socks that slide when wet.</p>
+              <div class="blog-card__meta">
+                <span class="blog-card__author">Barreletics Team</span>
+                <span class="blog-card__date"><time>January 18, 2026</time></span>
+              </div>
+            </div>
+          </a>
+        </article>
+        <nav class="blog-listing__pagination" aria-label="Blog pagination">
+          <span class="blog-listing__page-info">Page 1 of 2</span>
+          <a href="#" class="btn btn--secondary blog-listing__next">Next &rarr;</a>
+        </nav>
+    </div>
+  </div>
+</section>
+
+</body></html>

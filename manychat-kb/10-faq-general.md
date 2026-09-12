@@ -6,9 +6,13 @@
 
 ## "How long do they last?"
 
-Many customers use the same pair for years — some wear them 6+ days/week for over 3 years with zero issues.
+It depends on how you wear them — how often, how hard you go, and how you care for them. Just like shoes, some people are harder on them than others.
 
-Built in the USA. Never loses shape. Never loses grip. Same performance on class 1 as on class 1,000.
+Used for what they're designed for — Pilates, barre, reformer, Lagree, yoga — they hold up beautifully. One customer recently passed 1,000 classes on a single pair. Another is on year four.
+
+Built in the USA. Never loses shape. Never loses grip. The grip is molded into the sole, so there's nothing to peel or flake off.
+
+> Set the honest expectation first, then land the proof points — that order reads as candor instead of a promise. **Never publish "18+ months"** (owner letter 2026-08-12): it's an internal floor, and next to "1,000 classes" a customer anchors on the smaller number.
 
 ## "Will they make my feet hot or sweaty?"
 
@@ -26,7 +30,9 @@ Just skip thick or full-toe socks — they reduce natural toe splay, which makes
 
 Built for studio training: Barre, Pilates, Lagree, Reformer, Megaformer, Yoga.
 
-Also great for: Weight lifting, outdoor volleyball, martial arts, barefoot running, boating, beach, pool decks, anywhere you'd go barefoot.
+Also great for: Weight lifting, outdoor volleyball, martial arts, barefoot running, boating, paddleboarding, outdoor yoga, beach, resortwear, anywhere you'd go barefoot.
+
+> **Never say:** pool, poolside, pool deck, water park, tidal pool, aqua barre, water aerobics. Pool positioning drives the wrong buyer and creates slip risk on wet tile. Use resortwear · paddleboarding · beach · outdoor yoga instead. Don't invent scenery (rocky coves, tidepools, shell-covered beaches) — beach covers it.
 
 ## "Do they really not slip?"
 

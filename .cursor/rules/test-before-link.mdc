@@ -1,0 +1,31 @@
+---
+description: Never send preview URLs until push + HTTP 200 verified
+alwaysApply: true
+---
+
+# Test before link (HARD)
+
+**Owner 2026-08-13:** Andrew got dead GitHub Pages links repeatedly. Do not send a URL you have not verified.
+
+## Before any preview link in chat
+
+1. **Pushed?** If the file is new/changed, `git push` first (unless Andrew said local-only).
+2. **HTTP check:** `curl -sI "<url>" | head -1` must show **`200`** (or `301`/`302` to a 200).
+3. **GitHub Pages:** allow 1–3 min after push; re-curl if `404`.
+4. **Say what you tested:** e.g. “curl 200 @ 21:45 UTC”.
+
+## Forbidden
+
+- Linking to vN files that exist only locally or on Cloud
+- `localhost` as the only link when Andrew reviews via **GitHub Pages** or double-click in `docs/`
+- “Should be live soon” without a follow-up curl
+
+## If curl fails
+
+Tell Andrew: not live yet, push pending, or wrong path — **do not** paste the broken URL as if it works.
+
+## Base URL (docs folder Pages)
+
+`https://barreletics.github.io/Barreletics-Design-Review/`
+
+Example: `…/Barreletics%20Brand%20-%20Definitive-v17.html`

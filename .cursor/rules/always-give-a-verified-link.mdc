@@ -1,0 +1,65 @@
+---
+description: Every reply that changes a Shopify surface must end with a verified preview link. Never trust a push banner.
+alwaysApply: true
+---
+
+# Always give a verified link (HARD)
+
+**Owner 2026-08-14:** *"i need a link — give me one every single time."* Andrew reviewed a Returns page for 15 minutes that had none of the changes on it.
+
+## Every turn that touches `shopify-build/**`
+
+End the reply with a working link. No link = the task is not finished.
+
+## Use the primary domain — NOT myshopify.com
+
+```
+✅ https://barreletics.com/pages/returns?preview_theme_id=187144929571
+❌ https://barreletics.myshopify.com/pages/returns?preview_theme_id=187144929571
+```
+
+`barreletics.myshopify.com` **301-redirects to `barreletics.com` and drops the preview parameter**, silently serving the **live** theme. The CLI prints the myshopify URL — do not paste it. Rewrite it to the primary domain and append the page path.
+
+Tell Andrew to reload once if it looks unchanged: the first hit sets the preview cookie and may still render live.
+
+## NEVER truncate push output
+
+```
+❌ shopify theme push … | tail -3      # hides the error banner
+✅ shopify theme push … 2>&1           # read all of it
+```
+
+The CLI prints a **success box even when a file was rejected**. On 2026-08-14 every `page-returns.liquid` push failed schema validation for five straight attempts while the banner said success. Read the whole output and look for `─ error ─`.
+
+## Schema gotcha that caused it
+
+Shopify rejects a blank default outright. **Omit the key** to mean empty.
+
+```
+❌ { "type": "text", "id": "x", "label": "X", "default": "" }
+✅ { "type": "text", "id": "x", "label": "X" }
+```
+
+## One `--only` per file
+
+Repeated or space-separated patterns silently drop files. Push separately and verify each.
+
+```
+❌ --only "sections/a.liquid" "templates/b.json"
+✅ --only "sections/a.liquid"   then   --only "templates/b.json"
+```
+
+## Verify before linking, then say so
+
+Curl the draft and grep for a string you added **and** one you removed:
+
+```bash
+curl -s -c j.txt -o /dev/null -L "https://barreletics.com/?preview_theme_id=187144929571"
+curl -s -b j.txt -o p.html -L "https://barreletics.com/<path>?preview_theme_id=187144929571"
+rg -F -c "string I added" p.html      # expect 1
+rg -F -c "string I removed" p.html    # expect 0
+```
+
+The cookie jar is required — a single cold request serves the live theme.
+
+Companion: `.cursor/rules/test-before-link.mdc` · `.cursor/rules/shopify-draft-theme-only.mdc` · template↔handle map in `planning/page-template-registry.md` (check which template a handle actually renders **before** editing — `/pages/returns` renders `page.shipping-retruns.json`, not `page.returns.json`).

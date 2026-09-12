@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Barreletics — PDP version gallery (pick a letter)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --charcoal: #1c1916;
+    --rust: #c45c3f;
+    --border: #d6cfc0;
+    --muted: #8a8a8a;
+    --body: #4a4a4a;
+    --warm: #6b645a;
+    --cream: #f5f2ec;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--charcoal);
+    background: #f0ebe3;
+    line-height: 1.45;
+  }
+  .page-head {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 24px 24px;
+  }
+  .page-head h1 {
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    margin: 0 0 12px;
+  }
+  .page-head .lede {
+    font-size: 16px;
+    color: var(--body);
+    max-width: 68ch;
+    margin: 0 0 20px;
+  }
+  .banner {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--rust);
+    padding: 14px 18px;
+    font-size: 14px;
+    margin: 0 0 12px;
+  }
+  .banner.ok { border-left-color: #2f6b4f; }
+  .banner strong { color: var(--charcoal); }
+  .toc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 20px 0 0;
+  }
+  .toc a {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 12px;
+    background: #fff;
+    border: 1px solid var(--border);
+    color: var(--charcoal);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .toc a:hover { border-color: var(--charcoal); }
+  .toc a.highlight {
+    background: #2f6b4f;
+    color: #fff;
+    border-color: #2f6b4f;
+  }
+  .toc a.current-draft {
+    background: var(--rust);
+    color: #fff;
+    border-color: var(--rust);
+  }
+  .option {
+    margin: 0 0 48px;
+    background: #fff;
+    border: 1px solid var(--border);
+  }
+  .option__meta {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--cream);
+  }
+  .option__meta h2 {
+    margin: 0 0 8px;
+    font-size: 20px;
+    font-weight: 600;
+  }
+  .option__meta .one-liner {
+    margin: 0 0 10px;
+    font-size: 15px;
+    color: var(--body);
+  }
+  .option__meta .src {
+    margin: 0 0 8px;
+    font-size: 12px;
+    color: var(--muted);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    word-break: break-all;
+  }
+  .option__meta .tag {
+    display: inline-block;
+    margin: 0 8px 10px 0;
+    padding: 4px 8px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: var(--charcoal);
+    color: #fff;
+  }
+  .option__meta .tag.signed { background: #2f6b4f; }
+  .option__meta .tag.warn { background: var(--rust); }
+  .option__meta .tag.muted { background: #8a8a8a; }
+  .option__meta ul {
+    margin: 8px 0 0;
+    padding-left: 18px;
+    font-size: 13px;
+    color: var(--warm);
+  }
+  .option__meta a.open {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--charcoal);
+  }
+  .option__preview {
+    background: #fff;
+  }
+  .option__preview iframe {
+    display: block;
+    width: 100%;
+    height: min(78vh, 900px);
+    border: 0;
+    background: #fff;
+  }
+  .option__notes {
+    padding: 14px 24px 18px;
+    font-size: 13px;
+    color: var(--warm);
+    border-top: 1px solid var(--border);
+    background: #faf8f4;
+  }
+  .struct {
+    padding: 20px 24px 24px;
+    font-size: 14px;
+    color: var(--body);
+  }
+  .struct ol { margin: 8px 0 0; padding-left: 20px; }
+  .struct code {
+    font-size: 12px;
+    background: var(--cream);
+    padding: 1px 5px;
+  }
+  .page-foot {
+    max-width: 1100px;
+    margin: 0 auto 64px;
+    padding: 0 24px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+
+<div class="page-head">
+  <h1>PDP version gallery — pick a letter</h1>
+  <p class="lede">
+    <strong>⛔ CURRENT AUTHORITY:</strong> <strong>Definitive-v19</strong> mock + draft spine on theme <code>187144929571</code> / <code>templates/product.json</code> (LOCKED 2026-07-31).
+    <strong>Prior fingerprint:</strong> v16 @ <code>691f03b</code> — NEVER overwrite v16/v19 HTML. Rule: <code>.cursor/rules/pdp-hub-lock.mdc</code>.
+  </p>
+
+  <div class="banner ok">
+    <strong>CURRENT: Definitive-v19 (LOCKED Jul 31 2026) + draft-matched spine.</strong>
+    Empty under ATC · complimentary + Non-toxic strip · social-proof · compact sock-math · lifestyle quote · stats · guarantee 3-up · juicer · FAQ+GEO · no studio-trust · no page newsletter.
+    <a href="Barreletics%20PDP%20-%20Definitive-v19.html" style="font-weight:700;color:inherit;">Open v19 →</a>
+  </div>
+  <div class="banner ok">
+    <strong>Prior fingerprint: B — Definitive-v16 @ 691f03b.</strong>
+    Lede 34–44/400 · Complete the kit · Coming soon · By the numbers. NEVER overwrite.
+  </div>
+  <div class="banner ok">
+    <strong>Draft QA match (theme 187144929571):</strong> already matched to this lock. Redeploy only when Andrew names theme ID. Never publish.
+  </div>
+
+  <div class="toc">
+    <a class="highlight current-draft" href="#opt-i">I · v19 Locked (current)</a>
+    <a class="highlight" href="#opt-b">B · v16 @ 691f03b (prior fingerprint)</a>
+    <a href="#opt-a">A · July 17 (archive)</a>
+    <a href="#opt-c">C · v15</a>
+    <a href="#opt-d">D · v14</a>
+    <a href="#opt-e">E · Decision Packet</a>
+    <a href="#opt-f">F · Live Impulse</a>
+    <a href="#opt-g">G · v49 Final</a>
+    <a href="#opt-h">H · Matured</a>
+  </div>
+</div>
+
+<!-- I — v19 current -->
+<section class="option" id="opt-i">
+  <div class="option__meta">
+    <span class="tag signed">LOCKED — current authority</span>
+    <h2>I — Definitive-v19 (LOCKED Jul 31 2026)</h2>
+    <p class="one-liner">Andrew lock — mock v19 + draft-matched product.json spine on 187144929571. Supersedes v18.</p>
+    <p class="src">docs/Barreletics PDP - Definitive-v19.html · shopify-build/templates/product.json · planning/PDP-WORKING-ENTRY.md · specs/frozen/pdp.md</p>
+    <ul>
+      <li>Under ATC: <strong>empty</strong> — strip + accordion own guarantees</li>
+      <li>Value strip: complimentary shipping · 30/90 · <strong>Non-toxic</strong> · No latex · No silicone</li>
+      <li>Spine: social-proof reviews · compact sock-math · lifestyle quote · stats numbers · guarantee 3-up · juicer · FAQ+GEO · no studio-trust · no page newsletter</li>
+      <li>v18 = prior · v16 @ 691f03b = prior fingerprint — never overwrite v16/v19 HTML</li>
+    </ul>
+    <a class="open" href="Barreletics%20PDP%20-%20Definitive-v19.html#buy" target="_blank" rel="noopener">Open v19 #buy →</a>
+  </div>
+  <div class="option__preview">
+    <iframe title="PDP Definitive-v19" src="Barreletics%20PDP%20-%20Definitive-v19.html" loading="lazy"></iframe>
+  </div>
+  <div class="option__notes">Hub INDEX current authority. Draft 187144929571 = QA match for this lock.</div>
+</section>
+
+<!-- A -->
+<section class="option" id="opt-a">
+  <div class="option__meta">
+    <span class="tag muted">Archive — not hub authority</span>
+    <h2>A — APPROVED July 17</h2>
+    <p class="one-liner">Archive only. No kit / Coming soon. Not the 2026-07-31 hub lock.</p>
+    <p class="src">docs/Barreletics PDP - APPROVED July 17.html</p>
+    <ul>
+      <li>Video line: <strong>Yoga Socks Are Useless.</strong></li>
+      <li>Problem: Think outside the sock. / Tired Of Slipping…</li>
+      <li>Social: <strong>Juicer</strong> @barreletics</li>
+      <li>Fullbleed: One pair. No more socks.</li>
+    </ul>
+    <a class="open" href="Barreletics%20PDP%20-%20APPROVED%20July%2017.html" target="_blank" rel="noopener">Open →</a>
+  </div>
+  <div class="option__preview">
+    <iframe title="PDP APPROVED July 17" src="Barreletics%20PDP%20-%20APPROVED%20July%2017.html" loading="lazy"></iframe>
+  </div>
+  <div class="option__notes">Archive. Hub authority is B — Definitive-v16 @ 691f03b.</div>
+</section>
+
+<!-- B -->
+<section class="option" id="opt-b">
+  <div class="option__meta">
+    <span class="tag signed">Prior fingerprint — never overwrite</span>
+    <h2>B — Definitive-v16 @ 691f03b (prior fingerprint)</h2>
+    <p class="one-liner">Andrew lock 2026-07-31 — fingerprint file. Current full-page authority is v19.</p>
+    <p class="src">docs/Barreletics PDP - Definitive-v16.html · fingerprint 691f03b · .cursor/rules/pdp-hub-lock.mdc</p>
+    <ul>
+      <li>Buy-box: <strong>Complete the kit</strong> + size <strong>Coming soon</strong></li>
+      <li>Disciplines: <strong>Upgrade your grip. Upgrade your workout.</strong></li>
+      <li>Stack: buy-box → value-strip → features → disciplines → sock era → variant-grid → lifestyle → fullbleed → sock-math → commit → reviews → numbers → guarantee → UGC → FAQ → newsletter → sticky</li>
+      <li>Draft QA: theme <code>187144929571</code></li>
+    </ul>
+    <a class="open" href="Barreletics%20PDP%20-%20Definitive-v16.html" target="_blank" rel="noopener">Open full mock →</a>
+  </div>
+  <div class="option__preview">
+    <iframe title="PDP Definitive-v16" src="Barreletics%20PDP%20-%20Definitive-v16.html" loading="lazy"></iframe>
+  </div>
+  <div class="option__notes">Prior fingerprint mock. NEVER overwrite. Current authority = v19.</div>
+</section>
+
+<!-- C -->
+<section class="option" id="opt-c">
+  <div class="option__meta">
+    <span class="tag muted">Prior mock</span>
+    <h2>C — Definitive-v15</h2>
+    <p class="one-liner">Near-identical to v16 spine; titled “IG marquee.” Same “sock era” messaging family.</p>
+    <p class="src">docs/Barreletics PDP - Definitive-v15.html · Jul 23 2026</p>
+    <a class="open" href="Barreletics%20PDP%20-%20Definitive-v15.html" target="_blank" rel="noopener">Open full mock →</a>
+  </div>
+  <div class="option__preview">
+    <iframe title="PDP Definitive-v15" src="Barreletics%20PDP%20-%20Definitive-v15.html" loading="lazy"></iframe>
+  </div>
+</section>
+
+<!-- D -->
+<section class="option" id="opt-d">
+  <div class="option__meta">
+    <span class="tag muted">Prior mock</span>
+    <h2>D — Definitive-v14</h2>
+    <p class="one-liner">Reviews-arrows pass; UGC still @barreletics; same Definitive family as v15/v16.</p>
+    <p class="src">docs/Barreletics PDP - Definitive-v14.html · Jul 23 2026</p>
+    <a class="open" href="Barreletics%20PDP%20-%20Definitive-v14.html" target="_blank" rel="noopener">Open full mock →</a>
+  </div>
+  <div class="option__preview">
+    <iframe title="PDP Definitive-v14" src="Barreletics%20PDP%20-%20Definitive-v14.html" loading="lazy"></iframe>
+  </div>
+</section>
+
+<!-- E -->
+<section class="option" id="opt-e">
+  <div class="option__meta">
+    <span class="tag">Git / Decision Packet</span>
+    <h2>E — Decision Packet abbreviated stack</h2>
+    <p class="one-liner">Shorter <code>product.json</code> from commits <code>a0ef174</code>–<code>d7a8939</code>. Matches <code>specs/frozen/pdp.md</code> approved section list more closely than v16.</p>
+    <p class="src">shopify-build/templates/product.json @ a0ef174 / eeebaac / d7a8939</p>
+  </div>
+  <div class="struct">
+    <strong>Order (no full mock file — Liquid template stack):</strong>
+    <ol>
+      <li><code>pdp-buy-box</code></li>
+      <li><code>value-strip</code></li>
+      <li><code>pdp-features</code></li>
+      <li><code>fifty-fifty</code> video (motion / “Yoga Socks Are Useless” per DP messaging)</li>
+      <li><code>variant-grid</code></li>
+      <li><code>fifty-fifty</code> lifestyle</li>
+      <li><code>pdp-sock-math</code></li>
+      <li><code>pdp-reviews</code></li>
+      <li><code>geo-section</code></li>
+      <li><code>newsletter</code></li>
+      <li><code>pdp-sticky-atc</code></li>
+    </ol>
+    <p style="margin:12px 0 0;font-size:13px;color:var(--warm)">
+      Missing vs v16 draft: fullbleed-statement · commit fifty-fifty · guarantee-band · home-ugc.
+      Closest Liquid cousin to option <strong>A</strong>.
+    </p>
+  </div>
+  <div class="option__notes">Pick E if you want the shorter build stack restored on draft without the v16 extras.</div>
+</section>
+
+<!-- F -->
+<section class="option" id="opt-f">
+  <div class="option__meta">
+    <span class="tag muted">Live reference only</span>
+    <h2>F — Live Impulse PDP (read-only snapshot)</h2>
+    <p class="one-liner">Current production theme buy-box experience — Impulse <code>main-product</code> + long marketing stack. Not a Design System mock.</p>
+    <p class="src">/Users/andrewnehra/barreletics-theme-live-apr2026/templates/product.json (read-only)</p>
+  </div>
+  <div class="struct">
+    <strong>Live order (abbreviated):</strong>
+    <ol>
+      <li><code>main-product</code> — Impulse gallery + purchase</li>
+      <li><code>br-variants</code> — custom variants grid</li>
+      <li><code>hero-video</code></li>
+      <li><code>text-and-image</code></li>
+      <li><code>ss-hero-15</code> / <code>background-image-text</code> / <code>ss-hero-14</code> (repeated marketing)</li>
+      <li><code>slideshow</code> · <code>hero-animated</code> · <code>product-full-width</code></li>
+      <li>apps · featured-collections · recommendations · collection-return · more SS heroes</li>
+    </ol>
+    <p style="margin:12px 0 0;font-size:13px;color:var(--warm)">
+      Storefront: <a href="https://barreletics.com/products/best-reformer-pilates-legree-workout-shoes" target="_blank" rel="noopener">Closed Sole live PDP</a>
+      · Open Sole: <a href="https://barreletics.com/products/studio-performance-skin-footwear" target="_blank" rel="noopener">studio-performance-skin-footwear</a>
+    </p>
+  </div>
+  <div class="option__notes">Pick F only if you want draft to feel closer to live Impulse — not Definitive mocks. Agents will not push live theme.</div>
+</section>
+
+<!-- G -->
+<section class="option" id="opt-g">
+  <div class="option__meta">
+    <span class="tag muted">v49 lineage</span>
+    <h2>G — v49 Final</h2>
+    <p class="one-liner">Earlier “final” v49 page — different middle sections (carriage fullbleed, “See how it works”, justifier-style reviews).</p>
+    <p class="src">docs/Barreletics PDP - v49 Final.html</p>
+    <a class="open" href="Barreletics%20PDP%20-%20v49%20Final.html" target="_blank" rel="noopener">Open full mock →</a>
+  </div>
+  <div class="option__preview">
+    <iframe title="PDP v49 Final" src="Barreletics%20PDP%20-%20v49%20Final.html" loading="lazy"></iframe>
+  </div>
+</section>
+
+<!-- H -->
+<section class="option" id="opt-h">
+  <div class="option__meta">
+    <span class="tag muted">Early matured</span>
+    <h2>H — Matured</h2>
+    <p class="one-liner">Shorter early matured PDP — buy box + benefits + FAQ style. Not the July 17 / Definitive long spine.</p>
+    <p class="src">docs/Barreletics PDP - Matured.html</p>
+    <a class="open" href="Barreletics%20PDP%20-%20Matured.html" target="_blank" rel="noopener">Open full mock →</a>
+  </div>
+  <div class="option__preview">
+    <iframe title="PDP Matured" src="Barreletics%20PDP%20-%20Matured.html" loading="lazy"></iframe>
+  </div>
+</section>
+
+<div class="page-foot">
+  <p><strong>Also inventoried (not lettered):</strong> Definitive-v1–v8 (handoff), Dev Handoff v1, Final, Enhanced, PDP Complete v37–v49 (<code>archive/pdp-history/</code>), root <code>Barreletics-PDP-v36-Jul2026.html</code>.</p>
+  <p><strong>Current authority:</strong> Definitive-v19 + draft spine on 187144929571 (LOCKED Jul 31 2026). v16 @ 691f03b = prior fingerprint — never overwrite v16/v19 HTML.</p>
+  <p>Reply with one letter for history review, or ship from <a href="Barreletics%20PDP%20-%20Definitive-v19.html">v19 Locked</a>.</p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+{% comment %}
+  One tab panel: expand product variants into variant-card.
+  Params: product, sole_label, tab_key, max_variants, is_default, messaging_style
+  One-Offs (tab_key == oneoffs): single grid — available first, then sold-out (no separate band).
+{% endcomment %}
+{%- if product != blank -%}
+  <div
+    class="var-grid{% if tab_key == 'oneoffs' %} var-grid--oneoffs{% endif %}{% unless is_default %} is-grid-hidden{% endunless %}"
+    id="grid-{{ tab_key }}"
+    data-grid-tab="{{ tab_key }}"
+  >
+    {%- if tab_key == 'oneoffs' -%}
+      {%- comment -%} Pass 1: in stock {%- endcomment -%}
+      {%- for variant in product.variants limit: max_variants -%}
+        {%- assign o1d = variant.option1 | downcase -%}
+        {%- assign o2d = variant.option2 | downcase -%}
+        {%- if o1d contains 'kid' or o2d contains 'kid' -%}{%- continue -%}{%- endif -%}
+        {%- unless variant.available -%}{%- continue -%}{%- endunless -%}
+        {% render 'variant-card',
+          product: product,
+          variant: variant,
+          sole_label: sole_label,
+          tab_key: tab_key,
+          messaging_style: messaging_style
+        %}
+      {%- endfor -%}
+      {%- comment -%} Pass 2: sold out (after available — same grid, no “Earlier” heading) {%- endcomment -%}
+      {%- for variant in product.variants limit: max_variants -%}
+        {%- assign o1d = variant.option1 | downcase -%}
+        {%- assign o2d = variant.option2 | downcase -%}
+        {%- if o1d contains 'kid' or o2d contains 'kid' -%}{%- continue -%}{%- endif -%}
+        {%- if variant.available -%}{%- continue -%}{%- endif -%}
+        {% render 'variant-card',
+          product: product,
+          variant: variant,
+          sole_label: sole_label,
+          tab_key: tab_key,
+          messaging_style: messaging_style
+        %}
+      {%- endfor -%}
+    {%- else -%}
+      {%- for variant in product.variants limit: max_variants -%}
+        {%- assign o1d = variant.option1 | downcase -%}
+        {%- assign o2d = variant.option2 | downcase -%}
+        {%- if o1d contains 'kid' or o2d contains 'kid' -%}
+          {%- continue -%}
+        {%- endif -%}
+        {% render 'variant-card',
+          product: product,
+          variant: variant,
+          sole_label: sole_label,
+          tab_key: tab_key,
+          messaging_style: messaging_style
+        %}
+      {%- endfor -%}
+    {%- endif -%}
+  </div>
+{%- endif -%}

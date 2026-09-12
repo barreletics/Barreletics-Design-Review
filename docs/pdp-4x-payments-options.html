@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PDP 4× payments — Options (variants cards)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --charcoal: #1c1916;
+      --body: #4a4a4a;
+      --muted: #8a8a8a;
+      --warm: #6b645a;
+      --border: #d6cfc0;
+      --cream: #f5f2ec;
+      --card-border: #e8e2d8;
+      --chip: #f0ede8;
+      --rust: #c45c3f;
+      --sold: #8a8a8a;
+      --le: #3b82f6;
+      --white: #fff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--cream); color: var(--charcoal); margin: 0; padding: 40px 24px 80px;
+    }
+    .wrap { max-width: 1200px; margin: 0 auto; }
+    h1 { font-size: 28px; font-weight: 400; letter-spacing: -0.03em; margin: 0 0 8px; }
+    .lede { color: var(--body); max-width: 68ch; line-height: 1.55; margin: 0 0 28px; font-size: 15px; }
+    .back { font-size: 13px; color: var(--warm); text-decoration: none; display: inline-block; margin-bottom: 20px; }
+    .back:hover { color: var(--charcoal); }
+    section { margin-bottom: 36px; }
+    h2 {
+      font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--muted); margin: 0 0 12px;
+    }
+    code.inline {
+      font-size: 12px; background: #faf8f4; border: 1px solid var(--border);
+      padding: 1px 5px; border-radius: 3px;
+    }
+    .context {
+      background: var(--white); border: 1px solid var(--border); border-left: 4px solid var(--rust);
+      border-radius: 6px; padding: 18px 20px; margin-bottom: 28px;
+    }
+    .context__tag {
+      display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--rust); margin-bottom: 8px;
+    }
+    .context h3 { font-size: 17px; font-weight: 500; margin: 0 0 8px; letter-spacing: -0.02em; }
+    .context p { margin: 0 0 10px; font-size: 14px; color: var(--body); line-height: 1.55; }
+    .context p:last-child { margin-bottom: 0; }
+    .rule {
+      margin: 0; padding: 10px 12px; background: var(--cream); border-radius: 4px;
+      font-size: 13px; color: var(--charcoal); line-height: 1.45;
+    }
+
+    .stack { display: flex; flex-direction: column; gap: 22px; }
+
+    .option {
+      background: var(--white); border: 1px solid var(--border); border-radius: 8px;
+      overflow: hidden;
+    }
+    .option--rec { border-left: 4px solid var(--rust); }
+    .option--dont {
+      border-left: 4px solid #9a6b2f;
+      background: #faf8f4;
+    }
+    .option__head { padding: 18px 20px 14px; }
+    .option__tag {
+      display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--rust); margin-bottom: 6px;
+    }
+    .option__tag--muted { color: var(--muted); }
+    .option__tag--dont { color: #9a6b2f; }
+    .option h3 { font-size: 18px; font-weight: 500; margin: 0 0 6px; letter-spacing: -0.02em; }
+    .option__what { font-size: 13px; color: var(--body); line-height: 1.5; margin: 0; }
+    .option__hierarchy {
+      margin: 10px 0 0; font-size: 12px; color: var(--warm); line-height: 1.5;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .option__preview {
+      background: #faf8f4; border-top: 1px solid var(--border); padding: 16px 16px 20px;
+    }
+    .option__preview-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--muted); margin: 0 0 12px;
+    }
+    .option__foot {
+      padding: 12px 20px 14px; border-top: 1px solid var(--border);
+      font-size: 12px; color: var(--body); line-height: 1.45;
+    }
+    .option__foot strong { color: var(--charcoal); }
+
+    /* Draft Home variants chrome */
+    .mock {
+      background: var(--white); border: 1px solid var(--card-border); border-radius: 8px;
+      padding: 18px 16px 20px;
+      box-shadow: 0 2px 12px rgba(28,25,22,0.04);
+    }
+    .mock__toolbar {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px 16px;
+      padding: 0 0 14px; margin-bottom: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+    .mock__tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+    .mock__tab {
+      padding: 10px 18px; font-size: 11px; font-weight: 700; letter-spacing: 0.05em;
+      text-transform: uppercase; border-radius: 4px; border: 1px solid var(--border);
+      background: var(--white); color: var(--muted); font-family: inherit; cursor: default;
+    }
+    .mock__tab--on {
+      background: var(--charcoal); color: var(--white); border-color: var(--charcoal);
+    }
+    .mock__utils { display: flex; align-items: center; flex-wrap: wrap; gap: 12px 14px; }
+    .mock__size { display: flex; align-items: center; gap: 8px; }
+    .mock__size-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
+      color: var(--charcoal);
+    }
+    .mock__size-btn {
+      font-size: 12px; font-weight: 700; letter-spacing: 0.04em;
+      min-width: 34px; padding: 7px 12px; border: none; border-radius: 3px;
+      background: var(--chip); color: var(--muted); font-family: inherit; cursor: default;
+    }
+    .mock__size-btn--on { background: var(--charcoal); color: var(--white); }
+    .mock__link {
+      font-size: 11px; color: var(--muted); text-decoration: none;
+      border-bottom: 1px solid #d0c8be; padding-bottom: 1px;
+    }
+    .mock__grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px 18px;
+    }
+    @media (max-width: 900px) {
+      .mock__grid { grid-template-columns: repeat(2, 1fr); }
+      .mock__grid .vcard:nth-child(n+5) { display: none; }
+    }
+    .vcard {
+      display: flex; flex-direction: column;
+      border: 1px solid var(--card-border); border-radius: 6px; overflow: hidden;
+      background: var(--white);
+      box-shadow: 0 4px 16px rgba(28,25,22,0.07);
+    }
+    .vcard__img {
+      width: 100%; aspect-ratio: 1; overflow: hidden; background: var(--cream); position: relative;
+    }
+    .vcard__img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .vcard__status {
+      position: absolute; top: 10px; left: 10px; z-index: 1;
+      font-size: 8px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--white); padding: 3px 8px; border-radius: 2px;
+    }
+    .vcard__status--sold { background: var(--sold); }
+    .vcard__status--le { background: var(--le); }
+    .vcard__body {
+      padding: 16px 14px 16px; text-align: center;
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+    }
+    .vcard__name {
+      font-size: 16px; font-weight: 700; color: var(--charcoal); margin: 0; line-height: 1.25;
+    }
+    /* Closed Sole silver/grey meta pill — the one that clashes with a second pill */
+    .vcard__meta {
+      display: inline-block; margin: 4px 0 0;
+      font-size: 11px; font-weight: 500; letter-spacing: 0.02em; color: var(--warm);
+      background: var(--chip); padding: 4px 10px; border-radius: 3px;
+    }
+    .vcard__price { font-size: 15px; font-weight: 700; color: var(--charcoal); margin: 6px 0 0; }
+    .vcard__install {
+      font-size: 12px; color: var(--muted); margin: 2px 0 0; line-height: 1.35;
+    }
+    .vcard__install--under-cta {
+      font-size: 12.5px; color: var(--muted); margin: 8px 0 0; line-height: 1.35;
+      letter-spacing: 0.01em;
+    }
+    .vcard__install--chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-top: 6px; padding: 5px 10px;
+      background: #f0efec; border: 1px solid var(--border); border-radius: 999px;
+      font-size: 11px; font-weight: 500; color: var(--charcoal);
+    }
+    .vcard__install--chip span {
+      color: var(--rust); font-weight: 700; font-size: 9px; letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .vcard__add {
+      margin-top: 12px; width: 100%; min-height: 42px; padding: 11px 12px;
+      font-size: 12px; font-weight: 600; letter-spacing: 0.03em;
+      background: var(--charcoal); color: var(--white); border: 1px solid var(--charcoal);
+      border-radius: 4px; font-family: inherit; cursor: default;
+    }
+    .vcard__add--sold {
+      background: #d6d0c6; border-color: #d6d0c6; color: var(--muted); cursor: not-allowed;
+    }
+    /* Sold-out: greyed Quick Add–shaped button; install still OK under it */
+    .vcard__add--sold + .vcard__install--under-cta { margin-top: 8px; }
+
+    .clash-callout {
+      margin-top: 14px; padding: 12px 14px;
+      background: #f7efe6; border: 1px solid #e4d0b0; border-radius: 6px;
+      font-size: 12px; color: var(--body); line-height: 1.45;
+    }
+    .clash-callout strong { color: #7a5420; }
+
+    .bb-note {
+      margin-top: 14px; padding: 12px 14px; background: var(--white);
+      border: 1px dashed var(--border); border-radius: 6px;
+      font-size: 12px; color: var(--body); line-height: 1.45;
+    }
+    .bb-note strong { color: var(--charcoal); }
+    .bb-note code {
+      font-size: 11px; background: var(--cream); border: 1px solid var(--border);
+      padding: 1px 5px; border-radius: 3px;
+    }
+
+    .links { font-size: 13px; color: var(--body); line-height: 1.6; }
+    .links a { color: var(--charcoal); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <a class="back" href="./index.html">← Hub</a>
+    <h1>4× payments — refined variants options</h1>
+    <p class="lede">
+      High-end, high-conversion affordability on <strong>variant cards</strong> (tabs · Size · meta pill · LE/Sold Out · Quick Add).
+      Not discount BNPL spam. Never stack two competing pills in the same zone.
+    </p>
+
+    <div class="context">
+      <div class="context__tag">LOCKED Jul 31 2026</div>
+      <h3>Option A — Under Quick Add (variants authority)</h3>
+      <p>
+        <strong>Locked / applied</strong> on <a href="Barreletics%20PDP%20-%20Definitive-v19.html#variants">PDP v19 #variants</a>:
+        quiet <code class="inline">or 4 × $18.50</code> under Quick Add. Meta pill owns the chip zone.
+        Buy-box purchase stack is separately locked (price → muted 4× → configure → act) on <a href="Barreletics%20PDP%20-%20Definitive-v19.html#buy">v19 #buy</a>.
+      </p>
+      <p class="rule">
+        <strong>Hard rule:</strong> meta pill owns the chip zone. Pay in 4 never becomes a second pill next to / under it.
+        Freeze: <code class="inline">planning/m4-section-freeze.md</code> · <code class="inline">specs/frozen/pdp.md</code>.
+      </p>
+    </div>
+
+    <section>
+      <h2>Options A–D · full Draft Home chrome</h2>
+      <div class="stack">
+
+        <!-- A — Under Quick Add (recommended) -->
+        <article class="option option--rec" id="option-a">
+          <div class="option__head">
+            <div class="option__tag">LOCKED · Option A · Recommended</div>
+            <h3>Under Quick Add</h3>
+            <p class="option__what">
+              CTA first, affordability as quiet reassurance after intent. No install under price — meta pill stays alone.
+            </p>
+            <p class="option__hierarchy">Name → meta pill → $74 → Quick Add → or 4 × $18.50</p>
+          </div>
+          <div class="option__preview">
+            <p class="option__preview-label">Variants layout · Draft Home chrome</p>
+            <div class="mock" aria-hidden="true">
+              <div class="mock__toolbar">
+                <div class="mock__tabs">
+                  <span class="mock__tab mock__tab--on">Closed Sole</span>
+                  <span class="mock__tab">Open Sole</span>
+                  <span class="mock__tab">Outdoor</span>
+                </div>
+                <div class="mock__utils">
+                  <div class="mock__size">
+                    <span class="mock__size-label">Size</span>
+                    <span class="mock__size-btn mock__size-btn--on">M</span>
+                    <span class="mock__size-btn">L</span>
+                  </div>
+                  <span class="mock__link">Size chart →</span>
+                  <span class="mock__link">Compare →</span>
+                </div>
+              </div>
+              <div class="mock__grid">
+                <div class="vcard">
+                  <div class="vcard__img">
+                    <span class="vcard__status vcard__status--sold">Sold Out</span>
+                    <img src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=600" alt="">
+                  </div>
+                  <div class="vcard__body">
+                    <p class="vcard__name">Dusty Rose</p>
+                    <span class="vcard__meta">Closed Sole · Size M</span>
+                    <p class="vcard__price">$74</p>
+                    <button class="vcard__add vcard__add--sold" tabindex="-1" disabled>Sold Out</button>
+                    <p class="vcard__install--under-cta">or 4 × $18.50</p>
+                  </div>
+                </div>
+                <div class="vcard">
+                  <div class="vcard__img">
+                    <img src="https://barreletics.com/cdn/shop/files/Square_Pink.png?v=1764627088&width=600" alt="">
+                  </div>
+                  <div class="vcard__body">
+                    <p class="vcard__name">Copper Swirl</p>
+                    <span class="vcard__meta">Closed Sole · Size M</span>
+                    <p class="vcard__price">$74</p>
+                    <button class="vcard__add" tabindex="-1">Quick Add →</button>
+                    <p class="vcard__install--under-cta">or 4 × $18.50</p>
+                  </div>
+                </div>
+                <div class="vcard">
+                  <div class="vcard__img">
+                    <span class="vcard__status vcard__status--le">Limited Edition</span>
+                    <img src="https://barreletics.com/cdn/shop/files/Multi_Image.jpg?v=1768346625&width=600" alt="">
+                  </div>
+                  <div class="vcard__body">
+                    <p class="vcard__name">Deep Teal</p>
+                    <span class="vcard__meta">Closed Sole · Size M</span>
+                    <p class="vcard__price">$74</p>
+                    <button class="vcard__add" tabindex="-1">Quick Add →</button>
+                    <p class="vcard__install--under-cta">or 4 × $18.50</p>
+                  </div>
+                </div>
+                <div class="vcard">
+                  <div class="vcard__img">
+                    <img src="https://barreletics.com/cdn/shop/products/Yellow_Image-Blue_Shoe_1200x1200_59ef7b79-1661-4c2f-a2da-c6b9211e2c42.jpg?v=1678412911&width=600" alt="">
+                  </div>
+                  <div class="vcard__body">
+                    <p class="vcard__name">Turquoise</p>
+                    <span class="vcard__meta">Closed Sole · Size M</span>
+                    <p class="vcard__price">$74</p>
+                    <button class="vcard__add" tabindex="-1">Quick Add →</button>
+                    <p class="vcard__install--under-cta">or 4 × $18.50</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="bb-note"><strong>Buy-box later:</strong> quiet line under ATC (not a second pill next to sole meta).</p>
+          </div>
+          <div class="option__foot">
+            <strong>LOCKED Jul 31 2026</strong> on <a href="Barreletics%20PDP%20-%20Definitive-v19.html#variants">v19 #variants</a>. Alo/Nike/Lulu hierarchy — price + CTA stay clean; muted install under Quick Add. Meta pill unclashed.
+          </div>
+        </article>
+
+        <!-- B — Under price, text only -->
+        <article class="option" id="option-b">
+          <div class="option__head">
+            <div class="option__tag option__tag--muted">Option B</div>
+            <h3>Under price · text only</h3>
+            <p class="option__what">
+              Current Draft Home placement, refined typography only — no Pay-in-4 chip. Meta pill remains the only pill.
+            </p>
+            <p class="option__hierarchy">Name → meta pill → $74 → or 4 × $18.50 → Quick Add</p>
+          </div>
+          <div class="option__preview">
+            <p class="option__preview-label">Variants layout · Draft Home (refined type)</p>
+            <div class="mock" aria-hidden="true">
+              <div class="mock__toolbar">
+                <div class="mock__tabs">
+                  <span class="mock__tab mock__tab--on">Closed Sole</span>
+                  <span class="mock__tab">Open Sole</span>
+                  <span class="mock__tab">Outdoor</span>
+                </div>
+                <div class="mock__utils">
+                  <div class="mock__size">
+                    <span class="mock__size-label">Size</span>
+                    <span class="mock__size-btn mock__size-btn--on">M</span>
+                    <span class="mock__size-btn">L</span>
+                  </div>
+                  <span class="mock__link">Size chart →</span>
+                  <span class="mock__link">Compare →</span>
+                </div>
+              </div>
+              <div class="mock__grid">
+                <div class="vcard">
+                  <div class="vcard__img">
+                    <span class="vcard__status vcard__status--sold">Sold Out</span>
+                    <img src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=600" alt="">
+                  </div>
+                  <div class="vcard__body">
+                    <p class="vcard__name">Dusty Rose</p>
+                    <span class="vcard__meta">Closed Sole · Size M</span>
+                    <p class="vcard__price">$74</p>
+                    <p class="vcard__install">or 4 × $18.50</p>
+                    <button class="vcard__add vcard__add--sold" tabindex="-1" disabled>Sold Out</button>
+                  </div>
+                </div>
+                <div class="vcard">
+                  <div class="vcard__img">
+                    <img src="https://barreletics.com/cdn/shop/files/Square_Pink.png?v=1764627088&width=600" alt="">
+                  </div>
+                  <div class="vcard__body">
+                    <p class="vcard__name">Copper Swirl</p>
+                    <span class="vcard__meta">Closed Sole · Size M</span>
+                    <p class="vcard__price">$74</p>
+                    <p class="vcard__install">or 4 × $18.50</p>
+                    <button class="vcard__add" tabindex="-1">Quick Add →</button>
+                  </div>
+                </div>
+                <div class="vcard">
+                  <div class="vcard__img">
+                    <span class="vcard__status vcard__status--le">Limited Edition</span>
+                    <img src="https://barreletics.com/cdn/shop/files/Multi_Image.jpg?v=1768346625&width=600" alt="">
+                  </div>
+                  <div class="vcard__body">
+                    <p class="vcard__name">Deep Teal</p>
+                    <span class="vcard__meta">Closed Sole · Size M</span>
+                    <p class="vcard__price">$74</p>
+                    <p class="vcard__install">or 4 × $18.50</p>
+                    <button class="vcard__add" tabindex="-1">Quick Add →</button>
+                  </div>
+                </div>
+                <div class="vcard">
+                  <div class="vcard__img">
+                    <img src="https://barreletics.com/cdn/shop/products/Yellow_Image-Blue_Shoe_1200x1200_59ef7b79-1661-4c2f-a2da-c6b9211e2c42.jpg?v=1678412911&width=600" alt="">
+                  </div>
+                  <div class="vcard__body">
+                    <p class="vcard__name">Turquoise</p>
+                    <span class="vcard__meta">Closed Sole · Size M</span>
+                    <p class="vcard__price">$74</p>
+                    <p class="vcard__install">or 4 × $18.50</p>
+                    <button class="vcard__add" tabindex="-1">Quick Add →</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="bb-note"><strong>Buy-box later:</strong> <code>or 4 × $18.50</code> under price · text only.</p>
+          </div>
+          <div class="option__foot">
+            <strong>Tradeoff:</strong> Safe / familiar. Install competes slightly with $74 before intent — still clean (no second pill).
+          </div>
+        </article>
+
+        <!-- C — Under Quick Add + interest-free -->
+        <article class="option" id="option-c">
+          <div class="option__head">
+            <div class="option__tag option__tag--muted">Option C</div>
+            <h3>Under Quick Add · + interest-free</h3>
+            <p class="option__what">
+              Same hierarchy as A; adds fee clarity without a chip.
+            </p>
+            <p class="option__hierarchy">Name → meta pill → $74 → Quick Add → or 4 × $18.50 · interest-free</p>
+          </div>
+          <div class="option__preview">
+            <p class="option__preview-label">Variants layout · post-CTA reassurance + fee line</p>
+            <div class="mock" aria-hidden="true">
+              <div class="mock__toolbar">
+                <div class="mock__tabs">
+                  <span class="mock__tab mock__tab--on">Closed Sole</span>
+                  <span class="mock__tab">Open Sole</span>
+                  <span class="mock__tab">Outdoor</span>
+                </div>
+                <div class="mock__utils">
+                  <div class="mock__size">
+                    <span class="mock__size-label">Size</span>
+                    <span class="mock__size-btn mock__size-btn--on">M</span>
+                    <span class="mock__size-btn">L</span>
+                  </div>
+                  <span class="mock__link">Size chart →</span>
+                  <span class="mock__link">Compare →</span>
+                </div>
+              </div>
+              <div class="mock__grid">
+                <div class="vcard">
+                  <div class="vcard__img">
+                    <span class="vcard__status vcard__status--sold">Sold Out</span>
+                    <img src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=600" alt="">
+                  </div>
+                  <div class="vcard__body">
+                    <p class="vcard__name">Dusty Rose</p>
+                    <span class="vcard__meta">Closed Sole · Size M</span>
+                    <p class="vcard__price">$74</p>
+                    <button class="vcard__add vcard__add--sold" tabindex="-1" disabled>Sold Out</button>
+                    <p class="vcard__install--under-cta">or 4 × $18.50 · interest-free</p>
+                  </div>
+                </div>
+                <div class="vcard">
+                  <div class="vcard__img">
+                    <img src="https://barreletics.com/cdn/shop/files/Square_Pink.png?v=1764627088&width=600" alt="">
+                  </div>
+                  <div class="vcard__body">
+                    <p class="vcard__name">Copper Swirl</p>
+                    <span class="vcard__meta">Closed Sole · Size M</span>
+                    <p class="vcard__price">$74</p>
+                    <button class="vcard__add" tabindex="-1">Quick Add →</button>
+                    <p class="vcard__install--under-cta">or 4 × $18.50 · interest-free</p>
+                  </div>
+                </div>
+                <div class="vcard">
+                  <div class="vcard__img">
+                    <span class="vcard__status vcard__status--le">Limited Edition</span>
+                    <img src="https://barreletics.com/cdn/shop/files/Multi_Image.jpg?v=1768346625&width=600" alt="">
+                  </div>
+                  <div class="vcard__body">
+                    <p class="vcard__name">Deep Teal</p>
+                    <span class="vcard__meta">Closed Sole · Size M</span>
+                    <p class="vcard__price">$74</p>
+                    <button class="vcard__add" tabindex="-1">Quick Add →</button>
+                    <p class="vcard__install--under-cta">or 4 × $18.50 · interest-free</p>
+                  </div>
+                </div>
+                <div class="vcard">
+                  <div class="vcard__img">
+                    <img src="https://barreletics.com/cdn/shop/products/Yellow_Image-Blue_Shoe_1200x1200_59ef7b79-1661-4c2f-a2da-c6b9211e2c42.jpg?v=1678412911&width=600" alt="">
+                  </div>
+                  <div class="vcard__body">
+                    <p class="vcard__name">Turquoise</p>
+                    <span class="vcard__meta">Closed Sole · Size M</span>
+                    <p class="vcard__price">$74</p>
+                    <button class="vcard__add" tabindex="-1">Quick Add →</button>
+                    <p class="vcard__install--under-cta">or 4 × $18.50 · interest-free</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="bb-note"><strong>Buy-box later:</strong> <code>or 4 × $18.50 · interest-free</code> under ATC.</p>
+          </div>
+          <div class="option__foot">
+            <strong>When:</strong> Fee anxiety is real; line stays muted. Prefer A if Shop Pay already makes interest-free obvious at checkout.
+          </div>
+        </article>
+
+        <!-- D — Rejected clash -->
+        <article class="option option--dont" id="option-d">
+          <div class="option__head">
+            <div class="option__tag option__tag--dont">Don’t · Rejected clash</div>
+            <h3>Meta pill + Pay in 4 pill</h3>
+            <p class="option__what">
+              Shown once so the failure is obvious: two pills in the same zone above CTA. Pay in 4 alone can look fine — together with Closed Sole meta it fights.
+            </p>
+            <p class="option__hierarchy">Name → meta pill → $74 → Pay in 4 pill → Quick Add</p>
+          </div>
+          <div class="option__preview">
+            <p class="option__preview-label">Variants layout · clash demo (not a candidate)</p>
+            <div class="mock" aria-hidden="true">
+              <div class="mock__toolbar">
+                <div class="mock__tabs">
+                  <span class="mock__tab mock__tab--on">Closed Sole</span>
+                  <span class="mock__tab">Open Sole</span>
+                  <span class="mock__tab">Outdoor</span>
+                </div>
+                <div class="mock__utils">
+                  <div class="mock__size">
+                    <span class="mock__size-label">Size</span>
+                    <span class="mock__size-btn mock__size-btn--on">M</span>
+                    <span class="mock__size-btn">L</span>
+                  </div>
+                  <span class="mock__link">Size chart →</span>
+                  <span class="mock__link">Compare →</span>
+                </div>
+              </div>
+              <div class="mock__grid">
+                <div class="vcard">
+                  <div class="vcard__img">
+                    <span class="vcard__status vcard__status--sold">Sold Out</span>
+                    <img src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=600" alt="">
+                  </div>
+                  <div class="vcard__body">
+                    <p class="vcard__name">Dusty Rose</p>
+                    <span class="vcard__meta">Closed Sole · Size M</span>
+                    <p class="vcard__price">$74</p>
+                    <div class="vcard__install--chip"><span>Pay in 4</span> $18.50</div>
+                    <button class="vcard__add vcard__add--sold" tabindex="-1" disabled>Sold Out</button>
+                  </div>
+                </div>
+                <div class="vcard">
+                  <div class="vcard__img">
+                    <img src="https://barreletics.com/cdn/shop/files/Square_Pink.png?v=1764627088&width=600" alt="">
+                  </div>
+                  <div class="vcard__body">
+                    <p class="vcard__name">Copper Swirl</p>
+                    <span class="vcard__meta">Closed Sole · Size M</span>
+                    <p class="vcard__price">$74</p>
+                    <div class="vcard__install--chip"><span>Pay in 4</span> $18.50</div>
+                    <button class="vcard__add" tabindex="-1">Quick Add →</button>
+                  </div>
+                </div>
+                <div class="vcard">
+                  <div class="vcard__img">
+                    <span class="vcard__status vcard__status--le">Limited Edition</span>
+                    <img src="https://barreletics.com/cdn/shop/files/Multi_Image.jpg?v=1768346625&width=600" alt="">
+                  </div>
+                  <div class="vcard__body">
+                    <p class="vcard__name">Deep Teal</p>
+                    <span class="vcard__meta">Closed Sole · Size M</span>
+                    <p class="vcard__price">$74</p>
+                    <div class="vcard__install--chip"><span>Pay in 4</span> $18.50</div>
+                    <button class="vcard__add" tabindex="-1">Quick Add →</button>
+                  </div>
+                </div>
+                <div class="vcard">
+                  <div class="vcard__img">
+                    <img src="https://barreletics.com/cdn/shop/products/Yellow_Image-Blue_Shoe_1200x1200_59ef7b79-1661-4c2f-a2da-c6b9211e2c42.jpg?v=1678412911&width=600" alt="">
+                  </div>
+                  <div class="vcard__body">
+                    <p class="vcard__name">Turquoise</p>
+                    <span class="vcard__meta">Closed Sole · Size M</span>
+                    <p class="vcard__price">$74</p>
+                    <div class="vcard__install--chip"><span>Pay in 4</span> $18.50</div>
+                    <button class="vcard__add" tabindex="-1">Quick Add →</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="clash-callout">
+              <strong>Why it fails:</strong> silver/grey meta + Pay in 4 pill = two chips fighting for the same attention band above CTA. Discount-retail, not brand.
+            </p>
+          </div>
+          <div class="option__foot">
+            <strong>Reject.</strong> Keep for reference only — not a ship candidate.
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <section>
+      <h2>References</h2>
+      <p class="links">
+        <a href="./Barreletics%20PDP%20-%20Definitive-v19.html#variants">v19 #variants (applied)</a>
+        &nbsp;·&nbsp;
+        <a href="./Barreletics%20Home%20-%20Definitive-WORKING.html">Draft Home WORKING</a>
+        &nbsp;·&nbsp;
+        <a href="./pdp-v18-decision.html">Variants options</a>
+        &nbsp;·&nbsp;
+        <a href="./index.html">Hub</a>
+      </p>
+    </section>
+  </div>
+</body>
+</html>

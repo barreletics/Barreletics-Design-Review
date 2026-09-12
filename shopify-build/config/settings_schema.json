@@ -137,6 +137,28 @@
         "step": 4,
         "default": 24,
         "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "section_gap",
+        "label": "Section gap (desktop)",
+        "min": 0,
+        "max": 96,
+        "step": 4,
+        "default": 32,
+        "unit": "px",
+        "info": "Default 32. Space between sections site-wide."
+      },
+      {
+        "type": "range",
+        "id": "section_gap_mobile",
+        "label": "Section gap (mobile)",
+        "min": 0,
+        "max": 80,
+        "step": 4,
+        "default": 24,
+        "unit": "px",
+        "info": "Default 24. Phone."
       }
     ]
   },
@@ -153,7 +175,7 @@
         "type": "text",
         "id": "announcement_message_1",
         "label": "Message 1",
-        "default": "Buy 2, Save 15% — Code SAVE15"
+        "default": "Buy 2, Save 10% — Code SAVE2"
       },
       {
         "type": "text",
@@ -187,8 +209,14 @@
         "id": "cart_type",
         "label": "Cart type",
         "options": [
-          { "value": "drawer", "label": "Drawer (recommended)" },
-          { "value": "page", "label": "Full page" }
+          {
+            "value": "drawer",
+            "label": "Drawer (recommended)"
+          },
+          {
+            "value": "page",
+            "label": "Full page"
+          }
         ],
         "default": "drawer"
       },
@@ -237,7 +265,7 @@
         "type": "text",
         "id": "social_youtube",
         "label": "YouTube URL",
-        "default": ""
+        "default": "https://www.youtube.com/"
       }
     ]
   },
@@ -266,7 +294,7 @@
       },
       {
         "type": "paragraph",
-        "content": "Only use these fields if NOT using Shopify's native Google\/Meta channel integrations. Using both will cause duplicate tracking events."
+        "content": "Only use these fields if NOT using Shopify's native Google/Meta channel integrations. Using both will cause duplicate tracking events."
       },
       {
         "type": "text",
@@ -338,6 +366,380 @@
         "id": "free_shipping_message",
         "label": "Free shipping message",
         "default": "Free shipping on orders over $150"
+      }
+    ]
+  },
+  {
+    "name": "PDP hero image",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Global default for which product image shows in the PDP buy-box hero and sticky ATC thumb — without reordering variants or media in Admin. Buy Box / Sticky section settings can override per template."
+      },
+      {
+        "type": "select",
+        "id": "pdp_hero_image_mode",
+        "label": "Hero image priority",
+        "options": [
+          {
+            "value": "admin_order",
+            "label": "Admin media order (default)"
+          },
+          {
+            "value": "variant_color",
+            "label": "Variant color / option value"
+          },
+          {
+            "value": "media_index",
+            "label": "Specific media position #"
+          }
+        ],
+        "default": "admin_order"
+      },
+      {
+        "type": "text",
+        "id": "pdp_hero_color",
+        "label": "Hero color / option value",
+        "info": "When priority is Variant color. e.g. Coral, Bright Yellow, Blue, DarkGrey."
+      },
+      {
+        "type": "range",
+        "id": "pdp_hero_media_index",
+        "label": "Hero media position",
+        "min": 1,
+        "max": 12,
+        "step": 1,
+        "default": 1,
+        "info": "When priority is Specific media position #."
+      }
+    ]
+  },
+  {
+    "name": "One-off colors",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Pick a product → quiet link + Grippy nav item show. Clear the picker → they hide. No extra switches. Do not also add this in Online Store → Navigation."
+      },
+      {
+        "type": "product",
+        "id": "one_off_product",
+        "label": "One-off product",
+        "info": "Leave blank to hide nav + quiet link. All Variants uses this when its own One-Offs picker is empty."
+      },
+      {
+        "type": "text",
+        "id": "one_off_nav_label",
+        "label": "Nav label",
+        "default": "One-off colors",
+        "info": "Injected under the Grippy Shoes parent in the header."
+      },
+      {
+        "type": "text",
+        "id": "one_off_parent_match",
+        "label": "Parent menu match",
+        "default": "grippy",
+        "info": "Case-insensitive: parent link title must contain this (e.g. Grippy Shoes)."
+      },
+      {
+        "type": "text",
+        "id": "one_off_link_label",
+        "label": "PDP quiet link",
+        "default": "This week’s one-off color →",
+        "info": "Under Add to Cart on Closed / Open / Outdoor. Hidden on the one-off product itself."
+      }
+    ]
+  },
+  {
+    "name": "Sock kit",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "One place for Complete the kit on Closed, Open, and in-studio PDPs. Outdoor, one-offs, and Coperni stay off unless you turn the buy-box checkbox on. Link 2 is optional — leave it blank for one link."
+      },
+      {
+        "type": "text",
+        "id": "sock_kit_label",
+        "label": "Label",
+        "default": "Complete the kit"
+      },
+      {
+        "type": "text",
+        "id": "sock_kit_link_label",
+        "label": "Link",
+        "default": "Optional sock kit →"
+      },
+      {
+        "type": "url",
+        "id": "sock_kit_link_url",
+        "label": "Link URL",
+        "info": "Leave blank until the sock collection or product exists."
+      },
+      {
+        "type": "textarea",
+        "id": "sock_kit_hint",
+        "label": "Small type",
+        "default": "A sock made for Performance Skins with grip around the toes.\nDoes your studio require a sock? Need help with sweat, warmth, or comfort?",
+        "info": "Line breaks show. First line is what the sock is."
+      },
+      {
+        "type": "text",
+        "id": "sock_kit_link_2_label",
+        "label": "Link 2 (optional)"
+      },
+      {
+        "type": "url",
+        "id": "sock_kit_link_2_url",
+        "label": "Link 2 URL"
+      }
+    ]
+  },
+  {
+    "name": "Studio FAQ",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Shared by Closed, Open, One-Offs, and Coperni when Use shared studio FAQ is on. Outdoor and Shop All do not use this."
+      },
+      {
+        "type": "header",
+        "content": "Q1"
+      },
+      {
+        "type": "text",
+        "id": "studio_faq_1_q",
+        "label": "Question",
+        "default": "Tired of Pilates socks and yoga socks that slip?"
+      },
+      {
+        "type": "richtext",
+        "id": "studio_faq_1_a",
+        "label": "Answer",
+        "default": "<p>Pilates socks, yoga socks, and barre grip socks fail at the dots — they peel, stretch, and force resets in chair pose and flat back chair. Barreletics Performance Skins are grippy shoes with 360° full-contact grip: not patches, not another disposable sock. Secure in Every Hold for barre, Pilates, yoga, reformer, Megaformer, Lagree, and hot studios.</p>"
+      },
+      {
+        "type": "header",
+        "content": "Q2"
+      },
+      {
+        "type": "text",
+        "id": "studio_faq_2_q",
+        "label": "Question",
+        "default": "Are these good for reformer Pilates, Megaformer, Lagree & hot Pilates?"
+      },
+      {
+        "type": "richtext",
+        "id": "studio_faq_2_a",
+        "label": "Answer",
+        "default": "<p>Yes — engineered for reformer carriage load, Megaformer, Lagree, barre, hot Pilates, and yoga. The 360° grip handles lateral forces that destroy traditional Pilates socks and yoga socks. Both perform identically with the same grip and stability.</p>"
+      },
+      {
+        "type": "header",
+        "content": "Q3"
+      },
+      {
+        "type": "text",
+        "id": "studio_faq_3_q",
+        "label": "Question",
+        "default": "How long do they actually last?"
+      },
+      {
+        "type": "richtext",
+        "id": "studio_faq_3_a",
+        "label": "Answer",
+        "default": "<p>The shoe may wear. The grip does not — it's molded into the sole, so there's nothing to peel or flake. How long a pair lasts depends on how you wear them. Used for Pilates, barre, reformer, Lagree, and yoga, they hold up. One customer recently passed 1,000 classes on a single pair. Another is on year four.</p>"
+      },
+      {
+        "type": "header",
+        "content": "Q4"
+      },
+      {
+        "type": "text",
+        "id": "studio_faq_4_q",
+        "label": "Question",
+        "default": "How do I clean them?"
+      },
+      {
+        "type": "richtext",
+        "id": "studio_faq_4_a",
+        "label": "Answer",
+        "default": "<p>Hand wash with warm soapy water. That's it.</p>"
+      },
+      {
+        "type": "header",
+        "content": "Q5"
+      },
+      {
+        "type": "text",
+        "id": "studio_faq_5_q",
+        "label": "Question",
+        "default": "What size should I order?"
+      },
+      {
+        "type": "richtext",
+        "id": "studio_faq_5_a",
+        "label": "Answer",
+        "default": "<p>M: Women's 5.5–7.5, Kids' 2–5. L: Women's 7.5–11, Men's up to 10.5. Size 7.5 sits in both — wide foot goes Large, narrow goes Medium. Check the size chart.</p>"
+      },
+      {
+        "type": "header",
+        "content": "Q6"
+      },
+      {
+        "type": "text",
+        "id": "studio_faq_6_q",
+        "label": "Question",
+        "default": "Closed Sole or Open Sole — which one?"
+      },
+      {
+        "type": "richtext",
+        "id": "studio_faq_6_a",
+        "label": "Answer",
+        "default": "<p>Both perform identically with the same grip and stability. The difference is feel and coverage. Closed Sole: heel and foot fully covered. Open Sole: heel exposed, mid-foot breathing hole. More grounded, barefoot feel. Natural toe splay. Choice is preference and feel only.</p>"
+      },
+      {
+        "type": "header",
+        "content": "Q7"
+      },
+      {
+        "type": "text",
+        "id": "studio_faq_7_q",
+        "label": "Question",
+        "default": "What's the return and warranty policy?"
+      },
+      {
+        "type": "richtext",
+        "id": "studio_faq_7_a",
+        "label": "Answer",
+        "default": "<p>30-day returns on items in new, sellable condition — try on for fit at home. 90-day warranty covers manufacturing defects only. Free shipping on orders over $150. Orders process within 24–48 hours and typically ship the next business day.</p>"
+      },
+      {
+        "type": "header",
+        "content": "Q8"
+      },
+      {
+        "type": "text",
+        "id": "studio_faq_8_q",
+        "label": "Question",
+        "default": "Are they latex-free and silicone-free?"
+      },
+      {
+        "type": "richtext",
+        "id": "studio_faq_8_a",
+        "label": "Answer",
+        "default": "<p>Yes. Skin-safe. No latex. No silicone. Made in USA. Hand wash with warm soapy water. That's it.</p>"
+      },
+      {
+        "type": "header",
+        "content": "Q9"
+      },
+      {
+        "type": "text",
+        "id": "studio_faq_9_q",
+        "label": "Question",
+        "default": "Grip shoes for Megaformer & Lagree fitness"
+      },
+      {
+        "type": "richtext",
+        "id": "studio_faq_9_a",
+        "label": "Answer",
+        "default": "<p>Megaformer and Lagree demand lateral stability that grip socks cannot provide. Barreletics Performance Skin wraps the entire underfoot with continuous grip — eliminating the slip risk during lunges, pikes, and carriage work. Trusted by Lagree-certified instructors across North America.</p>"
+      },
+      {
+        "type": "header",
+        "content": "Q10"
+      },
+      {
+        "type": "text",
+        "id": "studio_faq_10_q",
+        "label": "Question",
+        "default": "Can I wear a sock with them?"
+      },
+      {
+        "type": "richtext",
+        "id": "studio_faq_10_a",
+        "label": "Answer",
+        "default": "<p>Yes. Optional. A sock made for Performance Skins with grip around the toes — for sweat, warmth, comfort, or when the studio wants a sock. The Skin is still the grip. Both soles perform identically — same grip, same stability.</p>"
+      },
+      {
+        "type": "header",
+        "content": "Q11"
+      },
+      {
+        "type": "text",
+        "id": "studio_faq_11_q",
+        "label": "Question",
+        "default": "Grip shoes vs Pilates socks & yoga socks — which is better?"
+      },
+      {
+        "type": "richtext",
+        "id": "studio_faq_11_a",
+        "label": "Answer",
+        "default": "<p>Pilates socks and yoga socks rely on silicone dots that wear off in weeks. Barreletics uses full-contact grip across the underfoot — one pair replaces the endless barre grip sock cycle. Consistent traction in chair pose, footwork, water ski, and heated rooms from day one.</p>"
+      },
+      {
+        "type": "header",
+        "content": "Q12"
+      },
+      {
+        "type": "text",
+        "id": "studio_faq_12_q",
+        "label": "Question",
+        "default": "Grippy shoes for barre, Pilates & yoga studios in New York City"
+      },
+      {
+        "type": "richtext",
+        "id": "studio_faq_12_a",
+        "label": "Answer",
+        "default": "<p>Barreletics Performance Skins are used in barre, Pilates, and reformer studios across Manhattan, Brooklyn, and the greater NYC area. The 360° grip is built for full class schedules — boutique Lagree rooms to classical Pilates studios — so you stay secure through every transition.</p>"
+      },
+      {
+        "type": "header",
+        "content": "Q13"
+      },
+      {
+        "type": "text",
+        "id": "studio_faq_13_q",
+        "label": "Question",
+        "default": "Best grip shoes for reformer Pilates in Los Angeles"
+      },
+      {
+        "type": "richtext",
+        "id": "studio_faq_13_a",
+        "label": "Answer",
+        "default": "<p>Popular with reformer and Megaformer instructors and studios in Los Angeles — from Santa Monica to West Hollywood. The patented grip is made for high-heat rooms and long class days. Both soles perform identically; choice is preference and feel only.</p>"
+      },
+      {
+        "type": "header",
+        "content": "Q14"
+      },
+      {
+        "type": "text",
+        "id": "studio_faq_14_q",
+        "label": "Question",
+        "default": "Premium Pilates grip shoes — London & Melbourne studios"
+      },
+      {
+        "type": "richtext",
+        "id": "studio_faq_14_a",
+        "label": "Answer",
+        "default": "<p>Barreletics ships internationally to customers and studios in London and Melbourne. Same 360° grip system as the US — built for reformer, Classical Pilates, and contemporary mat work — with standard and express shipping options.</p>"
+      },
+      {
+        "type": "header",
+        "content": "Q15"
+      },
+      {
+        "type": "text",
+        "id": "studio_faq_15_q",
+        "label": "Question",
+        "default": "Best grip footwear for barre classes — Toronto & Canada"
+      },
+      {
+        "type": "richtext",
+        "id": "studio_faq_15_a",
+        "label": "Answer",
+        "default": "<p>Popular with barre and Pilates studios and instructors across Toronto and Canada who want consistent 360° grip that outlasts disposable socks. Available in Open Sole and Closed Sole — same grip, same stability; choice is preference and feel only. Ships across Canada with standard and express options.</p>"
       }
     ]
   }

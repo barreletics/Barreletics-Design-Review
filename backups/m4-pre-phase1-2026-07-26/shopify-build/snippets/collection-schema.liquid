@@ -1,0 +1,16 @@
+{% comment %}
+  Collection Schema
+  Outputs CollectionPage structured data for collection templates.
+  Rendered automatically by theme-m3.liquid on collection pages.
+{% endcomment %}
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": {{ collection.title | json }},
+  "description": {{ collection.description | strip_html | truncate: 160 | json }},
+  "url": "{{ shop.url }}{{ collection.url }}",
+  "numberOfItems": {{ collection.products_count }}
+}
+</script>

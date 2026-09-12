@@ -1,0 +1,136 @@
+{% comment %}
+  Studio trust — Home WORKING 14b. Replaces state GEO accordion on Home.
+  Optional GEO accordion blocks keep FAQPage structured data when used.
+{% endcomment %}
+
+<section class="studio-trust" aria-label="Studio trust">
+  <p class="studio-trust__line type-statement">{{ section.settings.title }}</p>
+  {% if section.settings.subhead != blank %}
+    <p class="studio-trust__sub">{{ section.settings.subhead }}</p>
+  {% endif %}
+
+  {% if section.blocks.size > 0 %}
+    <div class="studio-trust__geo">
+      {% for block in section.blocks %}
+        {% if block.type == 'geo_item' %}
+          <details class="studio-trust__item" {{ block.shopify_attributes }}>
+            <summary class="studio-trust__trigger">{{ block.settings.question }}</summary>
+            <div class="studio-trust__answer">{{ block.settings.answer }}</div>
+          </details>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+</section>
+
+{% assign geo_count = 0 %}
+{% for block in section.blocks %}
+  {% if block.type == 'geo_item' %}
+    {% assign geo_count = geo_count | plus: 1 %}
+  {% endif %}
+{% endfor %}
+{% if geo_count > 0 %}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {% for block in section.blocks %}
+          {% if block.type == 'geo_item' %}
+            {
+              "@type": "Question",
+              "name": {{ block.settings.question | json }},
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": {{ block.settings.answer | strip_html | json }}
+              }
+            }{% unless forloop.last %},{% endunless %}
+          {% endif %}
+        {% endfor %}
+      ]
+    }
+  </script>
+{% endif %}
+
+<style>
+  .studio-trust {
+    padding: 48px 40px;
+    background: #f5f2ec;
+    text-align: center;
+    border-top: 1px solid #e8e2d8;
+  }
+  .studio-trust__line {
+    color: var(--text-primary);
+    margin: 0 0 var(--gap-a);
+  }
+  .studio-trust__sub {
+    font-size: var(--type-body-size);
+    font-weight: var(--type-body-weight);
+    line-height: var(--type-body-leading);
+    color: var(--text-warm-muted);
+    margin: 0;
+  }
+  .studio-trust__geo {
+    max-width: 720px;
+    margin: 32px auto 0;
+    text-align: left;
+  }
+  .studio-trust__item {
+    border-top: 1px solid #d6cfc0;
+  }
+  .studio-trust__item:last-child {
+    border-bottom: 1px solid #d6cfc0;
+  }
+  .studio-trust__trigger {
+    cursor: pointer;
+    list-style: none;
+    padding: 14px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1c1916;
+  }
+  .studio-trust__trigger::-webkit-details-marker { display: none; }
+  .studio-trust__answer {
+    padding: 0 0 16px;
+    font-size: 14px;
+    color: #4a4a4a;
+    line-height: 1.55;
+  }
+  @media (max-width: 768px) {
+    .studio-trust { padding: 40px 16px; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Studio trust",
+  "settings": [
+    { "type": "header", "content": "Shared — Content" },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Trusted by 1,000's of instructors & studios."
+    },
+    {
+      "type": "textarea",
+      "id": "subhead",
+      "label": "Body",
+      "default": "Dig into deep lunges and every position—endless grip that breathes."
+    },
+    { "type": "header", "content": "Section — Studio trust — GEO" },
+    { "type": "paragraph", "content": "GEO Q&A items are blocks below (lives in studio-trust per contract)." }
+  ],
+  "blocks": [
+    {
+      "type": "geo_item",
+      "name": "GEO item",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question / location" },
+        { "type": "richtext", "id": "answer", "label": "Answer" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Studio trust" }]
+}
+{% endschema %}

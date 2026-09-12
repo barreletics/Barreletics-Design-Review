@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "command": "bash .cursor/hooks/session-anti-revert.sh",
+        "failClosed": false
+      }
+    ],
+    "beforeShellExecution": [
+      {
+        "command": "bash .cursor/hooks/block-git-revert.sh",
+        "matcher": "git\\s+(restore|checkout|show)",
+        "failClosed": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+{% comment %}
+  Barreletics SEO — WebSite + Organization JSON-LD. Rendered automatically from theme.liquid.
+  No manual step: runs on every page. Theme-update note: one line in theme.liquid calls this snippet.
+{% endcomment %}
+{%- liquid
+  assign shop_domain = shop.url
+  assign search_url_template = shop_domain | append: '/search?q={search_term_string}'
+-%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": {{ shop.name | json }},
+  "url": {{ shop_domain | json }},
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": {{ search_url_template | json }}
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": {{ shop.name | json }},
+  "url": {{ shop_domain | json }}
+}
+</script>

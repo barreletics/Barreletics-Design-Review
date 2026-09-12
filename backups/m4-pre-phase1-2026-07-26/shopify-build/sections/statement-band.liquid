@@ -1,0 +1,114 @@
+{% comment %}
+  Full-bleed statement band — Home (July 17 commit moment)
+{% endcomment %}
+
+<section class="statement-band" aria-label="{{ section.settings.title | escape }}">
+  <div class="statement-band__inner">
+    {% if section.settings.eyebrow != blank %}
+      <p class="statement-band__eyebrow">{{ section.settings.eyebrow }}</p>
+    {% endif %}
+    <p class="statement-band__title">{{ section.settings.title }}</p>
+    {% if section.settings.subhead != blank %}
+      <p class="statement-band__sub">{{ section.settings.subhead }}</p>
+    {% endif %}
+    {% if section.settings.meta != blank %}
+      <p class="statement-band__meta">{{ section.settings.meta }}</p>
+    {% endif %}
+    {% if section.settings.cta_text != blank %}
+      {% assign sb_href = section.settings.cta_url | default: '/collections/grippy-shoes' %}
+      <a class="statement-band__cta" href="{{ sb_href }}">{{ section.settings.cta_text }}</a>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  .statement-band {
+    position: relative;
+    padding: 96px 40px;
+    background:
+      linear-gradient(135deg, rgba(28, 25, 22, 0.72), rgba(28, 25, 22, 0.45)),
+      #6b645a;
+    color: #fff;
+    text-align: center;
+  }
+  .statement-band__inner {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .statement-band__eyebrow {
+    margin: 0 0 12px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.7);
+  }
+  .statement-band__title {
+    margin: 0 0 16px;
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+  .statement-band__sub {
+    margin: 0 0 12px;
+    font-size: 18px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.92);
+  }
+  .statement-band__meta {
+    margin: 0 0 28px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.72);
+  }
+  .statement-band__cta {
+    display: inline-block;
+    padding: 14px 28px;
+    background: #fff;
+    color: #1c1916;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 6px;
+  }
+  .statement-band__cta:hover {
+    background: #c45c3f;
+    color: #fff;
+  }
+  @media (max-width: 768px) {
+    .statement-band {
+      padding: 72px 16px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Statement band",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Statement",
+      "default": "Studio Workouts and Footwear Will Never Be the Same"
+    },
+    {
+      "type": "text",
+      "id": "subhead",
+      "label": "Subhead",
+      "default": "You Commit to the Class. Commit to the Gear."
+    },
+    {
+      "type": "text",
+      "id": "meta",
+      "label": "Meta line",
+      "default": "Trusted by 1,000's of instructors across barre, Pilates, and reformer studios."
+    },
+    { "type": "text", "id": "cta_text", "label": "CTA text", "default": "Shop Performance Skins" },
+    { "type": "url", "id": "cta_url", "label": "CTA link" }
+  ],
+  "presets": [{ "name": "Statement band" }]
+}
+{% endschema %}

@@ -1,113 +1,74 @@
 {% comment %}
-  Partner Programs — Consolidated Page
-  D-042: Wholesale, Studio Partners, and Ambassadors on a single page.
-  Replaces page-wholesale.liquid, page-studio-program.liquid, page-ambassador.liquid.
-  Pricing/terms are INTERNAL — never displayed publicly.
+  Partner Programs — Hub Page
+  Heading, one paragraph, three links to the program pages, and a catch-all form.
+
+  Used on: templates/page.partners.json  →  /pages/partners
+
+  ARCHITECTURE NOTE (2026-08-08)
+  D-042 originally made this the single surface and deprecated the three standalone pages. Owner
+  direction 2026-08-08 restores dedicated pages for each program; this file is the router. Each
+  program owns its own application form on its own page. See planning/partner-programs.md.
+
+  ROUTING NOTE
+  Submissions post through Shopify's native {% form 'contact' %}, which always delivers to the store
+  Sender email and cannot carry a custom subject line. The hidden form_id token below is the value
+  the mail rule matches on to route inquiries away from the support inbox.
+
+  SHAPE NOTE (owner direction 2026-08-08 — "stop creating shit, make it straightforward like any
+  other brand")
+  The hub routes, it does not sell. Page eyebrow, the three program eyebrows, the pitch headings,
+  the benefit bullet lists and their block types, and the alternating full-bleed program bands were
+  removed; the three programs are now one plain list. Program links are fixed internal routes and
+  are no longer Theme Editor settings.
+
+  OPEN RECOMMENDATION: this page could go further and be nothing but the heading and the three
+  links. The only thing keeping the form is that it is the catch-all for people who do not know
+  which program fits; deleting it leaves them with no route. Owner decision, not an agent decision.
+
+  COPY NOTES
+  - No reassurance filler. "Each is read by a person" and "we'll read this" were cut. A stated
+    response time is a fact and stays.
+  - No price list, minimum order, or payment terms exist. Never imply a tier structure does.
+  - No tax content. Barreletics has never collected a resale certificate or tax ID (owner, 2026-08-08).
 {% endcomment %}
+
+{%- liquid
+  assign form_token = section.settings.form_token | default: 'BL-PARTNER-GENERAL'
+-%}
 
 <section class="section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
   <div class="section__inner section__inner--narrow">
-    {% if section.settings.eyebrow != blank %}
-      <p class="eyebrow eyebrow--accent">{{ section.settings.eyebrow }}</p>
-    {% endif %}
-    <h1 class="partners__title">{{ section.settings.title }}</h1>
+    <h1 class="partners__title type-hero">{{ section.settings.title }}</h1>
     {% if section.settings.subtitle != blank %}
-      <p class="partners__subtitle">{{ section.settings.subtitle }}</p>
+      <p class="partners__subtitle type-lede">{{ section.settings.subtitle }}</p>
     {% endif %}
-  </div>
-</section>
 
-{%- comment -%} Section 1: Wholesale {%- endcomment -%}
-<section class="section section--cream" id="wholesale">
-  <div class="section__inner">
-    <div class="partners__program">
-      <div class="partners__program-content">
-        <p class="eyebrow eyebrow--accent">{{ section.settings.wholesale_eyebrow }}</p>
-        <h2 class="partners__program-title">{{ section.settings.wholesale_title }}</h2>
-        <div class="partners__program-body">{{ section.settings.wholesale_body }}</div>
-        <ul class="partners__benefits-list">
-          {% for block in section.blocks %}
-            {% if block.type == 'wholesale_benefit' %}
-              <li class="partners__benefit-item" {{ block.shopify_attributes }}>
-                <strong>{{ block.settings.title }}</strong> — {{ block.settings.description }}
-              </li>
-            {% endif %}
-          {% endfor %}
-        </ul>
-        <a href="#partner-inquiry" class="btn btn--primary partners__cta">{{ section.settings.wholesale_cta }}</a>
+    <div class="partners__list">
+      <div class="partners__program" id="wholesale">
+        <h2 class="partners__program-title h2-standard">{{ section.settings.wholesale_title }}</h2>
+        <div class="partners__program-body type-body">{{ section.settings.wholesale_body }}</div>
+        <a href="/pages/wholesale" class="btn btn--primary partners__cta">{{ section.settings.wholesale_cta }}</a>
+      </div>
+
+      <div class="partners__program" id="studio-partners">
+        <h2 class="partners__program-title h2-standard">{{ section.settings.studio_title }}</h2>
+        <div class="partners__program-body type-body">{{ section.settings.studio_body }}</div>
+        <a href="/pages/studio-program" class="btn btn--primary partners__cta">{{ section.settings.studio_cta }}</a>
+      </div>
+
+      <div class="partners__program" id="ambassadors">
+        <h2 class="partners__program-title h2-standard">{{ section.settings.ambassador_title }}</h2>
+        <div class="partners__program-body type-body">{{ section.settings.ambassador_body }}</div>
+        <a href="/pages/ambassador" class="btn btn--primary partners__cta">{{ section.settings.ambassador_cta }}</a>
       </div>
     </div>
   </div>
 </section>
 
-{%- comment -%} Section 2: Studio Partners {%- endcomment -%}
-<section class="section" id="studio-partners">
-  <div class="section__inner">
-    <div class="partners__program">
-      <div class="partners__program-content">
-        <p class="eyebrow eyebrow--accent">{{ section.settings.studio_eyebrow }}</p>
-        <h2 class="partners__program-title">{{ section.settings.studio_title }}</h2>
-        <div class="partners__program-body">{{ section.settings.studio_body }}</div>
-        <ul class="partners__benefits-list">
-          {% for block in section.blocks %}
-            {% if block.type == 'studio_benefit' %}
-              <li class="partners__benefit-item" {{ block.shopify_attributes }}>
-                <strong>{{ block.settings.title }}</strong> — {{ block.settings.description }}
-              </li>
-            {% endif %}
-          {% endfor %}
-        </ul>
-        <a href="#partner-inquiry" class="btn btn--primary partners__cta">{{ section.settings.studio_cta }}</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-{%- comment -%}
-  Section 3: Ambassadors & Instructors
-  AFFILIATE INTEGRATION POINT: When an affiliate platform is connected (e.g. Refersion,
-  GoAffPro, or similar), insert the affiliate signup widget or tracking link here.
-  The CTA below currently routes to the unified inquiry form. Replace or augment
-  with the affiliate platform's embed code when ready.
-{%- endcomment -%}
-<section class="section section--cream" id="ambassadors">
-  <div class="section__inner">
-    <div class="partners__program">
-      <div class="partners__program-content">
-        <p class="eyebrow eyebrow--accent">{{ section.settings.ambassador_eyebrow }}</p>
-        <h2 class="partners__program-title">{{ section.settings.ambassador_title }}</h2>
-        <div class="partners__program-body">{{ section.settings.ambassador_body }}</div>
-        <ul class="partners__benefits-list">
-          {% for block in section.blocks %}
-            {% if block.type == 'ambassador_benefit' %}
-              <li class="partners__benefit-item" {{ block.shopify_attributes }}>
-                <strong>{{ block.settings.title }}</strong> — {{ block.settings.description }}
-              </li>
-            {% endif %}
-          {% endfor %}
-        </ul>
-
-        {%- comment -%}
-          AFFILIATE WIDGET PLACEHOLDER
-          When affiliate platform is live, render the signup/referral widget here:
-          {% if section.settings.affiliate_enabled %}
-            <div id="affiliate-widget" class="partners__affiliate-embed">
-              <!-- Affiliate platform embed code goes here -->
-            </div>
-          {% endif %}
-        {%- endcomment -%}
-
-        <a href="#partner-inquiry" class="btn btn--primary partners__cta">{{ section.settings.ambassador_cta }}</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-{%- comment -%} Unified Inquiry Form {%- endcomment -%}
-<section class="section" id="partner-inquiry">
+<section class="section section--cream" id="partner-inquiry">
   <div class="section__inner section__inner--narrow">
-    <h2 class="partners__form-title">{{ section.settings.form_heading }}</h2>
-    <p class="partners__form-subtitle">{{ section.settings.form_subtitle }}</p>
+    <h2 class="partners__form-title h2-standard">{{ section.settings.form_heading }}</h2>
+    <p class="partners__form-subtitle type-body">{{ section.settings.form_subtitle }}</p>
 
     {% form 'contact' %}
       {% if form.posted_successfully? %}
@@ -122,7 +83,8 @@
         </div>
       {% endif %}
 
-      <input type="hidden" name="contact[subject]" value="Partner Program Inquiry">
+      <input type="hidden" name="contact[subject]" value="Partner programs">
+      <input type="hidden" name="contact[form_id]" value="{{ form_token }}">
 
       <div class="partners__fields">
         <div class="partners__field-row">
@@ -137,18 +99,19 @@
         </div>
 
         <div class="partners__field">
-          <label for="partner-program" class="partners__label">Program Interest</label>
+          <label for="partner-program" class="partners__label">Program</label>
           <select id="partner-program" name="contact[program]" class="partners__select" required>
             <option value="" disabled selected>Select a program</option>
             <option value="Wholesale">Wholesale</option>
-            <option value="Studio Partner">Studio Partner</option>
+            <option value="Studio">Studio</option>
             <option value="Ambassador">Ambassador</option>
+            <option value="Not sure">Not sure</option>
           </select>
         </div>
 
         <div class="partners__field">
           <label for="partner-message" class="partners__label">Message</label>
-          <textarea id="partner-message" name="contact[body]" class="partners__textarea" rows="4" placeholder="Tell us about yourself, your studio, or your business..."></textarea>
+          <textarea id="partner-message" name="contact[body]" class="partners__textarea" rows="4" required placeholder="Tell us about yourself, your studio, or your business."></textarea>
         </div>
 
         <div class="partners__field">
@@ -160,79 +123,49 @@
 </section>
 
 <style>
+  /* Softer warm band, owner pick 2026-08-08 (variant B of the form-band comparison).
+     --bg-alternate #f5f2ec stepped down from white too hard; --bg-alternate-soft #faf8f6
+     halves the step and keeps the warmth. Set here, not as a Theme Editor setting, so the
+     old tone cannot come back on a fresh section add. */
+  #partner-inquiry.section--cream {
+    background: var(--bg-alternate-soft);
+  }
+
   .partners__title {
-    font-size: var(--text-5xl);
-    font-weight: var(--weight-bold);
     color: var(--text-primary);
     text-align: center;
-    margin: 0 0 var(--space-3);
-    letter-spacing: var(--tracking-tight);
+    margin: 0 0 var(--gap-b, 20px);
   }
 
   .partners__subtitle {
-    font-size: var(--text-md);
-    color: var(--text-body);
     text-align: center;
-    line-height: var(--leading-relaxed);
-    margin: 0;
+    margin: 0 auto;
     max-width: var(--max-width-copy);
-    margin-left: auto;
-    margin-right: auto;
+  }
+
+  .partners__list {
+    display: grid;
+    gap: var(--space-8);
+    margin: var(--space-10, 48px) auto 0;
+    max-width: 640px;
   }
 
   .partners__program {
-    max-width: 720px;
-    margin: 0 auto;
+    padding: var(--space-5) 0 0;
+    border-top: 1px solid var(--border-default);
+    scroll-margin-top: 96px;
   }
 
   .partners__program-title {
-    font-size: var(--text-3xl);
-    font-weight: var(--weight-bold);
-    color: var(--text-primary);
-    margin: 0 0 var(--space-4);
-    letter-spacing: var(--tracking-tight);
+    margin: 0 0 var(--space-2);
   }
 
   .partners__program-body {
-    font-size: var(--text-md);
-    color: var(--text-body);
-    line-height: var(--leading-relaxed);
-    margin-bottom: var(--space-6);
+    margin-bottom: var(--space-5);
   }
 
   .partners__program-body p {
-    margin-bottom: var(--space-3);
-  }
-
-  .partners__benefits-list {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 var(--space-7);
-    display: grid;
-    gap: var(--space-3);
-  }
-
-  .partners__benefit-item {
-    font-size: var(--text-base);
-    color: var(--text-body);
-    line-height: var(--leading-relaxed);
-    padding-left: var(--space-5);
-    position: relative;
-  }
-
-  .partners__benefit-item::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 8px;
-    width: 8px;
-    height: 2px;
-    background: var(--accent-primary);
-  }
-
-  .partners__benefit-item strong {
-    color: var(--text-primary);
-    font-weight: var(--weight-bold);
+    margin: 0;
   }
 
   .partners__cta {
@@ -240,24 +173,20 @@
   }
 
   .partners__form-title {
-    font-size: var(--text-2xl);
-    font-weight: var(--weight-bold);
-    color: var(--text-primary);
     text-align: center;
     margin: 0 0 var(--space-2);
   }
 
   .partners__form-subtitle {
-    font-size: var(--text-base);
-    color: var(--text-body);
     text-align: center;
-    margin: 0 0 var(--space-8);
+    margin: 0 auto var(--space-8);
+    max-width: var(--max-width-copy);
   }
 
   .partners__fields {
     display: grid;
     gap: var(--space-4);
-    max-width: 600px;
+    max-width: 680px;
     margin: 0 auto;
   }
 
@@ -300,6 +229,13 @@
     box-shadow: 0 0 0 1px var(--text-primary);
   }
 
+  .partners__input:focus-visible,
+  .partners__select:focus-visible,
+  .partners__textarea:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+  }
+
   .partners__textarea {
     resize: vertical;
     min-height: 100px;
@@ -333,14 +269,6 @@
   }
 
   @media (max-width: 768px) {
-    .partners__title {
-      font-size: var(--text-3xl);
-    }
-
-    .partners__program-title {
-      font-size: var(--text-2xl);
-    }
-
     .partners__field-row {
       grid-template-columns: 1fr;
     }
@@ -351,58 +279,35 @@
 {
   "name": "Partner Programs",
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Page eyebrow", "default": "Partner Programs" },
-    { "type": "text", "id": "title", "label": "Page title", "default": "Partner With Barreletics" },
-    { "type": "textarea", "id": "subtitle", "label": "Subtitle", "default": "Whether you're a studio, retailer, or instructor — we have a partnership that fits. Join the community redefining studio grip." },
+    { "type": "text", "id": "title", "label": "Page title", "default": "Partner programs" },
+    { "type": "textarea", "id": "subtitle", "label": "Subtitle", "default": "Instructors, studios, retailers. Pick the one that describes you." },
 
     { "type": "header", "content": "Wholesale" },
-    { "type": "text", "id": "wholesale_eyebrow", "label": "Wholesale eyebrow", "default": "Wholesale" },
-    { "type": "text", "id": "wholesale_title", "label": "Wholesale title", "default": "Carry Barreletics in Your Studio or Store" },
-    { "type": "richtext", "id": "wholesale_body", "label": "Wholesale body", "default": "<p>Bring Performance Skins to your studio or retail space. We work with studios, fitness retailers, and wellness centers to offer volume pricing on our patented grippy shoes.</p>" },
-    { "type": "text", "id": "wholesale_cta", "label": "Wholesale CTA", "default": "Apply for Wholesale" },
+    { "type": "text", "id": "wholesale_title", "label": "Wholesale title", "default": "Wholesale" },
+    { "type": "richtext", "id": "wholesale_body", "label": "Wholesale body", "default": "<p>For fitness and activewear retailers, boutiques, multi-location studio groups, gyms, wellness centers, and resorts.</p>" },
+    { "type": "text", "id": "wholesale_cta", "label": "Wholesale link label", "default": "Open a wholesale account", "info": "Links to /pages/wholesale." },
 
-    { "type": "header", "content": "Studio Partners" },
-    { "type": "text", "id": "studio_eyebrow", "label": "Studio eyebrow", "default": "Studio Partners" },
-    { "type": "text", "id": "studio_title", "label": "Studio title", "default": "Studio & Instructor Program" },
-    { "type": "richtext", "id": "studio_body", "label": "Studio body", "default": "<p>Join the studios and instructors upgrading their grip. Special pricing, dedicated support, and marketing materials for qualified partners.</p>" },
-    { "type": "text", "id": "studio_cta", "label": "Studio CTA", "default": "Become a Studio Partner" },
+    { "type": "header", "content": "Studio program" },
+    { "type": "text", "id": "studio_title", "label": "Studio title", "default": "Studio program" },
+    { "type": "richtext", "id": "studio_body", "label": "Studio body", "default": "<p>For single studios and certified instructors teaching barre, reformer Pilates, Lagree, Megaformer, mat Pilates, or yoga.</p>" },
+    { "type": "text", "id": "studio_cta", "label": "Studio link label", "default": "Apply to the studio program", "info": "Links to /pages/studio-program." },
 
-    { "type": "header", "content": "Ambassadors & Instructors" },
-    { "type": "text", "id": "ambassador_eyebrow", "label": "Ambassador eyebrow", "default": "Ambassadors & Instructors" },
-    { "type": "text", "id": "ambassador_title", "label": "Ambassador title", "default": "Represent the Next Generation of Grip" },
-    { "type": "richtext", "id": "ambassador_body", "label": "Ambassador body", "default": "<p>Join our community of instructors and athletes who are redefining studio performance. Get early access, exclusive perks, and help spread the word.</p>" },
-    { "type": "text", "id": "ambassador_cta", "label": "Ambassador CTA", "default": "Apply to Become an Ambassador" },
+    { "type": "header", "content": "Ambassador program" },
+    { "type": "text", "id": "ambassador_title", "label": "Ambassador title", "default": "Ambassador program" },
+    { "type": "richtext", "id": "ambassador_body", "label": "Ambassador body", "default": "<p>For instructors and practitioners with an audience. No follower minimum.</p>" },
+    { "type": "text", "id": "ambassador_cta", "label": "Ambassador link label", "default": "Apply to the ambassador program", "info": "Links to /pages/ambassador." },
 
-    { "type": "header", "content": "Inquiry Form" },
-    { "type": "text", "id": "form_heading", "label": "Form heading", "default": "Get in Touch" },
-    { "type": "text", "id": "form_subtitle", "label": "Form subtitle", "default": "Tell us which program interests you. We'll follow up within 3-5 business days." },
-    { "type": "text", "id": "submit_text", "label": "Submit button text", "default": "Submit Inquiry" },
-    { "type": "text", "id": "success_message", "label": "Success message", "default": "Thank you for your interest! We'll review your inquiry and get back to you within 3-5 business days." }
-  ],
-  "blocks": [
+    { "type": "header", "content": "Inquiry form" },
+    { "type": "text", "id": "form_heading", "label": "Form heading", "default": "Not sure which one?" },
+    { "type": "text", "id": "form_subtitle", "label": "Form subtitle", "default": "Tell us what you do and we'll point you at the right program. We reply within 3\u20135 business days." },
+    { "type": "text", "id": "submit_text", "label": "Submit button text", "default": "Send inquiry" },
+    { "type": "text", "id": "success_message", "label": "Success message", "default": "Thanks. We'll come back to you within 3\u20135 business days." },
     {
-      "type": "wholesale_benefit",
-      "name": "Wholesale Benefit",
-      "settings": [
-        { "type": "text", "id": "title", "label": "Title" },
-        { "type": "textarea", "id": "description", "label": "Description" }
-      ]
-    },
-    {
-      "type": "studio_benefit",
-      "name": "Studio Benefit",
-      "settings": [
-        { "type": "text", "id": "title", "label": "Title" },
-        { "type": "textarea", "id": "description", "label": "Description" }
-      ]
-    },
-    {
-      "type": "ambassador_benefit",
-      "name": "Ambassador Benefit",
-      "settings": [
-        { "type": "text", "id": "title", "label": "Title" },
-        { "type": "textarea", "id": "description", "label": "Description" }
-      ]
+      "type": "text",
+      "id": "form_token",
+      "label": "Routing token",
+      "default": "BL-PARTNER-GENERAL",
+      "info": "Hidden value included in the submission email. The mail rule matches this string to route inquiries to the partner applications inbox. Do not change without updating the rule — see planning/partner-programs.md."
     }
   ],
   "presets": [{ "name": "Partner Programs" }]

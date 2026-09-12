@@ -49,6 +49,8 @@ depends_on: [09-collection-architecture, 11-navigation-architecture, 12-seo-geo-
 | `/pages/blank-page` | `/` | 301 | Remove placeholder |
 | `/pages/free-people` | `/collections/collaborations` | 301 | Collab → collection |
 
+> **Retired 2026-08-08 (D-048 supersedes D-042):** `/pages/wholesale`, `/pages/ambassador`, and `/pages/studio-program` previously 301'd to `/pages/partners`. Those three are now dedicated live pages with their own intake forms, so the folding redirects are retired — leaving them in place would make the new pages unreachable. Removed from the bulk-import CSV below and struck in the Redirect Verification Audit. `/pages/become-an-affiliate` and `/pages/wholesale-calculator` still point at `/pages/partners` (the routing hub) and are unaffected.
+
 ## Blog Redirects
 
 | Old URL | New URL | Type | Notes |
@@ -110,9 +112,6 @@ Redirect from,Redirect to
 /pages/shop-bundles,/collections/grippy-shoes
 /pages/become-an-affiliate,/pages/partners
 /pages/wholesale-calculator,/pages/partners
-/pages/wholesale,/pages/partners
-/pages/ambassador,/pages/partners
-/pages/studio-program,/pages/partners
 /pages/bogo-template,/collections/sale
 /pages/size-chart,/pages/size-guide
 /pages/blank-page,/
@@ -152,9 +151,9 @@ Redirect from,Redirect to
 | `/pages/size-chart` | `/pages/size-guide` | Yes | No | No | None | No |
 | `/pages/blank-page` | `/` | Yes | No | No | Remove placeholder | No |
 | `/pages/free-people` | `/collections/collaborations` | Unknown | No | No | Collab may be inactive | **Yes** — confirm collaboration status |
-| `/pages/wholesale` | `/pages/partners` | Yes | No | No | D-042: consolidated partners page | No |
-| `/pages/ambassador` | `/pages/partners` | Yes | No | No | D-042: consolidated partners page | No |
-| `/pages/studio-program` | `/pages/partners` | Yes | No | No | D-042: consolidated partners page | No |
+| ~~`/pages/wholesale`~~ | ~~`/pages/partners`~~ | **No — RETIRED 2026-08-08** | — | — | D-048 supersedes D-042: `/pages/wholesale` is now a dedicated page. Redirect would make it unreachable. | No |
+| ~~`/pages/ambassador`~~ | ~~`/pages/partners`~~ | **No — RETIRED 2026-08-08** | — | — | D-048 supersedes D-042: `/pages/ambassador` is now a dedicated page. Redirect would make it unreachable. | No |
+| ~~`/pages/studio-program`~~ | ~~`/pages/partners`~~ | **No — RETIRED 2026-08-08** | — | — | D-048 supersedes D-042: `/pages/studio-program` is now a dedicated page. Redirect would make it unreachable. | No |
 
 ### Blog Redirects
 
@@ -175,7 +174,7 @@ Redirect from,Redirect to
 2. **Sale collection** — `/pages/bogo-template` → `/collections/sale` requires sale collection to exist
 3. **Collaborations** — `/pages/free-people` → `/collections/collaborations` requires confirmation collaboration is still active/relevant
 4. **Blog articles** — Each article under `/blogs/blog/` needs individual redirect entry; Shopify has no wildcard support. Full article inventory required before implementation.
-5. **Partner page consolidation** — Old `/pages/wholesale`, `/pages/ambassador`, `/pages/studio-program` all redirect to `/pages/partners` per D-042
+5. **Partner pages — folding redirects RETIRED 2026-08-08 (D-048)** — `/pages/wholesale`, `/pages/ambassador`, and `/pages/studio-program` are dedicated live pages, each with its own intake form; `/pages/partners` is the routing hub. The three 301s to `/pages/partners` are retired and must NOT be created in Shopify Admin. If they were already imported from an earlier CSV, delete them in Online Store → Navigation → URL Redirects before launch or the new pages are unreachable.
 
 ---
 

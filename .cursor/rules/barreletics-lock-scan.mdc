@@ -1,0 +1,21 @@
+---
+description: Before any theme push or page refine, run sitewide lock scan. Spots Type OS / pad / 50/50 / media / guarantee / spine mismatches on any page.
+globs:
+  - shopify-build/templates/**/*.json
+  - shopify-build/sections/**/*.liquid
+alwaysApply: false
+---
+# Barreletics lock scan (sitewide)
+
+Locks live in `planning/locks/`:
+- `sitewide.lock.json` — design system (pads, 50/50 mobile, cream, media QC, guarantee, Type OS pointers)
+- `<page>.lock.json` — page spine / titles / feature sets
+
+Before push or when refining any page:
+
+1. `python3 scripts/lock-scan.py` from Design Review root
+2. Fix every `FAIL` — never edit the lock to green the scan unless Andrew re-locks
+3. Report FAIL lines only (coffee blurts)
+4. One axis at a time after scan is clean
+
+Media geometry failures are not code bugs — run media QC gate before FIT/Liquid thrash.

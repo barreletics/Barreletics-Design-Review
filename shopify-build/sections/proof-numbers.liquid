@@ -1,0 +1,474 @@
+{% comment %}
+  Proof numbers — energetic trust stats band.
+  Reusable; add/remove in Theme Editor. Not coupled to other sections.
+{% endcomment %}
+
+{% liquid
+  assign enabled = section.settings.enabled
+  if enabled == nil
+    assign enabled = true
+  endif
+  assign tone = section.settings.tone | default: 'white'
+  assign region_label = section.settings.aria_label | strip
+  if region_label == blank
+    assign region_label = section.settings.eyebrow | default: 'By the numbers'
+  endif
+%}
+
+{% if enabled %}
+<section
+  {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | handleize }}"{% endif %}
+  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} proof-numbers proof-numbers--{{ tone }}"
+  data-proof-numbers
+  aria-label="{{ region_label | escape }}"
+ style="{% render 'section-inset-vars' %}">
+  <div class="proof-numbers__inner">
+    {% if section.settings.eyebrow != blank or section.settings.title != blank %}
+      <div class="proof-numbers__head">
+        {% if section.settings.eyebrow != blank %}
+          <p class="proof-numbers__eyebrow type-label">{{ section.settings.eyebrow }}</p>
+        {% endif %}
+        {% if section.settings.title != blank %}
+          <h2 class="proof-numbers__title h2-display">{{ section.settings.title }}</h2>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if section.blocks.size > 0 %}
+      <ul class="proof-numbers__grid" role="list">
+        {% for block in section.blocks %}
+          <li class="proof-numbers__cell" {{ block.shopify_attributes }} style="--pn-i: {{ forloop.index0 }};">
+            {% if block.settings.stat != blank %}
+              <p class="proof-numbers__stat">{{ block.settings.stat }}</p>
+            {% endif %}
+            {% if block.settings.label != blank %}
+              <p class="proof-numbers__label">{{ block.settings.label }}</p>
+            {% endif %}
+            {% if block.settings.detail != blank %}
+              <p class="proof-numbers__detail">{{ block.settings.detail }}</p>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  #shopify-section-{{ section.id }} .proof-numbers {
+    position: relative;
+    overflow: hidden;
+    padding: 88px 40px;
+    text-align: center;
+  }
+  #shopify-section-{{ section.id }} .proof-numbers--cream {
+    background: #f5f2ec;
+    color: #1c1916;
+    border-top: 1px solid #e8e2d8;
+    border-bottom: 1px solid #e8e2d8;
+  }
+  #shopify-section-{{ section.id }} .proof-numbers--white {
+    background: #ffffff;
+    color: #1c1916;
+    border-top: 1px solid #ebe7e0;
+    border-bottom: 1px solid #ebe7e0;
+  }
+  #shopify-section-{{ section.id }} .proof-numbers--charcoal {
+    background: #1c1916;
+    color: #fff;
+    border-top: 1px solid #1c1916;
+    border-bottom: 1px solid #1c1916;
+  }
+  #shopify-section-{{ section.id }} .proof-numbers__inner {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  #shopify-section-{{ section.id }} .proof-numbers__head {
+    margin: 0 auto var(--gap-c, 32px);
+    max-width: 36ch;
+  }
+  #shopify-section-{{ section.id }} .proof-numbers__eyebrow {
+    margin: 0 0 var(--gap-a, 16px);
+    color: #c45c3f;
+  }
+  #shopify-section-{{ section.id }} .proof-numbers--white .proof-numbers__eyebrow {
+    color: #6b645a;
+  }
+  #shopify-section-{{ section.id }} .proof-numbers--charcoal .proof-numbers__eyebrow {
+    color: #c45c3f;
+  }
+  #shopify-section-{{ section.id }} .proof-numbers__title {
+    margin: 0;
+    color: inherit;
+  }
+  #shopify-section-{{ section.id }} .proof-numbers__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat({{ section.blocks.size | at_most: 4 }}, minmax(0, 1fr));
+    gap: 0;
+    align-items: start;
+  }
+  #shopify-section-{{ section.id }} .proof-numbers__cell {
+    position: relative;
+    padding: 12px 28px;
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: calc(var(--pn-i, 0) * 90ms);
+  }
+  #shopify-section-{{ section.id }} .proof-numbers.is-in .proof-numbers__cell {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  #shopify-section-{{ section.id }} .proof-numbers__cell + .proof-numbers__cell::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 12%;
+    bottom: 12%;
+    width: 1px;
+    background: #d6cfc0;
+  }
+  #shopify-section-{{ section.id }} .proof-numbers--white .proof-numbers__cell + .proof-numbers__cell::before {
+    background: #e8e4dc;
+  }
+  #shopify-section-{{ section.id }} .proof-numbers--charcoal .proof-numbers__cell + .proof-numbers__cell::before {
+    background: rgba(255, 255, 255, 0.16);
+  }
+  #shopify-section-{{ section.id }} .proof-numbers__stat {
+    margin: 0 0 10px;
+    font-family: var(--font-family);
+    font-size: clamp(48px, 7vw, 72px);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 0.95;
+    color: #c45c3f;
+  }
+  #shopify-section-{{ section.id }} .proof-numbers--white .proof-numbers__stat {
+    color: #1c1916;
+  }
+  #shopify-section-{{ section.id }} .proof-numbers--charcoal .proof-numbers__stat {
+    color: #fff;
+    text-shadow: 0 0 40px rgba(196, 92, 63, 0.35);
+  }
+  #shopify-section-{{ section.id }} .proof-numbers__label {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    line-height: 1.35;
+    color: #1c1916;
+  }
+  #shopify-section-{{ section.id }} .proof-numbers--charcoal .proof-numbers__label {
+    color: #fff;
+  }
+  #shopify-section-{{ section.id }} .proof-numbers__detail {
+    margin: 8px 0 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.45;
+    color: #6b645a;
+    max-width: 22ch;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  #shopify-section-{{ section.id }} .proof-numbers--white .proof-numbers__detail {
+    color: #8a8a8a;
+  }
+  #shopify-section-{{ section.id }} .proof-numbers--charcoal .proof-numbers__detail {
+    color: rgba(255, 255, 255, 0.72);
+  }
+  /* Soft energy wash — cream / charcoal only; white stays clean */
+  #shopify-section-{{ section.id }} .proof-numbers--cream::before {
+    content: "";
+    position: absolute;
+    inset: -20% 20% auto;
+    height: 70%;
+    background: radial-gradient(ellipse at center, rgba(196, 92, 63, 0.08) 0%, transparent 68%);
+    pointer-events: none;
+  }
+  #shopify-section-{{ section.id }} .proof-numbers--charcoal::before {
+    content: "";
+    position: absolute;
+    inset: auto 10% -30%;
+    height: 70%;
+    background: radial-gradient(ellipse at center, rgba(196, 92, 63, 0.28) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  /* White: thin rust underline energy under each figure */
+  #shopify-section-{{ section.id }} .proof-numbers--white .proof-numbers__stat::after {
+    content: "";
+    display: block;
+    width: 28px;
+    height: 2px;
+    margin: 12px auto 0;
+    background: #c45c3f;
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .proof-numbers {
+      padding: 64px 20px;
+    }
+    #shopify-section-{{ section.id }} .proof-numbers__grid {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+    #shopify-section-{{ section.id }} .proof-numbers__cell {
+      padding: 0 8px 28px;
+    }
+    #shopify-section-{{ section.id }} .proof-numbers__cell + .proof-numbers__cell::before {
+      left: 18%;
+      right: 18%;
+      top: 0;
+      bottom: auto;
+      width: auto;
+      height: 1px;
+    }
+    #shopify-section-{{ section.id }} .proof-numbers__cell:last-child {
+      padding-bottom: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #shopify-section-{{ section.id }} .proof-numbers__cell {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  (function () {
+    var root = document.querySelector('#shopify-section-{{ section.id }} [data-proof-numbers]');
+    if (!root) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      root.classList.add('is-in');
+      return;
+    }
+    if (!('IntersectionObserver' in window)) {
+      root.classList.add('is-in');
+      return;
+    }
+    var io = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            root.classList.add('is-in');
+            io.disconnect();
+          }
+        });
+      },
+      { threshold: 0.28 }
+    );
+    io.observe(root);
+  })();
+</script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Proof numbers",
+  "tag": "section",
+  "class": "section-proof-numbers",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Show section",
+      "default": true,
+      "info": "Off = remove from page without deleting the section instance."
+    },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor ID",
+      "default": "numbers"
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Accessibility label",
+      "default": "Proof in numbers"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Proof"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Built for the ones who show up.",
+      "info": "Optional. Leave blank for stats-only energy."
+    },
+    {
+      "type": "select",
+      "id": "tone",
+      "label": "Tone",
+      "options": [
+        { "value": "white", "label": "White (clean · charcoal type)" },
+        { "value": "cream", "label": "Cream (energy wash)" },
+        { "value": "charcoal", "label": "Charcoal (high energy)" }
+      ],
+      "default": "white"
+    },
+    { "type": "header", "content": "Shared — Section frame" },
+    {
+      "type": "paragraph",
+      "content": "OUTER inset from the page edges (margin). Top and bottom are independent; left & right = one control. Custom mobile OFF = mobile uses the same inset as desktop. Defaults 0 = full bleed."
+    },
+    {
+      "type": "checkbox",
+      "id": "inset_custom_mobile",
+      "label": "Custom mobile inset",
+      "default": false,
+      "info": "OFF (default): ignore the mobile inset sliders — mobile uses desktop Inset top / bottom / left & right. ON: use the mobile inset sliders instead."
+    },
+    {
+      "type": "range",
+      "id": "inset_top",
+      "label": "Inset top",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom",
+      "label": "Inset bottom",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x",
+      "label": "Inset left & right",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Same value on both sides."
+    },
+    {
+      "type": "range",
+      "id": "inset_top_mobile",
+      "label": "Inset top — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom_mobile",
+      "label": "Inset bottom — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x_mobile",
+      "label": "Inset left & right — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_desktop",
+      "label": "Hide on desktop",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat",
+      "settings": [
+        {
+          "type": "text",
+          "id": "stat",
+          "label": "Number / figure",
+          "default": "1,000's"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Instructors & studios"
+        },
+        {
+          "type": "text",
+          "id": "detail",
+          "label": "Detail (optional)",
+          "info": "Use for attribution (e.g. named class achievement)."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "Proof numbers",
+      "settings": {
+        "enabled": true,
+        "eyebrow": "Proof",
+        "title": "Built for the ones who show up.",
+        "tone": "white"
+      },
+      "blocks": [
+        {
+          "type": "stat",
+          "settings": {
+            "stat": "1,000's",
+            "label": "Instructors & studios",
+            "detail": "Trusted in real class rooms"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "stat": "1,000+",
+            "label": "Classes",
+            "detail": "One athlete's achievement — swap name in TE when locked"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "stat": "USA",
+            "label": "Made in USA",
+            "detail": "No latex. No silicone."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

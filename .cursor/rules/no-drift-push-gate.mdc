@@ -1,0 +1,25 @@
+---
+description: HARD — No-drift push gate. Never claim fixed/matched without ruler + lock-scan + pull-verify + measure. Andrew’s minutes are scarce.
+alwaysApply: true
+---
+# No-drift push gate (HARD)
+
+Read `planning/NO-DRIFT-PROCESS-LOCKED.md` when unsure.
+
+## Forbidden until checklist passes
+Do **not** tell Andrew something is fixed, matched, locked-in visually, or done until:
+
+1. Ruler named (Shop All / LOCKED OS / lock JSON)
+2. `python3 scripts/lock-scan.py` clean on that template
+3. **Pull-verify** after push (remote file actually has the change)
+4. **Measured** vs ruler (computed px or side-by-side screenshot)
+5. Correct Theme Editor `previewPath` for the page changed
+
+## Code > Theme Editor
+Shopify strips many checkbox/JSON settings on draft. For sitewide visual locks use CSS tokens + Liquid (`section.index`, template suffix, `!important` if needed). TE settings are mirrors, not the source of truth.
+
+## Copy, don’t invent
+If Shop All (or another ruler) already has the value, copy it. Never invent a sibling pad/type/gap.
+
+## One axis, one proof, one done
+No stack of “pushed” messages while the visual is still wrong.

@@ -1,349 +1,374 @@
 {% comment %}
-  Page Returns Section
-  Return policy, exchange process, international returns, FAQ accordion.
-  Used on: page.returns.json
+  Consolidated Help page (2026-09-11) — returns / warranty / shipping / short FAQ.
+  Same short blurbs as PDP buy-box; more detail in the policy sections.
+  Used by page.help, page.returns, page.shipping-retruns, page.faq templates.
+  No generic help-center card hub. Type OS / help-family only.
 {% endcomment %}
 
-<section class="section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
-  <div class="section__inner section__inner--narrow">
+{% assign portal = section.settings.portal_url | default: '/pages/returns-portal' %}
+{% assign size_url = section.settings.size_url | default: '/pages/performance-skins-size-chart' %}
+{% assign contact_url = section.settings.contact_url | default: '/pages/contact-us-form' %}
+
+<section
+  class="page-returns-head section"
+  id="shopify-section-{{ section.id }}"
+  style="{% render 'type-override-vars', title_size: section.settings.title_size, title_weight: section.settings.title_weight, body_size: section.settings.body_size, body_weight: section.settings.body_weight %}"
+  {{ section.shopify_attributes }}
+>
+  <div class="section__inner section__inner--narrow page-returns-head__inner">
     {% if section.settings.eyebrow != blank %}
       <p class="eyebrow eyebrow--accent">{{ section.settings.eyebrow }}</p>
     {% endif %}
-    <h1 class="page-returns__title">{{ section.settings.title }}</h1>
-    {% if section.settings.subtitle != blank %}
-      <p class="page-returns__subtitle">{{ section.settings.subtitle }}</p>
+    <h1 class="page-returns-head__title">{{ section.settings.title }}</h1>
+    {% if section.settings.lede != blank %}
+      <p class="page-returns-head__lede">{{ section.settings.lede }}</p>
+    {% endif %}
+    <div class="page-returns-head__cta">
+      <a class="btn btn--brand" href="{{ portal }}" id="start-return">{{ section.settings.start_cta_label | default: 'Start a return' }}</a>
+    </div>
+    <nav class="page-returns-jumps" aria-label="On this page">
+      <a href="#returns">Returns</a>
+      <a href="#warranty">Warranty</a>
+      <a href="#shipping">Shipping</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</section>
+
+<section class="page-returns-policy section" aria-label="Policy details">
+  <div class="section__inner">
+    <div class="page-returns-policy__grid">
+      <article class="page-returns-card" id="returns">
+        <p class="eyebrow">Returns</p>
+        <h2 class="h2-standard">{{ section.settings.returns_heading }}</h2>
+        <div class="type-body">
+          {{ section.settings.returns_body }}
+          <p class="page-returns-card__note">Unsure on size? Check the <a href="{{ size_url }}">size chart</a> or <a href="{{ contact_url }}">Contact us</a> before starting a return.</p>
+        </div>
+      </article>
+
+      <article class="page-returns-card" id="warranty">
+        <p class="eyebrow">Warranty</p>
+        <h2 class="h2-standard">{{ section.settings.warranty_heading }}</h2>
+        <div class="type-body">{{ section.settings.warranty_body }}</div>
+        <div class="page-returns-coverage">
+          <div class="page-returns-coverage__col page-returns-coverage__col--yes">
+            <h3>Covered</h3>
+            {{ section.settings.warranty_covered }}
+          </div>
+          <div class="page-returns-coverage__col page-returns-coverage__col--no">
+            <h3>Not covered</h3>
+            {{ section.settings.warranty_not_covered }}
+          </div>
+        </div>
+        <p class="page-returns-card__note"><a href="{{ contact_url }}">File a claim →</a></p>
+      </article>
+
+      <article class="page-returns-card" id="shipping">
+        <p class="eyebrow">Shipping</p>
+        <h2 class="h2-standard">{{ section.settings.shipping_heading }}</h2>
+        <div class="type-body">{{ section.settings.shipping_body }}</div>
+      </article>
+
+      <article class="page-returns-card" id="exchanges">
+        <p class="eyebrow">Exchanges</p>
+        <h2 class="h2-standard">{{ section.settings.exchanges_heading }}</h2>
+        <div class="type-body">{{ section.settings.exchanges_body }}</div>
+      </article>
+
+      <article class="page-returns-card page-returns-card--wide" id="international">
+        <p class="eyebrow">International</p>
+        <h2 class="h2-standard">{{ section.settings.intl_heading }}</h2>
+        <div class="type-body">{{ section.settings.intl_body }}</div>
+      </article>
+    </div>
+  </div>
+</section>
+
+{%- comment -%}
+  Short FAQ — same blurbs as PDP buy-box accordion; detail lives in the cards above.
+{%- endcomment -%}
+<section class="page-returns-faq section section--cream" id="faq" aria-label="FAQ">
+  <div class="section__inner section__inner--narrow">
+    <p class="eyebrow">FAQ</p>
+    <h2 class="h2-standard">{{ section.settings.faq_heading | default: 'Quick answers' }}</h2>
+    <div class="page-returns-faq__list">
+      <details class="page-returns-faq__item">
+        <summary>What is your return policy?</summary>
+        <div class="type-body">
+          <p>30 days. Try on indoors for fit — like any shoe.</p>
+          <p>Items worn for a workout, class, or outdoors can’t be returned or exchanged. Must be clean and like new.</p>
+          <p><a href="#returns">Full returns detail ↑</a></p>
+        </div>
+      </details>
+      <details class="page-returns-faq__item">
+        <summary>Can I exchange for a different size?</summary>
+        <div class="type-body">
+          <p>Yes — size exchanges ship free once we receive and inspect your return. Start in the <a href="{{ portal }}">returns portal</a> within 30 days. Same rules: clean, like new, not worn for a workout, class, or outdoors.</p>
+          <p><a href="#exchanges">Full exchanges detail ↑</a></p>
+        </div>
+      </details>
+      <details class="page-returns-faq__item">
+        <summary>What does the warranty cover?</summary>
+        <div class="type-body">
+          <p>Backed against manufacturing defects for 90 days. Normal wear, accidents, and damage from use or improper care aren’t covered.</p>
+          <p><a href="#warranty">Full warranty detail ↑</a></p>
+        </div>
+      </details>
+      <details class="page-returns-faq__item">
+        <summary>How much is return shipping?</summary>
+        <div class="type-body">
+          <p>US returns are $7.95 flat, deducted from the refund. Prepaid label after approval. Size exchanges: we cover shipping the exchange pair once your return is inspected.</p>
+        </div>
+      </details>
+      <details class="page-returns-faq__item">
+        <summary>Are pool, spa, or shower floors okay?</summary>
+        <div class="type-body">
+          <p>Pool decks, spa floors, showers, and wet tile or stone are inherently slippery for any footwear — always check the surface before you trust it.</p>
+          <p>More on <a href="/pages/faq">FAQ</a>.</p>
+        </div>
+      </details>
+      <details class="page-returns-faq__item">
+        <summary>How long do Outdoor / water Performance Skins last?</summary>
+        <div class="type-body">
+          <p>They wear well — better than barefoot for water days and travel. Like all footwear, sun, salt, and rough surfaces will show wear over time.</p>
+          <p>Normal wear isn’t a defect. Our 90-day warranty covers manufacturing defects only — <a href="#warranty">warranty ↑</a>.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="page-returns-cta section" id="contact" aria-label="Contact">
+  <div class="section__inner section__inner--narrow page-returns-cta__inner">
+    <h2 class="h2-standard">{{ section.settings.cta_title }}</h2>
+    <p class="type-body">{{ section.settings.cta_body }}</p>
+    <div class="page-returns-cta__actions">
+      <a class="btn btn--brand" href="{{ portal }}">{{ section.settings.cta_portal_label | default: 'Start a return' }}</a>
+      <a class="btn btn--secondary" href="{{ contact_url }}">{{ section.settings.cta_label | default: 'Contact' }}</a>
+    </div>
+    {% if section.settings.cta_refund_note != blank %}
+      <p class="page-returns-cta__refund type-body">{{ section.settings.cta_refund_note }}</p>
     {% endif %}
   </div>
 </section>
 
-<section class="section section--cream">
-  <div class="section__inner section__inner--narrow">
-    <div class="page-returns__policy-card">
-      <h2 class="page-returns__policy-title">{{ section.settings.policy_heading }}</h2>
-      <div class="page-returns__policy-body">
-        {{ section.settings.policy_text }}
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="section">
-  <div class="section__inner section__inner--narrow">
-    <h2 class="page-returns__section-title">{{ section.settings.process_heading }}</h2>
-    <div class="page-returns__steps">
-      {% for block in section.blocks %}
-        {% if block.type == 'return_step' %}
-          <div class="page-returns__step" {{ block.shopify_attributes }}>
-            <span class="page-returns__step-number">{{ forloop.index }}</span>
-            <div class="page-returns__step-content">
-              <h3 class="page-returns__step-title">{{ block.settings.title }}</h3>
-              <p class="page-returns__step-text">{{ block.settings.description }}</p>
-            </div>
-          </div>
-        {% endif %}
-      {% endfor %}
-    </div>
-  </div>
-</section>
-
-{% if section.settings.exchange_heading != blank %}
-<section class="section section--cream">
-  <div class="section__inner section__inner--narrow">
-    <h2 class="page-returns__section-title">{{ section.settings.exchange_heading }}</h2>
-    <div class="page-returns__body">
-      {{ section.settings.exchange_text }}
-    </div>
-  </div>
-</section>
-{% endif %}
-
-{% if section.settings.international_heading != blank %}
-<section class="section">
-  <div class="section__inner section__inner--narrow">
-    <h2 class="page-returns__section-title">{{ section.settings.international_heading }}</h2>
-    <div class="page-returns__body">
-      {{ section.settings.international_text }}
-    </div>
-  </div>
-</section>
-{% endif %}
-
-{% assign faq_blocks_exist = false %}
-{% for block in section.blocks %}
-  {% if block.type == 'faq_item' %}
-    {% assign faq_blocks_exist = true %}
-    {% break %}
-  {% endif %}
-{% endfor %}
-
-{% if faq_blocks_exist %}
-<section class="section section--cream">
-  <div class="section__inner section__inner--narrow">
-    <h2 class="page-returns__section-title">Returns FAQ</h2>
-    <div class="faq" data-faq-accordion>
-      <div class="faq__inner">
-        <div class="faq__list">
-          {% for block in section.blocks %}
-            {% if block.type == 'faq_item' %}
-              <details class="faq__item" data-faq-item {{ block.shopify_attributes }}>
-                <summary class="faq__trigger" role="button" aria-expanded="false">
-                  <span class="faq__question">{{ block.settings.question }}</span>
-                  <span class="faq__icon" aria-hidden="true"></span>
-                </summary>
-                <div class="faq__body">
-                  {{ block.settings.answer }}
-                </div>
-              </details>
-            {% endif %}
-          {% endfor %}
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-{% endif %}
-
 <style>
-  .page-returns__title {
-    font-size: var(--text-5xl);
-    font-weight: var(--weight-bold);
+  .page-returns-head__inner { text-align: center; }
+  .page-returns-head__title {
+    margin: 0 0 var(--gap-b);
+    font-size: var(--te-title-size, clamp(32px, 4vw, 44px));
+    font-weight: var(--te-title-weight, 400);
+    line-height: 1.15;
+    letter-spacing: -0.028em;
+    text-transform: none;
     color: var(--text-primary);
-    text-align: center;
-    margin: 0 0 var(--space-3);
-    letter-spacing: var(--tracking-tight);
   }
-
-  .page-returns__subtitle {
-    font-size: var(--text-md);
+  .page-returns-head__lede {
+    font-size: var(--te-body-size, var(--type-lede-size));
+    font-weight: var(--te-body-weight, 400);
+    line-height: var(--type-lede-leading);
     color: var(--text-body);
-    text-align: center;
-    line-height: var(--leading-relaxed);
-    margin: 0;
-  }
-
-  .page-returns__policy-card {
-    background: var(--bg-primary);
-    border: 1px solid var(--border-default);
-    border-radius: var(--radius-card);
-    padding: var(--space-8);
-  }
-
-  .page-returns__policy-title {
-    font-size: var(--text-xl);
-    font-weight: var(--weight-bold);
-    color: var(--text-primary);
-    margin: 0 0 var(--space-4);
-  }
-
-  .page-returns__policy-body {
-    font-size: var(--text-md);
-    color: var(--text-body);
-    line-height: var(--leading-loose);
-  }
-
-  .page-returns__policy-body p {
-    margin-bottom: var(--space-3);
-  }
-
-  .page-returns__policy-body p:last-child {
-    margin-bottom: 0;
-  }
-
-  .page-returns__section-title {
-    font-size: var(--text-2xl);
-    font-weight: var(--weight-bold);
-    color: var(--text-primary);
     margin: 0 0 var(--space-6);
-    letter-spacing: var(--tracking-tight);
   }
+  @media (max-width: 768px) {
+    .page-returns-head__title { font-size: var(--te-title-size, clamp(28px, 8vw, 36px)); }
+  }
+  .page-returns-head__cta {
+    margin: var(--space-6) 0 var(--space-5);
+    display: flex;
+    justify-content: center;
+  }
+  .page-returns-head__inner .page-returns-jumps {
+    margin-top: 0;
+  }
+  .page-returns-start,
+  .page-returns-card,
+  .page-returns-cta,
+  .page-returns-faq,
+  #start-return {
+    scroll-margin-top: var(--faq-scroll-offset, 130px);
+  }
+  .page-returns-jumps {
+    display: flex; flex-wrap: wrap; gap: 12px 20px; justify-content: center;
+  }
+  .page-returns-jumps a {
+    font-size: 13px; font-weight: 600; color: var(--text-muted);
+    border-bottom: 1px solid var(--border-default); text-decoration: none;
+  }
+  .page-returns-jumps a:hover { color: var(--text-primary); border-bottom-color: var(--text-primary); }
+  .page-returns-start__note { color: var(--text-muted); margin: 0; }
+  .page-returns-start__note a { text-decoration: underline; text-underline-offset: 2px; }
 
-  .page-returns__steps {
+  .page-returns-policy__grid {
     display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: var(--space-5);
   }
-
-  .page-returns__step {
-    display: flex;
-    gap: var(--space-4);
-    align-items: flex-start;
+  .page-returns-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-card, 4px);
+    padding: var(--space-7);
   }
-
-  .page-returns__step-number {
-    flex-shrink: 0;
-    width: 36px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--text-primary);
-    color: var(--color-white);
-    border-radius: 50%;
-    font-size: var(--text-base);
-    font-weight: var(--weight-bold);
-  }
-
-  .page-returns__step-title {
-    font-size: var(--text-base);
-    font-weight: var(--weight-bold);
-    color: var(--text-primary);
-    margin: 0 0 var(--space-1);
-  }
-
-  .page-returns__step-text {
-    font-size: var(--text-base);
-    color: var(--text-body);
-    line-height: var(--leading-relaxed);
-    margin: 0;
-  }
-
-  .page-returns__body {
-    font-size: var(--text-md);
-    color: var(--text-body);
-    line-height: var(--leading-loose);
-  }
-
-  .page-returns__body p {
+  .page-returns-card--wide { grid-column: 1 / -1; }
+  .page-returns-card .h2-standard { margin: var(--gap-a) 0 var(--gap-b); }
+  .page-returns-card__note { margin: var(--space-4) 0 0; font-size: 13px; color: var(--text-muted); }
+  .page-returns-card .type-body > .page-returns-card__note { margin-top: var(--space-5); }
+  .page-returns-card__note a { color: var(--text-primary); text-decoration: underline; text-underline-offset: 2px; }
+  .page-returns-card > .type-body p { margin-bottom: var(--space-4); }
+  .page-returns-card > .type-body ul,
+  .page-returns-card > .type-body ol {
+    list-style: revert;
+    padding-left: var(--space-6);
     margin-bottom: var(--space-4);
   }
+  .page-returns-card > .type-body li { margin-bottom: var(--space-2); }
+  .page-returns-card > .type-body > *:last-child { margin-bottom: 0; }
+  .page-returns-card > .type-body a { text-decoration: underline; text-underline-offset: 2px; }
 
-  .page-returns__body p:last-child {
-    margin-bottom: 0;
+  .page-returns-coverage {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;
+  }
+  .page-returns-coverage__col h3 {
+    font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+    margin: 0 0 10px; padding-bottom: 8px; border-bottom: 2px solid var(--text-primary);
+  }
+  .page-returns-coverage__col--no h3 { color: var(--accent-primary, #c45c3f); border-bottom-color: var(--accent-primary, #c45c3f); }
+  .page-returns-coverage__col ul { margin: 0; padding: 0; list-style: none; }
+  .page-returns-coverage__col li {
+    font-size: 14px; color: var(--text-body); padding: 8px 0 8px 22px; position: relative;
+    border-bottom: 1px solid var(--border-default); line-height: 1.5;
+  }
+  .page-returns-coverage__col li::before { position: absolute; left: 0; font-weight: 700; }
+  .page-returns-coverage__col--yes li::before { content: "✓"; color: var(--text-primary); }
+  .page-returns-coverage__col--no li::before { content: "✕"; color: var(--accent-primary, #c45c3f); }
+
+  .page-returns-faq .h2-standard { margin: 0 0 var(--space-6); }
+  .page-returns-faq__item {
+    border-top: 1px solid var(--border-default);
+    padding: 0;
+  }
+  .page-returns-faq__item:last-child { border-bottom: 1px solid var(--border-default); }
+  .page-returns-faq__item summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 18px 0;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+  .page-returns-faq__item summary::-webkit-details-marker { display: none; }
+  .page-returns-faq__item .type-body {
+    padding: 0 0 20px;
+    color: var(--text-body);
+  }
+  .page-returns-faq__item .type-body p { margin: 0 0 var(--space-3); }
+  .page-returns-faq__item .type-body a { text-decoration: underline; text-underline-offset: 2px; }
+
+  .page-returns-cta__inner { text-align: center; }
+  .page-returns-cta__inner .h2-standard { margin: 0 0 var(--gap-b); }
+  .page-returns-cta__inner .type-body { margin: 0 0 var(--space-6); }
+  .page-returns-cta__actions {
+    display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;
+  }
+  .page-returns-cta__inner .page-returns-cta__refund {
+    margin: var(--space-6) 0 0; color: var(--text-muted); font-size: 14px;
   }
 
   @media (max-width: 768px) {
-    .page-returns__title {
-      font-size: var(--text-3xl);
-    }
-
-    .page-returns__policy-card {
-      padding: var(--space-5);
-    }
+    .page-returns-policy__grid,
+    .page-returns-coverage { grid-template-columns: 1fr; }
+    .page-returns-card--wide { grid-column: auto; }
+    .page-returns-cta__actions { flex-direction: column; }
+    .page-returns-cta__actions .btn { width: 100%; }
+    .page-returns-head__cta .btn { width: 100%; max-width: 320px; }
   }
 </style>
 
-<script>
-  (function() {
-    document.querySelectorAll('[data-faq-accordion]').forEach(function(accordion) {
-      var items = accordion.querySelectorAll('[data-faq-item]');
-      items.forEach(function(item) {
-        item.addEventListener('toggle', function() {
-          if (item.open) {
-            items.forEach(function(other) {
-              if (other !== item && other.open) other.open = false;
-            });
-            item.querySelector('.faq__trigger').setAttribute('aria-expanded', 'true');
-          } else {
-            item.querySelector('.faq__trigger').setAttribute('aria-expanded', 'false');
-          }
-        });
-      });
-    });
-  })();
-</script>
-
 {% schema %}
 {
-  "name": "Returns Page",
+  "name": "Help / Returns",
   "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "info": "Optional. Leave blank when the title already says Help." },
+    { "type": "text", "id": "title", "label": "Title", "default": "Help" },
+    { "type": "textarea", "id": "lede", "label": "Lede", "default": "30 days to try on indoors for fit. 90-day warranty against manufacturing defects. Start a return when you need to — or dig into the details below." },
+    { "type": "header", "content": "Type — size & weight", "info": "Family is brand Type OS. Support pages never use homepage hero size." },
     {
-      "type": "text",
-      "id": "eyebrow",
-      "label": "Eyebrow",
-      "default": "Returns & Exchanges"
-    },
-    {
-      "type": "text",
-      "id": "title",
-      "label": "Title",
-      "default": "Returns & Exchanges"
-    },
-    {
-      "type": "textarea",
-      "id": "subtitle",
-      "label": "Subtitle",
-      "default": "We want you to love your Performance Skins. If they're not right, here's how returns and exchanges work."
-    },
-    {
-      "type": "text",
-      "id": "policy_heading",
-      "label": "Policy heading",
-      "default": "30-Day Return Policy"
-    },
-    {
-      "type": "richtext",
-      "id": "policy_text",
-      "label": "Policy text",
-      "default": "<p>We accept returns within 30 days of delivery on items in new, sellable condition. Items must be unworn (other than trying on indoors) and in original packaging.</p><p>This is a standard return policy. Items showing signs of wear, outdoor use, or studio use are not eligible for return.</p>"
-    },
-    {
-      "type": "text",
-      "id": "process_heading",
-      "label": "Process heading",
-      "default": "How to Return"
-    },
-    {
-      "type": "text",
-      "id": "exchange_heading",
-      "label": "Exchange heading",
-      "default": "Size Exchanges"
-    },
-    {
-      "type": "richtext",
-      "id": "exchange_text",
-      "label": "Exchange text",
-      "default": "<p>Need a different size? We offer free shipping on size exchanges within 30 days of purchase. Contact our support team to initiate an exchange — we'll send you a prepaid return label and ship your new size as soon as we receive the original.</p>"
-    },
-    {
-      "type": "text",
-      "id": "international_heading",
-      "label": "International heading",
-      "default": "International Returns"
-    },
-    {
-      "type": "richtext",
-      "id": "international_text",
-      "label": "International text",
-      "default": "<p>International customers: send a photo of the item to our support team. For defects, no return shipping is required. For size exchanges, customer pays return shipping. We cover replacement shipping domestically; international replacement shipping is at customer's cost.</p>"
-    }
-  ],
-  "blocks": [
-    {
-      "type": "return_step",
-      "name": "Return Step",
-      "settings": [
-        {
-          "type": "text",
-          "id": "title",
-          "label": "Step title"
-        },
-        {
-          "type": "textarea",
-          "id": "description",
-          "label": "Step description"
-        }
+      "type": "select",
+      "id": "title_size",
+      "label": "Title size",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "32", "label": "32px" },
+        { "value": "36", "label": "36px" },
+        { "value": "40", "label": "40px" },
+        { "value": "44", "label": "44px" },
+        { "value": "48", "label": "48px" },
+        { "value": "56", "label": "56px" }
       ]
     },
     {
-      "type": "faq_item",
-      "name": "FAQ Item",
-      "settings": [
-        {
-          "type": "text",
-          "id": "question",
-          "label": "Question"
-        },
-        {
-          "type": "richtext",
-          "id": "answer",
-          "label": "Answer"
-        }
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" }
       ]
-    }
-  ],
-  "presets": [
+    },
     {
-      "name": "Returns Page"
-    }
-  ]
+      "type": "select",
+      "id": "body_size",
+      "label": "Lede size",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" },
+        { "value": "18", "label": "18px" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "body_weight",
+      "label": "Lede weight",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" }
+      ]
+    },
+    { "type": "url", "id": "portal_url", "label": "Returns portal URL" },
+    { "type": "url", "id": "size_url", "label": "Size chart URL" },
+    { "type": "url", "id": "contact_url", "label": "Contact URL" },
+    { "type": "text", "id": "start_cta_label", "label": "Start CTA", "default": "Start a return" },
+    { "type": "text", "id": "returns_heading", "label": "Returns heading", "default": "Returns & exchanges" },
+    { "type": "richtext", "id": "returns_body", "label": "Returns body" },
+    { "type": "text", "id": "warranty_heading", "label": "Warranty heading", "default": "90-day warranty" },
+    { "type": "richtext", "id": "warranty_body", "label": "Warranty body" },
+    { "type": "richtext", "id": "warranty_covered", "label": "Warranty covered list" },
+    { "type": "richtext", "id": "warranty_not_covered", "label": "Warranty not covered list" },
+    { "type": "text", "id": "shipping_heading", "label": "Shipping heading", "default": "Free over $150" },
+    { "type": "richtext", "id": "shipping_body", "label": "Shipping body" },
+    { "type": "text", "id": "exchanges_heading", "label": "Exchanges heading", "default": "Size exchanges" },
+    { "type": "richtext", "id": "exchanges_body", "label": "Exchanges body" },
+    { "type": "text", "id": "intl_heading", "label": "International heading", "default": "International orders & returns" },
+    { "type": "richtext", "id": "intl_body", "label": "International body" },
+    { "type": "text", "id": "faq_heading", "label": "FAQ heading", "default": "Quick answers" },
+    { "type": "text", "id": "cta_title", "label": "Bottom CTA title", "default": "Need a hand?" },
+    { "type": "textarea", "id": "cta_body", "label": "Bottom CTA body", "default": "Sizing, claims, or a stuck return — Contact us with your order number." },
+    { "type": "text", "id": "cta_portal_label", "label": "Bottom portal button", "default": "Start a return" },
+    { "type": "text", "id": "cta_label", "label": "Bottom contact button", "default": "Contact" },
+    { "type": "textarea", "id": "cta_refund_note", "label": "Bottom refund timing note", "default": "Refunds are processed within 72 hours of your return arriving. Your bank may take a few days after that to post it." }
+  ],
+  "presets": [{ "name": "Help / Returns" }]
 }
 {% endschema %}

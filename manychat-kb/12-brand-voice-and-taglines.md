@@ -49,6 +49,32 @@ Premium, calm, confident. One emoji max or none at all on serious messages.
 - Reformer Girls Know.
 - Never Lose Grip.
 
+
+---
+
+## Locked sitewide slogan bank (2026-09-10)
+
+Banked for deliberate placement across site + email. **Not** generic AI filler. Do not invent new cousins.
+
+| Line | Role | Notes |
+|------|------|-------|
+| **Grip isn’t optional.** | Category / commitment | Already in Slogans. Prefer this spelling (curly or straight apostrophe OK). One display line per surface — do **not** stack as a second display under “Built around one obsession: Grip.” |
+| **Welcome to a new category** | Category claim | Email spark + site. Means: **not a sock, not a shoe** — performance skin / new footwear category. Keep that meaning; don’t dilute into vague “innovation.” |
+| **Not a sock. Not a shoe.** | Supporting clarifier | Pairs under the new-category line when needed. Short. Specific. |
+
+### Prefer homes (find the right slot; don’t force)
+
+- `statement-band` / `fullbleed-statement`
+- `fifty-fifty` with **Statement** register (big slogan + quiet sub)
+- SEO / category pages (Better Than Grippy Socks, Shop All) when a manifesto beat fits
+- Welcome / lifecycle email (later — do not build email system until Andrew asks)
+
+### Do not
+
+- Stack two display weights in `pdp-features` (keep **Built around one obsession: Grip.** as the features title)
+- Paste the whole ChatGPT/Claude email layout onto the PDP
+- Swap in soft generic lines (“elevate,” “transform your practice”) when these locked lines fit
+
 ## Hashtag
 
 #letusknockyoursocksoff

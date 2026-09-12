@@ -1,0 +1,461 @@
+{% comment %}
+  Coperni PDP story — collab editorial (live br-coperni-pdp-story authority).
+  Desktop: text → video → 3-up. Mobile: video → 1 large still → text → 2-up.
+{% endcomment %}
+
+{% liquid
+  assign quote = section.settings.quote
+  assign body_1 = section.settings.body_1
+  assign body_2 = section.settings.body_2
+  assign note_label = section.settings.note_label
+  assign note_text = section.settings.note_text
+  assign video_caption = section.settings.video_caption
+  assign label = section.settings.label
+  assign video_height_mobile = section.settings.video_height_mobile | default: 72
+  assign lead_height_mobile = section.settings.lead_image_height_mobile | default: 52
+  assign video_max_desktop = section.settings.video_max_height_desktop | default: 720
+  assign video_poster = 'coperni-paris-poster.jpg' | asset_url
+  assign video_src_fast = 'coperni-paris-720.mp4' | asset_url
+  assign video_src = section.settings.video_url
+  comment
+    Prefer compressed theme asset over the original 52MB .mov CDN original.
+  endcomment
+  if video_src == blank
+    assign video_src = video_src_fast
+  elsif video_src contains 'd7ca87eac5034642851089c63af6a2d8'
+    assign video_src = video_src_fast
+  endif
+%}
+
+<section
+  id="{{ section.settings.anchor_id | default: 'coperni-story' | handleize }}"
+  class="coperni-story section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %}"
+  style="{% render 'section-inset-vars' %} --cs-video-h-m: {{ video_height_mobile }}vh; --cs-lead-h-m: {{ lead_height_mobile }}vh; --cs-video-max-d: {{ video_max_desktop }}px;"
+  aria-label="{{ section.settings.aria_label | default: 'Coperni collaboration story' | escape }}"
+>
+  <div class="coperni-story__inner">
+    <div class="coperni-story__divider" aria-hidden="true"></div>
+    <div class="coperni-story__copy">
+    {% if label != blank %}
+      <p class="coperni-story__label">{{ label | escape }}</p>
+    {% endif %}
+    {% if quote != blank %}
+      <p class="coperni-story__quote">{{ quote | escape }}</p>
+    {% endif %}
+    {% if body_1 != blank %}
+      <p class="coperni-story__body">{{ body_1 | escape }}</p>
+    {% endif %}
+    {% if body_2 != blank %}
+      <p class="coperni-story__body">{{ body_2 | escape }}</p>
+    {% endif %}
+    {% if note_text != blank %}
+      <div class="coperni-story__note">
+        {% if note_label != blank %}
+          <p class="coperni-story__label coperni-story__label--note">{{ note_label | escape }}</p>
+        {% endif %}
+        <p class="coperni-story__note-text">{{ note_text | escape }}</p>
+      </div>
+    {% endif %}
+    </div>
+
+    {% if section.settings.video != blank or video_src != blank %}
+      <div class="coperni-story__video-wrap">
+        {% if section.settings.video != blank %}
+          {{
+            section.settings.video
+            | video_tag:
+              image_size: '1600x',
+              autoplay: true,
+              loop: true,
+              muted: true,
+              controls: false,
+              playsinline: true,
+              preload: 'metadata',
+              class: 'coperni-story__video'
+          }}
+        {% else %}
+          <video
+            class="coperni-story__video"
+            autoplay
+            muted
+            loop
+            playsinline
+            webkit-playsinline
+            preload="metadata"
+            poster="{{ video_poster | escape }}"
+          >
+            <source src="{{ video_src | escape }}" type="video/mp4">
+          </video>
+        {% endif %}
+        {% if video_caption != blank %}
+          <p class="coperni-story__video-caption">{{ video_caption | escape }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {%- comment -%} Desktop: 3-up. Mobile: lead (1) after video, pair (2–3) after text. {%- endcomment -%}
+    <div class="coperni-story__runway coperni-story__runway--desk" role="list" aria-label="Runway looks">
+      {% for block in section.blocks %}
+        {% if block.type == 'runway_image' %}
+          {% liquid
+            assign img_src = blank
+            if block.settings.image != blank
+              assign img_src = block.settings.image | image_url: width: 1200
+            elsif block.settings.image_url != blank
+              assign img_src = block.settings.image_url
+            endif
+          %}
+          {% if img_src != blank %}
+            <div class="coperni-story__runway-img" role="listitem" style="background-image:url('{{ img_src | escape }}');" {{ block.shopify_attributes }}></div>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    {% assign mob_runway_n = 0 %}
+    {% for block in section.blocks %}
+      {% if block.type == 'runway_image' %}
+        {% liquid
+          assign img_src = blank
+          if block.settings.image != blank
+            assign img_src = block.settings.image | image_url: width: 1400
+          elsif block.settings.image_url != blank
+            assign img_src = block.settings.image_url
+          endif
+        %}
+        {% if img_src != blank %}
+          {% assign mob_runway_n = mob_runway_n | plus: 1 %}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+
+    {% if mob_runway_n > 0 %}
+      {% assign mob_i = 0 %}
+      {% for block in section.blocks %}
+        {% if block.type == 'runway_image' %}
+          {% liquid
+            assign img_src = blank
+            if block.settings.image != blank
+              assign img_src = block.settings.image | image_url: width: 1400
+            elsif block.settings.image_url != blank
+              assign img_src = block.settings.image_url
+            endif
+          %}
+          {% if img_src != blank %}
+            {% assign mob_i = mob_i | plus: 1 %}
+            {% if mob_i == 1 %}
+              <div class="coperni-story__runway-lead coperni-story__runway--mob">
+                <div class="coperni-story__runway-img coperni-story__runway-img--lead" style="background-image:url('{{ img_src | escape }}');" {{ block.shopify_attributes }}></div>
+              </div>
+              {% if mob_runway_n > 1 %}
+                <div class="coperni-story__runway-pair coperni-story__runway--mob">
+              {% endif %}
+            {% else %}
+                  <div class="coperni-story__runway-img" style="background-image:url('{{ img_src | escape }}');" {{ block.shopify_attributes }}></div>
+            {% endif %}
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+      {% if mob_runway_n > 1 %}
+                </div>
+      {% endif %}
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  #shopify-section-{{ section.id }} .coperni-story {
+    background: #fff;
+    color: #1c1916;
+  }
+  #shopify-section-{{ section.id }} .coperni-story__inner {
+    max-width: 880px;
+    margin: 48px auto 0;
+    padding: 0 24px 8px;
+    display: flex;
+    flex-direction: column;
+  }
+  #shopify-section-{{ section.id }} .coperni-story__copy {
+    display: block;
+  }
+  #shopify-section-{{ section.id }} .coperni-story__divider {
+    width: 100%;
+    height: 1px;
+    background: rgba(28, 25, 22, 0.15);
+    margin-bottom: 48px;
+  }
+  #shopify-section-{{ section.id }} .coperni-story__label {
+    font-family: var(--font-body), Roboto, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #1c1916;
+    margin: 0 0 18px;
+  }
+  #shopify-section-{{ section.id }} .coperni-story__label--note {
+    margin-bottom: 10px;
+  }
+  #shopify-section-{{ section.id }} .coperni-story__quote {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(22px, 2.6vw, 30px);
+    font-style: italic;
+    font-weight: 400;
+    color: #1c1916;
+    line-height: 1.5;
+    margin: 0 0 36px;
+    padding-left: 22px;
+    border-left: 3px solid #1c1916;
+  }
+  #shopify-section-{{ section.id }} .coperni-story__body {
+    font-family: var(--font-body), Roboto, sans-serif;
+    font-size: 17px;
+    font-weight: 400;
+    color: #4a4a4a;
+    line-height: 1.75;
+    margin: 0 0 18px;
+  }
+  #shopify-section-{{ section.id }} .coperni-story__note {
+    padding: 28px 32px;
+    border: 1px solid #d6cfc0;
+    background: #f9f9f9;
+    margin: 8px 0 48px;
+  }
+  #shopify-section-{{ section.id }} .coperni-story__note-text {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 19px;
+    font-style: italic;
+    color: #4a4a4a;
+    line-height: 1.6;
+    margin: 0;
+  }
+  #shopify-section-{{ section.id }} .coperni-story__runway {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3px;
+    margin: 12px 0 48px;
+  }
+  #shopify-section-{{ section.id }} .coperni-story__runway-img {
+    aspect-ratio: 2 / 3;
+    background-size: cover;
+    background-position: center top;
+    background-color: #f5f2ec;
+  }
+  /* Mobile split runway hidden on desktop */
+  #shopify-section-{{ section.id }} .coperni-story__runway--mob {
+    display: none;
+  }
+  #shopify-section-{{ section.id }} .coperni-story__video-wrap {
+    width: 100%;
+    margin: 48px 0 0;
+  }
+  #shopify-section-{{ section.id }} .coperni-story__video {
+    width: 100%;
+    display: block;
+    max-height: var(--cs-video-max-d, 720px);
+    min-height: 360px;
+    object-fit: cover;
+    background: #fff;
+  }
+  #shopify-section-{{ section.id }} .coperni-story__video-caption {
+    font-family: var(--font-body), Roboto, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #8a8a8a;
+    text-align: center;
+    margin: 14px 0 0;
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .coperni-story__inner {
+      margin-top: 32px;
+      padding: 0 16px;
+    }
+    /* Mobile: video → 1 large still → text → 2-up stills. Desktop unchanged. */
+    #shopify-section-{{ section.id }} .coperni-story__runway--desk {
+      display: none;
+    }
+    #shopify-section-{{ section.id }} .coperni-story__runway--mob {
+      display: grid;
+    }
+    #shopify-section-{{ section.id }} .coperni-story__divider { order: 0; }
+    #shopify-section-{{ section.id }} .coperni-story__video-wrap {
+      order: 1;
+      margin: 0 0 12px;
+    }
+    #shopify-section-{{ section.id }} .coperni-story__runway-lead {
+      order: 2;
+      grid-template-columns: 1fr;
+      gap: 0;
+      margin: 0 0 28px;
+    }
+    #shopify-section-{{ section.id }} .coperni-story__runway-img--lead {
+      aspect-ratio: 3 / 4;
+      min-height: var(--cs-lead-h-m, 52vh);
+      width: 100%;
+    }
+    #shopify-section-{{ section.id }} .coperni-story__copy {
+      order: 3;
+    }
+    #shopify-section-{{ section.id }} .coperni-story__runway-pair {
+      order: 4;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+      margin: 8px 0 32px;
+    }
+    #shopify-section-{{ section.id }} .coperni-story__runway-pair .coperni-story__runway-img {
+      aspect-ratio: 3 / 4;
+    }
+    #shopify-section-{{ section.id }} .coperni-story__video-wrap {
+      overflow: hidden;
+      border-radius: 0;
+      background: #fff;
+      min-height: var(--cs-video-h-m, 72vh);
+      height: var(--cs-video-h-m, 72vh);
+      aspect-ratio: auto;
+    }
+    #shopify-section-{{ section.id }} .coperni-story__video {
+      max-height: none;
+      min-height: 100%;
+      width: 100%;
+      height: 100%;
+      aspect-ratio: auto;
+      object-fit: cover;
+      object-position: center center;
+      /* crop baked-in letterbox bars in the source */
+      transform: scale(1.12);
+      background: #fff;
+    }
+    #shopify-section-{{ section.id }} .coperni-story__note {
+      padding: 20px;
+      margin-bottom: 28px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Coperni PDP story",
+  "tag": "section",
+  "class": "section-coperni-pdp-story",
+  "settings": [
+    { "type": "header", "content": "Story copy" },
+    { "type": "text", "id": "label", "label": "Small label above the quote", "default": "The collaboration" },
+    {
+      "type": "textarea",
+      "id": "quote",
+      "label": "Main quote",
+      "default": "Open, gripping, and free from all constraints — while offering optimal comfort and performance."
+    },
+    {
+      "type": "textarea",
+      "id": "body_1",
+      "label": "Story paragraph 1",
+      "default": "Coperni × Barreletics is a collaborative footwear line developed for the Coperni Spring–Summer 2026 Ready-to-Wear Collection, blending high fashion with functional performance. The partnership introduced a Pilates shoe designed for comfort, grounding, and athletic poise — emphasizing stability and grip during movement."
+    },
+    {
+      "type": "textarea",
+      "id": "body_2",
+      "label": "Story paragraph 2",
+      "default": "These shoes were created to support the collection's overarching theme of merging biotechnology, wellness, and human-centered design — aligning with Coperni's focus on innovation and the body's natural rhythms."
+    },
+    { "type": "text", "id": "note_label", "label": "Callout label", "default": "On the runway" },
+    {
+      "type": "textarea",
+      "id": "note_text",
+      "label": "Callout text",
+      "default": "Footwear shifts too: the collection includes this Pilates shoe collaboration with Barreletics, designed for comfort, grounding, and athletic poise — a sense of balance, even on the runway."
+    },
+    { "type": "header", "content": "Paris video" },
+    { "type": "video", "id": "video", "label": "Upload video (Shopify Files)" },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "Or paste an MP4 link",
+      "info": "Leave blank to use the fast compressed Paris clip in the theme (~0.5MB). Do not paste the original huge .mov (~50MB). Prefer Upload video (Shopify Files) when you can."
+    },
+    { "type": "text", "id": "video_caption", "label": "Caption under the video", "default": "Coperni 2026 · Paris" },
+    {
+      "type": "range",
+      "id": "video_height_mobile",
+      "label": "Phone — video height",
+      "min": 40,
+      "max": 92,
+      "step": 2,
+      "unit": "vh",
+      "default": 72,
+      "info": "How tall the runway video is on phones. 72 ≈ most of the screen. Does not change desktop."
+    },
+    {
+      "type": "range",
+      "id": "video_max_height_desktop",
+      "label": "Desktop — video max height",
+      "min": 360,
+      "max": 900,
+      "step": 20,
+      "unit": "px",
+      "default": 720,
+      "info": "Caps how tall the video can get on large screens."
+    },
+    { "type": "header", "content": "Runway photos (phone)" },
+    {
+      "type": "range",
+      "id": "lead_image_height_mobile",
+      "label": "Phone — first photo height",
+      "min": 36,
+      "max": 80,
+      "step": 2,
+      "unit": "vh",
+      "default": 52,
+      "info": "The large still right under the video on phones. The two smaller photos below the text stay a side-by-side pair. Desktop keeps the 3-across strip."
+    },
+    { "type": "paragraph", "content": "Add or reorder runway photos in the blocks list below (usually 3)." },
+    { "type": "header", "content": "Show / hide" },
+    { "type": "checkbox", "id": "hide_on_mobile", "label": "Hide this section on phones", "default": false },
+    { "type": "checkbox", "id": "hide_on_desktop", "label": "Hide this section on desktop", "default": false },
+    { "type": "header", "content": "Spacing from page edges" },
+    { "type": "range", "id": "inset_top", "label": "Gap above", "min": 0, "max": 96, "step": 4, "unit": "px", "default": 0 },
+    { "type": "range", "id": "inset_bottom", "label": "Gap below", "min": 0, "max": 96, "step": 4, "unit": "px", "default": 0 },
+    { "type": "range", "id": "inset_x", "label": "Gap left & right", "min": 0, "max": 96, "step": 4, "unit": "px", "default": 0 },
+    { "type": "header", "content": "Advanced" },
+    { "type": "text", "id": "anchor_id", "label": "Jump-link ID", "default": "coperni-story", "info": "Used for in-page links like #coperni-story." },
+    { "type": "text", "id": "aria_label", "label": "Screen-reader name", "default": "Coperni collaboration story" }
+  ],
+  "blocks": [
+    {
+      "type": "runway_image",
+      "name": "Runway photo",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Photo" },
+        { "type": "text", "id": "image_url", "label": "Or paste image link", "info": "Used only if no photo is picked above." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Coperni PDP story",
+      "blocks": [
+        {
+          "type": "runway_image",
+          "settings": {
+            "image_url": "https://cdn.shopify.com/s/files/1/0045/0612/4391/files/Screenshot_2026-03-20_at_6.53.05_PM.png?v=1774047278"
+          }
+        },
+        {
+          "type": "runway_image",
+          "settings": {
+            "image_url": "https://cdn.shopify.com/s/files/1/0045/0612/4391/files/Screenshot_2026-03-20_at_6.53.23_PM.png?v=1774047278"
+          }
+        },
+        {
+          "type": "runway_image",
+          "settings": {
+            "image_url": "https://cdn.shopify.com/s/files/1/0045/0612/4391/files/Screenshot_2026-03-20_at_6.53.30_PM.png?v=1774047278"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

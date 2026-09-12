@@ -1,0 +1,199 @@
+{% comment %}
+  Sole cards — Open vs Closed pick. Own section so Theme Editor can move it.
+{% endcomment %}
+
+{%- liquid
+  assign img_scale = section.settings.image_scale | default: 100
+  assign frame_h = section.settings.image_frame | default: 400
+  assign card_pad = section.settings.card_padding | default: 28
+  assign img_pad = section.settings.image_pad | default: 0
+  assign band_pad = section.settings.section_pad | default: 24
+  assign band_bg = section.settings.bg_color | default: '#ffffff'
+  assign closed_href = section.settings.closed_url | default: '/products/best-reformer-pilates-legree-workout-shoes'
+  assign open_href = section.settings.open_url | default: '/products/studio-performance-skin-footwear'
+-%}
+
+<section
+  class="sole-pair"
+  aria-label="{{ section.settings.aria_label | default: 'Choose Closed Sole or Open Sole' | escape }}"
+  style="--sp-scale: {{ img_scale }}; --sp-frame: {{ frame_h }}px; --sp-pad: {{ card_pad }}px; --sp-img-pad: {{ img_pad }}px; --sp-band-pad: {{ band_pad }}px; --sp-bg: {{ band_bg }};"
+>
+  <div class="sole-pair__inner">
+    <a class="sole-pair__card" href="{{ closed_href }}">
+      {% if section.settings.closed_image != blank %}
+        <div class="sole-pair__img">
+          <img
+            src="{{ section.settings.closed_image | image_url: width: 800 }}"
+            alt="Closed Sole"
+            loading="lazy"
+            width="400"
+            height="400"
+          >
+        </div>
+      {% endif %}
+      <div class="sole-pair__copy">
+        <span class="sole-pair__tag">Full Coverage</span>
+        <h3 class="sole-pair__title">Closed Sole</h3>
+        {% if section.settings.closed_best_for != blank %}
+          <p class="sole-pair__best">Pick this if: {{ section.settings.closed_best_for }}</p>
+        {% endif %}
+        <p class="sole-pair__desc">{{ section.settings.closed_desc }}</p>
+        <span class="sole-pair__cta">Shop Closed Sole →</span>
+      </div>
+    </a>
+
+    <a class="sole-pair__card" href="{{ open_href }}">
+      {% if section.settings.open_image != blank %}
+        <div class="sole-pair__img">
+          <img
+            src="{{ section.settings.open_image | image_url: width: 800 }}"
+            alt="Open Sole"
+            loading="lazy"
+            width="400"
+            height="400"
+          >
+        </div>
+      {% endif %}
+      <div class="sole-pair__copy">
+        <span class="sole-pair__tag">Barefoot Feel</span>
+        <h3 class="sole-pair__title">Open Sole</h3>
+        {% if section.settings.open_best_for != blank %}
+          <p class="sole-pair__best">Pick this if: {{ section.settings.open_best_for }}</p>
+        {% endif %}
+        <p class="sole-pair__desc">{{ section.settings.open_desc }}</p>
+        <span class="sole-pair__cta">Shop Open Sole →</span>
+      </div>
+    </a>
+  </div>
+</section>
+
+<style>
+  #shopify-section-{{ section.id }} {
+    background: var(--sp-bg, #ffffff);
+  }
+  #shopify-section-{{ section.id }} .sole-pair {
+    background: var(--sp-bg, #ffffff);
+    padding: var(--sp-band-pad, 24px) var(--section-padding-x, 40px);
+  }
+  .sole-pair__inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .sole-pair__card {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid #e8e2d8;
+    border-radius: 8px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+  }
+  .sole-pair__card:hover {
+    border-color: #1c1916;
+    box-shadow: 0 8px 24px rgba(28, 25, 22, 0.08);
+    text-decoration: none;
+  }
+  .sole-pair__img {
+    height: var(--sp-frame, 400px);
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: var(--sp-img-pad, 0px);
+    box-sizing: border-box;
+  }
+  .sole-pair__img img {
+    width: calc(var(--sp-scale, 100) * 1%);
+    height: auto;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+  .sole-pair__copy {
+    padding: var(--sp-pad, 28px);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+  }
+  .sole-pair__tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #8a8a8a;
+  }
+  .sole-pair__title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1c1916;
+    margin: 0;
+  }
+  .sole-pair__best {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: #c45c3f;
+    line-height: 1.4;
+  }
+  .sole-pair__desc {
+    margin: 0;
+    font-size: 14px;
+    color: #4a4a4a;
+    line-height: 1.6;
+  }
+  .sole-pair__cta {
+    margin-top: auto;
+    padding-top: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1c1916;
+    border-bottom: 1px solid #1c1916;
+    align-self: flex-start;
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .sole-pair {
+      padding: var(--sp-band-pad, 24px) 16px;
+    }
+    .sole-pair__inner {
+      grid-template-columns: 1fr;
+    }
+    .sole-pair__img {
+      height: min(var(--sp-frame, 400px), 52vw);
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Sole cards",
+  "settings": [
+    { "type": "header", "content": "Layout" },
+    { "type": "color", "id": "bg_color", "label": "Section background", "default": "#ffffff" },
+    { "type": "range", "id": "image_scale", "label": "Image size", "min": 40, "max": 100, "step": 2, "unit": "%", "default": 100, "info": "Contain — whole shoe stays visible." },
+    { "type": "range", "id": "image_frame", "label": "Image area height", "min": 280, "max": 560, "step": 10, "unit": "px", "default": 400 },
+    { "type": "range", "id": "image_pad", "label": "Image inset", "min": 0, "max": 48, "step": 2, "unit": "px", "default": 0, "info": "0 = no cream/white mat around the shoe." },
+    { "type": "range", "id": "section_pad", "label": "Section padding", "min": 0, "max": 64, "step": 4, "unit": "px", "default": 24 },
+    { "type": "range", "id": "card_padding", "label": "Card text padding", "min": 16, "max": 48, "step": 2, "unit": "px", "default": 28 },
+    { "type": "text", "id": "aria_label", "label": "ARIA label" },
+
+    { "type": "header", "content": "Closed Sole" },
+    { "type": "image_picker", "id": "closed_image", "label": "Closed Sole image" },
+    { "type": "url", "id": "closed_url", "label": "Closed Sole link" },
+    { "type": "text", "id": "closed_best_for", "label": "Closed Sole — Pick this if", "default": "you want heel and foot fully covered.", "info": "Feel and coverage only — never assign a discipline to a sole." },
+    { "type": "textarea", "id": "closed_desc", "label": "Closed Sole description", "default": "Heel and foot fully covered. 360° grip across the entire underfoot. Both perform identically — same grip, same stability." },
+
+    { "type": "header", "content": "Open Sole" },
+    { "type": "image_picker", "id": "open_image", "label": "Open Sole image" },
+    { "type": "url", "id": "open_url", "label": "Open Sole link" },
+    { "type": "text", "id": "open_best_for", "label": "Open Sole — Pick this if", "default": "you want a more grounded, barefoot feel with natural toe splay.", "info": "Feel and coverage only — never assign a discipline to a sole." },
+    { "type": "textarea", "id": "open_desc", "label": "Open Sole description", "default": "Heel exposed, mid-foot breathing hole. More grounded, barefoot feel. Natural toe splay. Both perform identically — same grip, same stability." }
+  ],
+  "presets": [{ "name": "Sole cards" }]
+}
+{% endschema %}

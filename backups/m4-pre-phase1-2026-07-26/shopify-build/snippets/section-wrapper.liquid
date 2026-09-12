@@ -1,0 +1,49 @@
+{% comment %}
+  Section Wrapper
+  Standard section container with consistent padding and max-width.
+
+  Usage:
+    {% render 'section-wrapper', id: section.id, class: 'my-section', bg: 'cream', inner_class: 'narrow' %}
+      ... content ...
+    {% endrender %}
+
+  Since Liquid `render` doesn't support content blocks, use this pattern instead:
+
+    <div class="section section--cream" id="section-{{ section.id }}">
+      <div class="section__inner">
+        ... content ...
+      </div>
+    </div>
+
+  Parameters (for reference when building sections):
+    - bg: 'white' | 'cream' | 'dark' | 'flush'
+    - inner: 'default' | 'wide' | 'narrow' | 'copy'
+    - padding: 'default' | 'narrow' | 'flush'
+{% endcomment %}
+
+{% comment %}
+  Since Liquid's `render` tag doesn't allow content blocks,
+  this snippet documents the section wrapper pattern for consistency.
+
+  STANDARD PATTERN (copy into each section):
+
+  <section
+    class="section{% if bg == 'cream' %} section--cream{% elsif bg == 'dark' %} section--dark{% endif %}{% if padding == 'narrow' %} section--narrow{% elsif padding == 'flush' %} section--flush{% endif %}"
+    id="shopify-section-{{ section.id }}"
+    {{ section.shopify_attributes }}
+  >
+    <div class="section__inner{% if inner == 'wide' %} section__inner--wide{% elsif inner == 'narrow' %} section__inner--narrow{% endif %}">
+      ... section content ...
+    </div>
+  </section>
+
+  CSS classes available (from barreletics-base.css):
+    .section              → default padding (64px/40px → 48px/16px mobile)
+    .section--narrow      → reduced vertical padding (48px)
+    .section--flush       → no padding
+    .section--cream       → warm cream background (#f5f2ec)
+    .section--dark        → charcoal background, white text
+    .section__inner       → max-width 1200px centered
+    .section__inner--wide → max-width 1400px
+    .section__inner--narrow → max-width 760px
+{% endcomment %}

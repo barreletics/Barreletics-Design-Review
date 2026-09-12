@@ -149,8 +149,26 @@ All tracking settings follow **D-045**: Shopify native channel integrations pref
 
 ---
 
+## One-off colors (2026-08-10)
+
+| Setting ID | Type | Label | Default | Consumed By |
+|------------|------|-------|---------|-------------|
+| `one_off_product` | `product` | One-off product | — | `snippets/one-off-nav-item.liquid`, `snippets/one-off-quiet-link.liquid`, `sections/variant-grid.liquid` (wins over section picker) |
+| `one_off_nav_label` | `text` | Nav label | `One-off colors` | Header inject under parent match |
+| `one_off_parent_match` | `text` | Parent menu match | `grippy` | Header subnav parent title contains |
+| `one_off_link_label` | `text` | PDP quiet link | `This week’s one-off color →` | Under ATC on Closed/Open/Outdoor; hidden on one-off PDP |
+
+**Behavior:** Product set → show nav + quiet link + One-Offs tab. Picker empty → hide all. Do not also add this link in Online Store → Navigation.
+
+**Featured drop (P-014 / D-052):** One product at a time in this picker. Flip when the drop changes. Both sole products may exist in Admin; only the featured one is in nav. Dual sibling nav = future only — no second picker until Andrew confirms.
+
+OS: **P-011** · **P-014** · **D-051** · **D-052** · `planning/one-off-surfaces.md`.
+
+---
+
 ## Cross-References
 
 - Design token CSS custom properties sourced from these settings → [07-css-architecture.md](07-css-architecture.md)
 - Analytics event implementation details → [06-javascript-architecture.md](06-javascript-architecture.md)
 - D-045 tracking strategy (Shopify native preferred) → decision log
+- One-off gate → P-011 / P-014 / D-051 / D-052

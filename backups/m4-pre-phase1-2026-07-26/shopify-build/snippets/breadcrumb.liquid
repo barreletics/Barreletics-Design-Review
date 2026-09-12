@@ -1,0 +1,277 @@
+{% comment %}
+  Breadcrumb Navigation
+  Renders breadcrumb trail with BreadcrumbList structured data (JSON-LD).
+  Follows hierarchy: Home > Collection/Page > Sub-page/Product
+
+  Usage: {% render 'breadcrumb' %}
+{% endcomment %}
+
+{% assign show_breadcrumb = true %}
+{% if template == 'index' %}
+  {% assign show_breadcrumb = false %}
+{% endif %}
+
+{% if show_breadcrumb %}
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <ol class="breadcrumb__list" role="list">
+    <li class="breadcrumb__item">
+      <a href="/" class="breadcrumb__link">Home</a>
+      <span class="breadcrumb__sep" aria-hidden="true">›</span>
+    </li>
+
+    {% case template.name %}
+      {% when 'collection' %}
+        {% if collection.handle == 'open-sole' or collection.handle == 'closed-sole' or collection.handle == 'outdoor' %}
+          <li class="breadcrumb__item">
+            <a href="/collections/grippy-shoes" class="breadcrumb__link">Grippy Shoes</a>
+            <span class="breadcrumb__sep" aria-hidden="true">›</span>
+          </li>
+          <li class="breadcrumb__item breadcrumb__item--current" aria-current="page">
+            {{ collection.title }}
+          </li>
+        {% else %}
+          <li class="breadcrumb__item breadcrumb__item--current" aria-current="page">
+            {% if collection.handle == 'grippy-shoes' %}
+              Grippy Shoes
+            {% else %}
+              {{ collection.title }}
+            {% endif %}
+          </li>
+        {% endif %}
+
+      {% when 'product' %}
+        {% if product.collections.size > 0 %}
+          {% assign primary_collection = product.collections | first %}
+          {% if primary_collection.handle == 'open-sole' or primary_collection.handle == 'closed-sole' or primary_collection.handle == 'outdoor' %}
+            <li class="breadcrumb__item">
+              <a href="/collections/grippy-shoes" class="breadcrumb__link">Grippy Shoes</a>
+              <span class="breadcrumb__sep" aria-hidden="true">›</span>
+            </li>
+            <li class="breadcrumb__item">
+              <a href="{{ primary_collection.url }}" class="breadcrumb__link">{{ primary_collection.title }}</a>
+              <span class="breadcrumb__sep" aria-hidden="true">›</span>
+            </li>
+          {% else %}
+            <li class="breadcrumb__item">
+              <a href="{{ primary_collection.url }}" class="breadcrumb__link">
+                {% if primary_collection.handle == 'grippy-shoes' %}Grippy Shoes{% else %}{{ primary_collection.title }}{% endif %}
+              </a>
+              <span class="breadcrumb__sep" aria-hidden="true">›</span>
+            </li>
+          {% endif %}
+        {% else %}
+          <li class="breadcrumb__item">
+            <a href="/collections/grippy-shoes" class="breadcrumb__link">Grippy Shoes</a>
+            <span class="breadcrumb__sep" aria-hidden="true">›</span>
+          </li>
+        {% endif %}
+        <li class="breadcrumb__item breadcrumb__item--current" aria-current="page">
+          {{ product.title }}
+        </li>
+
+      {% when 'article' %}
+        <li class="breadcrumb__item">
+          <a href="/blogs/journal" class="breadcrumb__link">Journal</a>
+          <span class="breadcrumb__sep" aria-hidden="true">›</span>
+        </li>
+        <li class="breadcrumb__item breadcrumb__item--current" aria-current="page">
+          {{ article.title }}
+        </li>
+
+      {% when 'blog' %}
+        <li class="breadcrumb__item breadcrumb__item--current" aria-current="page">
+          Journal
+        </li>
+
+      {% when 'page' %}
+        <li class="breadcrumb__item breadcrumb__item--current" aria-current="page">
+          {{ page.title }}
+        </li>
+
+      {% when 'search' %}
+        <li class="breadcrumb__item breadcrumb__item--current" aria-current="page">
+          Search
+        </li>
+
+      {% when 'cart' %}
+        <li class="breadcrumb__item breadcrumb__item--current" aria-current="page">
+          Cart
+        </li>
+    {% endcase %}
+  </ol>
+</nav>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ shop.url }}"
+    }
+    {% case template.name %}
+      {% when 'collection' %}
+        {% if collection.handle == 'open-sole' or collection.handle == 'closed-sole' or collection.handle == 'outdoor' %}
+          ,{
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Grippy Shoes",
+            "item": "{{ shop.url }}/collections/grippy-shoes"
+          }
+          ,{
+            "@type": "ListItem",
+            "position": 3,
+            "name": "{{ collection.title | escape }}",
+            "item": "{{ shop.url }}{{ collection.url }}"
+          }
+        {% else %}
+          ,{
+            "@type": "ListItem",
+            "position": 2,
+            "name": "{{ collection.title | escape }}",
+            "item": "{{ shop.url }}{{ collection.url }}"
+          }
+        {% endif %}
+
+      {% when 'product' %}
+        {% if product.collections.size > 0 %}
+          {% assign primary_collection = product.collections | first %}
+          {% if primary_collection.handle == 'open-sole' or primary_collection.handle == 'closed-sole' or primary_collection.handle == 'outdoor' %}
+            ,{
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Grippy Shoes",
+              "item": "{{ shop.url }}/collections/grippy-shoes"
+            }
+            ,{
+              "@type": "ListItem",
+              "position": 3,
+              "name": "{{ primary_collection.title | escape }}",
+              "item": "{{ shop.url }}{{ primary_collection.url }}"
+            }
+            ,{
+              "@type": "ListItem",
+              "position": 4,
+              "name": "{{ product.title | escape }}",
+              "item": "{{ shop.url }}{{ product.url }}"
+            }
+          {% else %}
+            ,{
+              "@type": "ListItem",
+              "position": 2,
+              "name": "{{ primary_collection.title | escape }}",
+              "item": "{{ shop.url }}{{ primary_collection.url }}"
+            }
+            ,{
+              "@type": "ListItem",
+              "position": 3,
+              "name": "{{ product.title | escape }}",
+              "item": "{{ shop.url }}{{ product.url }}"
+            }
+          {% endif %}
+        {% else %}
+          ,{
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Grippy Shoes",
+            "item": "{{ shop.url }}/collections/grippy-shoes"
+          }
+          ,{
+            "@type": "ListItem",
+            "position": 3,
+            "name": "{{ product.title | escape }}",
+            "item": "{{ shop.url }}{{ product.url }}"
+          }
+        {% endif %}
+
+      {% when 'article' %}
+        ,{
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Journal",
+          "item": "{{ shop.url }}/blogs/journal"
+        }
+        ,{
+          "@type": "ListItem",
+          "position": 3,
+          "name": "{{ article.title | escape }}",
+          "item": "{{ shop.url }}{{ article.url }}"
+        }
+
+      {% when 'blog' %}
+        ,{
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Journal",
+          "item": "{{ shop.url }}/blogs/journal"
+        }
+
+      {% when 'page' %}
+        ,{
+          "@type": "ListItem",
+          "position": 2,
+          "name": "{{ page.title | escape }}",
+          "item": "{{ shop.url }}{{ page.url }}"
+        }
+    {% endcase %}
+  ]
+}
+</script>
+{% endif %}
+
+<style>
+  .breadcrumb {
+    padding: 16px var(--section-padding-x);
+    max-width: var(--max-width);
+    margin: 0 auto;
+  }
+  .breadcrumb__list {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0;
+  }
+  .breadcrumb__item {
+    display: flex;
+    align-items: center;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    line-height: var(--leading-normal);
+  }
+  .breadcrumb__link {
+    color: var(--color-muted);
+    text-decoration: none;
+    padding: 4px 0;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    transition: color 150ms ease;
+  }
+  .breadcrumb__link:hover {
+    color: var(--color-charcoal);
+    text-decoration: none;
+  }
+  .breadcrumb__link:focus-visible {
+    outline: 2px solid var(--color-charcoal);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+  .breadcrumb__sep {
+    margin: 0 var(--space-2);
+    color: var(--border-default);
+    font-size: var(--text-xs);
+  }
+  .breadcrumb__item--current {
+    color: var(--color-charcoal);
+    font-weight: 500;
+  }
+
+  @media (max-width: 768px) {
+    .breadcrumb {
+      padding: 12px 16px;
+    }
+  }
+</style>

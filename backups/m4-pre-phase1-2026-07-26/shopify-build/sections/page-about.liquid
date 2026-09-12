@@ -1,0 +1,254 @@
+{% comment %}
+  Page About Section
+  Brand story, values, category creation narrative.
+  Used on: page.about.json
+{% endcomment %}
+
+<section class="section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
+  <div class="section__inner section__inner--narrow">
+    {% if section.settings.eyebrow != blank %}
+      <p class="eyebrow eyebrow--accent">{{ section.settings.eyebrow }}</p>
+    {% endif %}
+    <h1 class="page-about__title">{{ section.settings.title }}</h1>
+    <div class="page-about__intro">
+      {{ section.settings.intro_text }}
+    </div>
+  </div>
+</section>
+
+{% if section.settings.manifesto != blank %}
+<section class="section section--dark">
+  <div class="section__inner section__inner--narrow">
+    <blockquote class="page-about__manifesto">
+      {{ section.settings.manifesto }}
+    </blockquote>
+  </div>
+</section>
+{% endif %}
+
+{% if section.blocks.size > 0 %}
+<section class="section section--cream">
+  <div class="section__inner">
+    <h2 class="page-about__values-title">{{ section.settings.values_heading }}</h2>
+    <div class="page-about__values-grid">
+      {% for block in section.blocks %}
+        {% if block.type == 'value' %}
+          <div class="page-about__value" {{ block.shopify_attributes }}>
+            <h3 class="page-about__value-title">{{ block.settings.title }}</h3>
+            <p class="page-about__value-body">{{ block.settings.description }}</p>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if section.settings.made_in_usa_text != blank %}
+<section class="section">
+  <div class="section__inner section__inner--narrow">
+    <div class="page-about__usa">
+      <p class="eyebrow">Made in USA</p>
+      <h2 class="page-about__usa-title">{{ section.settings.made_in_usa_heading }}</h2>
+      <div class="page-about__usa-body">
+        {{ section.settings.made_in_usa_text }}
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Barreletics",
+  "url": "https://barreletics.com",
+  "description": {{ section.settings.intro_text | strip_html | json }},
+  "brand": {
+    "@type": "Brand",
+    "name": "Barreletics"
+  },
+  "foundingCountry": "US",
+  "knowsAbout": ["Performance footwear", "Grippy shoes", "Pilates", "Barre", "Reformer"]
+}
+</script>
+
+<style>
+  .page-about__title {
+    font-size: var(--text-5xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    margin: 0 0 var(--space-6);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .page-about__intro {
+    font-size: var(--text-md);
+    color: var(--text-body);
+    line-height: var(--leading-loose);
+  }
+
+  .page-about__intro p {
+    margin-bottom: var(--space-4);
+  }
+
+  .page-about__manifesto {
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-medium);
+    color: var(--color-white);
+    line-height: var(--leading-relaxed);
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    border: none;
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .page-about__values-title {
+    font-size: var(--text-3xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    text-align: center;
+    margin: 0 0 var(--space-9);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .page-about__values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--grid-gap);
+  }
+
+  .page-about__value {
+    padding: var(--space-6);
+    background: var(--bg-primary);
+    border-radius: var(--radius-card);
+    border: 1px solid var(--border-default);
+  }
+
+  .page-about__value-title {
+    font-size: var(--text-lg);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    margin: 0 0 var(--space-2);
+  }
+
+  .page-about__value-body {
+    font-size: var(--text-base);
+    color: var(--text-body);
+    line-height: var(--leading-relaxed);
+    margin: 0;
+  }
+
+  .page-about__usa {
+    text-align: center;
+  }
+
+  .page-about__usa-title {
+    font-size: var(--text-3xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    margin: var(--space-3) 0 var(--space-4);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .page-about__usa-body {
+    font-size: var(--text-md);
+    color: var(--text-body);
+    line-height: var(--leading-loose);
+    max-width: var(--max-width-copy);
+    margin: 0 auto;
+  }
+
+  @media (max-width: 768px) {
+    .page-about__title {
+      font-size: var(--text-3xl);
+    }
+
+    .page-about__manifesto {
+      font-size: var(--text-xl);
+    }
+
+    .page-about__values-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .page-about__usa-title {
+      font-size: var(--text-2xl);
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "About Page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Our Story"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Page title",
+      "default": "Redefining Grip"
+    },
+    {
+      "type": "richtext",
+      "id": "intro_text",
+      "label": "Intro text",
+      "default": "<p>Barreletics is replacing the grip sock category with Performance Skins — injection-molded grippy shoes engineered for barre, reformer, Lagree, and Pilates. Instead of asking 'which grip sock?' we want you asking 'why grip socks at all?'</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "manifesto",
+      "label": "Manifesto quote",
+      "default": "<p>We didn't improve the grip sock. We made it obsolete.</p>"
+    },
+    {
+      "type": "text",
+      "id": "values_heading",
+      "label": "Values section heading",
+      "default": "What We Stand For"
+    },
+    {
+      "type": "text",
+      "id": "made_in_usa_heading",
+      "label": "Made in USA heading",
+      "default": "Designed and Made in the USA"
+    },
+    {
+      "type": "richtext",
+      "id": "made_in_usa_text",
+      "label": "Made in USA text",
+      "default": "<p>Every pair of Barreletics is manufactured in the United States. From material sourcing to injection molding to quality control — the entire process stays domestic. No overseas factories. No compromises on quality oversight.</p>"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "value",
+      "name": "Brand Value",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Value title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Value description"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "About Page"
+    }
+  ]
+}
+{% endschema %}

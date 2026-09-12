@@ -3,12 +3,58 @@
   Wraps the sticky-atc snippet for use as a section in product templates.
 {% endcomment %}
 
-{% render 'sticky-atc' %}
+{% render 'sticky-atc',
+  hero_image_mode: section.settings.hero_image_mode,
+  hero_color: section.settings.hero_color,
+  hero_media_index: section.settings.hero_media_index
+%}
 
 {% schema %}
 {
   "name": "Sticky Add to Cart",
-  "settings": [],
+  "settings": [
+    { "type": "header", "content": "Shared — Content" },
+    {
+      "type": "paragraph",
+      "content": "Sticky ATC chrome is product-driven (Admin title / price / variant). Kept separate from PDP Buy Box per TE policy."
+    },
+    { "type": "header", "content": "Hero thumb priority" },
+    {
+      "type": "paragraph",
+      "content": "Global default: Theme settings → PDP hero image. Fields below optionally override for this sticky instance only."
+    },
+    {
+      "type": "select",
+      "id": "hero_image_mode",
+      "label": "Hero image priority (section override)",
+      "options": [
+        { "value": "admin_order", "label": "Use theme / Admin default" },
+        { "value": "variant_color", "label": "Variant color / option value" },
+        { "value": "media_index", "label": "Specific media position #" }
+      ],
+      "default": "admin_order"
+    },
+    {
+      "type": "text",
+      "id": "hero_color",
+      "label": "Hero color / option value (override)",
+      "info": "e.g. Coral, Bright Yellow, Blue."
+    },
+    {
+      "type": "range",
+      "id": "hero_media_index",
+      "label": "Hero media position (override)",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "default": 1
+    },
+    { "type": "header", "content": "Section — Sticky ATC" },
+    {
+      "type": "paragraph",
+      "content": "No copy overrides here — buy-box owns purchase stack messaging."
+    }
+  ],
   "presets": [{ "name": "Sticky Add to Cart" }]
 }
 {% endschema %}

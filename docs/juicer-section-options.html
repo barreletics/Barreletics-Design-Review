@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Juicer / IG section options — Barreletics PDP</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1c1916;
+      --body: #4a4a4a;
+      --muted: #8a8a8a;
+      --border: #d6cfc0;
+      --cream: #f5f2ec;
+      --rust: #c45c3f;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--ink);
+      background: #fff;
+    }
+    .banner {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: var(--ink);
+      color: #fff;
+      padding: 16px 24px;
+    }
+    .banner h1 {
+      margin: 0 0 6px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .banner p {
+      margin: 0;
+      font-size: 13px;
+      color: rgba(255,255,255,0.72);
+      max-width: 72ch;
+      line-height: 1.45;
+    }
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border);
+      background: var(--cream);
+    }
+    .nav a {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--ink);
+      border: 1px solid var(--border);
+      background: #fff;
+      padding: 10px 14px;
+      border-radius: 4px;
+    }
+    .option {
+      border-bottom: 1px solid var(--border);
+      padding: 40px 24px 56px;
+    }
+    .option__meta {
+      max-width: 720px;
+      margin-bottom: 28px;
+    }
+    .tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      border-radius: 3px;
+      margin: 0 6px 10px 0;
+      background: var(--cream);
+      color: var(--body);
+      border: 1px solid var(--border);
+    }
+    .tag.warn { background: #fff4ef; color: var(--rust); border-color: #efd0c4; }
+    .option h2 {
+      margin: 0 0 8px;
+      font-size: 28px;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+    }
+    .option .one-liner {
+      margin: 0 0 10px;
+      font-size: 15px;
+      color: var(--body);
+      line-height: 1.5;
+    }
+    .option .src {
+      margin: 0 0 12px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .option ul {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--body);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+    .preview-frame {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    /* === OPTION PREVIEWS === */
+    .juicer-section { padding: 64px 40px; background: #fff; }
+    .juicer-inner { max-width: 1200px; margin: 0 auto; text-align: center; }
+    .juicer-eyebrow {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      font-weight: 600;
+      margin: 0 0 12px;
+    }
+    .juicer-title {
+      font-size: 32px;
+      font-weight: 500;
+      color: var(--ink);
+      margin: 0 0 8px;
+    }
+    .juicer-body {
+      font-size: 15px;
+      color: var(--body);
+      margin: 0;
+    }
+    .juicer-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 12px;
+      margin: 32px 0 24px;
+    }
+    .juicer-grid img,
+    .juicer-placeholder {
+      aspect-ratio: 1;
+      width: 100%;
+      object-fit: cover;
+      display: block;
+      background: #f9f9f9;
+      border-radius: 4px;
+    }
+    .juicer-cta {
+      font-size: 13px;
+      color: var(--ink);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .ig-left .juicer-inner { text-align: left; }
+    .ig-left .juicer-grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .ig-marquee {
+      padding: 72px 0 56px;
+      background: #fff;
+      overflow: hidden;
+    }
+    .ig-marquee__head {
+      max-width: 1200px;
+      margin: 0 auto 28px;
+      padding: 0 40px;
+    }
+    .ig-marquee__title {
+      margin: 0 0 6px;
+      font-size: clamp(28px, 3.5vw, 40px);
+      font-weight: 400;
+      letter-spacing: -0.028em;
+    }
+    .ig-marquee__handle {
+      margin: 0;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .ig-rail {
+      display: flex;
+      gap: 10px;
+      width: max-content;
+      animation: rail 36s linear infinite;
+    }
+    .ig-rail img {
+      width: 180px;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 4px;
+      flex: 0 0 auto;
+    }
+    .ig-rail-wrap {
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+    .ig-rail-wrap--rev .ig-rail { animation-direction: reverse; animation-duration: 42s; }
+    .ig-marquee__cta {
+      display: inline-block;
+      margin: 28px 40px 0;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--ink);
+    }
+    @keyframes rail {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    @media (max-width: 900px) {
+      .juicer-grid { grid-template-columns: repeat(3, 1fr); }
+      .ig-left .juicer-grid { grid-template-columns: repeat(2, 1fr); }
+      .juicer-section, .ig-marquee__head { padding-left: 16px; padding-right: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="banner">
+    <h1>Juicer / Instagram section — pick before freeze</h1>
+    <p>Andrew has not reviewed Juicer options yet. Draft PDP currently uses a static <code>home-ugc</code> placeholder with July 17 @barreletics copy. Do not freeze IG/Juicer until a letter (A–C).</p>
+  </div>
+
+  <div class="nav">
+    <a href="#opt-a">A · July 17 centered</a>
+    <a href="#opt-b">B · Home WORKING grid</a>
+    <a href="#opt-c">C · Dual-run marquee</a>
+  </div>
+
+  <!-- A -->
+  <section class="option" id="opt-a">
+    <div class="option__meta">
+      <span class="tag">July 17 mock</span>
+      <span class="tag">Likely PDP default</span>
+      <h2>A — Centered Juicer grid</h2>
+      <p class="one-liner">APPROVED July 17 PDP treatment: centered eyebrow + @handle + 6-up square grid + Follow CTA. Wire real Juicer embed when chosen.</p>
+      <p class="src">docs/Barreletics PDP - APPROVED July 17.html · feed-id barreletics</p>
+      <ul>
+        <li>Eyebrow: Follow the movement</li>
+        <li>Title: @barreletics</li>
+        <li>Body: Real practitioners. Real studios. Real grip.</li>
+        <li>Production: Juicer <code>data-feed-id="barreletics"</code> replaces placeholders</li>
+      </ul>
+    </div>
+    <div class="preview-frame">
+      <section class="juicer-section" aria-label="Option A">
+        <div class="juicer-inner">
+          <p class="juicer-eyebrow">Follow the movement</p>
+          <h2 class="juicer-title">@barreletics</h2>
+          <p class="juicer-body">Real practitioners. Real studios. Real grip.</p>
+          <div class="juicer-grid">
+            <img src="https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=600" alt="">
+            <img src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=600" alt="">
+            <img src="https://barreletics.com/cdn/shop/files/IMG_2917.jpg?v=1741040637&width=600" alt="">
+            <img src="https://barreletics.com/cdn/shop/files/Multi_Image.jpg?v=1768346625&width=600" alt="">
+            <img src="https://barreletics.com/cdn/shop/products/barreletixxjumpingtogether.jpg?v=1619360969&width=600" alt="">
+            <img src="https://barreletics.com/cdn/shop/files/Square_Pink.png?v=1764627088&width=600" alt="">
+          </div>
+          <a class="juicer-cta" href="https://www.instagram.com/barreletics/" target="_blank" rel="noopener">Follow on Instagram →</a>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <!-- B -->
+  <section class="option" id="opt-b">
+    <div class="option__meta">
+      <span class="tag">Home WORKING</span>
+      <span class="tag">On draft now (static)</span>
+      <h2>B — Left-aligned studio grid</h2>
+      <p class="one-liner">Home WORKING / current <code>home-ugc</code> pattern: left type, denser 4×2 grid, same Follow CTA. Matches sitewide IG band if you want PDP = Home.</p>
+      <p class="src">docs/Barreletics Home - Definitive-WORKING.html · shopify-build/sections/home-ugc.liquid</p>
+      <ul>
+        <li>Title can be From the studio or @barreletics</li>
+        <li>8 tiles / 4 columns desktop</li>
+        <li>Static until Juicer or native embed is wired</li>
+      </ul>
+    </div>
+    <div class="preview-frame">
+      <section class="juicer-section ig-left" aria-label="Option B">
+        <div class="juicer-inner">
+          <h2 class="juicer-title" style="font-size:clamp(28px,3.5vw,40px);font-weight:400;letter-spacing:-0.028em;">From the studio</h2>
+          <p class="juicer-body">@barreletics</p>
+          <div class="juicer-grid">
+            <img src="https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=600" alt="">
+            <img src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=600" alt="">
+            <img src="https://barreletics.com/cdn/shop/files/IMG_2917.jpg?v=1741040637&width=600" alt="">
+            <img src="https://barreletics.com/cdn/shop/files/Multi_Image.jpg?v=1768346625&width=600" alt="">
+            <img src="https://barreletics.com/cdn/shop/products/barreletixxjumpingtogether.jpg?v=1619360969&width=600" alt="">
+            <img src="https://barreletics.com/cdn/shop/files/Square_Pink.png?v=1764627088&width=600" alt="">
+            <img src="https://barreletics.com/cdn/shop/products/Yellow_Image-Blue_Shoe_1200x1200_59ef7b79-1661-4c2f-a2da-c6b9211e2c42.jpg?v=1678412911&width=600" alt="">
+            <img src="https://barreletics.com/cdn/shop/files/Copreni_Final_More_grey.png?v=1774119812&width=600" alt="">
+          </div>
+          <a class="juicer-cta" href="https://www.instagram.com/barreletics/" target="_blank" rel="noopener">Follow on Instagram →</a>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <!-- C -->
+  <section class="option" id="opt-c">
+    <div class="option__meta">
+      <span class="tag warn">Definitive family</span>
+      <span class="tag">Motion-heavy</span>
+      <h2>C — Dual-run marquee</h2>
+      <p class="one-liner">v15/v16 continuous dual-run IG rail. Strong motion; different from July 17. Only pick if you want the marquee energy on PDP.</p>
+      <p class="src">docs/Barreletics PDP - Definitive-v16.html IG band</p>
+      <ul>
+        <li>Two opposing horizontal rails</li>
+        <li>Headline + @handle above</li>
+        <li>Heavier than A/B — review mobile carefully</li>
+      </ul>
+    </div>
+    <div class="preview-frame">
+      <section class="ig-marquee" aria-label="Option C">
+        <div class="ig-marquee__head">
+          <h2 class="ig-marquee__title">@barreletics</h2>
+          <p class="ig-marquee__handle">Real practitioners. Real studios. Real grip.</p>
+        </div>
+        <div class="ig-rail-wrap">
+          <div class="ig-rail">
+            <img src="https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=400" alt="">
+            <img src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=400" alt="">
+            <img src="https://barreletics.com/cdn/shop/files/IMG_2917.jpg?v=1741040637&width=400" alt="">
+            <img src="https://barreletics.com/cdn/shop/files/Multi_Image.jpg?v=1768346625&width=400" alt="">
+            <img src="https://barreletics.com/cdn/shop/products/barreletixxjumpingtogether.jpg?v=1619360969&width=400" alt="">
+            <img src="https://barreletics.com/cdn/shop/files/Square_Pink.png?v=1764627088&width=400" alt="">
+            <img src="https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=400" alt="">
+            <img src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=400" alt="">
+            <img src="https://barreletics.com/cdn/shop/files/IMG_2917.jpg?v=1741040637&width=400" alt="">
+            <img src="https://barreletics.com/cdn/shop/files/Multi_Image.jpg?v=1768346625&width=400" alt="">
+            <img src="https://barreletics.com/cdn/shop/products/barreletixxjumpingtogether.jpg?v=1619360969&width=400" alt="">
+            <img src="https://barreletics.com/cdn/shop/files/Square_Pink.png?v=1764627088&width=400" alt="">
+          </div>
+        </div>
+        <div class="ig-rail-wrap ig-rail-wrap--rev">
+          <div class="ig-rail">
+            <img src="https://barreletics.com/cdn/shop/products/Yellow_Image-Blue_Shoe_1200x1200_59ef7b79-1661-4c2f-a2da-c6b9211e2c42.jpg?v=1678412911&width=400" alt="">
+            <img src="https://barreletics.com/cdn/shop/files/Copreni_Final_More_grey.png?v=1774119812&width=400" alt="">
+            <img src="https://barreletics.com/cdn/shop/files/Multi_Image.jpg?v=1768346625&width=400" alt="">
+            <img src="https://barreletics.com/cdn/shop/files/IMG_2917.jpg?v=1741040637&width=400" alt="">
+            <img src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=400" alt="">
+            <img src="https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=400" alt="">
+            <img src="https://barreletics.com/cdn/shop/products/Yellow_Image-Blue_Shoe_1200x1200_59ef7b79-1661-4c2f-a2da-c6b9211e2c42.jpg?v=1678412911&width=400" alt="">
+            <img src="https://barreletics.com/cdn/shop/files/Copreni_Final_More_grey.png?v=1774119812&width=400" alt="">
+            <img src="https://barreletics.com/cdn/shop/files/Multi_Image.jpg?v=1768346625&width=400" alt="">
+            <img src="https://barreletics.com/cdn/shop/files/IMG_2917.jpg?v=1741040637&width=400" alt="">
+            <img src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=400" alt="">
+            <img src="https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=400" alt="">
+          </div>
+        </div>
+        <a class="ig-marquee__cta" href="https://www.instagram.com/barreletics/" target="_blank" rel="noopener">Follow on Instagram →</a>
+      </section>
+    </div>
+  </section>
+</body>
+</html>
