@@ -858,3 +858,9 @@ TODO when Andrew is at desktop. Draft HTML in `planning/draft-shopify-*.html`. E
 
 One row: **Shipping, returns & 90-day warranty** in `pdp-buy-box.liquid` (all PDPs). Outdoor Good to know remains water-only (slick + wear), no warranty line there.
 
+## D-chrome-announce — 2026-09-12 — LOCKED desktop one cream announce line
+- Desktop: one cream strip (SAVE2 + trust + 🇺🇸); sale banner CSS-hidden ≥901px.
+- Mobile: two-bar locked; logo_height_mobile 39.
+- Nav centered; SAVE2/nav not bold.
+- Values: see `planning/chrome-announce-LOCKED.md`.
+- Andrew: "done lock it in".

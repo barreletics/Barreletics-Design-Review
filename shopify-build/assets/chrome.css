@@ -3,30 +3,34 @@
    Extracted from Liquid for performance (Phase 1)
    ============================================================================= */
 
-/* Sale banner — top promo (live blue SAVE2 strip) */
+/* Sale banner — top promo */
 .sale-banner {
+  /* Cream SAVE2 bar — no border (too busy with trust + header lines) */
   background: var(--sale-banner-bg, #faf8f6);
   color: var(--sale-banner-color, #1c1916);
-  padding: 8px 20px;
+  padding: var(--sale-banner-pad-y, 10px) 24px;
   text-align: center;
   width: 100%;
   overflow: hidden;
   position: relative;
   z-index: calc(var(--z-header) + 2);
+  border-bottom: none;
 }
 .sale-banner__inner {
-  max-width: var(--max-width);
+  max-width: min(1400px, 100%);
   margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0 40px;
+  box-sizing: border-box;
 }
 .sale-banner__text {
   margin: 0;
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  line-height: 1.2;
+  font-size: var(--sale-banner-font-size, 15px);
+  font-weight: var(--sale-banner-weight, 500);
+  letter-spacing: 0.04em;
+  line-height: 1.25;
   text-transform: none;
   color: inherit;
   text-decoration: none;
@@ -39,35 +43,48 @@ a.sale-banner__text:hover {
   .sale-banner { padding: 6px 16px; }
   .sale-banner__text {
     font-size: 13px;
+    font-weight: 500;
     letter-spacing: 1.5px;
   }
 }
 
-/* Trust strip — soft cream, static, wraps like live second line */
+/* Trust strip */
 .announcement-strip {
-  background: #ffffff;
-  padding: 10px var(--section-padding-x);
+  /* Trust line under SAVE2 — no bottom line (header border is enough) */
+  background: var(--announce-bg, #ffffff);
+  padding: var(--announce-pad-y, 5px) var(--announce-pad-x, 56px);
   border-bottom: none;
   overflow: hidden;
   position: relative;
   z-index: calc(var(--z-header) + 1);
 }
 .announcement-strip__inner {
-  max-width: var(--max-width);
+  max-width: min(var(--announce-max-width, 1320px), 100%);
   margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-wrap: wrap;
-  gap: 2px 0;
+  flex-wrap: nowrap;
+  gap: 0 var(--announce-item-gap, 12px);
   text-align: center;
   white-space: normal;
-  font-size: 12px;
+  font-size: var(--announce-font-size, 12px);
   font-weight: 500;
   text-transform: none;
-  letter-spacing: 0.06em;
-  color: var(--color-warm-muted);
-  line-height: 1.45;
+  letter-spacing: var(--announce-tracking, 0.03em);
+  color: var(--announce-color, #5a544c);
+  line-height: 1.3;
+}
+
+/* Announce layout TE: center = Lulu compact line; spread = edge-to-edge messages */
+.announcement-strip[data-announce-distribute="spread"] .announcement-strip__inner {
+  justify-content: space-between;
+  gap: 0 var(--announce-item-gap, 28px);
+}
+.announcement-strip__item:first-child,
+.announcement-strip__item--promo {
+  font-weight: var(--announce-promo-weight, 600);
+  color: var(--announce-promo-color, #2e2a26);
 }
 .announcement-strip__item {
   display: inline-flex;
@@ -75,8 +92,9 @@ a.sale-banner__text:hover {
 }
 .announcement-strip__sep {
   color: #9a9182;
-  margin: 0 0.35em;
+  margin: 0;
   opacity: 0.7;
+  flex: 0 0 auto;
 }
 .announcement-strip__link {
   color: inherit;
@@ -88,6 +106,44 @@ a.sale-banner__text:hover {
 .announcement-strip__link:hover {
   color: var(--text-primary);
   text-decoration-thickness: 1.5px;
+}
+
+/* Desktop: one cream line (SAVE2 + trust in announce). Hide sale banner.
+   Mobile: two-bar locked — sale on, hide SAVE2 duplicate in announce.
+   Does not overwrite TE JSON — layout only. */
+@media (min-width: 901px) {
+  .sale-banner-section {
+    display: none !important;
+  }
+  .announcement-strip {
+    background: var(--announce-bg, #faf8f6);
+    padding-top: var(--announce-pad-y, 9px);
+    padding-bottom: var(--announce-pad-y, 9px);
+  }
+  .announcement-strip__inner {
+    font-size: var(--announce-font-size, 14px);
+  }
+  .announcement-strip__item--promo,
+  .announcement-strip__item:first-child {
+    font-weight: var(--announce-promo-weight, 500);
+    color: var(--announce-promo-color, #2e2a26);
+  }
+}
+@media (max-width: 900px) {
+  .announcement-strip__item--promo,
+  .announcement-strip__sep--after-promo {
+    display: none !important;
+  }
+  .announcement-strip {
+    background: var(--announce-bg-mobile, #ffffff);
+    padding: var(--announce-pad-y-mobile, 8px) 16px;
+  }
+  .announcement-strip__inner {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2px 0.35em;
+    font-size: var(--announce-font-size-mobile, 12px);
+  }
 }
 
 /* Shopify wraps each header-group member in its own <div id="shopify-section-…">, and a
@@ -115,17 +171,16 @@ a.sale-banner__text:hover {
   position: relative;
 }
 .site-header__inner {
-  max-width: var(--max-width);
+  /* TE: --header-max-width / pad — defaults match best nav>announce pass */
+  max-width: min(var(--header-max-width, 1320px), 100%);
   margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  /* Title-case nav at 18px is wider than the old 13px caps; without a floor the flex
-     children butt straight into each other at ~1200px ("Journal" touching "Help"). */
-  gap: 24px;
-  min-height: 56px;
+  gap: 32px;
+  min-height: 64px;
   height: auto;
-  padding: 12px var(--section-padding-x);
+  padding: var(--header-pad-y, 12px) var(--header-pad-x, 40px);
   box-sizing: border-box;
 }
 .site-header__hamburger {
@@ -155,14 +210,59 @@ a.sale-banner__text:hover {
   text-transform: uppercase;
   color: var(--header-text, var(--text-primary));
 }
+.site-header__nav {
+  display: flex;
+  align-items: center;
+  flex: 1 1 auto;
+  justify-content: center;
+  min-width: 0;
+  padding: 0 8px;
+}
 .site-header__nav-list {
   display: flex;
   align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
   gap: var(--header-nav-gap, var(--type-nav-gap, 32px));
+}
+/* center = cluster mid-rail | spread = edge-to-edge | live = logo left, big air, nav+actions pack right (matches live) */
+.site-header[data-nav-distribute="spread"] .site-header__nav {
+  justify-content: stretch;
+}
+.site-header[data-nav-distribute="spread"] .site-header__nav-list {
+  width: 100%;
+  justify-content: space-between;
+}
+.site-header[data-nav-distribute="center"] .site-header__nav {
+  justify-content: center;
+}
+.site-header[data-nav-distribute="center"] .site-header__nav-list {
+  width: auto;
+  justify-content: center;
+}
+@media (min-width: 901px) {
+  .site-header[data-nav-distribute="live"] .site-header__inner {
+    gap: 32px;
+  }
+  .site-header[data-nav-distribute="live"] .site-header__logo {
+    margin-right: auto; /* creates the live air after the mark */
+  }
+  .site-header[data-nav-distribute="live"] .site-header__nav {
+    flex: 0 1 auto;
+    justify-content: flex-end;
+    padding: 0;
+  }
+  .site-header[data-nav-distribute="live"] .site-header__nav-list {
+    width: auto;
+    justify-content: flex-end;
+  }
+  .site-header[data-nav-distribute="live"] .site-header__actions {
+    margin-left: 28px;
+  }
 }
 .site-header__nav-item > a {
   font-size: var(--header-nav-size, var(--type-nav-size));
-  font-weight: var(--type-nav-weight);
+  font-weight: var(--header-nav-weight, var(--type-nav-weight));
   /* Production paints title case — the capitals were ours, not the menu titles. */
   text-transform: none;
   letter-spacing: var(--type-nav-tracking);
@@ -213,13 +313,13 @@ a.sale-banner__text:hover {
   background: var(--bg-alternate);
   text-decoration: none;
 }
-.site-header__actions { display: flex; align-items: center; gap: 20px; }
+.site-header__actions { display: flex; align-items: center; gap: var(--header-action-gap, 18px); }
 /* Home WORKING text actions (Help / Account / Cart) */
 /* Utility actions read as a quieter sibling of the nav, not a different type system:
    same family/weight/case, one step down in size. */
 .site-header__action--text {
-  /* Match v20d nav #2 actions (Help · Account · Cart) */
-  font-size: 13px;
+  /* TE --header-action-size; keep one step under nav */
+  font-size: var(--header-action-size, 14px);
   font-weight: var(--type-nav-weight);
   text-transform: none;
   letter-spacing: var(--type-nav-tracking);
@@ -396,11 +496,34 @@ a.sale-banner__text:hover {
 }
 .site-header__action--help { display: flex; }
 
+/* Desktop: nav owns the chrome row — slightly heavier than mobile drawer */
+@media (min-width: 901px) {
+  .site-header__nav-item > a {
+    font-weight: 500;
+    letter-spacing: 0.015em;
+  }
+  .site-header__action--text {
+    letter-spacing: 0.015em;
+  }
+  .site-header__actions {
+    flex-shrink: 0;
+  }
+}
+
 /* Logo + four title-case 18px nav labels + Help/Account/Cart need ~873px to sit in one
    row; below that the header pushed the whole page into horizontal scroll. Collapsing to
    the drawer at 900px keeps a margin over that measured floor without touching the
    approved nav type. Measured by planning/nav-qa/audit.py. */
 @media (max-width: 900px) {
+  .site-header__inner {
+    max-width: var(--max-width);
+    padding: 10px 16px;
+    gap: 16px;
+  }
+  .site-header__nav-list {
+    width: auto;
+    justify-content: flex-start;
+  }
   .site-header__hamburger { display: flex; }
   .site-header__nav { display: none; }
   .site-header__action--help { display: none; }
@@ -412,6 +535,7 @@ a.sale-banner__text:hover {
     height: var(--header-logo-height-mobile, var(--header-logo-height, 22px));
   }
   .announcement-strip { padding: 10px 16px; }
+  .announcement-strip__inner { font-size: 12px; letter-spacing: 0.06em; }
 }
 
 /* Footer — match Home WORKING (Join the list · NO 10%) */

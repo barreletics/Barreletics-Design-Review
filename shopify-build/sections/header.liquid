@@ -11,6 +11,13 @@
 {%- if sticky_header == nil -%}{%- assign sticky_header = true -%}{%- endif -%}
 {%- assign nav_link_size = section.settings.nav_link_size | default: 'default' -%}
 {%- assign nav_gap = section.settings.nav_gap | default: 30 -%}
+{%- assign action_link_size = section.settings.action_link_size | default: '14' -%}
+{%- assign header_pad_y = section.settings.header_pad_y | default: 12 -%}
+{%- assign header_pad_x = section.settings.header_pad_x | default: 40 -%}
+{%- assign header_max_width = section.settings.header_max_width | default: 1320 -%}
+{%- assign action_gap = section.settings.action_gap | default: 18 -%}
+{%- assign nav_weight = section.settings.nav_weight | default: '500' -%}
+{%- assign nav_distribute = section.settings.nav_distribute | default: 'center' -%}
 {%- comment -%} Help center hub (page.help.json) — routes to FAQ, returns, size, contact. {%- endcomment -%}
 {%- assign help_fallback_url = '/pages/help' -%}
 {%- assign show_help = section.settings.show_help -%}
@@ -33,6 +40,7 @@
 <header
   class="site-header{% unless sticky_header %} site-header--static{% endunless %}"
   data-site-header
+  data-nav-distribute="{{ nav_distribute }}"
   role="banner"
   style="
     --header-logo-height: {{ logo_height }}px;
@@ -41,6 +49,12 @@
     --header-bg: {{ header_bg }};
     --header-text: {{ header_text }};
     {% if nav_link_size != 'default' %}--header-nav-size: {{ nav_link_size }}px;{% endif %}
+    --header-action-size: {{ action_link_size }}px;
+    --header-pad-y: {{ header_pad_y }}px;
+    --header-pad-x: {{ header_pad_x }}px;
+    --header-max-width: {{ header_max_width }}px;
+    --header-action-gap: {{ action_gap }}px;
+    --header-nav-weight: {{ nav_weight }};
   "
   {{ section.shopify_attributes }}
 >
@@ -342,18 +356,103 @@
         { "value": "22", "label": "22px" }
       ],
       "default": "default",
-      "info": "LOCKED 2026-08-11 nav #2: Type OS default = 13px / 500. Prefer 13px (v20d chrome)."
+      "info": "Best recent desktop pass: 17px with announce at 12px (nav larger than announce)."
     },
     {
       "type": "range",
       "id": "nav_gap",
-      "label": "Nav item gap",
+      "label": "Nav item gap (air between links)",
       "min": 16,
-      "max": 48,
+      "max": 72,
       "step": 2,
-      "default": 26,
+      "default": 28,
       "unit": "px",
-      "info": "26px matches v20d LOCKED nav #2."
+      "info": "Space between Grippy Shoes → Journal. Wider = more premium."
+    },
+    {
+      "type": "select",
+      "id": "nav_weight",
+      "label": "Nav weight",
+      "options": [
+        { "value": "400", "label": "400 Regular" },
+        { "value": "500", "label": "500 Medium" },
+        { "value": "600", "label": "600 Semibold" }
+      ],
+      "default": "400",
+      "info": "Live nav is regular — not bold."
+    },
+    {
+      "type": "select",
+      "id": "action_link_size",
+      "label": "Help / Account / Cart size",
+      "options": [
+        { "value": "12", "label": "12px" },
+        { "value": "13", "label": "13px" },
+        { "value": "14", "label": "14px" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" }
+      ],
+      "default": "14",
+      "info": "Keep one step under nav size."
+    },
+    {
+      "type": "range",
+      "id": "action_gap",
+      "label": "Utility link gap",
+      "min": 10,
+      "max": 32,
+      "step": 2,
+      "default": 18,
+      "unit": "px"
+    },
+    {
+      "type": "select",
+      "id": "nav_distribute",
+      "label": "Nav layout",
+      "options": [
+        { "value": "live", "label": "Live — logo left, nav right" },
+        { "value": "center", "label": "Center — mid-rail group" },
+        { "value": "spread", "label": "Spread — edge to edge" }
+      ],
+      "default": "center",
+      "info": "Live = big air after logo; nav items together before Help/Cart."
+    },
+    {
+      "type": "header",
+      "content": "Desktop — Rail & padding"
+    },
+    {
+      "type": "range",
+      "id": "header_max_width",
+      "label": "Rail max width",
+      "min": 1100,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 1320,
+      "info": "How wide logo + nav + utilities span. Match Announcement strip."
+    },
+    {
+      "type": "range",
+      "id": "header_pad_y",
+      "label": "Vertical padding",
+      "min": 6,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "header_pad_x",
+      "label": "Side padding (logo inset)",
+      "min": 24,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 56,
+      "info": "Pulls logo + utilities in from the viewport edge."
     },
     {
       "type": "header",
