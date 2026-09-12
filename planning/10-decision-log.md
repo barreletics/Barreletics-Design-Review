@@ -854,3 +854,7 @@ TODO when Andrew is at desktop. Draft HTML in `planning/draft-shopify-*.html`. E
 - BIS: theme form + Shopify waitlist + **Flow + Shopify Email** **after live** (no Klaviyo, **no Zapier**)
 - See `planning/earmark-post-qc-cart-bis-sequence.md`
 
+## 2026-09-12 — PDP buy-box accordion LOCKED (global)
+
+One row: **Shipping, returns & 90-day warranty** in `pdp-buy-box.liquid` (all PDPs). Outdoor Good to know remains water-only (slick + wear), no warranty line there.
+
