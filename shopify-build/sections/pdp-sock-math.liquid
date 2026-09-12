@@ -82,33 +82,33 @@
             >
           </div>
         {% endif %}
-        <div class="sock-math__cycle">
-          <div class="sock-math__cycle-item">
-            <span>{{ section.settings.theirs_label | default: 'The cycle' }}</span>
-            {% if section.settings.their_price != blank %}
-              <p class="sock-math__cycle-price">{{ section.settings.their_price }} <small>/yr</small></p>
-            {% endif %}
-            {% if section.settings.theirs_1 != blank %}
-              <p>{{ section.settings.theirs_1 }}</p>
-            {% endif %}
-          </div>
-          <div class="sock-math__cycle-item sock-math__cycle-item--ours">
-            <span>{{ section.settings.ours_label | default: 'The pair' }}</span>
-            {% if section.settings.our_price != blank %}
-              <p class="sock-math__cycle-price">{{ section.settings.our_price }} <small>once</small></p>
-            {% endif %}
-            {% if section.settings.ours_1 != blank %}
-              <p class="sock-math__grip">{{ section.settings.ours_1 }}</p>
-            {% endif %}
-            {% if section.settings.ours_2 != blank %}
-              <p>{{ section.settings.ours_2 }}</p>
-            {% endif %}
-          </div>
-          {% if section.settings.cycle_foot != blank %}
-            <p class="sock-math__cycle-foot">{{ section.settings.cycle_foot }}</p>
-          {% endif %}
-        </div>
       </div>
+    </div>
+    <div class="sock-math__cycle">
+      <div class="sock-math__cycle-item">
+        <span>{{ section.settings.theirs_label | default: 'The cycle' }}</span>
+        {% if section.settings.their_price != blank %}
+          <p class="sock-math__cycle-price">{{ section.settings.their_price }} <small>/yr</small></p>
+        {% endif %}
+        {% if section.settings.theirs_1 != blank %}
+          <p>{{ section.settings.theirs_1 }}</p>
+        {% endif %}
+      </div>
+      <div class="sock-math__cycle-item sock-math__cycle-item--ours">
+        <span>{{ section.settings.ours_label | default: 'The pair' }}</span>
+        {% if section.settings.our_price != blank %}
+          <p class="sock-math__cycle-price">{{ section.settings.our_price }} <small>once</small></p>
+        {% endif %}
+        {% if section.settings.ours_1 != blank %}
+          <p class="sock-math__grip">{{ section.settings.ours_1 }}</p>
+        {% endif %}
+        {% if section.settings.ours_2 != blank %}
+          <p>{{ section.settings.ours_2 }}</p>
+        {% endif %}
+      </div>
+      {% if section.settings.cycle_foot != blank %}
+        <p class="sock-math__cycle-foot">{{ section.settings.cycle_foot }}</p>
+      {% endif %}
     </div>
   {% else %}
   <div class="sock-math__header">
@@ -184,6 +184,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    min-width: 0;
   }
   .sock-math--editorial h2.sock-math__headline {
     text-align: left;
@@ -251,6 +252,7 @@
     display: flex;
     flex-direction: column;
     min-height: 0;
+    min-width: 0;
   }
   .sock-math--editorial .sock-math__visual {
     flex: 0 0 var(--sm-frame, 480px);
@@ -278,11 +280,14 @@
     background: transparent;
   }
   .sock-math--editorial .sock-math__cycle {
+    max-width: 1200px;
+    margin: 0 auto;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0;
     padding: 28px 24px 24px;
     background: #fff;
+    box-sizing: border-box;
   }
   .sock-math--editorial .sock-math__cycle-item {
     margin: 0;
@@ -334,10 +339,12 @@
   }
   .sock-math--editorial .sock-math__cycle-foot {
     grid-column: 1 / -1;
-    margin: 20px 8px 0;
-    padding-top: 18px;
+    width: 100%;
+    margin: 20px 0 0;
+    padding: 18px 8px 0;
     border-top: 1px solid #d6cfc0;
     text-align: center;
+    justify-self: stretch;
     font-size: 16px;
     font-weight: 600;
     line-height: 1.5;
