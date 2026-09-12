@@ -19,3 +19,6 @@ Single index of parked work. Detail lives in the linked earmarks. Updated 2026-0
 
 ## Sequence detail
 `earmark-post-qc-cart-bis-sequence.md`
+## Speak vocab
+`planning/CHEATSHEET-speak-vocab.md` — 50/50, Display, strong punch, etc.
+
