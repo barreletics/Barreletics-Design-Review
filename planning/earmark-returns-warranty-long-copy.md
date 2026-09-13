@@ -52,3 +52,6 @@ Kept for reference only — do not use:
 Longer Returns + Warranty leads are now in `templates/page.shipping-retruns.json` / `page.returns.json` on draft QA. Still pending: FAQ, Help Scout, ManyChat, Tidio.
 
 - [ ] Shopify legal `/policies/refund-policy` + `/policies/shipping-policy` (see `earmark-shopify-legal-policies-returns-warranty.md`)
+
+## 2026-09-13 — legal Admin paste
+Do **not** use `draft-shopify-*-policy.html` (retired). Legal Refund/Shipping must be rebuilt from Help `page.help.json` settings, not those files.
