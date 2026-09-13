@@ -45,7 +45,7 @@
   assign form_token = section.settings.form_token | default: 'BL-PARTNER-STUDIO'
 -%}
 
-<section class="section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
+<section class="section page-studio__head" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
   <div class="section__inner section__inner--narrow">
     <h1 class="page-studio__title">{{ section.settings.title }}</h1>
     <div class="page-studio__body type-lede">
@@ -152,7 +152,7 @@
     background: var(--bg-alternate-soft);
   }
 
-  .page-studio__title {
+  h1.page-studio__title {
     font-size: var(--te-title-size, clamp(32px, 4vw, 44px));
     font-weight: var(--te-title-weight, 400);
     line-height: 1.15;
@@ -164,7 +164,7 @@
   }
 
   @media (max-width: 768px) {
-    .page-studio__title { font-size: var(--te-title-size, clamp(28px, 8vw, 36px)); }
+    h1h1.page-studio__title { font-size: var(--te-title-size, clamp(28px, 8vw, 36px)); }
   }
 
 
@@ -202,7 +202,7 @@
     color: var(--text-primary);
     text-transform: uppercase;
     letter-spacing: var(--tracking-wide);
-    margin-bottom: var(--space-1);
+    margin-bottom: var(--space-2);
     padding: 0;
   }
 
@@ -210,7 +210,7 @@
   .page-studio__select,
   .page-studio__textarea {
     width: 100%;
-    padding: 12px 14px;
+    padding: 14px 16px;
     border: 1px solid var(--border-default);
     background: var(--bg-primary);
     font-size: var(--text-base);
@@ -251,10 +251,10 @@
 
   .page-studio__success {
     padding: var(--space-4);
-    background: var(--bg-primary);
+    background: var(--bg-alternate);
     border: 1px solid var(--border-default);
     border-radius: var(--radius-button);
-    margin-bottom: var(--space-5);
+    margin-bottom: var(--space-4);
     color: var(--text-primary);
     text-align: center;
   }
@@ -264,13 +264,28 @@
     background: rgba(196, 92, 63, 0.08);
     border: 1px solid var(--accent-primary);
     border-radius: var(--radius-button);
-    margin-bottom: var(--space-5);
+    margin-bottom: var(--space-4);
     color: var(--accent-primary);
   }
 
   @media (max-width: 768px) {
     .page-studio__field-row {
       grid-template-columns: 1fr;
+    }
+  }
+
+  /* Content-page open under sticky nav */
+  .page-studio__head.section {
+    padding-top: var(--pad-grid-page-open, 72px);
+    padding-bottom: var(--space-6, 24px);
+  }
+  @media (max-width: 768px) {
+    .page-studio__head.section {
+      padding-top: var(--pad-grid-page-open-mobile, 56px);
+    }
+    .page-studio__fields .btn,
+    .page-studio__fields button {
+      width: 100%;
     }
   }
 </style>
