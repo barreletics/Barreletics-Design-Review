@@ -114,11 +114,10 @@ Same place, three separate menus. Titles must produce handles `footer-shop`,
 | 1 | `Help Center` | `/pages/help` |
 | 2 | `FAQ` | `/pages/faq` |
 | 3 | `Size Guide` | `/pages/performance-skins-size-chart` |
-| 4 | `Performance Skins Care` | `/pages/care` |
-| 5 | `Shipping & Returns` | `/pages/help` |
-| 6 | `Contact Us` | `/pages/contact-us-form` |
+| 4 | `Shipping & Returns` | `/pages/help` |
+| 5 | `Contact Us` | `/pages/contact-us-form` |
 
-LOCKED 2026-09-12: one Shipping & Returns row → Help. Do not re-add Shopify `/policies/shipping-policy` or `/policies/refund-policy` to this menu.
+LOCKED 2026-09-12/13: Shipping & Returns → Help. No Care row (care lives on PDP + FAQ). Do not re-add `/policies/shipping-policy`, `/policies/refund-policy`, or `/pages/care`.
 
 Do **not** create a Connect menu — the footer builds that column from the social URL
 settings, and Instagram is already set.
@@ -427,7 +426,6 @@ Footer Support         (handle footer-support)
     Help Center        /pages/help
     FAQ                /pages/faq
     Size Guide         /pages/performance-skins-size-chart
-    Performance Skins Care  /pages/care
     Shipping & Returns /pages/help
     Contact Us         /pages/contact-us-form
     # LOCKED 2026-09-12 — no /policies/shipping-policy or refund-policy here
