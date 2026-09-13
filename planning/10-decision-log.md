@@ -864,3 +864,10 @@ One row: **Shipping, returns & 90-day warranty** in `pdp-buy-box.liquid` (all PD
 - Nav centered; SAVE2/nav not bold.
 - Values: see `planning/chrome-announce-LOCKED.md`.
 - Andrew: "done lock it in".
+
+## 2026-09-13 — Coperni crosslink hero geometry restored from faq-inventory pull
+
+- Drift: draft had `banner_height` 480 / `shoe_position_y` 0 / packshot `Copreni_Final_More_grey.png` — shoes cropped in hero.
+- Restored locked TE knobs from `planning/faq-inventory-pull/templates/product.coperni.json`: banner **1200**, shoe_y **100**, shoe asset runway still `Screenshot_2026-03-20_at_6.53.30_PM.png`.
+- Spine remains collab-first (crosslink → story → buy-box) per Andrew 2026-09-13.
+
