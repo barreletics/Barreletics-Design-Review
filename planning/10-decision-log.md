@@ -871,3 +871,11 @@ One row: **Shipping, returns & 90-day warranty** in `pdp-buy-box.liquid` (all PD
 - Action: `git checkout 9a7e77c --` `product.coperni.json` + `coperni-crosslink.liquid` + `coperni-pdp-story.liquid` (commit includes Sep 10 mobile top-stack lock).
 - Do not re-apply faq-inventory-pull hero guesses or collab-first reorder without a new Andrew lock letter.
 
+## 2026-09-13 — Coperni PDP: Andrew correction (no strip before hero; lady/runway hero)
+
+- Value-strip must not sit before yellow hero / video (faq-inventory-pull had no value-strip on Coperni).
+- Crosslink hero product image = runway still (lady), not grey packshot.
+- Order restored from `planning/faq-inventory-pull/templates/product.coperni.json`: buy-box → crosslink → story → … (no value-strip).
+- Home `collab-hero` pair: runway/lady first, packshot second.
+- Guarantee copy synced from Closed/default product.json.
+
