@@ -899,3 +899,9 @@ One row: **Shipping, returns & 90-day warranty** in `pdp-buy-box.liquid` (all PD
 
 **Do not revert** this spine/hero/cream lightening without a new Andrew letter.
 
+## 2026-09-13 — Coperni mobile: kill hero→video divider only
+
+- Hide `.coperni-story__divider` on mobile (order 0 line between yellow hero and video).
+- Keep `pdp-features` section border-top/bottom (line above Upgrade your grip / Obsession).
+- Keep item rules between Obsession points. Do not touch other sections.
+
