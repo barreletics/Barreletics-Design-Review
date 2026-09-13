@@ -111,13 +111,14 @@ Same place, three separate menus. Titles must produce handles `footer-shop`,
 
 | # | Name | Link |
 |---|---|---|
-| 1 | `FAQ` | `/pages/faq` |
-| 2 | `Size Guide` | `/pages/performance-skins-size-chart` |
-| 3 | `Care Instructions` | `/pages/care` |
-| 4 | `Returns & Exchanges` | `/pages/returns` |
-| 5 | `Shipping Policy` | `/policies/shipping-policy` |
-| 6 | `Refund Policy` | `/policies/refund-policy` |
-| 7 | `Contact Us` | `/pages/contact-us-form` |
+| 1 | `Help Center` | `/pages/help` |
+| 2 | `FAQ` | `/pages/faq` |
+| 3 | `Size Guide` | `/pages/performance-skins-size-chart` |
+| 4 | `Care Instructions` | `/pages/care` |
+| 5 | `Shipping & Returns` | `/pages/help` |
+| 6 | `Contact Us` | `/pages/contact-us-form` |
+
+LOCKED 2026-09-12: one Shipping & Returns row → Help. Do not re-add Shopify `/policies/shipping-policy` or `/policies/refund-policy` to this menu.
 
 Do **not** create a Connect menu — the footer builds that column from the social URL
 settings, and Instagram is already set.
@@ -427,8 +428,8 @@ Footer Support         (handle footer-support)
     Size Guide         /pages/performance-skins-size-chart
     Care Instructions  /pages/care
     Returns & Exchanges  /pages/returns
-    Shipping Policy    /policies/shipping-policy
-    Refund Policy      /policies/refund-policy
+    Shipping & Returns /pages/help
+    # LOCKED 2026-09-12 — no /policies/shipping-policy or refund-policy here
     Contact Us         /pages/contact-us-form
 ```
 
