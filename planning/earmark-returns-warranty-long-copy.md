@@ -12,7 +12,7 @@ RETURNS & EXCHANGES
 
 Returns and exchanges are accepted within 30 days of delivery.
 
-Performance Skins may be tried on indoors for fit. Returned items must be clean, unworn, and in new, sellable condition. Items worn for a workout, class, or outdoors are not eligible for return or exchange.
+Performance Skins may be tried on indoors for fit. Returned items must be clean, unworn, and in new, sellable condition.
 
 View our full Returns & Exchanges Policy → `/pages/returns#returns`
 

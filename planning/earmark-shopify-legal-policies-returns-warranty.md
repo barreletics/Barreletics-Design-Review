@@ -17,7 +17,7 @@
 
 ## Locked rules (must match Help / PDP accordion)
 - 30-day returns & exchanges; indoor try-on for fit
-- Workout / class / outdoors = not eligible; clean / like new
+- Indoor try-on; clean / unworn / sellable (BAN: never say workout/class/outdoors not eligible)
 - US return shipping $7.95 (deducted); prepaid label after approval
 - 90-day manufacturing-defect warranty only
 - Not covered: normal wear, accidents, improper care, grip-surface wear from use
