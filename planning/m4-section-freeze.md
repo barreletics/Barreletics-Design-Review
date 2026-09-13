@@ -126,7 +126,8 @@ Do **not** thrash `product.json` spine or `fifty-fifty.liquid` TE order without 
 **SIGNED 2026-08-21 — review cards.** Andrew: “the judge me cards are great… much better.” Text-card row on Shop All / PDPs / Home / Apparel is **LOCKED**. Photos + full list stay on `/pages/reviews` only. Do not put photo cards or live JM back on those pages without a letter.
 
 
-**Update 2026-09-13 — Coperni collab-first restored.** Andrew rejected product-first on draft QA: restore spine crosslink → pdp-story → buy-box → value-strip → rest (pre-cadfa2d). Video/yellow before the shoe buy-box.
+
+**2026-09-13 — Coperni PDP restored from git `9a7e77c` (post Sep 10 mobile lock).** Reverted same-day thrash (order + hero knobs). Authoritative files: `product.coperni.json`, `coperni-crosslink.liquid`, `coperni-pdp-story.liquid` at that commit. Do not invent TE values.
 
 **Forward 2026-08-21 — Coperni product first.** Andrew: product, then other images, then full runway. Spine: buy-box → value-strip → coperni-crosslink → coperni-pdp-story → rest. Firefox mute/autoplay **earmarked** — not this turn.
 

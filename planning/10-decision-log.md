@@ -865,9 +865,9 @@ One row: **Shipping, returns & 90-day warranty** in `pdp-buy-box.liquid` (all PD
 - Values: see `planning/chrome-announce-LOCKED.md`.
 - Andrew: "done lock it in".
 
-## 2026-09-13 — Coperni crosslink hero geometry restored from faq-inventory pull
+## 2026-09-13 — Coperni PDP hard-restore from lock commit
 
-- Drift: draft had `banner_height` 480 / `shoe_position_y` 0 / packshot `Copreni_Final_More_grey.png` — shoes cropped in hero.
-- Restored locked TE knobs from `planning/faq-inventory-pull/templates/product.coperni.json`: banner **1200**, shoe_y **100**, shoe asset runway still `Screenshot_2026-03-20_at_6.53.30_PM.png`.
-- Spine remains collab-first (crosslink → story → buy-box) per Andrew 2026-09-13.
+- Problem: same-day thrash invented order + hero knobs; Andrew: restore last locked version, no inventing.
+- Action: `git checkout 9a7e77c --` `product.coperni.json` + `coperni-crosslink.liquid` + `coperni-pdp-story.liquid` (commit includes Sep 10 mobile top-stack lock).
+- Do not re-apply faq-inventory-pull hero guesses or collab-first reorder without a new Andrew lock letter.
 
