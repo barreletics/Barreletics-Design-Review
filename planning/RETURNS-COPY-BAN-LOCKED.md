@@ -7,7 +7,7 @@
 
 ## USE instead (Help / FAQ / PDP / legal Admin)
 - 30 days of delivery
-- Indoor try-on for fit (like any shoe on short PDP)
+- Indoor try-on for fit only (like any shoe on short PDP)
 - Clean, unworn, new / sellable (or clean and like new)
 - Logistics: mesh bag, apparel tags, $7.95 US return shipping
 - 90-day manufacturing-defect warranty only
