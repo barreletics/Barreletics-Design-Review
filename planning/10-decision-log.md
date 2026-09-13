@@ -879,3 +879,23 @@ One row: **Shipping, returns & 90-day warranty** in `pdp-buy-box.liquid` (all PD
 - Home `collab-hero` pair: runway/lady first, packshot second.
 - Guarantee copy synced from Closed/default product.json.
 
+## 2026-09-13 — Coperni PDP LOCKED (Andrew: looks like it; lighten double cream; do not revert)
+
+**Spine (locked):** buy-box → yellow crosslink (runway lady) → story → features → … · **no value-strip**
+
+**Hero (locked):**
+- Image: `Screenshot_2026-03-20_at_6.53.30_PM.png` (lady/runway), not grey packshot
+- Desktop: banner 1200 · shoe_y 100 · shoe mat **white** (not cream letterbox) · shoe_size wired (no cover-crop)
+- Mobile: yellow ~58vh, white type, dark veil, **no split shoe**
+
+**Story (locked):**
+- Mobile: video → 1 lead still → text → 2-up
+- Desktop: text → video → 3-up
+- Runway/letterbox mats **white** (not #f5f2ec / #f9f9f9 cream stack)
+
+**Cream rhythm (locked this pass):** `fifty-fifty-lifestyle` media_bg + bg_color **#ffffff** so it is not cream-on-cream after sock-era soft cream.
+
+**Home:** collab-hero pair runway/lady first, packshot second.
+
+**Do not revert** this spine/hero/cream lightening without a new Andrew letter.
+

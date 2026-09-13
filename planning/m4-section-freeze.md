@@ -127,7 +127,8 @@ Do **not** thrash `product.json` spine or `fifty-fifty.liquid` TE order without 
 
 
 
-**2026-09-13 — Coperni PDP restored from git `9a7e77c` (post Sep 10 mobile lock).** Reverted same-day thrash (order + hero knobs). Authoritative files: `product.coperni.json`, `coperni-crosslink.liquid`, `coperni-pdp-story.liquid` at that commit. Do not invent TE values.
+
+**LOCKED 2026-09-13 — Coperni PDP** (Andrew). No value-strip. Lady/runway hero. White shoe/story mats (no double cream). Mobile yellow/video stack unchanged. See decision log.
 
 **Forward 2026-08-21 — Coperni product first.** Andrew: product, then other images, then full runway. Spine: buy-box → value-strip → coperni-crosslink → coperni-pdp-story → rest. Firefox mute/autoplay **earmarked** — not this turn.
 
