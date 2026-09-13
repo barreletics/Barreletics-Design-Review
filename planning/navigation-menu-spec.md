@@ -408,6 +408,7 @@ is the theme's picker for the architecture's **Company** column.
 
 ```
 Footer Shop            (handle footer-shop)
+    # + Better Than Grippy Socks /pages/best-barre-pilates-yoga-grippy-socks (LOCKED under Shop 2026-09-13)
     All Grippy Shoes   /collections/barre-pilates-yoga-shoe-sock-footwear
     Open Sole          /products/studio-performance-skin-footwear
     Closed Sole        /products/best-reformer-pilates-legree-workout-shoes
@@ -420,7 +421,6 @@ Footer Learn           (handle footer-learn)   [architecture: Company]
     Collaborations     /products/barreletics-x-coperni-closed-sole
     Partner programs   /pages/partners
     Compare Styles     /pages/compare-open-closed-sole
-    Better Than Grippy Socks   /pages/best-barre-pilates-yoga-grippy-socks
 
 Footer Support         (handle footer-support)
     Help Center        /pages/help
