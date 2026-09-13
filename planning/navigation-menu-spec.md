@@ -424,13 +424,13 @@ Footer Learn           (handle footer-learn)   [architecture: Company]
     Better Than Grippy Socks   /pages/best-barre-pilates-yoga-grippy-socks
 
 Footer Support         (handle footer-support)
+    Help Center        /pages/help
     FAQ                /pages/faq
     Size Guide         /pages/performance-skins-size-chart
     Care Instructions  /pages/care
-    Returns & Exchanges  /pages/returns
     Shipping & Returns /pages/help
-    # LOCKED 2026-09-12 — no /policies/shipping-policy or refund-policy here
     Contact Us         /pages/contact-us-form
+    # LOCKED 2026-09-12 — no /policies/shipping-policy or refund-policy here
 ```
 
 **Better Than Grippy Socks belongs here** (owner decision 2026-08-08), under Footer Learn — not in
