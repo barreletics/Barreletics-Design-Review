@@ -114,7 +114,7 @@ Same place, three separate menus. Titles must produce handles `footer-shop`,
 | 1 | `Help Center` | `/pages/help` |
 | 2 | `FAQ` | `/pages/faq` |
 | 3 | `Size Guide` | `/pages/performance-skins-size-chart` |
-| 4 | `Care Instructions` | `/pages/care` |
+| 4 | `Performance Skins Care` | `/pages/care` |
 | 5 | `Shipping & Returns` | `/pages/help` |
 | 6 | `Contact Us` | `/pages/contact-us-form` |
 
@@ -427,7 +427,7 @@ Footer Support         (handle footer-support)
     Help Center        /pages/help
     FAQ                /pages/faq
     Size Guide         /pages/performance-skins-size-chart
-    Care Instructions  /pages/care
+    Performance Skins Care  /pages/care
     Shipping & Returns /pages/help
     Contact Us         /pages/contact-us-form
     # LOCKED 2026-09-12 — no /policies/shipping-policy or refund-policy here
