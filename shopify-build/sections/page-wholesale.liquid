@@ -1,4 +1,5 @@
 {% comment %}
+  Type law: planning/help-family-type-law.md — page H1 clamp(32–44)/400, never type-hero.
   Page Wholesale Section
   Heading, one paragraph, application form. Nothing else.
 
@@ -40,7 +41,7 @@
 
 <section class="section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
   <div class="section__inner section__inner--narrow">
-    <h1 class="page-wholesale__title type-hero">{{ section.settings.title }}</h1>
+    <h1 class="page-wholesale__title">{{ section.settings.title }}</h1>
     <div class="page-wholesale__body type-lede">
       {{ section.settings.body }}
     </div>
@@ -152,11 +153,20 @@
   }
 
   .page-wholesale__title {
+    font-size: var(--te-title-size, clamp(32px, 4vw, 44px));
+    font-weight: var(--te-title-weight, 400);
+    line-height: 1.15;
+    letter-spacing: -0.028em;
     text-transform: none;
     color: var(--text-primary);
     text-align: center;
     margin: 0 0 var(--gap-b, 20px);
   }
+
+  @media (max-width: 768px) {
+    .page-wholesale__title { font-size: var(--te-title-size, clamp(28px, 8vw, 36px)); }
+  }
+
 
   .page-wholesale__body {
     text-align: center;
