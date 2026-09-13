@@ -18,7 +18,12 @@
     {% endif %}
   </div>
 
-  {% assign grid_band = section.settings.grid_band | default: 'cream' %}
+  {% comment %} Partners: force white — TE/JSON often drop grid_band; Help keeps cream {% endcomment %}
+  {% if template.suffix == 'partners' %}
+    {% assign grid_band = 'white' %}
+  {% else %}
+    {% assign grid_band = section.settings.grid_band | default: 'cream' %}
+  {% endif %}
   <div class="page-help__grid-wrap page-help__grid-wrap--{{ grid_band }}">
     <div class="page-help__grid" aria-label="Help destinations">
       {% for block in section.blocks %}
