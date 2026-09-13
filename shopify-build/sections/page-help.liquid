@@ -18,7 +18,8 @@
     {% endif %}
   </div>
 
-  <div class="page-help__grid-wrap">
+  {% assign grid_band = section.settings.grid_band | default: 'cream' %}
+  <div class="page-help__grid-wrap page-help__grid-wrap--{{ grid_band }}">
     <div class="page-help__grid" aria-label="Help destinations">
       {% for block in section.blocks %}
         {% if block.type == 'destination' %}
@@ -64,6 +65,13 @@
   .page-help__grid-wrap {
     background: #f5f2ec;
     padding: 48px 0 64px;
+  }
+  .page-help__grid-wrap--white {
+    background: #fff;
+    padding: 32px 0 56px;
+  }
+  .page-help__grid-wrap--white .page-help__card {
+    border-color: var(--border-default, #e5e0d8);
   }
   .page-help__grid {
     max-width: 900px;
@@ -221,6 +229,17 @@
         { "value": "400", "label": "400" },
         { "value": "500", "label": "500" },
         { "value": "600", "label": "600" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "grid_band",
+      "label": "Card band background",
+      "info": "Cream is Help default. White for cleaner hubs (Partners).",
+      "default": "cream",
+      "options": [
+        { "value": "cream", "label": "Cream" },
+        { "value": "white", "label": "White" }
       ]
     },
     {
