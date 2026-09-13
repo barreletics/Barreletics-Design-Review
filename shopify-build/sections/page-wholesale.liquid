@@ -1,9 +1,10 @@
 {% comment %}
   Type law: planning/help-family-type-law.md — page H1 clamp(32–44)/400, never type-hero.
-  Page Wholesale Section
-  Heading, one paragraph, application form. Nothing else.
+  Partner portal (one link)
+  H1 + lede + application form. Dropdown sorts studio / instructor / retail.
 
-  Used on: templates/page.wholesale.json  →  /pages/wholesale
+  Primary URL: templates/page.wholesale.json  →  /pages/wholesale
+  Also used by page.partners.json + page.studio-program.json (same portal).
 
   ARCHITECTURE NOTE (2026-08-08)
   D-042 previously consolidated Wholesale / Studio / Ambassador onto /pages/partners and deprecated
@@ -36,7 +37,7 @@
 {% endcomment %}
 
 {%- liquid
-  assign form_token = section.settings.form_token | default: 'BL-PARTNER-WHOLESALE'
+  assign form_token = section.settings.form_token | default: 'BL-PARTNER-APPLY'
 -%}
 
 <section class="section page-wholesale__head" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
@@ -63,29 +64,22 @@
         </div>
       {% endif %}
 
-      <input type="hidden" name="contact[subject]" value="Wholesale">
-      <input type="hidden" name="contact[program]" value="Wholesale">
+      <input type="hidden" name="contact[subject]" value="Partner application">
       <input type="hidden" name="contact[form_id]" value="{{ form_token }}">
 
       <div class="page-wholesale__fields">
         <div class="page-wholesale__field-row">
           <div class="page-wholesale__field">
-            <label for="wholesale-business-name" class="page-wholesale__label">Business name</label>
+            <label for="wholesale-business-name" class="page-wholesale__label">Studio or business name</label>
             <input type="text" id="wholesale-business-name" name="contact[business_name]" class="page-wholesale__input" required>
           </div>
           <div class="page-wholesale__field">
-            <label for="wholesale-type" class="page-wholesale__label">Business type</label>
-            <select id="wholesale-type" name="contact[business_type]" class="page-wholesale__select" required>
+            <label for="wholesale-type" class="page-wholesale__label">I am / we are</label>
+            <select id="wholesale-type" name="contact[partner_type]" class="page-wholesale__select" required>
               <option value="" disabled selected>Select one</option>
-              <option value="Studio - barre / Pilates / yoga">Studio — barre / Pilates / yoga</option>
-              <option value="Multi-location studio group or franchise">Multi-location studio group or franchise</option>
-              <option value="Fitness or activewear retailer">Fitness or activewear retailer</option>
-              <option value="Boutique">Boutique</option>
-              <option value="Gym or health club">Gym or health club</option>
-              <option value="Wellness center or physical therapy">Wellness center or physical therapy</option>
-              <option value="Hotel or resort">Hotel or resort</option>
-              <option value="Online-only retailer">Online-only retailer</option>
-              <option value="Distributor">Distributor</option>
+              <option value="Studio">Studio</option>
+              <option value="Instructor">Instructor</option>
+              <option value="Retail / wholesale">Retail / wholesale</option>
               <option value="Other">Other</option>
             </select>
           </div>
@@ -115,7 +109,7 @@
 
         <div class="page-wholesale__field">
           <label for="wholesale-message" class="page-wholesale__label">Message</label>
-          <textarea id="wholesale-message" name="contact[body]" class="page-wholesale__textarea" rows="5" required placeholder="Tell us about the business and what you'd want to carry."></textarea>
+          <textarea id="wholesale-message" name="contact[body]" class="page-wholesale__textarea" rows="5" required placeholder="Tell us about you and what you'd want to carry."></textarea>
           {%- comment -%}
             Prompt mirrors the studio program page. "Expected first order" was removed because
             "what you'd want to carry" already invites it.
@@ -317,13 +311,13 @@
       "type": "text",
       "id": "title",
       "label": "Title",
-      "default": "Wholesale"
+      "default": "Partner with us — Wholesale"
     },
     {
       "type": "richtext",
       "id": "body",
       "label": "Body text",
-      "default": "<p>Open to studios, multi-location groups, fitness and activewear retailers, boutiques, gyms, wellness centers, and resorts. We reply within 2\u20133 business days.</p>",
+      "default": "<p>Studios, instructors, retailers, and wholesale partners — one application. We reply within 2\u20133 business days.</p>",
       "info": "Who it is for, and the response time. Nothing else. No process-speak — a sentence like \"pricing and terms are worked out after we review your application\" describes a procedure without telling the reader anything and was cut. Only concrete numbers, timeframes, and requirements belong here."
     },
     {
@@ -348,7 +342,7 @@
       "type": "text",
       "id": "form_token",
       "label": "Routing token",
-      "default": "BL-PARTNER-WHOLESALE",
+      "default": "BL-PARTNER-APPLY",
       "info": "Hidden value included in the submission email. The mail rule matches this string to route applications to the partner applications inbox. Do not change without updating the rule — see planning/partner-programs.md."
     }
   ],

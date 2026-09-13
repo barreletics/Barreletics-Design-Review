@@ -102,7 +102,7 @@ Same place, three separate menus. Titles must produce handles `footer-shop`,
 | 1 | `About Us` | `/pages/our-story` |
 | 2 | `Journal` | `/blogs/news` |
 | 3 | `Collaborations` | `/pages/collaborations` |
-| 4 | `Partner programs` | `/pages/partners` |
+| 4 | `Partner with us` | `/pages/wholesale` |
 | 5 | `Ambassador` | `/pages/ambassador` |
 | 6 | `Compare Styles` | `/pages/compare-open-closed-sole` |
 | 7 | `Better Than Grippy Socks` | `/pages/best-barre-pilates-yoga-grippy-socks` |
@@ -419,7 +419,7 @@ Footer Learn           (handle footer-learn)   [architecture: Company]
     About Us           /pages/our-story
     Journal            /blogs/news
     Collaborations     /products/barreletics-x-coperni-closed-sole
-    Partner programs   /pages/partners
+    Partner with us   /pages/wholesale
     Compare Styles     /pages/compare-open-closed-sole
 
 Footer Support         (handle footer-support)
