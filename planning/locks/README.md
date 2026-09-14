@@ -4,6 +4,12 @@ Machine-readable: `*.lock.json` + `sitewide.lock.json`
 Human letters: `*-LOCKED.md` in this folder  
 Scanner: `python3 scripts/lock-scan.py .` from repo root
 
+## Master confirmed
+
+| Lock | File |
+| --- | --- |
+| **2026-09-14 draft QA confirmed** | [DRAFT-QA-CONFIRMED-2026-09-14.md](./DRAFT-QA-CONFIRMED-2026-09-14.md) |
+
 ## Confirmed page / block letters
 
 | Lock | File |
@@ -13,8 +19,8 @@ Scanner: `python3 scripts/lock-scan.py .` from repo root
 | Soft cream sitewide | [CREAM-SOFT-LOCKED.md](./CREAM-SOFT-LOCKED.md) |
 | Trusted by footer dark | [TRUSTED-BY-DARK-LOCKED.md](./TRUSTED-BY-DARK-LOCKED.md) |
 | FAQ Background cream default | [FAQ-BG-LOCKED.md](./FAQ-BG-LOCKED.md) |
-| Sitewide tokens / guarantee / cream / chair | [sitewide.lock.json](./sitewide.lock.json) |
+| Sitewide tokens / guarantee / cream / chair / faq / trust | [sitewide.lock.json](./sitewide.lock.json) |
 | Shop All | [shop-all.lock.json](./shop-all.lock.json) |
 | Grid page-open | [grid-page-open.lock.json](./grid-page-open.lock.json) |
 
-Cursor alwaysApply rules under `.cursor/rules/*LOCKED*.mdc` and `chair-pose-yellow-fit.mdc` mirror these. Prefer letter + lock-scan over memory.
+Cursor alwaysApply rules under `.cursor/rules/*LOCKED*.mdc` mirror these. Prefer letter + lock-scan over memory.
