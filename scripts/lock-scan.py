@@ -259,6 +259,37 @@ def scan_sitewide(site: dict, build: Path, only: Path | None):
   return issues
 
 
+def scan_forbidden_cream(site: dict, build: Path):
+  """Fail if retired darker cream hexes are used as real color values."""
+  issues = []
+  forbid = [h.lower() for h in (site.get("forbidden_cream_hex") or ["#f5f2ec"])]
+  soft = ((site.get("tokens") or {}).get("cream") or "#faf8f6").lower()
+  allow_words = ("never", "retired", "forbidden", "darker", "ban", "do not", "don't")
+  exts = {".liquid", ".css", ".json"}
+  for path in build.rglob("*"):
+    if path.suffix.lower() not in exts:
+      continue
+    if any(x in path.parts for x in ("node_modules", ".tmp")):
+      continue
+    try:
+      lines = path.read_text().splitlines()
+    except Exception:
+      continue
+    for i, line in enumerate(lines, 1):
+      low = line.lower()
+      for h in forbid:
+        if h not in low:
+          continue
+        # allow documentation that bans the hex
+        if any(w in low for w in allow_words):
+          continue
+        # allow JSON lock-style string lists only if key suggests forbid — rare in build
+        rel = path.relative_to(build.parent) if build.name == "shopify-build" else path
+        issues.append(f"{rel}:{i}: forbidden cream {h} as value (use {soft})")
+  return issues
+
+
+
 def main():
   root = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(".").resolve()
   only_rel = sys.argv[2] if len(sys.argv) > 2 else None
