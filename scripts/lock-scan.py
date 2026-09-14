@@ -211,6 +211,51 @@ def scan_sitewide(site: dict, build: Path, only: Path | None):
       if re.search(r"\.guarantee-item h4\s*\{[^}]*font-size:\s*1[45]px", liq_txt):
         issues.append("sections/guarantee-band.liquid: forbidden tiny 14–15px column titles")
 
+  # Open Sole Chair Pose yellow — COVER / P5A4949 / mmh 360
+  chair = site.get("chair_pose_open") or {}
+  if chair:
+    for tmpl_name in chair.get("templates") or []:
+      tmpl = build / "templates" / tmpl_name
+      if only and tmpl.resolve() != only.resolve():
+        continue
+      if not tmpl.exists():
+        issues.append(f"MISSING {tmpl_name} for chair_pose_open lock")
+        continue
+      try:
+        data = load_json(tmpl)
+      except Exception as e:
+        issues.append(f"{tmpl_name}: JSON parse {e}")
+        continue
+      sid = chair.get("section") or "fifty-fifty-lifestyle"
+      sec = (data.get("sections") or {}).get(sid) or {}
+      if sec.get("disabled"):
+        issues.append(f"templates/{tmpl_name} {sid}: Chair Pose section disabled")
+        continue
+      st = sec.get("settings") or {}
+      title = st.get("title") or ""
+      if chair.get("title_contains") and chair["title_contains"] not in title:
+        issues.append(f"templates/{tmpl_name} {sid}: title expected contains {chair['title_contains']!r}, got {title!r}")
+      img = str(st.get("image") or "") + str(st.get("image_url") or "")
+      if chair.get("image_contains") and chair["image_contains"] not in img:
+        issues.append(f"templates/{tmpl_name} {sid}: image expected {chair['image_contains']}, got {img!r}")
+      for bad in chair.get("forbidden_images") or []:
+        if bad in img:
+          issues.append(f"templates/{tmpl_name} {sid}: forbidden image {bad}")
+      for field, expect in [
+        ("media_fit", chair.get("media_fit")),
+        ("image_fit_mobile", chair.get("image_fit_mobile")),
+        ("image_scale", chair.get("image_scale")),
+        ("min_height", chair.get("min_height")),
+        ("mobile_media_height", chair.get("mobile_media_height")),
+        ("text_pad_top_mobile", chair.get("text_pad_top_mobile")),
+        ("text_pad_bottom_mobile", chair.get("text_pad_bottom_mobile")),
+      ]:
+        if expect is None:
+          continue
+        got = st.get(field)
+        if got != expect:
+          issues.append(f"templates/{tmpl_name} {sid}: {field} expected {expect!r}, got {got!r}")
+
   return issues
 
 

@@ -18,7 +18,7 @@ You are about to fail if you edit Open media without opening the lock this turn.
 
 1. Open `.cursor/rules/chair-pose-yellow-fit.mdc`
 2. Open `.cursor/skills/barreletics-chair-pose-yellow-fit/SKILL.md`
-3. Apply **fit · 100** on **Never slip in chair pose** only — whole photo in the frame
+3. Apply **COVER · 100 · P5A4949 · mmh 360** on **Never slip in chair pose** only — whole photo in the frame
 4. Do **not** set cover or contain on that heading. Cover is how it broke.
 
 If you cannot quote those three values (`fit` / `fit` / `100`) from the lock, you have not used the rule. Open it.
