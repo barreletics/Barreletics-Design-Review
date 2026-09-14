@@ -1,16 +1,17 @@
-# Barreletics lock catalog
+# Barreletics locks (source of truth index)
 
-**Sitewide (every page):** `sitewide.lock.json` — Type OS roles, pad ladder tokens, 50/50 mobile, media QC, guarantee band, cream, sock-math editorial.
+Machine-readable: `*.lock.json` + `sitewide.lock.json`  
+Human letters: `*-LOCKED.md` in this folder  
+Scanner: `python3 scripts/lock-scan.py .` from repo root
 
-**Page spines / feature sets:** `<page>.lock.json` (e.g. `shop-all.lock.json`).
+## Confirmed page / block letters
 
-**Scan:** from Design Review root:
-```bash
-python3 scripts/lock-scan.py
-# optional: one template
-python3 scripts/lock-scan.py . templates/collection.json
-```
+| Lock | File |
+| --- | --- |
+| Coperni PDP | [COPERNI-PDP-LOCKED.md](./COPERNI-PDP-LOCKED.md) |
+| Open Sole Chair Pose yellow | [OPEN-SOLE-CHAIR-POSE-LOCKED.md](./OPEN-SOLE-CHAIR-POSE-LOCKED.md) |
+| Sitewide tokens / guarantee / cream / chair | [sitewide.lock.json](./sitewide.lock.json) |
+| Shop All | [shop-all.lock.json](./shop-all.lock.json) |
+| Grid page-open | [grid-page-open.lock.json](./grid-page-open.lock.json) |
 
-**Rule:** never weaken a lock to pass. Update the lock only when Andrew re-locks.
-
-**Add a page lock:** copy `shop-all.lock.json` shape (visible_spine, section_titles, features_required, pads, cream_bg).
+Cursor alwaysApply rules under `.cursor/rules/*LOCKED*.mdc` and `chair-pose-yellow-fit.mdc` mirror these. Prefer letter + lock-scan over memory.
