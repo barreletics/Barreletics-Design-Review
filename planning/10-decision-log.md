@@ -905,3 +905,11 @@ One row: **Shipping, returns & 90-day warranty** in `pdp-buy-box.liquid` (all PD
 - Keep `pdp-features` section border-top/bottom (line above Upgrade your grip / Obsession).
 - Keep item rules between Obsession points. Do not touch other sections.
 
+## 2026-09-13 — Cream band HARD LOCK (disciplines = sock-era)
+
+- Problem: disciplines defaulted `#f5f2ec` (darker) / agent flipped to white; Andrew: must match sock-era soft cream.
+- Law: cream bands = **`#faf8f6` only**. Disciplines Upgrade grip = sock-era ruler on that PDP.
+- Code: `disciplines.liquid` default → `#faf8f6`; Coperni `disciplines.bg_color` → `#faf8f6`.
+- OS: `sitewide.lock.json` `cream_bands` · `.cursor/rules/cream-band-LOCKED.mdc` · skill `barreletics-cream-band`.
+- Anti-revert: do not restore older Coperni JSON to fix cream — fix forward.
+
