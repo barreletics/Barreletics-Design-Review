@@ -1,8 +1,8 @@
 # Barreletics locks (source of truth index)
 
 Machine-readable: `*.lock.json` + `sitewide.lock.json`  
-Human letters: `*-LOCKED.md` in this folder  
-Scanner: `python3 scripts/lock-scan.py .` from repo root
+Human letters: `*-LOCKED.md`  
+Scanner: `python3 scripts/lock-scan.py .`
 
 ## Master confirmed
 
@@ -10,17 +10,23 @@ Scanner: `python3 scripts/lock-scan.py .` from repo root
 | --- | --- |
 | **2026-09-14 draft QA confirmed** | [DRAFT-QA-CONFIRMED-2026-09-14.md](./DRAFT-QA-CONFIRMED-2026-09-14.md) |
 
-## Confirmed page / block letters
+## PDP letters (QC complete — do not re-open)
 
 | Lock | File |
 | --- | --- |
-| Coperni PDP | [COPERNI-PDP-LOCKED.md](./COPERNI-PDP-LOCKED.md) |
-| Open Sole Chair Pose yellow | [OPEN-SOLE-CHAIR-POSE-LOCKED.md](./OPEN-SOLE-CHAIR-POSE-LOCKED.md) |
-| Soft cream sitewide | [CREAM-SOFT-LOCKED.md](./CREAM-SOFT-LOCKED.md) |
-| Trusted by footer dark | [TRUSTED-BY-DARK-LOCKED.md](./TRUSTED-BY-DARK-LOCKED.md) |
-| FAQ Background cream default | [FAQ-BG-LOCKED.md](./FAQ-BG-LOCKED.md) |
-| Sitewide tokens / guarantee / cream / chair / faq / trust | [sitewide.lock.json](./sitewide.lock.json) |
-| Shop All | [shop-all.lock.json](./shop-all.lock.json) |
-| Grid page-open | [grid-page-open.lock.json](./grid-page-open.lock.json) |
+| Closed Sole | [CLOSED-SOLE-PDP-LOCKED.md](./CLOSED-SOLE-PDP-LOCKED.md) |
+| Open Sole | [OPEN-SOLE-PDP-LOCKED.md](./OPEN-SOLE-PDP-LOCKED.md) |
+| Open Sole Chair Pose (nested) | [OPEN-SOLE-CHAIR-POSE-LOCKED.md](./OPEN-SOLE-CHAIR-POSE-LOCKED.md) |
+| Outdoor | [OUTDOOR-PDP-LOCKED.md](./OUTDOOR-PDP-LOCKED.md) |
+| Coperni | [COPERNI-PDP-LOCKED.md](./COPERNI-PDP-LOCKED.md) |
 
-Cursor alwaysApply rules under `.cursor/rules/*LOCKED*.mdc` mirror these. Prefer letter + lock-scan over memory.
+## Sitewide
+
+| Lock | File |
+| --- | --- |
+| Soft cream | [CREAM-SOFT-LOCKED.md](./CREAM-SOFT-LOCKED.md) |
+| Trusted by dark | [TRUSTED-BY-DARK-LOCKED.md](./TRUSTED-BY-DARK-LOCKED.md) |
+| FAQ Background | [FAQ-BG-LOCKED.md](./FAQ-BG-LOCKED.md) |
+| Machine locks | [sitewide.lock.json](./sitewide.lock.json) · [shop-all.lock.json](./shop-all.lock.json) · [apparel.lock.json](./apparel.lock.json) |
+
+Prefer letter + lock-scan over memory. No theme edits without Andrew **go**.

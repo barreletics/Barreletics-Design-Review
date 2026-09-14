@@ -16,6 +16,9 @@
 | Guarantee columns Type H3 + outline CTA `#1c1916` | `sitewide.lock.json` → `guarantee_band` |
 | Collaborations = **Collaborations** (not Brand collaborations) | H1 / footer / URL; Brand collaboration = Wholesale dropdown only |
 | Collaborations lede A+B | `page.collaborations.json` |
+| **Closed Sole PDP** (QC complete) | [CLOSED-SOLE-PDP-LOCKED.md](./CLOSED-SOLE-PDP-LOCKED.md) |
+| **Open Sole PDP** (QC complete; Chair Pose nested) | [OPEN-SOLE-PDP-LOCKED.md](./OPEN-SOLE-PDP-LOCKED.md) |
+| **Outdoor PDP** (QC complete) | [OUTDOOR-PDP-LOCKED.md](./OUTDOOR-PDP-LOCKED.md) |
 
 ## Guardrails
 
