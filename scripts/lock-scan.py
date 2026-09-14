@@ -290,6 +290,33 @@ def scan_forbidden_cream(site: dict, build: Path):
 
 
 
+def scan_trusted_by_footer(site: dict, build: Path):
+  """Footer Trusted by must stay dark sitewide."""
+  issues = []
+  lock = site.get("trusted_by_footer") or {}
+  if not lock:
+    return issues
+  path = build / "sections" / "footer-group.json"
+  if not path.exists():
+    issues.append("MISSING sections/footer-group.json for trusted_by_footer lock")
+    return issues
+  try:
+    data = load_json(path)
+  except Exception as e:
+    issues.append(f"footer-group.json: JSON parse {e}")
+    return issues
+  sid = lock.get("section") or "footer"
+  sec = (data.get("sections") or {}).get(sid) or {}
+  st = sec.get("settings") or {}
+  if lock.get("show_studio_trust") is True and not st.get("show_studio_trust", True):
+    issues.append("footer-group footer: show_studio_trust expected true")
+  expect = lock.get("trust_theme") or "dark"
+  got = st.get("trust_theme") or "light"
+  if got != expect:
+    issues.append(f"footer-group footer: trust_theme expected {expect!r}, got {got!r}")
+  return issues
+
+
 def main():
   root = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(".").resolve()
   only_rel = sys.argv[2] if len(sys.argv) > 2 else None

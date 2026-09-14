@@ -11,6 +11,7 @@ Scanner: `python3 scripts/lock-scan.py .` from repo root
 | Coperni PDP | [COPERNI-PDP-LOCKED.md](./COPERNI-PDP-LOCKED.md) |
 | Open Sole Chair Pose yellow | [OPEN-SOLE-CHAIR-POSE-LOCKED.md](./OPEN-SOLE-CHAIR-POSE-LOCKED.md) |
 | Soft cream sitewide | [CREAM-SOFT-LOCKED.md](./CREAM-SOFT-LOCKED.md) |
+| Trusted by footer dark | [TRUSTED-BY-DARK-LOCKED.md](./TRUSTED-BY-DARK-LOCKED.md) |
 | Sitewide tokens / guarantee / cream / chair | [sitewide.lock.json](./sitewide.lock.json) |
 | Shop All | [shop-all.lock.json](./shop-all.lock.json) |
 | Grid page-open | [grid-page-open.lock.json](./grid-page-open.lock.json) |
