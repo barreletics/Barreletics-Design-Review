@@ -180,6 +180,36 @@ def scan_sitewide(site: dict, build: Path, only: Path | None):
         for phrase in gb.get("forbidden_phrases") or []:
           if phrase.lower() in blob:
             issues.append(f"{rel} {key}: forbidden guarantee phrase {phrase!r}")
+        # PDP Display head
+        if fnmatch.fnmatch(tmpl.name, "product*.json"):
+          role = (st.get("title_role") or "").strip()
+          expect_role = gb.get("title_role_pdp") or "display"
+          if role and role != expect_role:
+            issues.append(f"{rel} {key}: title_role expected {expect_role!r}, got {role!r}")
+          elif not role:
+            issues.append(f"{rel} {key}: title_role missing (expected {expect_role!r})")
+        # Outline CTA must not be white-on-white
+        if (st.get("cta_style") or "").lower() == "outline" and (st.get("cta_text") or "").strip():
+          tc = (st.get("cta_text_color") or "").lower()
+          expect_tc = (gb.get("cta_outline_text_color") or "#1c1916").lower()
+          if tc in ("", "#ffffff", "#fff", "white") or (tc and tc != expect_tc):
+            issues.append(
+              f"{rel} {key}: outline CTA text color expected {expect_tc}, got {st.get('cta_text_color')!r}"
+            )
+
+  # Liquid CSS must keep locked column token + outline CTA default
+  gu_liq = build / "sections" / "guarantee-band.liquid"
+  if gu_liq.exists() and not only:
+    liq_txt = gu_liq.read_text()
+    for must in gb.get("liquid_must_contain") or []:
+      if must not in liq_txt:
+        issues.append(f"sections/guarantee-band.liquid: missing locked pattern {must!r}")
+    # Forbid loud/tiny hardcodes if present without token
+    if "guarantee-item h4" in liq_txt:
+      if "clamp(20px, 2.2vw, 26px)" in liq_txt:
+        issues.append("sections/guarantee-band.liquid: forbidden loud column size clamp(20px, 2.2vw, 26px)")
+      if re.search(r"\.guarantee-item h4\s*\{[^}]*font-size:\s*1[45]px", liq_txt):
+        issues.append("sections/guarantee-band.liquid: forbidden tiny 14–15px column titles")
 
   return issues
 
