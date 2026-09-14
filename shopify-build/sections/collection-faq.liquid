@@ -9,14 +9,14 @@
   include_schema: true,
   studio_core: section.settings.use_studio_bank
 %}
-{% if template == 'collection' %}
 <style>
-  /* Shop All — cream stays light #faf8f6. Heading = Type OS H2 Section. */
-  #shopify-section-{{ section.id }} .faq--cream {
-    background: #faf8f6;
+  /* Per-page TE: Background cream = soft #faf8f6, white = #fff. Sitewide cream lock. */
+  #shopify-section-{{ section.id }} .faq--cream { background: #faf8f6; }
+  #shopify-section-{{ section.id }} .faq--white { background: #fff; }
+  #shopify-section-{{ section.id }} .faq__heading {
+    /* Type OS H2 Section on Shop All / PDP FAQ */
   }
 </style>
-{% endif %}
 
 {% schema %}
 {
@@ -35,8 +35,9 @@
       "type": "select",
       "id": "bg_class",
       "label": "Background",
+      "info": "Cream = soft #faf8f6. White = #fff. Set per page in Theme Editor.",
       "options": [
-        { "value": "cream", "label": "Cream" },
+        { "value": "cream", "label": "Cream (#faf8f6)" },
         { "value": "white", "label": "White" }
       ],
       "default": "cream"

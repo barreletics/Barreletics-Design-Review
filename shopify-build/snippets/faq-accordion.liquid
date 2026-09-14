@@ -20,7 +20,7 @@
 {% assign show_studio = studio_core | default: false %}
 
 {% if items.size > 0 or show_studio %}
-<div class="faq{% if bg_class == 'cream' %} faq--cream{% endif %}" data-faq-accordion>
+<div class="faq{% if bg_class == 'cream' %} faq--cream{% else %} faq--white{% endif %}" data-faq-accordion>
   <div class="faq__inner">
     {% if heading != blank %}
       <h2 class="faq__heading h2-standard">{{ heading }}</h2>
@@ -91,8 +91,9 @@
 {% endif %}
 
 <style>
-  .faq { padding: var(--section-padding-y) var(--section-padding-x); }
-  .faq--cream { background: var(--bg-alternate); }
+  .faq { padding: var(--section-padding-y) var(--section-padding-x); background: #fff; }
+  .faq--cream { background: #faf8f6; /* soft cream LOCKED */ }
+  .faq--white { background: #fff; }
   .faq__inner { max-width: var(--max-width-narrow); margin: 0 auto; }
   .faq__heading {
     font-size: var(--type-section-size);

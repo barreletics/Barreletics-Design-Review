@@ -22,8 +22,9 @@
   assign topics = topic_list | split: '|~|'
 -%}
 
+{%- assign faq_bg = section.settings.bg_class | default: 'white' -%}
 <section
-  class="page-faq"
+  class="page-faq page-faq--{{ faq_bg }}"
   id="shopify-section-{{ section.id }}"
   style="{% render 'type-override-vars', title_size: section.settings.title_size, title_weight: section.settings.title_weight, body_size: section.settings.body_size, body_weight: section.settings.body_weight, sub_size: section.settings.question_size %}"
   {{ section.shopify_attributes }}
@@ -129,8 +130,10 @@
 </script>
 
 <style>
-  /* ---- Quiet canvas: white throughout. No cream bands between topics. ---- */
+  /* Quiet canvas — TE Background: white or soft cream. No alternating topic bands. */
   .page-faq { background: #fff; }
+  .page-faq--cream { background: #faf8f6; }
+  .page-faq--white { background: #fff; }
 
   .page-faq__head {
     max-width: 640px;
@@ -519,6 +522,17 @@
       "type": "textarea",
       "id": "subtitle",
       "label": "Lede (optional — v7 quiet ships without one)"
+    },
+    {
+      "type": "select",
+      "id": "bg_class",
+      "label": "Background",
+      "info": "Cream = soft #faf8f6. White = #fff.",
+      "options": [
+        { "value": "white", "label": "White" },
+        { "value": "cream", "label": "Cream (#faf8f6)" }
+      ],
+      "default": "white"
     },
     { "type": "header", "content": "Type — size & weight", "info": "Family is brand Type OS. Default keeps the approved FAQ type. Title caps at 56px — support pages never use the homepage hero size." },
     {
