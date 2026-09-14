@@ -317,6 +317,35 @@ def scan_trusted_by_footer(site: dict, build: Path):
   return issues
 
 
+def scan_faq_background(site: dict, build: Path):
+  """FAQ sections default cream; listed white exceptions allowed."""
+  issues = []
+  lock = site.get("faq_background") or {}
+  if not lock:
+    return issues
+  default = lock.get("default") or "cream"
+  exceptions = set(lock.get("white_exceptions") or [])
+  for tmpl in sorted((build / "templates").glob("*.json")):
+    try:
+      data = load_json(tmpl)
+    except Exception:
+      continue
+    for sid, sec in (data.get("sections") or {}).items():
+      if sec.get("disabled"):
+        continue
+      if (sec.get("type") or "") not in ("collection-faq", "page-faq"):
+        continue
+      st = sec.get("settings") or {}
+      got = st.get("bg_class") or default
+      key = f"templates/{tmpl.name}#{sid}"
+      if key in exceptions:
+        if got != "white":
+          issues.append(f"{key}: white exception expected bg_class white, got {got!r}")
+      elif got != default:
+        issues.append(f"{key}: faq bg_class expected {default!r}, got {got!r}")
+  return issues
+
+
 def main():
   root = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(".").resolve()
   only_rel = sys.argv[2] if len(sys.argv) > 2 else None
