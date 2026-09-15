@@ -321,7 +321,7 @@ def scan_page_layout_os(site: dict, build: Path, only: Path | None):
         if "assign text_initial = 2" not in liq_txt:
           issues.append("sections/pdp-reviews.liquid: missing Home force text_initial = 2")
 
-  # Interni press-feature: no overflow clamps + 520 frame
+  # Interni press-feature: no overflow clamps + locked frame/fit (may be Andrew FIT exception)
   pfi = plo.get("press_feature_interni") or {}
   if pfi:
     sid = pfi.get("section_key") or "press-feature-interni"
@@ -336,7 +336,7 @@ def scan_page_layout_os(site: dict, build: Path, only: Path | None):
           issues.append(f"templates/index.json {sid}: {key} expected {expect}, got {st.get(key)}")
       fit = (st.get("image_fit_mobile") or "").lower()
       if fit and fit != (pfi.get("image_fit_mobile") or "cover"):
-        issues.append(f"templates/index.json {sid}: image_fit_mobile expected cover, got {st.get('image_fit_mobile')!r}")
+        issues.append(f"templates/index.json {sid}: image_fit_mobile expected {pfi.get('image_fit_mobile') or 'cover'!r}, got {st.get('image_fit_mobile')!r}")
     liq = build / "sections" / "press-feature.liquid"
     if liq.exists() and not (only and liq.resolve() != only.resolve()):
       liq_txt = liq.read_text()

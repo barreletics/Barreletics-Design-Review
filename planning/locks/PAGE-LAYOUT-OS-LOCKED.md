@@ -114,7 +114,7 @@ PAGE LAYOUT OS GATE
 - [ ] Marketing split (fifty-fifty)? → COVER 860/520 · center · pads 32/32 · scale 100 · body 16 · FIT forbidden
 - [ ] Desk 860/88/88/64 frozen when this is a mobile-only pass
 - [ ] Asymmetric 32/96 rejected
-- [ ] press-feature (Interni): stay press-feature type; when enlarging, adopt FF mobile visual frame; media/img never overflow frame (clamp + COVER)
+- [ ] press-feature (Interni): stay press-feature type; frame 640/640 · 32/32 center; clamp overflow; FIT/contain only via Andrew media QC option C (not Home fifty-fifty)
 - [ ] Home reviews: 2 text cards + See more (liquid force + `[hidden]` CSS `display:none !important`)
 - [ ] Phone text min-height mobile_text_height 520 (image≈text) on ALL Home fifty-fifty
 - [ ] Hero stays 92vh / 62/38 if touching Home hero
@@ -145,9 +145,24 @@ Humans/agents: every Home `fifty-fifty` must be COVER + 860/520 + **32/32** cent
 
 ## Interni note
 
-`press-feature-interni` stays **`press-feature`**. **Adopted** the marketing split mobile visual frame (520/520 · center · 32/32 · COVER · body 16) via section settings (`mobile_media_height` / `mobile_text_height` / equal text pads) — type remains `press-feature` (do **not** convert to `fifty-fifty`). TE can retune the knobs; Home Interni JSON locks the OS defaults.
+`press-feature-interni` stays **`press-feature`**. Mobile visual frame: **640 / 640 · center · 32/32 · body 16** via section settings (`mobile_media_height` / `mobile_text_height` / equal text pads) — type remains `press-feature` (do **not** convert to `fifty-fifty`). TE can retune the knobs; Home Interni JSON locks the OS defaults.
 
-**No overflow / no blow-up:** media + img must stay **inside** the 520 frame — `overflow: hidden`, `width/height/max-width/max-height: 100%`, `object-fit: cover`, `transform: none` (no scale>100). Frame matches Grip; do **not** enlarge frame to “fix” a zoomed crop. If COVER crops the required subject badly → **media QC** (swap asset / reframe / FIT exception with Andrew) — never invent FIT as default.
+**No overflow / no blow-up:** media + img must stay **inside** the 640 frame — `overflow: hidden`, `width/height/max-width/max-height: 100%`, `transform: none` (no scale>100). Do **not** enlarge frame further to “fix” a zoomed crop.
+
+### Andrew-approved FIT exception (media QC option C) — 2026-09-15
+
+Root cause: COVER + tall **640** frame on a **wide/square flat-lay** side-cropped INTERNI/ZINE masthead.
+
+| Axis | Value |
+| --- | --- |
+| `image_fit_mobile` (desk uses same setting on this section) | **`contain`** (FIT / letterbox) |
+| Media / text height | **640 / 640** kept |
+| Pads / justify | **32 / 32 · center** kept |
+| `media_bg_color` | **`#F4EEE5`** cream — letterbox matches section |
+| Scope | **Interni `press-feature` only** — Grip / One Pair stay **COVER** |
+| Home `fifty-fifty` FIT | Still **FORBIDDEN** |
+
+**Media QC gate options** when COVER crops the required subject: (A) swap asset · (B) reframe/crop asset · **(C) Andrew-approved FIT/contain exception** (this letter). Never invent FIT as default on Home fifty-fifty.
 
 ## Home reviews ruler
 
