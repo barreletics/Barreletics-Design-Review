@@ -1,0 +1,1620 @@
+{% doc %}
+  @prompt
+    build a section just like this but we need a field that sites below the column titles that is a global message for both the left and right column product. 
+    
+    Create a section that shoes both the open sole and closed sole version of the shoe in two columns side by side. Use a heading at the top "open sole vs Closed sole" then the two images side by side with the ability to adjust their size. then have a subheading below each image. Here is the copy for the Open Sole: Barre | Yoga | Mat Pilates
+    Lightweight, breathable, and flexible with a barefoot feel. The open sole design allows natural toe splay, balance, and strong floor connection for precise movement and superior grip. Ideal if you love that free, grounded feel for Barre, Yoga, Mat, or Reformer Pilates—maximum freedom, minimal coverage, total control.
+    
+    and here is the copy for the closed sole: Reformer Pilates | Outdoor | Water
+    Built for the same studio performance as the open version, with added cushioning and protection for outdoor use. Ideal for Reformer and Mat Pilates, Barre, or Yoga—plus versatile enough for activities like paddle-boarding, volleyball, or poolside lounging. Better than Pilates socks or water shoes. Also add shop now buttons under each one, Also add the ability to select and adjust the font
+    
+    Alaso make a sub heading under heading. also make sure to have shop now buttons for each product, Don't change my adjustments but we need adjustments for space between each heading, subheading, descriptions, below images etc, create an adjustment to make the shop now buttons at the same level if text is longer in one column then the other, The shop now buttons need the ability to adjust the wdith, the buy buttins need to be centered but maybe you should add the ability to make the subheading, description and shop now button have the ability to make left align, center align or right align, can you also add the ability to interchnage an image or video in each image section?, , the description boxes need to have styling and html functionality. The entire sections needs to have a padding adjustment  above and below. The text in the description needs to have a width adjustment, can you position the global message below the images?, At the very top, add a Heading field using a rich text editor so I can control the font size.
+    It should appear above everything else in the section.
+    
+    Directly under the heading, add a Subtitle field, also using a rich text editor with adjustable font size.
+    
+    Under the subtitle, add a Description field using a rich text editor.
+    This description must appear above the images, not below them.
+    This is where I will put the global description for both products.
+    
+    Below the description, place two images side by side on desktop, and stacked one after the other on mobile.
+    I need one image for the Open Sole and one for the Closed Sole.
+    
+    Under the left image, add a Left Description box using a rich text editor.
+    This is where I will write the short Open Sole feel description.
+    
+    Under the right image, add a Right Description box using a rich text editor.
+    This is where I will write the short Closed Sole feel description.
+    
+    Under each description box, add a button with custom text and a custom link.
+    The button should sit directly under the description and say “Shop Now” by default.
+    
+    The final order should look like this:
+    
+    Section heading
+    
+    Section subtitle
+    
+    Global description (for both versions)
+    
+    Two images (side by side)
+    
+    Left description → Left button
+    
+    Right description → Right button, great but I need font size by number as i dont always want a H1 to make large, we need the ability to pick the font styles and also round the corners of the images, great. We need a title below each photo like we had before for Open Sole and Closed Sole, we need a mobile font size adjustment and the shop buttons in a mobile view need to be under each picture and not stcked, Please add the ability to have text overlay on top of each image, Add a control to change the image size.
+    
+    Add a control to change the button style (solid or outline).
+    
+    Add a control to change the font size for the “Open Sole” and “Closed Sole” headings.
+    
+    Add simple spacing controls (space above, space below, and space between the images and text)., when using H1 or H2 etcc, the font size adjustment does not work. Only works when you choose paragraph. The image anbd video both need size contros. a set of generic swquate, portrait landscape, default etc as well as image slidersize controls to make the entire image smaller or larger. , great. add font size controls to the image titles and make sure the code is optimized for speed if not already
+{% enddoc %}
+{% comment %} BR section from ai_gen_block_7397266. Same schema IDs for migration. {% endcomment %}
+{% if request.path contains '/apps/returns-portal' %}{% else %}
+{% liquid
+  assign should_hide = false
+  if section.settings.hide_on_cart and template.name == 'cart'
+    assign should_hide = true
+  endif
+  if section.settings.hide_on_product and template.name == 'product'
+    assign should_hide = true
+  endif
+  if section.settings.hide_on_collection and template.name == 'collection'
+    assign should_hide = true
+  endif
+  if section.settings.hide_on_page and template.name == 'page'
+    assign should_hide = true
+  endif
+%}
+{% unless should_hide %}
+{% assign ai_gen_id = section.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-sole-comparison-{{ ai_gen_id }} {
+    padding: {{ section.settings.space_above }}px {{ section.settings.section_padding_horizontal }}px {{ section.settings.space_below }}px;
+    background-color: {{ section.settings.background_color }};
+    {% if section.settings.outline_style == 'section' %}
+      margin-left: {{ section.settings.section_outline_inset }}px;
+      margin-right: {{ section.settings.section_outline_inset }}px;
+      border: {{ section.settings.section_border_width }}px solid {{ section.settings.section_border_color }};
+      border-radius: {{ section.settings.section_border_radius }}px;
+    {% endif %}
+  }
+
+  .ai-sole-comparison__products-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: {{ section.settings.column_gap }}px;
+    margin-top: {{ section.settings.space_between_image_and_text }}px;
+    {% if section.settings.outline_style == 'per_column' %}
+      margin-left: {{ section.settings.section_outline_inset }}px;
+      margin-right: {{ section.settings.section_outline_inset }}px;
+    {% endif %}
+  }
+
+  .ai-sole-comparison__product-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    {% if section.settings.outline_style == 'per_column' %}
+      border: {{ section.settings.section_border_width }}px solid {{ section.settings.section_border_color }};
+      border-radius: {{ section.settings.section_border_radius }}px;
+      padding: {{ section.settings.section_padding_horizontal }}px;
+    {% endif %}
+  }
+
+  .ai-sole-comparison__container-{{ ai_gen_id }} {
+    max-width: {{ section.settings.max_width }}px;
+    margin: 0 auto;
+  }
+
+  .ai-sole-comparison__heading-{{ ai_gen_id }},
+  .ai-sole-comparison__heading-{{ ai_gen_id }} h1,
+  .ai-sole-comparison__heading-{{ ai_gen_id }} h2,
+  .ai-sole-comparison__heading-{{ ai_gen_id }} h3,
+  .ai-sole-comparison__heading-{{ ai_gen_id }} h4,
+  .ai-sole-comparison__heading-{{ ai_gen_id }} h5,
+  .ai-sole-comparison__heading-{{ ai_gen_id }} h6,
+  .ai-sole-comparison__heading-{{ ai_gen_id }} p {
+    font-family: {{ section.settings.heading_font.family }}, {{ section.settings.heading_font.fallback_families }} !important;
+    font-weight: {{ section.settings.heading_font.weight }} !important;
+    text-align: {{ section.settings.text_alignment }};
+    margin: 0 0 {{ section.settings.heading_spacing }}px;
+    color: {{ section.settings.text_color }};
+    font-size: {{ section.settings.heading_font_size }}px !important;
+  }
+
+  .ai-sole-comparison__subtitle-{{ ai_gen_id }},
+  .ai-sole-comparison__subtitle-{{ ai_gen_id }} h1,
+  .ai-sole-comparison__subtitle-{{ ai_gen_id }} h2,
+  .ai-sole-comparison__subtitle-{{ ai_gen_id }} h3,
+  .ai-sole-comparison__subtitle-{{ ai_gen_id }} h4,
+  .ai-sole-comparison__subtitle-{{ ai_gen_id }} h5,
+  .ai-sole-comparison__subtitle-{{ ai_gen_id }} h6,
+  .ai-sole-comparison__subtitle-{{ ai_gen_id }} p {
+    font-family: {{ section.settings.subtitle_font.family }}, {{ section.settings.subtitle_font.fallback_families }} !important;
+    font-weight: {{ section.settings.subtitle_font.weight }} !important;
+    text-align: {{ section.settings.text_alignment }};
+    margin: 0 0 {{ section.settings.subtitle_spacing }}px;
+    color: {{ section.settings.text_color }};
+    font-size: {{ section.settings.subtitle_font_size }}px !important;
+  }
+
+  .ai-sole-comparison__global-description-{{ ai_gen_id }} {
+    font-family: {{ section.settings.description_font.family }}, {{ section.settings.description_font.fallback_families }};
+    font-weight: {{ section.settings.description_font.weight }};
+    text-align: {{ section.settings.text_alignment }};
+    margin: 0 0 {{ section.settings.global_description_spacing }}px;
+    color: {{ section.settings.text_color }};
+    font-size: {{ section.settings.global_description_font_size }}px;
+  }
+
+  .ai-sole-comparison__global-description-{{ ai_gen_id }} p {
+    margin: 0 0 {{ section.settings.paragraph_spacing }}px;
+  }
+
+  .ai-sole-comparison__global-description-{{ ai_gen_id }} p:last-child {
+    margin-bottom: 0;
+  }
+
+  .ai-sole-comparison__image-column-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ai-sole-comparison__image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: {{ section.settings.image_scale }}%;
+    margin-left: auto;
+    margin-right: auto;
+    overflow: hidden;
+    border-radius: {{ section.settings.image_border_radius }}px;
+    margin-bottom: {{ section.settings.space_between_image_and_text }}px;
+  }
+
+  .ai-sole-comparison__image-inner-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    {% if section.settings.image_aspect_ratio == 'square' %}
+      aspect-ratio: 1 / 1;
+    {% elsif section.settings.image_aspect_ratio == 'portrait' %}
+      aspect-ratio: 3 / 4;
+    {% elsif section.settings.image_aspect_ratio == 'landscape' %}
+      aspect-ratio: 4 / 3;
+    {% endif %}
+  }
+
+  .ai-sole-comparison__image-inner-{{ ai_gen_id }} img,
+  .ai-sole-comparison__image-inner-{{ ai_gen_id }} video {
+    width: 100%;
+    height: 100%;
+    display: block;
+    {% if section.settings.image_aspect_ratio != 'natural' %}
+      object-fit: cover;
+    {% else %}
+      object-fit: contain;
+    {% endif %}
+  }
+
+  .ai-sole-comparison__image-placeholder-{{ ai_gen_id }} {
+    background-color: #f4f4f4;
+    width: 100%;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-sole-comparison__image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 300px;
+    max-height: 300px;
+  }
+
+  .ai-sole-comparison__image-overlay-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: {{ section.settings.overlay_vertical_position }};
+    justify-content: {{ section.settings.overlay_horizontal_position }};
+    padding: {{ section.settings.overlay_padding }}px;
+    pointer-events: none;
+  }
+
+  .ai-sole-comparison__image-overlay-{{ ai_gen_id }}::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: {{ section.settings.overlay_bg_color }};
+    opacity: {{ section.settings.overlay_bg_opacity | divided_by: 100.0 }};
+  }
+
+  .ai-sole-comparison__overlay-text-{{ ai_gen_id }} {
+    position: relative;
+    font-family: {{ section.settings.overlay_font.family }}, {{ section.settings.overlay_font.fallback_families }};
+    font-weight: {{ section.settings.overlay_font.weight }};
+    font-size: {{ section.settings.overlay_font_size }}px;
+    color: {{ section.settings.overlay_text_color }};
+    text-align: {{ section.settings.overlay_text_alignment }};
+    text-shadow: {{ section.settings.overlay_text_shadow }}px {{ section.settings.overlay_text_shadow }}px {{ section.settings.overlay_text_shadow | times: 2 }}px rgba(0, 0, 0, {{ section.settings.overlay_text_shadow_opacity | divided_by: 100.0 }});
+    max-width: {{ section.settings.overlay_text_max_width }}%;
+  }
+
+  .ai-sole-comparison__image-title-{{ ai_gen_id }} {
+    font-family: {{ section.settings.image_title_font.family }}, {{ section.settings.image_title_font.fallback_families }} !important;
+    font-weight: {{ section.settings.image_title_font.weight }} !important;
+    font-size: {{ section.settings.image_title_font_size }}px !important;
+    color: {{ section.settings.text_color }} !important;
+    text-align: {{ section.settings.content_alignment }};
+    margin: 0 0 {{ section.settings.image_section_spacing }}px !important;
+    line-height: 1.3;
+  }
+
+  .ai-sole-comparison__column-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-height: 0;
+  }
+
+  .ai-sole-comparison__description-wrapper-{{ ai_gen_id }} {
+    padding: {{ section.settings.description_padding_top }}px {{ section.settings.description_padding_horizontal }}px {{ section.settings.description_padding_bottom }}px;
+    background-color: {{ section.settings.description_bg_color }};
+    border-radius: {{ section.settings.description_border_radius }}px;
+    border: {{ section.settings.description_border_width }}px solid {{ section.settings.description_border_color }};
+    margin-bottom: {{ section.settings.description_spacing }}px;
+    flex-grow: 1;
+  }
+
+  .ai-sole-comparison__description-{{ ai_gen_id }} {
+    font-family: {{ section.settings.description_font.family }}, {{ section.settings.description_font.fallback_families }};
+    font-weight: {{ section.settings.description_font.weight }};
+    text-align: {{ section.settings.content_alignment }};
+    margin: 0 auto;
+    max-width: {{ section.settings.description_text_width }}%;
+    color: {{ section.settings.text_color }};
+    font-size: {{ section.settings.description_font_size }}px;
+  }
+
+  .ai-sole-comparison__description-{{ ai_gen_id }} p {
+    margin: 0 0 {{ section.settings.paragraph_spacing }}px;
+  }
+
+  .ai-sole-comparison__description-{{ ai_gen_id }} p:last-child {
+    margin-bottom: 0;
+  }
+
+  .ai-sole-comparison__description-{{ ai_gen_id }} strong,
+  .ai-sole-comparison__description-{{ ai_gen_id }} b {
+    font-weight: bold;
+  }
+
+  .ai-sole-comparison__description-{{ ai_gen_id }} em,
+  .ai-sole-comparison__description-{{ ai_gen_id }} i {
+    font-style: italic;
+  }
+
+  .ai-sole-comparison__description-{{ ai_gen_id }} ul,
+  .ai-sole-comparison__description-{{ ai_gen_id }} ol {
+    margin: 0 0 {{ section.settings.paragraph_spacing }}px;
+    padding-left: 20px;
+  }
+
+  .ai-sole-comparison__description-{{ ai_gen_id }} li {
+    margin-bottom: 8px;
+  }
+
+  .ai-sole-comparison__description-{{ ai_gen_id }} a {
+    color: {{ section.settings.link_color }};
+    text-decoration: underline;
+  }
+
+  .ai-sole-comparison__description-{{ ai_gen_id }} a:hover {
+    color: {{ section.settings.link_hover_color }};
+  }
+
+  .ai-sole-comparison__button-wrapper-{{ ai_gen_id }} {
+    display: flex;
+    {% if section.settings.content_alignment == 'left' %}
+      justify-content: flex-start;
+    {% elsif section.settings.content_alignment == 'center' %}
+      justify-content: center;
+    {% else %}
+      justify-content: flex-end;
+    {% endif %}
+    margin-top: auto;
+  }
+
+  .ai-sole-comparison__button-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: {{ section.settings.button_padding_vertical }}px {{ section.settings.button_padding_horizontal }}px;
+    font-family: {{ section.settings.button_font.family }}, {{ section.settings.button_font.fallback_families }};
+    font-weight: {{ section.settings.button_font.weight }};
+    font-size: {{ section.settings.button_font_size }}px;
+    text-decoration: none;
+    border-radius: {{ section.settings.button_border_radius }}px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: {{ section.settings.button_width }}%;
+    text-align: center;
+    {% if section.settings.button_uppercase %}
+      text-transform: uppercase;
+    {% endif %}
+    {% if section.settings.button_style == 'solid' %}
+      background-color: {{ section.settings.button_bg_color }};
+      color: {{ section.settings.button_text_color }};
+      border: 2px solid {{ section.settings.button_bg_color }};
+    {% else %}
+      background-color: transparent;
+      color: {{ section.settings.button_bg_color }};
+      border: 2px solid {{ section.settings.button_bg_color }};
+    {% endif %}
+  }
+
+  .ai-sole-comparison__button-{{ ai_gen_id }}:hover {
+    {% if section.settings.button_style == 'solid' %}
+      background-color: {{ section.settings.button_hover_bg_color }};
+      color: {{ section.settings.button_hover_text_color }};
+      border-color: {{ section.settings.button_hover_bg_color }};
+    {% else %}
+      background-color: {{ section.settings.button_bg_color }};
+      color: {{ section.settings.button_text_color }};
+      border-color: {{ section.settings.button_bg_color }};
+    {% endif %}
+  }
+
+  @media screen and (max-width: 768px) {
+    .ai-sole-comparison-{{ ai_gen_id }} {
+      padding: {{ section.settings.space_above | times: 0.7 }}px {{ section.settings.section_padding_horizontal | times: 0.7 }}px {{ section.settings.space_below | times: 0.7 }}px;
+    }
+
+    .ai-sole-comparison__heading-{{ ai_gen_id }},
+    .ai-sole-comparison__heading-{{ ai_gen_id }} h1,
+    .ai-sole-comparison__heading-{{ ai_gen_id }} h2,
+    .ai-sole-comparison__heading-{{ ai_gen_id }} h3,
+    .ai-sole-comparison__heading-{{ ai_gen_id }} h4,
+    .ai-sole-comparison__heading-{{ ai_gen_id }} h5,
+    .ai-sole-comparison__heading-{{ ai_gen_id }} h6,
+    .ai-sole-comparison__heading-{{ ai_gen_id }} p {
+      font-size: {{ section.settings.mobile_heading_font_size }}px !important;
+    }
+
+    .ai-sole-comparison__subtitle-{{ ai_gen_id }},
+    .ai-sole-comparison__subtitle-{{ ai_gen_id }} h1,
+    .ai-sole-comparison__subtitle-{{ ai_gen_id }} h2,
+    .ai-sole-comparison__subtitle-{{ ai_gen_id }} h3,
+    .ai-sole-comparison__subtitle-{{ ai_gen_id }} h4,
+    .ai-sole-comparison__subtitle-{{ ai_gen_id }} h5,
+    .ai-sole-comparison__subtitle-{{ ai_gen_id }} h6,
+    .ai-sole-comparison__subtitle-{{ ai_gen_id }} p {
+      font-size: {{ section.settings.mobile_subtitle_font_size }}px !important;
+    }
+
+    .ai-sole-comparison__global-description-{{ ai_gen_id }} {
+      font-size: {{ section.settings.mobile_global_description_font_size }}px;
+    }
+
+    .ai-sole-comparison__products-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: {{ section.settings.mobile_column_gap }}px;
+    }
+
+    .ai-sole-comparison__column-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    .ai-sole-comparison__image-column-{{ ai_gen_id }} {
+      margin-bottom: {{ section.settings.mobile_image_section_spacing }}px;
+    }
+
+    .ai-sole-comparison__image-column-{{ ai_gen_id }}:last-child {
+      margin-bottom: 0;
+    }
+
+    .ai-sole-comparison__image-wrapper-{{ ai_gen_id }} {
+      width: 100%;
+    }
+
+    .ai-sole-comparison__overlay-text-{{ ai_gen_id }} {
+      font-size: {{ section.settings.mobile_overlay_font_size }}px;
+      max-width: 100%;
+    }
+
+    .ai-sole-comparison__image-title-{{ ai_gen_id }} {
+      font-size: {{ section.settings.mobile_image_title_font_size }}px !important;
+      margin-bottom: {{ section.settings.mobile_image_title_spacing }}px !important;
+    }
+
+
+    .ai-sole-comparison__description-{{ ai_gen_id }} {
+      max-width: 100%;
+      font-size: {{ section.settings.mobile_description_font_size }}px;
+    }
+
+    .ai-sole-comparison__description-wrapper-{{ ai_gen_id }} {
+      padding: {{ section.settings.description_padding_top | times: 0.8 }}px {{ section.settings.description_padding_horizontal | times: 0.8 }}px {{ section.settings.description_padding_bottom | times: 0.8 }}px;
+    }
+
+    .ai-sole-comparison__button-{{ ai_gen_id }} {
+      width: 100%;
+    }
+
+    .ai-sole-comparison__mobile-content-{{ ai_gen_id }} {
+      display: block;
+    }
+  }
+
+  @media screen and (min-width: 769px) {
+    .ai-sole-comparison__mobile-content-{{ ai_gen_id }} {
+      display: none;
+    }
+  }
+{% endstyle %}
+
+<section class="ai-sole-comparison-{{ ai_gen_id }}" aria-labelledby="br-sole-heading-{{ ai_gen_id }}" {{ section.shopify_attributes }}>
+  <div class="ai-sole-comparison__container-{{ ai_gen_id }}">
+    {% if section.settings.heading != blank %}
+      <div id="br-sole-heading-{{ ai_gen_id }}" class="ai-sole-comparison__heading-{{ ai_gen_id }}">
+        {{ section.settings.heading }}
+      </div>
+    {% endif %}
+
+    {% if section.settings.subtitle != blank %}
+      <div class="ai-sole-comparison__subtitle-{{ ai_gen_id }}">
+        {{ section.settings.subtitle }}
+      </div>
+    {% endif %}
+
+    {% if section.settings.global_description != blank %}
+      <div class="ai-sole-comparison__global-description-{{ ai_gen_id }}">
+        {{ section.settings.global_description }}
+      </div>
+    {% endif %}
+
+    <div class="ai-sole-comparison__products-{{ ai_gen_id }}">
+      <div class="ai-sole-comparison__product-{{ ai_gen_id }}">
+        <div class="ai-sole-comparison__image-column-{{ ai_gen_id }}">
+          <div class="ai-sole-comparison__image-wrapper-{{ ai_gen_id }}">
+            <div class="ai-sole-comparison__image-inner-{{ ai_gen_id }}">
+              {% if section.settings.left_media_type == 'video' and section.settings.left_video != blank %}
+                {{
+                  section.settings.left_video
+                  | video_tag:
+                    image_size: '1024x',
+                    autoplay: section.settings.left_video_autoplay,
+                    loop: section.settings.left_video_loop,
+                    muted: section.settings.left_video_muted,
+                    controls: section.settings.left_video_controls
+                }}
+              {% elsif section.settings.left_image != blank %}
+                <img
+                  src="{{ section.settings.left_image | image_url: width: 1200 }}"
+                  srcset="{{ section.settings.left_image | image_url: width: 400 }} 400w,
+                          {{ section.settings.left_image | image_url: width: 600 }} 600w,
+                          {{ section.settings.left_image | image_url: width: 900 }} 900w,
+                          {{ section.settings.left_image | image_url: width: 1200 }} 1200w"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  alt="{{ section.settings.left_image.alt | default: section.settings.left_image_title | escape }}"
+                  loading="lazy"
+                  width="{{ section.settings.left_image.width }}"
+                  height="{{ section.settings.left_image.height }}"
+                >
+              {% else %}
+                <div class="ai-sole-comparison__image-placeholder-{{ ai_gen_id }}">
+                  {{ 'product-1' | placeholder_svg_tag }}
+                </div>
+              {% endif %}
+
+              {% if section.settings.left_overlay_text != blank %}
+                <div class="ai-sole-comparison__image-overlay-{{ ai_gen_id }}">
+                  <div class="ai-sole-comparison__overlay-text-{{ ai_gen_id }}">
+                    {{ section.settings.left_overlay_text }}
+                  </div>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+          {% if section.settings.left_image_title != blank %}
+            <h3 class="ai-sole-comparison__image-title-{{ ai_gen_id }}">
+              {{ section.settings.left_image_title }}
+            </h3>
+          {% endif %}
+
+          <div class="ai-sole-comparison__mobile-content-{{ ai_gen_id }}">
+            {% if section.settings.left_description != blank %}
+              <div class="ai-sole-comparison__description-wrapper-{{ ai_gen_id }}">
+                <div class="ai-sole-comparison__description-{{ ai_gen_id }}">
+                  {{ section.settings.left_description }}
+                </div>
+              </div>
+            {% endif %}
+
+            {% if section.settings.left_button_text != blank %}
+              <div class="ai-sole-comparison__button-wrapper-{{ ai_gen_id }}">
+                <a
+                  href="{{ section.settings.left_button_link }}"
+                  class="ai-sole-comparison__button-{{ ai_gen_id }}"
+                >
+                  {{ section.settings.left_button_text }}
+                </a>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="ai-sole-comparison__column-{{ ai_gen_id }}">
+          {% if section.settings.left_description != blank %}
+            <div class="ai-sole-comparison__description-wrapper-{{ ai_gen_id }}">
+              <div class="ai-sole-comparison__description-{{ ai_gen_id }}">
+                {{ section.settings.left_description }}
+              </div>
+            </div>
+          {% endif %}
+
+          {% if section.settings.left_button_text != blank %}
+            <div class="ai-sole-comparison__button-wrapper-{{ ai_gen_id }}">
+              <a
+                href="{{ section.settings.left_button_link }}"
+                class="ai-sole-comparison__button-{{ ai_gen_id }}"
+              >
+                {{ section.settings.left_button_text }}
+              </a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="ai-sole-comparison__product-{{ ai_gen_id }}">
+        <div class="ai-sole-comparison__image-column-{{ ai_gen_id }}">
+          <div class="ai-sole-comparison__image-wrapper-{{ ai_gen_id }}">
+            <div class="ai-sole-comparison__image-inner-{{ ai_gen_id }}">
+              {% if section.settings.right_media_type == 'video' and section.settings.right_video != blank %}
+                {{
+                  section.settings.right_video
+                  | video_tag:
+                    image_size: '1024x',
+                    autoplay: section.settings.right_video_autoplay,
+                    loop: section.settings.right_video_loop,
+                    muted: section.settings.right_video_muted,
+                    controls: section.settings.right_video_controls
+                }}
+              {% elsif section.settings.right_image != blank %}
+                <img
+                  src="{{ section.settings.right_image | image_url: width: 1200 }}"
+                  srcset="{{ section.settings.right_image | image_url: width: 400 }} 400w,
+                          {{ section.settings.right_image | image_url: width: 600 }} 600w,
+                          {{ section.settings.right_image | image_url: width: 900 }} 900w,
+                          {{ section.settings.right_image | image_url: width: 1200 }} 1200w"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  alt="{{ section.settings.right_image.alt | default: section.settings.right_image_title | escape }}"
+                  loading="lazy"
+                  width="{{ section.settings.right_image.width }}"
+                  height="{{ section.settings.right_image.height }}"
+                >
+              {% else %}
+                <div class="ai-sole-comparison__image-placeholder-{{ ai_gen_id }}">
+                  {{ 'product-1' | placeholder_svg_tag }}
+                </div>
+              {% endif %}
+
+              {% if section.settings.right_overlay_text != blank %}
+                <div class="ai-sole-comparison__image-overlay-{{ ai_gen_id }}">
+                  <div class="ai-sole-comparison__overlay-text-{{ ai_gen_id }}">
+                    {{ section.settings.right_overlay_text }}
+                  </div>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+          {% if section.settings.right_image_title != blank %}
+            <h3 class="ai-sole-comparison__image-title-{{ ai_gen_id }}">
+              {{ section.settings.right_image_title }}
+            </h3>
+          {% endif %}
+
+          <div class="ai-sole-comparison__mobile-content-{{ ai_gen_id }}">
+            {% if section.settings.right_description != blank %}
+              <div class="ai-sole-comparison__description-wrapper-{{ ai_gen_id }}">
+                <div class="ai-sole-comparison__description-{{ ai_gen_id }}">
+                  {{ section.settings.right_description }}
+                </div>
+              </div>
+            {% endif %}
+
+            {% if section.settings.right_button_text != blank %}
+              <div class="ai-sole-comparison__button-wrapper-{{ ai_gen_id }}">
+                <a
+                  href="{{ section.settings.right_button_link }}"
+                  class="ai-sole-comparison__button-{{ ai_gen_id }}"
+                >
+                  {{ section.settings.right_button_text }}
+                </a>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="ai-sole-comparison__column-{{ ai_gen_id }}">
+          {% if section.settings.right_description != blank %}
+            <div class="ai-sole-comparison__description-wrapper-{{ ai_gen_id }}">
+              <div class="ai-sole-comparison__description-{{ ai_gen_id }}">
+                {{ section.settings.right_description }}
+              </div>
+            </div>
+          {% endif %}
+
+          {% if section.settings.right_button_text != blank %}
+            <div class="ai-sole-comparison__button-wrapper-{{ ai_gen_id }}">
+              <a
+                href="{{ section.settings.right_button_link }}"
+                class="ai-sole-comparison__button-{{ ai_gen_id }}"
+              >
+                {{ section.settings.right_button_text }}
+              </a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endunless %}
+{% endif %}
+
+{% schema %}
+{
+  "name": "Open vs Closed Sole BR",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Page visibility"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_cart",
+      "label": "Hide on cart page",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_product",
+      "label": "Hide on product page",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_collection",
+      "label": "Hide on collection page",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_page",
+      "label": "Hide on standard pages",
+      "info": "Hide on pages (About, Contact, etc.)",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Section outline"
+    },
+    {
+      "type": "select",
+      "id": "outline_style",
+      "label": "Outline style",
+      "options": [
+        { "value": "section", "label": "Whole section" },
+        { "value": "per_column", "label": "Per column (each product)" }
+      ],
+      "default": "section"
+    },
+    {
+      "type": "range",
+      "id": "section_border_width",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "label": "Outline width",
+      "default": 1,
+      "info": "0 = no outline"
+    },
+    {
+      "type": "color",
+      "id": "section_border_color",
+      "label": "Outline color",
+      "default": "#d8d8d8"
+    },
+    {
+      "type": "range",
+      "id": "section_border_radius",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Corner radius",
+      "default": 0,
+      "info": "0 = square corners"
+    },
+    {
+      "type": "range",
+      "id": "section_outline_inset",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Outline inset (left & right)",
+      "default": 0,
+      "info": "Moves the section and outline in from the left and right to match other sections"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "space_above",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Space above section",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "space_below",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Space below section",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "space_between_image_and_text",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Space between image and text",
+      "default": 15
+    },
+    {
+      "type": "header",
+      "content": "Section heading"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "<p>Open Sole vs Closed Sole</p>"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Font",
+      "default": "roboto_n4"
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size",
+      "min": 16,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop font size",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "mobile_heading_font_size",
+      "min": 16,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile font size",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "heading_spacing",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Space below",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Section subtitle"
+    },
+    {
+      "type": "richtext",
+      "id": "subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "font_picker",
+      "id": "subtitle_font",
+      "label": "Font",
+      "default": "roboto_n3"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_font_size",
+      "min": 14,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop font size",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "mobile_subtitle_font_size",
+      "min": 14,
+      "max": 36,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile font size",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "subtitle_spacing",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Space below",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Global description"
+    },
+    {
+      "type": "richtext",
+      "id": "global_description",
+      "label": "Description",
+      "info": "Appears above images"
+    },
+    {
+      "type": "font_picker",
+      "id": "description_font",
+      "label": "Font",
+      "default": "roboto_n3"
+    },
+    {
+      "type": "range",
+      "id": "global_description_font_size",
+      "min": 12,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop font size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "mobile_global_description_font_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile font size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "global_description_spacing",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Space below",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Image settings"
+    },
+    {
+      "type": "select",
+      "id": "image_aspect_ratio",
+      "label": "Image aspect ratio",
+      "options": [
+        {"value": "natural", "label": "Natural"},
+        {"value": "square", "label": "Square (1:1)"},
+        {"value": "portrait", "label": "Portrait (3:4)"},
+        {"value": "landscape", "label": "Landscape (4:3)"}
+      ],
+      "default": "natural"
+    },
+    {
+      "type": "range",
+      "id": "image_scale",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Image size",
+      "default": 100,
+      "info": "Adjust overall image size"
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Corner radius",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Left image"
+    },
+    {
+      "type": "select",
+      "id": "left_media_type",
+      "label": "Media type",
+      "options": [
+        {"value": "image", "label": "Image"},
+        {"value": "video", "label": "Video"}
+      ],
+      "default": "image"
+    },
+    {
+      "type": "image_picker",
+      "id": "left_image",
+      "label": "Image"
+    },
+    {
+      "type": "video",
+      "id": "left_video",
+      "label": "Video"
+    },
+    {
+      "type": "checkbox",
+      "id": "left_video_autoplay",
+      "label": "Autoplay",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "left_video_loop",
+      "label": "Loop",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "left_video_muted",
+      "label": "Mute",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "left_video_controls",
+      "label": "Show controls",
+      "default": false
+    },
+    {
+      "type": "richtext",
+      "id": "left_overlay_text",
+      "label": "Overlay text"
+    },
+    {
+      "type": "text",
+      "id": "left_image_title",
+      "label": "Title",
+      "default": "Open Sole"
+    },
+    {
+      "type": "richtext",
+      "id": "left_description",
+      "label": "Description",
+      "default": "<p>Lightweight, breathable, and flexible with a barefoot feel.</p>"
+    },
+    {
+      "type": "text",
+      "id": "left_button_text",
+      "label": "Button text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "left_button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Right image"
+    },
+    {
+      "type": "select",
+      "id": "right_media_type",
+      "label": "Media type",
+      "options": [
+        {"value": "image", "label": "Image"},
+        {"value": "video", "label": "Video"}
+      ],
+      "default": "image"
+    },
+    {
+      "type": "image_picker",
+      "id": "right_image",
+      "label": "Image"
+    },
+    {
+      "type": "video",
+      "id": "right_video",
+      "label": "Video"
+    },
+    {
+      "type": "checkbox",
+      "id": "right_video_autoplay",
+      "label": "Autoplay",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "right_video_loop",
+      "label": "Loop",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "right_video_muted",
+      "label": "Mute",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "right_video_controls",
+      "label": "Show controls",
+      "default": false
+    },
+    {
+      "type": "richtext",
+      "id": "right_overlay_text",
+      "label": "Overlay text"
+    },
+    {
+      "type": "text",
+      "id": "right_image_title",
+      "label": "Title",
+      "default": "Closed Sole"
+    },
+    {
+      "type": "richtext",
+      "id": "right_description",
+      "label": "Description",
+      "default": "<p>Built for studio performance with added cushioning and protection.</p>"
+    },
+    {
+      "type": "text",
+      "id": "right_button_text",
+      "label": "Button text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "right_button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Product title style"
+    },
+    {
+      "type": "font_picker",
+      "id": "image_title_font",
+      "label": "Font",
+      "default": "roboto_n4"
+    },
+    {
+      "type": "range",
+      "id": "image_title_font_size",
+      "min": 14,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop font size",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "mobile_image_title_font_size",
+      "min": 14,
+      "max": 36,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile font size",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "mobile_image_title_spacing",
+      "min": 0,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile space below",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "image_section_spacing",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Desktop space below",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "mobile_image_section_spacing",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile space between products",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Image overlay"
+    },
+    {
+      "type": "font_picker",
+      "id": "overlay_font",
+      "label": "Font",
+      "default": "roboto_n4"
+    },
+    {
+      "type": "range",
+      "id": "overlay_font_size",
+      "min": 14,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop font size",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "mobile_overlay_font_size",
+      "min": 14,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile font size",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "overlay_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "select",
+      "id": "overlay_text_alignment",
+      "label": "Text alignment",
+      "options": [
+        {"value": "left", "label": "Left"},
+        {"value": "center", "label": "Center"},
+        {"value": "right", "label": "Right"}
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "overlay_vertical_position",
+      "label": "Vertical position",
+      "options": [
+        {"value": "flex-start", "label": "Top"},
+        {"value": "center", "label": "Center"},
+        {"value": "flex-end", "label": "Bottom"}
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "overlay_horizontal_position",
+      "label": "Horizontal position",
+      "options": [
+        {"value": "flex-start", "label": "Left"},
+        {"value": "center", "label": "Center"},
+        {"value": "flex-end", "label": "Right"}
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "overlay_text_max_width",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Text max width",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "overlay_padding",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "overlay_bg_color",
+      "label": "Background color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_bg_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Background opacity",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "overlay_text_shadow",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Text shadow",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "overlay_text_shadow_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Shadow opacity",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Text styling"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        {"value": "left", "label": "Left"},
+        {"value": "center", "label": "Center"},
+        {"value": "right", "label": "Right"}
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "paragraph_spacing",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Paragraph spacing",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "link_color",
+      "label": "Link color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "link_hover_color",
+      "label": "Link hover color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Description box"
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "Content alignment",
+      "options": [
+        {"value": "left", "label": "Left"},
+        {"value": "center", "label": "Center"},
+        {"value": "right", "label": "Right"}
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "description_font_size",
+      "min": 12,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop font size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "mobile_description_font_size",
+      "min": 12,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile font size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "description_text_width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Text width",
+      "default": 100
+    },
+    {
+      "type": "color",
+      "id": "description_bg_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "description_padding_top",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "description_padding_bottom",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "description_padding_horizontal",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Horizontal padding",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "description_border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "description_border_width",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Border width",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "description_border_color",
+      "label": "Border color",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "range",
+      "id": "description_spacing",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Space below",
+      "default": 25
+    },
+    {
+      "type": "header",
+      "content": "Button style"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "options": [
+        {"value": "solid", "label": "Solid"},
+        {"value": "outline", "label": "Outline"}
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "font_picker",
+      "id": "button_font",
+      "label": "Font",
+      "default": "roboto_n4"
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 16
+    },
+    {
+      "type": "checkbox",
+      "id": "button_uppercase",
+      "label": "Uppercase text",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "button_width",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Width",
+      "default": 100,
+      "info": "Desktop only"
+    },
+    {
+      "type": "range",
+      "id": "button_padding_vertical",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical padding",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "button_padding_horizontal",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Horizontal padding",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 4
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_bg_color",
+      "label": "Hover background",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_text_color",
+      "label": "Hover text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Section layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 600,
+      "max": 1600,
+      "step": 50,
+      "unit": "px",
+      "label": "Maximum width",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Column gap",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_column_gap",
+      "min": 10,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile column gap",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "section_padding_horizontal",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Horizontal padding",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Open vs Closed Sole BR"
+    }
+  ]
+}
+{% endschema %}

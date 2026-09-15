@@ -445,7 +445,7 @@
 01 · 360° traction — Full-contact grip across entire underfoot — not patches of silicone dots that wash off.
 02 · Second-skin fit — Your foot can't move inside it. That's the point. No twist, no bunch, no reset.
 03 · Reformer-ready — Tested on Megaformer & reformer carriages, hardwood barre studios, and yoga mats.
-04 · Rinse & reuse — Warm soapy water, air dry. No machine washing. No grip degradation.
+04 · Rinse & reuse — Hand wash with warm soapy water. That's it.
 05 · No latex · no silicone — Skin-safe proprietary grip material. Made in USA.
 06 · Barefoot-inspired — Natural toe articulation. Move freely — without the slip.
 

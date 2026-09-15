@@ -41,10 +41,10 @@
           });
         });
       } else if (name === 'Size') {
-        state.options[position] = getActiveValue(container, '.pdp-buy__size-btn', 'data-size');
-        container.querySelectorAll('.pdp-buy__size-btn').forEach(function (btn) {
+        state.options[position] = getActiveValue(container, '.pdp-buy__size-btn:not(.is-soon)', 'data-size');
+        container.querySelectorAll('.pdp-buy__size-btn:not(.is-soon)').forEach(function (btn) {
           btn.addEventListener('click', function () {
-            selectOption(position, btn.getAttribute('data-size'), container, '.pdp-buy__size-btn', 'data-size');
+            selectOption(position, btn.getAttribute('data-size'), container, '.pdp-buy__size-btn:not(.is-soon)', 'data-size');
           });
         });
       }
@@ -120,7 +120,7 @@
     if (els.ctaBtn) {
       if (variant.available) {
         els.ctaBtn.disabled = false;
-        els.ctaBtn.textContent = 'Add to Cart \u2014 ' + formatMoney(variant.price);
+        els.ctaBtn.textContent = 'Add to Cart';
         els.ctaBtn.classList.remove('btn--disabled');
       } else {
         els.ctaBtn.disabled = true;

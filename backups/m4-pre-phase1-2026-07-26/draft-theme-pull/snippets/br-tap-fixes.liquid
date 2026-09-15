@@ -1,0 +1,163 @@
+{%- comment -%}
+  BR tap fixes (iOS-focused)
+  Variant label JS removed — rely on CSS touch-action: manipulation on PDP (see br-add-to-cart-css).
+  Below: navigation / anchor helpers only.
+{%- endcomment -%}
+
+<script>
+(function() {
+  // iOS fast-tap for navigation controls (menu + slide-nav) only.
+  // This avoids the "tap 10 times" symptom when iOS delays/swallows click synthesis.
+  var NAV_SEL = [
+    '.js-toggle-slide-nav',
+    '.js-toggle-submenu',
+    '.site-nav__thumb-cart',
+    '.site-nav__link--icon',
+    '.slide-nav a.slide-nav__link',
+    '.slide-nav a.slide-nav__sublist-link',
+    '.slide-nav__return-btn'
+  ].join(',');
+
+  var suppress = { el: null, until: 0 };
+
+  function closestNavTarget(t) {
+    return t && t.closest && t.closest(NAV_SEL);
+  }
+
+  function isAnchor(el) {
+    return el && el.tagName === 'A' && el.getAttribute && el.getAttribute('href');
+  }
+
+  function onTouchEnd(evt) {
+    var el = closestNavTarget(evt.target);
+    if (!el) return;
+    if (evt.changedTouches && evt.changedTouches.length > 1) return;
+
+    // For anchors, navigate directly (only same-tab).
+    if (isAnchor(el) && el.target !== '_blank') {
+      var href = el.getAttribute('href');
+      if (!href || href.indexOf('#') === 0) return;
+      evt.preventDefault();
+      evt.stopPropagation();
+      // Navigate
+      window.location.href = el.href;
+      // suppress the subsequent native click
+      suppress.el = el;
+      suppress.until = Date.now() + 750;
+      return;
+    }
+
+    // Buttons / non-anchor controls: click immediately
+    evt.preventDefault();
+    evt.stopPropagation();
+    try { el.click(); } catch (e) {}
+    suppress.el = el;
+    suppress.until = Date.now() + 750;
+  }
+
+  function onClickCapture(evt) {
+    if (!suppress.el) return;
+    if (Date.now() > suppress.until) { suppress.el = null; return; }
+    var el = closestNavTarget(evt.target);
+    if (el && (el === suppress.el || (suppress.el.contains && suppress.el.contains(el)))) {
+      evt.preventDefault();
+      evt.stopImmediatePropagation();
+      suppress.el = null;
+    }
+  }
+
+  document.addEventListener('touchend', onTouchEnd, { capture: true, passive: false });
+  document.addEventListener('click', onClickCapture, true);
+})();
+</script>
+
+<script>
+(function() {
+  // iOS: make in-page anchor links reliable (first tap scrolls).
+  // Applies only to href="#..." anchors.
+  function closestAnchor(t) {
+    return t && t.closest && t.closest('a[href^="#"]');
+  }
+
+  var oneOffSuppress = { el: null, until: 0 };
+  function closestOneOff(t) {
+    return t && t.closest && t.closest('a[data-br-one-off-link]');
+  }
+
+  function onTouchEnd(evt) {
+    var a = closestAnchor(evt.target);
+    if (!a) return;
+
+    // Special case: "See exclusive colors" link uses a hash but scrolls via JS (no real target id).
+    if (a.hasAttribute('data-br-one-off-link')) {
+      evt.preventDefault();
+      evt.stopPropagation();
+      try { a.setAttribute('data-br-one-off-touch-handled-at', String(Date.now())); } catch (e) {}
+      oneOffSuppress.el = a;
+      oneOffSuppress.until = Date.now() + 750;
+      setTimeout(function() {
+        var tab4 = document.querySelector('.br-filter-tab[data-product="4"]');
+        if (!tab4) return;
+        var section = tab4.closest('.br-variants-section, [data-section-id]') || tab4.closest('section');
+        if (section) {
+          try { section.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) { section.scrollIntoView(); }
+        }
+        setTimeout(function() { tab4.click(); }, section ? 400 : 0);
+      }, 0);
+      return;
+    }
+
+    var href = a.getAttribute('href');
+    if (!href || href === '#') return;
+
+    var id = href.slice(1);
+    var target = document.getElementById(id);
+    if (!target && (id === 'shop-all-variants' || id.indexOf('br-variants-') === 0)) {
+      target = document.querySelector('.br-variants-section') || document.querySelector('[id^="br-variants-"]');
+    }
+    if (!target) return;
+
+    evt.preventDefault();
+    evt.stopPropagation();
+
+    try { history.replaceState(null, '', href); } catch (e) {}
+    try { target.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) { target.scrollIntoView(); }
+
+    // After anchoring into the All Variants section, ensure tab 1 is active (Closed Sole default).
+    // This avoids the case where the scroll happens but no tab shows as selected on iOS.
+    setTimeout(function() {
+      var variantsSection = target && target.closest ? target.closest('.br-variants-section') : null;
+      if (!variantsSection) return;
+      var sid = variantsSection.getAttribute('data-section-id') || '';
+      if (sid && typeof window.brFilterProduct === 'function') {
+        try { window.brFilterProduct(sid, 1); } catch (e) {}
+        return;
+      }
+      var tabs = variantsSection.querySelectorAll ? variantsSection.querySelectorAll('.br-filter-tab') : [];
+      if (tabs && tabs.length) {
+        for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('is-active');
+        tabs[0].classList.add('is-active');
+      }
+    }, 200);
+
+  }
+
+  document.addEventListener('touchend', onTouchEnd, { capture: true, passive: false });
+
+  // Suppress follow-up click after touchend (prevents double-fire with local click handlers)
+  function onClickCapture(evt) {
+    if (!oneOffSuppress.el) return;
+    if (Date.now() > oneOffSuppress.until) { oneOffSuppress.el = null; return; }
+    var a = closestOneOff(evt.target);
+    if (!a) return;
+    if (a === oneOffSuppress.el || (oneOffSuppress.el.contains && oneOffSuppress.el.contains(a))) {
+      evt.preventDefault();
+      evt.stopPropagation();
+      if (evt.stopImmediatePropagation) evt.stopImmediatePropagation();
+      oneOffSuppress.el = null;
+    }
+  }
+  document.addEventListener('click', onClickCapture, true);
+})();
+</script>
+

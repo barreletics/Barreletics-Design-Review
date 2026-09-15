@@ -1,0 +1,171 @@
+{% comment %}
+  GEO Content Section (D-022)
+  Editable accordion with FAQPage structured data.
+  Each page type gets contextually relevant geo content via section settings.
+{% endcomment %}
+
+{% assign geo_heading = section.settings.heading | default: 'Trusted in studios everywhere' %}
+
+<div class="geo-section">
+  <div class="geo-section__container">
+    <p class="geo-section__eyebrow">{{ geo_heading }}</p>
+
+    {% for block in section.blocks %}
+      {% if block.type == 'geo_item' %}
+        <details class="geo-section__item" {{ block.shopify_attributes }}>
+          <summary class="geo-section__trigger">
+            {{ block.settings.question }}
+          </summary>
+          <div class="geo-section__content">
+            {{ block.settings.answer }}
+          </div>
+        </details>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+{% assign geo_blocks_count = 0 %}
+{% for block in section.blocks %}
+  {% if block.type == 'geo_item' %}
+    {% assign geo_blocks_count = geo_blocks_count | plus: 1 %}
+  {% endif %}
+{% endfor %}
+
+{% if geo_blocks_count > 0 %}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {% for block in section.blocks %}
+          {% if block.type == 'geo_item' %}
+            {
+              "@type": "Question",
+              "name": {{ block.settings.question | json }},
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": {{ block.settings.answer | strip_html | json }}
+              }
+            }{% unless forloop.last %},{% endunless %}
+          {% endif %}
+        {% endfor %}
+      ]
+    }
+  </script>
+{% endif %}
+
+<style>
+  .geo-section {
+    padding: 0 var(--section-padding-x) var(--section-padding-y);
+  }
+
+  .geo-section__container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .geo-section__eyebrow {
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-widest);
+    color: var(--text-muted);
+    font-weight: var(--weight-bold);
+    margin: 0 0 var(--space-4);
+  }
+
+  .geo-section__item {
+    border-top: 1px solid #eee8de;
+  }
+
+  .geo-section__item:last-child {
+    border-bottom: 1px solid #eee8de;
+  }
+
+  .geo-section__trigger {
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: var(--weight-medium);
+    color: #9a9182;
+    padding: 12px 0;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .geo-section__trigger::-webkit-details-marker {
+    display: none;
+  }
+
+  .geo-section__trigger::after {
+    content: "+";
+    font-size: 14px;
+    color: var(--border-default);
+    flex-shrink: 0;
+    margin-left: var(--space-4);
+  }
+
+  .geo-section__item[open] .geo-section__trigger::after {
+    content: "\2212";
+  }
+
+  .geo-section__content {
+    padding: 0 0 12px;
+    font-size: 12px;
+    color: #9a9182;
+    line-height: var(--leading-loose);
+  }
+
+  @media (max-width: 768px) {
+    .geo-section {
+      padding: 0 var(--section-padding-x-mobile) var(--section-padding-y-mobile);
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "GEO Content",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section heading",
+      "default": "Trusted in studios everywhere"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "geo_item",
+      "name": "GEO Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question / Region heading"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer / Content"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "GEO Content",
+      "blocks": [
+        {
+          "type": "geo_item",
+          "settings": {
+            "question": "Where are Barreletics worn?",
+            "answer": "<p>From reformer studios in Miami to barre classes in NYC, Barreletics are trusted by instructors and athletes across 30+ states and internationally.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

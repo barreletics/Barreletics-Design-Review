@@ -1,0 +1,141 @@
+{% comment %}
+  SAVE2 promo bar. Mobile: on (locked two-bar). Desktop: off by default (one cream announce line).
+  TE: Show on desktop / Show on mobile — independent.
+{% endcomment %}
+
+{% if section.settings.enabled %}
+  {%- assign _fs = section.settings.font_size | default: 15 -%}
+  {%- assign _pad = section.settings.pad_y | default: 10 -%}
+  {%- assign _wt = section.settings.font_weight | default: '500' -%}
+  {%- assign _desk = section.settings.show_on_desktop -%}
+  {%- if _desk == nil -%}{%- assign _desk = true -%}{%- endif -%}
+  {%- assign _mob = section.settings.show_on_mobile -%}
+  {%- if _mob == nil -%}{%- assign _mob = true -%}{%- endif -%}
+
+  {%- unless _desk -%}
+    <style>#shopify-section-{{ section.id }} { }
+    @media (min-width: 901px) { #shopify-section-{{ section.id }} { display: none !important; } }</style>
+  {%- endunless -%}
+  {%- unless _mob -%}
+    <style>@media (max-width: 900px) { #shopify-section-{{ section.id }} { display: none !important; } }</style>
+  {%- endunless -%}
+
+  <div
+    class="sale-banner"
+    role="region"
+    aria-label="Promotion"
+    style="
+      --sale-banner-bg: {{ section.settings.bg_color | default: '#faf8f6' }};
+      --sale-banner-color: {{ section.settings.text_color | default: '#1c1916' }};
+      --sale-banner-font-size: {{ _fs }}px;
+      --sale-banner-pad-y: {{ _pad }}px;
+      --sale-banner-weight: {{ _wt }};
+    "
+    {{ section.shopify_attributes }}
+  >
+    <div class="sale-banner__inner">
+      {% if section.settings.link_url != blank %}
+        <a href="{{ section.settings.link_url }}" class="sale-banner__text">
+          {{ section.settings.text }}
+        </a>
+      {% else %}
+        <p class="sale-banner__text">{{ section.settings.text }}</p>
+      {% endif %}
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Sale banner",
+  "class": "sale-banner-section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Enable sale banner",
+      "default": true,
+      "info": "Master switch. Use desktop/mobile toggles below for where it shows."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_on_desktop",
+      "label": "Show on desktop",
+      "default": true,
+      "info": "On = cream two-bar (SAVE2 + trust). Off = one announce line only."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_on_mobile",
+      "label": "Show on mobile",
+      "default": true,
+      "info": "Keep on for locked mobile two-bar (SAVE2 + trust)."
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text",
+      "default": "Buy 2 save 10% | Use SAVE2"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Optional link"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#faf8f6"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#1c1916"
+    },
+    {
+      "type": "select",
+      "id": "font_weight",
+      "label": "Text weight",
+      "options": [
+        { "value": "400", "label": "400 Regular" },
+        { "value": "500", "label": "500 Medium" },
+        { "value": "600", "label": "600 Semibold" },
+        { "value": "700", "label": "700 Bold" }
+      ],
+      "default": "500",
+      "info": "Live SAVE2 is not bold."
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Text size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "pad_y",
+      "label": "Vertical padding",
+      "min": 4,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sale banner"
+    }
+  ]
+}
+{% endschema %}

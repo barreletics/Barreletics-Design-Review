@@ -1,0 +1,435 @@
+{
+  "id": "sitewide",
+  "updated": "2026-09-15",
+  "description": "Catalog of locked design-system parameters. Scanner walks every template; page locks add spine/feature specifics.",
+  "tokens": {
+    "cream": "#faf8f6",
+    "section_gap_desk": 32,
+    "section_gap_mobile": 24,
+    "band_pad": 64,
+    "band_pad_mobile_features": 48,
+    "campaign_pad": 96,
+    "mosaic_pad": 16,
+    "cream_dark_retired": "#f5f2ec"
+  },
+  "forbidden_pad_values": [
+    40
+  ],
+  "fifty_fifty_lifestyle": {
+    "text_pad_top_mobile": 96,
+    "text_pad_bottom_mobile": 96,
+    "vertical_padding": 80,
+    "side_padding": 64,
+    "min_height": 560,
+    "mobile_media_height": 550,
+    "image_fit_mobile": "cover",
+    "bg_color": "#faf8f6",
+    "applies_to_templates": [
+      "product*.json"
+    ],
+    "note": "Sitewide PDP 50/50 mobile lock 2026-09-10 (560/550). Home uses page_layout_os (860/520 COVER · 32/32 center) — separate family."
+  },
+  "fifty_fifty_packshot_exception": {
+    "image_fit_mobile": "fit",
+    "mobile_media_height_approx": 400,
+    "note": "FIT only after Andrew media QC gate — never default"
+  },
+  "sock_math_editorial": {
+    "section_type": "pdp-sock-math",
+    "title_size_px": 56,
+    "title_weight": 400
+  },
+  "features_obsession_title_role": "supporting",
+  "content_page_type": {
+    "h1_min": 32,
+    "h1_max": 44,
+    "h1_weight": 400,
+    "eyebrow_px": 11,
+    "body_px": 16,
+    "lede_px": 17,
+    "statement_min": 28,
+    "statement_max": 36,
+    "templates_glob": [
+      "page.help.json",
+      "page.faq.json",
+      "page.compare*.json",
+      "page.contact*.json",
+      "page.returns.json",
+      "page.shipping*.json",
+      "page.warranty.json",
+      "page.size*.json"
+    ]
+  },
+  "guarantee_band": {
+    "returns_detail_contains": "clean, unworn",
+    "warranty_detail_contains": "Defects only",
+    "forbidden_phrases": [
+      "try-on for fit",
+      "Not after"
+    ],
+    "cta_contains": "See details",
+    "cta_url_contains": "/pages/help",
+    "column_title_size": "clamp(18px, 2vw, 22px)",
+    "column_title_weight": 500,
+    "column_title_token": "--type-guarantee-column-size",
+    "title_role_pdp": "display",
+    "cta_outline_text_color": "#1c1916",
+    "cta_outline_border_color": "#1c1916",
+    "liquid_must_contain": [
+      "var(--type-guarantee-column-size",
+      "if cta_style == 'outline'"
+    ],
+    "rule": "Column titles = Type H3 scale via --type-guarantee-column-size (18–22 / weight 500). Display head. Outline CTA text/border #1c1916 — never white-on-white. One shared sections/guarantee-band.liquid for Home + all PDPs. Do not invent 20–26 or 14–15."
+  },
+  "media_qc": {
+    "default_fit": "cover",
+    "default_scale": 100,
+    "footprint_desk": 560,
+    "footprint_mobile_lifestyle": 550,
+    "rule": "Before Liquid/CSS/FIT change: diagnose asset geometry. FIT never default."
+  },
+  "draft_theme_id": "187144929571",
+  "live_theme_id_never_touch": "185687998755",
+  "never_push_unless_named": [
+    "index.json",
+    "product.json",
+    "collection.json",
+    "settings_data.json"
+  ],
+  "scan_policy": {
+    "on_any_page_refine": "Run full lock-scan.py; report FAILs for that page family first",
+    "never_weaken": true,
+    "one_axis_after_clean": true
+  },
+  "variant_grid_page_open": {
+    "pad_top_desk": 72,
+    "pad_top_mobile": 56,
+    "rule": "When variant-grid is first visible section on a page.* template, settings.page_open_pad must be true. Collections get 72/56 in Liquid automatically.",
+    "applies_to_templates": [
+      "page*.json"
+    ]
+  },
+  "grid_page_open": {
+    "ruler": "Shop All — templates/collection.json variant-grid",
+    "editor": "https://admin.shopify.com/store/barreletics/themes/187144929571/editor?previewPath=%2Fcollections%2Fbarre-pilates-yoga-shoe-sock-footwear",
+    "pad_top_desk": 72,
+    "pad_top_mobile": 56,
+    "css_tokens": [
+      "--pad-grid-page-open",
+      "--pad-grid-page-open-mobile"
+    ],
+    "liquid_gate": "section.index == 1 OR template.name == collection OR page_open_pad",
+    "rule": "LOCKED. Copy Shop All. Never invent."
+  },
+  "cream_bands": {
+    "token": "#faf8f6",
+    "forbidden": [
+      "#f5f2ec",
+      "#f7f5f2",
+      "#f8f6f4",
+      "#fff8f0"
+    ],
+    "rule": "ONE cream only: #faf8f6. --color-warm-cream aliases soft. Darker #f5f2ec retired forever. Help Quick Answers, disciplines, sock-era, value-strip, statement bands — all soft. Never invent a third cream.",
+    "disciplines_default": "#faf8f6",
+    "sock_era_ruler": "#faf8f6",
+    "css_token": "--color-warm-cream-soft",
+    "css_alias": "--color-warm-cream"
+  },
+  "forbidden_cream_hex": [
+    "#f5f2ec",
+    "#f7f5f2",
+    "#f8f6f4",
+    "#fff8f0"
+  ],
+  "chair_pose_open": {
+    "templates": [
+      "product.open-sole.json",
+      "product.in-studio-template.json"
+    ],
+    "section": "fifty-fifty-lifestyle",
+    "title_contains": "Never slip in chair pose",
+    "image_contains": "P5A4949",
+    "media_fit": "cover",
+    "image_fit_mobile": "cover",
+    "image_scale": 100,
+    "min_height": 560,
+    "mobile_media_height": 360,
+    "text_pad_top_mobile": 96,
+    "text_pad_bottom_mobile": 96,
+    "forbidden_images": [
+      "P5A4943"
+    ],
+    "forbidden_fit": true,
+    "rule": "Open Sole Chair Pose yellow = P5A4949 COVER 100 mmh 360. Never FIT / P5A4943."
+  },
+  "trusted_by_footer": {
+    "file": "sections/footer-group.json",
+    "section": "footer",
+    "show_studio_trust": true,
+    "trust_theme": "dark",
+    "rule": "Sitewide Trusted by strip = dark (black/white). Never light without Andrew letter."
+  },
+  "faq_background": {
+    "default": "cream",
+    "cream_hex": "#faf8f6",
+    "options": [
+      "cream",
+      "white"
+    ],
+    "white_exceptions": [
+      "templates/collection.apparel.json#collection-faq",
+      "templates/page.best-grippy-socks.json#collection-faq"
+    ],
+    "rule": "FAQ Background defaults cream soft #faf8f6. White only as listed exceptions or Andrew letter."
+  },
+  "draft_qa_confirmed": {
+    "date": "2026-09-14",
+    "andrew": "black closeout confirmed; everything checked out; guardrails on",
+    "letter": "planning/locks/DRAFT-QA-CONFIRMED-2026-09-14.md",
+    "trusted_by": "dark",
+    "cream": "#faf8f6"
+  },
+  "page_layout_os": {
+    "id": "page_layout_os",
+    "family": "home_marketing",
+    "locked": "2026-09-15",
+    "letter": "planning/locks/PAGE-LAYOUT-OS-LOCKED.md",
+    "measure_source": "planning/home-5050-enlarge-diag-2026-09-15/measure.json",
+    "draft_theme_id": "187144929571",
+    "separate_from": "fifty_fifty_lifestyle",
+    "rule_first": "Name the section family first, then apply that family's ruler.",
+    "note": "Home/marketing layout OS. Name family first. Marketing split: COVER 860/520 · 32/32 center · body 16. fullbleed IMAGE-ONLY (show_text false) — Andrew 2026-09-15 rejected Commit+Shop on image. Interni press-feature 490/490 COVER Chat editorial — never Commit strings. Never restore overlay copy without explicit go. Never thrash unrelated sections. Do NOT apply to product*.json. PDP stays 560/550.",
+    "applies_to_templates": [
+      "index.json"
+    ],
+    "body_px": 16,
+    "families": {
+      "fifty-fifty": {
+        "section_types": [
+          "fifty-fifty"
+        ],
+        "role": "split_media_text_story",
+        "uses_marketing_split_frame": true
+      },
+      "press-feature": {
+        "section_types": [
+          "press-feature"
+        ],
+        "role": "press_editorial_stack",
+        "home_instance": "press-feature-interni",
+        "uses_marketing_split_frame": "when_andrew_enlarges_to_match",
+        "stay_type": "press-feature",
+        "note": "Interni: 490/490 mobile frame · COVER · ChatGPT clean editorial. Do not convert type to fifty-fifty. Never thrash Interni when editing fullbleed. Never put Commit/Shop overlay strings on Interni.",
+        "no_overflow": true,
+        "image_clamp": "width/height/max 100% + object-fit from image_fit_mobile + transform none",
+        "frame_matches_ff_mobile": "640/640 (enlarged; FIT exception)",
+        "fit_exception": {
+          "approved_by": "Andrew",
+          "date": "2026-09-15",
+          "media_qc_option": "C",
+          "image_fit_mobile": "contain",
+          "reason": "COVER+640 side-cropped INTERNI/ZINE on wide flat-lay",
+          "superseded": "2026-09-15 COVER 490 ChatGPT clean editorial",
+          "status": "superseded_by_cover_490"
+        }
+      },
+      "collab-hero": {
+        "section_types": [
+          "collab-hero"
+        ],
+        "role": "campaign_stage",
+        "height_desktop_vh": 105
+      },
+      "fullbleed": {
+        "section_types": [
+          "fullbleed-statement"
+        ],
+        "role": "image_only_beat",
+        "desktop_vh_pct": 100,
+        "mobile_height_setting_approx": 52,
+        "overlay": "LOCKED_OFF",
+        "show_text": false,
+        "title": "",
+        "body": "",
+        "cta_text": "",
+        "note": "Andrew 2026-09-15 REJECTED Commit+Shop CTA on the image. fullbleed-statement is IMAGE-ONLY. Never restore overlay title/cta without explicit Andrew go. P0 punch-list restore (71200de) was wrong direction.",
+        "forbidden_overlay_phrases": [
+          "You commit to the class",
+          "Commit to the gear"
+        ],
+        "mobile_full_bleed": true
+      },
+      "statement": {
+        "section_types": [
+          "statement-band"
+        ],
+        "role": "text_band"
+      },
+      "reviews": {
+        "section_types": [
+          "pdp-reviews"
+        ],
+        "role": "quote_led",
+        "home_text_cards_initial": 2,
+        "home_text_cards_expand": true,
+        "home_force_in_liquid": true,
+        "note": "Home: 2 curated text cards + See more. Liquid forces on index. Extras need display:none !important (flex beats UA hidden)."
+      },
+      "problem-section": {
+        "section_types": [
+          "problem-section"
+        ],
+        "role": "problem_list_band"
+      }
+    },
+    "marketing_split_visual_frame": {
+      "applies_to": [
+        "fifty-fifty",
+        "press-feature_when_matching"
+      ],
+      "media_fit": "cover",
+      "image_fit_mobile": "cover",
+      "min_height": 860,
+      "mobile_media_height": 520,
+      "mobile_text_height": 520,
+      "mobile_justify": "center",
+      "image_scale": 100,
+      "body_size": "16",
+      "vertical_padding_desk": 88,
+      "side_padding_desk": 64,
+      "text_pad_top_mobile": 32,
+      "text_pad_bottom_mobile": 32,
+      "side_pad_mobile_measured": 20,
+      "desk_frozen_on_mobile_passes": true,
+      "rejected_asymmetric_pads": [
+        32,
+        96
+      ],
+      "fit_forbidden_on_home_fifty_fifty": true
+    },
+    "cover_vs_fit": {
+      "cover": "Frame height is the lock; image fills; may crop — REQUIRED for all Home fifty-fifty",
+      "fit": "FORBIDDEN on Home fifty-fifty — FIT ignores min_height / mobile_media_height and breaks height consistency (One Pair was FIT; converted to COVER)"
+    },
+    "hero": {
+      "section": "split_hero",
+      "split": "62/38",
+      "desktop_frame": "92vh",
+      "media_fit": "cover",
+      "guidance": "Keep 92vh frame; crop via X/Y/zoom only — never photo-aspect / 110"
+    },
+    "home_fifty_fifty_cover_grip": {
+      "section_key": "fifty-fifty-grip",
+      "media_fit": "cover",
+      "min_height": 860,
+      "mobile_media_height": 520,
+      "image_scale": 100,
+      "body_size": "16",
+      "mobile_text_height": 520,
+      "text_pad_top_mobile": 32,
+      "text_pad_bottom_mobile": 32
+    },
+    "one_pair_ruler_pads": {
+      "vertical_padding_desk": 88,
+      "side_padding_desk": 64,
+      "text_pad_top_mobile": 32,
+      "text_pad_bottom_mobile": 32,
+      "side_pad_mobile_measured": 20,
+      "rejected_asymmetric": "32/96"
+    },
+    "fullbleed_guidance": {
+      "mode": "image_only",
+      "show_text": false,
+      "show_overlay": false,
+      "title_must_be_blank": true,
+      "cta_text_must_be_blank": true,
+      "desktop_vh_pct": 100,
+      "mobile_height_setting_approx": 52,
+      "locked": "2026-09-15",
+      "andrew_rejection": "Commit + Shop All/Now must NOT sit on the fullbleed image",
+      "never_restore_without_explicit_go": true,
+      "mobile_full_bleed": true,
+      "height_mobile": 52,
+      "note": " image-only requires mobile_full_bleed true so phone-photo path does not collapse height to 0."
+    },
+    "collab_guidance": {
+      "height_desktop_vh": 105
+    },
+    "prove_gate_mandatory": true,
+    "prove_gate": [
+      "pull-verify named files after push",
+      "measure draft preview — every Home fifty-fifty mediaH ≈ 860 desk / 520 phone (±2px)",
+      "pads desk 88/88/64; phone 32/32 center (NOT 32/96)",
+      "body 16; phone text boxes equal via mobile_text_height 520 (±2px); centered",
+      "FIT must not appear on any Home fifty-fifty",
+      "visual prove any non-FF family touched (press/collab/fullbleed/statement/reviews/problem)",
+      "lock-scan page_layout_os OK; PDP 560/550 still OK",
+      "fullbleed show_text false + blank title/cta (Commit overlay LOCKED off)",
+      "Interni remains Chat editorial only — no Commit strings in settings or asset"
+    ],
+    "scan_key": "page_layout_os",
+    "home_fifty_fifty": {
+      "rule": "ALL Home type=fifty-fifty MUST be COVER 860 desk / 520 phone · center · pads 32/32 · body 16 · scale 100",
+      "media_fit": "cover",
+      "min_height": 860,
+      "mobile_media_height": 520,
+      "image_scale": 100,
+      "body_size": "16",
+      "fit_forbidden": true,
+      "mobile_text_height": 520,
+      "mobile_justify": "center",
+      "text_pad_top_mobile": 32,
+      "text_pad_bottom_mobile": 32,
+      "rejected_pads": "32/96 asymmetric"
+    },
+    "home_fifty_fifty_cover_one_pair": {
+      "section_key": "fifty-fifty-one-pair",
+      "media_fit": "cover",
+      "min_height": 860,
+      "mobile_media_height": 520,
+      "image_scale": 100,
+      "body_size": "16",
+      "note": "Was FIT (One Pair ruler for pads only). FIT forbidden on Home 50/50 — now COVER 860/520. Pads 32/32 center (32/96 rejected).",
+      "mobile_text_height": 520,
+      "text_pad_top_mobile": 32,
+      "text_pad_bottom_mobile": 32
+    },
+    "press_feature_interni": {
+      "section_key": "press-feature-interni",
+      "section_type": "press-feature",
+      "mobile_media_height": 490,
+      "mobile_text_height": 490,
+      "text_pad_top_mobile": 32,
+      "text_pad_bottom_mobile": 32,
+      "image_fit_mobile": "cover",
+      "media_bg_color": "#F4EEE5",
+      "no_overflow": true,
+      "liquid_css_must_contain": [
+        "overflow: hidden",
+        "object-fit",
+        "max-width: 100%",
+        "max-height: 100%",
+        "transform: none"
+      ],
+      "note": "ChatGPT clean editorial COVER @490 aspect match (2026-09-15). Never put Commit overlay copy on Interni. Leave Chat art alone unless Commit is baked into PNG. Grip/One Pair stay COVER 520.",
+      "editorial_only": true,
+      "forbidden_in_settings_or_asset": [
+        "You commit to the class",
+        "Commit to the gear"
+      ],
+      "image_contains": "barreletics-interni-chatgpt-editorial-clean"
+    },
+    "mobile_text_min_height": 520,
+    "home_reviews": {
+      "section_key": "reviews",
+      "section_type": "pdp-reviews",
+      "text_cards_initial": 2,
+      "text_cards_expand": true,
+      "liquid_force_on_index": true,
+      "css_must_contain": [
+        ".pdp-reviews__text-card[hidden]",
+        "display: none !important"
+      ]
+    }
+  }
+}

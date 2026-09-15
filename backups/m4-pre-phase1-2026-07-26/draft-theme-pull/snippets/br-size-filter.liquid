@@ -1,0 +1,34 @@
+{%- liquid
+  # br-size-filter.liquid
+  # Dynamically collects unique sizes from collection products.
+  # Only shows sizes present in this collection — no hardcoded list.
+  # Rendered via collection-grid-filter-controls.liquid
+  # JS counterpart: assets/br-size-filter.js
+  assign all_sizes = ''
+  for product in collection.products
+    for variant in product.variants
+      for option in product.options
+        assign option_name = option | downcase
+        if option_name == 'size'
+          assign option_index = forloop.index0
+          assign size_val = variant.options[option_index]
+          unless all_sizes contains size_val
+            assign all_sizes = all_sizes | append: size_val | append: '|'
+          endunless
+        endif
+      endfor
+    endfor
+  endfor
+  assign sizes_array = all_sizes | split: '|'
+-%}
+{%- unless all_sizes == blank -%}
+<div class="br-size-filter" data-br-size-filter>
+  <span class="br-size-filter__label">Size:</span>
+  <button class="br-size-filter__btn br-size-filter__btn--all is-active" data-size="all">All</button>
+  {%- for size in sizes_array -%}
+    {%- unless size == blank -%}
+      <button class="br-size-filter__btn" data-size="{{ size | escape }}">{{ size }}</button>
+    {%- endunless -%}
+  {%- endfor -%}
+</div>
+{%- endunless -%}

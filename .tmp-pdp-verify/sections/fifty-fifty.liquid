@@ -1,0 +1,972 @@
+{% comment %}
+  Reusable 50/50 Split Section (Video/Image + Copy)
+  Headings: .h2-display (brand) or .h2-standard (wayfinding) — Type OS
+  Layout / type overrides: Theme Editor → CSS variables (Default = Type OS)
+  Font family is brand Type OS — size/weight only; no font_picker.
+{% endcomment %}
+{% liquid
+  assign heading_register = section.settings.heading_register | default: 'display'
+  if heading_register == 'display'
+    assign heading_class = 'h2-display'
+  else
+    assign heading_class = 'h2-standard'
+  endif
+
+  assign heading_level = section.settings.heading_level | default: 'h2'
+  if heading_level != 'h1' and heading_level != 'h2' and heading_level != 'h3' and heading_level != 'h4' and heading_level != 'h5' and heading_level != 'h6'
+    assign heading_level = 'h2'
+  endif
+
+  assign media_fit = section.settings.media_fit | default: 'cover'
+
+  assign cta_target = section.settings.cta_link_target | default: 'custom'
+  if cta_target != blank and cta_target != 'custom'
+    assign cta_href = cta_target
+  else
+    assign cta_href = section.settings.cta_url
+  endif
+
+  assign media_pct = section.settings.media_column_pct | default: 50
+  assign text_pct = 100 | minus: media_pct
+
+  assign min_height = section.settings.min_height | default: 640
+  assign mobile_media_height = section.settings.mobile_media_height | default: 320
+  assign image_position = section.settings.image_position | default: 'center'
+  assign image_scale = section.settings.image_scale | default: 100
+  assign contain_width = section.settings.contain_width | default: 72
+  assign media_radius = section.settings.media_radius | default: 0
+  assign text_radius = section.settings.section_radius | default: 0
+  assign media_radius_outer = section.settings.media_radius_outer_only
+  assign column_gap = section.settings.column_gap | default: 0
+  assign side_padding = section.settings.side_padding | default: 64
+  assign vertical_padding = section.settings.vertical_padding | default: 88
+
+  assign image_scale_ratio = image_scale | times: 1.0 | divided_by: 100.0
+
+  assign title_size = section.settings.title_size | default: 'default'
+  assign body_size = section.settings.body_size | default: 'default'
+  assign title_weight = section.settings.title_weight | default: 'default'
+  assign body_weight = section.settings.body_weight | default: 'default'
+  assign cta_size = section.settings.cta_size | default: 'default'
+  assign cta_style = section.settings.cta_style | default: 'solid'
+  assign cta_bg = section.settings.cta_bg_color | default: '#c45c3f'
+  assign cta_border = section.settings.cta_border_color | default: cta_bg
+
+  assign region_label = section.settings.aria_label | strip
+  if region_label == blank
+    assign region_label = section.settings.title | strip_html | truncate: 60
+  endif
+
+  assign content_style = section.settings.content_style | default: 'standard'
+%}
+
+<section
+  {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | handleize }}"{% endif %}
+  class="split-section{% if section.settings.reverse %} split-section--reverse{% endif %}{% if media_fit == 'contain' %} split-section--contain{% endif %}{% if media_radius_outer %} split-section--media-outer-radius{% endif %}"
+  style="
+    --ff-min-height: {{ min_height }}px;
+    --ff-mobile-media-height: {{ mobile_media_height }}px;
+    --ff-media-fr: {{ media_pct }}fr;
+    --ff-text-fr: {{ text_pct }}fr;
+    --ff-object-position: {{ image_position }};
+    --ff-image-scale: {{ image_scale_ratio }};
+    --ff-contain-width: {{ contain_width }}%;
+    --ff-media-radius: {{ media_radius }}px;
+    --ff-text-radius: {{ text_radius }}px;
+    --ff-column-gap: {{ column_gap }}px;
+    --ff-side-padding: {{ side_padding }}px;
+    --ff-vertical-padding: {{ vertical_padding }}px;
+    --ff-cta-bg: {{ cta_bg }};
+    --ff-cta-border: {{ cta_border }};
+    {% if title_size != 'default' %}--ff-title-size: {{ title_size }}px;{% endif %}
+    {% if body_size != 'default' %}--ff-body-size: {{ body_size }}px;{% endif %}
+    {% if title_weight != 'default' %}--ff-title-weight: {{ title_weight }};{% endif %}
+    {% if body_weight != 'default' %}--ff-body-weight: {{ body_weight }};{% endif %}
+    {% if cta_size != 'default' %}--ff-cta-size: {{ cta_size }}px;{% endif %}
+    background: {{ section.settings.bg_color | default: '#fff' }};
+  "
+  {% if region_label != blank %}aria-label="{{ region_label | escape }}"{% endif %}
+>
+  <div class="split-media"{% if media_fit == 'contain' %} style="background: {{ section.settings.media_bg | default: '#f9f9f9' }};"{% endif %}>
+    {% if section.settings.video != blank %}
+      {{
+        section.settings.video
+        | video_tag:
+          image_size: '1200x',
+          autoplay: true,
+          loop: true,
+          muted: true,
+          controls: false,
+          playsinline: true,
+          class: 'split-media__video'
+      }}
+    {% elsif section.settings.video_url != blank %}
+      <video
+        class="split-media__video"
+        autoplay
+        muted
+        loop
+        playsinline
+        webkit-playsinline
+        preload="metadata"
+        {% if section.settings.image != blank %}
+          poster="{{ section.settings.image | image_url: width: 1200 }}"
+        {% elsif section.settings.poster_url != blank %}
+          poster="{{ section.settings.poster_url | escape }}"
+        {% endif %}
+      >
+        <source src="{{ section.settings.video_url | escape }}" type="video/mp4">
+      </video>
+    {% elsif section.settings.image != blank %}
+      <img
+        class="split-media__img"
+        src="{{ section.settings.image | image_url: width: 1200 }}"
+        srcset="{{ section.settings.image | image_url: width: 600 }} 600w,
+                {{ section.settings.image | image_url: width: 900 }} 900w,
+                {{ section.settings.image | image_url: width: 1200 }} 1200w"
+        sizes="(max-width: 768px) 100vw, 50vw"
+        alt="{{ section.settings.image_alt | escape }}"
+        loading="lazy"
+      >
+    {% elsif section.settings.image_url != blank %}
+      <img
+        class="split-media__img"
+        src="{{ section.settings.image_url | escape }}"
+        alt="{{ section.settings.image_alt | escape }}"
+        loading="lazy"
+      >
+    {% else %}
+      <div class="split-media__placeholder">
+        {{ section.settings.image_alt | default: 'Media placeholder' }}
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="split-text align-editorial{% if content_style == 'quote' %} split-text--quote{% endif %}{% if content_style == 'stats' %} split-text--stats{% endif %}{% if content_style == 'statement' %} split-text--statement{% endif %}" style="background: {{ section.settings.bg_color | default: '#fff' }};">
+    {% if content_style == 'quote' %}
+      {% if section.settings.show_quote_stars != false %}
+        <div class="split-quote__stars" aria-hidden="true">★★★★★</div>
+      {% endif %}
+      {% if section.settings.title != blank %}
+        <p class="split-quote__text">“{{ section.settings.title | strip | remove: '"' | remove: '“' | remove: '”' }}”</p>
+      {% endif %}
+      {% if section.settings.quote_author != blank %}
+        <p class="split-quote__author">{{ section.settings.quote_author }}</p>
+      {% elsif section.settings.body != blank %}
+        <p class="split-quote__author">{{ section.settings.body }}</p>
+      {% endif %}
+      {% if section.settings.quote_meta != blank %}
+        <p class="split-quote__meta">{{ section.settings.quote_meta }}</p>
+      {% endif %}
+      {% if section.settings.cta_text != blank %}
+        <a href="{{ cta_href | default: '#reviews' }}" class="split-quote__cta">{{ section.settings.cta_text }}</a>
+      {% endif %}
+    {% elsif content_style == 'stats' %}
+      {% if section.settings.eyebrow != blank %}
+        <p class="split-text__eyebrow type-label">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+      <div class="split-stats">
+        {% assign has_stat_blocks = false %}
+        {% for block in section.blocks %}
+          {% if block.type == 'stat' %}
+            {% assign has_stat_blocks = true %}
+            <div class="split-stat" {{ block.shopify_attributes }}>
+              <p class="split-stat__value{% if block.settings.emphasis %} split-stat__value--line{% endif %}">{{ block.settings.value }}</p>
+              {% if block.settings.label != blank %}
+                <p class="split-stat__label">{{ block.settings.label }}</p>
+              {% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+        {% unless has_stat_blocks %}
+          {% if section.settings.stat_1_value != blank %}
+            <div class="split-stat">
+              <p class="split-stat__value">{{ section.settings.stat_1_value }}</p>
+              {% if section.settings.stat_1_label != blank %}<p class="split-stat__label">{{ section.settings.stat_1_label }}</p>{% endif %}
+            </div>
+          {% endif %}
+          {% if section.settings.stat_2_value != blank %}
+            <div class="split-stat">
+              <p class="split-stat__value">{{ section.settings.stat_2_value }}</p>
+              {% if section.settings.stat_2_label != blank %}<p class="split-stat__label">{{ section.settings.stat_2_label }}</p>{% endif %}
+            </div>
+          {% endif %}
+          {% if section.settings.stat_3_value != blank %}
+            <div class="split-stat">
+              <p class="split-stat__value{% if section.settings.stat_3_emphasis %} split-stat__value--line{% endif %}">{{ section.settings.stat_3_value }}</p>
+              {% if section.settings.stat_3_label != blank %}<p class="split-stat__label">{{ section.settings.stat_3_label }}</p>{% endif %}
+            </div>
+          {% endif %}
+        {% endunless %}
+      </div>
+      {% if section.settings.cta_text != blank %}
+        <a
+          href="{{ cta_href | default: routes.all_products_collection_url }}"
+          class="btn split-cta{% if cta_style == 'outline' %} split-cta--outline{% else %} btn--primary{% endif %}"
+        >{{ section.settings.cta_text }}</a>
+      {% endif %}
+    {% else %}
+      {% comment %}standard + statement — heading + quiet body; statement uses Type OS expression sizing{% endcomment %}
+      {% if section.settings.eyebrow != blank %}
+        <p class="split-text__eyebrow type-label{% unless content_style == 'statement' %} eyebrow--accent{% endunless %}">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+      {% if section.settings.title != blank %}
+        {% liquid
+          if content_style == 'statement'
+            assign title_class = 'split-text__title type-statement'
+          else
+            assign title_class = 'split-text__title ' | append: heading_class
+          endif
+        %}
+        {% case heading_level %}
+          {% when 'h1' %}
+            <h1 class="{{ title_class }}">{{ section.settings.title | newline_to_br }}</h1>
+          {% when 'h3' %}
+            <h3 class="{{ title_class }}">{{ section.settings.title | newline_to_br }}</h3>
+          {% when 'h4' %}
+            <h4 class="{{ title_class }}">{{ section.settings.title | newline_to_br }}</h4>
+          {% when 'h5' %}
+            <h5 class="{{ title_class }}">{{ section.settings.title | newline_to_br }}</h5>
+          {% when 'h6' %}
+            <h6 class="{{ title_class }}">{{ section.settings.title | newline_to_br }}</h6>
+          {% else %}
+            <h2 class="{{ title_class }}">{{ section.settings.title | newline_to_br }}</h2>
+        {% endcase %}
+      {% endif %}
+      {% if section.settings.body != blank %}
+        <p class="split-text__body type-body{% if content_style == 'statement' %} split-text__body--quiet{% endif %}">{{ section.settings.body }}</p>
+      {% endif %}
+      {% if section.settings.cta_text != blank %}
+        <a
+          href="{{ cta_href | default: routes.all_products_collection_url }}"
+          class="btn split-cta{% if cta_style == 'outline' %} split-cta--outline{% else %} btn--primary{% endif %}"
+        >{{ section.settings.cta_text }}</a>
+      {% endif %}
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  #shopify-section-{{ section.id }} .split-section {
+    display: grid;
+    grid-template-columns: var(--ff-media-fr, 1fr) var(--ff-text-fr, 1fr);
+    gap: var(--ff-column-gap, 0);
+    min-height: var(--ff-min-height, 640px);
+  }
+  #shopify-section-{{ section.id }} .split-section--reverse {
+    grid-template-columns: var(--ff-text-fr, 1fr) var(--ff-media-fr, 1fr);
+  }
+  #shopify-section-{{ section.id }} .split-section--reverse .split-media { order: 2; }
+  #shopify-section-{{ section.id }} .split-section--reverse .split-text { order: 1; }
+  #shopify-section-{{ section.id }} .split-media {
+    position: relative;
+    overflow: hidden;
+    min-height: calc(var(--ff-min-height, 640px) * 0.75);
+    border-radius: var(--ff-media-radius, 0);
+  }
+  /* Round media only on the outer edge (away from the text column) */
+  #shopify-section-{{ section.id }} .split-section--media-outer-radius .split-media {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  #shopify-section-{{ section.id }} .split-section--media-outer-radius.split-section--reverse .split-media {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: var(--ff-media-radius, 0);
+    border-bottom-right-radius: var(--ff-media-radius, 0);
+  }
+  #shopify-section-{{ section.id }} .split-media__img,
+  #shopify-section-{{ section.id }} .split-media__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--ff-object-position, center);
+    display: block;
+    position: absolute;
+    inset: 0;
+    transform: scale(var(--ff-image-scale, 1));
+    transform-origin: var(--ff-object-position, center);
+  }
+  #shopify-section-{{ section.id }} .split-section--contain .split-media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #shopify-section-{{ section.id }} .split-section--contain .split-media__img {
+    position: relative;
+    inset: auto;
+    width: var(--ff-contain-width, 72%);
+    max-width: 420px;
+    height: auto;
+    object-fit: contain;
+    object-position: var(--ff-object-position, center);
+    padding: 48px 24px;
+    transform: scale(var(--ff-image-scale, 1));
+    transform-origin: center center;
+  }
+  #shopify-section-{{ section.id }} .split-media__placeholder {
+    width: 100%;
+    height: 100%;
+    min-height: calc(var(--ff-min-height, 640px) * 0.75);
+    background: linear-gradient(135deg, #c9c5b8, #e9d3cb);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: var(--text-muted, #8a8a8a);
+    padding: var(--space-8, 32px);
+    text-align: center;
+  }
+  #shopify-section-{{ section.id }} .split-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: var(--ff-vertical-padding, 88px) var(--ff-side-padding, 64px);
+    border-radius: var(--ff-text-radius, 0);
+    text-align: var(--align-editorial, left);
+  }
+  #shopify-section-{{ section.id }} .split-text__title {
+    font-family: var(--font-family, 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif);
+    max-width: none !important;
+    margin: 0 0 var(--gap-b, 20px);
+    text-transform: none;
+  }
+  /* Type OS — H2 Display / Standard (SETTLED tokens; TE size override optional) */
+  #shopify-section-{{ section.id }} .split-text__title.h2-display {
+    font-size: var(--ff-title-size, var(--type-h2-display-size));
+    font-weight: var(--ff-title-weight, var(--type-h2-display-weight));
+    line-height: var(--type-h2-display-leading);
+    letter-spacing: var(--type-h2-display-tracking);
+  }
+  #shopify-section-{{ section.id }} .split-text__title.h2-standard {
+    font-size: var(--ff-title-size, var(--type-section-size));
+    font-weight: var(--ff-title-weight, var(--type-section-weight));
+    line-height: var(--type-section-leading);
+    letter-spacing: var(--type-section-tracking);
+  }
+  #shopify-section-{{ section.id }} .split-text__title.type-statement {
+    font-size: var(--ff-title-size, var(--type-statement-size));
+    font-weight: var(--ff-title-weight, var(--type-statement-weight));
+    line-height: var(--type-statement-leading);
+    letter-spacing: var(--type-statement-tracking);
+    max-width: 18ch;
+  }
+  #shopify-section-{{ section.id }} .split-text__body--quiet {
+    color: #6b645a;
+    font-size: var(--ff-body-size, 16px);
+    max-width: 32ch;
+  }
+  #shopify-section-{{ section.id }} .split-text__eyebrow {
+    font-size: var(--type-label-size, 11px);
+    text-transform: uppercase;
+    letter-spacing: var(--type-label-tracking, 0.08em);
+    color: var(--type-label-color, #6b645a);
+    font-weight: var(--type-label-weight, 600);
+    margin: 0 0 var(--gap-a, 16px);
+  }
+  #shopify-section-{{ section.id }} .split-text__title.h2-display,
+  #shopify-section-{{ section.id }} .split-text__title.h2-standard {
+    margin: 0 0 var(--gap-b, 20px);
+  }
+  #shopify-section-{{ section.id }} .split-text__body {
+    font-family: var(--font-family, 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif);
+    font-size: var(--ff-body-size, var(--type-body-size, 17px));
+    font-weight: var(--ff-body-weight, var(--type-body-weight, 400));
+    color: var(--text-body, #4a4a4a);
+    line-height: var(--type-body-leading, 1.6);
+    margin: 0 0 var(--gap-c, 32px);
+    max-width: 36ch;
+  }
+  #shopify-section-{{ section.id }} .split-cta {
+    width: fit-content;
+    font-size: var(--ff-cta-size, 12px);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 4px;
+    min-height: 48px;
+    padding: 14px 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--ff-cta-bg, #c45c3f);
+    border: 1px solid var(--ff-cta-border, var(--ff-cta-bg, #c45c3f));
+    color: #fff;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+  #shopify-section-{{ section.id }} .split-cta--outline {
+    background: transparent;
+    color: var(--ff-cta-border, #c45c3f);
+  }
+  #shopify-section-{{ section.id }} .split-cta:hover {
+    background: #c45c3f;
+    border-color: #c45c3f;
+    color: #fff;
+  }
+  #shopify-section-{{ section.id }} .split-cta--outline:hover {
+    background: transparent;
+    color: #c45c3f;
+    border-color: #c45c3f;
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .split-section {
+      grid-template-columns: 1fr;
+      min-height: auto;
+    }
+    #shopify-section-{{ section.id }} .split-section--reverse .split-media,
+    #shopify-section-{{ section.id }} .split-section--reverse .split-text { order: 0; }
+    #shopify-section-{{ section.id }} .split-media {
+      min-height: var(--ff-mobile-media-height, 320px);
+    }
+    #shopify-section-{{ section.id }} .split-section--media-outer-radius .split-media,
+    #shopify-section-{{ section.id }} .split-section--media-outer-radius.split-section--reverse .split-media {
+      border-radius: var(--ff-media-radius, 0);
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+    #shopify-section-{{ section.id }} .split-text {
+      padding:
+        min(var(--ff-vertical-padding, 88px), var(--section-padding-y-mobile, 48px))
+        min(var(--ff-side-padding, 64px), var(--section-padding-x-mobile, 16px));
+    }
+  }
+
+  /* Quote composition (PDP lifestyle — v18) */
+  #shopify-section-{{ section.id }} .split-quote__stars {
+    color: #d4af37;
+    font-size: 18px;
+    letter-spacing: 3px;
+    margin-bottom: 16px;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .split-quote__text {
+    font-size: 22px;
+    font-style: italic;
+    font-weight: 400;
+    color: #1c1916;
+    line-height: 1.5;
+    margin: 0 0 20px;
+    max-width: 32ch;
+  }
+  #shopify-section-{{ section.id }} .split-quote__author {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1c1916;
+    margin: 0 0 4px;
+  }
+  #shopify-section-{{ section.id }} .split-quote__meta {
+    font-size: 12px;
+    color: #8a8a8a;
+    margin: 0 0 20px;
+  }
+  #shopify-section-{{ section.id }} .split-quote__cta {
+    font-size: 12px;
+    font-weight: 600;
+    color: #1c1916;
+    text-decoration: none;
+    border-bottom: 1px solid #1c1916;
+    padding-bottom: 2px;
+  }
+
+  /* Stats composition (PDP By the numbers — v18) */
+  #shopify-section-{{ section.id }} .split-text--stats .split-text__eyebrow {
+    margin: 0 0 32px;
+    color: #8a8a8a;
+  }
+  #shopify-section-{{ section.id }} .split-stats {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  #shopify-section-{{ section.id }} .split-stat {
+    border-left: 3px solid #c45c3f;
+    padding-left: 20px;
+  }
+  #shopify-section-{{ section.id }} .split-stat__value {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1c1916;
+    margin: 0;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .split-stat__value--line {
+    font-size: 22px;
+    line-height: 1.2;
+  }
+  #shopify-section-{{ section.id }} .split-stat__label {
+    font-size: 14px;
+    color: #4a4a4a;
+    margin: 4px 0 0;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "50/50 Split",
+  "settings": [
+    { "type": "header", "content": "Shared — Content" },
+    {
+      "type": "select",
+      "id": "content_style",
+      "label": "Content style",
+      "options": [
+        { "value": "standard", "label": "Standard — heading + body + CTA" },
+        { "value": "statement", "label": "Statement — big slogan + quiet sub" },
+        { "value": "quote", "label": "Quote — stars + italic + author" },
+        { "value": "stats", "label": "Stats — rust-bar metrics" }
+      ],
+      "default": "standard",
+      "info": "Home stays Standard. Statement = slogan expression (no stats). Quote/Stats = optional PDP compositions."
+    },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    {
+      "type": "select",
+      "id": "heading_register",
+      "label": "Heading register",
+      "options": [
+        { "value": "display", "label": "Display — brand statement" },
+        { "value": "standard", "label": "Standard — wayfinding" }
+      ],
+      "default": "display",
+      "info": "Family is brand Type OS — use Title size/weight to adjust. No font family picker."
+    },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "Heading",
+      "default": "Never loses shape.\nNever loses grip.",
+      "info": "Plain text. Line breaks become <br>. Quote style: use this field for the quote (no heading tag)."
+    },
+    {
+      "type": "select",
+      "id": "heading_level",
+      "label": "Heading level",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "h4", "label": "H4" },
+        { "value": "h5", "label": "H5" },
+        { "value": "h6", "label": "H6" }
+      ],
+      "default": "h2",
+      "info": "Outputs the real HTML tag (h1–h6) for SEO/accessibility. Visual size is Title size — not this control."
+    },
+    {
+      "type": "select",
+      "id": "title_size",
+      "label": "Title size",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "12", "label": "12px" },
+        { "value": "13", "label": "13px" },
+        { "value": "14", "label": "14px" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" },
+        { "value": "18", "label": "18px" },
+        { "value": "20", "label": "20px" },
+        { "value": "22", "label": "22px" },
+        { "value": "24", "label": "24px" },
+        { "value": "26", "label": "26px" },
+        { "value": "28", "label": "28px" },
+        { "value": "30", "label": "30px" },
+        { "value": "32", "label": "32px" },
+        { "value": "36", "label": "36px" },
+        { "value": "40", "label": "40px" },
+        { "value": "44", "label": "44px" },
+        { "value": "48", "label": "48px" },
+        { "value": "56", "label": "56px" }
+      ],
+      "default": "default",
+      "info": "Family is brand Type OS — size only. Default keeps Type OS."
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" },
+        { "value": "700", "label": "700" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Body",
+      "default": "Built to hold when it matters most—so you can push deeper, stay longer, and move with confidence.",
+      "info": "Family is brand Type OS — use Body size/weight to adjust. No font family picker."
+    },
+    {
+      "type": "select",
+      "id": "body_size",
+      "label": "Body size",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "12", "label": "12px" },
+        { "value": "13", "label": "13px" },
+        { "value": "14", "label": "14px" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" },
+        { "value": "18", "label": "18px" },
+        { "value": "20", "label": "20px" },
+        { "value": "22", "label": "22px" },
+        { "value": "24", "label": "24px" },
+        { "value": "26", "label": "26px" },
+        { "value": "28", "label": "28px" },
+        { "value": "30", "label": "30px" },
+        { "value": "32", "label": "32px" },
+        { "value": "36", "label": "36px" },
+        { "value": "40", "label": "40px" },
+        { "value": "44", "label": "44px" },
+        { "value": "48", "label": "48px" },
+        { "value": "56", "label": "56px" }
+      ],
+      "default": "default",
+      "info": "Family is brand Type OS — size only. Default keeps Type OS body size."
+    },
+    {
+      "type": "select",
+      "id": "body_weight",
+      "label": "Body weight",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" },
+        { "value": "700", "label": "700" }
+      ],
+      "default": "default"
+    },
+    { "type": "text", "id": "cta_text", "label": "CTA label", "default": "Shop Now" },
+    {
+      "type": "select",
+      "id": "cta_size",
+      "label": "CTA font size",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "11", "label": "11px" },
+        { "value": "12", "label": "12px" },
+        { "value": "13", "label": "13px" },
+        { "value": "14", "label": "14px" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "18", "label": "18px" },
+        { "value": "20", "label": "20px" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "select",
+      "id": "cta_style",
+      "label": "CTA style",
+      "options": [
+        { "value": "solid", "label": "Solid fill" },
+        { "value": "outline", "label": "Outline only" }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "color",
+      "id": "cta_bg_color",
+      "label": "CTA background color",
+      "default": "#c45c3f",
+      "info": "WORKING default rust. Used for solid fill. Ignored visually when style is Outline only (border still applies)."
+    },
+    {
+      "type": "color",
+      "id": "cta_border_color",
+      "label": "CTA outline / border color",
+      "default": "#c45c3f"
+    },
+    {
+      "type": "select",
+      "id": "cta_link_target",
+      "label": "CTA link",
+      "options": [
+        { "value": "custom", "label": "Custom URL…" },
+        { "value": "#variants", "label": "#variants — Shop styles" },
+        { "value": "#knock-socks", "label": "#knock-socks — Statement" },
+        { "value": "#reviews", "label": "#reviews" },
+        { "value": "#guarantee", "label": "#guarantee" },
+        { "value": "#never-loses-grip", "label": "#never-loses-grip" },
+        { "value": "#one-pair", "label": "#one-pair" },
+        { "value": "#coperni", "label": "#coperni — Collab" },
+        { "value": "#problem", "label": "#problem" }
+      ],
+      "default": "custom",
+      "info": "Homepage section anchors jump on the same page. Choose Custom URL… for a full URL, collection/product/page, or any other #hash. Blank custom → all-products collection."
+    },
+    {
+      "type": "text",
+      "id": "cta_url",
+      "label": "Custom CTA URL",
+      "info": "Used when CTA link = Custom URL…. Full URL, relative path, or custom #hash. Shopify’s URL picker often drops hash-only links — this text field keeps them."
+    },
+
+    { "type": "header", "content": "Shared — Media" },
+    {
+      "type": "paragraph",
+      "content": "Pick ONE media path. Priority: Shopify video → Video URL → Shopify image → Image URL fallback. Leave unused fields blank."
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Shopify video",
+      "info": "Preferred when the file lives in Shopify Files. Use this OR Video URL — not both. Shopify video wins if both are set."
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "Video URL (mp4)",
+      "info": "External/CDN mp4 when you are not using Shopify Video above. Ignored if Shopify video is set. Leave blank if using Shopify video or a still image."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image / poster (Shopify)",
+      "info": "Still image for image mode, OR poster frame when using Video URL. Prefer this over URL fields when the asset is in Shopify. Leave blank to use Image URL fallback (or poster URL for video)."
+    },
+    {
+      "type": "text",
+      "id": "poster_url",
+      "label": "Poster URL fallback",
+      "info": "Poster for Video URL only when Image / poster (Shopify) is empty. Not used for still-image mode. Leave blank if Shopify image/poster is set."
+    },
+    {
+      "type": "text",
+      "id": "image_url",
+      "label": "Image URL (optional fallback)",
+      "info": "Only used when the Shopify image picker is empty (and there is no video). Needed when: (1) you paste a CDN/external URL without uploading to Shopify Files, (2) theme defaults ship with mock CDN URLs, or (3) the picker is left blank. If both Shopify image and this URL are set, Shopify image wins. Leave blank if you always use the image picker."
+    },
+    { "type": "text", "id": "image_alt", "label": "Image alt text" },
+
+    { "type": "header", "content": "Shared — Layout" },
+    {
+      "type": "range",
+      "id": "min_height",
+      "label": "Desktop min height",
+      "min": 400,
+      "max": 900,
+      "step": 20,
+      "unit": "px",
+      "default": 640,
+      "info": "Home WORKING default is 640px."
+    },
+    {
+      "type": "range",
+      "id": "media_column_pct",
+      "label": "Media column %",
+      "min": 35,
+      "max": 65,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "info": "Desktop only. Text column = 100 − media %. Default 50/50."
+    },
+    {
+      "type": "range",
+      "id": "mobile_media_height",
+      "label": "Mobile media height",
+      "min": 220,
+      "max": 520,
+      "step": 10,
+      "unit": "px",
+      "default": 320
+    },
+    { "type": "checkbox", "id": "reverse", "label": "Reverse layout (text left, media right)", "default": false },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "label": "Column gap (gutter)",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Space between the media and text columns. WORKING mock is flush (0)."
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Side padding",
+      "min": 16,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 64,
+      "info": "Horizontal padding inside the text/content panel. WORKING mock is 64px."
+    },
+    {
+      "type": "range",
+      "id": "vertical_padding",
+      "label": "Vertical padding",
+      "min": 32,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 88,
+      "info": "Top and bottom padding inside the text/content panel. WORKING mock is 88px."
+    },
+    {
+      "type": "range",
+      "id": "media_radius",
+      "label": "Media corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 0,
+      "info": "Rounds the media panel only — independent of the text panel."
+    },
+    {
+      "type": "checkbox",
+      "id": "media_radius_outer_only",
+      "label": "Round media only on outer edge",
+      "default": false,
+      "info": "When on, only the outer corners of the media (away from the text column) are rounded. Off = all four media corners."
+    },
+    {
+      "type": "range",
+      "id": "section_radius",
+      "label": "Text panel corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 0,
+      "info": "Rounds the text/content panel only — independent of the media panel."
+    },
+    { "type": "color", "id": "bg_color", "label": "Background color", "default": "#ffffff" },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor ID (optional)",
+      "info": "This section’s own ID for same-page jumps (e.g. never-loses-grip → #never-loses-grip). Not the same as CTA link."
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Accessibility name (aria-label)",
+      "info": "Accessibility name for screen readers. Not shown on the page. Leave blank unless you need a special name — blank uses the Heading."
+    },
+
+    { "type": "header", "content": "Section — Fifty-fifty — quote / stats" },
+    {
+      "type": "checkbox",
+      "id": "show_quote_stars",
+      "label": "Show quote stars",
+      "default": true,
+      "info": "Quote style only."
+    },
+    {
+      "type": "text",
+      "id": "quote_author",
+      "label": "Quote author",
+      "info": "Quote style. Falls back to Body if blank."
+    },
+    {
+      "type": "text",
+      "id": "quote_meta",
+      "label": "Quote meta / role",
+      "info": "Quote style — e.g. Barre Instructor · New York, NY"
+    },
+    {
+      "type": "text",
+      "id": "stat_1_value",
+      "label": "Stat 1 value",
+      "info": "Stats style fallback when no Stat blocks — e.g. 360°"
+    },
+    { "type": "text", "id": "stat_1_label", "label": "Stat 1 label" },
+    { "type": "text", "id": "stat_2_value", "label": "Stat 2 value" },
+    { "type": "text", "id": "stat_2_label", "label": "Stat 2 label" },
+    { "type": "text", "id": "stat_3_value", "label": "Stat 3 value" },
+    { "type": "text", "id": "stat_3_label", "label": "Stat 3 label" },
+    {
+      "type": "checkbox",
+      "id": "stat_3_emphasis",
+      "label": "Stat 3 as longer line (smaller type)",
+      "default": true,
+      "info": "v18 cost line uses smaller multi-line treatment."
+    },
+
+    { "type": "header", "content": "Section — Fifty-fifty — media fit" },
+    {
+      "type": "select",
+      "id": "media_fit",
+      "label": "Media fit",
+      "options": [
+        { "value": "cover", "label": "Cover (lifestyle / video)" },
+        { "value": "contain", "label": "Contain (packshot)" }
+      ],
+      "default": "cover"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image focal point",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "top", "label": "Top" },
+        { "value": "bottom", "label": "Bottom" },
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" },
+        { "value": "top left", "label": "Top left" },
+        { "value": "top right", "label": "Top right" },
+        { "value": "bottom left", "label": "Bottom left" },
+        { "value": "bottom right", "label": "Bottom right" }
+      ],
+      "default": "center",
+      "info": "object-position for cover crops (and contain alignment)."
+    },
+    {
+      "type": "range",
+      "id": "image_scale",
+      "label": "Image scale",
+      "min": 100,
+      "max": 150,
+      "step": 5,
+      "unit": "%",
+      "default": 100,
+      "info": "Zooms media inside the cell (cover crop / contain packshot)."
+    },
+    {
+      "type": "range",
+      "id": "contain_width",
+      "label": "Contain media width",
+      "min": 40,
+      "max": 100,
+      "step": 2,
+      "unit": "%",
+      "default": 72,
+      "info": "Only when Media fit = Contain. WORKING mock uses ~72%."
+    },
+    { "type": "color", "id": "media_bg", "label": "Media background (contain)", "default": "#f9f9f9" },
+    { "type": "text", "id": "video_caption", "label": "Video caption (compat — unused)" }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat",
+      "settings": [
+        { "type": "text", "id": "value", "label": "Value", "default": "360°" },
+        { "type": "text", "id": "label", "label": "Label", "default": "grip surface" },
+        {
+          "type": "checkbox",
+          "id": "emphasis",
+          "label": "Longer line (smaller type)",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [{ "name": "50/50 Split" }]
+}
+{% endschema %}

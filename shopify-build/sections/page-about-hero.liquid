@@ -1,0 +1,87 @@
+{% comment %}
+  About page — cover hero (v25 Locked)
+{% endcomment %}
+
+<section
+  class="page-about-hero"
+  id="shopify-section-{{ section.id }}"
+  {{ section.shopify_attributes }}
+  aria-label="{{ section.settings.aria_label | default: 'Barreletics in motion' | escape }}"
+>
+  {% if section.settings.image != blank %}
+    {{
+      section.settings.image
+      | image_url: width: 2400
+      | image_tag:
+        widths: '800, 1200, 1600, 2000, 2400',
+        sizes: '100vw',
+        alt: section.settings.image_alt,
+        loading: 'eager',
+        fetchpriority: 'high',
+        class: 'page-about-hero__img'
+    }}
+  {% elsif section.settings.image_url != blank %}
+    <img
+      class="page-about-hero__img"
+      src="{{ section.settings.image_url | escape }}"
+      alt="{{ section.settings.image_alt | escape }}"
+      width="2400"
+      height="1600"
+      loading="eager"
+      fetchpriority="high"
+    >
+  {% endif %}
+</section>
+
+<style>
+  #shopify-section-{{ section.id }} .page-about-hero {
+    height: min({{ section.settings.height_vh }}vh, {{ section.settings.height_max }}px);
+    min-height: {{ section.settings.height_min }}px;
+    overflow: hidden;
+    background: #1c1916;
+  }
+  #shopify-section-{{ section.id }} .page-about-hero__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: {{ section.settings.focal_x }}% {{ section.settings.focal_y }}%;
+    display: block;
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .page-about-hero {
+      height: min({{ section.settings.height_vh_mobile }}vh, {{ section.settings.height_max_mobile }}px);
+      min-height: {{ section.settings.height_min_mobile }}px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "About — Hero",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Hero image" },
+    {
+      "type": "text",
+      "id": "image_url",
+      "label": "Image URL fallback",
+      "default": "https://barreletics.com/cdn/shop/products/barreletixxjumpingtogether.jpg?v=1619360969&width=2400"
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image alt",
+      "default": "Two women in Performance Skins"
+    },
+    { "type": "text", "id": "aria_label", "label": "ARIA label", "default": "Barreletics in motion" },
+    { "type": "range", "id": "height_vh", "label": "Height (desktop vh)", "min": 40, "max": 90, "step": 2, "unit": "vh", "default": 72 },
+    { "type": "range", "id": "height_max", "label": "Height max (desktop px)", "min": 320, "max": 900, "step": 20, "unit": "px", "default": 720 },
+    { "type": "range", "id": "height_min", "label": "Height min (desktop px)", "min": 260, "max": 520, "step": 10, "unit": "px", "default": 420 },
+    { "type": "range", "id": "height_vh_mobile", "label": "Height (mobile vh)", "min": 36, "max": 70, "step": 2, "unit": "vh", "default": 50 },
+    { "type": "range", "id": "height_max_mobile", "label": "Height max (mobile px)", "min": 240, "max": 520, "step": 10, "unit": "px", "default": 420 },
+    { "type": "range", "id": "height_min_mobile", "label": "Height min (mobile px)", "min": 220, "max": 360, "step": 10, "unit": "px", "default": 260 },
+    { "type": "range", "id": "focal_x", "label": "Focal X", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+    { "type": "range", "id": "focal_y", "label": "Focal Y", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 8 }
+  ],
+  "presets": [{ "name": "About — Hero" }]
+}
+{% endschema %}

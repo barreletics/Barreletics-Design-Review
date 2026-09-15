@@ -2,10 +2,70 @@
 
 ---
 document: 19 – Tidio Architecture
-version: 1.0
-status: Draft
+version: 1.1
+status: CURRENT · OS home for the website chatbot
 created: 2026-07-19
-depends_on: [07-product-knowledge-base, 08-copy-guide, 13-knowledge-architecture]
+updated: 2026-08-24
+depends_on: [docs/11-CANONICAL-ANSWERS.md]
+---
+
+## OS home
+
+This file is the operating-system home for the **website chat bot** (Tidio Lyro). Website chat is the only live use right now.
+
+- **How Lyro behaves** — paste blocks below (Guidance fields in Tidio)
+- **What Lyro says** — `docs/11-CANONICAL-ANSWERS.md`, formatted for upload in `planning/m4b-tidio-knowledge-base.md`
+
+The March 2026 Lyro paste was written in a setup chat and never filed here. That was a miss. Guidance + answers now live in the OS first, then get pasted into Tidio.
+
+---
+
+## Paste 1 · How the AI Agent should behave
+
+You are the Barreletics website chatbot. Answer only about Barreletics Performance Skins (grippy studio footwear), sizing, orders, shipping, returns, warranty, and the website. Keep replies short, warm, and professional — a few sentences unless the visitor asks for more. Do not invent product names, colors, prices, promos, restock dates, or policy. If you are unsure, say so and send them to the product page, Size Chart, Shipping/Returns page, or a human. Do not give medical or fitness advice, and do not discuss internal systems, theme code, or store administration.
+
+---
+
+## Paste 2 · Handoff and escalation
+
+Escalate to a human when the visitor asks about refunds, damaged or missing orders, **wrong items in an order**, account or payment issues, wholesale, studio partnerships, press, warranty claims, complaints, or anything you are not sure about. Do not guess or make promises on behalf of the store. Before you hand off, ask for the best email to reach them if it is not already in the conversation, and include it in the handoff note as “Customer email for follow-up: [email].” Clearly say you are connecting them with the team. Do not promise a callback time or a specific resolution unless it is written in the knowledge base.
+
+---
+
+## Paste 3 · Additional guidance
+
+Stay on Barreletics. If someone asks about other brands, general workout advice, or off-topic subjects, briefly redirect: you are here for Barreletics products, sizing, and orders.
+
+Closed Sole is heel and foot fully covered. Open Sole is heel exposed with a mid-foot breathing hole and a more grounded, barefoot feel. Both perform identically — same grip, same stability, same studio uses. Choice is preference and feel only. Never assign a discipline to a sole. Never say “fully enclosed.”
+
+Sizing: Medium is Women’s 5.5–7.5 (Kids’ 2–5). Large is Women’s 7.5–11 / Men up to 10.5. Width decides at 7.5. Men’s 13/14: we don’t currently offer them — tracking as we plan future sizes (Help Scout 2.3 tone). Never say “between sizes? size up.” Point to https://barreletics.com/pages/performance-skins-size-chart. Never mention a blow dryer.
+
+Never say pool, poolside, or aqua barre. Outdoor uses: paddleboarding, beach, outdoor yoga, resortwear, boating. Wet tile and stone can be slippery for any footwear.
+
+Never claim antimicrobial or bacteria. Care is hand wash with warm soapy water only. No 10% newsletter code. No invented restock dates. No invented weight in ounces or grams.
+
+Wrong items in an order: Help Scout 8.1 tone — “Sorry to hear this,” ask for order number + photo, “We’ll get the right pair on the way.” Link: https://barreletics.com/pages/contact-us-form. Then hand off (CA-28). Same for damaged or missing. Outdoor restock: no dates — Outdoor page or join the list (CA-29). Weight: ultra-light, no published scale weight (CA-30). Men’s 13/14: Help Scout 2.3 tone — don’t currently offer, tracking as we plan future sizes (CA-31).
+
+---
+
+## Four Tidio suggestions (paste into knowledge)
+
+**Q: What should I do if I receive the wrong items in my order?**
+A: Sorry to hear this. When you have a moment, send your order number and a photo of what arrived: https://barreletics.com/pages/contact-us-form
+
+We'll get the right pair on the way as soon as we have those.
+
+**Q: When will out of stock colors for outdoor styles be available again?**
+A: We don’t publish restock dates. Outdoor colors come back in production batches. Check the Outdoor page for what’s in stock now, or join the list for new drops. A teammate can note the color you want. https://barreletics.com/products/aquatic-performance-skins
+
+**Q: What is the weight of the shoes?**
+A: We don’t publish a scale weight. They’re ultra-light studio footwear — second-skin feel, not a shoe you weigh. If you need a shipping weight for a carrier, a teammate can pull it.
+
+**Q: Is it possible to order Pilates shoes in larger men's sizes, such as size 13/14?**
+A: Our largest is Large — men's up to 10.5. We don't currently offer 13 or 14, but we're tracking the request as we plan future sizes.
+
+Size chart: https://barreletics.com/pages/performance-skins-size-chart
+
 ---
 
 ## Overview
@@ -40,7 +100,7 @@ This passes `distinct_id`, `email`, and `name` so Tidio associates conversations
 
 ## Knowledge Base Training
 
-Tidio's AI chatbot is trained from Doc 07 (Product Knowledge Base). Content is formatted as Q&A pairs for Tidio's knowledge base system. Full training data defined in `planning/m4b-tidio-knowledge-base.md`.
+Tidio's AI chatbot is trained from **`docs/11-CANONICAL-ANSWERS.md`**. Q&A format for upload: `planning/m4b-tidio-knowledge-base.md`. Behavior (Guidance): paste blocks at the top of this file.
 
 ### Q&A Categories
 
@@ -103,27 +163,24 @@ Configured in **Tidio admin**, not in theme code:
 
 Same cascade as Doc 18 (Help Scout Architecture):
 
-1. **Doc 07** — single source of truth (update here first)
-2. **Website copy** — update affected pages/sections
-3. **Help Scout saved replies** — update to match
-4. **Tidio Q&A pairs** — update AI training data to match
+1. **`docs/11-CANONICAL-ANSWERS.md`** — single source of truth (update here first)
+2. **This file** — Guidance paste + website-bot Q&A
+3. **`planning/m4b-tidio-knowledge-base.md`** — upload file for Tidio data sources
+4. **Help Scout saved replies** — update to match when the answer is also email
+5. **Andrew pastes into live Tidio** — repo cannot log in (`planning/OWNER-MANUAL-TASKS.md` §G)
 
 ## Owner Implementation Steps
 
 1. Log into Tidio admin
-2. AI Chatbot → Knowledge Base → import Q&A pairs from `planning/m4b-tidio-knowledge-base.md`
-3. Configure conversation flows (sizing, style recommendation, returns)
-4. Set handoff rules (Tidio → Help Scout)
-5. Style widget: primary `#1c1916`, accent `#c45c3f`
-6. Enter Widget Key in Theme Customizer → Tracking & Integrations → Tidio Widget Key
-7. Test: ask each category of question → verify answer accuracy
-8. Test: trigger handoff → verify Help Scout ticket creation
+2. Paste Guidance blocks from the top of **this file** (behave · handoff · additional)
+3. Lyro data sources → replace with `planning/m4b-tidio-knowledge-base.md` (includes CA-28–CA-31)
+4. Style widget: primary `#1c1916`, accent `#c45c3f`
+5. Test the four suggestion questions + sizing + Open vs Closed + wash + pool (must refuse)
 
 ## Cross-References
 
-- Doc 07 (Product Knowledge Base) — source truth for all AI training content
-- Doc 08 (Copy Guide) — brand voice for answer formatting
-- Doc 13 (Knowledge Architecture) — update cascade process
-- Doc 16 (Integration Architecture) — snippet placement and guard pattern
+- `docs/11-CANONICAL-ANSWERS.md` — source truth for all bot answers (CA-28–CA-31 = Tidio suggestions)
 - Doc 18 (Help Scout Architecture) — parallel support system, handoff destination
-- `planning/m4b-tidio-knowledge-base.md` — full Q&A training data and flows
+- `planning/m4b-tidio-knowledge-base.md` — upload file
+- `planning/tidio-lyro-guidance.md` — paste copy of Guidance
+- `planning/OWNER-MANUAL-TASKS.md` §G — live Tidio paste (Andrew only)

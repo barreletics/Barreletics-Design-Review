@@ -1,0 +1,43 @@
+---
+description: "When a change hits >1 surface (templates/sections/nav/URLs/copy), update freeze + page-template-registry forward. Auto-invoke page-qa for page work."
+alwaysApply: false
+globs:
+  - shopify-build/**/*
+  - planning/m4-section-freeze.md
+  - planning/page-template-registry.md
+  - planning/*nav*
+  - planning/10-decision-log.md
+  - docs/10-DECISIONS.md
+  - docs/index.html
+---
+
+# OS sync on global change (HARD)
+
+**When any edit touches more than one customer-facing surface**, do not leave the OS docs stale.
+
+Surfaces include: `shopify-build/templates/**`, `shopify-build/sections/**` (shared chrome), header/footer groups, nav menus, hub Locked cards, canonical URLs, or approved copy that appears on multiple pages.
+
+## Required forward updates
+
+1. **`planning/m4-section-freeze.md`** — short forward note of what changed (CURRENT MESSAGE wins; never restore an older freeze over the ask).  
+2. **`planning/page-template-registry.md`** — if handle, template file, Admin suffix, Locked mock, or QA path changed (or a dead URL was retired/added).  
+3. **Nav / decisions** — if URLs or customer-facing copy changed: update the relevant nav spec and/or `planning/10-decision-log.md` / `docs/10-DECISIONS.md` as appropriate.  
+4. **Hub** (`docs/index.html`) — only when Andrew says **`LOCK THIS` + URL** (or equivalent) in the **current** message; never flip Locked cards silently.
+
+## Page work
+
+Auto-invoke **`barreletics-page-qa`** and read the registry row **before** editing a page template. **One page per turn.**
+
+## Forbidden
+
+- Shipping a template without updating the registry when the mapping changed  
+- Linking dead handles (`/blogs/journal`, open/closed/outdoor collection 404s). **`/pages/help` is live** (Help hub, 2026-08-14) — do not treat it as a 404 or restore Help fallback to `/pages/faq`  
+- “Fixing drift” by restoring older freeze/registry rows — fix forward or ASK  
+- Pushing theme without Andrew naming a theme ID in the current message
+
+## Companions
+
+- Registry: `planning/page-template-registry.md`  
+- Skill: `.cursor/skills/barreletics-page-qa/SKILL.md`  
+- Anti-revert: `.cursor/rules/anti-revert-fail-closed.mdc` · `barreletics-anti-revert`  
+- Shopify: `.cursor/rules/shopify-draft-theme-only.mdc`

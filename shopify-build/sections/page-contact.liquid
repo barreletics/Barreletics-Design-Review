@@ -5,7 +5,12 @@
   Used on: page.contact.json
 {% endcomment %}
 
-<section class="section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
+<section
+  class="section"
+  id="shopify-section-{{ section.id }}"
+  style="{% render 'type-override-vars', title_size: section.settings.title_size, title_weight: section.settings.title_weight, body_size: section.settings.body_size, body_weight: section.settings.body_weight %}"
+  {{ section.shopify_attributes }}
+>
   <div class="section__inner">
     <div class="page-contact__layout">
       <div class="page-contact__form-col">
@@ -97,9 +102,10 @@
             <ul class="page-contact__links-list">
               <li><a href="/pages/faq" class="page-contact__link">Frequently Asked Questions</a></li>
               <li><a href="/pages/returns" class="page-contact__link">Returns & Exchanges</a></li>
-              <li><a href="/pages/shipping" class="page-contact__link">Shipping Information</a></li>
-              <li><a href="/pages/size-guide" class="page-contact__link">Size Guide</a></li>
-              <li><a href="/pages/warranty" class="page-contact__link">Warranty</a></li>
+              <li><a href="/pages/returns#shipping" class="page-contact__link">Shipping Information</a></li>
+              <li><a href="/pages/performance-skins-size-chart" class="page-contact__link">Size Guide</a></li>
+              <li><a href="/pages/returns#warranty" class="page-contact__link">Warranty</a></li>
+              <li><a href="/pages/returns-portal" class="page-contact__link">Start a return</a></li>
             </ul>
           </nav>
         </div>
@@ -116,16 +122,20 @@
     align-items: start;
   }
 
+  /* Help-family page H1 — match Help hub (planning/help-family-type-law.md) */
   .page-contact__title {
-    font-size: var(--text-4xl);
-    font-weight: var(--weight-bold);
+    font-size: var(--te-title-size, clamp(32px, 4vw, 44px));
+    font-weight: var(--te-title-weight, 400);
+    line-height: 1.15;
+    letter-spacing: -0.028em;
+    text-transform: none;
     color: var(--text-primary);
     margin: 0 0 var(--space-2);
-    letter-spacing: var(--tracking-tight);
   }
 
   .page-contact__subtitle {
-    font-size: var(--text-md);
+    font-size: var(--te-body-size, var(--text-md));
+    font-weight: var(--te-body-weight, 400);
     color: var(--text-body);
     margin: 0 0 var(--space-8);
     line-height: var(--leading-relaxed);
@@ -294,7 +304,7 @@
     }
 
     .page-contact__title {
-      font-size: var(--text-3xl);
+      font-size: var(--te-title-size, clamp(28px, 8vw, 36px));
     }
 
     .page-contact__fields {
@@ -322,6 +332,66 @@
       "id": "subtitle",
       "label": "Subtitle",
       "default": "Have a question about fit, orders, or your Performance Skins? We're here to help."
+    },
+    { "type": "header", "content": "Type — size & weight", "info": "Family is brand Type OS. Default keeps the approved Contact type. Title caps at 56px — support pages never use the homepage hero size." },
+    {
+      "type": "select",
+      "id": "title_size",
+      "label": "Title size",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "24", "label": "24px" },
+        { "value": "26", "label": "26px" },
+        { "value": "28", "label": "28px" },
+        { "value": "30", "label": "30px" },
+        { "value": "32", "label": "32px" },
+        { "value": "36", "label": "36px" },
+        { "value": "40", "label": "40px" },
+        { "value": "44", "label": "44px" },
+        { "value": "48", "label": "48px" },
+        { "value": "56", "label": "56px" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" },
+        { "value": "700", "label": "700" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "body_size",
+      "label": "Subtitle size",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "14", "label": "14px" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" },
+        { "value": "18", "label": "18px" },
+        { "value": "20", "label": "20px" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "body_weight",
+      "label": "Subtitle weight",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" }
+      ]
     },
     {
       "type": "text",

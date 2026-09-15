@@ -1,0 +1,235 @@
+{% comment %}
+  Desktop: one promo+trust line (SAVE2 block + messages).
+  Mobile: trust only — SAVE2 lives on sale-banner (locked two-bar).
+  Static. No scroll. No rotation.
+{% endcomment %}
+
+{% if section.settings.enabled %}
+  {% assign slides = section.blocks %}
+  {% if slides.size > 0 %}
+    {%- assign _fs = section.settings.font_size | default: 13 -%}
+    {%- assign _pad = section.settings.pad_y | default: 7 -%}
+    {%- assign _fs_m = section.settings.font_size_mobile | default: 12 -%}
+    {%- assign _pad_m = section.settings.pad_y_mobile | default: 8 -%}
+    {%- assign _track = section.settings.letter_spacing | default: 3 -%}
+    {%- assign _promo_w = section.settings.promo_weight | default: '600' -%}
+    {%- assign _dist = section.settings.announce_distribute | default: 'center' -%}
+    <div
+      class="announcement-strip"
+      data-announce-distribute="{{ _dist }}"
+      role="region"
+      aria-label="Promotional messages"
+      style="
+        --announce-font-size: {{ _fs }}px;
+        --announce-pad-y: {{ _pad }}px;
+        --announce-font-size-mobile: {{ _fs_m }}px;
+        --announce-pad-y-mobile: {{ _pad_m }}px;
+        --announce-pad-x: {{ section.settings.pad_x | default: 56 }}px;
+        --announce-item-gap: {{ section.settings.item_gap | default: 12 }}px;
+        --announce-bg: {{ section.settings.bg_color | default: '#faf8f6' }};
+        --announce-bg-mobile: {{ section.settings.bg_color_mobile | default: '#ffffff' }};
+        --announce-color: {{ section.settings.text_color | default: '#5a544c' }};
+        --announce-promo-color: {{ section.settings.promo_color | default: '#2e2a26' }};
+        --announce-tracking: 0.0{{ _track }}em;
+        --announce-promo-weight: {{ _promo_w }};
+        --announce-max-width: {{ section.settings.max_width | default: 1320 }}px;
+      "
+      {{ section.shopify_attributes }}
+    >
+      <div class="announcement-strip__inner">
+        {% for block in slides %}
+          {% unless forloop.first %}
+            {% assign _prev_i = forloop.index0 | minus: 1 %}
+            {% assign _prev_t = slides[_prev_i].settings.text | downcase %}
+            <span class="announcement-strip__sep{% if _prev_t contains 'save2' %} announcement-strip__sep--after-promo{% endif %}" aria-hidden="true">|</span>
+          {% endunless %}
+          {% assign _txt = block.settings.text | downcase %}
+          {% assign _is_promo = false %}
+          {% if _txt contains 'save2' %}{% assign _is_promo = true %}{% endif %}
+          <span class="announcement-strip__item{% if _is_promo %} announcement-strip__item--promo{% endif %}" {{ block.shopify_attributes }}>
+            {% if block.settings.link_url != blank %}
+              <a href="{{ block.settings.link_url }}" class="announcement-strip__link">
+                {{ block.settings.text }}
+              </a>
+            {% else %}
+              {{ block.settings.text }}
+            {% endif %}
+          </span>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+{% endif %}
+
+{% schema %}
+{
+  "name": "Announcement strip",
+  "class": "announcement-strip-section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Show announcement / trust bar",
+      "default": true,
+      "info": "Desktop one-liner (incl. SAVE2). Mobile hides SAVE2 — sale banner stays."
+    },
+    {
+      "type": "header",
+      "content": "Desktop type & spacing"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Text size",
+      "min": 10,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 12,
+      "info": "Keep smaller than nav so the header row owns presence."
+    },
+    {
+      "type": "range",
+      "id": "pad_y",
+      "label": "Vertical padding",
+      "min": 2,
+      "max": 14,
+      "step": 1,
+      "unit": "px",
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "pad_x",
+      "label": "Side padding",
+      "min": 24,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 56,
+      "info": "Match Header → Side padding so bars align."
+    },
+    {
+      "type": "range",
+      "id": "item_gap",
+      "label": "Gap between messages",
+      "min": 8,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "default": 12,
+      "info": "Spreads SAVE2 · USA · Shipping · Returns inside the same rail as nav — not wider."
+    },
+    {
+      "type": "select",
+      "id": "announce_distribute",
+      "label": "Message layout",
+      "options": [
+        { "value": "center", "label": "Center — compact line (Lulu/Alo)" },
+        { "value": "spread", "label": "Spread — edge to edge" }
+      ],
+      "default": "center",
+      "info": "Center keeps SAVE2 from looking wider than the nav group."
+    },
+    {
+      "type": "range",
+      "id": "letter_spacing",
+      "label": "Letter spacing",
+      "min": 0,
+      "max": 8,
+      "step": 1,
+      "default": 3,
+      "info": "0.00–0.08em (3 ≈ 0.03em)."
+    },
+    {
+      "type": "select",
+      "id": "promo_weight",
+      "label": "SAVE2 / first-item weight",
+      "options": [
+        { "value": "500", "label": "500 Medium" },
+        { "value": "600", "label": "600 Semibold" },
+        { "value": "700", "label": "700 Bold" }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Bar max width",
+      "min": 1100,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 1320,
+      "info": "MUST match Header → Rail max width. Same rail = SAVE2 can’t out-span nav."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#faf8f6"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#5a544c"
+    },
+    {
+      "type": "color",
+      "id": "promo_color",
+      "label": "SAVE2 / first-item text",
+      "default": "#2e2a26"
+    },
+    {
+      "type": "header",
+      "content": "Legacy"
+    },
+    {
+      "type": "range",
+      "id": "rotation_speed",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "Rotation speed (unused)",
+      "default": 4,
+      "info": "Schema compatibility only. Strip is static."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "message",
+      "name": "Message",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Free Shipping Over $150"
+        },
+        {
+          "type": "url",
+          "id": "link_url",
+          "label": "Optional link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement strip",
+      "blocks": [
+        { "type": "message", "settings": { "text": "Buy 2 save 10% · Use SAVE2" } },
+        { "type": "message", "settings": { "text": "Made in USA" } },
+        { "type": "message", "settings": { "text": "Free Shipping Over $150" } },
+        { "type": "message", "settings": { "text": "30 Day Returns", "link_url": "/pages/returns" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

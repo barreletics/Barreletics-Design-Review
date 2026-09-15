@@ -1,0 +1,34 @@
+{% comment %}
+  Product page: Add to Cart always black (including when sold out/disabled).
+  One-off: hide "In stock" line. Rendered from layout/theme.liquid.
+{% endcomment %}
+<style>
+  /* iOS: removes ~300ms tap delay without JS capture handlers */
+  .variant-input-wrap label,
+  label.variant-input-label {
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
+    cursor: pointer;
+  }
+
+  .product-single__form .add-to-cart,
+  .payment-buttons .add-to-cart {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.08);
+    background: #000000 !important;
+    color: #ffffff !important;
+    border-color: transparent !important;
+  }
+  .product-single__form .add-to-cart:hover:not(:disabled),
+  .payment-buttons .add-to-cart:hover:not(:disabled) {
+    background: #333333 !important;
+    color: #ffffff !important;
+  }
+  .product-single__form .add-to-cart:disabled,
+  .payment-buttons .add-to-cart:disabled {
+    background: #000000 !important;
+    color: #ffffff !important;
+    opacity: 0.7;
+  }
+  .br-one-off-no-inventory { display: none !important; }
+</style>

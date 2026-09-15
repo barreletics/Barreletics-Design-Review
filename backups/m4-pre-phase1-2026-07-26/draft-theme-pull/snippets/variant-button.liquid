@@ -1,0 +1,221 @@
+{% comment %} UPLOAD THIS FILE: snippets/variant-button.liquid {% endcomment %}
+{%- assign swatch_file_extension = 'png' -%}
+
+{%- capture size_chart_title -%}
+  {{ 'products.general.size_chart' | t }} <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-size-chart" viewBox="0 0 64 64"><defs><style>.a{fill:none;stroke:#000;stroke-width:2px}</style></defs><path class="a" d="M22.39 33.53c-7.46 0-13.5-3.9-13.5-8.72s6-8.72 13.5-8.72 13.5 3.9 13.5 8.72a12 12 0 0 1-.22 1.73"/><ellipse cx="22.39" cy="24.81" rx="3.28" ry="2.12"/><path class="a" d="M8.89 24.81V38.5c0 7.9 6.4 9.41 14.3 9.41h31.92V33.53H22.39m24.39 0v7.44m-8.13-7.44v7.44m-8.13-7.44v7.44m-8.13-7.44v7.44"/></svg>
+{%- endcapture -%}
+
+{%- liquid
+  assign is_size = false
+  assign size_trigger = 'products.general.size_trigger' | t | downcase
+  assign downcased_option = option.name | downcase
+
+  if downcased_option contains size_trigger
+    assign is_size = true
+  endif
+
+  assign option_index = 0
+  for opt_name in product.options
+    assign option_index = option_index | plus: 1
+    if opt_name == option.name
+      break
+    endif
+  endfor
+  if option_index == 0
+    assign option_index = 1
+  endif
+-%}
+
+<div class="variant-wrapper small--text-center js" data-type="button">
+  <label class="variant__label{% if option.name == 'Default' or option.name == 'Title' %} hidden-label{% endif %}{% unless variant_labels %} hidden-label{% endunless %}"
+    for="ProductSelect-{{ section_id }}-{{ product.id }}-option-{{ option_index | minus: 1 }}">
+    {{ option.name }}
+    {%- if connect_to_sizechart and is_size -%}
+      <span class="variant__label-info">
+        &mdash;
+        {%- render
+          'tool-tip-trigger',
+          title: size_chart_title,
+          content: section.blocks[sizechart_index].settings.size_chart.content,
+          context: 'size-chart'
+        -%}
+      </span>
+    {%- endif -%}
+    {%- if is_color -%}
+      <span class="variant__label-info">
+        &mdash;
+        <span
+          data-color-label
+          data-color-label-index="{{ option_index | minus: 1 }}"
+          data-option-index="{{ option_index | minus: 1 }}">
+          {{ option.selected_value }}
+        </span>
+      </span>
+    {%- endif -%}
+  </label>
+  <fieldset class="variant-input-wrap"
+    name="{{ option.name }}"
+    data-index="option{{ option_index }}"
+    data-handle="{{ option.name | handleize }}"
+    id="ProductSelect-{{ section_id }}-{{ product.id }}-option-{{ option_index | minus: 1 }}">
+    <legend class="hide">{{ option.name }}</legend>
+    {%- if is_size -%}
+      {%- comment -%} Product page: 2-tier only. Initial (2 rows) → one "See more" reveals rest. No Kids / "See more sizes" – that’s Shop All Styles grid only. {% endcomment -%}
+      {%- assign _sk = product.metafields.custom.show_kids_sizes.value -%}
+      {%- assign hide_kids_pdp = false -%}
+      {%- if _sk == false or _sk == "false" or _sk == "False" -%}{%- assign hide_kids_pdp = true -%}{%- endif -%}
+      {%- for value in option.values -%}
+        {%- assign value_d = value | strip | downcase -%}
+        {%- assign is_kids = false -%}
+        {%- if hide_kids_pdp and value_d contains 'kids' -%}{%- assign is_kids = true -%}{%- endif -%}
+        {%- assign product_available = true -%}
+        {%- if product.options.size == 1 and block != blank and block.settings.product_dynamic_variants_enable -%}
+          {%- assign product_available = product.variants[forloop.index0].available -%}
+        {%- endif -%}
+        <div class="variant-input"{% if is_kids %} style="display:none!important"{% endif %}
+          data-index="option{{ option_index }}"
+          data-value="{{ value | escape }}">
+          <input type="radio"
+            form="{{ form_id }}"
+            {% if option.selected_value == value and product_available %} checked="checked"{% endif %}
+            value="{{ value | escape }}"
+            data-index="option{{ option_index }}"
+            name="{{ option.name }}"
+            data-variant-input
+            class="variant__input-{{ section_id }}{% unless product_available %} disabled{% endunless %}"
+            id="ProductSelect-{{ section_id }}-{{ product.id }}-option-{{ option.name | handleize }}-{{ value | url_encode }}">
+          <label tabindex="0" for="ProductSelect-{{ section_id }}-{{ product.id }}-option-{{ option.name | handleize }}-{{ value | url_encode }}"{% unless product_available %} class="disabled"{% endunless %}>{{ value | escape }}</label>
+        </div>
+      {%- endfor -%}
+    {%- else -%}
+    {%- comment -%} LE source: product.metafields.custom.limited_colors; match by exact value (strip + downcase + handleize). {%- endcomment -%}
+    {%- assign le_label_shown = false -%}
+    {%- assign le_raw = '' -%}
+    {%- assign le_me = product.metafields.custom.limited_colors -%}
+    {%- if le_me != blank and le_me.value != blank -%}
+      {%- assign le_raw = le_me.value | strip -%}
+    {%- endif -%}
+    {%- assign le_colors_list = le_raw | split: ',' -%}
+    {%- assign vp_block = block -%}
+    {%- if vp_block == blank and section != blank and section.blocks != blank -%}
+      {%- for b in section.blocks -%}
+        {%- if b.type == 'variant_picker' -%}
+          {%- assign vp_block = b -%}
+          {%- break -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
+    {%- for value in option.values -%}
+      {%- assign value_clean = value | strip | downcase -%}
+      {%- assign value_clean_le = value | strip | downcase | handleize -%}
+      {%- assign product_available = false -%}
+      {%- assign has_any_hidden = false -%}
+      {%- assign has_visible_available = false -%}
+      {%- for v in product.variants -%}
+        {%- assign ov = '' -%}
+        {%- if option_index == 1 -%}{%- assign ov = v.option1 | default: '' -%}
+        {%- elsif option_index == 2 -%}{%- assign ov = v.option2 | default: '' -%}
+        {%- else -%}{%- assign ov = v.option3 | default: '' -%}
+        {%- endif -%}
+        {%- assign ov_clean = ov | strip | downcase -%}
+        {%- if ov_clean == value_clean -%}
+          {%- assign v_hidden = v.metafields.custom.hide_from_storefront.value -%}
+          {%- assign v_hidden_str = v_hidden | append: '' | downcase -%}
+          {%- assign v_hidden_bool = false -%}
+          {%- if v_hidden_str == 'true' -%}
+            {%- assign v_hidden_bool = true -%}
+          {%- endif -%}
+          {%- if v_hidden_bool -%}
+            {%- assign has_any_hidden = true -%}
+          {%- endif -%}
+          {%- if v.available and v_hidden_bool == false -%}
+            {%- assign has_visible_available = true -%}
+            {%- assign product_available = true -%}
+          {%- endif -%}
+        {%- endif -%}
+      {%- endfor -%}
+      {%- if product.options.size == 1 -%}
+        {%- assign product_available = false -%}
+        {%- for v in product.variants -%}
+          {%- assign ov = '' -%}
+          {%- if option_index == 1 -%}{%- assign ov = v.option1 | default: '' -%}
+          {%- elsif option_index == 2 -%}{%- assign ov = v.option2 | default: '' -%}
+          {%- else -%}{%- assign ov = v.option3 | default: '' -%}
+          {%- endif -%}
+          {%- assign ov_clean = ov | strip | downcase -%}
+          {%- if ov_clean == value_clean and v.available -%}
+            {%- assign product_available = true -%}
+            {%- break -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+      {%- assign is_limited_edition = false -%}
+      {%- if le_raw != blank -%}
+        {%- for le_color in le_colors_list -%}
+          {%- assign le_color_clean = le_color | strip | downcase | handleize -%}
+          {%- if le_color_clean != blank and le_color_clean == value_clean_le -%}
+            {%- assign is_limited_edition = true -%}
+            {%- break -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+      {%- comment -%} Hide swatch when ANY variant for this color has hide_from_storefront.value == true. LE visibility is only by metafields (limited_colors + hide_from_storefront). {%- endcomment -%}
+      {%- assign skip_swatch = has_any_hidden -%}
+      {%- unless skip_swatch -%}
+      {%- comment -%} LE: no separate row in picker; badge only on main product image + All Variants cards. {%- endcomment -%}
+      <div
+        class="variant-input"
+        data-index="option{{ option_index }}"
+        data-value="{{ value | escape }}">
+        <input type="radio"
+          form="{{ form_id }}"
+          {% if option.selected_value == value and product_available %} checked="checked"{% endif %}
+          value="{{ value | escape }}"
+          data-index="option{{ option_index }}"
+          name="{{ option.name }}"
+          data-variant-input
+          {% if is_color %}data-color-swatch{% endif %}
+          class="variant__input-{{ section_id }}{% unless product_available %} disabled{% endunless %}"
+          {% if is_color %} data-color-name="{{ value | escape }}"{% endif %}
+          {% if is_color %} data-color-index="{{ option_index | minus: 1 }}"{% endif %}
+          id="ProductSelect-{{ section_id }}-{{ product.id }}-option-{{ option.name | handleize }}-{{ value | url_encode }}">
+        {%- if is_color -%}
+          {%- if value.swatch -%}
+            {% comment %} Handle color swatches from Liquid swatch drop {% endcomment %}
+            {%- liquid
+              assign color_image = value.swatch.image | image_url: width: 50
+              assign color_swatch_fallback = value.swatch.color
+            -%}
+            <label
+              tabindex="0"
+              for="ProductSelect-{{ section_id }}-{{ product.id }}-option-{{ option.name | handleize }}-{{ value | url_encode }}"
+              class="color-swatch color-swatch--{{ value | handle }}{% unless product_available %} disabled{% endunless %}"
+              style="background-color: {{ color_swatch_fallback }};{% if value.swatch.image %}  background-image: url({{ color_image }});{% endif %}"
+            >
+              {{ value | escape }}
+            </label>
+          {%- else -%}
+            {% comment %} Handle legacy color swatches generated color product option + product images {% endcomment %}
+            {%- liquid
+              assign color_file_name = value | handle | append: '.' | append: swatch_file_extension
+              assign color_image = color_file_name | file_img_url: '50x50' | prepend: 'https:' | split: '?' | first
+              assign color_swatch_fallback = value | split: ' ' | last | handle
+            -%}
+            <label
+              tabindex="0"
+              for="ProductSelect-{{ section_id }}-{{ product.id }}-option-{{ option.name | handleize }}-{{ value | url_encode }}"
+              class="color-swatch color-swatch--{{ value | handle }}{% unless product_available %} disabled{% endunless %}"
+              style="background-color: {{ color_swatch_fallback }};{% if images[color_file_name] != blank %}  background-image: url({{ color_image }});{% endif %}"
+            >
+              {{ value | escape }}
+            </label>
+          {%- endif -%}
+        {%- else -%}
+          <label tabindex="0" for="ProductSelect-{{ section_id }}-{{ product.id }}-option-{{ option.name | handleize }}-{{ value | url_encode }}"{% unless product_available %} class="disabled"{% endunless %}>{{ value | escape }}</label>
+        {%- endif -%}
+      </div>
+      {%- endunless -%}
+    {%- endfor -%}
+    {%- endif -%}
+  </fieldset>
+</div>

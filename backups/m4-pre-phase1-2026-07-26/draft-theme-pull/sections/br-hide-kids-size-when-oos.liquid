@@ -1,0 +1,25 @@
+{%- comment -%}
+  Theme-update safe section. Add to product template to hide Kids size when no stock.
+  No visible output; only loads br-hide-kids-size-when-oos.liquid script.
+{%- endcomment -%}
+{%- if template.name == 'product' and product -%}
+  {%- render 'br-hide-kids-size-when-oos', product: product -%}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "BR Hide Kids when OOS",
+  "class": "br-hide-kids-oos",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Hides the Kids size when they have zero stock. Add this section to every product template that shows the size selector: e.g. the default product template and the Product landing template. In Customize, open a product that uses that template → Add section → BR Hide Kids when OOS → place after Main product. No visible output."
+    }
+  ],
+  "presets": [
+    {
+      "name": "BR Hide Kids when OOS"
+    }
+  ]
+}
+{% endschema %}

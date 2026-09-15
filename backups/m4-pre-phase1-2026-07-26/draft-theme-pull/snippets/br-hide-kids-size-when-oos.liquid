@@ -1,0 +1,74 @@
+{%- comment -%} Hide Kids size when no stock. Liquid sets flag; JS hides pill/option. Load from br-global-styles or BR Hide Kids when OOS section. {%- endcomment -%}
+{%- liquid
+  assign kids_trigger = 'kids'
+  assign kids_in_stock = false
+  if product and product.variants.size > 0
+    for v in product.variants
+      assign o1 = v.option1 | default: '' | downcase
+      assign o2 = v.option2 | default: '' | downcase
+      assign o3 = v.option3 | default: '' | downcase
+      if o1 contains kids_trigger or o2 contains kids_trigger or o3 contains kids_trigger
+        if v.available
+          assign kids_in_stock = true
+          break
+        endif
+      endif
+    endfor
+  endif
+-%}
+<script>
+window.brKidsInStock = {{ kids_in_stock }};
+(function() {
+  var trigger = 'kids';
+  function hideKidsWhenOOS() {
+    if (window.brKidsInStock === true) return;
+    document.querySelectorAll('.variant-input-wrap .variant-input').forEach(function(wrap) {
+      var input = wrap.querySelector('input[type="radio"]');
+      var label = wrap.querySelector('label');
+      var val = (input && input.value) ? input.value.toLowerCase() : '';
+      var text = (label && label.textContent) ? label.textContent.toLowerCase().trim() : '';
+      if (val.indexOf(trigger) !== -1 || text.indexOf(trigger) !== -1) {
+        wrap.style.setProperty('display', 'none', 'important');
+        wrap.setAttribute('data-br-hide-kids', '1');
+      }
+    });
+    document.querySelectorAll('.variant-input-wrap input[type="radio"]').forEach(function(input) {
+      if ((input.value || '').toLowerCase().indexOf(trigger) === -1) return;
+      var wrap = input.closest('.variant-input');
+      if (wrap && !wrap.getAttribute('data-br-hide-kids')) {
+        wrap.style.setProperty('display', 'none', 'important');
+        wrap.setAttribute('data-br-hide-kids', '1');
+      }
+    });
+    document.querySelectorAll('.variant-input-wrap select').forEach(function(sel) {
+      [].slice.call(sel.querySelectorAll('option')).forEach(function(opt) {
+        if ((opt.value || '').toLowerCase().indexOf(trigger) !== -1) opt.remove();
+      });
+    });
+  }
+  function run() {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', run);
+      return;
+    }
+    var t = 0;
+    var times = [0, 100, 300, 600, 1000, 1500, 2500, 4000, 6000];
+    times.forEach(function(ms) {
+      if (ms === 0) hideKidsWhenOOS();
+      else setTimeout(hideKidsWhenOOS, ms);
+    });
+    window.addEventListener('load', hideKidsWhenOOS);
+    var obsTimer;
+    var obs = new MutationObserver(function() {
+      if (obsTimer) return;
+      obsTimer = setTimeout(function() {
+        obsTimer = null;
+        hideKidsWhenOOS();
+      }, 250);
+    });
+    obs.observe(document.body, { childList: true, subtree: true });
+    setTimeout(function() { obs.disconnect(); }, 10000);
+  }
+  run();
+})();
+</script>

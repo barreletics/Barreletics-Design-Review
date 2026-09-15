@@ -1,53 +1,92 @@
 {% comment %}
-  Page Compare Section
-  Open Sole vs Closed Sole side-by-side comparison with feature table.
-  Used on: page.compare.json
+  Page Compare — Open Sole vs Closed Sole
+  Used on: page.compare.json · page.compare-open-vs-closed.json
+  Page handle: /pages/compare-open-closed-sole
 {% endcomment %}
 
-<section class="section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
-  <div class="section__inner section__inner--narrow">
+{%- assign product_a = section.settings.product_a -%}
+{%- assign product_b = section.settings.product_b -%}
+{%- assign img_a = section.settings.product_a_image -%}
+{%- assign img_b = section.settings.product_b_image -%}
+{%- if img_a == blank and product_a != blank and product_a.featured_media -%}
+  {%- assign img_a = product_a.featured_media.preview_image -%}
+{%- endif -%}
+{%- if img_b == blank and product_b != blank and product_b.featured_media -%}
+  {%- assign img_b = product_b.featured_media.preview_image -%}
+{%- endif -%}
+{%- assign url_a = section.settings.product_a_url -%}
+{%- if url_a == blank and product_a != blank -%}{%- assign url_a = product_a.url -%}{%- endif -%}
+{%- assign url_b = section.settings.product_b_url -%}
+{%- if url_b == blank and product_b != blank -%}{%- assign url_b = product_b.url -%}{%- endif -%}
+
+<section class="section page-compare" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
+  <div class="section__inner section__inner--narrow page-compare__intro">
     {% if section.settings.eyebrow != blank %}
       <p class="eyebrow eyebrow--accent">{{ section.settings.eyebrow }}</p>
     {% endif %}
     <h1 class="page-compare__title">{{ section.settings.title }}</h1>
     {% if section.settings.subtitle != blank %}
-      <p class="page-compare__subtitle">{{ section.settings.subtitle }}</p>
+      <p class="page-compare__subtitle type-lede">{{ section.settings.subtitle }}</p>
     {% endif %}
   </div>
 </section>
 
-<section class="section section--cream">
+<section class="section page-compare__products">
   <div class="section__inner">
     <div class="page-compare__visual">
       <div class="page-compare__product">
         <div class="page-compare__product-image">
-          <div class="page-compare__placeholder">Open Sole</div>
+          {% if img_a != blank %}
+            {{ img_a
+              | image_url: width: 1200
+              | image_tag:
+                loading: 'lazy',
+                widths: '480, 720, 1200',
+                sizes: '(max-width: 768px) 90vw, 40vw',
+                class: 'page-compare__img',
+                alt: section.settings.product_a_name
+            }}
+          {% else %}
+            <div class="page-compare__placeholder">{{ section.settings.product_a_name }}</div>
+          {% endif %}
         </div>
-        <h2 class="page-compare__product-name">{{ section.settings.product_a_name }}</h2>
-        <p class="page-compare__product-desc">{{ section.settings.product_a_desc }}</p>
-        {% if section.settings.product_a_url != blank %}
-          {% render 'button', label: section.settings.product_a_cta, url: section.settings.product_a_url, style: 'primary' %}
+        <h2 class="page-compare__product-name type-statement">{{ section.settings.product_a_name }}</h2>
+        <p class="page-compare__product-desc type-body">{{ section.settings.product_a_desc }}</p>
+        {% if url_a != blank %}
+          {% render 'button', label: section.settings.product_a_cta, url: url_a, style: 'primary' %}
         {% endif %}
       </div>
-      <div class="page-compare__vs">vs</div>
+      <div class="page-compare__vs type-statement" aria-hidden="true">vs</div>
       <div class="page-compare__product">
         <div class="page-compare__product-image">
-          <div class="page-compare__placeholder">Closed Sole</div>
+          {% if img_b != blank %}
+            {{ img_b
+              | image_url: width: 1200
+              | image_tag:
+                loading: 'lazy',
+                widths: '480, 720, 1200',
+                sizes: '(max-width: 768px) 90vw, 40vw',
+                class: 'page-compare__img',
+                alt: section.settings.product_b_name
+            }}
+          {% else %}
+            <div class="page-compare__placeholder">{{ section.settings.product_b_name }}</div>
+          {% endif %}
         </div>
-        <h2 class="page-compare__product-name">{{ section.settings.product_b_name }}</h2>
-        <p class="page-compare__product-desc">{{ section.settings.product_b_desc }}</p>
-        {% if section.settings.product_b_url != blank %}
-          {% render 'button', label: section.settings.product_b_cta, url: section.settings.product_b_url, style: 'primary' %}
+        <h2 class="page-compare__product-name type-statement">{{ section.settings.product_b_name }}</h2>
+        <p class="page-compare__product-desc type-body">{{ section.settings.product_b_desc }}</p>
+        {% if url_b != blank %}
+          {% render 'button', label: section.settings.product_b_cta, url: url_b, style: 'primary' %}
         {% endif %}
       </div>
     </div>
   </div>
 </section>
 
-<section class="section">
+<section class="section page-compare__table-section">
   <div class="section__inner">
     <div class="page-compare__table-wrap">
-      <table class="page-compare__table" role="table" aria-label="Feature comparison: Open Sole vs Closed Sole">
+      <table class="page-compare__table type-body" role="table" aria-label="Feature comparison: {{ section.settings.product_a_name }} vs {{ section.settings.product_b_name }}">
         <thead>
           <tr>
             <th scope="col" class="page-compare__th page-compare__th--feature">Feature</th>
@@ -69,176 +108,215 @@
       </table>
     </div>
 
-    {% if section.settings.shared_note != blank %}
-      <div class="page-compare__shared">
-        <p class="page-compare__shared-text">{{ section.settings.shared_note }}</p>
-      </div>
-    {% endif %}
   </div>
 </section>
 
+{% if section.settings.shared_note != blank or section.settings.bottom_cta_label != blank %}
+<section class="section page-compare__close">
+  <div class="section__inner section__inner--narrow page-compare__close-inner">
+    {% if section.settings.shared_note != blank %}
+      <p class="page-compare__shared-text type-body">{{ section.settings.shared_note }}</p>
+    {% endif %}
+    {% if section.settings.bottom_cta_label != blank %}
+      {% render 'button',
+        label: section.settings.bottom_cta_label,
+        url: section.settings.bottom_cta_url | default: '/collections/all',
+        style: 'brand',
+        size: 'lg'
+      %}
+    {% endif %}
+  </div>
+</section>
+{% endif %}
+
 <style>
+  /* Layout + color only — type comes from Type OS classes
+     eyebrow → .eyebrow (label 11)
+     title → page H1 law clamp(32–44)/400 (Help/FAQ family)
+     subtitle/desc/table/shared → .type-body (16)
+     product name → .type-statement (28–36)
+     vs → .type-label (11) */
+  /* Rhythm aligned to Help/FAQ content pages */
+  .page-compare.section {
+    padding-top: 72px;
+    padding-bottom: 8px;
+  }
+  .page-compare__intro { text-align: center; }
+  .page-compare__intro .eyebrow {
+    margin: 0 0 16px;
+  }
+  .page-compare__products.section {
+    padding-top: var(--section-padding-y, 32px);
+    padding-bottom: var(--section-padding-y, 32px);
+  }
+  .page-compare__table-section.section {
+    padding-top: var(--section-padding-y, 32px);
+    padding-bottom: var(--section-padding-y, 32px);
+  }
+  .page-compare__close.section {
+    padding-top: var(--section-padding-y, 32px);
+    padding-bottom: var(--section-padding-y, 32px);
+  }
+  @media (max-width: 768px) {
+    .page-compare.section {
+      padding-top: 48px;
+      padding-bottom: 4px;
+    }
+    .page-compare__products.section,
+    .page-compare__table-section.section,
+    .page-compare__close.section {
+      padding-top: var(--section-padding-y-mobile, 24px);
+      padding-bottom: var(--section-padding-y-mobile, 24px);
+    }
+  }
+  /* Help-family page H1 — planning/help-family-type-law.md */
   .page-compare__title {
-    font-size: var(--text-5xl);
-    font-weight: var(--weight-bold);
-    color: var(--text-primary);
+    font-size: clamp(32px, 4vw, 44px);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.028em;
+    text-transform: none;
+    color: var(--text-primary, #1c1916);
     text-align: center;
-    margin: 0 0 var(--space-3);
-    letter-spacing: var(--tracking-tight);
+    margin: 0 0 20px;
   }
-
+  @media (max-width: 768px) {
+    .page-compare__title { font-size: clamp(28px, 8vw, 36px); }
+  }
   .page-compare__subtitle {
-    font-size: var(--text-md);
-    color: var(--text-body);
     text-align: center;
-    line-height: var(--leading-relaxed);
-    margin: 0;
+    margin: 0 auto;
+    max-width: 42ch;
   }
-
   .page-compare__visual {
     display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    gap: var(--space-6);
-    align-items: center;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: clamp(28px, 4vw, 56px);
+    align-items: stretch;
+    width: 100%;
   }
-
   .page-compare__product {
+    width: 100%;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
   }
-
+  .page-compare__product .btn {
+    margin-top: auto;
+    min-height: var(--type-cta-min-height, 44px);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .page-compare__product-desc {
+    flex: 1 1 auto;
+    margin: 0 auto 20px;
+    max-width: 34ch;
+  }
   .page-compare__product-image {
-    margin-bottom: var(--space-5);
-  }
-
-  .page-compare__placeholder {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 0 20px;
     aspect-ratio: 1;
-    max-width: 320px;
-    margin: 0 auto;
-    background: linear-gradient(135deg, var(--bg-primary), var(--border-default));
-    border-radius: var(--radius-card);
+    overflow: hidden;
+    background: transparent;
+    position: relative;
+    z-index: 0;
+  }
+  .page-compare__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: transparent;
+  }
+  .page-compare__placeholder {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1;
+    background: var(--bg-alternate-soft, #faf8f6);
+    border-radius: var(--radius-card, 8px);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: var(--text-sm);
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-wide);
   }
-
   .page-compare__vs {
-    font-size: var(--text-xl);
-    font-weight: var(--weight-bold);
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-widest);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+    text-transform: lowercase;
+    flex-shrink: 0;
+    padding: 0 8px;
+    position: relative;
+    z-index: 1;
   }
-
-  .page-compare__product-name {
-    font-size: var(--text-xl);
-    font-weight: var(--weight-bold);
-    color: var(--text-primary);
-    margin: 0 0 var(--space-2);
-  }
-
-  .page-compare__product-desc {
-    font-size: var(--text-base);
-    color: var(--text-body);
-    line-height: var(--leading-relaxed);
-    margin: 0 0 var(--space-5);
-    max-width: 32ch;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
+  .page-compare__product-name { margin: 0 0 8px; }
+  .page-compare__table-section { background: #fff; }
   .page-compare__table-wrap {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
-
   .page-compare__table {
     width: 100%;
     border-collapse: collapse;
-    font-size: var(--text-base);
   }
-
   .page-compare__th {
-    padding: var(--space-4) var(--space-5);
+    padding: 14px 16px;
     text-align: left;
-    font-weight: var(--weight-bold);
+    font-weight: 500;
     color: var(--text-primary);
-    border-bottom: 2px solid var(--text-primary);
-    font-size: var(--text-sm);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-wide);
+    border-bottom: 1px solid var(--text-primary);
+    background: var(--bg-alternate-soft, #faf8f6);
   }
-
-  .page-compare__th--feature {
-    width: 30%;
-  }
-
+  .page-compare__th--feature { width: 28%; }
   .page-compare__td {
-    padding: var(--space-4) var(--space-5);
-    border-bottom: 1px solid var(--border-default);
+    padding: 14px 16px;
+    border-bottom: 1px solid #ebe6dc;
     color: var(--text-body);
-    line-height: var(--leading-relaxed);
+    line-height: var(--type-body-leading, 1.5);
     vertical-align: top;
   }
-
   .page-compare__td--feature {
-    font-weight: var(--weight-medium);
+    font-weight: 500;
     color: var(--text-primary);
   }
-
-  .page-compare__shared {
-    margin-top: var(--space-8);
+  .page-compare__close {
+    background: var(--bg-alternate-soft, #faf8f6);
+  }
+  .page-compare__close-inner {
     text-align: center;
-    padding: var(--space-6);
-    background: var(--bg-alternate);
-    border-radius: var(--radius-card);
+    max-width: 42rem;
+    margin: 0 auto;
   }
-
   .page-compare__shared-text {
-    font-size: var(--text-md);
-    font-weight: var(--weight-medium);
-    color: var(--text-primary);
-    margin: 0;
+    margin: 0 auto 32px;
+    max-width: 38ch;
   }
-
   @media (max-width: 768px) {
-    .page-compare__title {
-      font-size: var(--text-3xl);
-    }
-
     .page-compare__visual {
       grid-template-columns: 1fr;
-      gap: var(--space-4);
+      gap: 12px;
     }
-
-    .page-compare__vs {
-      text-align: center;
-    }
-
-    .page-compare__placeholder {
-      max-width: 200px;
-    }
-
+    .page-compare__vs { text-align: center; }
     .page-compare__th,
-    .page-compare__td {
-      padding: var(--space-3);
-      font-size: 14px;
-    }
+    .page-compare__td { padding: 12px 8px; }
   }
 </style>
 
 {% schema %}
 {
   "name": "Compare Page",
+  "tag": "div",
+  "class": "page-compare-section",
   "settings": [
     {
       "type": "text",
       "id": "eyebrow",
       "label": "Eyebrow",
-      "default": "Two Versions. One Performance."
+      "default": "Two versions. One performance."
     },
     {
       "type": "text",
@@ -250,7 +328,21 @@
       "type": "textarea",
       "id": "subtitle",
       "label": "Subtitle",
-      "default": "Same patented 360° grip. Same durability. Choose the build that fits your practice."
+      "default": "Both perform identically — same grip, same stability. The difference is feel and coverage only."
+    },
+    {
+      "type": "header",
+      "content": "Product A — Open Sole"
+    },
+    {
+      "type": "product",
+      "id": "product_a",
+      "label": "Product A (pulls image + URL)"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_a_image",
+      "label": "Product A image override"
     },
     {
       "type": "text",
@@ -262,18 +354,32 @@
       "type": "textarea",
       "id": "product_a_desc",
       "label": "Product A description",
-      "default": "Heel grounded to the surface. Barefoot connection. Mid-foot ventilation."
+      "default": "Heel exposed, mid-foot breathing hole. More grounded, barefoot feel. Natural toe splay."
     },
     {
       "type": "text",
       "id": "product_a_cta",
-      "label": "Product A CTA text",
+      "label": "Product A CTA",
       "default": "Shop Open Sole"
     },
     {
       "type": "url",
       "id": "product_a_url",
-      "label": "Product A link"
+      "label": "Product A link override"
+    },
+    {
+      "type": "header",
+      "content": "Product B — Closed Sole"
+    },
+    {
+      "type": "product",
+      "id": "product_b",
+      "label": "Product B (pulls image + URL)"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_b_image",
+      "label": "Product B image override"
     },
     {
       "type": "text",
@@ -285,24 +391,46 @@
       "type": "textarea",
       "id": "product_b_desc",
       "label": "Product B description",
-      "default": "Full underfoot coverage. More protection. Slightly warmer."
+      "default": "Heel and foot fully covered. Same grip, same stability."
     },
     {
       "type": "text",
       "id": "product_b_cta",
-      "label": "Product B CTA text",
+      "label": "Product B CTA",
       "default": "Shop Closed Sole"
     },
     {
       "type": "url",
       "id": "product_b_url",
-      "label": "Product B link"
+      "label": "Product B link override"
+    },
+    {
+      "type": "header",
+      "content": "Shared + bottom CTA"
     },
     {
       "type": "textarea",
       "id": "shared_note",
       "label": "Shared features note",
-      "default": "Both deliver the same patented 360° full-contact grip, full toe splay, and are priced at $74."
+      "default": "Both deliver the same molded 360° full-contact grip, the same stability, and natural toe splay. Choice is preference and feel only.",
+      "info": "Leave blank to hide."
+    },
+    {
+      "type": "text",
+      "id": "bottom_cta_heading",
+      "label": "Bottom CTA heading",
+      "default": "Not sure? Start with the pair that matches your feel."
+    },
+    {
+      "type": "text",
+      "id": "bottom_cta_label",
+      "label": "Bottom CTA label",
+      "default": "Shop All"
+    },
+    {
+      "type": "url",
+      "id": "bottom_cta_url",
+      "label": "Bottom CTA URL"
     }
   ],
   "blocks": [
@@ -310,28 +438,12 @@
       "type": "feature_row",
       "name": "Feature Row",
       "settings": [
-        {
-          "type": "text",
-          "id": "feature",
-          "label": "Feature name"
-        },
-        {
-          "type": "text",
-          "id": "value_a",
-          "label": "Product A value"
-        },
-        {
-          "type": "text",
-          "id": "value_b",
-          "label": "Product B value"
-        }
+        { "type": "text", "id": "feature", "label": "Feature name" },
+        { "type": "text", "id": "value_a", "label": "Product A value" },
+        { "type": "text", "id": "value_b", "label": "Product B value" }
       ]
     }
   ],
-  "presets": [
-    {
-      "name": "Compare Page"
-    }
-  ]
+  "presets": [{ "name": "Compare Page" }]
 }
 {% endschema %}

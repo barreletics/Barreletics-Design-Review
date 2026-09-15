@@ -1,0 +1,189 @@
+{% comment %}
+  Home Instagram / UGC band (DP-09)
+  Static grid fallback until Juicer or native IG embed is wired.
+{% endcomment %}
+
+<section class="home-ugc" aria-label="From Instagram">
+  <div class="home-ugc__inner">
+    {% if section.settings.eyebrow != blank %}
+      <p class="home-ugc__eyebrow type-label">{{ section.settings.eyebrow }}</p>
+    {% endif %}
+    <h2 class="home-ugc__title h2-standard">{{ section.settings.title }}</h2>
+    {% if section.settings.body != blank %}
+      <p class="home-ugc__body type-body">{{ section.settings.body }}</p>
+    {% endif %}
+
+    <div class="home-ugc__grid">
+      {% for block in section.blocks %}
+        <a
+          class="home-ugc__cell"
+          href="{{ block.settings.link | default: section.settings.profile_url }}"
+          {{ block.shopify_attributes }}
+          {% if block.settings.link != blank or section.settings.profile_url != blank %}
+            target="_blank" rel="noopener noreferrer"
+          {% endif %}
+        >
+          {% if block.settings.image != blank %}
+            <img
+              src="{{ block.settings.image | image_url: width: 600 }}"
+              alt="{{ block.settings.alt | escape }}"
+              loading="lazy"
+              width="280"
+              height="280"
+            >
+          {% elsif block.settings.image_url != blank %}
+            <img
+              src="{{ block.settings.image_url | escape }}"
+              alt="{{ block.settings.alt | escape }}"
+              loading="lazy"
+              width="280"
+              height="280"
+            >
+          {% else %}
+            <div class="home-ugc__placeholder" aria-hidden="true"></div>
+          {% endif %}
+        </a>
+      {% endfor %}
+    </div>
+
+    {% if section.settings.cta_text != blank %}
+      <a class="home-ugc__cta" href="{{ section.settings.profile_url }}" target="_blank" rel="noopener noreferrer">
+        {{ section.settings.cta_text }}
+      </a>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  /* Home WORKING .ig-section */
+  .home-ugc {
+    padding: 96px 0 72px;
+    background: #fff;
+    overflow: hidden;
+  }
+  .home-ugc__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+    text-align: left;
+  }
+  .home-ugc__eyebrow {
+    margin: 0 0 var(--gap-a);
+    color: var(--type-label-color);
+  }
+  .home-ugc__title {
+    /* Type OS H2 Standard — class on element */
+    margin: 0 0 var(--gap-a);
+  }
+  .home-ugc__body {
+    font-size: var(--type-body-size);
+    color: var(--text-warm-muted);
+    margin: 0;
+    font-weight: var(--type-body-weight);
+    line-height: var(--type-body-leading);
+    max-width: none;
+  }
+  .home-ugc__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    margin: 32px 0 28px;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .home-ugc__cell {
+    display: block;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 0;
+    background: #f0ede8;
+    position: relative;
+  }
+  .home-ugc__cell img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+  }
+  .home-ugc__cell:hover img { transform: scale(1.04); }
+  .home-ugc__cell::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(28,25,22,0);
+    transition: background 0.3s;
+  }
+  .home-ugc__cell:hover::after { background: rgba(28,25,22,0.18); }
+  .home-ugc__placeholder {
+    width: 100%;
+    height: 100%;
+    background: #f0ede8;
+  }
+  .home-ugc__cta {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1c1916;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    border-bottom: 1px solid #1c1916;
+    padding-bottom: 2px;
+  }
+  @media (max-width: 900px) {
+    .home-ugc__grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .home-ugc { padding: 48px 16px; }
+    .home-ugc__inner { padding: 0; }
+    .home-ugc__grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+      margin: 24px 0 22px;
+      border-radius: 4px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Home UGC",
+  "settings": [
+    { "type": "header", "content": "Shared — Content" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Follow the movement", "info": "Leave blank if it restates the H2." },
+    { "type": "text", "id": "title", "label": "Heading", "default": "@barreletics" },
+    { "type": "textarea", "id": "body", "label": "Body", "default": "Instructors and clients posting the grip that actually lasts." },
+    { "type": "text", "id": "cta_text", "label": "CTA label", "default": "Follow on Instagram →" },
+    { "type": "url", "id": "profile_url", "label": "CTA link" },
+    { "type": "header", "content": "Section — UGC" },
+    { "type": "paragraph", "content": "Tiles below hold the grid images. Media is per-block." }
+  ],
+  "blocks": [
+    {
+      "type": "tile",
+      "name": "UGC tile",
+      "settings": [
+        { "type": "header", "content": "Shared — Media" },
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "image_url", "label": "Image URL fallback" },
+        { "type": "text", "id": "alt", "label": "Alt text", "default": "Barreletics in studio" },
+        { "type": "url", "id": "link", "label": "Link (optional)" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Home UGC",
+      "blocks": [
+        { "type": "tile" },
+        { "type": "tile" },
+        { "type": "tile" },
+        { "type": "tile" }
+      ]
+    }
+  ]
+}
+{% endschema %}
