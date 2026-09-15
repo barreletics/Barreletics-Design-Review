@@ -74,6 +74,17 @@
   if template.name == 'product'
     assign more_label = 'More reviews →'
   endif
+
+  comment
+    Home only: text_cards_initial > 0 truncates text cards with in-page See more.
+    Default 0 = show all (PDPs unchanged).
+  endcomment
+  assign text_initial = section.settings.text_cards_initial | default: 0 | plus: 0
+  assign text_expand = section.settings.text_cards_expand
+  if template.name != 'index'
+    assign text_initial = 0
+    assign text_expand = false
+  endif
 %}
 {% comment %}
   HARD: show_live_text always mounts Judge.me. Compact CSS hides chrome +
@@ -227,7 +238,7 @@
       {% if section.settings.community_label != blank %}
         <p class="pdp-reviews__community-label">{{ section.settings.community_label }}</p>
       {% endif %}
-      <div class="pdp-reviews__text-grid">
+      <div class="pdp-reviews__text-grid" data-reviews-text-grid>
         {% assign text_shown = 0 %}
         {% for block in section.blocks %}
           {% if block.type == 'text_review' and text_shown < 6 %}
@@ -240,8 +251,12 @@
                 assign star_n = 5
               endif
               assign text_shown = text_shown | plus: 1
+              assign card_extra = false
+              if text_initial > 0 and text_shown > text_initial
+                assign card_extra = true
+              endif
             %}
-            <article class="pdp-reviews__text-card" {{ block.shopify_attributes }}>
+            <article class="pdp-reviews__text-card{% if card_extra %} pdp-reviews__text-card--extra{% endif %}" {% if card_extra %}hidden{% endif %} {{ block.shopify_attributes }}>
               <div class="pdp-reviews__text-stars" aria-label="{{ star_n }} out of 5 stars">
                 {% for i in (1..5) %}
                   {% if i <= star_n %}★{% else %}<span class="pdp-reviews__star--empty">☆</span>{% endif %}
@@ -265,6 +280,13 @@
           {% endif %}
         {% endfor %}
       </div>
+      {% if text_expand and text_initial > 0 and text_count > text_initial %}
+        <div class="pdp-reviews__expand-wrap">
+          <button type="button" class="pdp-reviews__expand" data-reviews-expand aria-expanded="false">
+            See more reviews
+          </button>
+        </div>
+      {% endif %}
     {% endif %}
 
     {% if render_live %}
@@ -1008,6 +1030,20 @@
         if (build(section)) obs.disconnect();
       });
       obs.observe(source, { childList: true, subtree: true });
+    });
+  })();
+
+  (function () {
+    var root = document.getElementById('shopify-section-{{ section.id }}');
+    if (!root) return;
+    var btn = root.querySelector('[data-reviews-expand]');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      root.querySelectorAll('.pdp-reviews__text-card--extra').forEach(function (el) {
+        el.hidden = false;
+      });
+      btn.setAttribute('aria-expanded', 'true');
+      btn.hidden = true;
     });
   })();
 </script>
