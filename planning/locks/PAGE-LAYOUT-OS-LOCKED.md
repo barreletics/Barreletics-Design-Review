@@ -144,7 +144,7 @@ Humans/agents: every Home `fifty-fifty` must be COVER + 860/520 + **32/32** cent
 
 ## Interni note
 
-`press-feature-interni` stays **`press-feature`**. When Andrew asks to enlarge Interni to the marketing split look, adopt the **same mobile visual frame** as fifty-fifty (520/520 · center · 32/32 · COVER · scale 100 · body 16). Do **not** retarget the section type to `fifty-fifty`.
+`press-feature-interni` stays **`press-feature`**. **Adopted** the marketing split mobile visual frame (520/520 · center · 32/32 · COVER · body 16) via section settings (`mobile_media_height` / `mobile_text_height` / equal text pads) — type remains `press-feature` (do **not** convert to `fifty-fifty`). TE can retune the knobs; Home Interni JSON locks the OS defaults.
 
 ## Do not
 

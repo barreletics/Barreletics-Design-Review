@@ -705,11 +705,15 @@
       line-height: 1.10;
     }
     {%- if mobile_text_height > 0 %}
+    /* Fixed phone text column: vertically center copy (desktop uses center already;
+       do not keep flex-start + asymmetric padT/padB which parks text at the top). */
     #shopify-section-{{ section.id }} .split-text {
       min-height: {{ mobile_text_height }}px;
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
+      justify-content: center;
+      padding-top: {{ text_pad_m }}px;
+      padding-bottom: {{ text_pad_m }}px;
     }
     {%- endif %}
   }
