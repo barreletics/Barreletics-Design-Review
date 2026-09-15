@@ -27,12 +27,12 @@
     "applies_to_templates": [
       "product*.json"
     ],
-    "note": "Sitewide PDP 50/50 mobile lock 2026-09-10 (560/550). Home uses page_layout_os (860/520 COVER Grip) — separate family."
+    "note": "Sitewide PDP 50/50 mobile lock 2026-09-10 (560/550). Home uses page_layout_os (860/520 COVER \u00b7 32/32 center) \u2014 separate family."
   },
   "fifty_fifty_packshot_exception": {
     "image_fit_mobile": "fit",
     "mobile_media_height_approx": 400,
-    "note": "FIT only after Andrew media QC gate — never default"
+    "note": "FIT only after Andrew media QC gate \u2014 never default"
   },
   "sock_math_editorial": {
     "section_type": "pdp-sock-math",
@@ -79,7 +79,7 @@
       "var(--type-guarantee-column-size",
       "if cta_style == 'outline'"
     ],
-    "rule": "Column titles = Type H3 scale via --type-guarantee-column-size (18–22 / weight 500). Display head. Outline CTA text/border #1c1916 — never white-on-white. One shared sections/guarantee-band.liquid for Home + all PDPs. Do not invent 20–26 or 14–15."
+    "rule": "Column titles = Type H3 scale via --type-guarantee-column-size (18\u201322 / weight 500). Display head. Outline CTA text/border #1c1916 \u2014 never white-on-white. One shared sections/guarantee-band.liquid for Home + all PDPs. Do not invent 20\u201326 or 14\u201315."
   },
   "media_qc": {
     "default_fit": "cover",
@@ -110,7 +110,7 @@
     ]
   },
   "grid_page_open": {
-    "ruler": "Shop All — templates/collection.json variant-grid",
+    "ruler": "Shop All \u2014 templates/collection.json variant-grid",
     "editor": "https://admin.shopify.com/store/barreletics/themes/187144929571/editor?previewPath=%2Fcollections%2Fbarre-pilates-yoga-shoe-sock-footwear",
     "pad_top_desk": 72,
     "pad_top_mobile": 56,
@@ -129,7 +129,7 @@
       "#f8f6f4",
       "#fff8f0"
     ],
-    "rule": "ONE cream only: #faf8f6. --color-warm-cream aliases soft. Darker #f5f2ec retired forever. Help Quick Answers, disciplines, sock-era, value-strip, statement bands — all soft. Never invent a third cream.",
+    "rule": "ONE cream only: #faf8f6. --color-warm-cream aliases soft. Darker #f5f2ec retired forever. Help Quick Answers, disciplines, sock-era, value-strip, statement bands \u2014 all soft. Never invent a third cream.",
     "disciplines_default": "#faf8f6",
     "sock_era_ruler": "#faf8f6",
     "css_token": "--color-warm-cream-soft",
@@ -197,21 +197,99 @@
     "measure_source": "planning/home-5050-enlarge-diag-2026-09-15/measure.json",
     "draft_theme_id": "187144929571",
     "separate_from": "fifty_fifty_lifestyle",
-    "note": "Home/marketing layout OS. Home fifty-fifty sections are ALWAYS COVER 860/520 — FIT is forbidden on Home 50/50 (height consistency). Phone text column min-height mobile_text_height=520 (image≈text). Do NOT apply to product*.json. PDP stays 560/550 + 96/96.",
+    "rule_first": "Name the section family first, then apply that family's ruler.",
+    "note": "Home/marketing layout OS. Name family first. Marketing split media+text visual frame: COVER desk 860 phone 520/520 center pads 32/32 body 16 scale 100. Desk 860/88/88/64 frozen on mobile passes. Asymmetric 32/96 REJECTED. FIT forbidden on Home fifty-fifty. press-feature (Interni) may adopt same mobile visual frame when Andrew enlarges \u2014 stay press-feature type. Do NOT apply to product*.json. PDP stays 560/550 + 96/96.",
     "applies_to_templates": [
       "index.json"
     ],
     "body_px": 16,
+    "families": {
+      "fifty-fifty": {
+        "section_types": [
+          "fifty-fifty"
+        ],
+        "role": "split_media_text_story",
+        "uses_marketing_split_frame": true
+      },
+      "press-feature": {
+        "section_types": [
+          "press-feature"
+        ],
+        "role": "press_editorial_stack",
+        "home_instance": "press-feature-interni",
+        "uses_marketing_split_frame": "when_andrew_enlarges_to_match",
+        "stay_type": "press-feature",
+        "note": "Interni: adopt same mobile visual frame as FF when enlarged \u2014 do not convert type to fifty-fifty."
+      },
+      "collab-hero": {
+        "section_types": [
+          "collab-hero"
+        ],
+        "role": "campaign_stage",
+        "height_desktop_vh": 105
+      },
+      "fullbleed": {
+        "section_types": [
+          "fullbleed-statement"
+        ],
+        "role": "commit_image_beat",
+        "desktop_vh_pct": 100,
+        "mobile_height_setting_approx": 52
+      },
+      "statement": {
+        "section_types": [
+          "statement-band"
+        ],
+        "role": "text_band"
+      },
+      "reviews": {
+        "section_types": [
+          "pdp-reviews"
+        ],
+        "role": "quote_led"
+      },
+      "problem-section": {
+        "section_types": [
+          "problem-section"
+        ],
+        "role": "problem_list_band"
+      }
+    },
+    "marketing_split_visual_frame": {
+      "applies_to": [
+        "fifty-fifty",
+        "press-feature_when_matching"
+      ],
+      "media_fit": "cover",
+      "image_fit_mobile": "cover",
+      "min_height": 860,
+      "mobile_media_height": 520,
+      "mobile_text_height": 520,
+      "mobile_justify": "center",
+      "image_scale": 100,
+      "body_size": "16",
+      "vertical_padding_desk": 88,
+      "side_padding_desk": 64,
+      "text_pad_top_mobile": 32,
+      "text_pad_bottom_mobile": 32,
+      "side_pad_mobile_measured": 20,
+      "desk_frozen_on_mobile_passes": true,
+      "rejected_asymmetric_pads": [
+        32,
+        96
+      ],
+      "fit_forbidden_on_home_fifty_fifty": true
+    },
     "cover_vs_fit": {
-      "cover": "Frame height is the lock; image fills; may crop — REQUIRED for all Home fifty-fifty",
-      "fit": "FORBIDDEN on Home fifty-fifty — FIT ignores min_height / mobile_media_height and breaks height consistency (One Pair was FIT; converted to COVER)"
+      "cover": "Frame height is the lock; image fills; may crop \u2014 REQUIRED for all Home fifty-fifty",
+      "fit": "FORBIDDEN on Home fifty-fifty \u2014 FIT ignores min_height / mobile_media_height and breaks height consistency (One Pair was FIT; converted to COVER)"
     },
     "hero": {
       "section": "split_hero",
       "split": "62/38",
       "desktop_frame": "92vh",
       "media_fit": "cover",
-      "guidance": "Keep 92vh frame; crop via X/Y/zoom only — never photo-aspect / 110"
+      "guidance": "Keep 92vh frame; crop via X/Y/zoom only \u2014 never photo-aspect / 110"
     },
     "home_fifty_fifty_cover_grip": {
       "section_key": "fifty-fifty-grip",
@@ -222,14 +300,15 @@
       "body_size": "16",
       "mobile_text_height": 520,
       "text_pad_top_mobile": 32,
-      "text_pad_bottom_mobile": 96
+      "text_pad_bottom_mobile": 32
     },
     "one_pair_ruler_pads": {
       "vertical_padding_desk": 88,
       "side_padding_desk": 64,
       "text_pad_top_mobile": 32,
-      "text_pad_bottom_mobile": 96,
-      "side_pad_mobile_measured": 20
+      "text_pad_bottom_mobile": 32,
+      "side_pad_mobile_measured": 20,
+      "rejected_asymmetric": "32/96"
     },
     "fullbleed_guidance": {
       "desktop_vh_pct": 100,
@@ -238,16 +317,19 @@
     "collab_guidance": {
       "height_desktop_vh": 105
     },
+    "prove_gate_mandatory": true,
     "prove_gate": [
       "pull-verify named files after push",
-      "measure draft preview — every Home fifty-fifty mediaH ≈ 860 desk / 520 phone (±2px)",
-      "lock-scan page_layout_os OK; PDP 560/550 still OK",
+      "measure draft preview \u2014 every Home fifty-fifty mediaH \u2248 860 desk / 520 phone (\u00b12px)",
+      "pads desk 88/88/64; phone 32/32 center (NOT 32/96)",
+      "body 16; phone text boxes equal via mobile_text_height 520 (\u00b12px); centered",
       "FIT must not appear on any Home fifty-fifty",
-      "measure phone — every Home fifty-fifty mediaH=520 AND text box heights equal (±2px) via mobile_text_height 520"
+      "visual prove any non-FF family touched (press/collab/fullbleed/statement/reviews/problem)",
+      "lock-scan page_layout_os OK; PDP 560/550 still OK"
     ],
     "scan_key": "page_layout_os",
     "home_fifty_fifty": {
-      "rule": "ALL Home type=fifty-fifty MUST be COVER 860 desk / 520 phone",
+      "rule": "ALL Home type=fifty-fifty MUST be COVER 860 desk / 520 phone \u00b7 center \u00b7 pads 32/32 \u00b7 body 16 \u00b7 scale 100",
       "media_fit": "cover",
       "min_height": 860,
       "mobile_media_height": 520,
@@ -255,8 +337,10 @@
       "body_size": "16",
       "fit_forbidden": true,
       "mobile_text_height": 520,
+      "mobile_justify": "center",
       "text_pad_top_mobile": 32,
-      "text_pad_bottom_mobile": 96
+      "text_pad_bottom_mobile": 32,
+      "rejected_pads": "32/96 asymmetric"
     },
     "home_fifty_fifty_cover_one_pair": {
       "section_key": "fifty-fifty-one-pair",
@@ -265,10 +349,26 @@
       "mobile_media_height": 520,
       "image_scale": 100,
       "body_size": "16",
-      "note": "Was FIT (One Pair ruler for pads only). FIT forbidden on Home 50/50 — now COVER 860/520 like Grip.",
+      "note": "Was FIT (One Pair ruler for pads only). FIT forbidden on Home 50/50 \u2014 now COVER 860/520. Pads 32/32 center (32/96 rejected).",
       "mobile_text_height": 520,
       "text_pad_top_mobile": 32,
-      "text_pad_bottom_mobile": 96
+      "text_pad_bottom_mobile": 32
+    },
+    "press_feature_interni": {
+      "section_key": "press-feature-interni",
+      "section_type": "press-feature",
+      "stay_type": "press-feature",
+      "when_enlarged_adopt_mobile_frame": {
+        "mobile_media_height": 520,
+        "mobile_text_height": 520,
+        "mobile_justify": "center",
+        "text_pad_top_mobile": 32,
+        "text_pad_bottom_mobile": 32,
+        "media_fit": "cover",
+        "image_scale": 100,
+        "body_size": "16"
+      },
+      "note": "Interni should adopt same mobile visual frame as FF when Andrew enlarges it \u2014 stay press-feature type."
     },
     "mobile_text_min_height": 520
   }
