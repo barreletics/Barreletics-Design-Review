@@ -1,6 +1,6 @@
 {
   "id": "sitewide",
-  "updated": "2026-09-13",
+  "updated": "2026-09-15",
   "description": "Catalog of locked design-system parameters. Scanner walks every template; page locks add spine/feature specifics.",
   "tokens": {
     "cream": "#faf8f6",
@@ -27,7 +27,7 @@
     "applies_to_templates": [
       "product*.json"
     ],
-    "note": "Sitewide PDP 50/50 mobile lock 2026-09-10. Home/SEO get page locks when we refine those pages."
+    "note": "Sitewide PDP 50/50 mobile lock 2026-09-10 (560/550). Home uses page_layout_os (860/520 COVER Grip) \u2014 separate family."
   },
   "fifty_fifty_packshot_exception": {
     "image_fit_mobile": "fit",
@@ -188,5 +188,66 @@
     "letter": "planning/locks/DRAFT-QA-CONFIRMED-2026-09-14.md",
     "trusted_by": "dark",
     "cream": "#faf8f6"
+  },
+  "page_layout_os": {
+    "id": "page_layout_os",
+    "family": "home_marketing",
+    "locked": "2026-09-15",
+    "letter": "planning/locks/PAGE-LAYOUT-OS-LOCKED.md",
+    "measure_source": "planning/home-5050-enlarge-diag-2026-09-15/measure.json",
+    "draft_theme_id": "187144929571",
+    "separate_from": "fifty_fifty_lifestyle",
+    "note": "Home/marketing layout OS. Do NOT apply to product*.json. PDP stays 560/550 + 96/96.",
+    "applies_to_templates": [
+      "index.json"
+    ],
+    "body_px": 16,
+    "cover_vs_fit": {
+      "cover": "Frame height is the lock; image fills; may crop",
+      "fit": "Ignores min_height / mobile_media_height on Home \u2014 do not claim height on FIT"
+    },
+    "hero": {
+      "section": "split_hero",
+      "split": "62/38",
+      "desktop_frame": "92vh",
+      "media_fit": "cover",
+      "guidance": "Keep 92vh frame; crop via X/Y/zoom only \u2014 never photo-aspect / 110"
+    },
+    "home_fifty_fifty_cover_grip": {
+      "section_key": "fifty-fifty-grip",
+      "media_fit": "cover",
+      "min_height": 860,
+      "mobile_media_height": 520,
+      "image_scale": 100
+    },
+    "home_fifty_fifty_fit_one_pair": {
+      "section_key": "fifty-fifty-one-pair",
+      "media_fit": "fit",
+      "ruler": true,
+      "min_height_claimed_in_json": 720,
+      "mobile_media_height_claimed_in_json": 640,
+      "height_lock": false,
+      "note": "FIT collapses on Home \u2014 measured mediaH is asset-driven; do not QA to 720/640"
+    },
+    "one_pair_ruler_pads": {
+      "vertical_padding_desk": 88,
+      "side_padding_desk": 64,
+      "text_pad_top_mobile": 32,
+      "text_pad_bottom_mobile": 96,
+      "side_pad_mobile_measured": 20
+    },
+    "fullbleed_guidance": {
+      "desktop_vh_pct": 100,
+      "mobile_height_setting_approx": 52
+    },
+    "collab_guidance": {
+      "height_desktop_vh": 105
+    },
+    "prove_gate": [
+      "pull-verify named files after push",
+      "measure draft preview before done",
+      "lock-scan page_layout_os OK; PDP 560/550 still OK"
+    ],
+    "scan_key": "page_layout_os"
   }
 }
