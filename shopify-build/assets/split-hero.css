@@ -1,6 +1,6 @@
 /**
  * Split hero — media-dominant lifestyle
- * Width split via --sh-media-pct. Desktop height = photo aspect × --sh-height-scale.
+ * Width split via --sh-media-pct. Desktop height = 100vh × --sh-height-scale (TE Section height).
  * Full-bleed cover. No contain. No fill bands.
  * X/Y = object-position. Zoom = scale() min 1.
  * One --sh-media-radius clips both sides of the split (photo + copy).
@@ -9,7 +9,7 @@
 .split-hero {
   display: grid;
   grid-template-columns: minmax(0, var(--sh-media-pct, 62%)) minmax(0, calc(100% - var(--sh-media-pct, 62%)));
-  min-height: 92vh;
+  min-height: calc(100vh * var(--sh-height-scale, 1));
   align-items: stretch;
   background: transparent;
   overflow: hidden;
@@ -22,9 +22,9 @@
   overflow: hidden;
   box-sizing: border-box;
   width: 100%;
-  height: 92vh;
-  min-height: 92vh;
-  max-height: 92vh;
+  height: calc(100vh * var(--sh-height-scale, 1));
+  min-height: calc(100vh * var(--sh-height-scale, 1));
+  max-height: calc(100vh * var(--sh-height-scale, 1));
   aspect-ratio: auto;
   background: transparent;
   isolation: isolate;
@@ -239,7 +239,7 @@ a.split-hero__tag:focus-visible {
     order: 1;
     width: 100%;
     min-height: 0;
-    max-height: 62vh;
+    max-height: 78vh;
     aspect-ratio: 4 / 5;
   }
 
