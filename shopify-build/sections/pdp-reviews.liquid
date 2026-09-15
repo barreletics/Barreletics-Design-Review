@@ -84,6 +84,13 @@
   if template.name != 'index'
     assign text_initial = 0
     assign text_expand = false
+  elsif text_initial == 0
+    comment
+      Home ruler: featured_review (separate) + 2 text cards, See more expands rest.
+      TE strips text_cards_* when missing from schema — keep fallback.
+    endcomment
+    assign text_initial = 2
+    assign text_expand = true
   endif
 %}
 {% comment %}
@@ -1108,6 +1115,23 @@
       "label": "Show curated text cards (6)",
       "default": true,
       "info": "Original community row under the photo cards."
+    },
+    {
+      "type": "range",
+      "id": "text_cards_initial",
+      "label": "Text cards shown first (Home)",
+      "min": 0,
+      "max": 6,
+      "step": 1,
+      "default": 0,
+      "info": "0 = show all. Home uses 2 regular text cards (featured quote is separate). PDPs leave 0. Non-index templates ignore and show all."
+    },
+    {
+      "type": "checkbox",
+      "id": "text_cards_expand",
+      "label": "See more reviews expands down (Home)",
+      "default": false,
+      "info": "Home only. Reveals remaining text cards on-page."
     },
     {
       "type": "checkbox",
