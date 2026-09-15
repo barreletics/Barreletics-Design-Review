@@ -26,7 +26,7 @@ Before any pad / height / fit edit:
 | **collab-hero** | `collab-hero` | Campaign stage | Stage ~**105vh** desk guidance · own lane — not a 50/50 |
 | **fullbleed** | `fullbleed-statement` | Commit / image beat | COVER · vh/pct height (~900 desk / ~439 phone @52) — not 50/50 mmh |
 | **statement** | `statement-band` | Text band (Knock socks) | Text height only · Type Statement role |
-| **reviews** | `pdp-reviews` | Quote-led | Own card stack · no aggregate count on Home |
+| **reviews** | `pdp-reviews` | Quote-led | Home: **2 text cards + See more** (force in liquid; extras `[hidden]` + `display:none !important`). No aggregate count on Home. |
 | **problem-section** | `problem-section` | Problem / × list band | Text-list family · not FF |
 
 Also on Home (not in the split-frame set): `split-hero` (62/38 · **92vh** desk), `disciplines` + `variant-grid`, `home-juicer`, `guarantee-band`.
@@ -114,7 +114,8 @@ PAGE LAYOUT OS GATE
 - [ ] Marketing split (fifty-fifty)? → COVER 860/520 · center · pads 32/32 · scale 100 · body 16 · FIT forbidden
 - [ ] Desk 860/88/88/64 frozen when this is a mobile-only pass
 - [ ] Asymmetric 32/96 rejected
-- [ ] press-feature (Interni): stay press-feature type; when enlarging, adopt FF mobile visual frame
+- [ ] press-feature (Interni): stay press-feature type; when enlarging, adopt FF mobile visual frame; media/img never overflow frame (clamp + COVER)
+- [ ] Home reviews: 2 text cards + See more (liquid force + `[hidden]` CSS `display:none !important`)
 - [ ] Phone text min-height mobile_text_height 520 (image≈text) on ALL Home fifty-fifty
 - [ ] Hero stays 92vh / 62/38 if touching Home hero
 - [ ] Draft theme only 187144929571 — never live
@@ -145,6 +146,12 @@ Humans/agents: every Home `fifty-fifty` must be COVER + 860/520 + **32/32** cent
 ## Interni note
 
 `press-feature-interni` stays **`press-feature`**. **Adopted** the marketing split mobile visual frame (520/520 · center · 32/32 · COVER · body 16) via section settings (`mobile_media_height` / `mobile_text_height` / equal text pads) — type remains `press-feature` (do **not** convert to `fifty-fifty`). TE can retune the knobs; Home Interni JSON locks the OS defaults.
+
+**No overflow / no blow-up:** media + img must stay **inside** the 520 frame — `overflow: hidden`, `width/height/max-width/max-height: 100%`, `object-fit: cover`, `transform: none` (no scale>100). Frame matches Grip; do **not** enlarge frame to “fix” a zoomed crop. If COVER crops the required subject badly → **media QC** (swap asset / reframe / FIT exception with Andrew) — never invent FIT as default.
+
+## Home reviews ruler
+
+Home `reviews` (`pdp-reviews` on `index.json`): **`text_cards_initial: 2`** + **`text_cards_expand: true`**. Liquid **forces** 2 + expand on `template.name == index` even if TE strips settings. Extras use `hidden` **and** CSS `display: none !important` (plain `[hidden]` loses to `.text-card { display:flex }`). Measure: only 2 visible curated text cards + See more button.
 
 ## Do not
 

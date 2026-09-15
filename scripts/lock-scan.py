@@ -296,6 +296,53 @@ def scan_page_layout_os(site: dict, build: Path, only: Path | None):
     bs = str(st.get("body_size") or "")
     if bs and bs not in ("default", str(body_px), f"{body_px}px"):
       issues.append(f"templates/index.json {sid}: body_size expected {body_px}/default, got {bs!r}")
+
+  # Home reviews: 2 text cards + See more (PAGE-LAYOUT-OS)
+  hr = plo.get("home_reviews") or {}
+  if hr:
+    rev = sections.get(hr.get("section_key") or "reviews") or {}
+    if (rev.get("type") or "") == (hr.get("section_type") or "pdp-reviews") and not rev.get("disabled"):
+      rst = rev.get("settings") or {}
+      want_n = hr.get("text_cards_initial", 2)
+      if rst.get("text_cards_initial") != want_n:
+        issues.append(
+          f"templates/index.json reviews: text_cards_initial expected {want_n}, got {rst.get('text_cards_initial')!r}"
+        )
+      if hr.get("text_cards_expand", True) and not rst.get("text_cards_expand"):
+        issues.append("templates/index.json reviews: text_cards_expand expected true")
+    liq = build / "sections" / "pdp-reviews.liquid"
+    if liq.exists() and not (only and liq.resolve() != only.resolve()):
+      liq_txt = liq.read_text()
+      for must in hr.get("css_must_contain") or [".pdp-reviews__text-card[hidden]", "display: none !important"]:
+        if must not in liq_txt:
+          issues.append(f"sections/pdp-reviews.liquid: missing Home-reviews guard {must!r}")
+      if "template.name == 'index'" not in liq_txt and 'template.name == "index"' not in liq_txt:
+        # liquid uses template.name == 'index'
+        if "assign text_initial = 2" not in liq_txt:
+          issues.append("sections/pdp-reviews.liquid: missing Home force text_initial = 2")
+
+  # Interni press-feature: no overflow clamps + 520 frame
+  pfi = plo.get("press_feature_interni") or {}
+  if pfi:
+    sid = pfi.get("section_key") or "press-feature-interni"
+    sec = sections.get(sid) or {}
+    if sec and not sec.get("disabled"):
+      st = sec.get("settings") or {}
+      for key, expect in (
+        ("mobile_media_height", pfi.get("mobile_media_height", 520)),
+        ("mobile_text_height", pfi.get("mobile_text_height", 520)),
+      ):
+        if st.get(key) not in (None, "") and st.get(key) != expect:
+          issues.append(f"templates/index.json {sid}: {key} expected {expect}, got {st.get(key)}")
+      fit = (st.get("image_fit_mobile") or "").lower()
+      if fit and fit != (pfi.get("image_fit_mobile") or "cover"):
+        issues.append(f"templates/index.json {sid}: image_fit_mobile expected cover, got {st.get('image_fit_mobile')!r}")
+    liq = build / "sections" / "press-feature.liquid"
+    if liq.exists() and not (only and liq.resolve() != only.resolve()):
+      liq_txt = liq.read_text()
+      for must in pfi.get("liquid_css_must_contain") or []:
+        if must not in liq_txt:
+          issues.append(f"sections/press-feature.liquid: missing Interni no-overflow guard {must!r}")
   return issues
 
 

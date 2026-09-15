@@ -76,21 +76,16 @@
   endif
 
   comment
-    Home only: text_cards_initial > 0 truncates text cards with in-page See more.
-    Default 0 = show all (PDPs unchanged).
+    Home only: ALWAYS 2 text cards + See more (PAGE-LAYOUT-OS).
+    Force on index even if TE strips/zeros text_cards_* settings.
+    Non-index (PDP/collection): show all — never apply Home truncation.
   endcomment
-  assign text_initial = section.settings.text_cards_initial | default: 0 | plus: 0
-  assign text_expand = section.settings.text_cards_expand
-  if template.name != 'index'
-    assign text_initial = 0
-    assign text_expand = false
-  elsif text_initial == 0
-    comment
-      Home ruler: featured_review (separate) + 2 text cards, See more expands rest.
-      TE strips text_cards_* when missing from schema — keep fallback.
-    endcomment
+  if template.name == 'index'
     assign text_initial = 2
     assign text_expand = true
+  else
+    assign text_initial = 0
+    assign text_expand = false
   endif
 %}
 {% comment %}
@@ -577,6 +572,12 @@
     box-sizing: border-box;
   }
 
+  /* Home extras: display:flex on .text-card beats UA [hidden] — force hide until See more */
+  #shopify-section-{{ section.id }} .pdp-reviews__text-card[hidden],
+  #shopify-section-{{ section.id }} .pdp-reviews__text-card--extra[hidden] {
+    display: none !important;
+  }
+
   .pdp-reviews__text-stars {
     color: #d4af37;
     font-size: 14px;
@@ -1048,6 +1049,7 @@
     btn.addEventListener('click', function () {
       root.querySelectorAll('.pdp-reviews__text-card--extra').forEach(function (el) {
         el.hidden = false;
+        el.removeAttribute('hidden');
       });
       btn.setAttribute('aria-expanded', 'true');
       btn.hidden = true;

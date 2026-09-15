@@ -198,7 +198,7 @@
     "draft_theme_id": "187144929571",
     "separate_from": "fifty_fifty_lifestyle",
     "rule_first": "Name the section family first, then apply that family's ruler.",
-    "note": "Home/marketing layout OS. Name family first. Marketing split media+text visual frame: COVER desk 860 phone 520/520 center pads 32/32 body 16 scale 100. Desk 860/88/88/64 frozen on mobile passes. Asymmetric 32/96 REJECTED. FIT forbidden on Home fifty-fifty. press-feature (Interni) may adopt same mobile visual frame when Andrew enlarges \u2014 stay press-feature type. Do NOT apply to product*.json. PDP stays 560/550 + 96/96.",
+    "note": "Home/marketing layout OS. Name family first. Marketing split media+text visual frame: COVER desk 860 phone 520/520 center pads 32/32 body 16 scale 100. Desk 860/88/88/64 frozen on mobile passes. Asymmetric 32/96 REJECTED. FIT forbidden on Home fifty-fifty. press-feature (Interni) may adopt same mobile visual frame when Andrew enlarges \u2014 stay press-feature type. Do NOT apply to product*.json. PDP stays 560/550 + 96/96. Home reviews: 2 text cards + See more (liquid force). Interni press-feature: no frame overflow (clamp+COVER).",
     "applies_to_templates": [
       "index.json"
     ],
@@ -219,7 +219,10 @@
         "home_instance": "press-feature-interni",
         "uses_marketing_split_frame": "when_andrew_enlarges_to_match",
         "stay_type": "press-feature",
-        "note": "Interni: adopt same mobile visual frame as FF when enlarged \u2014 do not convert type to fifty-fifty."
+        "note": "Interni: adopt same mobile visual frame as FF when enlarged \u2014 do not convert type to fifty-fifty. Never overflow frame; do not enlarge frame to fix COVER crop \u2014 media QC instead.",
+        "no_overflow": true,
+        "image_clamp": "width/height/max 100% + object-fit cover + transform none",
+        "frame_matches_ff_mobile": "520/520"
       },
       "collab-hero": {
         "section_types": [
@@ -246,7 +249,11 @@
         "section_types": [
           "pdp-reviews"
         ],
-        "role": "quote_led"
+        "role": "quote_led",
+        "home_text_cards_initial": 2,
+        "home_text_cards_expand": true,
+        "home_force_in_liquid": true,
+        "note": "Home: 2 curated text cards + See more. Liquid forces on index. Extras need display:none !important (flex beats UA hidden)."
       },
       "problem-section": {
         "section_types": [
@@ -357,19 +364,30 @@
     "press_feature_interni": {
       "section_key": "press-feature-interni",
       "section_type": "press-feature",
-      "stay_type": "press-feature",
-      "when_enlarged_adopt_mobile_frame": {
-        "mobile_media_height": 520,
-        "mobile_text_height": 520,
-        "mobile_justify": "center",
-        "text_pad_top_mobile": 32,
-        "text_pad_bottom_mobile": 32,
-        "media_fit": "cover",
-        "image_scale": 100,
-        "body_size": "16"
-      },
-      "note": "Interni should adopt same mobile visual frame as FF when Andrew enlarges it \u2014 stay press-feature type."
+      "mobile_media_height": 520,
+      "mobile_text_height": 520,
+      "image_fit_mobile": "cover",
+      "no_overflow": true,
+      "liquid_css_must_contain": [
+        "overflow: hidden",
+        "object-fit",
+        "max-width: 100%",
+        "max-height: 100%",
+        "transform: none"
+      ],
+      "note": "Frame = Grip 520. Image stays inside via clamp+COVER. Bad crop = media QC, not taller frame / not default FIT."
     },
-    "mobile_text_min_height": 520
+    "mobile_text_min_height": 520,
+    "home_reviews": {
+      "section_key": "reviews",
+      "section_type": "pdp-reviews",
+      "text_cards_initial": 2,
+      "text_cards_expand": true,
+      "liquid_force_on_index": true,
+      "css_must_contain": [
+        ".pdp-reviews__text-card[hidden]",
+        "display: none !important"
+      ]
+    }
   }
 }
