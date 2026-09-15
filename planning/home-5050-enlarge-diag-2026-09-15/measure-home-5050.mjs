@@ -35,11 +35,14 @@ async function measureViewport(page, label, width, height) {
       const fcs = frame ? getComputedStyle(frame) : null;
       const textEl = root.querySelector('.split-text, .split-hero__copy, .collab-hero__overlay, .collab-hero__editorial-copy, .statement-band__copy');
       const tcs = textEl ? getComputedStyle(textEl) : null;
+      const tr = textEl ? textEl.getBoundingClientRect() : null;
       return {
         sectionId: root.id,
         rootH: Math.round(rr.height),
         mediaH: Math.round(mr.height),
         mediaW: Math.round(mr.width),
+        textH: tr ? Math.round(tr.height) : null,
+        textMinH: tcs ? tcs.minHeight : null,
         minHeight: cs.minHeight,
         frameMinH: fcs ? fcs.minHeight : null,
         bodyFontSize: bcs ? bcs.fontSize : null,
@@ -47,6 +50,7 @@ async function measureViewport(page, label, width, height) {
         inlineVars: frame ? {
           ffMin: frame.style.getPropertyValue('--ff-min-height') || null,
           ffMob: frame.style.getPropertyValue('--ff-mobile-media-height') || null,
+          ffText: frame.style.getPropertyValue('--ff-mobile-text-height') || null,
           shScale: frame.style.getPropertyValue('--sh-height-scale') || null,
           chDesk: frame.style.getPropertyValue('--ch-height-desktop') || null,
         } : null,

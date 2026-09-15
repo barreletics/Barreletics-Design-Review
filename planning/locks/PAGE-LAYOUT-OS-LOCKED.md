@@ -7,7 +7,7 @@
 
 ## Law (one line)
 
-Home fifty-fifty = **always COVER 860 desk / 520 phone**. FIT is **forbidden** on Home 50/50 (FIT makes height a no-op — that caused inconsistency). Pads = **One Pair ruler**. Body **16**. Image scale **100**.
+Home fifty-fifty = **always COVER 860 desk / 520 phone**. FIT is **forbidden** on Home 50/50 (FIT makes height a no-op — that caused inconsistency). Pads = **One Pair ruler**. Body **16**. Image scale **100**. Phone text min-height **`mobile_text_height` 520** (image≈text).
 
 ## Section architecture (Home spine — apply-same language to any page)
 
@@ -48,9 +48,10 @@ Viewport rulers: **desktop 1280×900** · **mobile 390×844**.
 | Side pad | **64 / 64** | **20 / 20** (measured) |
 | Body | **16** | **16** |
 | Image scale | **100** | **100** |
+| Text column min-height | desk stretch | **`mobile_text_height` 520** (image≈text) |
 | Display title | Type OS Big 50/50 (38–52 / 400) | same ladder |
 
-JSON keys: `media_fit: cover`, `image_fit_mobile: cover`, `min_height: 860`, `mobile_media_height: 520`, `image_scale: 100`, `vertical_padding: 88`, `side_padding: 64`, `text_pad_top_mobile: 32`, `text_pad_bottom_mobile: 96`, `body_size: "16"`.
+JSON keys: `media_fit: cover`, `image_fit_mobile: cover`, `min_height: 860`, `mobile_media_height: 520`, `mobile_text_height: 520`, `image_scale: 100`, `vertical_padding: 88`, `side_padding: 64`, `text_pad_top_mobile: 32`, `text_pad_bottom_mobile: 96`, `body_size: "16"`.
 
 ### PDP contrast (do not touch)
 
@@ -94,6 +95,7 @@ PAGE LAYOUT OS GATE
 - [ ] Family: Home/marketing OR PDP — never mix 860/520 with 560/550
 - [ ] Home fifty-fifty? → COVER 860/520 · scale 100 · FIT forbidden
 - [ ] Pads = One Pair ruler (88/88 · 64 · phone 32/96 · side ~20)
+- [ ] Phone text min-height `mobile_text_height` **520** (image≈text) on ALL Home 50/50
 - [ ] Body 16 on 50/50 text
 - [ ] Hero stays 92vh / 62/38 if touching Home hero
 - [ ] Draft theme only 187144929571 — never live
@@ -108,6 +110,7 @@ PAGE LAYOUT OS GATE
    - **Every** Home fifty-fifty COVER mediaH ≈ **860** desk / **520** phone (±2px)
    - Pads match ruler (desk 88/88 · 64; phone 32/96)
    - Body font-size **16px** on 50/50 text
+   - Phone text boxes equal via `mobile_text_height` **520** (±2px; image≈text)
    - No Home fifty-fifty still on FIT
 4. lock-scan: `python3 scripts/lock-scan.py .` — Home keys under scan key `page_layout_os` must OK; PDP 560/550 still OK.
 

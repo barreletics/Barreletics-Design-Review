@@ -288,6 +288,11 @@ def scan_page_layout_os(site: dict, build: Path, only: Path | None):
         issues.append(
           f"templates/index.json {sid}: text_pad_bottom_mobile expected {pads.get('text_pad_bottom_mobile')}, got {st.get('text_pad_bottom_mobile')}"
         )
+    expect_mth = cover.get("mobile_text_height")
+    if expect_mth is not None and "mobile_text_height" in st and st.get("mobile_text_height") != expect_mth:
+      issues.append(
+        f"templates/index.json {sid}: mobile_text_height expected {expect_mth}, got {st.get('mobile_text_height')}"
+      )
     bs = str(st.get("body_size") or "")
     if bs and bs not in ("default", str(body_px), f"{body_px}px"):
       issues.append(f"templates/index.json {sid}: body_size expected {body_px}/default, got {bs!r}")
