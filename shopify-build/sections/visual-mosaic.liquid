@@ -426,11 +426,12 @@
       min-height: var(--vm-mob-h);
     }
   }
-  /* iPhone / phone only — one full-width tile per row. Tablet (768–900) stays 2-col. TE mobile_columns unchanged. */
+  /* Phone ≤767 — denser mosaic: honor TE mobile_columns (Home = 2-col) + TE mobile_tile_height.
+     Prior 1-col + 1.35× row made ~2198px; CURRENT (2026-09-15) asks denser ~40–50% shorter. */
   @media (max-width: 767px) {
     #visual-mosaic-{{ section.id }} .visual-mosaic__grid {
-      grid-template-columns: 1fr;
-      grid-auto-rows: calc(var(--vm-mob-h) * 1.35);
+      grid-template-columns: var(--vm-mob-cols-css);
+      grid-auto-rows: var(--vm-mob-h);
     }
     #visual-mosaic-{{ section.id }} .vm-tile--hero {
       min-height: 0;
@@ -443,7 +444,7 @@
       font-size: var(--vm-title-size-sm-m, 16px);
     }
     #visual-mosaic-{{ section.id }} .vm-tile--filler {
-      min-height: calc(var(--vm-mob-h) * 1.35);
+      min-height: var(--vm-mob-h);
     }
     {%- if qa_frame -%}
     #visual-mosaic-{{ section.id }} .visual-mosaic__grid {
