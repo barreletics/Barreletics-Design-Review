@@ -24,7 +24,7 @@ Before any pad / height / fit edit:
 | **fifty-fifty** | `fifty-fifty` | Split media+text story | **Marketing split frame** (below) — REQUIRED |
 | **press-feature** | `press-feature` | Press / editorial stack (media→copy) | Own type. When Andrew enlarges to match marketing split look, adopt the **same mobile visual frame** as FF (520/520 · center · 32/32 · COVER · scale 100 · body 16) — **stay `press-feature` type** (do not convert to `fifty-fifty`). Interni is the Home instance. |
 | **collab-hero** | `collab-hero` | Campaign stage | Stage ~**105vh** desk guidance · own lane — not a 50/50 |
-| **fullbleed** | `fullbleed-statement` | Commit / image beat | COVER · vh/pct height (~900 desk / ~439 phone @52) — not 50/50 mmh |
+| **fullbleed** | `fullbleed-statement` | **Image-only** beat (Commit overlay **LOCKED OFF**) | COVER · vh/pct (~900 desk / ~439 phone @52) — **no title/CTA on image** — not 50/50 mmh |
 | **statement** | `statement-band` | Text band (Knock socks) | Text height only · Type Statement role |
 | **reviews** | `pdp-reviews` | Quote-led | Home: **2 text cards + See more** (force in liquid; extras `[hidden]` + `display:none !important`). No aggregate count on Home. |
 | **problem-section** | `problem-section` | Problem / × list band | Text-list family · not FF |
@@ -78,7 +78,7 @@ Never “fix Home by copying PDP” or the reverse.
 | --- | --- | --- | --- | --- |
 | Hero (`split-hero`) | COVER frame | **92vh** | media content stack | Do **not** swap to photo-aspect / 110 / invent px |
 | Collab | stage | **105vh** guidance | own lane | Not a 50/50 |
-| Fullbleed | COVER | ~900 (=100vh @900) | ~439 (~52) | Not a 50/50 |
+| Fullbleed | COVER · **image-only** | ~900 (=100vh @900) | ~439 (~52) | Overlay `show_text` **false** — Commit+Shop CTA on image **REJECTED 2026-09-15** |
 | Statement / problem / reviews | text / cards | own | own | No FF media-height claim |
 
 ## COVER vs FIT
@@ -118,6 +118,9 @@ PAGE LAYOUT OS GATE
 - [ ] Home reviews: 2 text cards + See more (liquid force + `[hidden]` CSS `display:none !important`)
 - [ ] Phone text min-height mobile_text_height 520 (image≈text) on ALL Home fifty-fifty
 - [ ] Hero stays 92vh / 62/38 if touching Home hero
+- [ ] fullbleed-statement: show_text **false** + blank title/body/cta (Commit overlay LOCKED OFF — Andrew 2026-09-15)
+- [ ] Never restore overlay copy without **explicit Andrew go**
+- [ ] Never thrash unrelated sections when editing Interni (and vice versa)
 - [ ] Draft theme only 187144929571 — never live
 - [ ] Prove gate below before "done" — MANDATORY
 ```
@@ -145,7 +148,7 @@ Humans/agents: every Home `fifty-fifty` must be COVER + 860/520 + **32/32** cent
 
 ## Interni note
 
-`press-feature-interni` stays **`press-feature`**. Mobile visual frame: **640 / 640 · center · 32/32 · body 16** via section settings (`mobile_media_height` / `mobile_text_height` / equal text pads) — type remains `press-feature` (do **not** convert to `fifty-fifty`). TE can retune the knobs; Home Interni JSON locks the OS defaults.
+`press-feature-interni` stays **`press-feature`**. Mobile visual frame: **490 / 490 · center · 32/32 · body 16 · COVER** (aspect-matched Chat editorial; prior 640 FIT exception superseded) via section settings (`mobile_media_height` / `mobile_text_height` / equal text pads) — type remains `press-feature` (do **not** convert to `fifty-fifty`). TE can retune the knobs; Home Interni JSON locks the OS defaults.
 
 **No overflow / no blow-up:** media + img must stay **inside** the 640 frame — `overflow: hidden`, `width/height/max-width/max-height: 100%`, `transform: none` (no scale>100). Do **not** enlarge frame further to “fix” a zoomed crop.
 
@@ -156,7 +159,7 @@ Root cause: COVER + tall **640** frame on a **wide/square flat-lay** side-croppe
 | Axis | Value |
 | --- | --- |
 | `image_fit_mobile` (desk uses same setting on this section) | **`contain`** (FIT / letterbox) |
-| Media / text height | **640 / 640** kept |
+| Media / text height | **490 / 490** (aspect match; 640 FIT exception superseded) |
 | Pads / justify | **32 / 32 · center** kept |
 | `media_bg_color` | **`#F4EEE5`** cream — letterbox matches section |
 | Scope | **Interni `press-feature` only** — Grip / One Pair stay **COVER** |
@@ -168,6 +171,33 @@ Root cause: COVER + tall **640** frame on a **wide/square flat-lay** side-croppe
 
 Home `reviews` (`pdp-reviews` on `index.json`): **`text_cards_initial: 2`** + **`text_cards_expand: true`**. Liquid **forces** 2 + expand on `template.name == index` even if TE strips settings. Extras use `hidden` **and** CSS `display: none !important` (plain `[hidden]` loses to `.text-card { display:flex }`). Measure: only 2 visible curated text cards + See more button.
 
+
+## Fullbleed Commit overlay — LOCKED OFF (2026-09-15)
+
+**Andrew rejection:** “You commit to the class” + Shop CTA **on the image** must stop. Do not revert to overlay.
+
+| Axis | Value |
+| --- | --- |
+| Section | `fullbleed-statement` |
+| Mode | **Image-only** |
+| `show_text` | **`false`** |
+| `show_overlay` | **`false`** |
+| `mobile_full_bleed` | **`true`** (keeps ~52vh; without it phone-photo collapses H→0) |
+| `title` / `body` / `cta_text` | **blank** |
+| Media | Keep coral shoe `IMG_2917` (or current approved asset) — no burned-in Commit copy |
+| Re-enable overlay? | **Only with explicit Andrew go** — never from punch-list P0 nostalgia (`71200de` wrongly restored) |
+
+**History:** Punch-list P0 (empty overlay → “restore Commit”) conflicted with Andrew’s image-only intent. `71200de` restored title+Shop Now. **2026-09-15 Andrew angry: remove from image.** Lock holds image-only.
+
+Scan: `fullbleed_guidance.mode = image_only` in `sitewide.lock.json`; `lock-scan` asserts blank overlay fields.
+
+## Interni edit hygiene
+
+- Chat Interni editorial art only (`barreletics-interni-chatgpt-editorial-clean`).
+- **No Commit strings** in Interni settings or PNG.
+- When editing Interni: **do not** touch fullbleed / Grip / One Pair.
+- When editing fullbleed: **do not** touch Interni / Grip / One Pair.
+
 ## Do not
 
 - Use FIT on any Home fifty-fifty (height becomes a no-op)
@@ -176,3 +206,6 @@ Home `reviews` (`pdp-reviews` on `index.json`): **`text_cards_initial: 2`** + **
 - Push live theme
 - Invent a third Home 50/50 height family
 - Convert Interni to `fifty-fifty` just to share the visual frame
+- Restore Commit / Shop CTA overlay on `fullbleed-statement` without explicit Andrew go
+- Put Commit strings on Interni settings or bake them into Interni PNG
+- Thrash Grip / One Pair / Interni when the ticket is fullbleed (or the reverse)

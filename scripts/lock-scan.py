@@ -321,6 +321,34 @@ def scan_page_layout_os(site: dict, build: Path, only: Path | None):
         if "assign text_initial = 2" not in liq_txt:
           issues.append("sections/pdp-reviews.liquid: missing Home force text_initial = 2")
 
+  # Fullbleed: IMAGE-ONLY — Commit overlay LOCKED off (Andrew 2026-09-15)
+  fbg = plo.get("fullbleed_guidance") or {}
+  if fbg.get("mode") == "image_only" or fbg.get("show_text") is False:
+    sid = "fullbleed-statement"
+    sec = sections.get(sid) or {}
+    if sec and not sec.get("disabled"):
+      st = sec.get("settings") or {}
+      if st.get("show_text") is not False:
+        issues.append(
+          f"templates/index.json {sid}: show_text must be false (Commit overlay LOCKED off 2026-09-15)"
+        )
+      if fbg.get("mobile_full_bleed") is True and st.get("mobile_full_bleed") is not True:
+        issues.append(
+          f"templates/index.json {sid}: mobile_full_bleed must be true (image-only keeps ~52vh; phone-photo collapses)"
+        )
+      for field in ("title", "body", "cta_text"):
+        if (st.get(field) or "").strip():
+          issues.append(
+            f"templates/index.json {sid}: {field} must be blank (image-only; got {st.get(field)!r})"
+          )
+      for phrase in (plo.get("families") or {}).get("fullbleed", {}).get("forbidden_overlay_phrases") or [
+        "You commit to the class",
+        "Commit to the gear",
+      ]:
+        blob = " ".join(str(st.get(k) or "") for k in ("title", "body", "cta_text", "eyebrow"))
+        if phrase.lower() in blob.lower():
+          issues.append(f"templates/index.json {sid}: forbidden overlay phrase {phrase!r}")
+
   # Interni press-feature: no overflow clamps + locked frame/fit (may be Andrew FIT exception)
   pfi = plo.get("press_feature_interni") or {}
   if pfi:
@@ -337,6 +365,11 @@ def scan_page_layout_os(site: dict, build: Path, only: Path | None):
       fit = (st.get("image_fit_mobile") or "").lower()
       if fit and fit != (pfi.get("image_fit_mobile") or "cover"):
         issues.append(f"templates/index.json {sid}: image_fit_mobile expected {pfi.get('image_fit_mobile') or 'cover'!r}, got {st.get('image_fit_mobile')!r}")
+      for phrase in pfi.get("forbidden_in_settings_or_asset") or []:
+        blob = " ".join(str(st.get(k) or "") for k in ("title", "body", "cta_text", "eyebrow", "image_alt", "image_url", "image"))
+        if phrase.lower() in blob.lower():
+          issues.append(f"templates/index.json {sid}: forbidden Commit/overlay string on Interni {phrase!r}")
+
     liq = build / "sections" / "press-feature.liquid"
     if liq.exists() and not (only and liq.resolve() != only.resolve()):
       liq_txt = liq.read_text()
