@@ -213,7 +213,10 @@ def scan_sitewide(site: dict, build: Path, only: Path | None):
 
 
 def scan_page_layout_os(site: dict, build: Path, only: Path | None):
-  """Home/marketing page layout OS — separate from PDP 560/550."""
+  """Home/marketing page layout OS — separate from PDP 560/550.
+
+  Home fifty-fifty: ALWAYS COVER 860/520. FIT is forbidden (height no-op).
+  """
   issues = []
   plo = site.get("page_layout_os") or {}
   if not plo:
@@ -229,73 +232,65 @@ def scan_page_layout_os(site: dict, build: Path, only: Path | None):
     issues.append(f"index.json: JSON parse {e}")
     return issues
   sections = data.get("sections") or {}
-  cover = plo.get("home_fifty_fifty_cover_grip") or {}
-  fit = plo.get("home_fifty_fifty_fit_one_pair") or {}
+  cover = plo.get("home_fifty_fifty") or plo.get("home_fifty_fifty_cover_grip") or {}
   pads = plo.get("one_pair_ruler_pads") or {}
   body_px = plo.get("body_px", 16)
+  expect_fit = cover.get("media_fit", "cover")
+  expect_min = cover.get("min_height", 860)
+  expect_mmh = cover.get("mobile_media_height", 520)
+  expect_scale = cover.get("image_scale", 100)
 
-  grip_key = cover.get("section_key") or "fifty-fifty-grip"
-  grip = sections.get(grip_key) or {}
-  if grip and not grip.get("disabled"):
-    st = grip.get("settings") or {}
-    if (st.get("media_fit") or st.get("image_fit") or "").lower() not in ("cover", ""):
+  # Every Home fifty-fifty must match COVER lock (FIT forbidden)
+  for sid, sec in sections.items():
+    if (sec.get("type") or "") != "fifty-fifty":
+      continue
+    if sec.get("disabled"):
+      continue
+    st = sec.get("settings") or {}
+    mf = (st.get("media_fit") or st.get("image_fit") or "").lower()
+    if mf == "fit":
       issues.append(
-        f"templates/index.json {grip_key}: page_layout_os expects COVER, got {st.get('media_fit') or st.get('image_fit')!r}"
+        f"templates/index.json {sid}: page_layout_os FORBIDS FIT on Home fifty-fifty (use COVER {expect_min}/{expect_mmh})"
       )
-    if st.get("min_height") not in (None, "") and st.get("min_height") != cover.get("min_height"):
+    elif mf and mf != expect_fit:
       issues.append(
-        f"templates/index.json {grip_key}: min_height expected {cover.get('min_height')}, got {st.get('min_height')}"
+        f"templates/index.json {sid}: page_layout_os expects COVER, got {st.get('media_fit') or st.get('image_fit')!r}"
       )
-    if st.get("mobile_media_height") not in (None, "") and st.get("mobile_media_height") != cover.get(
-      "mobile_media_height"
-    ):
+    if st.get("min_height") not in (None, "") and st.get("min_height") != expect_min:
       issues.append(
-        f"templates/index.json {grip_key}: mobile_media_height expected {cover.get('mobile_media_height')}, got {st.get('mobile_media_height')}"
+        f"templates/index.json {sid}: min_height expected {expect_min}, got {st.get('min_height')}"
+      )
+    if st.get("mobile_media_height") not in (None, "") and st.get("mobile_media_height") != expect_mmh:
+      issues.append(
+        f"templates/index.json {sid}: mobile_media_height expected {expect_mmh}, got {st.get('mobile_media_height')}"
+      )
+    if "image_scale" in st and expect_scale is not None and st.get("image_scale") != expect_scale:
+      issues.append(
+        f"templates/index.json {sid}: image_scale expected {expect_scale}, got {st.get('image_scale')}"
       )
     if "vertical_padding" in st and pads.get("vertical_padding_desk") is not None:
       if st.get("vertical_padding") != pads.get("vertical_padding_desk"):
         issues.append(
-          f"templates/index.json {grip_key}: vertical_padding expected {pads.get('vertical_padding_desk')}, got {st.get('vertical_padding')}"
+          f"templates/index.json {sid}: vertical_padding expected {pads.get('vertical_padding_desk')}, got {st.get('vertical_padding')}"
         )
     if "side_padding" in st and pads.get("side_padding_desk") is not None:
       if st.get("side_padding") != pads.get("side_padding_desk"):
         issues.append(
-          f"templates/index.json {grip_key}: side_padding expected {pads.get('side_padding_desk')}, got {st.get('side_padding')}"
+          f"templates/index.json {sid}: side_padding expected {pads.get('side_padding_desk')}, got {st.get('side_padding')}"
         )
     if "text_pad_top_mobile" in st and pads.get("text_pad_top_mobile") is not None:
       if st.get("text_pad_top_mobile") != pads.get("text_pad_top_mobile"):
         issues.append(
-          f"templates/index.json {grip_key}: text_pad_top_mobile expected {pads.get('text_pad_top_mobile')}, got {st.get('text_pad_top_mobile')}"
+          f"templates/index.json {sid}: text_pad_top_mobile expected {pads.get('text_pad_top_mobile')}, got {st.get('text_pad_top_mobile')}"
         )
-    # body 16 when explicitly set
+    if "text_pad_bottom_mobile" in st and pads.get("text_pad_bottom_mobile") is not None:
+      if st.get("text_pad_bottom_mobile") != pads.get("text_pad_bottom_mobile"):
+        issues.append(
+          f"templates/index.json {sid}: text_pad_bottom_mobile expected {pads.get('text_pad_bottom_mobile')}, got {st.get('text_pad_bottom_mobile')}"
+        )
     bs = str(st.get("body_size") or "")
     if bs and bs not in ("default", str(body_px), f"{body_px}px"):
-      issues.append(f"templates/index.json {grip_key}: body_size expected {body_px}/default, got {bs!r}")
-
-  pair_key = fit.get("section_key") or "fifty-fifty-one-pair"
-  pair = sections.get(pair_key) or {}
-  if pair and not pair.get("disabled"):
-    st = pair.get("settings") or {}
-    if (st.get("media_fit") or st.get("image_fit") or "").lower() != "fit":
-      issues.append(
-        f"templates/index.json {pair_key}: page_layout_os ruler expects FIT, got {st.get('media_fit') or st.get('image_fit')!r}"
-      )
-    if "vertical_padding" in st and pads.get("vertical_padding_desk") is not None:
-      if st.get("vertical_padding") != pads.get("vertical_padding_desk"):
-        issues.append(
-          f"templates/index.json {pair_key}: vertical_padding expected {pads.get('vertical_padding_desk')}, got {st.get('vertical_padding')}"
-        )
-    if "side_padding" in st and pads.get("side_padding_desk") is not None:
-      if st.get("side_padding") != pads.get("side_padding_desk"):
-        issues.append(
-          f"templates/index.json {pair_key}: side_padding expected {pads.get('side_padding_desk')}, got {st.get('side_padding')}"
-        )
-    if "text_pad_top_mobile" in st and pads.get("text_pad_top_mobile") is not None:
-      if st.get("text_pad_top_mobile") != pads.get("text_pad_top_mobile"):
-        issues.append(
-          f"templates/index.json {pair_key}: text_pad_top_mobile expected {pads.get('text_pad_top_mobile')}, got {st.get('text_pad_top_mobile')}"
-        )
-    # Explicit: do NOT enforce min_height / mobile_media_height on FIT
+      issues.append(f"templates/index.json {sid}: body_size expected {body_px}/default, got {bs!r}")
   return issues
 
 

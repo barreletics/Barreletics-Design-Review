@@ -197,14 +197,14 @@
     "measure_source": "planning/home-5050-enlarge-diag-2026-09-15/measure.json",
     "draft_theme_id": "187144929571",
     "separate_from": "fifty_fifty_lifestyle",
-    "note": "Home/marketing layout OS. Do NOT apply to product*.json. PDP stays 560/550 + 96/96.",
+    "note": "Home/marketing layout OS. Home fifty-fifty sections are ALWAYS COVER 860/520 \u2014 FIT is forbidden on Home 50/50 (height consistency). Do NOT apply to product*.json. PDP stays 560/550 + 96/96.",
     "applies_to_templates": [
       "index.json"
     ],
     "body_px": 16,
     "cover_vs_fit": {
-      "cover": "Frame height is the lock; image fills; may crop",
-      "fit": "Ignores min_height / mobile_media_height on Home \u2014 do not claim height on FIT"
+      "cover": "Frame height is the lock; image fills; may crop \u2014 REQUIRED for all Home fifty-fifty",
+      "fit": "FORBIDDEN on Home fifty-fifty \u2014 FIT ignores min_height / mobile_media_height and breaks height consistency (One Pair was FIT; converted to COVER)"
     },
     "hero": {
       "section": "split_hero",
@@ -218,16 +218,8 @@
       "media_fit": "cover",
       "min_height": 860,
       "mobile_media_height": 520,
-      "image_scale": 100
-    },
-    "home_fifty_fifty_fit_one_pair": {
-      "section_key": "fifty-fifty-one-pair",
-      "media_fit": "fit",
-      "ruler": true,
-      "min_height_claimed_in_json": 720,
-      "mobile_media_height_claimed_in_json": 640,
-      "height_lock": false,
-      "note": "FIT collapses on Home \u2014 measured mediaH is asset-driven; do not QA to 720/640"
+      "image_scale": 100,
+      "body_size": "16"
     },
     "one_pair_ruler_pads": {
       "vertical_padding_desk": 88,
@@ -245,9 +237,28 @@
     },
     "prove_gate": [
       "pull-verify named files after push",
-      "measure draft preview before done",
-      "lock-scan page_layout_os OK; PDP 560/550 still OK"
+      "measure draft preview \u2014 every Home fifty-fifty mediaH \u2248 860 desk / 520 phone (\u00b12px)",
+      "lock-scan page_layout_os OK; PDP 560/550 still OK",
+      "FIT must not appear on any Home fifty-fifty"
     ],
-    "scan_key": "page_layout_os"
+    "scan_key": "page_layout_os",
+    "home_fifty_fifty": {
+      "rule": "ALL Home type=fifty-fifty MUST be COVER 860 desk / 520 phone",
+      "media_fit": "cover",
+      "min_height": 860,
+      "mobile_media_height": 520,
+      "image_scale": 100,
+      "body_size": "16",
+      "fit_forbidden": true
+    },
+    "home_fifty_fifty_cover_one_pair": {
+      "section_key": "fifty-fifty-one-pair",
+      "media_fit": "cover",
+      "min_height": 860,
+      "mobile_media_height": 520,
+      "image_scale": 100,
+      "body_size": "16",
+      "note": "Was FIT (One Pair ruler for pads only). FIT forbidden on Home 50/50 \u2014 now COVER 860/520 like Grip."
+    }
   }
 }
