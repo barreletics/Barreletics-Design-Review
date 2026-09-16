@@ -159,7 +159,7 @@
               assign star_n = 5
             endif
           %}
-          <figure class="pdp-reviews__featured pdp-reviews__featured--row" {{ block.shopify_attributes }}>
+          <figure class="pdp-reviews__featured" {{ block.shopify_attributes }}>
             <div class="pdp-reviews__featured-stars" aria-label="{{ star_n }} out of 5 stars">
               {% for i in (1..5) %}
                 {% if i <= star_n %}★{% else %}<span class="pdp-reviews__star--empty">☆</span>{% endif %}
@@ -653,75 +653,66 @@
   }
 
 
-  /* Featured quote — one compact row above cards */
-  .pdp-reviews__featured--row {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: baseline;
-    gap: 10px 14px;
-    margin: 0 0 20px;
-    padding: 12px 16px;
+  /* ---- Featured quote (original stacked layout) ------------------------ */
+  .pdp-reviews__featured {
+    margin: 0 auto 24px;
+    padding: 16px 20px;
     background: #fff;
     border: 1px solid #e6e6e6;
-    border-radius: 10px;
-    text-align: left;
-    max-width: none;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 720px;
   }
-  .pdp-reviews__featured--row .pdp-reviews__featured-stars {
+  .pdp-reviews__featured-stars {
     color: #d4af37;
-    font-size: 12px;
-    letter-spacing: 0.1em;
-    line-height: 1;
-    margin: 0;
-    flex-shrink: 0;
-  }
-  .pdp-reviews__featured--row .pdp-reviews__featured-quote {
-    margin: 0;
-    flex: 1 1 auto;
-    min-width: 0;
-    font-family: inherit;
     font-size: 14px;
+    letter-spacing: 0.12em;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .pdp-reviews__featured-quote {
+    margin: 0;
+    font-family: inherit;
+    font-size: clamp(15px, 1.6vw, 18px);
     font-weight: 500;
     font-style: italic;
-    line-height: 1.35;
+    line-height: 1.4;
     color: #1c1916;
     quotes: none;
   }
-  .pdp-reviews__featured--row .pdp-reviews__featured-meta {
-    margin: 0;
+  .pdp-reviews__featured-meta {
+    margin-top: 10px;
     display: flex;
+    justify-content: center;
     align-items: baseline;
-    flex-wrap: nowrap;
-    flex-shrink: 0;
+    flex-wrap: wrap;
     gap: 0;
-    font-size: 12px;
+    font-size: 13px;
   }
-  .pdp-reviews__featured--row .pdp-reviews__featured-author {
+  .pdp-reviews__featured-author {
     font-weight: 700;
     font-style: normal;
     color: #1c1916;
   }
-  .pdp-reviews__featured--row .pdp-reviews__featured-loc {
+  .pdp-reviews__featured-loc {
     color: #8a8a8a;
     font-weight: 400;
     font-style: italic;
   }
-  .pdp-reviews__featured--row .pdp-reviews__featured-author + .pdp-reviews__featured-loc::before {
+  .pdp-reviews__featured-author + .pdp-reviews__featured-loc::before {
     content: "·";
-    margin: 0 6px 0 5px;
+    margin: 0 8px 0 6px;
     font-style: normal;
     color: #c4c0ba;
   }
   @media (max-width: 768px) {
-    .pdp-reviews__featured--row {
-      flex-wrap: wrap;
-      gap: 6px 10px;
-      padding: 10px 14px;
-      margin-bottom: 16px;
+    .pdp-reviews__featured {
+      padding: 22px 18px;
+      margin-bottom: 24px;
+      border-radius: 12px;
     }
-    .pdp-reviews__featured--row .pdp-reviews__featured-quote {
-      flex: 1 1 100%;
-      font-size: 14px;
+    .pdp-reviews__featured-quote {
+      font-size: 17px;
     }
   }
 
