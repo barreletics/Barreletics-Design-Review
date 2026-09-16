@@ -214,6 +214,8 @@ Do **not** thrash `product.json` spine or `fifty-fifty.liquid` TE order without 
 
 **Forward 2026-09-01 — Home mosaic phone gap uniform + bottom pad SIGNED.** Hero `min-height: 280` killed on ≤767 so first gap matches the rest. Section `padding-bottom` on ≤560 = `--vm-gap` (same as between cards). Phone still `1fr`. CSS only.
 
+**Forward 2026-09-15 — Home mobile CSS order — Grip → One Pair → Coperni → Interni.** Andrew: JUST CHANGE THE ORDER · mobile-first · NO REVERT. `barreletics-base.css` ≤768 flex `order` on `#main-content` `[id$="__…"]` only. `index.json` order untouched (desk unchanged). FF 520/520 spot-check OK. No Commit overlay restore. Draft `187144929571`.
+
 **Forward 2026-09-01 — Home Juicer phone feed SIGNED.** Andrew: “jesus christ thank you.” `@barreletics` tiles were a short left column because Juicer boots `j-desktop` at 375. Phone ≤768: stacker/columns/items `width: 100%` + centered. Not hero stars. Not review cards. CSS only — no `index.json`.
 
 **Forward 2026-09-01 — Click the thing he sees SIGNED.** Rule `.cursor/rules/click-the-thing-he-sees.mdc`. Screenshot / on-page copy = the only target. No remaps (Judge.me ≠ hero stars ≠ juicer). Sign-off = commit + push to GitHub.
