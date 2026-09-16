@@ -297,29 +297,44 @@ def scan_page_layout_os(site: dict, build: Path, only: Path | None):
     if bs and bs not in ("default", str(body_px), f"{body_px}px"):
       issues.append(f"templates/index.json {sid}: body_size expected {body_px}/default, got {bs!r}")
 
-  # Home reviews: 2 text cards + See more (PAGE-LAYOUT-OS)
+  # Home reviews: featured LOCKED + desk all / phone 2+See more (PAGE-LAYOUT-OS)
   hr = plo.get("home_reviews") or {}
   if hr:
     rev = sections.get(hr.get("section_key") or "reviews") or {}
     if (rev.get("type") or "") == (hr.get("section_type") or "pdp-reviews") and not rev.get("disabled"):
       rst = rev.get("settings") or {}
-      want_n = hr.get("text_cards_initial", 2)
-      if rst.get("text_cards_initial") != want_n:
+      want_desk = hr.get("text_cards_initial", 0)
+      want_mob = hr.get("text_cards_initial_mobile", 2)
+      if rst.get("text_cards_initial") != want_desk:
         issues.append(
-          f"templates/index.json reviews: text_cards_initial expected {want_n}, got {rst.get('text_cards_initial')!r}"
+          f"templates/index.json reviews: text_cards_initial (desk) expected {want_desk}, got {rst.get('text_cards_initial')!r}"
+        )
+      if rst.get("text_cards_initial_mobile") != want_mob:
+        issues.append(
+          f"templates/index.json reviews: text_cards_initial_mobile expected {want_mob}, got {rst.get('text_cards_initial_mobile')!r}"
         )
       if hr.get("text_cards_expand", True) and not rst.get("text_cards_expand"):
         issues.append("templates/index.json reviews: text_cards_expand expected true")
+      if hr.get("featured_review_required", True):
+        blocks = rev.get("blocks") or {}
+        featured = [b for b in blocks.values() if (b.get("type") or "") == "featured_review"]
+        if not featured:
+          issues.append("templates/index.json reviews: missing LOCKED featured_review block")
+        else:
+          body = (featured[0].get("settings") or {}).get("body") or ""
+          want_q = hr.get("featured_quote") or ""
+          if want_q and want_q not in body and body not in want_q:
+            issues.append("templates/index.json reviews: featured_review quote drifted from lock")
     liq = build / "sections" / "pdp-reviews.liquid"
     if liq.exists() and not (only and liq.resolve() != only.resolve()):
       liq_txt = liq.read_text()
-      for must in hr.get("css_must_contain") or [".pdp-reviews__text-card[hidden]", "display: none !important"]:
+      for must in hr.get("css_must_contain") or [".pdp-reviews__text-card[hidden]", "display: none !important", "min-width: 769px"]:
         if must not in liq_txt:
           issues.append(f"sections/pdp-reviews.liquid: missing Home-reviews guard {must!r}")
-      if "template.name == 'index'" not in liq_txt and 'template.name == "index"' not in liq_txt:
-        # liquid uses template.name == 'index'
-        if "assign text_initial = 2" not in liq_txt:
-          issues.append("sections/pdp-reviews.liquid: missing Home force text_initial = 2")
+      if "text_initial_mobile" not in liq_txt:
+        issues.append("sections/pdp-reviews.liquid: missing text_initial_mobile (desk/phone split)")
+      if "featured_review" not in liq_txt:
+        issues.append("sections/pdp-reviews.liquid: missing featured_review render")
 
   # Fullbleed: IMAGE-ONLY — Commit overlay LOCKED off (Andrew 2026-09-15)
   fbg = plo.get("fullbleed_guidance") or {}
