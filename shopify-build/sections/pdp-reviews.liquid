@@ -81,13 +81,13 @@
     Non-index: show all.
   endcomment
   if template.name == 'index'
-    assign text_initial_desktop = section.settings.text_cards_initial | default: 4
+    assign text_initial_desktop = section.settings.text_cards_initial | default: 3
     assign text_initial_mobile = section.settings.text_cards_initial_mobile | default: 2
     if text_initial_mobile < 1
       assign text_initial_mobile = 2
     endif
     if text_initial_desktop < 1
-      assign text_initial_desktop = 4
+      assign text_initial_desktop = 3
     endif
     assign text_expand = true
     if section.settings.text_cards_expand == false
@@ -601,10 +601,10 @@
   #shopify-section-{{ section.id }} .pdp-reviews__text-card--extra[hidden] {
     display: none !important;
   }
-  /* Desktop Home: one row of 4; extras hidden until See more */
+  /* Desktop Home: one row of 3; extras hidden until See more */
   @media (min-width: 769px) {
     #shopify-section-{{ section.id }} .pdp-reviews__text-grid {
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
     }
     #shopify-section-{{ section.id }} .pdp-reviews__text-card--extra-desk:not(.is-expanded) {
       display: none !important;
