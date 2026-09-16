@@ -144,42 +144,7 @@
       </header>
     {% endif %}
 
-    {% if featured_count > 0 %}
-      {% for block in section.blocks %}
-        {% if block.type == 'featured_review' %}
-          {% liquid
-            assign star_n = block.settings.rating | default: 5
-            if star_n < 1
-              assign star_n = 1
-            endif
-            if star_n > 5
-              assign star_n = 5
-            endif
-          %}
-          <figure class="pdp-reviews__featured" {{ block.shopify_attributes }}>
-            <div class="pdp-reviews__featured-stars" aria-label="{{ star_n }} out of 5 stars">
-              {% for i in (1..5) %}
-                {% if i <= star_n %}★{% else %}<span class="pdp-reviews__star--empty">☆</span>{% endif %}
-              {% endfor %}
-            </div>
-            {% if block.settings.body != blank %}
-              <blockquote class="pdp-reviews__featured-quote">“{{ block.settings.body | strip | remove: '"' | remove: '“' | remove: '”' }}”</blockquote>
-            {% endif %}
-            {% if block.settings.author != blank or block.settings.location != blank %}
-              <figcaption class="pdp-reviews__featured-meta">
-                {% if block.settings.author != blank %}
-                  <span class="pdp-reviews__featured-author">{{ block.settings.author }}</span>
-                {% endif %}
-                {% if block.settings.location != blank %}
-                  <span class="pdp-reviews__featured-loc">{{ block.settings.location }}</span>
-                {% endif %}
-              </figcaption>
-            {% endif %}
-          </figure>
-          {% break %}
-        {% endif %}
-      {% endfor %}
-    {% endif %}
+    {% comment %} Featured quote renders as first card in text grid (space-saving). {% endcomment %}
 
     {% if show_photo and photo_count > 0 %}
       <div class="pdp-reviews__photo-grid">
@@ -249,14 +214,50 @@
       </div>
     {% endif %}
 
-    {% if show_text and text_count > 0 %}
+    {% if show_text %}{% if text_count > 0 or featured_count > 0 %}
       {% if section.settings.community_label != blank %}
         <p class="pdp-reviews__community-label">{{ section.settings.community_label }}</p>
       {% endif %}
       <div class="pdp-reviews__text-grid" data-reviews-text-grid>
         {% assign text_shown = 0 %}
         {% for block in section.blocks %}
-          {% if block.type == 'text_review' and text_shown < 6 %}
+          {% if block.type == 'featured_review' and text_shown < 1 %}
+            {% liquid
+              assign star_n = block.settings.rating | default: 5
+              if star_n < 1
+                assign star_n = 1
+              endif
+              if star_n > 5
+                assign star_n = 5
+              endif
+              assign text_shown = text_shown | plus: 1
+              assign card_extra = false
+              if text_initial > 0 and text_shown > text_initial
+                assign card_extra = true
+              endif
+            %}
+            <article class="pdp-reviews__text-card pdp-reviews__text-card--featured{% if card_extra %} pdp-reviews__text-card--extra{% endif %}" {% if card_extra %}hidden{% endif %} {{ block.shopify_attributes }}>
+              <div class="pdp-reviews__text-stars" aria-label="{{ star_n }} out of 5 stars">
+                {% for i in (1..5) %}
+                  {% if i <= star_n %}★{% else %}<span class="pdp-reviews__star--empty">☆</span>{% endif %}
+                {% endfor %}
+              </div>
+              {% if block.settings.body != blank %}
+                <p class="pdp-reviews__text-body">“{{ block.settings.body | strip | remove: '"' | remove: '“' | remove: '”' }}”</p>
+              {% endif %}
+              <footer class="pdp-reviews__text-footer">
+                {% if block.settings.author != blank %}
+                  <span class="pdp-reviews__text-author">{{ block.settings.author }}</span>
+                {% endif %}
+                {% if block.settings.location != blank %}
+                  <span class="pdp-reviews__text-loc">{{ block.settings.location }}</span>
+                {% endif %}
+              </footer>
+            </article>
+          {% endif %}
+        {% endfor %}
+        {% for block in section.blocks %}
+          {% if block.type == 'text_review' and text_shown < 7 %}
             {% liquid
               assign star_n = block.settings.rating | default: 5
               if star_n < 1
@@ -295,13 +296,15 @@
           {% endif %}
         {% endfor %}
       </div>
-      {% if text_expand and text_initial > 0 and text_count > text_initial %}
+      {% assign grid_total = text_count | plus: featured_count %}
+      {% if text_expand and text_initial > 0 and grid_total > text_initial %}
         <div class="pdp-reviews__expand-wrap">
           <button type="button" class="pdp-reviews__expand" data-reviews-expand aria-expanded="false">
             See more reviews
           </button>
         </div>
       {% endif %}
+    {% endif %}
     {% endif %}
 
     {% if render_live %}
@@ -639,7 +642,15 @@
   }
 
 
-  /* ---- Featured quote (above cards) ------------------------------------ */
+  /* Featured quote as first grid card (not a tall band) */
+  .pdp-reviews__text-card--featured {
+    border-color: #1c1916;
+    background: #fff;
+  }
+  .pdp-reviews__text-card--featured .pdp-reviews__text-body {
+    font-weight: 500;
+  }
+  /* ---- Featured quote (legacy band — unused when card-in-grid) ---------- */
   .pdp-reviews__featured {
     margin: 0 0 24px;
     padding: 16px 20px;
