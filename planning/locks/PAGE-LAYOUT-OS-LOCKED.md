@@ -169,6 +169,8 @@ Root cause: COVER + tall **640** frame on a **wide/square flat-lay** side-croppe
 
 ## Home reviews ruler
 
+**Text card body LOCKED:** `.pdp-reviews__text-body` uses Type OS body **16px** (`var(--type-body-size)`). Never 14px.
+
 **Featured quote LOCKED (never remove):** block type `featured_review` on Home `reviews` — “Where have you been all my life? These grippy shoes have absolutely changed my Pilates practice.” · Verified buyer · Pilates. Sits above the text cards. Lock-scan must fail if missing.
 
 Home `reviews` (`pdp-reviews` on `index.json`): **desk `text_cards_initial: 0` (all 6)**; **phone `text_cards_initial_mobile: 2`** + **`text_cards_expand: true`**. Mobile extras use `hidden` + `display:none !important` ≤768 only; desk always shows all cards. Measure phone: 2 + See more; desk: 6 visible, no See more.

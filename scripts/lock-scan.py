@@ -331,6 +331,8 @@ def scan_page_layout_os(site: dict, build: Path, only: Path | None):
       for must in hr.get("css_must_contain") or [".pdp-reviews__text-card[hidden]", "display: none !important", "min-width: 769px"]:
         if must not in liq_txt:
           issues.append(f"sections/pdp-reviews.liquid: missing Home-reviews guard {must!r}")
+      if "type-body-size" not in liq_txt and hr.get("text_card_body_token"):
+        issues.append("sections/pdp-reviews.liquid: text card body missing Type OS --type-body-size lock")
       if "text_initial_mobile" not in liq_txt:
         issues.append("sections/pdp-reviews.liquid: missing text_initial_mobile (desk/phone split)")
       if "featured_review" not in liq_txt:
