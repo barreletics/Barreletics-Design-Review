@@ -26,7 +26,7 @@ Before any pad / height / fit edit:
 | **collab-hero** | `collab-hero` | Campaign stage | Stage ~**105vh** desk guidance · own lane — not a 50/50 |
 | **fullbleed** | `fullbleed-statement` | **Image-only** beat (Commit overlay **LOCKED OFF**) | COVER · vh/pct (~900 desk / ~439 phone @52) — **no title/CTA on image** — not 50/50 mmh |
 | **statement** | `statement-band` | Text band (Knock socks) | Text height only · Type Statement role |
-| **reviews** | `pdp-reviews` | Quote-led | Home: **2 text cards + See more** (force in liquid; extras `[hidden]` + `display:none !important`). No aggregate count on Home. |
+| **reviews** | `pdp-reviews` | Quote-led | Home **desk: all 6** curated text cards; Home **phone: 2 + See more** (mobile-only hide). No aggregate on Home. |
 | **problem-section** | `problem-section` | Problem / × list band | Text-list family · not FF |
 
 Also on Home (not in the split-frame set): `split-hero` (62/38 · **92vh** desk), `disciplines` + `variant-grid`, `home-juicer`, `guarantee-band`.
@@ -115,7 +115,7 @@ PAGE LAYOUT OS GATE
 - [ ] Desk 860/88/88/64 frozen when this is a mobile-only pass
 - [ ] Asymmetric 32/96 rejected
 - [ ] press-feature (Interni): stay press-feature type; frame 640/640 · 32/32 center; clamp overflow; FIT/contain only via Andrew media QC option C (not Home fifty-fifty)
-- [ ] Home reviews: 2 text cards + See more (liquid force + `[hidden]` CSS `display:none !important`)
+- [ ] Home reviews: desk all 6; phone 2 + See more (mobile-only `[hidden]`; desk never truncated)
 - [ ] Phone text min-height mobile_text_height 520 (image≈text) on ALL Home fifty-fifty
 - [ ] Hero stays 92vh / 62/38 if touching Home hero
 - [ ] fullbleed-statement: show_text **false** + blank title/body/cta (Commit overlay LOCKED OFF — Andrew 2026-09-15)
@@ -169,7 +169,7 @@ Root cause: COVER + tall **640** frame on a **wide/square flat-lay** side-croppe
 
 ## Home reviews ruler
 
-Home `reviews` (`pdp-reviews` on `index.json`): **`text_cards_initial: 2`** + **`text_cards_expand: true`**. Liquid **forces** 2 + expand on `template.name == index` even if TE strips settings. Extras use `hidden` **and** CSS `display: none !important` (plain `[hidden]` loses to `.text-card { display:flex }`). Measure: only 2 visible curated text cards + See more button.
+Home `reviews` (`pdp-reviews` on `index.json`): **desk `text_cards_initial: 0` (all 6)**; **phone `text_cards_initial_mobile: 2`** + **`text_cards_expand: true`**. Mobile extras use `hidden` + `display:none !important` ≤768 only; desk always shows all cards. Measure phone: 2 + See more; desk: 6 visible, no See more.
 
 
 ## Fullbleed Commit overlay — LOCKED OFF (2026-09-15)
