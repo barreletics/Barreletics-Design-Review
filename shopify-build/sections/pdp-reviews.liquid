@@ -81,17 +81,20 @@
     Non-index: show all.
   endcomment
   if template.name == 'index'
-    assign text_initial_desktop = section.settings.text_cards_initial | default: 0
+    assign text_initial_desktop = section.settings.text_cards_initial | default: 4
     assign text_initial_mobile = section.settings.text_cards_initial_mobile | default: 2
     if text_initial_mobile < 1
       assign text_initial_mobile = 2
+    endif
+    if text_initial_desktop < 1
+      assign text_initial_desktop = 4
     endif
     assign text_expand = true
     if section.settings.text_cards_expand == false
       assign text_expand = false
     endif
     comment
-      text_initial drives which cards get --extra (mobile collapse only).
+      text_initial = mobile collapse count (hidden attr). Desk uses --extra-desk + CSS.
     endcomment
     assign text_initial = text_initial_mobile
   else
@@ -267,11 +270,15 @@
               endif
               assign text_shown = text_shown | plus: 1
               assign card_extra = false
+              assign card_extra_desk = false
               if text_initial > 0 and text_shown > text_initial
                 assign card_extra = true
               endif
+              if template.name == 'index' and text_initial_desktop > 0 and text_shown > text_initial_desktop
+                assign card_extra_desk = true
+              endif
             %}
-            <article class="pdp-reviews__text-card{% if card_extra %} pdp-reviews__text-card--extra{% endif %}" {% if card_extra %}hidden{% endif %} {{ block.shopify_attributes }}>
+            <article class="pdp-reviews__text-card{% if card_extra %} pdp-reviews__text-card--extra{% endif %}{% if card_extra_desk %} pdp-reviews__text-card--extra-desk{% endif %}" {% if card_extra %}hidden{% endif %} {{ block.shopify_attributes }}>
               <div class="pdp-reviews__text-stars" aria-label="{{ star_n }} out of 5 stars">
                 {% for i in (1..5) %}
                   {% if i <= star_n %}★{% else %}<span class="pdp-reviews__star--empty">☆</span>{% endif %}
@@ -295,7 +302,11 @@
           {% endif %}
         {% endfor %}
       </div>
-      {% if text_expand and text_initial > 0 and text_count > text_initial %}
+      {% assign desk_overflow = false %}
+      {% if template.name == 'index' and text_initial_desktop > 0 and text_count > text_initial_desktop %}
+        {% assign desk_overflow = true %}
+      {% endif %}
+      {% if text_expand and text_initial > 0 and text_count > text_initial or text_expand and desk_overflow %}
         <div class="pdp-reviews__expand-wrap">
           <button type="button" class="pdp-reviews__expand" data-reviews-expand aria-expanded="false">
             See more reviews
@@ -590,14 +601,17 @@
   #shopify-section-{{ section.id }} .pdp-reviews__text-card--extra[hidden] {
     display: none !important;
   }
-  /* Desktop Home: always show all curated cards; See more is phone-only */
+  /* Desktop Home: one row of 4; extras hidden until See more */
   @media (min-width: 769px) {
-    #shopify-section-{{ section.id }} .pdp-reviews__text-card--extra[hidden],
-    #shopify-section-{{ section.id }} .pdp-reviews__text-card[hidden].pdp-reviews__text-card--extra {
-      display: flex !important;
+    #shopify-section-{{ section.id }} .pdp-reviews__text-grid {
+      grid-template-columns: repeat(4, 1fr);
     }
-    #shopify-section-{{ section.id }} .pdp-reviews__expand-wrap {
+    #shopify-section-{{ section.id }} .pdp-reviews__text-card--extra-desk:not(.is-expanded) {
       display: none !important;
+    }
+    /* Mobile-only extras still visible on desk if within the 4 */
+    #shopify-section-{{ section.id }} .pdp-reviews__text-card--extra[hidden]:not(.pdp-reviews__text-card--extra-desk) {
+      display: flex !important;
     }
   }
 
@@ -1078,9 +1092,10 @@
     var btn = root.querySelector('[data-reviews-expand]');
     if (!btn) return;
     btn.addEventListener('click', function () {
-      root.querySelectorAll('.pdp-reviews__text-card--extra').forEach(function (el) {
+      root.querySelectorAll('.pdp-reviews__text-card--extra, .pdp-reviews__text-card--extra-desk').forEach(function (el) {
         el.hidden = false;
         el.removeAttribute('hidden');
+        el.classList.add('is-expanded');
       });
       btn.setAttribute('aria-expanded', 'true');
       btn.hidden = true;
