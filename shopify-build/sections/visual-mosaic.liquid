@@ -134,6 +134,9 @@
         else
           assign tile_class = tile_class | append: ' vm-tile--sm'
         endif
+        if block.settings.hide_on_mobile
+          assign tile_class = tile_class | append: ' vm-tile--hide-mobile'
+        endif
 
         assign link_target = block.settings.link_target | default: 'default'
         if link_target == 'default'
@@ -439,6 +442,9 @@
       grid-row: span 2;
       min-height: calc(var(--vm-mob-h) * 2 + var(--vm-gap, 4px));
     }
+    #visual-mosaic-{{ section.id }} .vm-tile--hide-mobile {
+      display: none !important;
+    }
     #visual-mosaic-{{ section.id }} .vm-tile__title {
       font-size: var(--vm-title-size-m, 22px);
     }
@@ -541,17 +547,50 @@
       "id": "title_size",
       "label": "Title size",
       "options": [
-        { "value": "default", "label": "Default — 28px hero / 20px small" },
-        { "value": "16", "label": "16px" },
-        { "value": "18", "label": "18px" },
-        { "value": "20", "label": "20px" },
-        { "value": "22", "label": "22px" },
-        { "value": "24", "label": "24px" },
-        { "value": "26", "label": "26px" },
-        { "value": "28", "label": "28px" },
-        { "value": "32", "label": "32px" },
-        { "value": "36", "label": "36px" },
-        { "value": "40", "label": "40px" }
+        {
+          "value": "default",
+          "label": "Default — 28px hero / 20px small"
+        },
+        {
+          "value": "16",
+          "label": "16px"
+        },
+        {
+          "value": "18",
+          "label": "18px"
+        },
+        {
+          "value": "20",
+          "label": "20px"
+        },
+        {
+          "value": "22",
+          "label": "22px"
+        },
+        {
+          "value": "24",
+          "label": "24px"
+        },
+        {
+          "value": "26",
+          "label": "26px"
+        },
+        {
+          "value": "28",
+          "label": "28px"
+        },
+        {
+          "value": "32",
+          "label": "32px"
+        },
+        {
+          "value": "36",
+          "label": "36px"
+        },
+        {
+          "value": "40",
+          "label": "40px"
+        }
       ],
       "default": "default",
       "info": "All mosaic card titles on desktop. Pick a px = hero and small match."
@@ -561,16 +600,46 @@
       "id": "title_size_mobile",
       "label": "Title size — mobile",
       "options": [
-        { "value": "default", "label": "Default — 22px hero / 16px small" },
-        { "value": "16", "label": "16px" },
-        { "value": "18", "label": "18px" },
-        { "value": "20", "label": "20px" },
-        { "value": "22", "label": "22px" },
-        { "value": "24", "label": "24px" },
-        { "value": "26", "label": "26px" },
-        { "value": "28", "label": "28px" },
-        { "value": "32", "label": "32px" },
-        { "value": "36", "label": "36px" }
+        {
+          "value": "default",
+          "label": "Default — 22px hero / 16px small"
+        },
+        {
+          "value": "16",
+          "label": "16px"
+        },
+        {
+          "value": "18",
+          "label": "18px"
+        },
+        {
+          "value": "20",
+          "label": "20px"
+        },
+        {
+          "value": "22",
+          "label": "22px"
+        },
+        {
+          "value": "24",
+          "label": "24px"
+        },
+        {
+          "value": "26",
+          "label": "26px"
+        },
+        {
+          "value": "28",
+          "label": "28px"
+        },
+        {
+          "value": "32",
+          "label": "32px"
+        },
+        {
+          "value": "36",
+          "label": "36px"
+        }
       ],
       "default": "default",
       "info": "Phone ≤767. Default is the current sizes. Pick a px if type is too small."
@@ -761,10 +830,22 @@
       "label": "Aspect ratio mobile",
       "default": "portrait",
       "options": [
-        { "value": "square", "label": "Square" },
-        { "value": "portrait", "label": "Portrait" },
-        { "value": "landscape", "label": "Landscape" },
-        { "value": "widescreen", "label": "Widescreen" }
+        {
+          "value": "square",
+          "label": "Square"
+        },
+        {
+          "value": "portrait",
+          "label": "Portrait"
+        },
+        {
+          "value": "landscape",
+          "label": "Landscape"
+        },
+        {
+          "value": "widescreen",
+          "label": "Widescreen"
+        }
       ],
       "info": "Collection page only. Same as live."
     },
@@ -774,9 +855,18 @@
       "label": "Image fit mobile",
       "default": "cover",
       "options": [
-        { "value": "cover", "label": "Cover" },
-        { "value": "contain", "label": "Contain" },
-        { "value": "fill", "label": "Fill" }
+        {
+          "value": "cover",
+          "label": "Cover"
+        },
+        {
+          "value": "contain",
+          "label": "Contain"
+        },
+        {
+          "value": "fill",
+          "label": "Fill"
+        }
       ]
     },
     {
@@ -785,9 +875,18 @@
       "label": "Video fit mobile",
       "default": "cover",
       "options": [
-        { "value": "cover", "label": "Cover" },
-        { "value": "contain", "label": "Contain" },
-        { "value": "fill", "label": "Fill" }
+        {
+          "value": "cover",
+          "label": "Cover"
+        },
+        {
+          "value": "contain",
+          "label": "Contain"
+        },
+        {
+          "value": "fill",
+          "label": "Fill"
+        }
       ]
     },
     {
@@ -1021,6 +1120,13 @@
           ],
           "default": "sm",
           "info": "First tile = Large. Section Grid sets the shape."
+        },
+        {
+          "type": "checkbox",
+          "id": "hide_on_mobile",
+          "label": "Hide on mobile",
+          "default": false,
+          "info": "Phone only. Desk still shows this tile."
         },
         {
           "type": "select",
