@@ -10,6 +10,7 @@
   assign mobile_media_height = section.settings.mobile_media_height | default: 520
   assign media_position_x = section.settings.media_position_x | default: 50
   assign media_position_y_mobile = section.settings.media_position_y_mobile | default: 50
+  assign copy_stack_gap = section.settings.copy_stack_gap | default: 28
 
   assign has_media = false
   if section.settings.video != blank
@@ -41,7 +42,7 @@
   class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} problem-section{% if has_media %} problem-section--with-media{% endif %}"
   id="{{ section.settings.anchor_id | default: 'problem' | handleize }}"
   aria-label="{{ section.settings.title | escape }}"
-  style="{% render 'section-inset-vars' %} --pr-cta-bg: {{ cta_bg }}; --pr-cta-border: {{ cta_border }}; --pr-cta-text: {{ cta_text_color }}; --pr-mobile-media-height: {{ mobile_media_height }}px; --pr-media-pos-x: {{ media_position_x }}%; --pr-media-pos-y-mobile: {{ media_position_y_mobile }}%;"
+  style="{% render 'section-inset-vars' %} --pr-cta-bg: {{ cta_bg }}; --pr-cta-border: {{ cta_border }}; --pr-cta-text: {{ cta_text_color }}; --pr-mobile-media-height: {{ mobile_media_height }}px; --pr-media-pos-x: {{ media_position_x }}%; --pr-media-pos-y-mobile: {{ media_position_y_mobile }}%; --pr-copy-stack-gap: {{ copy_stack_gap }}px;"
 >
   <div class="problem-shell">
     <div class="problem-layout{% if has_media %} problem-layout--with-media{% endif %}">
@@ -171,7 +172,7 @@
   #shopify-section-{{ section.id }} .problem-layout--with-media .problem-inner {
     grid-column: auto;
     grid-template-columns: 1fr;
-    gap: 28px;
+    gap: var(--pr-copy-stack-gap, 28px);
   }
   .problem-title {
     max-width: none;
@@ -247,7 +248,7 @@
     }
     .problem-inner {
       grid-template-columns: 1fr;
-      gap: 28px;
+      gap: var(--pr-copy-stack-gap, 28px);
     }
     #shopify-section-{{ section.id }} .problem-media__video,
     #shopify-section-{{ section.id }} .problem-media__img {
@@ -399,6 +400,17 @@
     {
       "type": "header",
       "content": "Section — Problem"
+    },
+    {
+      "type": "range",
+      "id": "copy_stack_gap",
+      "label": "Space above bullet list",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 28,
+      "info": "Gap under the title and body before the list (stacked copy). Lower = list moves up."
     },
     {
       "type": "text",
