@@ -1,3 +1,8 @@
+## Parked 2026-09-18 — Press OS + pre-live
+- Press cards module (3 large: Coperni / ITSLIQUID·Biennale / INTERNI); desk row; no mobile carousel — see `planning/locks/PRESS-OS-LOCKED.md`
+- Blog placeholders for those three — see `planning/earmark-press-blogs-and-qc.md`
+- After all layouts signed off → sitewide QC + content confirm pass
+
 # Parked / next (Barreletics redesign)
 
 Single index of parked work. Detail lives in the linked earmarks. Updated 2026-09-14.

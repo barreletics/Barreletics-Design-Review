@@ -913,3 +913,10 @@ One row: **Shipping, returns & 90-day warranty** in `pdp-buy-box.liquid` (all PD
 - OS: `sitewide.lock.json` `cream_bands` · `.cursor/rules/cream-band-LOCKED.mdc` · skill `barreletics-cream-band`.
 - Anti-revert: do not restore older Coperni JSON to fix cream — fix forward.
 
+
+## 2026-09-18 — Press OS locked
+- Blog = SoT for Coperni / INTERNI / ITSLIQUID·Venice Biennale
+- Home press beat = three large **Press cards** (not huge Coperni video)
+- Desk: row (+ optional second row); mobile: no carousel
+- Earmark blog placeholders + post-layout QC pass before live
+- OS: `planning/locks/PRESS-OS-LOCKED.md` · earmark: `planning/earmark-press-blogs-and-qc.md`

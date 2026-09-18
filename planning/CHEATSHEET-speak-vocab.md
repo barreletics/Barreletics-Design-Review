@@ -50,3 +50,7 @@ When Andrew says **whole system** / **everywhere** / **sitewide** for policy or 
 
 Say: **“Sync whole system”** or **“Update FAQ master + Help + Outdoor”**.
 
+
+## Press (2026-09-18)
+- **Press cards** — large recognition cards module (Coperni · ITSLIQUID/Biennale · INTERNI)
+- **Press blog** — long-form article source of truth for each win
