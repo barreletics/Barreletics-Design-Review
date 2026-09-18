@@ -1,5 +1,5 @@
 {% comment %}
-  Problem section — Home WORKING 12b. Cream text-only beat (not 50/50).
+  Problem section — Home WORKING 12b. Cream beat with optional muted media + copy split.
 {% endcomment %}
 
 {%- liquid
@@ -7,41 +7,109 @@
   assign cta_bg = section.settings.cta_bg_color | default: '#c45c3f'
   assign cta_border = section.settings.cta_border_color | default: cta_bg
   assign cta_text_color = section.settings.cta_text_color | default: '#ffffff'
+  assign image_fit = section.settings.image_fit | default: 'cover'
+  assign mobile_media_height = section.settings.mobile_media_height | default: 520
+
+  assign has_media = false
+  if section.settings.video != blank
+    assign has_media = true
+  elsif section.settings.video_url != blank
+    assign has_media = true
+  elsif section.settings.image != blank
+    assign has_media = true
+  endif
+
+  assign video_src = section.settings.video_url | strip
+  assign video_source_type = 'video/mp4'
+  if video_src contains '.mov'
+    assign video_source_type = 'video/quicktime'
+  endif
+
+  assign poster_url = ''
+  if section.settings.image != blank
+    assign poster_url = section.settings.image | image_url: width: 1600
+  endif
 -%}
 <section
-  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} problem-section"
+  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} problem-section{% if has_media %} problem-section--with-media{% endif %}"
   id="{{ section.settings.anchor_id | default: 'problem' | handleize }}"
   aria-label="{{ section.settings.title | escape }}"
-  style="{% render 'section-inset-vars' %} --pr-cta-bg: {{ cta_bg }}; --pr-cta-border: {{ cta_border }}; --pr-cta-text: {{ cta_text_color }};"
+  style="{% render 'section-inset-vars' %} --pr-cta-bg: {{ cta_bg }}; --pr-cta-border: {{ cta_border }}; --pr-cta-text: {{ cta_text_color }}; --pr-image-fit: {{ image_fit }}; --pr-mobile-media-height: {{ mobile_media_height }}px;"
 >
   <div class="problem-shell">
-    <div class="problem-inner">
-      <div>
-        <h2 class="problem-title h2-display">{{ section.settings.title }}</h2>
-        {% if section.settings.body != blank %}
-          <p class="problem-body">{{ section.settings.body }}</p>
-        {% endif %}
-      </div>
-      <div>
-        {% if section.blocks.size > 0 %}
-          <ul class="problem-list">
-            {% for block in section.blocks %}
-              {% if block.settings.text != blank %}
-              <li {{ block.shopify_attributes }}>
-                <span class="problem-list__x" aria-hidden="true">×</span>
-                <span>{{ block.settings.text }}</span>
-              </li>
-              {% endif %}
-            {% endfor %}
-          </ul>
-        {% endif %}
-        {% if section.settings.cta_text != blank %}
-          <div class="problem-resolve">
-            <a class="problem-resolve__cta{% if cta_style == 'outline' %} problem-resolve__cta--outline{% endif %}" href="{{ section.settings.cta_url | default: '#variants' }}">
-              {{ section.settings.cta_text }}
-            </a>
+    <div class="problem-layout{% if has_media %} problem-layout--with-media{% endif %}">
+      {% if has_media %}
+        <div class="problem-media">
+          <div class="problem-media__clip">
+            {% if section.settings.video != blank %}
+              {{
+                section.settings.video
+                | video_tag:
+                  image_size: '1600x',
+                  autoplay: true,
+                  loop: true,
+                  muted: true,
+                  controls: false,
+                  playsinline: true,
+                  class: 'problem-media__video'
+              }}
+            {% elsif video_src != blank %}
+              <video
+                class="problem-media__video"
+                autoplay
+                muted
+                loop
+                playsinline
+                webkit-playsinline
+                preload="auto"
+                disablepictureinpicture
+                {% if poster_url != blank %}poster="{{ poster_url | escape }}"{% endif %}
+              >
+                <source src="{{ video_src | escape }}" type="{{ video_source_type }}">
+              </video>
+            {% elsif section.settings.image != blank %}
+              {{
+                section.settings.image
+                | image_url: width: 1600
+                | image_tag:
+                  widths: '600, 900, 1200, 1600',
+                  sizes: '(max-width: 768px) 100vw, 50vw',
+                  alt: section.settings.title,
+                  loading: 'lazy',
+                  class: 'problem-media__img'
+              }}
+            {% endif %}
           </div>
-        {% endif %}
+        </div>
+      {% endif %}
+      <div class="problem-inner">
+        <div>
+          <h2 class="problem-title h2-display">{{ section.settings.title }}</h2>
+          {% if section.settings.body != blank %}
+            <p class="problem-body">{{ section.settings.body }}</p>
+          {% endif %}
+        </div>
+        <div>
+          {% if section.blocks.size > 0 %}
+            <ul class="problem-list">
+              {% for block in section.blocks %}
+                {% if block.settings.text != blank %}
+                <li {{ block.shopify_attributes }}>
+                  <span class="problem-list__x" aria-hidden="true">×</span>
+                  <span>{{ block.settings.text }}</span>
+                </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          {% endif %}
+          {% if section.settings.cta_text != blank %}
+            <div class="problem-resolve">
+              <a class="problem-resolve__cta{% if cta_style == 'outline' %} problem-resolve__cta--outline{% endif %}" href="{{ section.settings.cta_url | default: '#variants' }}">
+                {{ section.settings.cta_text }}
+              </a>
+            </div>
+          {% endif %}
+        </div>
       </div>
     </div>
   </div>
@@ -61,11 +129,41 @@
     max-width: 1100px;
     margin: 0 auto;
   }
+  #shopify-section-{{ section.id }} .problem-layout--with-media {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: stretch;
+    max-width: none;
+  }
+  #shopify-section-{{ section.id }} .problem-layout--with-media .problem-shell {
+    max-width: none;
+  }
+  #shopify-section-{{ section.id }} .problem-media__clip {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 280px;
+    overflow: hidden;
+    border-radius: 4px;
+    background: #f0ebe4;
+  }
+  #shopify-section-{{ section.id }} .problem-media__video,
+  #shopify-section-{{ section.id }} .problem-media__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: var(--pr-image-fit, cover);
+    object-position: center center;
+  }
   .problem-inner {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 48px;
     align-items: start;
+  }
+  #shopify-section-{{ section.id }} .problem-layout--with-media .problem-inner {
+    grid-column: auto;
   }
   .problem-title {
     max-width: none;
@@ -130,12 +228,49 @@
   .problem-resolve__cta:hover { opacity: 0.92; }
   @media (max-width: 768px) {
     .problem-section { padding: 48px 16px; }
+    #shopify-section-{{ section.id }} .problem-layout--with-media {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+    #shopify-section-{{ section.id }} .problem-media__clip {
+      height: var(--pr-mobile-media-height, 520px);
+      min-height: var(--pr-mobile-media-height, 520px);
+      max-height: var(--pr-mobile-media-height, 520px);
+    }
     .problem-inner {
       grid-template-columns: 1fr;
       gap: 28px;
     }
   }
 </style>
+
+{% if section.settings.video != blank or video_src != blank %}
+<script>
+  (function () {
+    var root = document.getElementById('shopify-section-{{ section.id }}');
+    if (!root) return;
+    var video = root.querySelector('.problem-media__video');
+    if (!video || video.hasAttribute('controls')) return;
+    function kick() {
+      video.muted = true;
+      video.defaultMuted = true;
+      video.setAttribute('muted', '');
+      video.playsInline = true;
+      var p = video.play();
+      if (p && p.catch) p.catch(function () {});
+    }
+    video.addEventListener('loadeddata', kick);
+    video.addEventListener('canplay', kick);
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) kick(); });
+      }, { rootMargin: '80px 0px' });
+      io.observe(video);
+    }
+    kick();
+  })();
+</script>
+{% endif %}
 
 {% schema %}
 {
@@ -198,6 +333,52 @@
       "type": "url",
       "id": "cta_url",
       "label": "CTA link"
+    },
+    {
+      "type": "header",
+      "content": "Media (optional)"
+    },
+    {
+      "type": "paragraph",
+      "content": "When set, shows muted looping video (or still image) beside copy. Priority: Shopify video → Video URL → Image. All videos are always muted."
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Shopify video"
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "Video URL",
+      "info": "CDN or external URL (mp4, mov). Ignored if Shopify video is set."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Poster / still image",
+      "info": "Poster for video URL, or still image when no video is set."
+    },
+    {
+      "type": "select",
+      "id": "image_fit",
+      "label": "Media object fit",
+      "options": [
+        { "value": "cover", "label": "Cover" },
+        { "value": "contain", "label": "Contain" }
+      ],
+      "default": "cover"
+    },
+    {
+      "type": "range",
+      "id": "mobile_media_height",
+      "label": "Mobile media height",
+      "min": 320,
+      "max": 720,
+      "step": 20,
+      "unit": "px",
+      "default": 520,
+      "info": "Fixed height for the media column on phone when split layout is active."
     },
     {
       "type": "header",
