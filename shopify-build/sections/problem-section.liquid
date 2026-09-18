@@ -7,8 +7,9 @@
   assign cta_bg = section.settings.cta_bg_color | default: '#c45c3f'
   assign cta_border = section.settings.cta_border_color | default: cta_bg
   assign cta_text_color = section.settings.cta_text_color | default: '#ffffff'
-  assign image_fit = section.settings.image_fit | default: 'cover'
   assign mobile_media_height = section.settings.mobile_media_height | default: 520
+  assign media_position_x = section.settings.media_position_x | default: 50
+  assign media_position_y_mobile = section.settings.media_position_y_mobile | default: 50
 
   assign has_media = false
   if section.settings.video != blank
@@ -40,7 +41,7 @@
   class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} problem-section{% if has_media %} problem-section--with-media{% endif %}"
   id="{{ section.settings.anchor_id | default: 'problem' | handleize }}"
   aria-label="{{ section.settings.title | escape }}"
-  style="{% render 'section-inset-vars' %} --pr-cta-bg: {{ cta_bg }}; --pr-cta-border: {{ cta_border }}; --pr-cta-text: {{ cta_text_color }}; --pr-image-fit: {{ image_fit }}; --pr-mobile-media-height: {{ mobile_media_height }}px;"
+  style="{% render 'section-inset-vars' %} --pr-cta-bg: {{ cta_bg }}; --pr-cta-border: {{ cta_border }}; --pr-cta-text: {{ cta_text_color }}; --pr-mobile-media-height: {{ mobile_media_height }}px; --pr-media-pos-x: {{ media_position_x }}%; --pr-media-pos-y-mobile: {{ media_position_y_mobile }}%;"
 >
   <div class="problem-shell">
     <div class="problem-layout{% if has_media %} problem-layout--with-media{% endif %}">
@@ -160,7 +161,6 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center center;
   }
   .problem-inner {
     display: grid;
@@ -170,6 +170,8 @@
   }
   #shopify-section-{{ section.id }} .problem-layout--with-media .problem-inner {
     grid-column: auto;
+    grid-template-columns: 1fr;
+    gap: 28px;
   }
   .problem-title {
     max-width: none;
@@ -247,6 +249,16 @@
       grid-template-columns: 1fr;
       gap: 28px;
     }
+    #shopify-section-{{ section.id }} .problem-media__video,
+    #shopify-section-{{ section.id }} .problem-media__img {
+      object-position: 50% var(--pr-media-pos-y-mobile, 50%);
+    }
+  }
+  @media (min-width: 769px) {
+    #shopify-section-{{ section.id }} .problem-media__video,
+    #shopify-section-{{ section.id }} .problem-media__img {
+      object-position: var(--pr-media-pos-x, 50%) 50%;
+    }
   }
 </style>
 
@@ -316,26 +328,6 @@
       "default": "solid"
     },
     {
-      "type": "color",
-      "id": "cta_bg_color",
-      "label": "CTA background color",
-      "default": "#c45c3f",
-      "info": "Used for solid fill. Outline style uses transparent fill + border color."
-    },
-    {
-      "type": "color",
-      "id": "cta_border_color",
-      "label": "CTA outline / border color",
-      "default": "#c45c3f"
-    },
-    {
-      "type": "color",
-      "id": "cta_text_color",
-      "label": "CTA label color",
-      "default": "#ffffff",
-      "info": "Solid fill: usually white. Outline or light fill: charcoal/black."
-    },
-    {
       "type": "url",
       "id": "cta_url",
       "label": "CTA link"
@@ -357,13 +349,7 @@
       "type": "text",
       "id": "video_url",
       "label": "Video URL",
-      "info": "CDN/external. Use mp4 — HEVC .mov often shows a blank placeholder in Chrome. Ignored if Shopify video or theme asset is set."
-    },
-    {
-      "type": "text",
-      "id": "video_asset",
-      "label": "Theme video asset filename",
-      "info": "e.g. chair-pose-home.mp4 in Assets. Wins over Video URL. Always muted."
+      "info": "CDN/external mp4. Ignored when Shopify video is set. Legacy theme-asset filenames in saved settings still work."
     },
     {
       "type": "image_picker",
@@ -372,14 +358,26 @@
       "info": "Poster for video URL, or still image when no video is set."
     },
     {
-      "type": "select",
-      "id": "image_fit",
-      "label": "Media object fit",
-      "options": [
-        { "value": "cover", "label": "Cover" },
-        { "value": "contain", "label": "Contain" }
-      ],
-      "default": "cover"
+      "type": "range",
+      "id": "media_position_x",
+      "label": "Desktop media — left ↔ right",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "info": "Object position on desktop (769px+). Media always uses cover."
+    },
+    {
+      "type": "range",
+      "id": "media_position_y_mobile",
+      "label": "Mobile media — up ↔ down",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "info": "Object position on mobile (768px and below)."
     },
     {
       "type": "range",
