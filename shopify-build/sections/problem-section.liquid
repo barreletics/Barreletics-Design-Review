@@ -8,21 +8,9 @@
   assign cta_border = section.settings.cta_border_color | default: cta_bg
   assign cta_text_color = section.settings.cta_text_color | default: '#ffffff'
   assign mobile_media_height = section.settings.mobile_media_height | default: 520
-  assign copy_stack_gap = section.settings.copy_stack_gap | default: 28
-
-  assign media_x_side = section.settings.media_x_side | default: 'center'
-  assign media_x_pct = section.settings.media_x_pct | default: 0
-  assign media_y_side = section.settings.media_y_side | default: 'center'
-  assign media_y_pct = section.settings.media_y_pct | default: 0
-
-  assign media_pos_x_desktop = 50
-  if media_x_side == 'left'
-    assign media_pos_x_desktop = media_x_pct
-  elsif media_x_side == 'right'
-    assign media_pos_x_desktop = 100 | minus: media_x_pct
-  else
-    assign media_pos_x_desktop = section.settings.media_position_x | default: 50
-  endif
+  assign copy_stack_gap = section.settings.copy_stack_gap | default: 16
+  assign reverse = section.settings.reverse
+  assign mobile_stack_order = section.settings.mobile_stack_order | default: 'media_first'
 
   assign media_pos_y_mobile = 50
   if media_y_side == 'up'
@@ -60,10 +48,10 @@
   endif
 -%}
 <section
-  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} problem-section{% if has_media %} problem-section--with-media{% endif %}"
+  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} problem-section{% if has_media %} problem-section--with-media{% endif %}{% if reverse %} problem-section--reverse{% endif %}{% if mobile_stack_order == 'copy_first' %} problem-section--copy-first{% else %} problem-section--media-first{% endif %}"
   id="{{ section.settings.anchor_id | default: 'problem' | handleize }}"
   aria-label="{{ section.settings.title | escape }}"
-  style="{% render 'section-inset-vars' %} --pr-cta-bg: {{ cta_bg }}; --pr-cta-border: {{ cta_border }}; --pr-cta-text: {{ cta_text_color }}; --pr-mobile-media-height: {{ mobile_media_height }}px; --pr-media-pos-x: {{ media_pos_x_desktop }}%; --pr-media-pos-y-mobile: {{ media_pos_y_mobile }}%; --pr-copy-stack-gap: {{ copy_stack_gap }}px;"
+  style="{% render 'section-inset-vars' %} --pr-cta-bg: {{ cta_bg }}; --pr-cta-border: {{ cta_border }}; --pr-cta-text: {{ cta_text_color }}; --pr-mobile-media-height: {{ mobile_media_height }}px; --pr-copy-stack-gap: {{ copy_stack_gap }}px;"
 >
   <div class="problem-shell">
     <div class="problem-layout{% if has_media %} problem-layout--with-media{% endif %}">
@@ -256,7 +244,27 @@
     color: var(--pr-cta-text, var(--pr-cta-border, #c45c3f));
   }
   .problem-resolve__cta:hover { opacity: 0.92; }
+  
+  /* Match 50/50: desk media left; reverse = media right */
+  @media (min-width: 769px) {
+    #shopify-section-{{ section.id }}.problem-section--reverse .problem-layout--with-media {
+      direction: rtl;
+    }
+    #shopify-section-{{ section.id }}.problem-section--reverse .problem-layout--with-media > * {
+      direction: ltr;
+    }
+  }
+  /* Match 50/50: mobile media above or below copy */
   @media (max-width: 768px) {
+    #shopify-section-{{ section.id }}.problem-section--copy-first .problem-layout--with-media {
+      display: flex;
+      flex-direction: column;
+    }
+    #shopify-section-{{ section.id }}.problem-section--copy-first .problem-layout--with-media .problem-inner {
+      order: -1;
+    }
+  }
+@media (max-width: 768px) {
     .problem-section { padding: 48px 16px; }
     #shopify-section-{{ section.id }} .problem-layout--with-media {
       grid-template-columns: 1fr;
@@ -273,13 +281,13 @@
     }
     #shopify-section-{{ section.id }} .problem-media__video,
     #shopify-section-{{ section.id }} .problem-media__img {
-      object-position: 50% var(--pr-media-pos-y-mobile, 50%);
+      object-position: center center;
     }
   }
   @media (min-width: 769px) {
     #shopify-section-{{ section.id }} .problem-media__video,
     #shopify-section-{{ section.id }} .problem-media__img {
-      object-position: var(--pr-media-pos-x, 50%) 50%;
+      object-position: center center;
     }
   }
 </style>
@@ -318,7 +326,7 @@
   "settings": [
     {
       "type": "header",
-      "content": "Shared — Content"
+      "content": "Shared \u2014 Content"
     },
     {
       "type": "text",
@@ -338,14 +346,19 @@
       "label": "CTA label",
       "default": "Shop Now"
     },
-    
     {
       "type": "select",
       "id": "cta_style",
       "label": "CTA style",
       "options": [
-        { "value": "solid", "label": "Solid fill" },
-        { "value": "outline", "label": "Outline only" }
+        {
+          "value": "solid",
+          "label": "Solid fill"
+        },
+        {
+          "value": "outline",
+          "label": "Outline only"
+        }
       ],
       "default": "solid"
     },
@@ -360,7 +373,7 @@
     },
     {
       "type": "paragraph",
-      "content": "When set, shows muted looping video (or still image) beside copy. Priority: Shopify video → Video URL → Image. All videos are always muted."
+      "content": "When set, shows muted looping video (or still image) beside copy. Priority: Shopify video \u2192 Video URL \u2192 Image. All videos are always muted."
     },
     {
       "type": "video",
@@ -394,50 +407,6 @@
       "content": "Desktop (769px+): horizontal anchor + nudge. Mobile (768px and below): vertical anchor + nudge. Media always uses object-fit: cover."
     },
     {
-      "type": "select",
-      "id": "media_x_side",
-      "label": "Desktop horizontal",
-      "options": [
-        { "value": "left", "label": "Left" },
-        { "value": "center", "label": "Center" },
-        { "value": "right", "label": "Right" }
-      ],
-      "default": "center"
-    },
-    {
-      "type": "range",
-      "id": "media_x_pct",
-      "label": "Nudge from that side (%) — desktop",
-      "min": 0,
-      "max": 50,
-      "step": 1,
-      "unit": "%",
-      "default": 0,
-      "info": "Only applies when Desktop horizontal is Left or Right. Ignored when Center."
-    },
-    {
-      "type": "select",
-      "id": "media_y_side",
-      "label": "Mobile vertical",
-      "options": [
-        { "value": "up", "label": "Up" },
-        { "value": "center", "label": "Center" },
-        { "value": "down", "label": "Down" }
-      ],
-      "default": "center"
-    },
-    {
-      "type": "range",
-      "id": "media_y_pct",
-      "label": "Nudge from that side (%) — mobile",
-      "min": 0,
-      "max": 50,
-      "step": 1,
-      "unit": "%",
-      "default": 0,
-      "info": "Only applies when Mobile vertical is Up or Down. Ignored when Center."
-    },
-    {
       "type": "range",
       "id": "mobile_media_height",
       "label": "Mobile media height",
@@ -449,103 +418,49 @@
       "info": "Fixed height for the media column on phone when split layout is active."
     },
     {
+      "type": "checkbox",
+      "id": "reverse",
+      "label": "Media on right (desktop)",
+      "default": false,
+      "info": "Off = media left. On = media right. Same as 50/50 reverse."
+    },
+    {
+      "type": "select",
+      "id": "mobile_stack_order",
+      "label": "Mobile: media up or down",
+      "default": "media_first",
+      "options": [
+        {
+          "value": "media_first",
+          "label": "Media above copy"
+        },
+        {
+          "value": "copy_first",
+          "label": "Media below copy"
+        }
+      ],
+      "info": "Phone only. Same as 50/50 mobile stack order."
+    },
+    {
       "type": "header",
-      "content": "Section — Problem"
+      "content": "Section \u2014 Problem"
     },
     {
       "type": "range",
       "id": "copy_stack_gap",
-      "label": "Space above bullet list",
+      "label": "Gap under title (pull list up)",
       "min": 0,
       "max": 96,
       "step": 4,
       "unit": "px",
-      "default": 28,
-      "info": "Gap under the title and body before the list (stacked copy). Lower = list moves up."
+      "default": 12,
+      "info": "Smaller = bullets sit tighter under the title."
     },
     {
       "type": "text",
       "id": "anchor_id",
       "label": "Anchor ID",
       "default": "problem"
-    },
-    {
-      "type": "header",
-      "content": "Shared — Section frame"
-    },
-    {
-      "type": "paragraph",
-      "content": "OUTER inset from the page edges (margin). Top and bottom are independent; left & right = one control. Custom mobile OFF = mobile uses the same inset as desktop. Defaults 0 = full bleed."
-    },
-    {
-      "type": "checkbox",
-      "id": "inset_custom_mobile",
-      "label": "Custom mobile inset",
-      "default": false,
-      "info": "OFF (default): ignore the mobile inset sliders — mobile uses desktop Inset top / bottom / left & right. ON: use the mobile inset sliders instead."
-    },
-    {
-      "type": "range",
-      "id": "inset_top",
-      "label": "Inset top",
-      "min": 0,
-      "max": 96,
-      "step": 4,
-      "unit": "px",
-      "default": 0
-    },
-    {
-      "type": "range",
-      "id": "inset_bottom",
-      "label": "Inset bottom",
-      "min": 0,
-      "max": 96,
-      "step": 4,
-      "unit": "px",
-      "default": 0
-    },
-    {
-      "type": "range",
-      "id": "inset_x",
-      "label": "Inset left & right",
-      "min": 0,
-      "max": 96,
-      "step": 4,
-      "unit": "px",
-      "default": 0,
-      "info": "Same value on both sides."
-    },
-    {
-      "type": "range",
-      "id": "inset_top_mobile",
-      "label": "Inset top — mobile",
-      "min": 0,
-      "max": 64,
-      "step": 4,
-      "unit": "px",
-      "default": 0,
-      "info": "Only when Custom mobile inset is on."
-    },
-    {
-      "type": "range",
-      "id": "inset_bottom_mobile",
-      "label": "Inset bottom — mobile",
-      "min": 0,
-      "max": 64,
-      "step": 4,
-      "unit": "px",
-      "default": 0
-    },
-    {
-      "type": "range",
-      "id": "inset_x_mobile",
-      "label": "Inset left & right — mobile",
-      "min": 0,
-      "max": 64,
-      "step": 4,
-      "unit": "px",
-      "default": 0,
-      "info": "Only when Custom mobile inset is on."
     },
     {
       "type": "checkbox",
@@ -581,13 +496,13 @@
         {
           "type": "item",
           "settings": {
-            "text": "Flat back chair & water ski — resetting mid-set"
+            "text": "Flat back chair & water ski \u2014 resetting mid-set"
           }
         },
         {
           "type": "item",
           "settings": {
-            "text": "Reformer footwork — adjusting between sets"
+            "text": "Reformer footwork \u2014 adjusting between sets"
           }
         },
         {
