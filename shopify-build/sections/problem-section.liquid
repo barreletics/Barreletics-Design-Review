@@ -11,6 +11,14 @@
   assign copy_stack_gap = section.settings.copy_stack_gap | default: 16
   assign reverse = section.settings.reverse
   assign mobile_stack_order = section.settings.mobile_stack_order | default: 'media_first'
+  assign media_fit = section.settings.media_fit | default: 'cover'
+  assign media_frame_shape = section.settings.media_frame_shape | default: 'interni'
+  assign desk_media_min = 640
+  if media_frame_shape == 'tall'
+    assign desk_media_min = 860
+  elsif media_frame_shape == 'square'
+    assign desk_media_min = 0
+  endif
 
 
   assign has_media = false
@@ -38,10 +46,10 @@
   endif
 -%}
 <section
-  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} problem-section{% if has_media %} problem-section--with-media{% endif %}{% if reverse %} problem-section--reverse{% endif %}{% if mobile_stack_order == 'copy_first' %} problem-section--copy-first{% else %} problem-section--media-first{% endif %}"
+  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} problem-section{% if has_media %} problem-section--with-media{% endif %}{% if reverse %} problem-section--reverse{% endif %}{% if mobile_stack_order == 'copy_first' %} problem-section--copy-first{% else %} problem-section--media-first{% endif %}{% if media_frame_shape == 'square' %} problem-section--media-square{% endif %}{% if media_fit == 'contain' %} problem-section--media-contain{% endif %}"
   id="{{ section.settings.anchor_id | default: 'problem' | handleize }}"
   aria-label="{{ section.settings.title | escape }}"
-  style="{% render 'section-inset-vars' %} --pr-cta-bg: {{ cta_bg }}; --pr-cta-border: {{ cta_border }}; --pr-cta-text: {{ cta_text_color }}; --pr-mobile-media-height: {{ mobile_media_height }}px; --pr-copy-stack-gap: {{ copy_stack_gap }}px;"
+  style="{% render 'section-inset-vars' %} --pr-cta-bg: {{ cta_bg }}; --pr-cta-border: {{ cta_border }}; --pr-cta-text: {{ cta_text_color }}; --pr-mobile-media-height: {{ mobile_media_height }}px; --pr-desk-media-min: {{ desk_media_min }}px; --pr-copy-stack-gap: {{ copy_stack_gap }}px;"
 >
   <div class="problem-shell">
     <div class="problem-layout{% if has_media %} problem-layout--with-media{% endif %}">
@@ -163,7 +171,7 @@
     position: relative;
     width: 100%;
     height: 100%;
-    min-height: 860px; /* Home 50/50 desk ruler (Grip / One Pair) */
+    min-height: var(--pr-desk-media-min, 640px);
     overflow: hidden;
     border-radius: 4px;
     background: #f0ebe4;
@@ -175,6 +183,19 @@
     height: 100%;
     object-fit: cover;
   }
+  #shopify-section-{{ section.id }}.problem-section--media-contain .problem-media__video,
+  #shopify-section-{{ section.id }}.problem-section--media-contain .problem-media__img {
+    object-fit: contain;
+  }
+  @media (min-width: 769px) {
+    #shopify-section-{{ section.id }}.problem-section--media-square .problem-media__clip {
+      min-height: 0;
+      aspect-ratio: 1 / 1;
+      height: auto;
+      width: 100%;
+    }
+  }
+
   .problem-inner {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -422,14 +443,6 @@
       "info": "Poster for video URL, or still image when no video is set."
     },
     {
-      "type": "header",
-      "content": "Media position"
-    },
-    {
-      "type": "paragraph",
-      "content": "Desktop (769px+): horizontal anchor + nudge. Mobile (768px and below): vertical anchor + nudge. Media always uses object-fit: cover."
-    },
-    {
       "type": "range",
       "id": "mobile_media_height",
       "label": "Mobile media height",
@@ -439,6 +452,46 @@
       "unit": "px",
       "default": 520,
       "info": "Fixed height for the media column on phone when split layout is active."
+    },
+    {
+      "type": "header",
+      "content": "Media frame"
+    },
+    {
+      "type": "select",
+      "id": "media_frame_shape",
+      "label": "Desktop frame shape",
+      "default": "interni",
+      "options": [
+        {
+          "value": "interni",
+          "label": "Interni height (~640) \u2014 wider"
+        },
+        {
+          "value": "tall",
+          "label": "Tall (860)"
+        },
+        {
+          "value": "square",
+          "label": "Square"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "media_fit",
+      "label": "Media fit",
+      "default": "cover",
+      "options": [
+        {
+          "value": "cover",
+          "label": "Cover"
+        },
+        {
+          "value": "contain",
+          "label": "Contain"
+        }
+      ]
     },
     {
       "type": "checkbox",
