@@ -12,14 +12,6 @@
   assign reverse = section.settings.reverse
   assign mobile_stack_order = section.settings.mobile_stack_order | default: 'media_first'
 
-  assign media_pos_y_mobile = 50
-  if media_y_side == 'up'
-    assign media_pos_y_mobile = media_y_pct
-  elsif media_y_side == 'down'
-    assign media_pos_y_mobile = 100 | minus: media_y_pct
-  else
-    assign media_pos_y_mobile = section.settings.media_position_y_mobile | default: 50
-  endif
 
   assign has_media = false
   if section.settings.video != blank
@@ -264,25 +256,25 @@
   }
   #shopify-section-{{ section.id }} .problem-layout--with-media .problem-media { order: 1; }
   #shopify-section-{{ section.id }} .problem-layout--with-media .problem-inner { order: 2; }
-  #shopify-section-{{ section.id }}.problem-section--reverse .problem-layout--with-media .problem-media { order: 2; }
-  #shopify-section-{{ section.id }}.problem-section--reverse .problem-layout--with-media .problem-inner { order: 1; }
+  #shopify-section-{{ section.id }} .problem-section--reverse .problem-layout--with-media .problem-media { order: 2; }
+  #shopify-section-{{ section.id }} .problem-section--reverse .problem-layout--with-media .problem-inner { order: 1; }
 
   /* Phone U/D — same idea as fifty-fifty mobile_stack_order */
   @media (max-width: 768px) {
     #shopify-section-{{ section.id }} .problem-layout--with-media {
       grid-template-columns: 1fr;
     }
-    #shopify-section-{{ section.id }}.problem-section--media-first .problem-layout--with-media .problem-media { order: 1; }
-    #shopify-section-{{ section.id }}.problem-section--media-first .problem-layout--with-media .problem-inner { order: 2; }
-    #shopify-section-{{ section.id }}.problem-section--copy-first .problem-layout--with-media .problem-inner { order: 1; }
-    #shopify-section-{{ section.id }}.problem-section--copy-first .problem-layout--with-media .problem-media { order: 2; }
+    #shopify-section-{{ section.id }} .problem-section--media-first .problem-layout--with-media .problem-media { order: 1; }
+    #shopify-section-{{ section.id }} .problem-section--media-first .problem-layout--with-media .problem-inner { order: 2; }
+    #shopify-section-{{ section.id }} .problem-section--copy-first .problem-layout--with-media .problem-inner { order: 1; }
+    #shopify-section-{{ section.id }} .problem-section--copy-first .problem-layout--with-media .problem-media { order: 2; }
     /* reset desk reverse on phone */
-    #shopify-section-{{ section.id }}.problem-section--reverse .problem-layout--with-media .problem-media,
-    #shopify-section-{{ section.id }}.problem-section--reverse .problem-layout--with-media .problem-inner { order: unset; }
-    #shopify-section-{{ section.id }}.problem-section--media-first.problem-section--reverse .problem-layout--with-media .problem-media { order: 1; }
-    #shopify-section-{{ section.id }}.problem-section--media-first.problem-section--reverse .problem-layout--with-media .problem-inner { order: 2; }
-    #shopify-section-{{ section.id }}.problem-section--copy-first.problem-section--reverse .problem-layout--with-media .problem-inner { order: 1; }
-    #shopify-section-{{ section.id }}.problem-section--copy-first.problem-section--reverse .problem-layout--with-media .problem-media { order: 2; }
+    #shopify-section-{{ section.id }} .problem-section--reverse .problem-layout--with-media .problem-media,
+    #shopify-section-{{ section.id }} .problem-section--reverse .problem-layout--with-media .problem-inner { order: unset; }
+    #shopify-section-{{ section.id }} .problem-section--media-first.problem-section--reverse .problem-layout--with-media .problem-media { order: 1; }
+    #shopify-section-{{ section.id }} .problem-section--media-first.problem-section--reverse .problem-layout--with-media .problem-inner { order: 2; }
+    #shopify-section-{{ section.id }} .problem-section--copy-first.problem-section--reverse .problem-layout--with-media .problem-inner { order: 1; }
+    #shopify-section-{{ section.id }} .problem-section--copy-first.problem-section--reverse .problem-layout--with-media .problem-media { order: 2; }
   }
 @media (max-width: 768px) {
     .problem-section { padding: 48px 16px; }
