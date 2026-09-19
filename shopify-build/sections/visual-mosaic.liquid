@@ -15,9 +15,38 @@
   assign vm_fit = section.settings.media_fit | default: 'cover'
   assign vm_mob_cols = section.settings.mobile_columns | default: '2' | plus: 0
   assign vm_mob_h = section.settings.mobile_tile_height | default: 320
+  assign vm_hero_full_m = true
+  if section.settings.mobile_hero_full_width == false
+    assign vm_hero_full_m = false
+  endif
+  assign vm_hero_span_m = section.settings.mobile_hero_row_span | default: 2
+  if vm_hero_full_m
+    assign vm_hero_col_m = '1 / -1'
+  else
+    assign vm_hero_col_m = 'span 1'
+  endif
+  assign vm_hero_min_m = vm_mob_h | times: vm_hero_span_m
+  if vm_hero_span_m > 1
+    assign vm_hero_gap_m = vm_gap | times: vm_hero_span_m | minus: vm_gap
+    assign vm_hero_min_m = vm_hero_min_m | plus: vm_hero_gap_m
+  endif
   assign aspect_ratio_mobile = section.settings.aspect_ratio_mobile | default: 'portrait'
   assign image_fit_mobile = section.settings.image_fit_mobile | default: 'cover'
   assign video_fit_mobile = section.settings.video_fit_mobile | default: 'cover'
+  case aspect_ratio_mobile
+    when 'square'
+      assign vm_aspect_m = '1 / 1'
+    when 'landscape'
+      assign vm_aspect_m = '16 / 9'
+    when 'widescreen'
+      assign vm_aspect_m = '21 / 9'
+    else
+      assign vm_aspect_m = '3 / 4'
+  endcase
+  assign vm_aspect_uses_height = true
+  if aspect_ratio_mobile == 'square' or aspect_ratio_mobile == 'landscape' or aspect_ratio_mobile == 'widescreen'
+    assign vm_aspect_uses_height = false
+  endif
   comment
     Independent-frame QA gate (2026-09-04 letter). Default OFF everywhere.
     ON only on the default collection template — Home / PDP / About instances
@@ -108,6 +137,12 @@
     --vm-pad-x: {{ vm_pad_x }}px;
     --vm-fit: {{ vm_fit }};
     --vm-mob-h: {{ vm_mob_h }}px;
+    --vm-hero-col-m: {{ vm_hero_col_m }};
+    --vm-hero-span-m: {{ vm_hero_span_m }};
+    --vm-hero-min-m: {{ vm_hero_min_m }}px;
+    --vm-aspect-m: {{ vm_aspect_m }};
+    --vm-fit-img-m: {{ image_fit_mobile }};
+    --vm-fit-vid-m: {{ video_fit_mobile }};
     {% if vm_title_size != 'default' %}--vm-title-size: {{ vm_title_size }}px; --vm-title-size-sm: {{ vm_title_size }}px;{% endif %}
     {% if vm_title_size_m != 'default' %}--vm-title-size-m: {{ vm_title_size_m }}px; --vm-title-size-sm-m: {{ vm_title_size_m }}px;{% endif %}
     --vm-title-shadow: {% if vm_title_shadow %}0 1px 2px rgba(0,0,0,0.55), 0 2px 14px rgba(0,0,0,0.4){% else %}none{% endif %};
@@ -136,6 +171,18 @@
         endif
         if block.settings.hide_on_mobile
           assign tile_class = tile_class | append: ' vm-tile--hide-mobile'
+        endif
+        if block.settings.hide_on_desktop
+          assign tile_class = tile_class | append: ' vm-tile--hide-desktop'
+        endif
+        assign size_m = block.settings.size_mobile | default: 'default'
+        if size_m == 'default' or size_m == blank
+          assign size_m = size
+        endif
+        if size_m == 'hero'
+          assign tile_class = tile_class | append: ' vm-tile--hero-m'
+        else
+          assign tile_class = tile_class | append: ' vm-tile--sm-m'
         endif
 
         assign link_target = block.settings.link_target | default: 'default'
@@ -305,6 +352,11 @@
   #visual-mosaic-{{ section.id }} .vm-tile--hero {
     grid-row: span 2;
   }
+  @media (min-width: 769px) {
+    #visual-mosaic-{{ section.id }} .vm-tile--hide-desktop {
+      display: none !important;
+    }
+  }
   #visual-mosaic-{{ section.id }} .vm-tile[data-text-color="black"] {
     color: #1c1916;
   }
@@ -436,11 +488,33 @@
       grid-template-columns: var(--vm-mob-cols-css);
       grid-auto-rows: var(--vm-mob-h);
     }
-    /* Home: video/hero tile larger on phone — full width + 2 rows */
-    #visual-mosaic-{{ section.id }} .vm-tile--hero {
-      grid-column: 1 / -1;
-      grid-row: span 2;
-      min-height: calc(var(--vm-mob-h) * 2 + var(--vm-gap, 4px));
+    #visual-mosaic-{{ section.id }} .vm-tile--hero-m {
+      grid-column: var(--vm-hero-col-m, 1 / -1);
+      grid-row: span var(--vm-hero-span-m, 2);
+      aspect-ratio: var(--vm-aspect-m, 3 / 4);
+      {%- if vm_aspect_uses_height -%}
+      min-height: var(--vm-hero-min-m, calc(var(--vm-mob-h) * 2 + var(--vm-gap, 4px)));
+      {%- else -%}
+      min-height: 0;
+      height: auto;
+      {%- endif -%}
+    }
+    #visual-mosaic-{{ section.id }} .vm-tile--sm-m {
+      grid-column: span 1;
+      grid-row: span 1;
+      aspect-ratio: var(--vm-aspect-m, 3 / 4);
+      {%- if vm_aspect_uses_height -%}
+      min-height: var(--vm-mob-h);
+      {%- else -%}
+      min-height: 0;
+      height: auto;
+      {%- endif -%}
+    }
+    #visual-mosaic-{{ section.id }} .vm-tile img {
+      object-fit: var(--vm-fit-img-m, var(--vm-fit, cover));
+    }
+    #visual-mosaic-{{ section.id }} .vm-tile video {
+      object-fit: var(--vm-fit-vid-m, var(--vm-fit, cover));
     }
     #visual-mosaic-{{ section.id }} .vm-tile--hide-mobile {
       display: none !important;
@@ -809,9 +883,17 @@
       "info": "Only when Grid is Tall left."
     },
     {
+      "type": "header",
+      "content": "Section — Mosaic — phone"
+    },
+    {
+      "type": "paragraph",
+      "content": "Current Home phone: 2 columns, Large tile full width × 2 rows, one tile hidden. These sliders recreate that. Desk Grid is unchanged."
+    },
+    {
       "type": "select",
       "id": "mobile_columns",
-      "label": "Columns per row (mobile)",
+      "label": "Columns per row — phone",
       "options": [
         {
           "value": "1",
@@ -825,9 +907,26 @@
       "default": "2"
     },
     {
+      "type": "checkbox",
+      "id": "mobile_hero_full_width",
+      "label": "Large tile full width on phone",
+      "default": true,
+      "info": "On = video/large tile sits alone on its row (current Home). Off = it sits in the 2-col grid."
+    },
+    {
+      "type": "range",
+      "id": "mobile_hero_row_span",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "label": "Large tile rows on phone",
+      "default": 2,
+      "info": "Current Home = 2. 1 = same height as the small tiles."
+    },
+    {
       "type": "select",
       "id": "aspect_ratio_mobile",
-      "label": "Aspect ratio mobile",
+      "label": "Aspect ratio — phone",
       "default": "portrait",
       "options": [
         {
@@ -847,12 +946,12 @@
           "label": "Widescreen"
         }
       ],
-      "info": "Collection page only. Same as live."
+      "info": "Phone tile shape. Portrait + Tile height = current Home. Square / landscape / widescreen ignore the height floor so the shape can change."
     },
     {
       "type": "select",
       "id": "image_fit_mobile",
-      "label": "Image fit mobile",
+      "label": "Image fit — phone",
       "default": "cover",
       "options": [
         {
@@ -867,12 +966,13 @@
           "value": "fill",
           "label": "Fill"
         }
-      ]
+      ],
+      "info": "Phone stills. Cover crops. Contain shows the whole photo. Fill stretches."
     },
     {
       "type": "select",
       "id": "video_fit_mobile",
-      "label": "Video fit mobile",
+      "label": "Video fit — phone",
       "default": "cover",
       "options": [
         {
@@ -887,12 +987,13 @@
           "value": "fill",
           "label": "Fill"
         }
-      ]
+      ],
+      "info": "Phone video. Cover crops. Contain shows the whole frame (cream sides). Fill stretches."
     },
     {
       "type": "range",
       "id": "mobile_tile_height",
-      "label": "Mobile tile height (other pages)",
+      "label": "Tile height — phone",
       "min": 120,
       "max": 696,
       "step": 8,
@@ -1122,11 +1223,39 @@
           "info": "First tile = Large. Section Grid sets the shape."
         },
         {
+          "type": "select",
+          "id": "size_mobile",
+          "label": "Size on phone",
+          "options": [
+            {
+              "value": "default",
+              "label": "Same as Size"
+            },
+            {
+              "value": "hero",
+              "label": "Large (phone hero)"
+            },
+            {
+              "value": "sm",
+              "label": "Square (1 cell)"
+            }
+          ],
+          "default": "default",
+          "info": "Leave Same as Size to keep the current Home phone: video tile stays Large."
+        },
+        {
           "type": "checkbox",
           "id": "hide_on_mobile",
           "label": "Hide on mobile",
           "default": false,
-          "info": "Phone only. Desk still shows this tile."
+          "info": "Phone only. Desk still shows this tile. Current Home untitled tile uses this."
+        },
+        {
+          "type": "checkbox",
+          "id": "hide_on_desktop",
+          "label": "Hide on desktop",
+          "default": false,
+          "info": "Desk only hide. Phone still shows this tile."
         },
         {
           "type": "select",

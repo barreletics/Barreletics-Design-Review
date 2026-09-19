@@ -202,7 +202,9 @@ Do **not** thrash `product.json` spine or `fifty-fifty.liquid` TE order without 
 
 **Forward 2026-09-01 — Home split-hero CURRENT (docs only).** Contain + studio-fill / pink pad is **REJECTED**. Do not restore older 2026-08-31 contain rows. Current code: `object-fit: cover` · X/Y = `object-position` · Zoom = `scale()` min 1 (TE &lt;100 clamped) · one Corner radius on photo + text · Text panel background on copy only · no fill bands. Rules updated: `.cursor/rules/te-sidebar-crop-lies.mdc` · skill `barreletics-te-vs-fullwidth-crop`. No hero code / JSON change in this note.
 
-**Forward 2026-09-15 — Home mosaic denser + juicer shorter (CURRENT).** Phone mosaic honors TE `mobile_columns` (Home **2-col**) + TE `mobile_tile_height` (no forced 1-col / no 1.35×). Home `grid_gap` **4** · `mobile_tile_height` **264** (2-col denser; gap 4). Home juicer `posts_per_page` **2** · See more on · `max_height` **0** · no sideways scroll. Grip/One Pair / Interni / fullbleed image-only / reviews untouched.
+**Forward 2026-09-18 — Home mosaic phone TE (CURRENT).** Phone hero + fit/aspect now Theme Editor. `image_fit_mobile` / `video_fit_mobile` wire on Home (were collection-only). Aspect shapes tiles; portrait keeps the height floor. Photos untouched. Draft `187144929571`.
+
+**Forward 2026-09-15 — Home mosaic denser + juicer shorter.** Phone mosaic honors TE `mobile_columns` (Home **2-col**) + TE `mobile_tile_height` (no forced 1-col / no 1.35×). Home `grid_gap` **4** · `mobile_tile_height` **264** (2-col denser; gap 4). Home juicer `posts_per_page` **2** · See more on · `max_height` **0** · no sideways scroll. Grip/One Pair / Interni / fullbleed image-only / reviews untouched.
 
 **Forward 2026-09-01 — Home mosaic mobile 1-col SIGNED.** Phone ≤767px = one full-width tile. Tablet 768–900 stays 2-col. TE `mobile_columns` not overwritten. CSS only.
 
