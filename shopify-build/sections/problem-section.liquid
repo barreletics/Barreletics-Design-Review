@@ -16,19 +16,17 @@
   assign has_media = false
   if section.settings.video != blank
     assign has_media = true
-  elsif section.settings.video_asset != blank
-    assign has_media = true
   elsif section.settings.video_url != blank
     assign has_media = true
   elsif section.settings.image != blank
     assign has_media = true
+  elsif section.settings.video_asset != blank
+    assign has_media = true
   endif
 
+  # Media priority: Shopify video → Video URL → Image → theme asset (last)
   assign video_src = section.settings.video_url | strip
   assign video_asset = section.settings.video_asset | default: '' | strip
-  if video_asset != blank
-    assign video_src = video_asset | asset_url
-  endif
   assign video_source_type = 'video/mp4'
   if video_src contains '.mov'
     assign video_source_type = 'video/quicktime'
@@ -87,6 +85,19 @@
                   loading: 'lazy',
                   class: 'problem-media__img'
               }}
+            {% elsif video_asset != blank %}
+              <video
+                class="problem-media__video"
+                autoplay
+                muted
+                loop
+                playsinline
+                webkit-playsinline
+                preload="auto"
+                disablepictureinpicture
+              >
+                <source src="{{ video_asset | asset_url }}" type="video/mp4">
+              </video>
             {% endif %}
           </div>
         </div>
