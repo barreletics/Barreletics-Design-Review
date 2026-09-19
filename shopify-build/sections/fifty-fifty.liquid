@@ -85,6 +85,12 @@
   assign cta_bg = section.settings.cta_bg_color | default: '#c45c3f'
   assign cta_text_color = section.settings.cta_text_color | default: '#ffffff'
   assign cta_border = section.settings.cta_border_color | default: cta_bg
+  if cta_style == 'outline'
+    assign _cta_tc = cta_text_color | downcase | strip
+    if _cta_tc == '#ffffff' or _cta_tc == '#fff' or _cta_tc == 'white' or _cta_tc == blank
+      assign cta_text_color = cta_border
+    endif
+  endif
 
   assign region_label = section.settings.aria_label | strip
   if region_label == blank
@@ -620,6 +626,7 @@
   #shopify-section-{{ section.id }} .split-cta--outline {
     background: transparent;
     color: var(--ff-cta-text, var(--ff-cta-border, #c45c3f));
+    border-color: var(--ff-cta-border, #c45c3f);
   }
   #shopify-section-{{ section.id }} .split-cta:hover {
     opacity: 0.92;
