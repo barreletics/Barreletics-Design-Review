@@ -33,3 +33,5 @@ Scanner: `python3 scripts/lock-scan.py .`
 Prefer letter + lock-scan over memory. No theme edits without Andrew **go**.
 
 - **MEDIA-FILL-50-50-LOCKED.md** — Home/marketing split media fill (Cover, full-bleed, stretch to row). Open when media doesn’t fill like One Pair.
+
+- **../CHEATSHEET-incident-log.md** — Living thrash log (dated rows). Append after every stuck axis; search before inventing.

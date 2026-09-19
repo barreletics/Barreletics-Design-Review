@@ -14,3 +14,5 @@
 - Letterbox in frame? → object-fit / contain class
 - Short column? → fixed height + align-items start
 - Auth loop? → stop axis; Mac CLI
+
+**Accumulate:** New media-fill incidents also get a row in `CHEATSHEET-incident-log.md`.
