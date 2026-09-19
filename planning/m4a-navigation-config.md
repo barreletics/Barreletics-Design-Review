@@ -89,10 +89,17 @@ Company
 | Compare Open vs Closed Sole | `compare-open-closed-sole` | `/pages/compare-open-closed-sole` |
 | Grip Comparison | `grip-comparison` | `/pages/grip-comparison` |
 | Technology | `technology` | `/pages/technology` |
-| Partner Programs | `partners` | `/pages/partners` |
-| ~~Wholesale~~ | ~~`wholesale`~~ | ~~`/pages/wholesale`~~ → redirects to `/pages/partners` (D-042) |
-| ~~Ambassador~~ | ~~`ambassador`~~ | ~~`/pages/ambassador`~~ → redirects to `/pages/partners` (D-042) |
-| ~~Studio Program~~ | ~~`studio-program`~~ | ~~`/pages/studio-program`~~ → redirects to `/pages/partners` (D-042) |
+| Partner Programs (routing hub) | `partners` | `/pages/partners` |
+| Wholesale | `wholesale` | `/pages/wholesale` — dedicated page (**D-048**) |
+| Ambassador | `ambassador` | `/pages/ambassador` — dedicated page (**D-048**) |
+| Studio Program | `studio-program` | `/pages/studio-program` — dedicated page (**D-048**) |
+
+> **UPDATED 2026-08-08 — the three program rows above.** They previously read
+> ~~`/pages/wholesale`~~ / ~~`/pages/ambassador`~~ / ~~`/pages/studio-program`~~ "→ redirects to
+> `/pages/partners` (D-042)". Owner direction 2026-08-08 reversed the fold — **D-048** in
+> `planning/10-decision-log.md`. All three are real handles that must exist in Shopify Admin, and the
+> folding 301s are **retired** in `planning/m4a-redirect-map.md`. Partner surfaces stay **out of
+> primary nav** (`specs/frozen/navigation.md`) — footer and Contact quick links remain the entry point.
 
 ## Blog Handle
 
@@ -107,7 +114,8 @@ Company
 3. **Collection creation** — D-043: Create collections ONLY when products/merchandising require them. Templates are ready (from M3). Do NOT batch-create all 13 collections immediately — create each collection in Shopify admin only when there are actual products to populate it.
 4. **Page creation** — All pages above must exist with correct handles before navigation links work
 5. **Blog creation** — Blog named "Journal" with handle `journal` must exist
-6. **Partner page consolidation** — D-042: `/pages/wholesale`, `/pages/ambassador`, and `/pages/studio-program` are superseded by unified `/pages/partners`. Old handles redirect to partners page.
+6. **Partner pages — UPDATED 2026-08-08 (D-048 supersedes D-042)** — create **four** pages: `wholesale`, `studio-program`, `ambassador` (each a dedicated page with its own intake form) and `partners` (the routing hub). Assign the matching templates. Do **not** create `/pages/wholesale`, `/pages/ambassador` or `/pages/studio-program` → `/pages/partners` redirects; those folding 301s are retired in `planning/m4a-redirect-map.md` and would make the new pages unreachable — if they were already imported from an earlier CSV, delete them in Online Store → Navigation → URL Redirects.
+   *Previously read: "Partner page consolidation — D-042: `/pages/wholesale`, `/pages/ambassador`, and `/pages/studio-program` are superseded by unified `/pages/partners`. Old handles redirect to partners page." Retired 2026-08-08.*
 
 ## Current Live Site → New Mapping
 

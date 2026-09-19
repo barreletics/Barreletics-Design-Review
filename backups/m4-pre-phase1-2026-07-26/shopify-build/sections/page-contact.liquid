@@ -1,0 +1,357 @@
+{% comment %}
+  Page Contact Section
+  Contact form with name, email, subject dropdown, message textarea.
+  Includes support hours and links to FAQ/Returns/Shipping.
+  Used on: page.contact.json
+{% endcomment %}
+
+<section class="section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
+  <div class="section__inner">
+    <div class="page-contact__layout">
+      <div class="page-contact__form-col">
+        {% if section.settings.title != blank %}
+          <h1 class="page-contact__title">{{ section.settings.title }}</h1>
+        {% endif %}
+        {% if section.settings.subtitle != blank %}
+          <p class="page-contact__subtitle">{{ section.settings.subtitle }}</p>
+        {% endif %}
+
+        {% form 'contact' %}
+          {% if form.posted_successfully? %}
+            <div class="page-contact__success" role="alert">
+              <p>{{ section.settings.success_message }}</p>
+            </div>
+          {% endif %}
+
+          {% if form.errors %}
+            <div class="page-contact__errors" role="alert">
+              {{ form.errors | default_errors }}
+            </div>
+          {% endif %}
+
+          <div class="page-contact__fields">
+            <div class="page-contact__field">
+              <label for="contact-name" class="page-contact__label">Name</label>
+              <input
+                type="text"
+                id="contact-name"
+                name="contact[name]"
+                class="page-contact__input"
+                required
+                autocomplete="name"
+              >
+            </div>
+
+            <div class="page-contact__field">
+              <label for="contact-email" class="page-contact__label">Email</label>
+              <input
+                type="email"
+                id="contact-email"
+                name="contact[email]"
+                class="page-contact__input"
+                required
+                autocomplete="email"
+              >
+            </div>
+
+            <div class="page-contact__field page-contact__field--full">
+              <label for="contact-subject" class="page-contact__label">Subject</label>
+              <select id="contact-subject" name="contact[subject]" class="page-contact__select" required>
+                <option value="" disabled selected>Select a topic</option>
+                <option value="Sizing & Fit">Sizing & Fit</option>
+                <option value="Order Status">Order Status</option>
+                <option value="Returns & Exchanges">Returns & Exchanges</option>
+                <option value="Warranty Claim">Warranty Claim</option>
+                <option value="Wholesale Inquiry">Wholesale Inquiry</option>
+                <option value="General Question">General Question</option>
+              </select>
+            </div>
+
+            <div class="page-contact__field page-contact__field--full">
+              <label for="contact-message" class="page-contact__label">Message</label>
+              <textarea
+                id="contact-message"
+                name="contact[body]"
+                class="page-contact__textarea"
+                rows="5"
+                required
+              ></textarea>
+            </div>
+
+            <div class="page-contact__field page-contact__field--full">
+              {% render 'button', label: section.settings.button_text, type: 'submit', style: 'primary', size: 'lg' %}
+            </div>
+          </div>
+        {% endform %}
+      </div>
+
+      <aside class="page-contact__info-col">
+        <div class="page-contact__info-card">
+          <h2 class="page-contact__info-title">{{ section.settings.info_heading }}</h2>
+          <p class="page-contact__info-text">{{ section.settings.response_time }}</p>
+        </div>
+
+        <div class="page-contact__links">
+          <h3 class="page-contact__links-title">Quick Links</h3>
+          <nav aria-label="Support links">
+            <ul class="page-contact__links-list">
+              <li><a href="/pages/faq" class="page-contact__link">Frequently Asked Questions</a></li>
+              <li><a href="/pages/returns" class="page-contact__link">Returns & Exchanges</a></li>
+              <li><a href="/pages/shipping" class="page-contact__link">Shipping Information</a></li>
+              <li><a href="/pages/size-guide" class="page-contact__link">Size Guide</a></li>
+              <li><a href="/pages/warranty" class="page-contact__link">Warranty</a></li>
+            </ul>
+          </nav>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<style>
+  .page-contact__layout {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: var(--space-12);
+    align-items: start;
+  }
+
+  .page-contact__title {
+    font-size: var(--text-4xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    margin: 0 0 var(--space-2);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .page-contact__subtitle {
+    font-size: var(--text-md);
+    color: var(--text-body);
+    margin: 0 0 var(--space-8);
+    line-height: var(--leading-relaxed);
+  }
+
+  .page-contact__fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-5);
+  }
+
+  .page-contact__field--full {
+    grid-column: 1 / -1;
+  }
+
+  .page-contact__label {
+    display: block;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    margin-bottom: var(--space-2);
+  }
+
+  .page-contact__input,
+  .page-contact__select,
+  .page-contact__textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid var(--border-default);
+    background: var(--bg-primary);
+    font-size: var(--text-base);
+    font-family: var(--font-family);
+    color: var(--text-primary);
+    border-radius: var(--radius-button);
+    transition: border-color var(--transition-fast);
+    min-height: 44px;
+  }
+
+  .page-contact__input:focus,
+  .page-contact__select:focus,
+  .page-contact__textarea:focus {
+    outline: none;
+    border-color: var(--text-primary);
+    box-shadow: 0 0 0 1px var(--text-primary);
+  }
+
+  .page-contact__input:focus-visible,
+  .page-contact__select:focus-visible,
+  .page-contact__textarea:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+  }
+
+  .page-contact__link:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+  }
+
+  .page-contact__textarea {
+    resize: vertical;
+    min-height: 140px;
+  }
+
+  .page-contact__select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath fill='%234a4a4a' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 40px;
+  }
+
+  .page-contact__success {
+    padding: var(--space-4);
+    background: var(--bg-alternate);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-button);
+    margin-bottom: var(--space-5);
+    color: var(--text-primary);
+    font-size: var(--text-base);
+  }
+
+  .page-contact__errors {
+    padding: var(--space-4);
+    background: var(--bg-alternate);
+    border: 1px solid var(--accent-primary);
+    border-radius: var(--radius-button);
+    margin-bottom: var(--space-5);
+    color: var(--accent-primary);
+    font-size: var(--text-base);
+  }
+
+  .page-contact__info-col {
+    position: sticky;
+    top: var(--space-8);
+  }
+
+  .page-contact__info-card {
+    background: var(--bg-alternate);
+    border-radius: var(--radius-card);
+    padding: var(--space-6);
+    margin-bottom: var(--space-5);
+  }
+
+  .page-contact__info-title {
+    font-size: var(--text-lg);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    margin: 0 0 var(--space-2);
+  }
+
+  .page-contact__info-text {
+    font-size: var(--text-base);
+    color: var(--text-body);
+    line-height: var(--leading-relaxed);
+    margin: 0;
+  }
+
+  .page-contact__links {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-card);
+    padding: var(--space-6);
+  }
+
+  .page-contact__links-title {
+    font-size: var(--text-base);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    margin: 0 0 var(--space-3);
+  }
+
+  .page-contact__links-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .page-contact__links-list li {
+    margin-bottom: var(--space-2);
+  }
+
+  .page-contact__links-list li:last-child {
+    margin-bottom: 0;
+  }
+
+  .page-contact__link {
+    font-size: var(--text-base);
+    color: var(--text-body);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    transition: color var(--transition-fast);
+  }
+
+  .page-contact__link:hover {
+    color: var(--accent-primary);
+  }
+
+  @media (max-width: 768px) {
+    .page-contact__layout {
+      grid-template-columns: 1fr;
+      gap: var(--space-8);
+    }
+
+    .page-contact__title {
+      font-size: var(--text-3xl);
+    }
+
+    .page-contact__fields {
+      grid-template-columns: 1fr;
+    }
+
+    .page-contact__info-col {
+      position: static;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Contact Page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Get in Touch"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Have a question about fit, orders, or your Performance Skins? We're here to help."
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Submit button text",
+      "default": "Send Message"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Success message",
+      "default": "Thanks for reaching out. We'll get back to you within 24-48 hours."
+    },
+    {
+      "type": "text",
+      "id": "info_heading",
+      "label": "Info card heading",
+      "default": "Response Time"
+    },
+    {
+      "type": "textarea",
+      "id": "response_time",
+      "label": "Response time text",
+      "default": "We respond to all inquiries within 24-48 hours during business days."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact Page"
+    }
+  ]
+}
+{% endschema %}

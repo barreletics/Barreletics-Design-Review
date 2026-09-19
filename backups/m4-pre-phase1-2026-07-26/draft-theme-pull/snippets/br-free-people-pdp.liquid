@@ -1,0 +1,69 @@
+{%- if request.page_type == 'product' -%}
+{%- liquid
+  assign fp_ids = ''
+  for v in product.variants
+    if v.metafields.custom.free_people.value == true and v.available == false
+      if fp_ids != ''
+        assign fp_ids = fp_ids | append: ','
+      endif
+      assign fp_ids = fp_ids | append: v.id
+    endif
+  endfor
+-%}
+{%- if fp_ids != '' -%}
+<style>
+  .br-fp-pdp-msg {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #1a6dca;
+    margin: 12px 0 0;
+    padding: 8px 0 0;
+    border-top: 1px solid #e0e0e0;
+  }
+</style>
+<div id="br-fp-pdp-data" data-fp-ids="{{ fp_ids }}" style="display:none"></div>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  var data = document.getElementById('br-fp-pdp-data');
+  if (!data) return;
+  var ids = data.getAttribute('data-fp-ids').split(',');
+
+  var btn = document.querySelector('[data-add-to-cart]');
+  if (!btn) return;
+
+  var msg = document.createElement('p');
+  msg.className = 'br-fp-pdp-msg';
+  msg.textContent = 'Also available at Free People';
+  msg.style.display = 'none';
+  btn.parentNode.insertBefore(msg, btn.nextSibling);
+
+  function getVariantId() {
+    var params = new URLSearchParams(window.location.search);
+    var vid = params.get('variant');
+    if (vid) return vid;
+    var sel = document.querySelector('[data-product-select]');
+    return sel ? String(sel.value) : '';
+  }
+
+  function toggle() {
+    var vid = getVariantId();
+    msg.style.display = ids.indexOf(vid) !== -1 ? '' : 'none';
+  }
+
+  toggle();
+
+  var sel = document.querySelector('[data-product-select]');
+  if (sel) sel.addEventListener('change', function(){ setTimeout(toggle, 50); });
+
+  var pushState = history.pushState;
+  var replaceState = history.replaceState;
+  history.pushState = function(){ pushState.apply(history, arguments); toggle(); };
+  history.replaceState = function(){ replaceState.apply(history, arguments); toggle(); };
+  window.addEventListener('popstate', toggle);
+});
+</script>
+{%- endif -%}
+{%- endif -%}

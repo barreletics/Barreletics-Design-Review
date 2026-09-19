@@ -1,0 +1,52 @@
+{% comment %}
+  Live br-media-text-split mobile media (collection only).
+  Aspect-ratio + object-fit on the img/video. Wrapper height follows.
+{% endcomment %}
+{%- assign cmf_ratio = aspect_ratio_mobile | default: 'portrait' -%}
+{%- assign cmf_img_fit = image_fit_mobile | default: 'cover' -%}
+{%- assign cmf_vid_fit = video_fit_mobile | default: cmf_img_fit -%}
+{%- case cmf_ratio -%}
+{%- when 'square' -%}
+  {%- assign cmf_aspect = '1 / 1' -%}
+{%- when 'landscape' -%}
+  {%- assign cmf_aspect = '16 / 9' -%}
+{%- when 'widescreen' -%}
+  {%- assign cmf_aspect = '21 / 9' -%}
+{%- else -%}
+  {%- assign cmf_aspect = '3 / 4' -%}
+{%- endcase -%}
+{{ wrap }} {
+  height: auto;
+  min-height: 0;
+  max-height: none;
+}
+{%- if clip != blank -%}
+{{ clip }} {
+  position: relative;
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+}
+{%- endif -%}
+{{ img }} {
+  width: 100%;
+  height: 100%;
+  display: block;
+  position: static;
+  inset: auto;
+  transform: none;
+  object-fit: {{ cmf_img_fit }};
+  aspect-ratio: {{ cmf_aspect }};
+}
+{%- if video != blank -%}
+{{ video }} {
+  width: 100%;
+  height: 100%;
+  display: block;
+  position: static;
+  inset: auto;
+  transform: none;
+  object-fit: {{ cmf_vid_fit }};
+  aspect-ratio: {{ cmf_aspect }};
+}
+{%- endif -%}

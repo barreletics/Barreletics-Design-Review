@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Title type compare — Barreletics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,600;0,700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body {
+      background: #f5f2ec;
+      color: #1c1916;
+      font-family: Roboto, sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      padding: 40px 24px 72px;
+    }
+    .page-title {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #6b645a;
+      margin: 0 0 8px;
+    }
+    .page-lede {
+      font-size: 13px;
+      color: #6b645a;
+      margin: 0 0 40px;
+      max-width: 52ch;
+    }
+    section { margin-bottom: 56px; }
+    .section-label {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #1c1916;
+      margin: 0 0 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #ddd6c8;
+    }
+    .spec {
+      font-size: 11px;
+      line-height: 1.55;
+      color: #6b645a;
+      margin: 12px 0 0;
+    }
+    .spec strong { font-weight: 500; color: #4a4540; }
+    .col-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: #6b645a;
+      margin: 0 0 16px;
+    }
+    .note-inline {
+      font-size: 11px;
+      color: #c45c3f;
+      margin-top: 8px;
+    }
+
+    /* Section A — four-up */
+    .four-up {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0;
+    }
+    .four-up .col {
+      padding: 0 20px 0 0;
+      border-right: 1px solid #ddd6c8;
+    }
+    .four-up .col:last-child { border-right: none; padding-right: 0; }
+    .four-up .col:not(:first-child) { padding-left: 20px; }
+    .sample { margin: 0 0 10px; color: #1c1916; }
+
+    .t-5050 {
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: 500;
+      font-size: clamp(38px, 4.6vw, 52px);
+      line-height: 1.10;
+      letter-spacing: -0.028em;
+    }
+    .t-old-coperni {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(28px, 3.6vw, 50px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    /* Section B — most of site */
+    .site-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 24px;
+    }
+    .site-card {
+      padding: 20px;
+      background: #fff;
+      border: 1px solid #ddd6c8;
+    }
+    .site-card__role {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #6b645a;
+      margin: 0 0 12px;
+    }
+    .t-hero {
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: 700;
+      font-size: clamp(50px, 6.4vw, 72px);
+      line-height: 1.06;
+      letter-spacing: -0.028em;
+      margin: 0;
+    }
+    .t-h2-standard {
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: 600;
+      font-size: clamp(26px, 2.9vw, 32px);
+      line-height: 1.22;
+      letter-spacing: -0.012em;
+      margin: 0;
+    }
+    .t-buy-lede {
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: 400;
+      font-size: clamp(30px, 3.6vw, 40px);
+      line-height: 1.06;
+      letter-spacing: 0;
+      margin: 0;
+    }
+    .t-nav {
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 13px;
+      letter-spacing: 0.01em;
+      margin: 0;
+    }
+    .t-body {
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.72;
+      color: #4a4a4a;
+      margin: 0;
+    }
+
+    /* Section C — real 50/50 cards */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .real-card {
+      padding: 20px;
+      background: #fff;
+      border: 1px solid #ddd6c8;
+    }
+    .real-card__pdp {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #c45c3f;
+      margin: 0 0 10px;
+    }
+    .real-card__pdp--open { color: #1c1916; }
+    .real-card__pdp--coperni { color: #6b645a; }
+    .real-card__block {
+      font-size: 10px;
+      color: #8a8a8a;
+      margin: 8px 0 0;
+    }
+
+    /* Section D — verdict */
+    .verdict-box {
+      background: #fff;
+      border: 1px solid #1c1916;
+      padding: 24px 28px;
+      max-width: 720px;
+    }
+    .verdict-box h2 {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin: 0 0 16px;
+    }
+    .verdict-box ul {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 14px;
+      line-height: 1.65;
+    }
+    .verdict-box li { margin-bottom: 8px; }
+    .verdict-box li:last-child { margin-bottom: 0; }
+    .still-old {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid #ddd6c8;
+    }
+    .still-old__label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #6b645a;
+      margin: 0 0 8px;
+    }
+    .t-georgia-quote {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(14px, 1.4vw, 19px);
+      line-height: 1.6;
+      color: #4a4a4a;
+      margin: 0 0 6px;
+    }
+    .t-georgia-story-quote {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(22px, 2.6vw, 30px);
+      line-height: 1.5;
+      color: #1c1916;
+      margin: 0 0 6px;
+    }
+
+    @media (max-width: 960px) {
+      .four-up,
+      .site-row,
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+      .four-up .col {
+        border-right: none;
+        border-bottom: 1px solid #ddd6c8;
+        padding: 0 0 24px;
+        margin-bottom: 24px;
+      }
+      .four-up .col:not(:first-child) { padding-left: 0; }
+      .four-up .col:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <p class="page-title">Title type compare</p>
+  <p class="page-lede">Same words where useful. Spec under every sample — font, weight, style, size.</p>
+
+  <!-- A. Four-up title compare -->
+  <section>
+    <h1 class="section-label">A. Four-up title compare</h1>
+    <div class="four-up">
+      <div class="col">
+        <p class="col-label">Big 50/50 title — Closed Sole</p>
+        <p class="sample t-5050">Barreletics × Coperni</p>
+        <p class="sample t-5050">Never Loses Shape.</p>
+        <p class="spec">
+          <strong>Font:</strong> Roboto<br>
+          <strong>Weight:</strong> 500<br>
+          <strong>Style:</strong> normal<br>
+          <strong>Size:</strong> clamp(38px, 4.6vw, 52px)
+        </p>
+      </div>
+      <div class="col">
+        <p class="col-label">Big 50/50 title — Open Sole</p>
+        <p class="sample t-5050">Barreletics × Coperni</p>
+        <p class="sample t-5050">Never Loses Shape.</p>
+        <p class="spec">
+          <strong>Font:</strong> Roboto<br>
+          <strong>Weight:</strong> 500<br>
+          <strong>Style:</strong> normal<br>
+          <strong>Size:</strong> clamp(38px, 4.6vw, 52px)
+        </p>
+      </div>
+      <div class="col">
+        <p class="col-label">Old Coperni banner title</p>
+        <p class="sample t-old-coperni">Barreletics × Coperni</p>
+        <p class="sample t-old-coperni">Never Loses Shape.</p>
+        <p class="spec">
+          <strong>Font:</strong> Georgia<br>
+          <strong>Weight:</strong> 400<br>
+          <strong>Style:</strong> italic<br>
+          <strong>Size:</strong> clamp(28px, 3.6vw, 50px)
+        </p>
+      </div>
+      <div class="col">
+        <p class="col-label">New Coperni banner title</p>
+        <p class="sample t-5050">Barreletics × Coperni</p>
+        <p class="sample t-5050">Never Loses Shape.</p>
+        <p class="spec">
+          <strong>Font:</strong> Roboto<br>
+          <strong>Weight:</strong> 500<br>
+          <strong>Style:</strong> normal<br>
+          <strong>Size:</strong> clamp(38px, 4.6vw, 52px)
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- B. Most of the site -->
+  <section>
+    <h1 class="section-label">Most of the site</h1>
+    <div class="site-row">
+      <div class="site-card">
+        <p class="site-card__role">Homepage hero headline</p>
+        <p class="t-hero">The Pilates Sock Era is Over</p>
+        <p class="spec">
+          <strong>Source:</strong> index.json → split-hero<br>
+          <strong>Font:</strong> Roboto<br>
+          <strong>Weight:</strong> 700<br>
+          <strong>Style:</strong> normal<br>
+          <strong>Size:</strong> clamp(50px, 6.4vw, 72px)
+        </p>
+      </div>
+      <div class="site-card">
+        <p class="site-card__role">Shop All grid heading</p>
+        <p class="t-h2-standard">Shop all colors &amp; styles</p>
+        <p class="spec">
+          <strong>Source:</strong> collection.json → variant-grid<br>
+          <strong>Font:</strong> Roboto<br>
+          <strong>Weight:</strong> 600<br>
+          <strong>Style:</strong> normal<br>
+          <strong>Size:</strong> clamp(26px, 2.9vw, 32px)
+        </p>
+      </div>
+      <div class="site-card">
+        <p class="site-card__role">Buy-box lede</p>
+        <p class="t-buy-lede">Secure in every hold.<br>No sliding. No resets.</p>
+        <p class="note-inline">Not the 50/50 title — smaller on purpose.</p>
+        <p class="spec">
+          <strong>Source:</strong> product.json → pdp-buy-box<br>
+          <strong>Font:</strong> Roboto<br>
+          <strong>Weight:</strong> 400<br>
+          <strong>Style:</strong> normal<br>
+          <strong>Size:</strong> clamp(30px, 3.6vw, 40px)
+        </p>
+      </div>
+      <div class="site-card">
+        <p class="site-card__role">Nav link</p>
+        <p class="t-nav">Grippy Footwear · Hot Pilates &amp; Yoga Kits · Apparel</p>
+        <p class="spec">
+          <strong>Source:</strong> design-tokens.css → --type-nav-*<br>
+          <strong>Font:</strong> Roboto<br>
+          <strong>Weight:</strong> 500<br>
+          <strong>Style:</strong> normal<br>
+          <strong>Size:</strong> 13px
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- C. Real 50/50 examples -->
+  <section>
+    <h1 class="section-label">C. Real 50/50 headlines from PDPs</h1>
+    <div class="cards-grid">
+
+      <div class="real-card">
+        <p class="real-card__pdp">Closed Sole PDP</p>
+        <p class="sample t-5050">The grip sock era is over.</p>
+        <p class="spec">
+          <strong>Font:</strong> Roboto · <strong>Weight:</strong> 500 · <strong>Style:</strong> normal · <strong>Size:</strong> clamp(38px, 4.6vw, 52px)
+        </p>
+        <p class="real-card__block">fifty-fifty-sock-era · product.json</p>
+      </div>
+
+      <div class="real-card">
+        <p class="real-card__pdp">Closed Sole PDP</p>
+        <p class="sample t-5050">This pair is my second purchased — my first having been purchased almost 4 years ago. The reason for the second pair is purely color!</p>
+        <p class="spec">
+          <strong>Font:</strong> Roboto · <strong>Weight:</strong> 500 · <strong>Style:</strong> normal · <strong>Size:</strong> clamp(38px, 4.6vw, 52px)
+        </p>
+        <p class="real-card__block">fifty-fifty-lifestyle (quote) · product.json</p>
+      </div>
+
+      <div class="real-card">
+        <p class="real-card__pdp">Closed Sole PDP</p>
+        <p class="sample t-5050">Studio workouts will never be the same.</p>
+        <p class="spec">
+          <strong>Font:</strong> Roboto · <strong>Weight:</strong> 500 · <strong>Style:</strong> normal · <strong>Size:</strong> clamp(38px, 4.6vw, 52px)
+        </p>
+        <p class="real-card__block">fifty-fifty-commit · product.json</p>
+      </div>
+
+      <div class="real-card">
+        <p class="real-card__pdp real-card__pdp--open">Open Sole PDP</p>
+        <p class="sample t-5050">The Pilates sock era is over.</p>
+        <p class="spec">
+          <strong>Font:</strong> Roboto · <strong>Weight:</strong> 500 · <strong>Style:</strong> normal · <strong>Size:</strong> clamp(38px, 4.6vw, 52px)
+        </p>
+        <p class="real-card__block">fifty-fifty-sock-era · product.open-sole.json</p>
+      </div>
+
+      <div class="real-card">
+        <p class="real-card__pdp real-card__pdp--open">Open Sole PDP</p>
+        <p class="sample t-5050">Never slip in chair pose</p>
+        <p class="spec">
+          <strong>Font:</strong> Roboto · <strong>Weight:</strong> 500 · <strong>Style:</strong> normal · <strong>Size:</strong> clamp(38px, 4.6vw, 52px)
+        </p>
+        <p class="real-card__block">fifty-fifty-lifestyle · product.open-sole.json</p>
+      </div>
+
+      <div class="real-card">
+        <p class="real-card__pdp real-card__pdp--open">Open Sole PDP</p>
+        <p class="sample t-5050">Never loses shape.<br>Never loses grip.</p>
+        <p class="spec">
+          <strong>Font:</strong> Roboto · <strong>Weight:</strong> 500 · <strong>Style:</strong> normal · <strong>Size:</strong> clamp(38px, 4.6vw, 52px)
+        </p>
+        <p class="real-card__block">fifty-fifty-commit · product.open-sole.json</p>
+      </div>
+
+      <div class="real-card">
+        <p class="real-card__pdp real-card__pdp--coperni">Coperni PDP</p>
+        <p class="sample t-5050">The sock era is over.</p>
+        <p class="spec">
+          <strong>Font:</strong> Roboto · <strong>Weight:</strong> 500 · <strong>Style:</strong> normal · <strong>Size:</strong> clamp(38px, 4.6vw, 52px)
+        </p>
+        <p class="real-card__block">fifty-fifty-sock-era · product.coperni.json</p>
+      </div>
+
+      <div class="real-card">
+        <p class="real-card__pdp real-card__pdp--coperni">Coperni PDP</p>
+        <p class="sample t-5050">My love-hate relationship with the sock has finally come to a ceremonial end.</p>
+        <p class="spec">
+          <strong>Font:</strong> Roboto · <strong>Weight:</strong> 500 · <strong>Style:</strong> normal · <strong>Size:</strong> clamp(38px, 4.6vw, 52px)
+        </p>
+        <p class="real-card__block">fifty-fifty-lifestyle (quote) · product.coperni.json</p>
+      </div>
+
+      <div class="real-card">
+        <p class="real-card__pdp real-card__pdp--coperni">Coperni PDP</p>
+        <p class="sample t-5050">You commit to the class.<br>Commit to the gear.</p>
+        <p class="spec">
+          <strong>Font:</strong> Roboto · <strong>Weight:</strong> 500 · <strong>Style:</strong> normal · <strong>Size:</strong> clamp(38px, 4.6vw, 52px)
+        </p>
+        <p class="real-card__block">fifty-fifty-commit · product.coperni.json</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- D. Verdict -->
+  <section>
+    <div class="verdict-box">
+      <h2>Verdict</h2>
+      <ul>
+        <li><strong>Old Coperni banner title</strong> = different — Georgia italic, lighter weight, smaller clamp.</li>
+        <li><strong>New Coperni banner title</strong> = same as Closed / Open big 50/50 title (Roboto 500, clamp 38–52).</li>
+        <li><strong>Buy-box lede</strong> = different on purpose — Roboto 400, clamp 30–40. Do not unify with 50/50 titles.</li>
+        <li><strong>Homepage hero</strong> = bigger still — Roboto 700, clamp 50–72. Page-opening only.</li>
+      </ul>
+      <div class="still-old">
+        <p class="still-old__label">Coperni — still old Georgia italic style</p>
+        <p class="t-georgia-quote">The Closed Sole, as seen on the Coperni 2026 runway in Paris. One run, limited release.</p>
+        <p class="spec" style="margin-top:4px;">
+          <strong>Coperni banner subhead</strong> (coperni-crosslink · csb-sub) · Georgia · 400 · italic · clamp(14px, 1.4vw, 19px)
+        </p>
+        <p class="t-georgia-story-quote" style="margin-top:14px;">Open, gripping, and free from all constraints — while offering optimal comfort and performance.</p>
+        <p class="spec" style="margin-top:4px;">
+          <strong>Story quote</strong> (coperni-pdp-story · coperni-story__quote) · Georgia · 400 · italic · clamp(22px, 2.6vw, 30px)
+        </p>
+        <p class="t-georgia-quote" style="margin-top:14px; font-size:19px;">Footwear shifts too: the collection includes this Pilates shoe collaboration with Barreletics…</p>
+        <p class="spec" style="margin-top:4px;">
+          <strong>Runway note</strong> (coperni-pdp-story · coperni-story__note-text) · Georgia · 400 · italic · 19px
+        </p>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>

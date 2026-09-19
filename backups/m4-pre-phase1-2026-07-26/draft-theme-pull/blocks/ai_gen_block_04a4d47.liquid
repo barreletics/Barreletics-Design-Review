@@ -1,0 +1,448 @@
+{% comment %}
+  Product highlight BR — Rebuilt from "new product highlight section 802.rtf".
+  Image + content (eyebrow, title, description, feature list). Caption above/below image. CTA / Add to Cart.
+  Proper section (survives theme updates). File: br-product-highlight.liquid
+{% endcomment %}
+
+{%- liquid
+  assign image = section.settings.image
+  assign image_position = section.settings.image_position
+  assign image_border_radius = section.settings.image_border_radius
+  assign image_caption = section.settings.image_caption
+  assign image_caption_position = section.settings.image_caption_position
+
+  assign eyebrow = section.settings.eyebrow
+  assign title = section.settings.title
+  assign description = section.settings.description
+
+  assign columns = section.settings.columns
+  assign max_width = section.settings.max_width
+  assign section_padding = section.settings.section_padding
+
+  assign background_color = section.settings.background_color
+  assign eyebrow_color = section.settings.eyebrow_color
+  assign title_color = section.settings.title_color
+  assign text_color = section.settings.text_color
+  assign item_background = section.settings.item_background
+  assign icon_background = section.settings.icon_background
+  assign icon_color = section.settings.icon_color
+
+  assign eyebrow_size = section.settings.eyebrow_size
+  assign title_size = section.settings.title_size
+  assign description_size = section.settings.description_size
+  assign item_title_size = section.settings.item_title_size
+  assign item_description_size = section.settings.item_description_size
+
+  assign icon_size = section.settings.icon_size
+  assign item_padding = section.settings.item_padding
+  assign item_border_radius = section.settings.item_border_radius
+
+  assign cta_product = section.settings.cta_product
+  assign cta_link = section.settings.cta_link
+  assign cta_text = section.settings.cta_text
+  assign cta_style = section.settings.cta_style
+
+  assign font_body = section.settings.font_body
+  assign font_cta = section.settings.font_cta
+  assign image_column_width = section.settings.image_column_width
+  assign image_column_width_mobile = section.settings.image_column_width_mobile
+-%}
+
+{% style %}
+  {% if font_body != blank %}{{ font_body | font_face: font_display: 'swap' }}{% endif %}
+  {% if font_cta != blank %}{{ font_cta | font_face: font_display: 'swap' }}{% endif %}
+
+  .br-ph-{{ section.id }} {
+    display: block;
+    width: 100%;
+    background-color: {{ background_color }};
+    padding: {{ section_padding }}px 20px;
+    {% if font_body != blank %}font-family: {{ font_body.family }}, {{ font_body.fallback_families }}; font-weight: {{ font_body.weight }}; font-style: {{ font_body.style }};{% endif %}
+  }
+
+  .br-ph-{{ section.id }}__container {
+    max-width: {{ max_width }}px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px;
+    align-items: center;
+  }
+
+  @media screen and (min-width: 750px) {
+    .br-ph-{{ section.id }}__container {
+      grid-template-columns: {% if image_position == 'left' %}{{ image_column_width }}fr {{ 100 | minus: image_column_width }}fr{% else %}{{ 100 | minus: image_column_width }}fr {{ image_column_width }}fr{% endif %};
+      gap: 60px;
+    }
+
+    .br-ph-{{ section.id }}__image-wrap {
+      order: {% if image_position == 'left' %}1{% else %}2{% endif %};
+      max-width: none;
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    .br-ph-{{ section.id }}__content {
+      order: {% if image_position == 'left' %}2{% else %}1{% endif %};
+    }
+  }
+
+  .br-ph-{{ section.id }}__image-wrap {
+    position: relative;
+    width: 100%;
+    max-width: {{ image_column_width_mobile }}%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .br-ph-{{ section.id }}__media {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    border-radius: {{ image_border_radius }}px;
+    overflow: hidden;
+  }
+
+  .br-ph-{{ section.id }}__placeholder {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: {{ image_border_radius }}px;
+  }
+
+  .br-ph-{{ section.id }}__placeholder svg {
+    width: 100%;
+    height: 100%;
+    max-width: 300px;
+    max-height: 300px;
+    opacity: 0.3;
+  }
+
+  .br-ph-{{ section.id }}__caption {
+    margin: 0 0 0.5rem;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: {{ text_color }};
+  }
+
+  .br-ph-{{ section.id }}__caption * { margin: 0; }
+
+  .br-ph-{{ section.id }}__caption--below {
+    margin: 0.5rem 0 0;
+  }
+
+  .br-ph-{{ section.id }}__content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .br-ph-{{ section.id }}__eyebrow {
+    font-size: {{ eyebrow_size }}px;
+    font-weight: 600;
+    color: {{ eyebrow_color }};
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 0;
+  }
+
+  .br-ph-{{ section.id }}__title {
+    font-size: {{ title_size }}px;
+    font-weight: 700;
+    color: {{ title_color }};
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  .br-ph-{{ section.id }}__description {
+    font-size: {{ description_size }}px;
+    color: {{ text_color }};
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .br-ph-{{ section.id }}__list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media screen and (min-width: 750px) {
+    .br-ph-{{ section.id }}__list {
+      grid-template-columns: {% if columns == '2' %}1fr 1fr{% else %}1fr{% endif %};
+    }
+  }
+
+  .br-ph-{{ section.id }}__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: {{ item_padding }}px;
+    background-color: {{ item_background }};
+    border-radius: {{ item_border_radius }}px;
+    transition: transform 0.2s ease;
+  }
+
+  .br-ph-{{ section.id }}__item:hover {
+    transform: translateX(4px);
+  }
+
+  .br-ph-{{ section.id }}__icon {
+    flex-shrink: 0;
+    width: {{ icon_size }}px;
+    height: {{ icon_size }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: {{ icon_background }};
+    border-radius: 50%;
+    color: {{ icon_color }};
+  }
+
+  .br-ph-{{ section.id }}__icon svg {
+    width: calc({{ icon_size }}px * 0.5);
+    height: calc({{ icon_size }}px * 0.5);
+    stroke-width: 2.5;
+  }
+
+  .br-ph-{{ section.id }}__item-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .br-ph-{{ section.id }}__item-title {
+    font-size: {{ item_title_size }}px;
+    font-weight: 600;
+    color: {{ title_color }};
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  .br-ph-{{ section.id }}__item-desc {
+    font-size: {{ item_description_size }}px;
+    color: {{ text_color }};
+    margin: 0;
+    line-height: 1.5;
+    opacity: 0.9;
+  }
+
+  .br-ph-{{ section.id }}__cta {
+    margin-top: 0.5rem;
+  }
+
+  .br-ph-{{ section.id }}__cta-btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 2px solid {{ title_color }};
+    background: {{ title_color }};
+    color: #fff;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+
+  .br-ph-{{ section.id }}__cta-btn:hover {
+    opacity: 0.9;
+    color: #fff;
+  }
+
+  .br-ph-{{ section.id }}__cta-btn--secondary {
+    background: transparent;
+    color: {{ title_color }};
+  }
+
+  .br-ph-{{ section.id }}__cta-btn--secondary:hover {
+    background: {{ title_color }};
+    color: #fff;
+  }
+
+  @media screen and (max-width: 749px) {
+    .br-ph-{{ section.id }}__title {
+      font-size: calc({{ title_size }}px * 0.8);
+    }
+
+    .br-ph-{{ section.id }}__eyebrow {
+      font-size: calc({{ eyebrow_size }}px * 0.9);
+    }
+  }
+{% endstyle %}
+
+{% if font_cta != blank %}
+  <style>
+    .br-ph-{{ section.id }}__cta-btn {
+      font-family: {{ font_cta.family }}, {{ font_cta.fallback_families }};
+      font-weight: {{ font_cta.weight }};
+      font-style: {{ font_cta.style }};
+    }
+  </style>
+{% endif %}
+
+<section class="br-ph br-ph-{{ section.id }}" aria-labelledby="br-ph-title-{{ section.id }}">
+  <div class="br-ph-{{ section.id }}__container">
+    <div class="br-ph-{{ section.id }}__image-wrap">
+      {% if image_caption != blank and image_caption_position == 'above' %}
+        <div class="br-ph-{{ section.id }}__caption">{{ image_caption }}</div>
+      {% endif %}
+
+      {% if image != blank %}
+        <img
+          src="{{ image | image_url: width: 1200 }}"
+          srcset="{{ image | image_url: width: 400 }} 400w, {{ image | image_url: width: 800 }} 800w, {{ image | image_url: width: 1200 }} 1200w"
+          sizes="(max-width: 749px) {{ image_column_width_mobile }}vw, {{ image_column_width }}vw"
+          alt="{{ image.alt | default: '' }}"
+          width="{{ image.width }}"
+          height="{{ image.height }}"
+          class="br-ph-{{ section.id }}__media"
+          loading="lazy"
+        >
+      {% else %}
+        <div class="br-ph-{{ section.id }}__placeholder">
+          {{ 'product-1' | placeholder_svg_tag }}
+        </div>
+      {% endif %}
+
+      {% if image_caption != blank and image_caption_position == 'below' %}
+        <div class="br-ph-{{ section.id }}__caption br-ph-{{ section.id }}__caption--below">{{ image_caption }}</div>
+      {% endif %}
+    </div>
+
+    <div class="br-ph-{{ section.id }}__content">
+      {% if eyebrow != blank %}
+        <p class="br-ph-{{ section.id }}__eyebrow">{{ eyebrow }}</p>
+      {% endif %}
+
+      {% if title != blank %}
+        <h2 class="br-ph-{{ section.id }}__title" id="br-ph-title-{{ section.id }}">{{ title }}</h2>
+      {% endif %}
+
+      {% if description != blank %}
+        <div class="br-ph-{{ section.id }}__description">{{ description }}</div>
+      {% endif %}
+
+      <ul class="br-ph-{{ section.id }}__list">
+        {% for i in (1..6) %}
+          {% assign feature_title_key = 'feature_' | append: i | append: '_title' %}
+          {% assign feature_desc_key = 'feature_' | append: i | append: '_description' %}
+          {% assign feature_title = section.settings[feature_title_key] %}
+          {% assign feature_desc = section.settings[feature_desc_key] %}
+
+          {% if feature_title != blank %}
+            <li class="br-ph-{{ section.id }}__item" role="listitem">
+              <div class="br-ph-{{ section.id }}__icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+              <div class="br-ph-{{ section.id }}__item-text">
+                <h3 class="br-ph-{{ section.id }}__item-title">{{ feature_title }}</h3>
+                {% if feature_desc != blank %}
+                  <p class="br-ph-{{ section.id }}__item-desc">{{ feature_desc }}</p>
+                {% endif %}
+              </div>
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+
+      {% if cta_product != blank or cta_link != blank %}
+        <div class="br-ph-{{ section.id }}__cta">
+          {% if cta_product != blank %}
+            {% assign add_form_id = 'br-ph-add-' | append: section.id %}
+            {% form 'product', cta_product, id: add_form_id %}
+              <input type="hidden" name="id" value="{{ cta_product.selected_or_first_available_variant.id }}">
+              <button type="submit" name="add" class="br-ph-{{ section.id }}__cta-btn br-ph-{{ section.id }}__cta-btn--{{ cta_style }}">
+                {{ cta_text | default: 'Add to Cart' }}
+              </button>
+            {% endform %}
+          {% elsif cta_link != blank %}
+            <a href="{{ cta_link }}" class="br-ph-{{ section.id }}__cta-btn br-ph-{{ section.id }}__cta-btn--{{ cta_style }}">
+              {{ cta_text | default: 'Shop Now' }}
+            </a>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product highlight BR",
+  "settings": [
+    {"type": "header", "content": "Image"},
+    {"type": "image_picker", "id": "image", "label": "Image"},
+    {"type": "select", "id": "image_position", "label": "Image position", "default": "left", "options": [{"value": "left", "label": "Left"}, {"value": "right", "label": "Right"}]},
+    {"type": "range", "id": "image_column_width", "label": "Image column width (desktop)", "min": 35, "max": 65, "step": 5, "unit": "%", "default": 50, "info": "Desktop: larger = bigger image"},
+    {"type": "range", "id": "image_column_width_mobile", "label": "Image width (mobile)", "min": 60, "max": 100, "step": 5, "unit": "%", "default": 100, "info": "Mobile: % of container width"},
+    {"type": "range", "id": "image_border_radius", "label": "Image border radius", "min": 0, "max": 40, "step": 4, "unit": "px", "default": 12},
+    {"type": "richtext", "id": "image_caption", "label": "Image caption (above or below photo)"},
+    {"type": "select", "id": "image_caption_position", "label": "Caption position", "default": "below", "options": [{"value": "above", "label": "Above image"}, {"value": "below", "label": "Below image"}]},
+    {"type": "header", "content": "Content"},
+    {"type": "text", "id": "eyebrow", "label": "Eyebrow text", "default": "Why choose us"},
+    {"type": "text", "id": "title", "label": "Heading", "default": "Engineered for peak performance"},
+    {"type": "richtext", "id": "description", "label": "Description", "default": "<p>Precision-crafted footwear designed to elevate your studio workout with innovative features that deliver real results.</p>"},
+    {"type": "header", "content": "Feature 1"},
+    {"type": "text", "id": "feature_1_title", "label": "Title", "default": "Superior grip technology"},
+    {"type": "text", "id": "feature_1_description", "label": "Description", "default": "Non-slip sole engineered for studio surfaces"},
+    {"type": "header", "content": "Feature 2"},
+    {"type": "text", "id": "feature_2_title", "label": "Title", "default": "Breathable construction"},
+    {"type": "text", "id": "feature_2_description", "label": "Description", "default": "Moisture-wicking materials keep feet cool"},
+    {"type": "header", "content": "Feature 3"},
+    {"type": "text", "id": "feature_3_title", "label": "Title", "default": "Arch support system"},
+    {"type": "text", "id": "feature_3_description", "label": "Description", "default": "Anatomical design reduces fatigue"},
+    {"type": "header", "content": "Feature 4"},
+    {"type": "text", "id": "feature_4_title", "label": "Title", "default": "Lightweight design"},
+    {"type": "text", "id": "feature_4_description", "label": "Description", "default": "Move freely without bulk or restriction"},
+    {"type": "header", "content": "Feature 5"},
+    {"type": "text", "id": "feature_5_title", "label": "Title", "default": "Durable materials"},
+    {"type": "text", "id": "feature_5_description", "label": "Description", "default": "Built to withstand intense daily workouts"},
+    {"type": "header", "content": "Feature 6"},
+    {"type": "text", "id": "feature_6_title", "label": "Title", "default": "Easy care"},
+    {"type": "text", "id": "feature_6_description", "label": "Description", "default": "Machine washable for hassle-free maintenance"},
+    {"type": "header", "content": "Call to action"},
+    {"type": "product", "id": "cta_product", "label": "Product (for Add to Cart)"},
+    {"type": "url", "id": "cta_link", "label": "Link URL (if no product)"},
+    {"type": "text", "id": "cta_text", "label": "Button text", "default": "Add to Cart"},
+    {"type": "select", "id": "cta_style", "label": "Button style", "default": "primary", "options": [{"value": "primary", "label": "Primary"}, {"value": "secondary", "label": "Secondary"}]},
+    {"type": "font_picker", "id": "font_cta", "label": "Button font", "default": "assistant_n4"},
+    {"type": "header", "content": "Layout"},
+    {"type": "select", "id": "columns", "label": "Columns on desktop", "default": "2", "options": [{"value": "1", "label": "1 column"}, {"value": "2", "label": "2 columns"}]},
+    {"type": "range", "id": "max_width", "label": "Maximum width", "min": 800, "max": 1400, "step": 100, "unit": "px", "default": 1200},
+    {"type": "range", "id": "section_padding", "label": "Section padding", "min": 20, "max": 100, "step": 10, "unit": "px", "default": 60},
+    {"type": "header", "content": "Colors"},
+    {"type": "color", "id": "background_color", "label": "Background", "default": "#ffffff"},
+    {"type": "color", "id": "eyebrow_color", "label": "Eyebrow", "default": "#000000"},
+    {"type": "color", "id": "title_color", "label": "Heading", "default": "#000000"},
+    {"type": "color", "id": "text_color", "label": "Text", "default": "#000000"},
+    {"type": "color", "id": "item_background", "label": "Feature background", "default": "#f9f9f9"},
+    {"type": "color", "id": "icon_background", "label": "Icon background", "default": "#000000"},
+    {"type": "color", "id": "icon_color", "label": "Icon", "default": "#ffffff"},
+    {"type": "header", "content": "Typography"},
+    {"type": "font_picker", "id": "font_body", "label": "Font (all text)", "default": "assistant_n4"},
+    {"type": "range", "id": "eyebrow_size", "label": "Eyebrow size", "min": 10, "max": 20, "step": 1, "unit": "px", "default": 12},
+    {"type": "range", "id": "title_size", "label": "Heading size", "min": 24, "max": 60, "step": 2, "unit": "px", "default": 36},
+    {"type": "range", "id": "description_size", "label": "Description size", "min": 14, "max": 24, "step": 1, "unit": "px", "default": 16},
+    {"type": "range", "id": "item_title_size", "label": "Feature title size", "min": 14, "max": 22, "step": 1, "unit": "px", "default": 16},
+    {"type": "range", "id": "item_description_size", "label": "Feature description size", "min": 12, "max": 18, "step": 1, "unit": "px", "default": 14},
+    {"type": "header", "content": "Feature style"},
+    {"type": "range", "id": "icon_size", "label": "Icon size", "min": 24, "max": 48, "step": 4, "unit": "px", "default": 32},
+    {"type": "range", "id": "item_padding", "label": "Feature padding", "min": 8, "max": 24, "step": 2, "unit": "px", "default": 16},
+    {"type": "range", "id": "item_border_radius", "label": "Feature border radius", "min": 0, "max": 20, "step": 2, "unit": "px", "default": 8}
+  ],
+  "presets": [
+    {"name": "Product highlight BR"}
+  ]
+}
+{% endschema %}

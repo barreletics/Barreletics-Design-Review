@@ -1,0 +1,15 @@
+{% comment %}
+  Barreletics breadcrumbs wrapper — light grey, small text. Styles here so they always apply.
+{% endcomment %}
+{%- capture breadcrumb_inner -%}
+  {%- render 'breadcrumbs' -%}
+{%- endcapture -%}
+{%- if breadcrumb_inner != blank -%}
+<style>
+.br-breadcrumbs { font-size: 0.75rem; color: #a5a5a5; }
+.br-breadcrumbs a { color: #a5a5a5 !important; text-decoration: none; }
+.br-breadcrumbs a:hover { color: #888 !important; text-decoration: underline; }
+.br-breadcrumbs a:focus { outline: 1px dotted currentColor; }
+</style>
+<nav class="br-breadcrumbs" aria-label="Breadcrumb">{{ breadcrumb_inner }}</nav>
+{%- endif -%}

@@ -1,0 +1,103 @@
+{% comment %}
+  Meta Pixel — Base Code + Standard Events
+  Placement: Inside <head> via theme.liquid
+  Configuration: Theme Settings → Tracking & Integrations → Meta Pixel ID
+
+  Events: PageView, ViewContent, AddToCart, InitiateCheckout
+  Deduplication: event_id parameter prevents double-counting with CAPI.
+  Purchase event handled by Shopify checkout — see note at bottom.
+
+  IMPORTANT: If using Shopify's native Meta & Instagram channel,
+  leave the Pixel ID blank to prevent duplicate tracking.
+{% endcomment %}
+
+{% if settings.meta_pixel_id != blank %}
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', {{ settings.meta_pixel_id | json }});
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id={{ settings.meta_pixel_id }}&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+
+{% if request.page_type == 'product' %}
+<script>
+  fbq('track', 'ViewContent', {
+    content_name: {{ product.title | json }},
+    content_ids: [{{ product.selected_or_first_available_variant.sku | default: product.id | json }}],
+    content_type: 'product',
+    value: {{ product.selected_or_first_available_variant.price | money_without_currency | remove: ',' }},
+    currency: {{ cart.currency.iso_code | json }}
+  }, { eventID: 'vc_{{ product.id }}_' + Date.now() });
+</script>
+{% endif %}
+
+<script>
+(function() {
+  'use strict';
+
+  if (typeof fbq === 'undefined') return;
+
+  document.addEventListener('cart:item-added', function(e) {
+    var item = e.detail;
+    if (!item) return;
+    var eventId = 'atc_' + item.id + '_' + Date.now();
+    fbq('track', 'AddToCart', {
+      content_name: item.title,
+      content_ids: [item.sku || String(item.id)],
+      content_type: 'product',
+      value: item.price / 100,
+      currency: {{ cart.currency.iso_code | json }},
+      num_items: item.quantity || 1
+    }, { eventID: eventId });
+  });
+
+  document.addEventListener('click', function(e) {
+    var checkoutBtn = e.target.closest('[data-checkout-button], [name="checkout"]');
+    if (checkoutBtn) {
+      fbq('track', 'InitiateCheckout', {
+        value: {{ cart.total_price | money_without_currency | remove: ',' }},
+        currency: {{ cart.currency.iso_code | json }},
+        num_items: {{ cart.item_count }},
+        content_ids: [{% for item in cart.items %}{{ item.sku | default: item.variant_id | json }}{% unless forloop.last %},{% endunless %}{% endfor %}],
+        content_type: 'product'
+      }, { eventID: 'ic_' + Date.now() });
+    }
+  });
+
+})();
+</script>
+{% endif %}
+
+{% comment %}
+  PURCHASE EVENT:
+  The 'Purchase' event must be configured in Shopify Admin →
+  Settings → Customer events as a Custom Pixel, or via the
+  Meta & Instagram sales channel CAPI integration.
+  Theme code cannot fire on the checkout thank-you page.
+
+  CAPI SETUP (Owner action):
+  1. Install Meta & Instagram sales channel in Shopify Admin
+  2. Connect Meta Business Manager account
+  3. Enable Conversions API (CAPI) in channel settings
+  4. CAPI automatically sends server-side events
+  5. Event deduplication: browser event_id matches CAPI event_id
+     (Shopify's Meta channel handles this automatically)
+  6. Verify in Events Manager → Test Events tab
+
+  DUPLICATE PREVENTION:
+  If using Shopify's native Meta & Instagram channel (Sales Channels),
+  that integration fires PageView, ViewContent, AddToCart,
+  InitiateCheckout, and Purchase events automatically. In that case,
+  leave the Meta Pixel ID blank in Theme Settings to avoid double-counting.
+{% endcomment %}
