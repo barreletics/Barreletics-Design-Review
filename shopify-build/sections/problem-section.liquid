@@ -188,12 +188,23 @@
     max-height: none;
     aspect-ratio: 1 / 1;
   }
+  /* Cover fill = 50/50 law: absolute inset + object-fit cover.
+     Theme base sets video { max-width:100%; height:auto } which blocks fill. */
+  #shopify-section-{{ section.id }} .problem-media__clip {
+    position: relative;
+    overflow: hidden;
+  }
   #shopify-section-{{ section.id }} .problem-media__video,
   #shopify-section-{{ section.id }} .problem-media__img {
     display: block;
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
+    max-width: none;
+    max-height: none;
     object-fit: cover;
+    object-position: center center;
   }
   #shopify-section-{{ section.id }} .problem-section--media-contain .problem-media__video,
   #shopify-section-{{ section.id }} .problem-section--media-contain .problem-media__img {
