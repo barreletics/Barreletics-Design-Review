@@ -20,7 +20,7 @@
   assign media_fit = section.settings.media_fit | default: 'cover'
   assign image_fit_mobile = section.settings.image_fit_mobile | default: 'cover'
   assign media_aspect = section.settings.media_aspect | default: 'stretch'
-  assign min_height = section.settings.min_height | default: 640
+  assign min_height = section.settings.min_height | default: 860
 
 
   assign has_media = false
@@ -108,6 +108,8 @@
               >
                 <source src="{{ video_asset | asset_url }}" type="video/mp4">
               </video>
+            {% else %}
+              <div class="problem-media__placeholder" aria-hidden="true"></div>
             {% endif %}
           </div>
         </div>
@@ -159,56 +161,73 @@
     max-width: 1100px;
     margin: 0 auto;
   }
+  /* Media column = One Pair 50/50 law: column stretches, clip fills column, Cover. */
   #shopify-section-{{ section.id }} .problem-layout--with-media {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 48px;
+    gap: 0;
     align-items: stretch;
     max-width: none;
+    min-height: var(--pr-desk-media-min, 860px);
+    overflow: hidden;
   }
   #shopify-section-{{ section.id }} .problem-layout--with-media .problem-shell {
     max-width: none;
   }
-  #shopify-section-{{ section.id }} .problem-layout--with-media {
-    align-items: start;
-  }
-  #shopify-section-{{ section.id }} .problem-media__clip {
+  #shopify-section-{{ section.id }} .problem-media {
     position: relative;
-    width: 100%;
-    height: var(--pr-desk-media-min, 640px);
-    min-height: var(--pr-desk-media-min, 640px);
-    max-height: var(--pr-desk-media-min, 640px);
+    align-self: stretch;
+    height: 100%;
+    min-height: var(--pr-desk-media-min, 860px);
     overflow: hidden;
-    border-radius: 4px;
     background: #f0ebe4;
   }
-  #shopify-section-{{ section.id }} .problem-section--media-square .problem-media__clip {
-    height: auto;
-    min-height: 0;
-    max-height: none;
-    aspect-ratio: 1 / 1;
-  }
-  /* Cover fill = 50/50 law: absolute inset + object-fit cover.
-     Theme base sets video { max-width:100%; height:auto } which blocks fill. */
   #shopify-section-{{ section.id }} .problem-media__clip {
-    position: relative;
-    overflow: hidden;
-  }
-  #shopify-section-{{ section.id }} .problem-media__video,
-  #shopify-section-{{ section.id }} .problem-media__img {
-    display: block;
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
-    max-width: none;
-    max-height: none;
-    object-fit: cover;
+    overflow: hidden;
+    border-radius: 0;
+    background: #f0ebe4;
+  }
+  #shopify-section-{{ section.id }} .problem-section--media-square .problem-media {
+    aspect-ratio: 1 / 1;
+    height: auto;
+    min-height: var(--pr-desk-media-min, 860px);
+  }
+  #shopify-section-{{ section.id }} .problem-media__video,
+  #shopify-section-{{ section.id }} .problem-media__img,
+  #shopify-section-{{ section.id }} .problem-media__clip video,
+  #shopify-section-{{ section.id }} .problem-media__clip img,
+  #shopify-section-{{ section.id }} .problem-media__placeholder {
+    display: block;
+    position: absolute;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    object-fit: cover !important;
     object-position: center center;
   }
+  #shopify-section-{{ section.id }} .problem-media__placeholder {
+    background: linear-gradient(135deg, #e8e2da, #f0ebe4);
+    object-fit: unset !important;
+  }
   #shopify-section-{{ section.id }} .problem-section--media-contain .problem-media__video,
-  #shopify-section-{{ section.id }} .problem-section--media-contain .problem-media__img {
-    object-fit: contain;
+  #shopify-section-{{ section.id }} .problem-section--media-contain .problem-media__img,
+  #shopify-section-{{ section.id }} .problem-section--media-contain .problem-media__clip video,
+  #shopify-section-{{ section.id }} .problem-section--media-contain .problem-media__clip img {
+    object-fit: contain !important;
+  }
+  #shopify-section-{{ section.id }} .problem-layout--with-media .problem-inner {
+    padding: 72px 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
   .problem-inner {
@@ -333,10 +352,23 @@
       grid-template-columns: 1fr;
       gap: 28px;
     }
-    #shopify-section-{{ section.id }} .problem-media__clip {
-      height: var(--pr-mobile-media-height, 520px);
+    #shopify-section-{{ section.id }} .problem-layout--with-media {
+      min-height: 0;
+      gap: 0;
+    }
+    #shopify-section-{{ section.id }} .problem-media {
       min-height: var(--pr-mobile-media-height, 520px);
-      max-height: var(--pr-mobile-media-height, 520px);
+      height: var(--pr-mobile-media-height, 520px);
+    }
+    #shopify-section-{{ section.id }} .problem-media__clip {
+      position: absolute;
+      inset: 0;
+      height: 100%;
+      min-height: 0;
+      max-height: none;
+    }
+    #shopify-section-{{ section.id }} .problem-layout--with-media .problem-inner {
+      padding: 40px 20px;
     }
     .problem-inner {
       grid-template-columns: 1fr;
@@ -553,7 +585,7 @@
       "max": 1200,
       "step": 20,
       "unit": "px",
-      "default": 640,
+      "default": 860,
       "info": "Same control as 50/50. Interni-like ~640; Grip/One Pair Home often 860."
     },
     {
