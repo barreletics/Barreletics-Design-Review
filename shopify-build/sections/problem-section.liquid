@@ -195,6 +195,18 @@
     margin: 0;
     max-width: 38ch;
   }
+  .problem-layout--with-media .problem-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .problem-layout--with-media .problem-list,
+  .problem-layout--with-media .problem-resolve {
+    /* list block starts after title/body */
+  }
+  .problem-layout--with-media .problem-inner > div:last-child {
+    margin-top: var(--pr-copy-stack-gap, 12px);
+  }
   .problem-list {
     list-style: none;
     margin: 0;
@@ -245,24 +257,32 @@
   }
   .problem-resolve__cta:hover { opacity: 0.92; }
   
-  /* Match 50/50: desk media left; reverse = media right */
-  @media (min-width: 769px) {
-    #shopify-section-{{ section.id }}.problem-section--reverse .problem-layout--with-media {
-      direction: rtl;
-    }
-    #shopify-section-{{ section.id }}.problem-section--reverse .problem-layout--with-media > * {
-      direction: ltr;
-    }
+  /* Desk L/R — same mechanism as fifty-fifty reverse (CSS order, not % crop) */
+  #shopify-section-{{ section.id }} .problem-layout--with-media {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
   }
-  /* Match 50/50: mobile media above or below copy */
+  #shopify-section-{{ section.id }} .problem-layout--with-media .problem-media { order: 1; }
+  #shopify-section-{{ section.id }} .problem-layout--with-media .problem-inner { order: 2; }
+  #shopify-section-{{ section.id }}.problem-section--reverse .problem-layout--with-media .problem-media { order: 2; }
+  #shopify-section-{{ section.id }}.problem-section--reverse .problem-layout--with-media .problem-inner { order: 1; }
+
+  /* Phone U/D — same idea as fifty-fifty mobile_stack_order */
   @media (max-width: 768px) {
-    #shopify-section-{{ section.id }}.problem-section--copy-first .problem-layout--with-media {
-      display: flex;
-      flex-direction: column;
+    #shopify-section-{{ section.id }} .problem-layout--with-media {
+      grid-template-columns: 1fr;
     }
-    #shopify-section-{{ section.id }}.problem-section--copy-first .problem-layout--with-media .problem-inner {
-      order: -1;
-    }
+    #shopify-section-{{ section.id }}.problem-section--media-first .problem-layout--with-media .problem-media { order: 1; }
+    #shopify-section-{{ section.id }}.problem-section--media-first .problem-layout--with-media .problem-inner { order: 2; }
+    #shopify-section-{{ section.id }}.problem-section--copy-first .problem-layout--with-media .problem-inner { order: 1; }
+    #shopify-section-{{ section.id }}.problem-section--copy-first .problem-layout--with-media .problem-media { order: 2; }
+    /* reset desk reverse on phone */
+    #shopify-section-{{ section.id }}.problem-section--reverse .problem-layout--with-media .problem-media,
+    #shopify-section-{{ section.id }}.problem-section--reverse .problem-layout--with-media .problem-inner { order: unset; }
+    #shopify-section-{{ section.id }}.problem-section--media-first.problem-section--reverse .problem-layout--with-media .problem-media { order: 1; }
+    #shopify-section-{{ section.id }}.problem-section--media-first.problem-section--reverse .problem-layout--with-media .problem-inner { order: 2; }
+    #shopify-section-{{ section.id }}.problem-section--copy-first.problem-section--reverse .problem-layout--with-media .problem-inner { order: 1; }
+    #shopify-section-{{ section.id }}.problem-section--copy-first.problem-section--reverse .problem-layout--with-media .problem-media { order: 2; }
   }
 @media (max-width: 768px) {
     .problem-section { padding: 48px 16px; }
@@ -389,7 +409,7 @@
     {
       "type": "text",
       "id": "video_asset",
-      "label": "Theme video asset filename",
+      "label": "Theme asset fallback (don't use if Shopify video/image set)",
       "info": "e.g. chair-pose-home.mp4 in Assets. Wins over Video URL."
     },
     {
@@ -420,23 +440,23 @@
     {
       "type": "checkbox",
       "id": "reverse",
-      "label": "Media on right (desktop)",
+      "label": "Reverse layout (text left, media right)",
       "default": false,
-      "info": "Off = media left. On = media right. Same as 50/50 reverse."
+      "info": "Desktop only (769px+). Same control as 50/50."
     },
     {
       "type": "select",
       "id": "mobile_stack_order",
-      "label": "Mobile: media up or down",
+      "label": "Mobile stack order",
       "default": "media_first",
       "options": [
         {
           "value": "media_first",
-          "label": "Media above copy"
+          "label": "Image above copy"
         },
         {
           "value": "copy_first",
-          "label": "Media below copy"
+          "label": "Copy above image"
         }
       ],
       "info": "Phone only. Same as 50/50 mobile stack order."
@@ -448,7 +468,7 @@
     {
       "type": "range",
       "id": "copy_stack_gap",
-      "label": "Gap under title (pull list up)",
+      "label": "Space above bullet list",
       "min": 0,
       "max": 96,
       "step": 4,
