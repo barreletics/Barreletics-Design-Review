@@ -7,6 +7,12 @@
   assign cta_bg = section.settings.cta_bg_color | default: '#c45c3f'
   assign cta_border = section.settings.cta_border_color | default: cta_bg
   assign cta_text_color = section.settings.cta_text_color | default: '#ffffff'
+  if cta_style == 'outline'
+    assign _cta_tc = cta_text_color | downcase
+    if _cta_tc == '#ffffff' or _cta_tc == '#fff' or _cta_tc == 'white' or cta_text_color == blank
+      assign cta_text_color = cta_border
+    endif
+  endif
   assign mobile_media_height = section.settings.mobile_media_height | default: 520
   assign copy_stack_gap = section.settings.copy_stack_gap | default: 16
   assign reverse = section.settings.reverse
@@ -255,10 +261,11 @@
     padding-top: 0;
     border-top: none;
   }
-  .problem-resolve__cta {
+  #shopify-section-{{ section.id }} .problem-resolve__cta {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    width: fit-content;
     min-height: var(--type-cta-min-height);
     padding: var(--type-cta-pad-y) var(--type-cta-pad-x);
     background: var(--pr-cta-bg, #c45c3f);
@@ -273,11 +280,12 @@
     border: 1px solid var(--pr-cta-border, var(--pr-cta-bg, #c45c3f));
     transition: opacity 0.15s ease;
   }
-  .problem-resolve__cta--outline {
+  #shopify-section-{{ section.id }} .problem-resolve__cta--outline {
     background: transparent;
     color: var(--pr-cta-text, var(--pr-cta-border, #c45c3f));
   }
-  .problem-resolve__cta:hover { opacity: 0.92; }
+  #shopify-section-{{ section.id }} .problem-resolve__cta:hover { opacity: 0.92; }
+  #shopify-section-{{ section.id }} .problem-resolve__cta--outline:hover { opacity: 0.85; }
   
   /* Desk L/R — same mechanism as fifty-fifty reverse (CSS order, not % crop) */
   #shopify-section-{{ section.id }} .problem-layout--with-media {
@@ -410,6 +418,26 @@
         }
       ],
       "default": "solid"
+    },
+    {
+      "type": "color",
+      "id": "cta_bg_color",
+      "label": "CTA background color",
+      "default": "#c45c3f",
+      "info": "Solid fill. Outline ignores fill; border still applies."
+    },
+    {
+      "type": "color",
+      "id": "cta_border_color",
+      "label": "CTA outline / border color",
+      "default": "#c45c3f"
+    },
+    {
+      "type": "color",
+      "id": "cta_text_color",
+      "label": "CTA label color",
+      "default": "#ffffff",
+      "info": "Solid: usually white. Outline auto-uses border color when left white."
     },
     {
       "type": "url",
