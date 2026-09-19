@@ -8,9 +8,30 @@
   assign cta_border = section.settings.cta_border_color | default: cta_bg
   assign cta_text_color = section.settings.cta_text_color | default: '#ffffff'
   assign mobile_media_height = section.settings.mobile_media_height | default: 520
-  assign media_position_x = section.settings.media_position_x | default: 50
-  assign media_position_y_mobile = section.settings.media_position_y_mobile | default: 50
   assign copy_stack_gap = section.settings.copy_stack_gap | default: 28
+
+  assign media_x_side = section.settings.media_x_side | default: 'center'
+  assign media_x_pct = section.settings.media_x_pct | default: 0
+  assign media_y_side = section.settings.media_y_side | default: 'center'
+  assign media_y_pct = section.settings.media_y_pct | default: 0
+
+  assign media_pos_x_desktop = 50
+  if media_x_side == 'left'
+    assign media_pos_x_desktop = media_x_pct
+  elsif media_x_side == 'right'
+    assign media_pos_x_desktop = 100 | minus: media_x_pct
+  else
+    assign media_pos_x_desktop = section.settings.media_position_x | default: 50
+  endif
+
+  assign media_pos_y_mobile = 50
+  if media_y_side == 'up'
+    assign media_pos_y_mobile = media_y_pct
+  elsif media_y_side == 'down'
+    assign media_pos_y_mobile = 100 | minus: media_y_pct
+  else
+    assign media_pos_y_mobile = section.settings.media_position_y_mobile | default: 50
+  endif
 
   assign has_media = false
   if section.settings.video != blank
@@ -42,7 +63,7 @@
   class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} problem-section{% if has_media %} problem-section--with-media{% endif %}"
   id="{{ section.settings.anchor_id | default: 'problem' | handleize }}"
   aria-label="{{ section.settings.title | escape }}"
-  style="{% render 'section-inset-vars' %} --pr-cta-bg: {{ cta_bg }}; --pr-cta-border: {{ cta_border }}; --pr-cta-text: {{ cta_text_color }}; --pr-mobile-media-height: {{ mobile_media_height }}px; --pr-media-pos-x: {{ media_position_x }}%; --pr-media-pos-y-mobile: {{ media_position_y_mobile }}%; --pr-copy-stack-gap: {{ copy_stack_gap }}px;"
+  style="{% render 'section-inset-vars' %} --pr-cta-bg: {{ cta_bg }}; --pr-cta-border: {{ cta_border }}; --pr-cta-text: {{ cta_text_color }}; --pr-mobile-media-height: {{ mobile_media_height }}px; --pr-media-pos-x: {{ media_pos_x_desktop }}%; --pr-media-pos-y-mobile: {{ media_pos_y_mobile }}%; --pr-copy-stack-gap: {{ copy_stack_gap }}px;"
 >
   <div class="problem-shell">
     <div class="problem-layout{% if has_media %} problem-layout--with-media{% endif %}">
@@ -365,26 +386,56 @@
       "info": "Poster for video URL, or still image when no video is set."
     },
     {
-      "type": "range",
-      "id": "media_position_x",
-      "label": "Desktop media — left ↔ right",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "%",
-      "default": 50,
-      "info": "Object position on desktop (769px+). Media always uses cover."
+      "type": "header",
+      "content": "Media position"
+    },
+    {
+      "type": "paragraph",
+      "content": "Desktop (769px+): horizontal anchor + nudge. Mobile (768px and below): vertical anchor + nudge. Media always uses object-fit: cover."
+    },
+    {
+      "type": "select",
+      "id": "media_x_side",
+      "label": "Desktop horizontal",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
     },
     {
       "type": "range",
-      "id": "media_position_y_mobile",
-      "label": "Mobile media — up ↔ down",
+      "id": "media_x_pct",
+      "label": "Nudge from that side (%) — desktop",
       "min": 0,
-      "max": 100,
+      "max": 50,
       "step": 1,
       "unit": "%",
-      "default": 50,
-      "info": "Object position on mobile (768px and below)."
+      "default": 0,
+      "info": "Only applies when Desktop horizontal is Left or Right. Ignored when Center."
+    },
+    {
+      "type": "select",
+      "id": "media_y_side",
+      "label": "Mobile vertical",
+      "options": [
+        { "value": "up", "label": "Up" },
+        { "value": "center", "label": "Center" },
+        { "value": "down", "label": "Down" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "media_y_pct",
+      "label": "Nudge from that side (%) — mobile",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "%",
+      "default": 0,
+      "info": "Only applies when Mobile vertical is Up or Down. Ignored when Center."
     },
     {
       "type": "range",
