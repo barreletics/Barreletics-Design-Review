@@ -31,3 +31,5 @@ Scanner: `python3 scripts/lock-scan.py .`
 | Machine locks | [sitewide.lock.json](./sitewide.lock.json) · [shop-all.lock.json](./shop-all.lock.json) · [apparel.lock.json](./apparel.lock.json) |
 
 Prefer letter + lock-scan over memory. No theme edits without Andrew **go**.
+
+- **MEDIA-FILL-50-50-LOCKED.md** — Home/marketing split media fill (Cover, full-bleed, stretch to row). Open when media doesn’t fill like One Pair.
