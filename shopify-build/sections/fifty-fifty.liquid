@@ -36,16 +36,16 @@
     assign panel_bg = section.settings.bg_color | default: '#ffffff'
   endif
 
-  # Media pad / letterbox bg when Fit or Contain. Default preset white (safe letterbox).
-  assign media_bg_preset = section.settings.media_bg_preset | default: 'white'
+  # Media pad / letterbox bg when Fit or Contain.
+  # Schema default for NEW sections = white. Blank preset on older sections → keep media_bg.
+  assign media_bg_preset = section.settings.media_bg_preset
   if media_bg_preset == 'cream'
     assign media_pad_bg = '#faf8f6'
-  elsif media_bg_preset == 'custom'
-    assign media_pad_bg = section.settings.media_bg | default: '#ffffff'
   elsif media_bg_preset == 'white'
     assign media_pad_bg = '#ffffff'
+  elsif media_bg_preset == 'custom'
+    assign media_pad_bg = section.settings.media_bg | default: '#ffffff'
   else
-    # Missing preset on older sections: keep saved media_bg if set, else white
     assign media_pad_bg = section.settings.media_bg | default: '#ffffff'
   endif
 
