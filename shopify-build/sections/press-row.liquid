@@ -5,6 +5,7 @@
 
 {% liquid
   assign heading = section.settings.heading | default: 'Press'
+  assign heading_style = section.settings.heading_style | default: 'eyebrow'
   assign bg = section.settings.bg_color | default: '#faf8f6'
   assign hero_label = section.settings.hero_label | default: 'Barreletics × Coperni'
   assign hero_line = section.settings.hero_line | default: 'Limited edition · Paris 2026'
@@ -25,7 +26,11 @@
 >
   <div class="press-row__inner">
     {% if heading != blank %}
-      <p class="press-row__eyebrow type-label">{{ heading }}</p>
+      {% if heading_style == 'standard' %}
+        <h2 class="press-row__head h2-standard">{{ heading }}</h2>
+      {% else %}
+        <p class="press-row__eyebrow type-label">{{ heading }}</p>
+      {% endif %}
     {% endif %}
 
     <div class="press-row__grid">
@@ -163,7 +168,7 @@
     font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
     /* .type-label handles size, weight, letter-spacing, uppercase */
   }
-  /* Legacy .press-row__head retained during transition; safe to drop later. */
+  /* .press-row__head — used when heading_style = 'standard'. Global .h2-standard sets size/weight; this scope adds the underline + spacing. */
   #shopify-section-{{ section.id }} .press-row__head {
     margin: 0 0 32px;
     padding-bottom: 12px;
@@ -370,6 +375,17 @@
       "id": "heading",
       "label": "Heading",
       "default": "Press"
+    },
+    {
+      "type": "select",
+      "id": "heading_style",
+      "label": "Heading style",
+      "info": "Eyebrow = small caps label. Standard = grid section header (matches other sections).",
+      "options": [
+        { "value": "eyebrow", "label": "Eyebrow (small caps)" },
+        { "value": "standard", "label": "Standard heading" }
+      ],
+      "default": "eyebrow"
     },
     {
       "type": "range",
