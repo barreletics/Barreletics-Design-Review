@@ -46,6 +46,7 @@
           assign card_link_label = block.settings.link_label
           assign image_fit = block.settings.image_fit | default: 'cover'
           assign alt_text = card_title | default: card_eyebrow | default: 'Press' | strip_html
+          assign pc_sizes = '(max-width: 749px) 100vw, calc(100vw / ' | append: cols | append: ')'
         %}
         <article class="press-cards__card" {{ block.shopify_attributes }}>
           <div class="press-cards__media press-cards__media--{{ image_fit }}">
@@ -83,7 +84,14 @@
                     aria-label="Play video"
                   >
                     {% if poster_src != blank %}
-                      <img class="press-cards__img" src="{{ poster_src | escape }}" alt="{{ alt_text | escape }}" width="800" height="1000" loading="lazy">
+                      {% render 'media-img',
+                         url: poster_src,
+                         alt: alt_text,
+                         class: 'press-cards__img',
+                         loading: 'lazy',
+                         position: 'css',
+                         width_attr: 800,
+                         height_attr: 1000 %}
                     {% endif %}
                     <span class="press-cards__play-icon" aria-hidden="true"></span>
                   </button>
@@ -113,44 +121,64 @@
                   </video>
                 {% endif %}
               {% elsif block.settings.poster != blank %}
-                <img
-                  class="press-cards__img"
-                  src="{{ block.settings.poster | image_url: width: 1600 }}"
-                  srcset="{{ block.settings.poster | image_url: width: 800 }} 800w, {{ block.settings.poster | image_url: width: 1200 }} 1200w, {{ block.settings.poster | image_url: width: 1600 }} 1600w"
-                  sizes="(max-width: 749px) 100vw, calc(100vw / {{ cols }})"
-                  alt="{{ alt_text | escape }}"
-                  loading="lazy"
-                  width="{{ block.settings.poster.width }}"
-                  height="{{ block.settings.poster.height }}"
-                >
+                {% render 'media-img',
+                   image: block.settings.poster,
+                   alt: alt_text,
+                   class: 'press-cards__img',
+                   widths: '800, 1200, 1600',
+                   width_default: 1600,
+                   sizes: pc_sizes,
+                   loading: 'lazy',
+                   position: 'css' %}
               {% elsif block.settings.poster_url != blank %}
-                <img class="press-cards__img" src="{{ block.settings.poster_url | escape }}" alt="{{ alt_text | escape }}" width="800" height="1000" loading="lazy">
+                {% render 'media-img',
+                   url: block.settings.poster_url,
+                   alt: alt_text,
+                   class: 'press-cards__img',
+                   loading: 'lazy',
+                   position: 'css',
+                   width_attr: 800,
+                   height_attr: 1000 %}
               {% endif %}
             {% else %}
               {% if block.settings.image != blank %}
-                <img
-                  class="press-cards__img"
-                  src="{{ block.settings.image | image_url: width: 1600 }}"
-                  srcset="{{ block.settings.image | image_url: width: 800 }} 800w, {{ block.settings.image | image_url: width: 1200 }} 1200w, {{ block.settings.image | image_url: width: 1600 }} 1600w"
-                  sizes="(max-width: 749px) 100vw, calc(100vw / {{ cols }})"
-                  alt="{{ alt_text | escape }}"
-                  loading="lazy"
-                  width="{{ block.settings.image.width }}"
-                  height="{{ block.settings.image.height }}"
-                >
+                {% render 'media-img',
+                   image: block.settings.image,
+                   alt: alt_text,
+                   class: 'press-cards__img',
+                   widths: '800, 1200, 1600',
+                   width_default: 1600,
+                   sizes: pc_sizes,
+                   loading: 'lazy',
+                   position: 'css' %}
               {% elsif block.settings.image_url != blank %}
-                <img class="press-cards__img" src="{{ block.settings.image_url | escape }}" alt="{{ alt_text | escape }}" width="800" height="1000" loading="lazy">
+                {% render 'media-img',
+                   url: block.settings.image_url,
+                   alt: alt_text,
+                   class: 'press-cards__img',
+                   loading: 'lazy',
+                   position: 'css',
+                   width_attr: 800,
+                   height_attr: 1000 %}
               {% elsif block.settings.poster != blank %}
-                <img
-                  class="press-cards__img"
-                  src="{{ block.settings.poster | image_url: width: 1600 }}"
-                  alt="{{ alt_text | escape }}"
-                  width="{{ block.settings.poster.width | default: 800 }}"
-                  height="{{ block.settings.poster.height | default: 1000 }}"
-                  loading="lazy"
-                >
+                {% render 'media-img',
+                   image: block.settings.poster,
+                   alt: alt_text,
+                   class: 'press-cards__img',
+                   widths: '800, 1200, 1600',
+                   width_default: 1600,
+                   sizes: pc_sizes,
+                   loading: 'lazy',
+                   position: 'css' %}
               {% elsif block.settings.poster_url != blank %}
-                <img class="press-cards__img" src="{{ block.settings.poster_url | escape }}" alt="{{ alt_text | escape }}" width="800" height="1000" loading="lazy">
+                {% render 'media-img',
+                   url: block.settings.poster_url,
+                   alt: alt_text,
+                   class: 'press-cards__img',
+                   loading: 'lazy',
+                   position: 'css',
+                   width_attr: 800,
+                   height_attr: 1000 %}
               {% endif %}
             {% endif %}
           </div>
