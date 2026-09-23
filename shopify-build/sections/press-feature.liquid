@@ -42,6 +42,8 @@
             assign pos_m = section.settings.media_2_position_mobile | default: pos_d
             assign alt = section.settings.media_2_alt | default: section.settings.eyebrow | default: 'Lifestyle'
           endif
+          assign tf_sizes = '(max-width: 749px) 100vw, 50vw'
+          assign tf_pos_css = 'css'
         %}
         <div
           class="twin-frame__frame twin-frame__frame--{{ i }} twin-frame__frame--fit-{{ fit_d }} twin-frame__frame--pos-{{ pos_d }} twin-frame__frame--fit-m-{{ fit_m }} twin-frame__frame--pos-m-{{ pos_m }}"
@@ -59,15 +61,49 @@
                   <source src="{{ vid_url | escape }}" type="video/mp4">
                 </video>
               {% elsif img != blank %}
-                {{ img | image_url: width: 1600 | image_tag: class: 'twin-frame__img', loading: 'lazy', alt: alt }}
+                {% render 'media-img',
+                   image: img,
+                   alt: alt,
+                   fit: 'cover',
+                   class: 'twin-frame__img',
+                   sizes: tf_sizes,
+                   widths: '800, 1200, 1600',
+                   width_default: 1600,
+                   loading: 'lazy',
+                   position: tf_pos_css %}
               {% elsif img_url != blank %}
-                <img class="twin-frame__img" src="{{ img_url | escape }}" alt="{{ alt | escape }}" loading="lazy" width="1200" height="1500">
+                {% render 'media-img',
+                   url: img_url,
+                   alt: alt,
+                   fit: 'cover',
+                   class: 'twin-frame__img',
+                   loading: 'lazy',
+                   position: tf_pos_css,
+                   width_attr: 1200,
+                   height_attr: 1500 %}
               {% endif %}
             {% else %}
               {% if img != blank %}
-                {{ img | image_url: width: 1600 | image_tag: class: 'twin-frame__img', loading: 'lazy', alt: alt }}
+                {% render 'media-img',
+                   image: img,
+                   alt: alt,
+                   fit: 'cover',
+                   class: 'twin-frame__img',
+                   sizes: tf_sizes,
+                   widths: '800, 1200, 1600',
+                   width_default: 1600,
+                   loading: 'lazy',
+                   position: tf_pos_css %}
               {% elsif img_url != blank %}
-                <img class="twin-frame__img" src="{{ img_url | escape }}" alt="{{ alt | escape }}" loading="lazy" width="1200" height="1500">
+                {% render 'media-img',
+                   url: img_url,
+                   alt: alt,
+                   fit: 'cover',
+                   class: 'twin-frame__img',
+                   loading: 'lazy',
+                   position: tf_pos_css,
+                   width_attr: 1200,
+                   height_attr: 1500 %}
               {% endif %}
             {% endif %}
           </div>
