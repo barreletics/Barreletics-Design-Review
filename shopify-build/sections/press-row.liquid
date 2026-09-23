@@ -1,0 +1,484 @@
+{% comment %}
+  Press row — unified Home band: Coperni hero video + 4 cards.
+  Desktop grid 1.08fr / 0.46fr / 0.46fr · Roboto only · cream #faf8f6.
+{% endcomment %}
+
+{% liquid
+  assign heading = section.settings.heading | default: 'Press'
+  assign bg = section.settings.bg_color | default: '#faf8f6'
+  assign hero_label = section.settings.hero_label | default: 'Barreletics × Coperni'
+  assign hero_line = section.settings.hero_line | default: 'Limited edition · Paris 2026'
+  assign video_url = section.settings.video_url
+  assign poster_src = blank
+  if section.settings.poster != blank
+    assign poster_src = section.settings.poster | image_url: width: 2000
+  elsif section.settings.poster_url != blank
+    assign poster_src = section.settings.poster_url
+  endif
+%}
+
+<section
+  id="press-row-{{ section.id }}"
+  class="press-row"
+  style="--pr-bg: {{ bg }};"
+  aria-label="{{ heading | strip_html | escape }}"
+>
+  <div class="press-row__inner">
+    {% if heading != blank %}
+      <h2 class="press-row__head h2-standard">{{ heading }}</h2>
+    {% endif %}
+
+    <div class="press-row__grid">
+      <div class="press-row__hero">
+        {% comment %} Shopify Files video wins. video_url is fallback only — never override the picker. {% endcomment %}
+        {% if section.settings.video != blank %}
+          <video
+            class="press-row__hero-video"
+            autoplay
+            muted
+            loop
+            playsinline
+            webkit-playsinline
+            preload="metadata"
+            {% if poster_src != blank %}poster="{{ poster_src | escape }}"{% endif %}
+          >
+            {% for source in section.settings.video.sources %}
+              <source src="{{ source.url }}" type="{{ source.mime_type }}">
+            {% endfor %}
+          </video>
+        {% elsif video_url != blank %}
+          <video
+            class="press-row__hero-video"
+            autoplay
+            muted
+            loop
+            playsinline
+            webkit-playsinline
+            preload="metadata"
+            {% if poster_src != blank %}poster="{{ poster_src | escape }}"{% endif %}
+          >
+            <source src="{{ video_url | escape }}" type="video/mp4">
+          </video>
+        {% elsif poster_src != blank %}
+          <img class="press-row__hero-fallback" src="{{ poster_src | escape }}" alt="" loading="lazy" width="1200" height="1600">
+        {% endif %}
+        <div class="press-row__hero-copy">
+          {% if hero_label != blank %}
+            <p class="type-label">{{ hero_label }}</p>
+          {% endif %}
+          {% if hero_line != blank %}
+            <p class="type-statement">{{ hero_line }}</p>
+          {% endif %}
+        </div>
+      </div>
+
+      {% for block in section.blocks %}
+        {% liquid
+          assign card_title = block.settings.title
+          assign card_caption = block.settings.caption
+          assign card_link = block.settings.link
+          assign fit = block.settings.media_fit | default: 'cover'
+          assign is_placeholder = block.settings.placeholder_gradient
+          assign alt_text = card_title | default: 'Press' | strip_html
+          assign img_src = blank
+          if block.settings.image != blank
+            assign img_src = block.settings.image | image_url: width: 900
+          elsif block.settings.image_url != blank
+            assign img_src = block.settings.image_url
+          endif
+          assign card_class = 'press-row__card'
+          if fit == 'contain'
+            assign card_class = card_class | append: ' press-row__card--contain'
+          endif
+          if is_placeholder
+            assign card_class = card_class | append: ' press-row__card--venice'
+          endif
+        %}
+        {% if card_link != blank %}
+          <a class="{{ card_class }}" href="{{ card_link }}" {{ block.shopify_attributes }}>
+        {% else %}
+          <div class="{{ card_class }}" {{ block.shopify_attributes }}>
+        {% endif %}
+          <div class="press-row__card-media"{% if is_placeholder and img_src == blank %} aria-hidden="true"{% endif %}>
+            {% if img_src != blank %}
+              <img
+                src="{{ img_src | escape }}"
+                alt="{{ alt_text | escape }}"
+                width="900"
+                height="1100"
+                loading="lazy"
+              >
+            {% endif %}
+          </div>
+          <div class="press-row__card-foot">
+            {% if card_title != blank %}
+              <p class="press-row__card-title">{{ card_title }}</p>
+            {% endif %}
+            <p class="press-row__card-cap">
+              <span>{{ card_caption }}</span>
+              {% if card_link != blank %}<span class="press-row__card-arrow" aria-hidden="true">→</span>{% endif %}
+            </p>
+          </div>
+        {% if card_link != blank %}
+          </a>
+        {% else %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+  #shopify-section-{{ section.id }} {
+    background: var(--pr-bg, #faf8f6);
+  }
+  #shopify-section-{{ section.id }} .press-row {
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--pr-bg, #faf8f6);
+    color: #1c1916;
+    padding: 64px 40px;
+  }
+  #shopify-section-{{ section.id }} .press-row__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  #shopify-section-{{ section.id }} .press-row__head {
+    margin: 0 0 32px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #d6cfc0;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: clamp(26px, 2.9vw, 32px);
+    font-weight: 600;
+    line-height: 1.22;
+    letter-spacing: -0.012em;
+    color: #1c1916;
+    text-transform: none;
+  }
+  #shopify-section-{{ section.id }} .press-row__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.46fr) minmax(0, 0.46fr);
+    grid-template-rows: 1fr 1fr;
+    gap: 10px;
+    height: clamp(440px, 52vw, 540px);
+  }
+  #shopify-section-{{ section.id }} .press-row__hero {
+    grid-row: 1 / 3;
+    grid-column: 1;
+    position: relative;
+    overflow: hidden;
+    background: #faf8f6;
+  }
+  /* Oversize the media box past the cell so baked letterbox bars are clipped by overflow:hidden */
+  #shopify-section-{{ section.id }} .press-row__hero video,
+  #shopify-section-{{ section.id }} .press-row__hero .press-row__hero-video,
+  #shopify-section-{{ section.id }} .press-row__hero-fallback {
+    position: absolute !important;
+    top: -12% !important;
+    left: -12% !important;
+    width: 124% !important;
+    height: 124% !important;
+    max-width: none !important;
+    max-height: none !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    outline: none !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    display: block !important;
+    background: #faf8f6 !important;
+    transform: none !important;
+  }
+
+
+  #shopify-section-{{ section.id }} .press-row__hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(180deg, transparent 55%, rgba(28, 25, 22, 0.82) 100%);
+  }
+  #shopify-section-{{ section.id }} .press-row__hero-copy {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    padding: 24px 28px 28px;
+    color: #faf8f6;
+  }
+  #shopify-section-{{ section.id }} .press-row__hero-copy .type-label {
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(250, 248, 246, 0.88);
+    margin: 0 0 8px;
+  }
+  #shopify-section-{{ section.id }} .press-row__hero-copy .type-statement {
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: clamp(28px, 3vw, 36px);
+    font-weight: 500;
+    line-height: 1.12;
+    letter-spacing: -0.022em;
+    color: #faf8f6;
+    margin: 0;
+    max-width: 15ch;
+    text-transform: none;
+  }
+  #shopify-section-{{ section.id }} .press-row__card {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    min-height: 0;
+    background: #fff;
+    border: 1px solid #e8e4dc;
+    text-decoration: none;
+    color: inherit;
+  }
+  #shopify-section-{{ section.id }} .press-row__card-media {
+    position: relative;
+    overflow: hidden;
+    background: #f5f2ec;
+    min-height: 0;
+  }
+  #shopify-section-{{ section.id }} .press-row__card-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  #shopify-section-{{ section.id }} .press-row__card--contain .press-row__card-media img {
+    object-fit: contain;
+    object-position: center top;
+    padding: 8px;
+    background: #faf8f6;
+  }
+  #shopify-section-{{ section.id }} .press-row__card--venice .press-row__card-media {
+    background: linear-gradient(160deg, #2a2420 0%, #3d3530 45%, #1c1916 100%);
+  }
+  #shopify-section-{{ section.id }} .press-row__card-foot {
+    padding: 12px 14px 14px;
+    border-top: 1px solid #f0ebe4;
+    min-height: 72px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  #shopify-section-{{ section.id }} .press-row__card-title {
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin: 0 0 2px;
+    color: #1c1916;
+  }
+  #shopify-section-{{ section.id }} .press-row__card-cap {
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: #6b645a;
+    line-height: 1.4;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  #shopify-section-{{ section.id }} .press-row__card-arrow {
+    font-size: 13px;
+    opacity: 0.7;
+  }
+  @media (max-width: 900px) {
+    #shopify-section-{{ section.id }} .press-row__grid {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto;
+      height: auto;
+    }
+    #shopify-section-{{ section.id }} .press-row__hero {
+      grid-column: 1 / -1;
+      grid-row: auto;
+      height: min(400px, 70vw);
+    }
+    #shopify-section-{{ section.id }} .press-row__card {
+      min-height: 260px;
+    }
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .press-row {
+      padding: 48px 16px;
+    }
+    #shopify-section-{{ section.id }} .press-row__head {
+      font-size: clamp(24px, 5vw, 28px);
+    }
+    #shopify-section-{{ section.id }} .press-row__hero-copy .type-statement {
+      font-size: clamp(28px, 7vw, 36px);
+    }
+  }
+  @media (max-width: 520px) {
+    #shopify-section-{{ section.id }} .press-row__grid {
+      grid-template-columns: 1fr;
+    }
+    #shopify-section-{{ section.id }} .press-row__hero {
+      height: 320px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Press row",
+  "tag": "section",
+  "class": "section-press-row",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Press"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#faf8f6"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Hero video (Shopify Files)",
+      "info": "Prefer this — use the Coperni file from the old Press card."
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "Hero video URL (mp4)",
+      "info": "Fallback only. Leave blank when Hero video (Shopify Files) is set."
+    },
+    {
+      "type": "image_picker",
+      "id": "poster",
+      "label": "Hero poster (Shopify)"
+    },
+    {
+      "type": "text",
+      "id": "poster_url",
+      "label": "Hero poster URL fallback",
+      "default": "https://barreletics.com/cdn/shop/files/yellow_tone_mix.png?width=2000"
+    },
+    {
+      "type": "text",
+      "id": "hero_label",
+      "label": "Hero overlay label",
+      "default": "Barreletics × Coperni"
+    },
+    {
+      "type": "text",
+      "id": "hero_line",
+      "label": "Hero overlay line",
+      "default": "Limited edition · Paris 2026"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image (Shopify)"
+        },
+        {
+          "type": "text",
+          "id": "image_url",
+          "label": "Image URL fallback",
+          "info": "Used when Image (Shopify) is empty — for existing CDN URLs."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Press"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Caption"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "select",
+          "id": "media_fit",
+          "label": "Image fit",
+          "options": [
+            { "value": "cover", "label": "Cover (runway)" },
+            { "value": "contain", "label": "Contain (magazine)" }
+          ],
+          "default": "cover"
+        },
+        {
+          "type": "checkbox",
+          "id": "placeholder_gradient",
+          "label": "Placeholder gradient (no image)",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Press row",
+      "blocks": [
+        {
+          "type": "card",
+          "settings": {
+            "image_url": "https://barreletics.com/cdn/shop/files/Screenshot_2026-03-20_at_6.53.30_PM.png?width=900",
+            "title": "Runway",
+            "caption": "Paris Fashion Week",
+            "link": "https://barreletics.com/products/barreletics-x-coperni-closed-sole",
+            "media_fit": "cover"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "image_url": "https://barreletics.com/cdn/shop/files/Copreni_Final_More_grey.png?v=1774119812&width=900",
+            "title": "Collaboration",
+            "caption": "Spring–Summer 2026",
+            "link": "https://barreletics.com/products/barreletics-x-coperni-closed-sole",
+            "media_fit": "cover"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "image_url": "https://cdn.shopify.com/s/files/1/0045/0612/4391/files/Interni_Blog_Magazine_Page.png",
+            "title": "INTERNI",
+            "caption": "Sano come un piede",
+            "link": "https://barreletics.com/blogs/news/barreletics-in-interni",
+            "media_fit": "contain"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "title": "ITSLIQUID · Venice",
+            "caption": "Biennale arte 2026",
+            "link": "https://barreletics.com/blogs/news",
+            "media_fit": "cover",
+            "placeholder_gradient": true
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
