@@ -84,6 +84,16 @@
   if region_label == blank
     assign region_label = title
   endif
+
+  # media-img shared params — object-position stays on CSS class (--sh-img-x/y)
+  assign sh_pos_css = 'css'
+  assign sh_widths = '800, 1200, 1600, 2000, 2400'
+  assign sh_width_default = 2400
+  assign sh_widths_v = '600, 900, 1200, 1600'
+  assign sh_width_default_v = 1600
+  assign sh_sizes = '(max-width: 768px) 100vw, 62vw'
+  assign sh_sizes_v = '(max-width: 768px) 100vw, 50vw'
+  assign sh_alt_fallback = 'Barreletics Performance Skins — grip that holds in every studio workout'
 -%}
 
 <div
@@ -149,18 +159,17 @@
           {% if section.settings.video_controls %}controls{% endif %}
         ></video>
       {%- elsif image != blank -%}
-        {{
-          image
-          | image_url: width: 1600
-          | image_tag:
-            widths: '600, 900, 1200, 1600',
-            sizes: '(max-width: 768px) 100vw, 50vw',
-            alt: image_alt,
-            loading: 'eager',
-            fetchpriority: 'high',
-            decoding: 'async',
-            class: 'split-hero__img'
-        }}
+        {%- assign sh_alt_v = image_alt -%}
+        {% render 'media-img',
+           image: image,
+           alt: sh_alt_v,
+           class: 'split-hero__img',
+           widths: sh_widths_v,
+           width_default: sh_width_default_v,
+           sizes: sh_sizes_v,
+           loading: 'eager',
+           fetchpriority: 'high',
+           position: sh_pos_css %}
       {%- else -%}
         <div class="split-hero__placeholder" role="img" aria-label="Add video or poster image">
           Add video (or poster image) in Theme Editor
@@ -168,42 +177,35 @@
       {%- endif -%}
     {%- else -%}
       {%- if image != blank -%}
-        {{
-          image
-          | image_url: width: 2400
-          | image_tag:
-            widths: '800, 1200, 1600, 2000, 2400',
-            sizes: '(max-width: 768px) 100vw, 62vw',
-            alt: image_alt,
-            loading: 'eager',
-            fetchpriority: 'high',
-            decoding: 'async',
-            class: 'split-hero__img'
-        }}
+        {%- assign sh_alt_i = image_alt -%}
+        {% render 'media-img',
+           image: image,
+           alt: sh_alt_i,
+           class: 'split-hero__img',
+           widths: sh_widths,
+           width_default: sh_width_default,
+           sizes: sh_sizes,
+           loading: 'eager',
+           fetchpriority: 'high',
+           position: sh_pos_css %}
       {%- elsif image_url != blank -%}
-        {%- if image_url contains '://' -%}
-          <img
-            class="split-hero__img"
-            src="{{ image_url | escape }}"
-            alt="{{ image_alt | default: 'Barreletics Performance Skins — grip that holds in every studio workout' | escape }}"
-            width="2400"
-            height="1890"
-            loading="eager"
-            fetchpriority="high"
-            decoding="async"
-          >
-        {%- else -%}
-          <img
-            class="split-hero__img"
-            src="{{ image_url | asset_url }}"
-            alt="{{ image_alt | default: 'Barreletics Performance Skins — grip that holds in every studio workout' | escape }}"
-            width="2400"
-            height="1890"
-            loading="eager"
-            fetchpriority="high"
-            decoding="async"
-          >
-        {%- endif -%}
+        {%- liquid
+          assign sh_alt_url = image_alt | default: sh_alt_fallback
+          if image_url contains '://'
+            assign sh_src_url = image_url
+          else
+            assign sh_src_url = image_url | asset_url
+          endif
+        -%}
+        {% render 'media-img',
+           url: sh_src_url,
+           alt: sh_alt_url,
+           class: 'split-hero__img',
+           loading: 'eager',
+           fetchpriority: 'high',
+           position: sh_pos_css,
+           width_attr: 2400,
+           height_attr: 1890 %}
       {%- else -%}
         <div class="split-hero__placeholder" role="img" aria-label="Add hero image in Theme Editor">
           Add pink-shorts hero image in Theme Editor

@@ -403,6 +403,20 @@ h1, h2, h3, h4, h5, h6 {
 .media-fill--left { object-position: left center; }
 .media-fill--right { object-position: right center; }
 
+/* .media-img — snippet-driven img fill. Parent must be position:relative + defined height.
+   Section CSS still owns transforms/zoom + object-position (via CSS vars). */
+.media-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  min-height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.media-img--contain { object-fit: contain; }
+
 /* Split sections — mobile stack order (TE: mobile_stack_order on fifty-fifty, split-hero, collection-hero, hero) */
 @media (max-width: 768px) {
   .mobile-stack--copy-first.split-section .split-media,
