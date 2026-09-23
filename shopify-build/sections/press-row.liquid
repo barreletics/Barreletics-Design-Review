@@ -60,7 +60,14 @@
             <source src="{{ video_url | escape }}" type="video/mp4">
           </video>
         {% elsif poster_src != blank %}
-          <img class="press-row__hero-fallback" src="{{ poster_src | escape }}" alt="" loading="lazy" width="1200" height="1600">
+          {% render 'media-img',
+             url: poster_src,
+             alt: '',
+             class: 'press-row__hero-fallback',
+             loading: 'lazy',
+             position: 'css',
+             width_attr: 1200,
+             height_attr: 1600 %}
         {% endif %}
         <div class="press-row__hero-copy">
           {% if hero_label != blank %}
@@ -107,13 +114,13 @@
         {% endif %}
           <div class="press-row__card-media"{% if is_placeholder and img_src == blank %} aria-hidden="true"{% endif %}>
             {% if img_src != blank %}
-              <img
-                src="{{ img_src | escape }}"
-                alt="{{ alt_text | escape }}"
-                width="900"
-                height="1100"
-                loading="lazy"
-              >
+              {% render 'media-img',
+                 url: img_src,
+                 alt: alt_text,
+                 loading: 'lazy',
+                 position: 'css',
+                 width_attr: 900,
+                 height_attr: 1100 %}
             {% endif %}
           </div>
           <div class="press-row__card-foot">
