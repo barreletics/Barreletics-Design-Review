@@ -38,21 +38,27 @@
   }
 }
 
+/* Video fill — img fill is handled by .media-img class in barreletics-base.css */
+.split-hero__media .split-hero__video,
+.split-hero__media video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  min-height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Focal + zoom overlay (from section CSS vars — applies to both img via .media-img and video) */
 .split-hero__media .split-hero__img,
 .split-hero__media .split-hero__video,
 .split-hero__media img,
 .split-hero__media video {
-  position: absolute;
-  inset: 0;
-  width: 100% !important;
-  height: 100% !important;
-  max-width: none;
-  min-height: 100%;
-  object-fit: cover !important;
   object-position: var(--sh-img-x, 50%) var(--sh-img-y, 50%);
   transform: scale(max(1, var(--sh-img-zoom, 1)));
   transform-origin: var(--sh-img-x, 50%) var(--sh-img-y, 50%);
-  display: block;
 }
 
 .split-hero__placeholder {
