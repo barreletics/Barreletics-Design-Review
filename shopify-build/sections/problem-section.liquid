@@ -110,16 +110,16 @@
                 <source src="{{ video_src | escape }}" type="{{ video_source_type }}">
               </video>
             {% elsif section.settings.image != blank %}
-              {{
-                section.settings.image
-                | image_url: width: 1600
-                | image_tag:
-                  widths: '600, 900, 1200, 1600',
-                  sizes: '(max-width: 768px) 100vw, 50vw',
-                  alt: section.settings.title,
-                  loading: 'lazy',
-                  class: 'problem-media__img'
-              }}
+              {%- assign pr_alt = section.settings.title -%}
+              {% render 'media-img',
+                 image: section.settings.image,
+                 alt: pr_alt,
+                 class: 'problem-media__img',
+                 widths: '600, 900, 1200, 1600',
+                 width_default: 1600,
+                 sizes: '(max-width: 768px) 100vw, 50vw',
+                 loading: 'lazy',
+                 position: 'css' %}
             {% elsif video_asset != blank %}
               <video
                 class="problem-media__video"

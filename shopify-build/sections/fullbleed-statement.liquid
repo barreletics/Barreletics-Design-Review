@@ -146,29 +146,34 @@
         <div class="fullbleed-statement__poster-cover" aria-hidden="true"></div>
       {% endif %}
     {% elsif section.settings.image != blank %}
-      <img
-        src="{{ section.settings.image | image_url: width: 2000 }}"
-        alt="{{ section.settings.image_alt | escape }}"
-        loading="lazy"
-        width="2000"
-        height="1200"
-      >
+      {%- assign fb_alt = section.settings.image_alt -%}
+      {% render 'media-img',
+         image: section.settings.image,
+         alt: fb_alt,
+         widths: '800, 1200, 1600, 2000, 2400',
+         width_default: 2000,
+         sizes: '100vw',
+         loading: 'lazy',
+         position: 'css' %}
     {% elsif section.settings.image_asset != blank %}
-      <img
-        src="{{ section.settings.image_asset | asset_url }}"
-        alt="{{ section.settings.image_alt | escape }}"
-        loading="lazy"
-        width="2000"
-        height="1200"
-      >
+      {%- assign fb_alt_a = section.settings.image_alt -%}
+      {%- assign fb_src_a = section.settings.image_asset | asset_url -%}
+      {% render 'media-img',
+         url: fb_src_a,
+         alt: fb_alt_a,
+         loading: 'lazy',
+         position: 'css',
+         width_attr: 2000,
+         height_attr: 1200 %}
     {% elsif section.settings.image_url != blank %}
-      <img
-        src="{{ section.settings.image_url | escape }}"
-        alt="{{ section.settings.image_alt | escape }}"
-        loading="lazy"
-        width="2000"
-        height="1200"
-      >
+      {%- assign fb_alt_u = section.settings.image_alt -%}
+      {% render 'media-img',
+         url: section.settings.image_url,
+         alt: fb_alt_u,
+         loading: 'lazy',
+         position: 'css',
+         width_attr: 2000,
+         height_attr: 1200 %}
     {% endif %}
   </div>
   {% if show_text %}

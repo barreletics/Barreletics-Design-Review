@@ -213,32 +213,33 @@
         <source src="{{ section.settings.video_url | escape }}" type="video/mp4">
       </video>
     {% elsif section.settings.image != blank %}
-      <img
-        class="split-media__img"
-        src="{{ section.settings.image | image_url: width: 1200 }}"
-        srcset="{{ section.settings.image | image_url: width: 600 }} 600w,
-                {{ section.settings.image | image_url: width: 900 }} 900w,
-                {{ section.settings.image | image_url: width: 1200 }} 1200w"
-        sizes="(max-width: 768px) 100vw, 50vw"
-        alt="{{ section.settings.image_alt | escape }}"
-        loading="lazy"
-        width="{{ section.settings.image.width }}"
-        height="{{ section.settings.image.height }}"
-      >
+      {%- assign ff_alt = section.settings.image_alt -%}
+      {% render 'media-img',
+         image: section.settings.image,
+         alt: ff_alt,
+         class: 'split-media__img',
+         widths: '600, 900, 1200',
+         width_default: 1200,
+         sizes: '(max-width: 768px) 100vw, 50vw',
+         loading: 'lazy',
+         position: 'css' %}
     {% elsif section.settings.image_asset != blank %}
-      <img
-        class="split-media__img"
-        src="{{ section.settings.image_asset | asset_url }}"
-        alt="{{ section.settings.image_alt | escape }}"
-        loading="lazy"
-      >
+      {%- assign ff_alt_a = section.settings.image_alt -%}
+      {%- assign ff_src_a = section.settings.image_asset | asset_url -%}
+      {% render 'media-img',
+         url: ff_src_a,
+         alt: ff_alt_a,
+         class: 'split-media__img',
+         loading: 'lazy',
+         position: 'css' %}
     {% elsif section.settings.image_url != blank %}
-      <img
-        class="split-media__img"
-        src="{{ section.settings.image_url | escape }}"
-        alt="{{ section.settings.image_alt | escape }}"
-        loading="lazy"
-      >
+      {%- assign ff_alt_u = section.settings.image_alt -%}
+      {% render 'media-img',
+         url: section.settings.image_url,
+         alt: ff_alt_u,
+         class: 'split-media__img',
+         loading: 'lazy',
+         position: 'css' %}
     {% else %}
       <div class="split-media__placeholder">
         {{ section.settings.image_alt | default: 'Media placeholder' }}
