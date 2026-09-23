@@ -1,17 +1,14 @@
 /**
  * Split hero — media-dominant lifestyle
- * Width split via --sh-media-pct (TE). Desk height = min(640px,70vh) × --sh-height-scale (TE Section height). Same in TE + full page.
- * Full-bleed cover. No contain. No fill bands.
- * X/Y = object-position. Zoom = scale() min 1.
- * One --sh-media-radius clips both sides of the split (photo + copy).
+ * Authority: 93639ed photo law · barreletics-home-split-hero · barreletics-images
+ * Desk frame: 92vh × --sh-height-scale (62/38). Photo COVER-fills frame; crop = X/Y/zoom only.
+ * Do not swap to min(640,70vh) or photo-aspect height — both caused reversion loops.
  */
 
 .split-hero {
   display: grid;
   grid-template-columns: minmax(0, var(--sh-media-pct, 62%)) minmax(0, calc(100% - var(--sh-media-pct, 62%)));
-  /* Desk height follows media aspect — NOT 100vh. 100vh made editor (sidebar) look
-     perfect and full-page crop differently (Andrew 2026-09-20). */
-  min-height: 0;
+  min-height: calc(92vh * var(--sh-height-scale, 1));
   align-items: stretch;
   background: transparent;
   overflow: hidden;
@@ -24,29 +21,20 @@
   overflow: hidden;
   box-sizing: border-box;
   width: 100%;
-  /* Base desk cap min(640px,70vh); TE Section height (--sh-height-scale) scales the whole section. */
-  height: calc(min(640px, 70vh) * var(--sh-height-scale, 1));
-  min-height: 0;
-  max-height: calc(min(640px, 70vh) * var(--sh-height-scale, 1));
+  height: calc(92vh * var(--sh-height-scale, 1));
+  min-height: calc(92vh * var(--sh-height-scale, 1));
+  max-height: calc(92vh * var(--sh-height-scale, 1));
   aspect-ratio: auto;
   background: transparent;
   isolation: isolate;
   border-radius: var(--sh-media-radius, 0px);
   clip-path: inset(0 round var(--sh-media-radius, 0px));
 }
-.split-hero {
-  min-height: 0 !important;
-}
+
 @media (min-width: 769px) {
-  .split-hero {
-    min-height: calc(min(640px, 70vh) * var(--sh-height-scale, 1));
-    height: calc(min(640px, 70vh) * var(--sh-height-scale, 1));
-  }
-  .split-hero__media,
   .split-hero__copy {
-    height: 100%;
-    max-height: none;
-    min-height: 0;
+    min-height: calc(92vh * var(--sh-height-scale, 1));
+    align-self: stretch;
   }
 }
 
@@ -54,16 +42,17 @@
 .split-hero__media .split-hero__video,
 .split-hero__media img,
 .split-hero__media video {
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
   max-width: none;
-  object-fit: cover;
+  min-height: 100%;
+  object-fit: cover !important;
   object-position: var(--sh-img-x, 50%) var(--sh-img-y, 50%);
   transform: scale(max(1, var(--sh-img-zoom, 1)));
   transform-origin: var(--sh-img-x, 50%) var(--sh-img-y, 50%);
   display: block;
-  position: absolute;
-  inset: 0;
 }
 
 .split-hero__placeholder {
@@ -256,9 +245,14 @@ a.split-hero__tag:focus-visible {
   .split-hero__media {
     order: 1;
     width: 100%;
+    height: auto;
     min-height: 0;
     max-height: 78vh;
     aspect-ratio: 4 / 5;
+  }
+
+  .split-hero__copy {
+    min-height: 0;
   }
 
   .split-hero__placeholder {
