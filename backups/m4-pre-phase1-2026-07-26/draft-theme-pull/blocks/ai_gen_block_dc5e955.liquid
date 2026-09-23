@@ -1,0 +1,844 @@
+{% doc %}
+  @prompt
+    Create a section that shoes both the open sole and closed sole version of the shoe in two columns side by side. Use a heading at the top "open sole vs Closed sole" then the two images side by side with the ability to adjust their size. then have a subheading below each image. Here is the copy for the Open Sole: Barre | Yoga | Mat Pilates
+    Lightweight, breathable, and flexible with a barefoot feel. The open sole design allows natural toe splay, balance, and strong floor connection for precise movement and superior grip. Ideal if you love that free, grounded feel for Barre, Yoga, Mat, or Reformer Pilates—maximum freedom, minimal coverage, total control.
+    
+    and here is the copy for the closed sole: Reformer Pilates | Outdoor | Water
+    Built for the same studio performance as the open version, with added cushioning and protection for outdoor use. Ideal for Reformer and Mat Pilates, Barre, or Yoga—plus versatile enough for activities like paddle-boarding, volleyball, or poolside lounging. Better than Pilates socks or water shoes. Also add shop now buttons under each one, Also add the ability to select and adjust the font
+    
+    Alaso make a sub heading under heading. also make sure to have shop now buttons for each product, Don't change my adjustments but we need adjustments for space between each heading, subheading, descriptions, below images etc, create an adjustment to make the shop now buttons at the same level if text is longer in one column then the other, The shop now buttons need the ability to adjust the wdith, the buy buttins need to be centered but maybe you should add the ability to make the subheading, description and shop now button have the ability to make left align, center align or right align, can you also add the ability to interchnage an image or video in each image section?, the description boxes need to have styling and html functionality. The entire sections needs to have a padding adjustment  above and below. The text in the description needs to have a width adjustment 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-sole-comparison-{{ ai_gen_id }} {
+    padding: {{ block.settings.section_padding_top }}px 20px {{ block.settings.section_padding_bottom }}px;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-sole-comparison__container-{{ ai_gen_id }} {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .ai-sole-comparison__header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: {{ block.settings.header_bottom_spacing }}px;
+  }
+
+  .ai-sole-comparison__heading-{{ ai_gen_id }} {
+    font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
+    font-weight: {{ block.settings.heading_font.weight }};
+    font-style: {{ block.settings.heading_font.style }};
+    color: {{ block.settings.heading_color }};
+    font-size: {{ block.settings.heading_size }}px;
+    margin: 0 0 {{ block.settings.heading_subheading_spacing }}px 0;
+    line-height: 1.2;
+  }
+
+  .ai-sole-comparison__subheading-{{ ai_gen_id }} {
+    font-family: {{ block.settings.subheading_font.family }}, {{ block.settings.subheading_font.fallback_families }};
+    font-weight: {{ block.settings.subheading_font.weight }};
+    font-style: {{ block.settings.subheading_font.style }};
+    color: {{ block.settings.subheading_color }};
+    font-size: {{ block.settings.subheading_size }}px;
+    margin: 0;
+    line-height: 1.4;
+    text-align: {{ block.settings.header_subheading_alignment }};
+  }
+
+  .ai-sole-comparison__grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: {{ block.settings.column_gap }}px;
+  }
+
+  .ai-sole-comparison__column-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .ai-sole-comparison__media-wrapper-{{ ai_gen_id }} {
+    width: 100%;
+    margin-bottom: {{ block.settings.image_content_spacing }}px;
+    position: relative;
+  }
+
+  .ai-sole-comparison__image-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: {{ block.settings.image_border_radius }}px;
+  }
+
+  .ai-sole-comparison__video-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: {{ block.settings.image_border_radius }}px;
+  }
+
+  .ai-sole-comparison__image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    aspect-ratio: 1;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: {{ block.settings.image_border_radius }}px;
+    position: relative;
+  }
+
+  .ai-sole-comparison__image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-sole-comparison__empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  .ai-sole-comparison__content-{{ ai_gen_id }} {
+    text-align: {{ block.settings.content_alignment }};
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .ai-sole-comparison__title-{{ ai_gen_id }} {
+    font-family: {{ block.settings.title_font.family }}, {{ block.settings.title_font.fallback_families }};
+    font-weight: {{ block.settings.title_font.weight }};
+    font-style: {{ block.settings.title_font.style }};
+    color: {{ block.settings.title_color }};
+    font-size: {{ block.settings.title_size }}px;
+    margin: 0 0 {{ block.settings.title_description_spacing }}px 0;
+    line-height: 1.3;
+  }
+
+  .ai-sole-comparison__description-{{ ai_gen_id }} {
+    font-family: {{ block.settings.description_font.family }}, {{ block.settings.description_font.fallback_families }};
+    font-weight: {{ block.settings.description_font.weight }};
+    font-style: {{ block.settings.description_font.style }};
+    color: {{ block.settings.description_color }};
+    font-size: {{ block.settings.description_size }}px;
+    line-height: 1.6;
+    margin: 0 0 {{ block.settings.description_button_spacing }}px 0;
+    flex-grow: 1;
+    max-width: {{ block.settings.description_width }}px;
+    {% if block.settings.content_alignment == 'left' %}
+      margin-left: 0;
+      margin-right: auto;
+    {% elsif block.settings.content_alignment == 'right' %}
+      margin-left: auto;
+      margin-right: 0;
+    {% else %}
+      margin-left: auto;
+      margin-right: auto;
+    {% endif %}
+  }
+
+  .ai-sole-comparison__description-{{ ai_gen_id }} p {
+    margin: 0 0 1em 0;
+  }
+
+  .ai-sole-comparison__description-{{ ai_gen_id }} p:last-child {
+    margin-bottom: 0;
+  }
+
+  .ai-sole-comparison__description-{{ ai_gen_id }} strong {
+    font-weight: 700;
+  }
+
+  .ai-sole-comparison__description-{{ ai_gen_id }} em {
+    font-style: italic;
+  }
+
+  .ai-sole-comparison__description-{{ ai_gen_id }} ul,
+  .ai-sole-comparison__description-{{ ai_gen_id }} ol {
+    margin: 0 0 1em 0;
+    padding-left: 1.5em;
+  }
+
+  .ai-sole-comparison__description-{{ ai_gen_id }} li {
+    margin-bottom: 0.5em;
+  }
+
+  .ai-sole-comparison__description-{{ ai_gen_id }} a {
+    color: {{ block.settings.description_link_color }};
+    text-decoration: underline;
+  }
+
+  .ai-sole-comparison__description-{{ ai_gen_id }} a:hover {
+    opacity: 0.8;
+  }
+
+  .ai-sole-comparison__button-wrapper-{{ ai_gen_id }} {
+    display: flex;
+    {% if block.settings.content_alignment == 'left' %}
+      justify-content: flex-start;
+    {% elsif block.settings.content_alignment == 'right' %}
+      justify-content: flex-end;
+    {% else %}
+      justify-content: center;
+    {% endif %}
+  }
+
+  .ai-sole-comparison__button-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: 15px 40px;
+    background-color: {{ block.settings.button_color }};
+    color: {{ block.settings.button_text_color }};
+    text-decoration: none;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-family: {{ block.settings.button_font.family }}, {{ block.settings.button_font.fallback_families }};
+    font-weight: {{ block.settings.button_font.weight }};
+    font-style: {{ block.settings.button_font.style }};
+    font-size: {{ block.settings.button_size }}px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    border: none;
+    width: {{ block.settings.button_width }}px;
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .ai-sole-comparison__button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_color }};
+    color: {{ block.settings.button_hover_text_color }};
+  }
+
+  @media screen and (max-width: 768px) {
+    .ai-sole-comparison-{{ ai_gen_id }} {
+      padding: {{ block.settings.section_padding_top | times: 0.6 }}px 15px {{ block.settings.section_padding_bottom | times: 0.6 }}px;
+    }
+
+    .ai-sole-comparison__grid-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: {{ block.settings.mobile_row_gap }}px;
+    }
+
+    .ai-sole-comparison__heading-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.heading_size }}px * 0.7);
+    }
+
+    .ai-sole-comparison__subheading-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.subheading_size }}px * 0.85);
+    }
+
+    .ai-sole-comparison__title-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.title_size }}px * 0.85);
+    }
+
+    .ai-sole-comparison__description-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.description_size }}px * 0.9);
+      max-width: 100%;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-sole-comparison-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-sole-comparison__container-{{ ai_gen_id }}">
+    <div class="ai-sole-comparison__header-{{ ai_gen_id }}">
+      {% if block.settings.heading != blank %}
+        <h2 class="ai-sole-comparison__heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+      {% endif %}
+      {% if block.settings.subheading != blank %}
+        <div class="ai-sole-comparison__subheading-{{ ai_gen_id }}">{{ block.settings.subheading }}</div>
+      {% endif %}
+    </div>
+
+    <div class="ai-sole-comparison__grid-{{ ai_gen_id }}">
+      <div class="ai-sole-comparison__column-{{ ai_gen_id }}">
+        <div class="ai-sole-comparison__media-wrapper-{{ ai_gen_id }}" style="max-width: {{ block.settings.image_width }}px;">
+          {% if block.settings.open_sole_media_type == 'video' and block.settings.open_sole_video != blank %}
+            <video
+              class="ai-sole-comparison__video-{{ ai_gen_id }}"
+              autoplay
+              loop
+              muted
+              playsinline
+            >
+              <source src="{{ block.settings.open_sole_video }}" type="video/mp4">
+            </video>
+          {% elsif block.settings.open_sole_image %}
+            <img
+              src="{{ block.settings.open_sole_image | image_url: width: 1200 }}"
+              alt="{{ block.settings.open_sole_image.alt | escape }}"
+              class="ai-sole-comparison__image-{{ ai_gen_id }}"
+              loading="lazy"
+              width="{{ block.settings.open_sole_image.width }}"
+              height="{{ block.settings.open_sole_image.height }}"
+            >
+          {% else %}
+            <div class="ai-sole-comparison__image-placeholder-{{ ai_gen_id }}">
+              {{ 'product-1' | placeholder_svg_tag }}
+              <div class="ai-sole-comparison__empty-state-{{ ai_gen_id }}">
+                Add open sole image or video
+              </div>
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="ai-sole-comparison__content-{{ ai_gen_id }}">
+          {% if block.settings.open_sole_title != blank %}
+            <h3 class="ai-sole-comparison__title-{{ ai_gen_id }}">{{ block.settings.open_sole_title }}</h3>
+          {% endif %}
+          {% if block.settings.open_sole_description != blank %}
+            <div class="ai-sole-comparison__description-{{ ai_gen_id }}">{{ block.settings.open_sole_description }}</div>
+          {% endif %}
+          {% if block.settings.open_sole_button_text != blank %}
+            <div class="ai-sole-comparison__button-wrapper-{{ ai_gen_id }}">
+              <a href="{{ block.settings.open_sole_button_link }}" class="ai-sole-comparison__button-{{ ai_gen_id }}">
+                {{ block.settings.open_sole_button_text }}
+              </a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="ai-sole-comparison__column-{{ ai_gen_id }}">
+        <div class="ai-sole-comparison__media-wrapper-{{ ai_gen_id }}" style="max-width: {{ block.settings.image_width }}px;">
+          {% if block.settings.closed_sole_media_type == 'video' and block.settings.closed_sole_video != blank %}
+            <video
+              class="ai-sole-comparison__video-{{ ai_gen_id }}"
+              autoplay
+              loop
+              muted
+              playsinline
+            >
+              <source src="{{ block.settings.closed_sole_video }}" type="video/mp4">
+            </video>
+          {% elsif block.settings.closed_sole_image %}
+            <img
+              src="{{ block.settings.closed_sole_image | image_url: width: 1200 }}"
+              alt="{{ block.settings.closed_sole_image.alt | escape }}"
+              class="ai-sole-comparison__image-{{ ai_gen_id }}"
+              loading="lazy"
+              width="{{ block.settings.closed_sole_image.width }}"
+              height="{{ block.settings.closed_sole_image.height }}"
+            >
+          {% else %}
+            <div class="ai-sole-comparison__image-placeholder-{{ ai_gen_id }}">
+              {{ 'product-1' | placeholder_svg_tag }}
+              <div class="ai-sole-comparison__empty-state-{{ ai_gen_id }}">
+                Add closed sole image or video
+              </div>
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="ai-sole-comparison__content-{{ ai_gen_id }}">
+          {% if block.settings.closed_sole_title != blank %}
+            <h3 class="ai-sole-comparison__title-{{ ai_gen_id }}">{{ block.settings.closed_sole_title }}</h3>
+          {% endif %}
+          {% if block.settings.closed_sole_description != blank %}
+            <div class="ai-sole-comparison__description-{{ ai_gen_id }}">{{ block.settings.closed_sole_description }}</div>
+          {% endif %}
+          {% if block.settings.closed_sole_button_text != blank %}
+            <div class="ai-sole-comparison__button-wrapper-{{ ai_gen_id }}">
+              <a href="{{ block.settings.closed_sole_button_link }}" class="ai-sole-comparison__button-{{ ai_gen_id }}">
+                {{ block.settings.closed_sole_button_text }}
+              </a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Open vs closed sole",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Main heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Open Sole vs Closed Sole"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "roboto_n4"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 20,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 48
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#000000"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "font_picker",
+      "id": "subheading_font",
+      "label": "Subheading font",
+      "default": "roboto_n3"
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "min": 12,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Subheading size",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading color",
+      "default": "#666666"
+    },
+    {
+      "type": "select",
+      "id": "header_subheading_alignment",
+      "label": "Subheading alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Open sole"
+    },
+    {
+      "type": "select",
+      "id": "open_sole_media_type",
+      "label": "Media type",
+      "options": [
+        {
+          "value": "image",
+          "label": "Image"
+        },
+        {
+          "value": "video",
+          "label": "Video"
+        }
+      ],
+      "default": "image"
+    },
+    {
+      "type": "image_picker",
+      "id": "open_sole_image",
+      "label": "Image"
+    },
+    {
+      "type": "video_url",
+      "id": "open_sole_video",
+      "label": "Video URL",
+      "accept": ["youtube", "vimeo"]
+    },
+    {
+      "type": "text",
+      "id": "open_sole_title",
+      "label": "Title",
+      "default": "Open Sole"
+    },
+    {
+      "type": "richtext",
+      "id": "open_sole_description",
+      "label": "Description",
+      "default": "<p>Barre | Yoga | Mat Pilates</p><p>Lightweight, breathable, and flexible with a barefoot feel. The open sole design allows natural toe splay, balance, and strong floor connection for precise movement and superior grip. Ideal if you love that free, grounded feel for Barre, Yoga, Mat, or Reformer Pilates—maximum freedom, minimal coverage, total control.</p>"
+    },
+    {
+      "type": "text",
+      "id": "open_sole_button_text",
+      "label": "Button text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "open_sole_button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Closed sole"
+    },
+    {
+      "type": "select",
+      "id": "closed_sole_media_type",
+      "label": "Media type",
+      "options": [
+        {
+          "value": "image",
+          "label": "Image"
+        },
+        {
+          "value": "video",
+          "label": "Video"
+        }
+      ],
+      "default": "image"
+    },
+    {
+      "type": "image_picker",
+      "id": "closed_sole_image",
+      "label": "Image"
+    },
+    {
+      "type": "video_url",
+      "id": "closed_sole_video",
+      "label": "Video URL",
+      "accept": ["youtube", "vimeo"]
+    },
+    {
+      "type": "text",
+      "id": "closed_sole_title",
+      "label": "Title",
+      "default": "Closed Sole"
+    },
+    {
+      "type": "richtext",
+      "id": "closed_sole_description",
+      "label": "Description",
+      "default": "<p>Reformer Pilates | Outdoor | Water</p><p>Built for the same studio performance as the open version, with added cushioning and protection for outdoor use. Ideal for Reformer and Mat Pilates, Barre, or Yoga—plus versatile enough for activities like paddle-boarding, volleyball, or poolside lounging. Better than Pilates socks or water shoes.</p>"
+    },
+    {
+      "type": "text",
+      "id": "closed_sole_button_text",
+      "label": "Button text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "closed_sole_button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Product titles"
+    },
+    {
+      "type": "font_picker",
+      "id": "title_font",
+      "label": "Title font",
+      "default": "roboto_n4"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Title size",
+      "default": 28
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Product descriptions"
+    },
+    {
+      "type": "font_picker",
+      "id": "description_font",
+      "label": "Description font",
+      "default": "roboto_n3"
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Description size",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Description color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "description_link_color",
+      "label": "Description link color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "description_width",
+      "min": 200,
+      "max": 800,
+      "step": 20,
+      "unit": "px",
+      "label": "Description width",
+      "default": 600
+    },
+    {
+      "type": "header",
+      "content": "Content alignment"
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "Title, description and button alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "font_picker",
+      "id": "button_font",
+      "label": "Button font",
+      "default": "roboto_n4"
+    },
+    {
+      "type": "range",
+      "id": "button_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Button text size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "button_width",
+      "min": 100,
+      "max": 400,
+      "step": 10,
+      "unit": "px",
+      "label": "Button width",
+      "default": 200
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Button color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_color",
+      "label": "Button hover color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_text_color",
+      "label": "Button hover text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Button border radius",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "image_width",
+      "min": 200,
+      "max": 800,
+      "step": 20,
+      "unit": "px",
+      "label": "Media width",
+      "default": 600
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Media border radius",
+      "default": 8
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Section spacing"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "min": 0,
+      "max": 150,
+      "step": 10,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 10,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Content spacing"
+    },
+    {
+      "type": "range",
+      "id": "heading_subheading_spacing",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Heading to subheading",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "header_bottom_spacing",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Header to products",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Space between columns",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_row_gap",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile space between rows",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_content_spacing",
+      "min": 10,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Media to content",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "title_description_spacing",
+      "min": 5,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Title to description",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "description_button_spacing",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Description to button",
+      "default": 25
+    }
+  ],
+  "presets": [
+    {
+      "name": "Open vs closed sole"
+    }
+  ]
+}
+{% endschema %}

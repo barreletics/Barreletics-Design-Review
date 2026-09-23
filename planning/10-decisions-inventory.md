@@ -482,18 +482,17 @@
 - **Source:** manychat-kb/02-open-vs-closed-sole.md, docs/09-PRODUCT-KNOWLEDGE.md
 - **Category:** PRODUCT
 
-### P-004: First-Time Buyer Recommendation
-- **Decision:** "Most first-time buyers start with Open Sole — the barefoot feel is where they shine."
-- **Rationale:** Open Sole showcases the product's signature barefoot feel.
-- **Supersedes:** N/A
-- **Source:** manychat-kb/02-open-vs-closed-sole.md
+### P-004: First-Time Buyer Recommendation — SUPERSEDED 2026-08-02
+- **Decision (OLD — DO NOT USE):** "Most first-time buyers start with Open Sole — the barefoot feel is where they shine."
+- **Superseded by:** Owner letter 2026-08-02 — first-time buyers do **not** choose Open by default. Do not recommend either sole as the first-timer default. Choice = preference / feel only (see P-003).
+- **Source (stale):** manychat-kb/02-open-vs-closed-sole.md
 - **Category:** PRODUCT
 
-### P-005: No Machine Washing
-- **Decision:** Care: "Warm soapy water, air dry. No machine washing. No grip degradation."
-- **Rationale:** Protects product longevity.
-- **Supersedes:** N/A
-- **Source:** docs/09-PRODUCT-KNOWLEDGE.md, manychat-kb/06-care-and-cleaning.md
+### P-005: Care — hand wash only (updated 2026-08-26)
+- **Decision:** “Hand wash with warm soapy water. That's it.” Never mention dishwasher or washing machine — even to say don’t.
+- **Rationale:** Owner letters 2026-08-21 / 2026-08-26. Naming a machine puts the idea in the customer’s head.
+- **Supersedes:** “Warm soapy water, air dry. No machine washing.”
+- **Source:** docs/09-PRODUCT-KNOWLEDGE.md, docs/11-CANONICAL-ANSWERS.md CA-23/24, manychat-kb/06-care-and-cleaning.md
 - **Category:** PRODUCT
 
 ### P-006: Made in USA — Every Pair
@@ -584,10 +583,10 @@
 - **Source:** manychat-kb/04-pricing.md, docs/09-PRODUCT-KNOWLEDGE.md
 - **Category:** BUSINESS
 
-### BZ-007: Newsletter 10% Off First Order
-- **Decision:** New customers get 10% off via newsletter signup.
-- **Rationale:** List building + first-purchase incentive.
-- **Supersedes:** N/A
+### BZ-007: Newsletter 10% Off First Order — RETIRED
+- **Decision:** ~~New customers get 10% off via newsletter signup.~~ **Retired 2026-07-31 (Footer LOCK).** Newsletter is "Join the list" with benefit checkmarks — no discount promise, on any surface (footer, page newsletter, email, ManyChat, ads).
+- **Rationale:** List building without discounting the product; the offer trained first-time buyers to wait for a code.
+- **Superseded by:** `specs/frozen/footer.md` · `planning/m4-section-freeze.md` (Footer row)
 - **Source:** manychat-kb/04-pricing.md
 - **Category:** BUSINESS
 
@@ -626,12 +625,104 @@
 - **Source:** docs/09-PRODUCT-KNOWLEDGE.md (Shipping section)
 - **Category:** BUSINESS
 
-### BZ-013: International — Customer Covers Duties/Returns
-- **Decision:** International customers responsible for duties, taxes, customs fees. Return/exchange shipping costs are customer's responsibility.
-- **Rationale:** Standard international shipping policy.
-- **Supersedes:** N/A
+### BZ-013: International — Customer Covers Duties/Returns → **RETIRED 2026-08-12**
+- **Decision:** ~~International customers responsible for duties, taxes, customs fees.~~ **Wrong — duties are PREPAID** (Andrew 2026-08-12, D-054 / P-016). Return and warranty-replacement shipping remain the customer's.
+- **Rationale:** The duties-responsibility language belonged to warranty replacements and leaked onto outbound-order copy across eight surfaces.
+- **Superseded by:** P-016 · canonical CA-18 in `docs/11-CANONICAL-ANSWERS.md`
 - **Source:** docs/09-PRODUCT-KNOWLEDGE.md (Shipping section), manychat-kb/08-shipping.md
 - **Category:** BUSINESS
+
+### BZ-014: We Outgrew Grip Socks — Category Slogan (Not Primary H1)
+- **Decision:** Add *We Outgrew Grip Socks.* as approved category-creation slogan. Primary hero H1 stays *The Pilates Sock Era Is Over*. *Studio Workouts and Footwear Will Never Be the Same* demoted to legacy/meta only.
+- **Rationale:** Strongest north-star line for category break; "We" acceptable as evolution statement in mid-page band, not hero. Pilates Sock Era retains SEO + discipline specificity.
+- **Supersedes:** N/A
+- **Source:** planning/02-brand-system.md, Definitive-v16 Home mockup
+- **Category:** BRAND
+
+### BZ-015: Home Typography — Hybrid (Alo UI + Nike Display)
+- **Decision:** Lock Hybrid type: **Manrope** for UI/body (Alo ≈ Avenir); **Barlow Condensed** weight 600, sentence case, for hero H1 and section statements (Nike Futura-condensed energy without ALL CAPS). Coperni keeps Syne + Cormorant. Do not use Roboto as primary Home face; no Fraunces/italic display serifs on Home.
+- **Rationale:** Matches real Alo/Nike patterns; AI serif stacks felt generic.
+- **Supersedes:** v49 Roboto-only default for Home marketing surfaces
+- **Status:** SUPERSEDED by BZ-016 (kept as experiment — Definitive-v20.html retained)
+- **Source:** Definitive-v20, barreletics-design-system skill
+- **Category:** BRAND
+
+### BZ-016: Home Typography — Jost + Helvetica Neue (Home Run)
+- **Decision:** Lock Home type: **Helvetica Neue** for UI/body/nav; **Jost** weight 500–600, sentence case, tight line-height (~1.0–1.05) for hero H1 and major display statements (Knock Socks, Commit full-bleed, We Outgrew, section H2s). Slightly larger hero/statement scale. Coperni keeps Syne + Cormorant. No ALL CAPS display shout; no Fraunces/Cormorant on Home marketing.
+- **Rationale:** Hybrid (Manrope + Barlow Condensed) was neat but not a home run — Barlow reads gym-flyer condensed; Jost carries Futura geometric DNA with studio-premium calm. Helvetica Neue is the real Nike/Alo web UI face.
+- **Supersedes:** BZ-015 Hybrid for Home marketing surfaces. Keep all prior mocks (v16–v20, v19 type-lab) — do not delete.
+- **Status:** SUPERSEDED by BZ-017 (kept as experiment — Definitive-v21.html retained)
+- **Source:** Definitive-v21, barreletics-design-system skill
+- **Category:** BRAND
+
+### BZ-017: Home Typography — Roboto Craft (Lulu / On Precision)
+- **Decision:** Lock Home type to **Roboto only** (weights 400 / 500 / 700). Elevate via tracking, hierarchy, and moderate scale — Lululemon / On-level precision, not bigger-for-bigger. Shop/UI quiet; Barreletics heat in slogans, rust, imagery, and a few stronger statement lines (700). Coperni keeps Syne + Cormorant. Keep warm neutrals + category punch (do not become Lulu).
+- **Rationale:** Font-hopping (Fraunces/Syne/Cormorant Home, Barlow gym, Hybrid, Jost) was not a home run. Single-family craft matches premium athletic ecom (Lulu/On) while keeping Barreletics voice.
+- **Supersedes:** BZ-016 for Home marketing surfaces. Keep all prior mocks (v16–v21, v19 type-lab) — do not delete.
+- **Source:** Definitive-v22, barreletics-design-system skill
+- **Category:** BRAND
+
+### BZ-018: Home Copy OS — Master Slogan Inventory
+- **Decision:** `planning/HOME-WORKING-ENTRY.md` is the Home start entry (sections build/refine/change + instructions). `planning/home-copy-v24.md` holds the deep slogan/copy inventory. Brand-copy + slogan-engine skills must point here. Agents must not require the owner to re-paste the inventory.
+- **Rationale:** Owner repeatedly resurfaces the full live/approved slogan set; it belongs in repo OS, not chat.
+- **Source:** Owner paste 2026-07-23 + live barreletics.com Home + WORKING v29
+- **Category:** BRAND / OPERATIONAL
+
+### BZ-019: Home Working Authority — Definitive-v28 → v29
+- **Decision:** Working Home mock = `Barreletics Home - Definitive-WORKING.html` (**v29**). Same as v28 difference spine + optional quiet Knock Socks sub: *Safely push harder in every studio move.* v28 kept without sub for A/B. Next edits = **v30+**.
+- **Rationale:** Owner: “20000% better” on v28; then asked for Knock Socks secondary (keep-or-drop).
+- **Source:** Definitive-v28/v29, Compare-v24-v28, planning/home-copy-v24.md
+- **Category:** BRAND
+
+### BZ-020: Type OS — Opening Punch + Calm Flow (FINAL BALANCE)
+- **Decision:** Shop-wide Roboto. **v9 size + light weight** on opening H1 only — site flows without heavy 500 or tiny Home-sized heroes. Stop further trials unless owner reopens.
+  | Role | Size | Weight | Case |
+  |------|------|--------|------|
+  | **Opening H1** | `clamp(40px, 6vw, 64px)` · mobile `clamp(34px, 9vw, 44px)` · lh **1.08** · **-0.03em** | **400** (not 500) | **Title case (v6 / Chicago)** — major words only |
+  | **Section / mid-page** | ~28–40 | **400** | Editorial sentence case |
+  | **Body** | 15–16px | **400** | Sentence |
+  | **Quiet UI** | — | **500** | as needed |
+  | **CTAs / tabs / eyebrows / badges** | 11–12px | **700** | **ALL CAPS** |
+- **Opening H1:** Home · Collection · SEO · Pattern · Journal · Help · PDP name. **Not** mid-page full-bleeds / pose / statements / Sock Math / reviews.
+- **Authorities:** SEO **v36** · Pattern **v2** · Home WORKING · Collection **v18** · PDP **v16** · Journal **v5** · Help **v3**
+- **Supersedes:** 34–46 opening · opening **500** · SEO v34/v35 · Pattern-v1 · endless hybrids
+- **Source:** Owner 2026-07-25 — perfect balance / site flow
+- **Category:** BRAND
+
+### BZ-024: Display Casing — Title Case Hero (v6) + Editorial Sections
+- **Decision:** Opening H1 only uses **traditional title case** (SEO v6 / Chicago-style): capitalize major words; **do not** capitalize short function words (*a, an, the, and, or, but, in, on, of, to, for, is, as, at, by, from…*) unless first or last word.
+  - Examples: *The Pilates Sock Era is Over* · *Secure in Every Hold* · *From the Studio*
+  - **Wrong:** *…Era Is Over* · *Secure In Every Hold* · *From The Studio*
+  - Everywhere else = editorial **sentence case** (first word + proper nouns). No title-case section stacks.
+- **Authority:** SEO `Definitive-v36.html` · Home WORKING · Collection v18 · Pattern-v2
+- **Source:** Owner 2026-07-25 — match v6; stop capping *is* / *in*
+- **Category:** BRAND
+
+### BZ-025: Centered Full-Bleed Hero Pattern
+- **Decision:** Reusable **centered** full-bleed for Help / Journal / content / SEO-style (not Home/Collection split).
+  - Type = **BZ-020** opening H1 (**64/400** · v6 title case) · CTAs 700 ALL CAPS
+  - Left commerce = SEO **v36** (same tokens)
+- **Authority:** `docs/Barreletics Hero - Centered Fullbleed - Pattern-v2.html` · `sections/hero-fullbleed-snippet.html` · `planning/HERO-FULLBLEED.md`
+- **Source:** Owner 2026-07-25
+- **Category:** BRAND
+
+### BZ-021: SEO Never Loses — Full-Bleed Barre Short Video
+- **Decision:** SEO mid-page Never Loses uses **Barre Short Video** (`Barre_Short_Video_-nosound.mp4`) full-bleed ~**90vh** (`.lifestyle-break`), not the first-viewport hero. Hero stays still `IMG_2917`. Same clip as Home Never Loses proof.
+- **Rationale:** Still hero = message/LCP; full-bleed video mid-page = grip proof without diluting Sock Era CTA.
+- **Source:** SEO Definitive-v29 · owner 2026-07-24
+- **Category:** BRAND
+
+### BZ-022: Collection — No Closed/Open Sole Sections (tabs + FAQ only)
+- **Decision:** Collection authority = `Definitive-v18` (v16 spine + v18 type calm). Spine: **hero → value strip → variants**. Remove early `#explain` sole cards **and** late “Closed Sole or Open Sole” 50/50. Closed/Open via **grid tabs + FAQ** only. Hero may still name the choice. Type: BZ-020 calm (**400** display · 700 CTAs).
+- **Rationale:** Shop-first convert (matches SEO); sole explainer bands delayed/duplicated the grid without adding interaction.
+- **Source:** Owner 2026-07-24 · Collection v16 → v17 → v18
+- **Category:** BRAND
+
+### BZ-023: Collection Hero — Media Fill Control (theme)
+- **Decision:** Theme schema for Collection split hero must include **`media_fill`**: `inset` (default — matches mock) \| `column` (fills entire right 50%). Also `media_type` image\|video. Mock stays inset; merchant/Brian can switch to full-column fill without code change.
+- **Rationale:** Owner wants full-half fill available at build time without changing the locked mock look now.
+- **Source:** Owner 2026-07-24 · planning/COLLECTION-WORKING-ENTRY.md
+- **Category:** BRAND / OPERATIONAL
 
 ---
 

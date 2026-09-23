@@ -1,0 +1,60 @@
+GROK — stop on Home mosaic and Home spine OS. The other chat took those over.
+
+WHAT YOU WERE DOING WRONG
+
+You built phone as secret CSS. barreletics-base.css reorders Home with flex order. visual-mosaic hardcoded the large tile to full width x 2 rows. Aspect ratio and Cover / Contain / Fill existed in Theme Editor but only ran on the collection template (qa_frame). On Home they did nothing. Andrew dragged them and they were dead.
+
+You added sliders before they were wired. Same backwards admin problem as the rest of the theme: labels in TE, behavior in a media query, Andrew cannot mimic the layout from admin.
+
+You eyed off Coperni (disabled: true). Andrew said Coperni should not be off. It is on again. Last on Home. Do not disable it.
+
+You were heading toward a second mobile spine too early. Shopify has one order list. Phone CSS restack is the default. Duplicate + Hide on phones / Hide on desktop is only after Andrew names a leftover that cannot share a slot. Do not invent mobile_order or a second Home template.
+
+Do not add more crop / zoom / pad sliders while the existing ones still lie.
+
+MOBILE (read this)
+
+Phone is not a second homepage. Same sections. Same order list. Phone restacks inside each section with CSS (768px): photo above or below copy, phone height, phone crop.
+
+Your Home flex order in barreletics-base.css is a hidden second list. Desk JSON and phone CSS do not match (Proof and Reviews swap). Andrew said unify first: copy the phone list into one order if he locks it, then kill the CSS reorder. Do not keep two orders. Do not add mobile_order. Do not duplicate sections yet.
+
+Mosaic on phone is no longer your CSS. It is Theme Editor. Defaults were copied from your hardcoded phone layout. Fit and aspect now work on Home. You do not touch that file.
+
+Hide inventory: nothing whole is off on phone and on on desk. Coperni is on both. One mosaic tile is desk-only. Reviews: 3 cards desk, 2 phone.
+
+Duplicate + Hide on phones / Hide on desktop is later, only if Andrew names a heading that must sit in a different place on phone vs desk.
+
+WHAT THE OTHER CHAT DID (do not redo)
+
+Home hide inventory: no whole section is phone-off and desk-on. Coperni was off on both (your disable). Desk vs phone order only swaps Proof and Reviews. Mosaic untitled tile (vm-4) is desk-only. Reviews show 3 cards on desk, 2 on phone.
+
+Unify first: same Home list on phone and desk. Duplicates last.
+
+Mosaic phone layout is now Theme Editor, defaults copied from your CSS:
+Section — Mosaic — phone
+Columns per row — phone (2)
+Large tile full width on phone (on)
+Large tile rows on phone (2)
+Tile height — phone (264)
+Aspect ratio — phone (now wired on Home)
+Image fit — phone and Video fit — phone (cover / contain / fill, now wired on Home)
+Per tile: Size on phone, Hide on mobile, Hide on desktop
+
+Portrait + height = current Home look. Square / landscape / widescreen change the tile shape. Insets stay.
+
+Draft only: theme 187144929571
+Editor: https://admin.shopify.com/store/barreletics/themes/187144929571/editor?previewPath=/
+Preview: https://barreletics.com/?preview_theme_id=187144929571
+
+WHERE YOU STOP
+
+Do not edit visual-mosaic.liquid.
+Do not edit templates/index.json order.
+Do not edit the Home flex order in barreletics-base.css.
+Do not disable Coperni.
+Do not restore Commit text on the fullbleed image.
+Do not touch fifty-fifty-grip or fifty-fifty-one-pair unless Andrew names that heading.
+
+WHERE YOU MAY WORK
+
+One heading Andrew names in his message to you. After he walks Home. Not mosaic. Not the spine list. Pull TE before any JSON. One file. One preview. Stop.

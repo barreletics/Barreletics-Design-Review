@@ -1,0 +1,327 @@
+{% comment %}
+  Page Size Guide Section
+  Size chart, color-specific fit notes, and visual fit guidance.
+  Used on: page.size-guide.json
+{% endcomment %}
+
+<section class="section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
+  <div class="section__inner section__inner--narrow">
+    {% if section.settings.eyebrow != blank %}
+      <p class="eyebrow eyebrow--accent">{{ section.settings.eyebrow }}</p>
+    {% endif %}
+    <h1 class="page-size__title">{{ section.settings.title }}</h1>
+    {% if section.settings.subtitle != blank %}
+      <p class="page-size__subtitle">{{ section.settings.subtitle }}</p>
+    {% endif %}
+  </div>
+</section>
+
+<section class="section section--cream">
+  <div class="section__inner section__inner--narrow">
+    <h2 class="page-size__section-title">Size Chart</h2>
+    <div class="page-size__table-wrap">
+      <table class="page-size__table" role="table" aria-label="Size chart">
+        <thead>
+          <tr>
+            <th scope="col">Size</th>
+            <th scope="col">US Women's</th>
+            <th scope="col">Foot Length</th>
+            <th scope="col">Best For</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for block in section.blocks %}
+            {% if block.type == 'size_row' %}
+              <tr {{ block.shopify_attributes }}>
+                <td class="page-size__td--size">{{ block.settings.size_name }}</td>
+                <td>{{ block.settings.us_size }}</td>
+                <td>{{ block.settings.foot_length }}</td>
+                <td>{{ block.settings.best_for }}</td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section__inner section__inner--narrow">
+    <h2 class="page-size__section-title">Fit Notes by Color</h2>
+    <div class="page-size__notes">
+      <div class="page-size__note page-size__note--alert">
+        <h3 class="page-size__note-title">Dark Grey, Hot Coral & Blue</h3>
+        <p class="page-size__note-text">{{ section.settings.snug_colors_note }}</p>
+      </div>
+      <div class="page-size__note">
+        <h3 class="page-size__note-title">Light Grey</h3>
+        <p class="page-size__note-text">{{ section.settings.light_grey_note }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--cream">
+  <div class="section__inner section__inner--narrow">
+    <h2 class="page-size__section-title">Fit Tips</h2>
+    <div class="page-size__tips">
+      {% for block in section.blocks %}
+        {% if block.type == 'fit_tip' %}
+          <div class="page-size__tip" {{ block.shopify_attributes }}>
+            <h3 class="page-size__tip-title">{{ block.settings.title }}</h3>
+            <p class="page-size__tip-text">{{ block.settings.description }}</p>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% if section.settings.cta_text != blank %}
+<section class="section">
+  <div class="section__inner section__inner--narrow" style="text-align: center;">
+    <p class="page-size__cta-text">{{ section.settings.cta_note }}</p>
+    {% render 'button', label: section.settings.cta_text, url: section.settings.cta_url, style: 'primary', size: 'lg' %}
+  </div>
+</section>
+{% endif %}
+
+<style>
+  .page-size__title {
+    font-size: var(--text-5xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    text-align: center;
+    margin: 0 0 var(--space-3);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .page-size__subtitle {
+    font-size: var(--text-md);
+    color: var(--text-body);
+    text-align: center;
+    line-height: var(--leading-relaxed);
+    margin: 0;
+  }
+
+  .page-size__section-title {
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    margin: 0 0 var(--space-6);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .page-size__table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .page-size__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-base);
+  }
+
+  .page-size__table th {
+    padding: var(--space-3) var(--space-4);
+    text-align: left;
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    border-bottom: 2px solid var(--text-primary);
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+  }
+
+  .page-size__table td {
+    padding: var(--space-4);
+    border-bottom: 1px solid var(--border-default);
+    color: var(--text-body);
+  }
+
+  .page-size__td--size {
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+  }
+
+  .page-size__notes {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .page-size__note {
+    padding: var(--space-5);
+    background: var(--bg-alternate);
+    border-radius: var(--radius-card-sm);
+    border-left: 3px solid var(--border-default);
+  }
+
+  .page-size__note--alert {
+    border-left-color: var(--accent-primary);
+    background: rgba(196, 92, 63, 0.06);
+  }
+
+  .page-size__note-title {
+    font-size: var(--text-base);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    margin: 0 0 var(--space-1);
+  }
+
+  .page-size__note-text {
+    font-size: var(--text-base);
+    color: var(--text-body);
+    line-height: var(--leading-relaxed);
+    margin: 0;
+  }
+
+  .page-size__tips {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .page-size__tip {
+    padding: var(--space-5);
+    background: var(--bg-primary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-card-sm);
+  }
+
+  .page-size__tip-title {
+    font-size: var(--text-base);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    margin: 0 0 var(--space-1);
+  }
+
+  .page-size__tip-text {
+    font-size: var(--text-base);
+    color: var(--text-body);
+    line-height: var(--leading-relaxed);
+    margin: 0;
+  }
+
+  .page-size__cta-text {
+    font-size: var(--text-md);
+    color: var(--text-body);
+    margin: 0 0 var(--space-5);
+  }
+
+  @media (max-width: 768px) {
+    .page-size__title {
+      font-size: var(--text-3xl);
+    }
+
+    .page-size__table th,
+    .page-size__table td {
+      padding: var(--space-2) var(--space-3);
+      font-size: 14px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Size Guide Page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Fit Guide"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Size Guide"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Performance Skins are designed for a snug, second-skin fit. Here's how to find your perfect size."
+    },
+    {
+      "type": "textarea",
+      "id": "snug_colors_note",
+      "label": "Snug colors note",
+      "default": "These colors run slightly snugger than Light Grey. If you're between sizes in Dark Grey, Hot Coral, or Blue — size up."
+    },
+    {
+      "type": "textarea",
+      "id": "light_grey_note",
+      "label": "Light Grey note",
+      "default": "Light Grey offers a slightly more relaxed fit compared to other colors. True to size for most customers."
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "CTA link"
+    },
+    {
+      "type": "textarea",
+      "id": "cta_note",
+      "label": "CTA note",
+      "default": "Still unsure? Contact us and we'll help you find the right fit."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "size_row",
+      "name": "Size Row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "size_name",
+          "label": "Size name"
+        },
+        {
+          "type": "text",
+          "id": "us_size",
+          "label": "US size range"
+        },
+        {
+          "type": "text",
+          "id": "foot_length",
+          "label": "Foot length"
+        },
+        {
+          "type": "text",
+          "id": "best_for",
+          "label": "Best for"
+        }
+      ]
+    },
+    {
+      "type": "fit_tip",
+      "name": "Fit Tip",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Tip title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Tip description"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Size Guide Page"
+    }
+  ]
+}
+{% endschema %}

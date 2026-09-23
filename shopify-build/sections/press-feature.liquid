@@ -1,0 +1,484 @@
+{% comment %}
+  Twin frame — two equal lifestyle frames + shared caption.
+  Repurposed from Press feature (INTERNI). Type stays press-feature.
+  Each frame: image or video. Desktop + mobile size / fit / position.
+{% endcomment %}
+{% liquid
+  assign desk_h = section.settings.desktop_height | default: 520
+  assign mob_h = section.settings.mobile_height | default: 280
+  assign bg = section.settings.bg_color | default: '#faf8f6'
+  assign caption_bg = section.settings.caption_bg | default: '#faf8f6'
+%}
+
+<section
+  class="twin-frame{% if section.settings.hide_on_mobile %} twin-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} twin-frame--hide-desktop{% endif %}"
+  style="--tf-desk-h: {{ desk_h }}px; --tf-mob-h: {{ mob_h }}px; --tf-bg: {{ bg }}; --tf-caption-bg: {{ caption_bg }};"
+  {% if section.settings.aria_label != blank %}aria-label="{{ section.settings.aria_label | escape }}"{% endif %}
+>
+  <div class="twin-frame__inner">
+    <div class="twin-frame__frames">
+      {% for i in (1..2) %}
+        {% liquid
+          if i == 1
+            assign media_type = section.settings.media_1_type | default: 'image'
+            assign img = section.settings.media_1_image
+            assign img_url = section.settings.media_1_image_url
+            assign vid = section.settings.media_1_video
+            assign vid_url = section.settings.media_1_video_url
+            assign fit_d = section.settings.media_1_fit | default: 'cover'
+            assign pos_d = section.settings.media_1_position | default: 'center'
+            assign fit_m = section.settings.media_1_fit_mobile | default: fit_d
+            assign pos_m = section.settings.media_1_position_mobile | default: pos_d
+            assign alt = section.settings.media_1_alt | default: section.settings.eyebrow | default: 'Lifestyle'
+          else
+            assign media_type = section.settings.media_2_type | default: 'image'
+            assign img = section.settings.media_2_image
+            assign img_url = section.settings.media_2_image_url
+            assign vid = section.settings.media_2_video
+            assign vid_url = section.settings.media_2_video_url
+            assign fit_d = section.settings.media_2_fit | default: 'cover'
+            assign pos_d = section.settings.media_2_position | default: 'center'
+            assign fit_m = section.settings.media_2_fit_mobile | default: fit_d
+            assign pos_m = section.settings.media_2_position_mobile | default: pos_d
+            assign alt = section.settings.media_2_alt | default: section.settings.eyebrow | default: 'Lifestyle'
+          endif
+        %}
+        <div
+          class="twin-frame__frame twin-frame__frame--{{ i }} twin-frame__frame--fit-{{ fit_d }} twin-frame__frame--pos-{{ pos_d }} twin-frame__frame--fit-m-{{ fit_m }} twin-frame__frame--pos-m-{{ pos_m }}"
+        >
+          <div class="twin-frame__media">
+            {% if media_type == 'video' %}
+              {% if vid != blank %}
+                <video class="twin-frame__video" autoplay muted loop playsinline webkit-playsinline preload="metadata" aria-label="{{ alt | escape }}">
+                  {% for source in vid.sources %}
+                    <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                  {% endfor %}
+                </video>
+              {% elsif vid_url != blank %}
+                <video class="twin-frame__video" autoplay muted loop playsinline webkit-playsinline preload="metadata" aria-label="{{ alt | escape }}">
+                  <source src="{{ vid_url | escape }}" type="video/mp4">
+                </video>
+              {% elsif img != blank %}
+                {{ img | image_url: width: 1600 | image_tag: class: 'twin-frame__img', loading: 'lazy', alt: alt }}
+              {% elsif img_url != blank %}
+                <img class="twin-frame__img" src="{{ img_url | escape }}" alt="{{ alt | escape }}" loading="lazy" width="1200" height="1500">
+              {% endif %}
+            {% else %}
+              {% if img != blank %}
+                {{ img | image_url: width: 1600 | image_tag: class: 'twin-frame__img', loading: 'lazy', alt: alt }}
+              {% elsif img_url != blank %}
+                <img class="twin-frame__img" src="{{ img_url | escape }}" alt="{{ alt | escape }}" loading="lazy" width="1200" height="1500">
+              {% endif %}
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if section.settings.eyebrow != blank or section.settings.title != blank or section.settings.body != blank %}
+      <div class="twin-frame__caption">
+        {% if section.settings.eyebrow != blank %}
+          <p class="twin-frame__eyebrow">{{ section.settings.eyebrow }}</p>
+        {% endif %}
+        {% if section.settings.title != blank %}
+          <h2 class="twin-frame__title">{{ section.settings.title }}</h2>
+        {% endif %}
+        {% if section.settings.body != blank %}
+          <p class="twin-frame__body">{{ section.settings.body }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  #shopify-section-{{ section.id }} .twin-frame {
+    background: var(--tf-bg, #faf8f6);
+    padding: 48px 40px 56px;
+    color: #1c1916;
+  }
+  #shopify-section-{{ section.id }} .twin-frame__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  #shopify-section-{{ section.id }} .twin-frame__frames {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    height: var(--tf-desk-h, 520px);
+  }
+  #shopify-section-{{ section.id }} .twin-frame__frame {
+    position: relative;
+    overflow: hidden;
+    min-height: 0;
+    background: #f0ebe4;
+  }
+  #shopify-section-{{ section.id }} .twin-frame__media {
+    position: absolute;
+    inset: 0;
+  }
+  #shopify-section-{{ section.id }} .twin-frame__img,
+  #shopify-section-{{ section.id }} .twin-frame__video {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+    display: block !important;
+    border: 0 !important;
+    object-fit: cover;
+    object-position: center center;
+  }
+  #shopify-section-{{ section.id }} .twin-frame__frame--fit-contain .twin-frame__img,
+  #shopify-section-{{ section.id }} .twin-frame__frame--fit-contain .twin-frame__video {
+    object-fit: contain;
+    background: #faf8f6;
+  }
+  #shopify-section-{{ section.id }} .twin-frame__frame--pos-top .twin-frame__img,
+  #shopify-section-{{ section.id }} .twin-frame__frame--pos-top .twin-frame__video {
+    object-position: center top;
+  }
+  #shopify-section-{{ section.id }} .twin-frame__frame--pos-bottom .twin-frame__img,
+  #shopify-section-{{ section.id }} .twin-frame__frame--pos-bottom .twin-frame__video {
+    object-position: center bottom;
+  }
+  #shopify-section-{{ section.id }} .twin-frame__caption {
+    background: var(--tf-caption-bg, #faf8f6);
+    text-align: center;
+    padding: 28px 24px 8px;
+    max-width: 42rem;
+    margin: 0 auto;
+  }
+  #shopify-section-{{ section.id }} .twin-frame__eyebrow {
+    margin: 0 0 8px;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #6b6560;
+  }
+  #shopify-section-{{ section.id }} .twin-frame__title {
+    margin: 0 0 10px;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: clamp(22px, 2.4vw, 28px);
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: #1c1916;
+  }
+  #shopify-section-{{ section.id }} .twin-frame__body {
+    margin: 0;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #4a453f;
+  }
+  #shopify-section-{{ section.id }} .twin-frame--hide-desktop {
+    display: none;
+  }
+
+  @media (max-width: 749px) {
+    #shopify-section-{{ section.id }} .twin-frame {
+      padding: 40px 16px 48px;
+    }
+    #shopify-section-{{ section.id }} .twin-frame--hide-mobile {
+      display: none !important;
+    }
+    #shopify-section-{{ section.id }} .twin-frame--hide-desktop {
+      display: block;
+    }
+    #shopify-section-{{ section.id }} .twin-frame__frames {
+      grid-template-columns: 1fr;
+      height: auto;
+      gap: 10px;
+    }
+    #shopify-section-{{ section.id }} .twin-frame__frame {
+      height: var(--tf-mob-h, 280px);
+    }
+    #shopify-section-{{ section.id }} .twin-frame__frame--fit-m-contain .twin-frame__img,
+    #shopify-section-{{ section.id }} .twin-frame__frame--fit-m-contain .twin-frame__video {
+      object-fit: contain;
+      background: #faf8f6;
+    }
+    #shopify-section-{{ section.id }} .twin-frame__frame--fit-m-cover .twin-frame__img,
+    #shopify-section-{{ section.id }} .twin-frame__frame--fit-m-cover .twin-frame__video {
+      object-fit: cover;
+    }
+    #shopify-section-{{ section.id }} .twin-frame__frame--pos-m-top .twin-frame__img,
+    #shopify-section-{{ section.id }} .twin-frame__frame--pos-m-top .twin-frame__video {
+      object-position: center top;
+    }
+    #shopify-section-{{ section.id }} .twin-frame__frame--pos-m-center .twin-frame__img,
+    #shopify-section-{{ section.id }} .twin-frame__frame--pos-m-center .twin-frame__video {
+      object-position: center center;
+    }
+    #shopify-section-{{ section.id }} .twin-frame__frame--pos-m-bottom .twin-frame__img,
+    #shopify-section-{{ section.id }} .twin-frame__frame--pos-m-bottom .twin-frame__video {
+      object-position: center bottom;
+    }
+    #shopify-section-{{ section.id }} .twin-frame__caption {
+      padding: 20px 8px 0;
+      text-align: left;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Twin frame",
+  "tag": "section",
+  "class": "section-press-feature",
+  "settings": [
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Accessibility label",
+      "default": "Product in use"
+    },
+    {
+      "type": "header",
+      "content": "Size"
+    },
+    {
+      "type": "range",
+      "id": "desktop_height",
+      "label": "Desktop frame height",
+      "min": 360,
+      "max": 720,
+      "step": 20,
+      "unit": "px",
+      "default": 520,
+      "info": "Height of both frames on desktop."
+    },
+    {
+      "type": "range",
+      "id": "mobile_height",
+      "label": "Mobile frame height",
+      "min": 200,
+      "max": 520,
+      "step": 10,
+      "unit": "px",
+      "default": 280,
+      "info": "Each stacked frame on phone."
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section background",
+      "default": "#faf8f6"
+    },
+    {
+      "type": "color",
+      "id": "caption_bg",
+      "label": "Caption background",
+      "default": "#faf8f6"
+    },
+    {
+      "type": "header",
+      "content": "Frame 1 (left / top on mobile)"
+    },
+    {
+      "type": "select",
+      "id": "media_1_type",
+      "label": "Media type",
+      "options": [
+        { "value": "image", "label": "Image" },
+        { "value": "video", "label": "Video" }
+      ],
+      "default": "image"
+    },
+    {
+      "type": "image_picker",
+      "id": "media_1_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "media_1_image_url",
+      "label": "Image URL fallback"
+    },
+    {
+      "type": "video",
+      "id": "media_1_video",
+      "label": "Video (Shopify Files)"
+    },
+    {
+      "type": "text",
+      "id": "media_1_video_url",
+      "label": "Video URL fallback (mp4)",
+      "info": "Used only when Shopify video is empty."
+    },
+    {
+      "type": "text",
+      "id": "media_1_alt",
+      "label": "Alt text"
+    },
+    {
+      "type": "select",
+      "id": "media_1_fit",
+      "label": "Fit · desktop",
+      "options": [
+        { "value": "cover", "label": "Cover" },
+        { "value": "contain", "label": "Contain" }
+      ],
+      "default": "cover"
+    },
+    {
+      "type": "select",
+      "id": "media_1_position",
+      "label": "Position · desktop",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "top", "label": "Top" },
+        { "value": "bottom", "label": "Bottom" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "media_1_fit_mobile",
+      "label": "Fit · mobile",
+      "options": [
+        { "value": "cover", "label": "Cover" },
+        { "value": "contain", "label": "Contain" }
+      ],
+      "default": "cover"
+    },
+    {
+      "type": "select",
+      "id": "media_1_position_mobile",
+      "label": "Position · mobile",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "top", "label": "Top" },
+        { "value": "bottom", "label": "Bottom" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Frame 2 (right / below on mobile)"
+    },
+    {
+      "type": "select",
+      "id": "media_2_type",
+      "label": "Media type",
+      "options": [
+        { "value": "image", "label": "Image" },
+        { "value": "video", "label": "Video" }
+      ],
+      "default": "image"
+    },
+    {
+      "type": "image_picker",
+      "id": "media_2_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "media_2_image_url",
+      "label": "Image URL fallback"
+    },
+    {
+      "type": "video",
+      "id": "media_2_video",
+      "label": "Video (Shopify Files)"
+    },
+    {
+      "type": "text",
+      "id": "media_2_video_url",
+      "label": "Video URL fallback (mp4)",
+      "info": "Used only when Shopify video is empty."
+    },
+    {
+      "type": "text",
+      "id": "media_2_alt",
+      "label": "Alt text"
+    },
+    {
+      "type": "select",
+      "id": "media_2_fit",
+      "label": "Fit · desktop",
+      "options": [
+        { "value": "cover", "label": "Cover" },
+        { "value": "contain", "label": "Contain" }
+      ],
+      "default": "cover"
+    },
+    {
+      "type": "select",
+      "id": "media_2_position",
+      "label": "Position · desktop",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "top", "label": "Top" },
+        { "value": "bottom", "label": "Bottom" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "media_2_fit_mobile",
+      "label": "Fit · mobile",
+      "options": [
+        { "value": "cover", "label": "Cover" },
+        { "value": "contain", "label": "Contain" }
+      ],
+      "default": "cover"
+    },
+    {
+      "type": "select",
+      "id": "media_2_position_mobile",
+      "label": "Position · mobile",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "top", "label": "Top" },
+        { "value": "bottom", "label": "Bottom" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Shared caption"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "IN USE"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Built for the work."
+    },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Body"
+    },
+    {
+      "type": "header",
+      "content": "Visibility"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_desktop",
+      "label": "Hide on desktop",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "Twin frame"
+    }
+  ]
+}
+{% endschema %}

@@ -18,8 +18,20 @@
     liveRegion.id = 'cart-live-region';
     document.body.appendChild(liveRegion);
 
+    bindCartTriggers();
     bindAddToCartForms();
     bindDrawerControls();
+  }
+
+  function bindCartTriggers() {
+    document.querySelectorAll('[data-cart-trigger]').forEach(function (el) {
+      if (el.dataset.cartBound) return;
+      el.dataset.cartBound = 'true';
+      el.addEventListener('click', function (e) {
+        e.preventDefault();
+        openDrawer();
+      });
+    });
   }
 
   /* ── Public API ── */
@@ -109,7 +121,7 @@
       itemsContainer.innerHTML =
         '<div class="cart-drawer__empty">' +
           '<p>Your cart is empty</p>' +
-          '<a href="/collections/grippy-shoes" class="btn btn--primary">Shop Grippy Shoes</a>' +
+          '<a href="/collections/all" class="btn btn--primary">Continue shopping</a>' +
         '</div>';
       if (footer) footer.style.display = 'none';
     } else {
@@ -166,38 +178,47 @@
   function updateCartCount(count) {
     document.querySelectorAll('[data-cart-count]').forEach(function (el) {
       el.textContent = count;
-      el.style.display = count > 0 ? '' : 'none';
+      if (count > 0) {
+        el.removeAttribute('hidden');
+        el.style.display = '';
+      } else {
+        el.setAttribute('hidden', '');
+        el.style.display = 'none';
+      }
     });
   }
 
   /* ── Event Binding ── */
 
   function bindAddToCartForms() {
-    var form = document.getElementById('pdp-form');
-    if (form && !form.dataset.ajaxBound) {
+    document.querySelectorAll('form[action*="/cart/add"]').forEach(function (form) {
+      if (form.dataset.ajaxBound) return;
       form.dataset.ajaxBound = 'true';
       form.addEventListener('submit', function (e) {
         e.preventDefault();
-        var idInput = form.querySelector('input[name="id"]');
-        if (!idInput) return;
-        var btn = form.querySelector('.pdp-buy__cta');
+        var idInput = form.querySelector('[name="id"]');
+        if (!idInput || !idInput.value) return;
+        var qtyInput = form.querySelector('[name="quantity"]');
+        var qty = qtyInput ? parseInt(qtyInput.value, 10) || 1 : 1;
+        var btn = form.querySelector('[type="submit"], button[name="add"]');
+        var prev = btn ? btn.textContent : '';
         if (btn) {
           btn.disabled = true;
           btn.textContent = 'Adding\u2026';
         }
-        addToCart(parseInt(idInput.value, 10), 1)
+        addToCart(parseInt(idInput.value, 10), qty)
           .catch(function () {
             showError(form, 'This item is currently unavailable');
+            window.location.href = form.getAttribute('action') || '/cart';
           })
           .finally(function () {
             if (btn) {
-              var price = btn.getAttribute('data-price') || '';
               btn.disabled = false;
-              btn.textContent = price ? 'Add to Cart \u2014 ' + price : 'Add to Cart';
+              btn.textContent = prev || 'Add to cart';
             }
           });
       });
-    }
+    });
   }
 
   function bindDrawerControls() {

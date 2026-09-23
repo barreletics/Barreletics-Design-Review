@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barreletics — Press row mock</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #f5f2ec;
+    color: #1c1916;
+    padding: 40px 20px 56px;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .wrap { max-width: 1200px; margin: 0 auto; }
+
+  details.compare {
+    margin-top: 32px;
+    font-size: 12px;
+    color: #6b645a;
+  }
+  details.compare summary {
+    cursor: pointer;
+    list-style: none;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 12px 0;
+    border-top: 1px solid #d6cfc0;
+  }
+  details.compare summary::-webkit-details-marker { display: none; }
+  details.compare .compare-tabs { display: flex; gap: 8px; margin: 16px 0; flex-wrap: wrap; }
+  details.compare button {
+    font: 600 10px/1 'Roboto', sans-serif; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 8px 12px; border: 1px solid #d6cfc0; background: #fff; cursor: pointer; color: #4a4a4a;
+  }
+  details.compare button.active { background: #1c1916; color: #faf8f6; border-color: #1c1916; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .press-band {
+    background: #faf8f6;
+    padding: 64px 40px;
+    box-shadow: 0 1px 0 rgba(28, 25, 22, 0.06);
+  }
+  @media (max-width: 768px) {
+    .press-band { padding: 48px 16px; }
+  }
+  .press-band__head {
+    font-size: clamp(26px, 2.9vw, 32px);
+    font-weight: 600;
+    line-height: 1.22;
+    letter-spacing: -0.012em;
+    padding-bottom: 12px;
+    margin-bottom: 32px;
+    border-bottom: 1px solid #d6cfc0;
+  }
+  @media (max-width: 768px) {
+    .press-band__head { font-size: clamp(24px, 5vw, 28px); }
+  }
+  .press-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.46fr) minmax(0, 0.46fr);
+    grid-template-rows: 1fr 1fr;
+    gap: 10px;
+    height: clamp(440px, 52vw, 540px);
+  }
+  @media (max-width: 900px) {
+    .press-grid {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto;
+      height: auto;
+    }
+    .press-grid__hero { grid-column: 1 / -1; height: min(400px, 70vw); }
+  }
+  @media (max-width: 520px) {
+    .press-grid { grid-template-columns: 1fr; }
+    .press-grid__hero { height: 320px; }
+  }
+
+  .press-grid__hero {
+    grid-row: 1 / 3;
+    grid-column: 1;
+    position: relative;
+    overflow: hidden;
+    background: #1c1916;
+  }
+  .press-grid__hero video {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  }
+  .press-grid__hero::after {
+    content: "";
+    position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(180deg, transparent 55%, rgba(28, 25, 22, 0.82) 100%);
+  }
+  .press-grid__hero-copy {
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 1;
+    padding: 24px 28px 28px;
+    color: #faf8f6;
+  }
+  .press-grid__hero-copy .type-label {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+    color: rgba(250, 248, 246, 0.88); margin-bottom: 8px;
+  }
+  .press-grid__hero-copy .hero-title {
+    font-size: clamp(28px, 3vw, 36px);
+    font-weight: 500;
+    line-height: 1.12;
+    letter-spacing: -0.022em;
+    max-width: 15ch;
+  }
+
+  .press-card {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    min-height: 0;
+    background: #fff;
+    border: 1px solid #e8e4dc;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .press-card:hover {
+    border-color: #d6cfc0;
+    box-shadow: 0 4px 20px rgba(28, 25, 22, 0.06);
+  }
+  .press-card__media {
+    position: relative;
+    overflow: hidden;
+    background: #f5f2ec;
+    min-height: 0;
+  }
+  .press-card__media img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+  .press-card--press .press-card__media img {
+    object-fit: contain;
+    object-position: center top;
+    padding: 8px;
+    background: #faf8f6;
+  }
+  .press-card__foot {
+    padding: 12px 14px 14px;
+    border-top: 1px solid #f0ebe4;
+    min-height: 72px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .press-card__title {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 2px;
+  }
+  .press-card__cap {
+    font-size: 13px;
+    color: #6b645a;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .press-card__arrow { color: #1c1916; font-size: 13px; flex-shrink: 0; opacity: 0.7; }
+  .press-card:hover .press-card__arrow { opacity: 1; }
+
+  .press-card--venice .press-card__media {
+    background: linear-gradient(160deg, #2a2420 0%, #3d3530 45%, #1c1916 100%);
+  }
+
+  /* Grok comparison (collapsed by default) */
+  .grok-before {
+    background: #faf8f6; display: grid; grid-template-columns: 1.15fr 1fr; gap: 4px;
+    max-height: 520px; overflow: hidden;
+  }
+  .grok-before .stage { display: grid; grid-template-columns: 1.4fr 0.7fr; gap: 8px; padding: 6px; }
+  .grok-before .stage-video { position: relative; background: #111; aspect-ratio: 16/11; overflow: hidden; }
+  .grok-before .stage-video video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .grok-before .tiles { display: grid; grid-template-rows: 1fr 1fr; gap: 8px; }
+  .grok-before .tile { position: relative; overflow: hidden; background: #ddd; min-height: 80px; }
+  .grok-before .tile img { width: 100%; height: 100%; object-fit: cover; }
+  .grok-before .rail { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 6px; }
+  .grok-after { background: #faf8f6; display: grid; grid-template-columns: 1.1fr 1fr; max-height: 480px; overflow: hidden; margin-top: 16px; }
+  .grok-after .feature { display: grid; grid-template-columns: 1fr 1fr; }
+  .grok-after .feature img { width: 100%; height: 100%; object-fit: cover; min-height: 240px; }
+  .grok-after .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 16px; }
+  .grok-after .card .pic { aspect-ratio: 5/6; overflow: hidden; background: #eee; }
+  .grok-after .card .pic img, .grok-after .card .pic video { width: 100%; height: 100%; object-fit: cover; }
+  @media (max-width: 768px) {
+    .grok-before, .grok-after { grid-template-columns: 1fr; max-height: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="press-band" aria-label="Press">
+    <h2 class="press-band__head">Press</h2>
+    <div class="press-grid">
+      <div class="press-grid__hero">
+        <video autoplay muted loop playsinline poster="https://barreletics.com/cdn/shop/files/yellow_tone_mix.png?width=2000">
+          <source src="https://barreletics.com/cdn/shop/videos/c/vp/a91000a89fb04c70935becea5180b69e/a91000a89fb04c70935becea5180b69e.HD-1080p-7.2Mbps-43057645.mp4" type="video/mp4">
+        </video>
+        <div class="press-grid__hero-copy">
+          <p class="type-label">Barreletics × Coperni</p>
+          <p class="hero-title">Limited edition · Paris 2026</p>
+        </div>
+      </div>
+
+      <a class="press-card press-card--runway" href="https://barreletics.com/products/barreletics-x-coperni-closed-sole">
+        <div class="press-card__media">
+          <img src="https://barreletics.com/cdn/shop/files/Screenshot_2026-03-20_at_6.53.30_PM.png?width=900" alt="Coperni runway">
+        </div>
+        <div class="press-card__foot">
+          <p class="press-card__title">Runway</p>
+          <p class="press-card__cap"><span>Paris Fashion Week</span><span class="press-card__arrow">→</span></p>
+        </div>
+      </a>
+
+      <a class="press-card press-card--runway" href="https://barreletics.com/products/barreletics-x-coperni-closed-sole">
+        <div class="press-card__media">
+          <img src="https://barreletics.com/cdn/shop/files/Copreni_Final_More_grey.png?v=1774119812&width=900" alt="Coperni detail">
+        </div>
+        <div class="press-card__foot">
+          <p class="press-card__title">Collaboration</p>
+          <p class="press-card__cap"><span>Spring–Summer 2026</span><span class="press-card__arrow">→</span></p>
+        </div>
+      </a>
+
+      <a class="press-card press-card--press" href="https://barreletics.com/blogs/news/barreletics-in-interni">
+        <div class="press-card__media">
+          <img src="https://cdn.shopify.com/s/files/1/0045/0612/4391/files/Interni_Blog_Magazine_Page.png" alt="INTERNI magazine">
+        </div>
+        <div class="press-card__foot">
+          <p class="press-card__title">INTERNI</p>
+          <p class="press-card__cap"><span>Sano come un piede</span><span class="press-card__arrow">→</span></p>
+        </div>
+      </a>
+
+      <a class="press-card press-card--press press-card--venice" href="https://barreletics.com/blogs/news">
+        <div class="press-card__media" aria-hidden="true"></div>
+        <div class="press-card__foot">
+          <p class="press-card__title">ITSLIQUID · Venice</p>
+          <p class="press-card__cap"><span>Biennale arte 2026</span><span class="press-card__arrow">→</span></p>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <details class="compare">
+    <summary>Compare older layout options</summary>
+    <div class="compare-tabs">
+      <button type="button" class="active" data-panel="before">Grok before</button>
+      <button type="button" data-panel="stack">Grok stacked</button>
+    </div>
+    <div id="before" class="panel active">
+      <div class="grok-before">
+        <div class="stage">
+          <div class="stage-video">
+            <video autoplay muted loop playsinline><source src="https://barreletics.com/cdn/shop/videos/c/vp/a91000a89fb04c70935becea5180b69e/a91000a89fb04c70935becea5180b69e.HD-1080p-7.2Mbps-43057645.mp4" type="video/mp4"></video>
+          </div>
+          <div class="tiles">
+            <a class="tile" href="#"><img src="https://barreletics.com/cdn/shop/files/Screenshot_2026-03-20_at_6.53.30_PM.png?width=800" alt=""></a>
+            <a class="tile" href="#"><img src="https://barreletics.com/cdn/shop/files/Copreni_Final_More_grey.png?v=1774119812&width=800" alt=""></a>
+          </div>
+        </div>
+        <div class="rail">
+          <img src="https://cdn.shopify.com/s/files/1/0045/0612/4391/files/Interni_Blog_Magazine_Page.png" style="width:100%;aspect-ratio:4/5;object-fit:cover" alt="">
+          <img src="https://cdn.shopify.com/s/files/1/0045/0612/4391/files/barreletics-interni-chatgpt-editorial-clean.png?v=1789511311" style="width:100%;aspect-ratio:4/5;object-fit:cover" alt="">
+        </div>
+      </div>
+    </div>
+    <div id="stack" class="panel">
+      <div class="grok-before">
+        <div class="stage">
+          <div class="stage-video"><video autoplay muted loop playsinline><source src="https://barreletics.com/cdn/shop/videos/c/vp/a91000a89fb04c70935becea5180b69e/a91000a89fb04c70935becea5180b69e.HD-1080p-7.2Mbps-43057645.mp4" type="video/mp4"></video></div>
+          <div class="tiles"><a class="tile" href="#"><img src="https://barreletics.com/cdn/shop/files/Screenshot_2026-03-20_at_6.53.30_PM.png?width=800" alt=""></a><a class="tile" href="#"><img src="https://barreletics.com/cdn/shop/files/Copreni_Final_More_grey.png?v=1774119812&width=800" alt=""></a></div>
+        </div>
+        <div class="rail"><img src="https://cdn.shopify.com/s/files/1/0045/0612/4391/files/Interni_Blog_Magazine_Page.png" style="width:100%;aspect-ratio:4/5;object-fit:cover" alt=""><img src="https://cdn.shopify.com/s/files/1/0045/0612/4391/files/barreletics-interni-chatgpt-editorial-clean.png?v=1789511311" style="width:100%;aspect-ratio:4/5;object-fit:cover" alt=""></div>
+      </div>
+      <div class="grok-after">
+        <div class="feature"><img src="https://cdn.shopify.com/s/files/1/0045/0612/4391/files/barreletics-interni-chatgpt-editorial-clean.png?v=1789511311" alt=""><div style="padding:20px;font-family:'Roboto',sans-serif;font-size:40px;font-weight:400;line-height:1.1;letter-spacing:-0.02em">Where performance, design and fashion meet.</div></div>
+        <div class="card-grid">
+          <div class="card"><div class="pic"><video autoplay muted loop playsinline><source src="https://barreletics.com/cdn/shop/videos/c/vp/a91000a89fb04c70935becea5180b69e/a91000a89fb04c70935becea5180b69e.HD-1080p-7.2Mbps-43057645.mp4" type="video/mp4"></video></div></div>
+          <div class="card"><div class="pic"><img src="https://cdn.shopify.com/s/files/1/0045/0612/4391/files/Interni_Blog_Magazine_Page.png" alt=""></div></div>
+          <div class="card"><div class="pic" style="background:#3d3530"></div></div>
+        </div>
+      </div>
+    </div>
+  </details>
+</div>
+<script>
+  document.querySelectorAll('.compare-tabs button').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.compare-tabs button').forEach(function (b) { b.classList.remove('active'); });
+      document.querySelectorAll('details .panel').forEach(function (p) { p.classList.remove('active'); });
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.panel).classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
