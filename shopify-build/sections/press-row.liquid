@@ -25,7 +25,7 @@
 >
   <div class="press-row__inner">
     {% if heading != blank %}
-      <h2 class="press-row__head h2-standard">{{ heading }}</h2>
+      <p class="press-row__eyebrow type-label">{{ heading }}</p>
     {% endif %}
 
     <div class="press-row__grid">
@@ -156,6 +156,14 @@
     max-width: 1200px;
     margin: 0 auto;
   }
+  #shopify-section-{{ section.id }} .press-row__eyebrow {
+    margin: 0 0 24px;
+    padding: 0;
+    color: var(--type-label-color, #6b6459);
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+    /* .type-label handles size, weight, letter-spacing, uppercase */
+  }
+  /* Legacy .press-row__head retained during transition; safe to drop later. */
   #shopify-section-{{ section.id }} .press-row__head {
     margin: 0 0 32px;
     padding-bottom: 12px;
@@ -330,6 +338,9 @@
   @media (max-width: 768px) {
     #shopify-section-{{ section.id }} .press-row {
       padding: 48px 16px;
+    }
+    #shopify-section-{{ section.id }} .press-row__eyebrow {
+      margin: 0 0 20px;
     }
     #shopify-section-{{ section.id }} .press-row__head {
       font-size: clamp(24px, 5vw, 28px);
