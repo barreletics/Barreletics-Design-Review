@@ -55,8 +55,8 @@
   assign body_size = section.settings.body_size | default: 'default'
   assign title_weight = section.settings.title_weight | default: 'default'
   assign body_weight = section.settings.body_weight | default: 'default'
-  assign star_color = section.settings.star_color | default: '#d4af37'
-  assign star_size = section.settings.star_size | default: 14
+  assign star_color = settings.star_color_global | default: '#E5C71F'
+  assign star_size = settings.star_size_global | default: 14
   assign trust_text_size = section.settings.trust_text_size | default: 'default'
   assign trust_gap = section.settings.trust_gap | default: 10
   assign trust_below = section.settings.trust_below | default: 16
@@ -181,16 +181,29 @@
             class: 'split-hero__img'
         }}
       {%- elsif image_url != blank -%}
-        <img
-          class="split-hero__img"
-          src="{{ image_url | escape }}"
-          alt="{{ image_alt | default: 'Barreletics Performance Skins — grip that holds in every studio workout' | escape }}"
-          width="2400"
-          height="2750"
-          loading="eager"
-          fetchpriority="high"
-          decoding="async"
-        >
+        {%- if image_url contains '://' -%}
+          <img
+            class="split-hero__img"
+            src="{{ image_url | escape }}"
+            alt="{{ image_alt | default: 'Barreletics Performance Skins — grip that holds in every studio workout' | escape }}"
+            width="2400"
+            height="1890"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+          >
+        {%- else -%}
+          <img
+            class="split-hero__img"
+            src="{{ image_url | asset_url }}"
+            alt="{{ image_alt | default: 'Barreletics Performance Skins — grip that holds in every studio workout' | escape }}"
+            width="2400"
+            height="1890"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+          >
+        {%- endif -%}
       {%- else -%}
         <div class="split-hero__placeholder" role="img" aria-label="Add hero image in Theme Editor">
           Add pink-shorts hero image in Theme Editor
@@ -623,7 +636,7 @@
       "step": 2,
       "unit": "%",
       "default": 100,
-      "info": "How tall the whole hero is. 100 = photo shape. Drag down to shorten, up to lengthen. Text column matches."
+      "info": "Scales the whole hero (media + copy). 100 = default desk cap min(640px, 70vh). Drag to shorten or lengthen. Left/right size = Left/right split."
     },
     {
       "type": "range",

@@ -20,8 +20,33 @@
   assign media_fit = section.settings.media_fit | default: 'cover'
   assign image_fit_mobile = section.settings.image_fit_mobile | default: 'cover'
   assign media_aspect = section.settings.media_aspect | default: 'stretch'
+  assign media_aspect_m = section.settings.media_aspect_mobile | default: 'stretch'
   assign min_height = section.settings.min_height | default: 860
 
+  # Text panel / section bg: preset white/cream or custom picker (bg_color).
+  # No preset → cream #faf8f6 (compat with current Home Never-slip look).
+  assign bg_preset = section.settings.bg_preset | default: ''
+  if bg_preset == 'white'
+    assign panel_bg = '#ffffff'
+  elsif bg_preset == 'cream'
+    assign panel_bg = '#faf8f6'
+  elsif bg_preset == 'custom'
+    assign panel_bg = section.settings.bg_color | default: '#faf8f6'
+  else
+    assign panel_bg = section.settings.bg_color | default: '#faf8f6'
+  endif
+
+  # Media pad / letterbox bg when Fit or Contain (desk or phone).
+  assign media_bg_preset = section.settings.media_bg_preset
+  if media_bg_preset == 'cream'
+    assign media_pad_bg = '#faf8f6'
+  elsif media_bg_preset == 'white'
+    assign media_pad_bg = '#ffffff'
+  elsif media_bg_preset == 'custom'
+    assign media_pad_bg = section.settings.media_bg | default: '#ffffff'
+  else
+    assign media_pad_bg = section.settings.media_bg | default: '#ffffff'
+  endif
 
   assign has_media = false
   if section.settings.video != blank
@@ -48,15 +73,15 @@
   endif
 -%}
 <section
-  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} problem-section{% if has_media %} problem-section--with-media{% endif %}{% if reverse %} problem-section--reverse{% endif %}{% if mobile_stack_order == 'copy_first' %} problem-section--copy-first{% else %} problem-section--media-first{% endif %}{% if media_aspect == 'square' %} problem-section--media-square{% endif %}{% if media_fit == 'contain' or media_fit == 'fit' %} problem-section--media-contain{% endif %}{% if image_fit_mobile == 'fit' or image_fit_mobile == 'contain' %} problem-section--fit-mobile{% endif %}{% if media_fit == 'contain' %} problem-section--media-contain{% endif %}"
+  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} problem-section{% if has_media %} problem-section--with-media{% endif %}{% if reverse %} problem-section--reverse{% endif %}{% if mobile_stack_order == 'copy_first' %} problem-section--copy-first{% else %} problem-section--media-first{% endif %}{% if media_aspect == 'square' %} problem-section--media-square{% endif %}{% if media_aspect_m == 'square' %} problem-section--media-square-m{% endif %}{% if media_fit == 'contain' or media_fit == 'fit' %} problem-section--media-contain{% endif %}{% if media_fit == 'cover_inset' %} problem-section--cover-inset{% elsif media_fit == 'cover' or media_fit == blank %} problem-section--cover-flush{% endif %}{% if image_fit_mobile == 'fit' or image_fit_mobile == 'contain' %} problem-section--fit-mobile{% endif %}{% if media_fit == 'contain' %} problem-section--media-contain{% endif %}"
   id="{{ section.settings.anchor_id | default: 'problem' | handleize }}"
   aria-label="{{ section.settings.title | escape }}"
-  style="{% render 'section-inset-vars' %} --pr-cta-bg: {{ cta_bg }}; --pr-cta-border: {{ cta_border }}; --pr-cta-text: {{ cta_text_color }}; --pr-mobile-media-height: {{ mobile_media_height }}px; --pr-desk-media-min: {{ min_height }}px; --pr-copy-stack-gap: {{ copy_stack_gap }}px;"
+  style="{% render 'section-inset-vars' %} --pr-cta-bg: {{ cta_bg }}; --pr-cta-border: {{ cta_border }}; --pr-cta-text: {{ cta_text_color }}; --pr-mobile-media-height: {{ mobile_media_height }}px; --pr-desk-media-min: {{ min_height }}px; --pr-copy-stack-gap: {{ copy_stack_gap }}px; --pr-panel-bg: {{ panel_bg }}; --pr-media-pad-bg: {{ media_pad_bg }};"
 >
   <div class="problem-shell">
     <div class="problem-layout{% if has_media %} problem-layout--with-media{% endif %}">
       {% if has_media %}
-        <div class="problem-media">
+        <div class="problem-media" style="background: {{ media_pad_bg }};">
           <div class="problem-media__clip">
             {% if section.settings.video != blank %}
               {{
@@ -150,77 +175,154 @@
 <style>
   .problem-section {
     padding: 72px 40px;
-    background: #faf8f6;
+    background: {{ panel_bg }};
   }
-  /* Full-bleed media column like Home 50/50 (One Pair) — no cream pad around media */
-  #shopify-section-{{ section.id }} .problem-section.problem-section--with-media {
+  /* Cover (fill half): media column bleeds edge-to-edge in its 50%. Text keeps cream. */
+  #shopify-section-{{ section.id }} .problem-section--with-media.problem-section--cover-flush {
     padding: 0;
+  }
+  /* Cover flush: kill shell max-width/centering — that was the left-margin pad. */
+  #shopify-section-{{ section.id }} .problem-section--cover-flush .problem-shell {
+    max-width: none;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  #shopify-section-{{ section.id }} .problem-section--cover-flush .problem-layout--with-media {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    gap: 0;
+    align-items: stretch;
+  }
+  /* Cover flush + Landscape: fill the full media half (edge-to-edge). */
+  #shopify-section-{{ section.id }} .problem-section--cover-flush:not(.problem-section--media-square) .problem-media__clip {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    max-height: none;
+    aspect-ratio: auto;
+    border-radius: 0;
+  }
+  /* Cover flush + Square desk: still left-flush to margin, but 1:1 frame (Frame shape works). */
+  #shopify-section-{{ section.id }} .problem-section--cover-flush.problem-section--media-square .problem-media {
+    position: relative;
+    align-self: start;
+    height: auto;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+  }
+  #shopify-section-{{ section.id }} .problem-section--cover-flush.problem-section--media-square .problem-media__clip {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    aspect-ratio: 1 / 1;
+    border-radius: 0;
+    margin: 0;
+    padding: 0;
+  }
+  /* Cover inset (sit in panel): preserve Never-slip sitting-in look (pad + gap + radius). */
+  #shopify-section-{{ section.id }} .problem-section--with-media.problem-section--cover-inset {
+    padding: 72px 40px;
   }
   {% if template.name == 'collection' %}
   #shopify-section-{{ section.id }} .problem-section {
-    background: #faf8f6;
+    background: {{ panel_bg }};
   }
   {% endif %}
   .problem-shell {
     max-width: 1100px;
     margin: 0 auto;
   }
-  #shopify-section-{{ section.id }} .problem-section--with-media > .problem-shell {
-    max-width: none;
-    width: 100%;
-    margin: 0;
-  }
-  /* Media column = One Pair 50/50 law: column stretches, clip fills column, Cover. */
   #shopify-section-{{ section.id }} .problem-layout--with-media {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 0;
+    gap: 48px;
     align-items: stretch;
     max-width: none;
-    width: 100%;
-    min-height: var(--pr-desk-media-min, 860px);
-    overflow: hidden;
+  }
+  #shopify-section-{{ section.id }} .problem-section--cover-flush .problem-layout--with-media {
+    gap: 0;
+    align-items: stretch;
+  }
+  #shopify-section-{{ section.id }} .problem-section--cover-inset .problem-layout--with-media {
+    gap: 48px;
   }
   #shopify-section-{{ section.id }} .problem-layout--with-media .problem-shell {
     max-width: none;
   }
-  #shopify-section-{{ section.id }} .problem-media {
-    position: relative;
-    align-self: stretch;
-    height: auto;
-    min-height: 100%;
-    min-height: var(--pr-desk-media-min, 860px);
-    overflow: hidden;
-    background: #f0ebe4;
-  }
-  /* Stretch media to FULL grid row (text column height) — no white under media */
   #shopify-section-{{ section.id }} .problem-layout--with-media {
-    grid-template-rows: 1fr;
+    align-items: start;
   }
-  #shopify-section-{{ section.id }} .problem-layout--with-media > .problem-media {
-    grid-row: 1 / -1;
-    height: 100%;
-    min-height: var(--pr-desk-media-min, 860px);
+  #shopify-section-{{ section.id }} .problem-section--cover-flush .problem-layout--with-media {
+    align-items: stretch;
   }
   #shopify-section-{{ section.id }} .problem-media__clip {
+    position: relative;
+    width: 100%;
+    height: var(--pr-desk-media-min, 860px);
+    min-height: var(--pr-desk-media-min, 860px);
+    max-height: var(--pr-desk-media-min, 860px);
+    overflow: hidden;
+    border-radius: 4px;
+    background: var(--pr-media-pad-bg, #ffffff);
+  }
+  #shopify-section-{{ section.id }} .problem-media {
+    background: {{ media_pad_bg }};
+  }
+  /* Cover flush: no radius, stretch to full half, clip absolute fill */
+  #shopify-section-{{ section.id }} .problem-section--cover-flush .problem-media {
+    align-self: stretch;
+    height: 100%;
+    min-height: var(--pr-desk-media-min, 860px);
+    margin: 0;
+    padding: 0;
+  }
+  #shopify-section-{{ section.id }} .problem-section--cover-flush:not(.problem-section--media-square) .problem-media__clip {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     min-height: 100%;
-    overflow: hidden;
+    max-height: none;
     border-radius: 0;
-    background: #f0ebe4;
+    margin: 0;
+    padding: 0;
   }
-  #shopify-section-{{ section.id }} .problem-section--media-square .problem-media {
-    aspect-ratio: 1 / 1;
+  #shopify-section-{{ section.id }} .problem-section--cover-flush .problem-media {
+    position: relative;
+  }
+  /* Text column keeps cream pad when media is flush */
+  #shopify-section-{{ section.id }} .problem-section--cover-flush .problem-inner {
+    padding: 72px 40px;
+    background: {{ panel_bg }};
+    box-sizing: border-box;
+  }
+  /* Cover inset: keep rounded card sitting in panel */
+  #shopify-section-{{ section.id }} .problem-section--cover-inset .problem-media__clip {
+    border-radius: 4px;
+  }
+  #shopify-section-{{ section.id }} .problem-section--media-square .problem-media__clip,
+  #shopify-section-{{ section.id }} .problem-section--cover-inset.problem-section--media-square .problem-media__clip {
     height: auto;
-    min-height: var(--pr-desk-media-min, 860px);
+    min-height: 0;
+    max-height: none;
+    aspect-ratio: 1 / 1;
+  }
+  /* Cover fill = 50/50 law: absolute inset + object-fit cover.
+     Theme base sets video { max-width:100%; height:auto } which blocks fill. */
+  #shopify-section-{{ section.id }} .problem-media__clip {
+    position: relative;
+    overflow: hidden;
   }
   #shopify-section-{{ section.id }} .problem-media__video,
   #shopify-section-{{ section.id }} .problem-media__img,
-  #shopify-section-{{ section.id }} .problem-media__clip video,
-  #shopify-section-{{ section.id }} .problem-media__clip img,
   #shopify-section-{{ section.id }} .problem-media__placeholder {
     display: block;
     position: absolute;
@@ -229,26 +331,16 @@
     height: 100% !important;
     max-width: none !important;
     max-height: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    object-fit: cover !important;
+    object-fit: cover;
     object-position: center center;
   }
   #shopify-section-{{ section.id }} .problem-media__placeholder {
     background: linear-gradient(135deg, #e8e2da, #f0ebe4);
-    object-fit: unset !important;
+    object-fit: unset;
   }
   #shopify-section-{{ section.id }} .problem-section--media-contain .problem-media__video,
-  #shopify-section-{{ section.id }} .problem-section--media-contain .problem-media__img,
-  #shopify-section-{{ section.id }} .problem-section--media-contain .problem-media__clip video,
-  #shopify-section-{{ section.id }} .problem-section--media-contain .problem-media__clip img {
-    object-fit: contain !important;
-  }
-  #shopify-section-{{ section.id }} .problem-layout--with-media .problem-inner {
-    padding: 72px 48px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+  #shopify-section-{{ section.id }} .problem-section--media-contain .problem-media__img {
+    object-fit: contain;
   }
 
   .problem-inner {
@@ -369,28 +461,78 @@
   }
 @media (max-width: 768px) {
     .problem-section { padding: 48px 16px; }
-    #shopify-section-{{ section.id }} .problem-section.problem-section--with-media { padding: 0; }
+    #shopify-section-{{ section.id }} .problem-section--with-media.problem-section--cover-flush {
+      padding: 0;
+    }
+    #shopify-section-{{ section.id }} .problem-section--cover-flush .problem-inner {
+      padding: 48px 16px;
+    }
+    #shopify-section-{{ section.id }} .problem-section--cover-flush .problem-media__clip {
+      position: relative;
+      inset: auto;
+      height: var(--pr-mobile-media-height, 520px);
+      min-height: var(--pr-mobile-media-height, 520px);
+      max-height: var(--pr-mobile-media-height, 520px);
+      border-radius: 0;
+    }
+    #shopify-section-{{ section.id }} .problem-section--with-media.problem-section--cover-inset {
+      padding: 48px 16px;
+    }
     #shopify-section-{{ section.id }} .problem-layout--with-media {
       grid-template-columns: 1fr;
       gap: 28px;
     }
-    #shopify-section-{{ section.id }} .problem-layout--with-media {
-      min-height: 0;
+    #shopify-section-{{ section.id }} .problem-section--cover-flush .problem-layout--with-media {
       gap: 0;
     }
-    #shopify-section-{{ section.id }} .problem-media {
-      min-height: var(--pr-mobile-media-height, 520px);
-      height: var(--pr-mobile-media-height, 520px);
-    }
     #shopify-section-{{ section.id }} .problem-media__clip {
-      position: absolute;
-      inset: 0;
-      height: 100%;
+      height: var(--pr-mobile-media-height, 520px);
+      min-height: var(--pr-mobile-media-height, 520px);
+      max-height: var(--pr-mobile-media-height, 520px);
+      aspect-ratio: auto;
+    }
+    /* Phone landscape: desk square must not force 1:1 over height slider */
+    #shopify-section-{{ section.id }} .problem-section--media-square:not(.problem-section--media-square-m) .problem-media__clip {
+      height: var(--pr-mobile-media-height, 520px);
+      min-height: var(--pr-mobile-media-height, 520px);
+      max-height: var(--pr-mobile-media-height, 520px);
+      aspect-ratio: auto;
+    }
+    /* Phone square frame — 1/1; height follows width (ignore height slider). */
+
+    /* Frame shape — phone: Square under Cover flush */
+    #shopify-section-{{ section.id }} .problem-section--cover-flush.problem-section--media-square-m .problem-media {
+      height: auto;
+      min-height: 0;
+      align-self: stretch;
+    }
+    #shopify-section-{{ section.id }} .problem-section--cover-flush.problem-section--media-square-m .problem-media__clip {
+      position: relative !important;
+      inset: auto !important;
+      width: 100%;
+      height: auto !important;
+      min-height: 0 !important;
+      max-height: none !important;
+      aspect-ratio: 1 / 1;
+      border-radius: 0;
+    }
+    /* Frame shape — phone: Landscape under Cover flush = full-width height slider */
+    #shopify-section-{{ section.id }} .problem-section--cover-flush:not(.problem-section--media-square-m) .problem-media__clip {
+      position: relative;
+      inset: auto;
+      width: 100%;
+      height: var(--pr-mobile-media-height, 520px);
+      min-height: var(--pr-mobile-media-height, 520px);
+      max-height: none;
+      aspect-ratio: auto;
+      border-radius: 0;
+    }
+
+    #shopify-section-{{ section.id }} .problem-section--media-square-m .problem-media__clip {
+      height: auto;
       min-height: 0;
       max-height: none;
-    }
-    #shopify-section-{{ section.id }} .problem-layout--with-media .problem-inner {
-      padding: 40px 20px;
+      aspect-ratio: 1 / 1;
     }
     .problem-inner {
       grid-template-columns: 1fr;
@@ -565,7 +707,11 @@
       "options": [
         {
           "value": "cover",
-          "label": "Cover (lifestyle / video)"
+          "label": "Cover (fill half)"
+        },
+        {
+          "value": "cover_inset",
+          "label": "Cover inset (sit in panel)"
         },
         {
           "value": "fit",
@@ -576,7 +722,7 @@
           "label": "Contain (packshot)"
         }
       ],
-      "info": "Same control as 50/50."
+      "info": "Cover = edge-to-edge in the media half. Cover inset = current Never-slip sitting-in look (pad + gap + radius). Fit/Contain unchanged."
     },
     {
       "type": "select",
@@ -611,21 +757,102 @@
       "info": "Same control as 50/50. Interni-like ~640; Grip/One Pair Home often 860."
     },
     {
+      "type": "header",
+      "content": "Frame shape"
+    },
+    {
       "type": "select",
       "id": "media_aspect",
-      "label": "Media frame shape",
+      "label": "Frame shape — desktop",
       "default": "stretch",
       "options": [
         {
           "value": "stretch",
-          "label": "Stretch to section height (default)"
+          "label": "Fill height"
         },
         {
           "value": "square",
-          "label": "Square \u2014 packshots under cover"
+          "label": "Square"
         }
       ],
-      "info": "Same control as 50/50."
+      "info": "Fill height keeps value stretch (backward compatible). Square = 1:1 media column on desktop."
+    },
+    {
+      "type": "select",
+      "id": "media_aspect_mobile",
+      "label": "Frame shape — phone",
+      "default": "stretch",
+      "options": [
+        {
+          "value": "stretch",
+          "label": "Fill height"
+        },
+        {
+          "value": "square",
+          "label": "Square"
+        }
+      ],
+      "info": "Fill height uses Photo height — phone slider. Square forces 1:1 on phone (height follows width)."
+    },
+    {
+      "type": "header",
+      "content": "Backgrounds"
+    },
+    {
+      "type": "select",
+      "id": "bg_preset",
+      "label": "Text panel background",
+      "options": [
+        {
+          "value": "white",
+          "label": "White (#ffffff)"
+        },
+        {
+          "value": "cream",
+          "label": "Cream — sock-era (#faf8f6)"
+        },
+        {
+          "value": "custom",
+          "label": "Custom (picker below)"
+        }
+      ],
+      "default": "custom",
+      "info": "Pick Custom, then use the color picker. Default cream matches Home Never-slip. Unset older sections still get cream #faf8f6."
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Custom text panel color",
+      "default": "#faf8f6",
+      "info": "Pick Custom above, then set this. White=#ffffff. Cream=#faf8f6 only (never #f5f2ec)."
+    },
+    {
+      "type": "select",
+      "id": "media_bg_preset",
+      "label": "Media pad / letterbox background",
+      "options": [
+        {
+          "value": "white",
+          "label": "White (#ffffff)"
+        },
+        {
+          "value": "cream",
+          "label": "Cream — sock-era (#faf8f6)"
+        },
+        {
+          "value": "custom",
+          "label": "Custom (picker below)"
+        }
+      ],
+      "default": "custom",
+      "info": "Always paints the media column (Cover included). Pick Custom, then use the color picker below."
+    },
+    {
+      "type": "color",
+      "id": "media_bg",
+      "label": "Custom media pad / letterbox color",
+      "default": "#ffffff",
+      "info": "Pick Custom above, then set this. White=#ffffff. Cream=#faf8f6 only (never #f5f2ec)."
     },
     {
       "type": "checkbox",

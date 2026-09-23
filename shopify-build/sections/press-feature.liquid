@@ -1,462 +1,466 @@
 {% comment %}
-  Reusable editorial press — 50/50 split: full-bleed artwork | white copy.
-  Home / Shop All INTERNI. Not a product grid. Not Journal Featured.
+  Twin frame — two equal lifestyle frames + shared caption.
+  Repurposed from Press feature (INTERNI). Type stays press-feature.
+  Each frame: image or video. Desktop + mobile size / fit / position.
 {% endcomment %}
 {% liquid
-  assign copy_bg = section.settings.bg_color | default: '#ffffff'
-  assign media_bg = section.settings.media_bg_color | default: '#F4EEE5'
-  assign cta_href = section.settings.cta_url
-  if cta_href == blank
-    assign cta_href = '/blogs/news/barreletics-in-interni'
-  endif
-  assign img_alt = section.settings.image_alt | strip
-  if img_alt == blank
-    assign img_alt = section.settings.title | strip_html
-  endif
-  assign region_label = section.settings.aria_label | strip
-  if region_label == blank
-    assign region_label = section.settings.title | strip_html | truncate: 60
-  endif
-  assign mobile_media_height = section.settings.mobile_media_height | default: 520
-  assign mobile_text_height = section.settings.mobile_text_height | default: 520
-  assign text_pad_top_m = section.settings.text_pad_top_mobile | default: 32
-  assign text_pad_bottom_m = section.settings.text_pad_bottom_mobile | default: 32
-  if section.settings.text_pad_bottom_mobile == blank
-    assign text_pad_bottom_m = text_pad_top_m
-  endif
-  assign body_size = section.settings.body_size | default: '16'
-  assign image_fit_mobile = section.settings.image_fit_mobile | default: 'cover'
+  assign desk_h = section.settings.desktop_height | default: 520
+  assign mob_h = section.settings.mobile_height | default: 280
+  assign bg = section.settings.bg_color | default: '#faf8f6'
+  assign caption_bg = section.settings.caption_bg | default: '#faf8f6'
 %}
 
 <section
-  {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | handleize }}"{% endif %}
-  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} press-feature press-feature--split"
-  style="{% render 'section-inset-vars' %} --pf-copy-bg: {{ copy_bg }}; --pf-media-bg: {{ media_bg }}; --pf-mobile-media-height: {{ mobile_media_height }}px; --pf-mobile-text-height: {{ mobile_text_height }}px; --pf-text-pad-top-m: {{ text_pad_top_m }}px; --pf-text-pad-bottom-m: {{ text_pad_bottom_m }}px;{% if body_size != 'default' %} --pf-body-size: {{ body_size }}px;{% endif %}"
-  {% if region_label != blank %}aria-label="{{ region_label | escape }}"{% endif %}
+  class="twin-frame{% if section.settings.hide_on_mobile %} twin-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} twin-frame--hide-desktop{% endif %}"
+  style="--tf-desk-h: {{ desk_h }}px; --tf-mob-h: {{ mob_h }}px; --tf-bg: {{ bg }}; --tf-caption-bg: {{ caption_bg }};"
+  {% if section.settings.aria_label != blank %}aria-label="{{ section.settings.aria_label | escape }}"{% endif %}
 >
-  <div class="press-feature__inner">
-    <div class="press-feature__media">
-      <div class="press-feature__media-fill">
-        {% if section.settings.image != blank %}
-          <img
-            class="press-feature__img"
-            src="{{ section.settings.image | image_url: width: 1600 }}"
-            srcset="{{ section.settings.image | image_url: width: 800 }} 800w,
-                    {{ section.settings.image | image_url: width: 1200 }} 1200w,
-                    {{ section.settings.image | image_url: width: 1600 }} 1600w"
-            sizes="(max-width: 749px) 100vw, 50vw"
-            alt="{{ img_alt | escape }}"
-            width="{{ section.settings.image.width }}"
-            height="{{ section.settings.image.height }}"
-            loading="lazy"
-          >
-        {% elsif section.settings.image_url != blank %}
-          <img
-            class="press-feature__img"
-            src="{{ section.settings.image_url | escape }}"
-            alt="{{ img_alt | escape }}"
-            loading="lazy"
-          >
-        {% endif %}
-      </div>
+  <div class="twin-frame__inner">
+    <div class="twin-frame__frames">
+      {% for i in (1..2) %}
+        {% liquid
+          if i == 1
+            assign media_type = section.settings.media_1_type | default: 'image'
+            assign img = section.settings.media_1_image
+            assign img_url = section.settings.media_1_image_url
+            assign vid = section.settings.media_1_video
+            assign vid_url = section.settings.media_1_video_url
+            assign fit_d = section.settings.media_1_fit | default: 'cover'
+            assign pos_d = section.settings.media_1_position | default: 'center'
+            assign fit_m = section.settings.media_1_fit_mobile | default: fit_d
+            assign pos_m = section.settings.media_1_position_mobile | default: pos_d
+            assign alt = section.settings.media_1_alt | default: section.settings.eyebrow | default: 'Lifestyle'
+          else
+            assign media_type = section.settings.media_2_type | default: 'image'
+            assign img = section.settings.media_2_image
+            assign img_url = section.settings.media_2_image_url
+            assign vid = section.settings.media_2_video
+            assign vid_url = section.settings.media_2_video_url
+            assign fit_d = section.settings.media_2_fit | default: 'cover'
+            assign pos_d = section.settings.media_2_position | default: 'center'
+            assign fit_m = section.settings.media_2_fit_mobile | default: fit_d
+            assign pos_m = section.settings.media_2_position_mobile | default: pos_d
+            assign alt = section.settings.media_2_alt | default: section.settings.eyebrow | default: 'Lifestyle'
+          endif
+        %}
+        <div
+          class="twin-frame__frame twin-frame__frame--{{ i }} twin-frame__frame--fit-{{ fit_d }} twin-frame__frame--pos-{{ pos_d }} twin-frame__frame--fit-m-{{ fit_m }} twin-frame__frame--pos-m-{{ pos_m }}"
+        >
+          <div class="twin-frame__media">
+            {% if media_type == 'video' %}
+              {% if vid != blank %}
+                <video class="twin-frame__video" autoplay muted loop playsinline webkit-playsinline preload="metadata" aria-label="{{ alt | escape }}">
+                  {% for source in vid.sources %}
+                    <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                  {% endfor %}
+                </video>
+              {% elsif vid_url != blank %}
+                <video class="twin-frame__video" autoplay muted loop playsinline webkit-playsinline preload="metadata" aria-label="{{ alt | escape }}">
+                  <source src="{{ vid_url | escape }}" type="video/mp4">
+                </video>
+              {% elsif img != blank %}
+                {{ img | image_url: width: 1600 | image_tag: class: 'twin-frame__img', loading: 'lazy', alt: alt }}
+              {% elsif img_url != blank %}
+                <img class="twin-frame__img" src="{{ img_url | escape }}" alt="{{ alt | escape }}" loading="lazy" width="1200" height="1500">
+              {% endif %}
+            {% else %}
+              {% if img != blank %}
+                {{ img | image_url: width: 1600 | image_tag: class: 'twin-frame__img', loading: 'lazy', alt: alt }}
+              {% elsif img_url != blank %}
+                <img class="twin-frame__img" src="{{ img_url | escape }}" alt="{{ alt | escape }}" loading="lazy" width="1200" height="1500">
+              {% endif %}
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
     </div>
 
-    <div class="press-feature__copy">
-      {% if section.settings.eyebrow != blank %}
-        <p class="press-feature__eyebrow type-label">{{ section.settings.eyebrow }}</p>
-      {% endif %}
-      {% if section.settings.title != blank %}
-        <h2 class="press-feature__title h2-display">{{ section.settings.title }}</h2>
-      {% endif %}
-      {% if section.settings.body != blank %}
-        <p class="press-feature__body type-body">{{ section.settings.body }}</p>
-      {% endif %}
-      {% if section.settings.body_2 != blank %}
-        <p class="press-feature__body type-body">{{ section.settings.body_2 }}</p>
-      {% endif %}
-      {% if section.settings.quote != blank %}
-        <p class="press-feature__quote type-lede">{{ section.settings.quote }}</p>
-      {% endif %}
-      {% if section.settings.cta_text != blank %}
-        <a class="btn btn--primary press-feature__cta" href="{{ cta_href }}">{{ section.settings.cta_text }}</a>
-      {% endif %}
-    </div>
+    {% if section.settings.eyebrow != blank or section.settings.title != blank or section.settings.body != blank %}
+      <div class="twin-frame__caption">
+        {% if section.settings.eyebrow != blank %}
+          <p class="twin-frame__eyebrow">{{ section.settings.eyebrow }}</p>
+        {% endif %}
+        {% if section.settings.title != blank %}
+          <h2 class="twin-frame__title">{{ section.settings.title }}</h2>
+        {% endif %}
+        {% if section.settings.body != blank %}
+          <p class="twin-frame__body">{{ section.settings.body }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
   </div>
 </section>
 
 <style>
-  #shopify-section-{{ section.id }} .press-feature--split {
-    padding: 0;
+  #shopify-section-{{ section.id }} .twin-frame {
+    background: var(--tf-bg, #faf8f6);
+    padding: 48px 40px 56px;
     color: #1c1916;
-    background: var(--pf-copy-bg, #ffffff);
-    overflow: hidden;
   }
-  #shopify-section-{{ section.id }} .press-feature__inner {
+  #shopify-section-{{ section.id }} .twin-frame__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  #shopify-section-{{ section.id }} .twin-frame__frames {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 0;
-    align-items: stretch;
-    min-height: 640px;
-    max-width: none;
-    margin: 0;
+    gap: 12px;
+    height: var(--tf-desk-h, 520px);
   }
-  #shopify-section-{{ section.id }} .press-feature__media {
+  #shopify-section-{{ section.id }} .twin-frame__frame {
     position: relative;
-    min-height: 100%;
-    max-width: 100%;
-    background: var(--pf-media-bg, #F4EEE5);
     overflow: hidden;
-    contain: paint;
+    min-height: 0;
+    background: #f0ebe4;
   }
-  #shopify-section-{{ section.id }} .press-feature__media-fill {
+  #shopify-section-{{ section.id }} .twin-frame__media {
     position: absolute;
     inset: 0;
-    width: 100%;
-    height: 100%;
-    max-width: 100%;
-    max-height: 100%;
-    overflow: hidden;
   }
-  #shopify-section-{{ section.id }} .press-feature__img {
-    display: block;
-    width: 100%;
-    max-width: 100%;
-    height: 100%;
-    max-height: 100%;
-    object-fit: {{ image_fit_mobile }};
-    object-position: center;
-    /* COVER fill; desktop framing tuned via min-width media query below. */
-    transform: none;
-    box-sizing: border-box;
+  #shopify-section-{{ section.id }} .twin-frame__img,
+  #shopify-section-{{ section.id }} .twin-frame__video {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+    display: block !important;
+    border: 0 !important;
+    object-fit: cover;
+    object-position: center center;
   }
-  #shopify-section-{{ section.id }} .press-feature__copy {
-    background: var(--pf-copy-bg, #ffffff);
-    min-width: 0;
-    padding: 80px 64px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    box-sizing: border-box;
+  #shopify-section-{{ section.id }} .twin-frame__frame--fit-contain .twin-frame__img,
+  #shopify-section-{{ section.id }} .twin-frame__frame--fit-contain .twin-frame__video {
+    object-fit: contain;
+    background: #faf8f6;
   }
-  #shopify-section-{{ section.id }} .press-feature__eyebrow {
-    margin: 0 0 var(--gap-a, 16px);
+  #shopify-section-{{ section.id }} .twin-frame__frame--pos-top .twin-frame__img,
+  #shopify-section-{{ section.id }} .twin-frame__frame--pos-top .twin-frame__video {
+    object-position: center top;
   }
-  #shopify-section-{{ section.id }} .press-feature__title {
-    max-width: 18ch;
+  #shopify-section-{{ section.id }} .twin-frame__frame--pos-bottom .twin-frame__img,
+  #shopify-section-{{ section.id }} .twin-frame__frame--pos-bottom .twin-frame__video {
+    object-position: center bottom;
   }
-  #shopify-section-{{ section.id }} .press-feature__body {
-    margin: 0 0 var(--gap-b, 20px);
-    max-width: 42ch;
+  #shopify-section-{{ section.id }} .twin-frame__caption {
+    background: var(--tf-caption-bg, #faf8f6);
+    text-align: center;
+    padding: 28px 24px 8px;
+    max-width: 42rem;
+    margin: 0 auto;
   }
-  #shopify-section-{{ section.id }} .press-feature__quote {
-    margin: 0 0 var(--gap-c, 32px);
-    font-style: italic;
+  #shopify-section-{{ section.id }} .twin-frame__eyebrow {
+    margin: 0 0 8px;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #6b6560;
+  }
+  #shopify-section-{{ section.id }} .twin-frame__title {
+    margin: 0 0 10px;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: clamp(22px, 2.4vw, 28px);
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
     color: #1c1916;
-    max-width: 36ch;
   }
-  #shopify-section-{{ section.id }} .press-feature__cta {
-    margin-top: var(--gap-c, 32px);
-    align-self: flex-start;
+  #shopify-section-{{ section.id }} .twin-frame__body {
+    margin: 0;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #4a453f;
   }
-  #shopify-section-{{ section.id }} .press-feature__quote + .press-feature__cta {
-    margin-top: 0;
+  #shopify-section-{{ section.id }} .twin-frame--hide-desktop {
+    display: none;
   }
+
   @media (max-width: 749px) {
-    #shopify-section-{{ section.id }} .press-feature__inner {
-      grid-template-columns: minmax(0, 1fr);
-      width: 100%;
-      max-width: 100%;
-      min-height: 0;
+    #shopify-section-{{ section.id }} .twin-frame {
+      padding: 40px 16px 48px;
     }
-    #shopify-section-{{ section.id }} .press-feature__media {
-      position: relative;
-      width: 100%;
-      max-width: 100%;
-      min-width: 0;
-      box-sizing: border-box;
-      /* Marketing split frame (OS): fixed phone mediaH — COVER default; Interni may use contain (FIT exception). */
-      aspect-ratio: auto;
-      min-height: var(--pf-mobile-media-height, 520px);
-      height: var(--pf-mobile-media-height, 520px);
-      max-height: var(--pf-mobile-media-height, 520px);
-      overflow: hidden;
-      contain: paint;
+    #shopify-section-{{ section.id }} .twin-frame--hide-mobile {
+      display: none !important;
     }
-    #shopify-section-{{ section.id }} .press-feature__media-fill {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      max-width: 100%;
-      height: 100%;
-      max-height: 100%;
-      overflow: hidden;
+    #shopify-section-{{ section.id }} .twin-frame--hide-desktop {
+      display: block;
     }
-    #shopify-section-{{ section.id }} .press-feature__img {
-      width: 100%;
-      max-width: 100%;
-      height: 100%;
-      max-height: 100%;
-      object-fit: {{ image_fit_mobile }};
-      object-position: center;
-      transform: none;
-      box-sizing: border-box;
+    #shopify-section-{{ section.id }} .twin-frame__frames {
+      grid-template-columns: 1fr;
+      height: auto;
+      gap: 10px;
     }
-    #shopify-section-{{ section.id }} .press-feature__copy {
-      min-width: 0;
-      box-sizing: border-box;
-      min-height: var(--pf-mobile-text-height, 520px);
-      padding: var(--pf-text-pad-top-m, 32px) var(--section-padding-x-mobile, 16px) var(--pf-text-pad-bottom-m, 32px);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+    #shopify-section-{{ section.id }} .twin-frame__frame {
+      height: var(--tf-mob-h, 280px);
     }
-    #shopify-section-{{ section.id }} .press-feature__title {
-      max-width: none;
+    #shopify-section-{{ section.id }} .twin-frame__frame--fit-m-contain .twin-frame__img,
+    #shopify-section-{{ section.id }} .twin-frame__frame--fit-m-contain .twin-frame__video {
+      object-fit: contain;
+      background: #faf8f6;
     }
-    #shopify-section-{{ section.id }} .press-feature__body {
-      font-size: var(--pf-body-size, 16px);
+    #shopify-section-{{ section.id }} .twin-frame__frame--fit-m-cover .twin-frame__img,
+    #shopify-section-{{ section.id }} .twin-frame__frame--fit-m-cover .twin-frame__video {
+      object-fit: cover;
     }
-  }
-  @media (min-width: 769px) {
-    #shopify-section-{{ section.id }} .press-feature__img {
+    #shopify-section-{{ section.id }} .twin-frame__frame--pos-m-top .twin-frame__img,
+    #shopify-section-{{ section.id }} .twin-frame__frame--pos-m-top .twin-frame__video {
       object-position: center top;
+    }
+    #shopify-section-{{ section.id }} .twin-frame__frame--pos-m-center .twin-frame__img,
+    #shopify-section-{{ section.id }} .twin-frame__frame--pos-m-center .twin-frame__video {
+      object-position: center center;
+    }
+    #shopify-section-{{ section.id }} .twin-frame__frame--pos-m-bottom .twin-frame__img,
+    #shopify-section-{{ section.id }} .twin-frame__frame--pos-m-bottom .twin-frame__video {
+      object-position: center bottom;
+    }
+    #shopify-section-{{ section.id }} .twin-frame__caption {
+      padding: 20px 8px 0;
+      text-align: left;
     }
   }
 </style>
 
 {% schema %}
 {
-  "name": "Press feature",
+  "name": "Twin frame",
   "tag": "section",
   "class": "section-press-feature",
   "settings": [
     {
       "type": "text",
-      "id": "anchor_id",
-      "label": "Anchor ID",
-      "default": "press"
-    },
-    {
-      "type": "text",
       "id": "aria_label",
-      "label": "Accessibility label"
+      "label": "Accessibility label",
+      "default": "Product in use"
     },
     {
       "type": "header",
-      "content": "Artwork"
+      "content": "Size"
+    },
+    {
+      "type": "range",
+      "id": "desktop_height",
+      "label": "Desktop frame height",
+      "min": 360,
+      "max": 720,
+      "step": 20,
+      "unit": "px",
+      "default": 520,
+      "info": "Height of both frames on desktop."
+    },
+    {
+      "type": "range",
+      "id": "mobile_height",
+      "label": "Mobile frame height",
+      "min": 200,
+      "max": 520,
+      "step": 10,
+      "unit": "px",
+      "default": 280,
+      "info": "Each stacked frame on phone."
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section background",
+      "default": "#faf8f6"
+    },
+    {
+      "type": "color",
+      "id": "caption_bg",
+      "label": "Caption background",
+      "default": "#faf8f6"
+    },
+    {
+      "type": "header",
+      "content": "Frame 1 (left / top on mobile)"
+    },
+    {
+      "type": "select",
+      "id": "media_1_type",
+      "label": "Media type",
+      "options": [
+        { "value": "image", "label": "Image" },
+        { "value": "video", "label": "Video" }
+      ],
+      "default": "image"
     },
     {
       "type": "image_picker",
-      "id": "image",
+      "id": "media_1_image",
       "label": "Image"
     },
     {
       "type": "text",
-      "id": "image_url",
-      "label": "Image URL fallback",
-      "default": "https://cdn.shopify.com/s/files/1/0045/0612/4391/files/Interni_Blog_Magazine_Page.png?v=1788892860",
-      "info": "Used only when Image picker is empty. Warm INTERNI page."
+      "id": "media_1_image_url",
+      "label": "Image URL fallback"
+    },
+    {
+      "type": "video",
+      "id": "media_1_video",
+      "label": "Video (Shopify Files)"
     },
     {
       "type": "text",
-      "id": "image_alt",
-      "label": "Image alt",
-      "default": "INTERNI magazine — Sano come un piede featuring Barreletics"
+      "id": "media_1_video_url",
+      "label": "Video URL fallback (mp4)",
+      "info": "Used only when Shopify video is empty."
     },
     {
-      "type": "color",
-      "id": "media_bg_color",
-      "label": "Image half fallback",
-      "default": "#F4EEE5",
-      "info": "Warm tone behind full-bleed artwork."
+      "type": "text",
+      "id": "media_1_alt",
+      "label": "Alt text"
+    },
+    {
+      "type": "select",
+      "id": "media_1_fit",
+      "label": "Fit · desktop",
+      "options": [
+        { "value": "cover", "label": "Cover" },
+        { "value": "contain", "label": "Contain" }
+      ],
+      "default": "cover"
+    },
+    {
+      "type": "select",
+      "id": "media_1_position",
+      "label": "Position · desktop",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "top", "label": "Top" },
+        { "value": "bottom", "label": "Bottom" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "media_1_fit_mobile",
+      "label": "Fit · mobile",
+      "options": [
+        { "value": "cover", "label": "Cover" },
+        { "value": "contain", "label": "Contain" }
+      ],
+      "default": "cover"
+    },
+    {
+      "type": "select",
+      "id": "media_1_position_mobile",
+      "label": "Position · mobile",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "top", "label": "Top" },
+        { "value": "bottom", "label": "Bottom" }
+      ],
+      "default": "center"
     },
     {
       "type": "header",
-      "content": "Copy"
+      "content": "Frame 2 (right / below on mobile)"
+    },
+    {
+      "type": "select",
+      "id": "media_2_type",
+      "label": "Media type",
+      "options": [
+        { "value": "image", "label": "Image" },
+        { "value": "video", "label": "Video" }
+      ],
+      "default": "image"
+    },
+    {
+      "type": "image_picker",
+      "id": "media_2_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "media_2_image_url",
+      "label": "Image URL fallback"
+    },
+    {
+      "type": "video",
+      "id": "media_2_video",
+      "label": "Video (Shopify Files)"
+    },
+    {
+      "type": "text",
+      "id": "media_2_video_url",
+      "label": "Video URL fallback (mp4)",
+      "info": "Used only when Shopify video is empty."
+    },
+    {
+      "type": "text",
+      "id": "media_2_alt",
+      "label": "Alt text"
+    },
+    {
+      "type": "select",
+      "id": "media_2_fit",
+      "label": "Fit · desktop",
+      "options": [
+        { "value": "cover", "label": "Cover" },
+        { "value": "contain", "label": "Contain" }
+      ],
+      "default": "cover"
+    },
+    {
+      "type": "select",
+      "id": "media_2_position",
+      "label": "Position · desktop",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "top", "label": "Top" },
+        { "value": "bottom", "label": "Bottom" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "media_2_fit_mobile",
+      "label": "Fit · mobile",
+      "options": [
+        { "value": "cover", "label": "Cover" },
+        { "value": "contain", "label": "Contain" }
+      ],
+      "default": "cover"
+    },
+    {
+      "type": "select",
+      "id": "media_2_position_mobile",
+      "label": "Position · mobile",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "top", "label": "Top" },
+        { "value": "bottom", "label": "Bottom" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Shared caption"
     },
     {
       "type": "text",
       "id": "eyebrow",
       "label": "Eyebrow",
-      "default": "AS SEEN IN INTERNI MAGAZINE"
+      "default": "IN USE"
     },
     {
       "type": "text",
       "id": "title",
       "label": "Heading",
-      "default": "Where performance, design and fashion meet."
+      "default": "Built for the work."
     },
     {
       "type": "textarea",
       "id": "body",
-      "label": "Body",
-      "default": "Featured in INTERNI’s July–August 2026 issue, Barreletics was included in Sano come un piede — an exploration of products and design changing how we think about foot health, movement and freedom."
-    },
-    {
-      "type": "textarea",
-      "id": "body_2",
-      "label": "Second paragraph"
-    },
-    {
-      "type": "textarea",
-      "id": "quote",
-      "label": "Quote"
-    },
-    {
-      "type": "text",
-      "id": "cta_text",
-      "label": "CTA",
-      "default": "READ THE FEATURE →"
-    },
-    {
-      "type": "text",
-      "id": "cta_url",
-      "label": "CTA URL",
-      "default": "/blogs/news/barreletics-in-interni"
-    },
-    {
-      "type": "color",
-      "id": "bg_color",
-      "label": "Copy panel background",
-      "default": "#ffffff"
+      "label": "Body"
     },
     {
       "type": "header",
-      "content": "Mobile visual frame (marketing)"
-    },
-    {
-      "type": "range",
-      "id": "mobile_media_height",
-      "label": "Photo height — phone",
-      "min": 220,
-      "max": 700,
-      "step": 10,
-      "unit": "px",
-      "default": 520,
-      "info": "PAGE-LAYOUT-OS Home/marketing: 520 to match fifty-fifty Grip/One Pair. Stay press-feature type."
-    },
-    {
-      "type": "range",
-      "id": "mobile_text_height",
-      "label": "Text column min-height — phone",
-      "min": 0,
-      "max": 700,
-      "step": 10,
-      "unit": "px",
-      "default": 520,
-      "info": "Match photo height (~520) so image≈text. 0 = natural content height."
-    },
-    {
-      "type": "range",
-      "id": "text_pad_top_mobile",
-      "label": "Text pad top — phone",
-      "min": 16,
-      "max": 120,
-      "step": 4,
-      "unit": "px",
-      "default": 32,
-      "info": "Marketing split frame: equal 32/32 + vertical center."
-    },
-    {
-      "type": "range",
-      "id": "text_pad_bottom_mobile",
-      "label": "Text pad bottom — phone",
-      "min": 16,
-      "max": 120,
-      "step": 4,
-      "unit": "px",
-      "default": 32,
-      "info": "Match top (32). Asymmetric 32/96 rejected on marketing."
-    },
-    {
-      "type": "select",
-      "id": "image_fit_mobile",
-      "label": "Image fit — phone",
-      "options": [
-        { "value": "cover", "label": "Cover (crop to fill)" },
-        { "value": "contain", "label": "Contain (letterbox)" }
-      ],
-      "default": "cover",
-      "info": "COVER default for fixed media height. Contain = Andrew-approved FIT exception only (Interni editorial media QC option C)."
-    },
-    {
-      "type": "select",
-      "id": "body_size",
-      "label": "Body size",
-      "options": [
-        { "value": "default", "label": "Type OS default" },
-        { "value": "16", "label": "16px" },
-        { "value": "17", "label": "17px" }
-      ],
-      "default": "16",
-      "info": "Marketing split frame: 16."
-    },
-    { "type": "header", "content": "Shared — Section frame" },
-    {
-      "type": "checkbox",
-      "id": "inset_custom_mobile",
-      "label": "Custom mobile inset",
-      "default": false
-    },
-    {
-      "type": "range",
-      "id": "inset_top",
-      "label": "Inset top",
-      "min": 0,
-      "max": 96,
-      "step": 4,
-      "unit": "px",
-      "default": 0
-    },
-    {
-      "type": "range",
-      "id": "inset_bottom",
-      "label": "Inset bottom",
-      "min": 0,
-      "max": 96,
-      "step": 4,
-      "unit": "px",
-      "default": 0
-    },
-    {
-      "type": "range",
-      "id": "inset_x",
-      "label": "Inset left & right",
-      "min": 0,
-      "max": 96,
-      "step": 4,
-      "unit": "px",
-      "default": 0
-    },
-    {
-      "type": "range",
-      "id": "inset_top_mobile",
-      "label": "Inset top — mobile",
-      "min": 0,
-      "max": 64,
-      "step": 4,
-      "unit": "px",
-      "default": 0
-    },
-    {
-      "type": "range",
-      "id": "inset_bottom_mobile",
-      "label": "Inset bottom — mobile",
-      "min": 0,
-      "max": 64,
-      "step": 4,
-      "unit": "px",
-      "default": 0
-    },
-    {
-      "type": "range",
-      "id": "inset_x_mobile",
-      "label": "Inset left & right — mobile",
-      "min": 0,
-      "max": 64,
-      "step": 4,
-      "unit": "px",
-      "default": 0
+      "content": "Visibility"
     },
     {
       "type": "checkbox",
@@ -473,14 +477,7 @@
   ],
   "presets": [
     {
-      "name": "Press feature",
-      "settings": {
-        "eyebrow": "AS SEEN IN INTERNI MAGAZINE",
-        "title": "Where performance, design and fashion meet.",
-        "quote": "“The most radical solution in its formal simplicity.”",
-        "cta_text": "READ THE FEATURE →",
-        "cta_url": "/blogs/news/barreletics-in-interni"
-      }
+      "name": "Twin frame"
     }
   ]
 }

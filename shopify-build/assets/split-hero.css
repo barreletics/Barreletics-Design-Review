@@ -1,6 +1,6 @@
 /**
  * Split hero — media-dominant lifestyle
- * Width split via --sh-media-pct. Desktop height = 100vh × --sh-height-scale (TE Section height).
+ * Width split via --sh-media-pct (TE). Desk height = min(640px,70vh) × --sh-height-scale (TE Section height). Same in TE + full page.
  * Full-bleed cover. No contain. No fill bands.
  * X/Y = object-position. Zoom = scale() min 1.
  * One --sh-media-radius clips both sides of the split (photo + copy).
@@ -9,7 +9,9 @@
 .split-hero {
   display: grid;
   grid-template-columns: minmax(0, var(--sh-media-pct, 62%)) minmax(0, calc(100% - var(--sh-media-pct, 62%)));
-  min-height: calc(100vh * var(--sh-height-scale, 1));
+  /* Desk height follows media aspect — NOT 100vh. 100vh made editor (sidebar) look
+     perfect and full-page crop differently (Andrew 2026-09-20). */
+  min-height: 0;
   align-items: stretch;
   background: transparent;
   overflow: hidden;
@@ -22,14 +24,30 @@
   overflow: hidden;
   box-sizing: border-box;
   width: 100%;
-  height: calc(100vh * var(--sh-height-scale, 1));
-  min-height: calc(100vh * var(--sh-height-scale, 1));
-  max-height: calc(100vh * var(--sh-height-scale, 1));
+  /* Base desk cap min(640px,70vh); TE Section height (--sh-height-scale) scales the whole section. */
+  height: calc(min(640px, 70vh) * var(--sh-height-scale, 1));
+  min-height: 0;
+  max-height: calc(min(640px, 70vh) * var(--sh-height-scale, 1));
   aspect-ratio: auto;
   background: transparent;
   isolation: isolate;
   border-radius: var(--sh-media-radius, 0px);
   clip-path: inset(0 round var(--sh-media-radius, 0px));
+}
+.split-hero {
+  min-height: 0 !important;
+}
+@media (min-width: 769px) {
+  .split-hero {
+    min-height: calc(min(640px, 70vh) * var(--sh-height-scale, 1));
+    height: calc(min(640px, 70vh) * var(--sh-height-scale, 1));
+  }
+  .split-hero__media,
+  .split-hero__copy {
+    height: 100%;
+    max-height: none;
+    min-height: 0;
+  }
 }
 
 .split-hero__media .split-hero__img,

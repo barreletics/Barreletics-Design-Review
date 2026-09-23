@@ -78,6 +78,7 @@
           assign card_caption = block.settings.caption
           assign card_link = block.settings.link
           assign fit = block.settings.media_fit | default: 'cover'
+          assign pos = block.settings.media_position | default: 'center'
           assign is_placeholder = block.settings.placeholder_gradient
           assign alt_text = card_title | default: 'Press' | strip_html
           assign img_src = blank
@@ -92,6 +93,11 @@
           endif
           if is_placeholder
             assign card_class = card_class | append: ' press-row__card--venice'
+          endif
+          if pos == 'top'
+            assign card_class = card_class | append: ' press-row__card--pos-top'
+          elsif pos == 'bottom'
+            assign card_class = card_class | append: ' press-row__card--pos-bottom'
           endif
         %}
         {% if card_link != blank %}
@@ -160,7 +166,7 @@
     grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.46fr) minmax(0, 0.46fr);
     grid-template-rows: 1fr 1fr;
     gap: 10px;
-    height: clamp(440px, 52vw, 540px);
+    height: {{ section.settings.desktop_height | default: 620 }}px;
   }
   #shopify-section-{{ section.id }} .press-row__hero {
     grid-row: 1 / 3;
@@ -257,6 +263,13 @@
     padding: 8px;
     background: #faf8f6;
   }
+
+  #shopify-section-{{ section.id }} .press-row__card--pos-top .press-row__card-media img {
+    object-position: center top !important;
+  }
+  #shopify-section-{{ section.id }} .press-row__card--pos-bottom .press-row__card-media img {
+    object-position: center bottom !important;
+  }
   #shopify-section-{{ section.id }} .press-row__card--venice .press-row__card-media {
     background: linear-gradient(160deg, #2a2420 0%, #3d3530 45%, #1c1916 100%);
   }
@@ -341,6 +354,17 @@
       "default": "Press"
     },
     {
+      "type": "range",
+      "id": "desktop_height",
+      "label": "Size · desktop height",
+      "min": 480,
+      "max": 720,
+      "step": 20,
+      "unit": "px",
+      "default": 620,
+      "info": "Taller = more of Runway / cards visible. Mobile stacks and ignores this."
+    },
+    {
       "type": "color",
       "id": "bg_color",
       "label": "Background",
@@ -419,10 +443,22 @@
           "id": "media_fit",
           "label": "Image fit",
           "options": [
-            { "value": "cover", "label": "Cover (runway)" },
-            { "value": "contain", "label": "Contain (magazine)" }
+            { "value": "cover", "label": "Cover (fill card)" },
+            { "value": "contain", "label": "Contain (fit inside)" }
           ],
           "default": "cover"
+        },
+        {
+          "type": "select",
+          "id": "media_position",
+          "label": "Image position",
+          "info": "For Cover — Top keeps heads in frame.",
+          "options": [
+            { "value": "center", "label": "Center" },
+            { "value": "top", "label": "Top" },
+            { "value": "bottom", "label": "Bottom" }
+          ],
+          "default": "center"
         },
         {
           "type": "checkbox",

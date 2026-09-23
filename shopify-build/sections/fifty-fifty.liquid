@@ -22,6 +22,32 @@
   assign media_fit = section.settings.media_fit | default: 'cover'
   assign image_fit_m = section.settings.image_fit_mobile | default: 'cover'
   assign media_aspect = section.settings.media_aspect | default: 'stretch'
+  assign media_aspect_m = section.settings.media_aspect_mobile | default: 'stretch'
+
+  # Text panel bg: preset white/cream or custom picker (bg_color). No preset → bg_color (compat).
+  assign bg_preset = section.settings.bg_preset | default: ''
+  if bg_preset == 'white'
+    assign panel_bg = '#ffffff'
+  elsif bg_preset == 'cream'
+    assign panel_bg = '#faf8f6'
+  elsif bg_preset == 'custom'
+    assign panel_bg = section.settings.bg_color | default: '#ffffff'
+  else
+    assign panel_bg = section.settings.bg_color | default: '#ffffff'
+  endif
+
+  # Media pad / letterbox bg when Fit or Contain.
+  # Schema default for NEW sections = white. Blank preset on older sections → keep media_bg.
+  assign media_bg_preset = section.settings.media_bg_preset
+  if media_bg_preset == 'cream'
+    assign media_pad_bg = '#faf8f6'
+  elsif media_bg_preset == 'white'
+    assign media_pad_bg = '#ffffff'
+  elsif media_bg_preset == 'custom'
+    assign media_pad_bg = section.settings.media_bg | default: '#ffffff'
+  else
+    assign media_pad_bg = section.settings.media_bg | default: '#ffffff'
+  endif
 
   assign cta_target = section.settings.cta_link_target | default: 'custom'
   if cta_target != blank and cta_target != 'custom'
@@ -85,12 +111,6 @@
   assign cta_bg = section.settings.cta_bg_color | default: '#c45c3f'
   assign cta_text_color = section.settings.cta_text_color | default: '#ffffff'
   assign cta_border = section.settings.cta_border_color | default: cta_bg
-  if cta_style == 'outline'
-    assign _cta_tc = cta_text_color | downcase | strip
-    if _cta_tc == '#ffffff' or _cta_tc == '#fff' or _cta_tc == 'white' or _cta_tc == blank
-      assign cta_text_color = cta_border
-    endif
-  endif
 
   assign region_label = section.settings.aria_label | strip
   if region_label == blank
@@ -126,7 +146,7 @@
 
 <section
   {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | handleize }}"{% endif %}
-  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} split-section{% if template.name == 'product' %} split-section--pdp{% endif %}{% if section.settings.reverse %} split-section--reverse{% endif %}{% if media_fit == 'contain' %} split-section--contain{% endif %}{% if media_fit == 'fit' %} split-section--fit{% endif %}{% if image_fit_m == 'fit' %} split-section--fit-m{% endif %}{% if image_fit_m == 'contain' %} split-section--contain-m{% endif %}{% if media_aspect == 'square' %} split-section--media-square{% endif %}{% render 'split-mobile-stack-class', mobile_stack_order: section.settings.mobile_stack_order %}"
+  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} split-section{% if template.name == 'product' %} split-section--pdp{% endif %}{% if section.settings.reverse %} split-section--reverse{% endif %}{% if media_fit == 'contain' %} split-section--contain{% endif %}{% if media_fit == 'fit' %} split-section--fit{% endif %}{% if media_fit == 'cover_inset' %} split-section--cover-inset{% endif %}{% if image_fit_m == 'fit' %} split-section--fit-m{% endif %}{% if image_fit_m == 'contain' %} split-section--contain-m{% endif %}{% if media_aspect == 'square' %} split-section--media-square{% endif %}{% if media_aspect_m == 'square' %} split-section--media-square-m{% endif %}{% render 'split-mobile-stack-class', mobile_stack_order: section.settings.mobile_stack_order %}"
   style="{% render 'section-inset-vars' %} 
     --ff-min-height: {{ min_height }}px;
     --ff-mobile-media-height: {{ mobile_media_height }}px;
@@ -138,7 +158,8 @@
     --ff-contain-width: {{ contain_width }}%;
     --ff-media-radius: {{ media_radius }}px;
     --ff-text-radius: {{ media_radius }}px;
-    --ff-panel-bg: {{ section.settings.bg_color | default: '#fff' }};
+    --ff-panel-bg: {{ panel_bg }};
+    --ff-media-pad-bg: {{ media_pad_bg }};
     --ff-column-gap: {{ column_gap }}px;
     --ff-side-padding: {{ side_padding }}px;
     --ff-vertical-padding: {{ vertical_padding }}px;
@@ -160,7 +181,7 @@
   "
   {% if region_label != blank %}aria-label="{{ region_label | escape }}"{% endif %}
 >
-  <div class="split-media"{% if media_fit == 'contain' %} style="background: {{ section.settings.media_bg | default: '#f9f9f9' }};"{% endif %}>
+  <div class="split-media" style="background: {{ media_pad_bg }};">
     <div class="split-media__clip">
     {% if section.settings.video != blank %}
       {{
@@ -236,7 +257,7 @@
       </div>
     {% endif %}
   {% endcapture %}
-  <div class="split-text align-editorial{% if content_style == 'quote' %} split-text--quote{% endif %}{% if content_style == 'stats' %} split-text--stats{% endif %}{% if content_style == 'statement' %} split-text--statement{% endif %}" style="background: {{ section.settings.bg_color | default: '#fff' }};">
+  <div class="split-text align-editorial{% if content_style == 'quote' %} split-text--quote{% endif %}{% if content_style == 'stats' %} split-text--stats{% endif %}{% if content_style == 'statement' %} split-text--statement{% endif %}" style="background: {{ panel_bg }};">
     {% if content_style == 'quote' %}
       {% if section.settings.eyebrow != blank %}
         <h2 class="split-text__title {{ heading_class }}" style="margin:0 0 20px;">{{ section.settings.eyebrow }}</h2>
@@ -367,7 +388,7 @@
     --ff-text-pad-bottom-m: {{ text_pad_bottom_m }}px;
     padding-block: var(--ff-section-gap, var(--section-padding-y, 32px));
     box-sizing: border-box;
-    background: {{ section.settings.bg_color | default: '#ffffff' }};
+    background: {{ panel_bg }};
   }
   /* Visible air you named: hero → mosaic tiles = 16 (mosaic pad). Cream, not white. */
   #shopify-section-{{ section.id }}:has(#never-loses-grip) {
@@ -465,6 +486,20 @@
     object-fit: cover;
     object-position: var(--ff-object-position, center);
   }
+  /* Cover inset (sit in panel): modest pad inside media column; media still object-fit cover */
+  #shopify-section-{{ section.id }} .split-section--cover-inset .split-media {
+    padding: 28px;
+    box-sizing: border-box;
+    background: {{ media_pad_bg }};
+  }
+  #shopify-section-{{ section.id }} .split-section--cover-inset .split-media__clip {
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  #shopify-section-{{ section.id }} .split-section--cover-inset .split-media__img,
+  #shopify-section-{{ section.id }} .split-section--cover-inset .split-media__video {
+    object-fit: cover;
+  }
   #shopify-section-{{ section.id }} .split-section--contain .split-media {
     display: flex;
     align-items: center;
@@ -533,7 +568,7 @@
     justify-content: center;
     align-items: flex-start;
     padding: var(--ff-vertical-padding, 88px) var(--ff-side-padding, 64px);
-    background: var(--ff-panel-bg, {{ section.settings.bg_color | default: '#fff' }});
+    background: var(--ff-panel-bg, {{ panel_bg }});
     overflow: hidden;
     border-radius: var(--ff-text-radius, 0);
     clip-path: inset(0 round var(--ff-text-radius, 0px));
@@ -626,7 +661,6 @@
   #shopify-section-{{ section.id }} .split-cta--outline {
     background: transparent;
     color: var(--ff-cta-text, var(--ff-cta-border, #c45c3f));
-    border-color: var(--ff-cta-border, #c45c3f);
   }
   #shopify-section-{{ section.id }} .split-cta:hover {
     opacity: 0.92;
@@ -650,12 +684,18 @@
     }
     #shopify-section-{{ section.id }} .split-section--reverse .split-media,
     #shopify-section-{{ section.id }} .split-section--reverse .split-text { order: 0; }
-    #shopify-section-{{ section.id }} .split-media,
-    #shopify-section-{{ section.id }} .split-section--media-square .split-media {
+    #shopify-section-{{ section.id }} .split-media {
       aspect-ratio: auto;
       width: 100%;
       height: var(--ff-mobile-media-height, 320px);
       min-height: var(--ff-mobile-media-height, 320px);
+    }
+    /* Phone square frame — 1/1; height follows width (ignore height slider). */
+    #shopify-section-{{ section.id }} .split-section--media-square-m .split-media {
+      aspect-ratio: 1 / 1;
+      width: 100%;
+      height: auto;
+      min-height: 0;
     }
     #shopify-section-{{ section.id }} .split-section.split-section--fit .split-media,
     #shopify-section-{{ section.id }} .split-section.split-section--fit-m .split-media {
@@ -844,13 +884,23 @@
     object-position: var(--ff-object-position, center);
   }
   @media (max-width: 768px) {
-    #shopify-section-{{ section.id }} .split-section:not(.split-section--contain):not(.split-section--fit):not(.split-section--fit-m):not(.split-section--contain-m) .split-media {
+    #shopify-section-{{ section.id }} .split-section:not(.split-section--contain):not(.split-section--fit):not(.split-section--fit-m):not(.split-section--contain-m):not(.split-section--media-square-m) .split-media {
       position: relative;
       align-self: stretch;
       width: 100%;
       height: var(--ff-mobile-media-height, 550px);
       min-height: var(--ff-mobile-media-height, 550px);
       aspect-ratio: auto;
+      overflow: hidden;
+      background: transparent;
+    }
+    #shopify-section-{{ section.id }} .split-section.split-section--media-square-m:not(.split-section--contain):not(.split-section--fit):not(.split-section--fit-m):not(.split-section--contain-m) .split-media {
+      position: relative;
+      align-self: stretch;
+      width: 100%;
+      height: auto;
+      min-height: 0;
+      aspect-ratio: 1 / 1;
       overflow: hidden;
       background: transparent;
     }
@@ -881,7 +931,7 @@
     height: 100%;
     min-height: var(--ff-min-height, 560px);
     overflow: hidden;
-    background: {{ section.settings.media_bg | default: '#ffffff' }};
+    background: {{ media_pad_bg }};
   }
   #shopify-section-{{ section.id }} .split-section.split-section--pdp.split-section--fit .split-media__clip {
     position: absolute;
@@ -906,7 +956,7 @@
     #shopify-section-{{ section.id }} .split-section.split-section--pdp.split-section--fit-m .split-media {
       height: var(--ff-mobile-media-height, 550px);
       min-height: var(--ff-mobile-media-height, 550px);
-      background: {{ section.settings.media_bg | default: section.settings.bg_color | default: '#faf8f6' }};
+      background: {{ media_pad_bg }};
     }
     #shopify-section-{{ section.id }} .split-section.split-section--pdp.split-section--fit-m .split-media__clip {
       position: absolute;
@@ -999,7 +1049,11 @@
       "options": [
         {
           "value": "cover",
-          "label": "Cover (lifestyle / video)"
+          "label": "Cover (fill half)"
+        },
+        {
+          "value": "cover_inset",
+          "label": "Cover inset (sit in panel)"
         },
         {
           "value": "fit",
@@ -1011,7 +1065,7 @@
         }
       ],
       "default": "cover",
-      "info": "Cover = fill like Closed. Fit = whole photo inside the locked frame. Contain = packshot only."
+      "info": "Cover = edge-to-edge media half. Cover inset = sit in panel (modest pad + radius). Fit/Contain unchanged."
     },
     {
       "type": "select",
@@ -1119,10 +1173,32 @@
       "info": "Only when Media fit = Contain. WORKING mock uses ~72%."
     },
     {
+      "type": "select",
+      "id": "media_bg_preset",
+      "label": "Media pad / letterbox background",
+      "options": [
+        {
+          "value": "white",
+          "label": "White (#ffffff)"
+        },
+        {
+          "value": "cream",
+          "label": "Cream — sock-era (#faf8f6)"
+        },
+        {
+          "value": "custom",
+          "label": "Custom (picker below)"
+        }
+      ],
+      "default": "custom",
+      "info": "Always paints the media column (Cover included). Pick Custom, then use the color picker below."
+    },
+    {
       "type": "color",
       "id": "media_bg",
-      "label": "Media background (contain)",
-      "default": "#f9f9f9"
+      "label": "Custom media pad / letterbox color",
+      "default": "#ffffff",
+      "info": "Pick Custom above, then set this. White=#ffffff. Cream=#faf8f6 only (never #f5f2ec)."
     },
     {
       "type": "range",
@@ -1191,21 +1267,42 @@
       "info": "LOCKED global PDP standard: 96 (matches top). Packshot FIT letterbox is NOT text pad — fix media frame height instead."
     },
     {
+      "type": "header",
+      "content": "Frame shape"
+    },
+    {
       "type": "select",
       "id": "media_aspect",
-      "label": "Media frame shape",
+      "label": "Frame shape — desktop",
       "options": [
         {
           "value": "stretch",
-          "label": "Stretch to section height (default)"
+          "label": "Fill height"
         },
         {
           "value": "square",
-          "label": "Square — packshots under cover"
+          "label": "Square"
         }
       ],
       "default": "stretch",
-      "info": "Square keeps TopBottom packshots inside the frame with media_fit Cover (no landscape toe-clip). Lifestyle photos stay on Stretch."
+      "info": "Fill height keeps value stretch (backward compatible). Square = 1:1 media column on desktop."
+    },
+    {
+      "type": "select",
+      "id": "media_aspect_mobile",
+      "label": "Frame shape — phone",
+      "options": [
+        {
+          "value": "stretch",
+          "label": "Fill height"
+        },
+        {
+          "value": "square",
+          "label": "Square"
+        }
+      ],
+      "default": "stretch",
+      "info": "Fill height uses Photo height — phone slider. Square forces 1:1 on phone (height follows width)."
     },
     {
       "type": "header",
@@ -1888,11 +1985,32 @@
       "info": "One slider — photo side and text side."
     },
     {
+      "type": "select",
+      "id": "bg_preset",
+      "label": "Text panel background",
+      "options": [
+        {
+          "value": "white",
+          "label": "White (#ffffff)"
+        },
+        {
+          "value": "cream",
+          "label": "Cream — sock-era (#faf8f6)"
+        },
+        {
+          "value": "custom",
+          "label": "Custom (picker below)"
+        }
+      ],
+      "default": "custom",
+      "info": "Pick Custom, then use the color picker. If unset on older sections, bg_color still applies."
+    },
+    {
       "type": "color",
       "id": "bg_color",
-      "label": "Text panel background",
+      "label": "Custom text panel color",
       "default": "#ffffff",
-      "info": "Shades the text column so radius + middle gap are visible. Use white/cream/soft gray as needed."
+      "info": "Pick Custom above, then set this. White=#ffffff. Cream=#faf8f6 only (never #f5f2ec)."
     },
     {
       "type": "text",

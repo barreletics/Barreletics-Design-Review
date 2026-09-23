@@ -1,0 +1,313 @@
+{% comment %}
+  Press / recognition-split — one layout per section instance (TE):
+  - coperni_rail: Coperni video + tiles | large press cards
+  - interni_press: Interni feature | press cards (add/remove/edit blocks)
+  Section label (e.g. Press) at top. No inner "Press" on the cards column.
+{% endcomment %}
+{% liquid
+  assign layout = section.settings.layout | default: 'coperni_rail'
+  assign bg = section.settings.bg_color | default: '#faf8f6'
+%}
+<section
+  id="recognition-{{ section.id }}"
+  class="recognition-split recognition-split--{{ layout }} section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %}"
+  style="{% render 'section-inset-vars' %} --rs-bg: {{ bg }};"
+  {% if section.settings.aria_label != blank %}aria-label="{{ section.settings.aria_label | escape }}"{% endif %}
+>
+  {% if section.settings.heading != blank %}
+    <p class="recognition-split__heading">{{ section.settings.heading }}</p>
+  {% endif %}
+  <div class="recognition-split__inner">
+    {% if layout == 'interni_press' %}
+      <div class="recognition-split__feature">
+        <div class="recognition-split__feature-media">
+          {% if section.settings.feature_image != blank %}
+            <img src="{{ section.settings.feature_image | image_url: width: 1600 }}" alt="{{ section.settings.feature_image_alt | escape }}" loading="lazy" width="800" height="1000">
+          {% elsif section.settings.feature_image_url != blank %}
+            <img src="{{ section.settings.feature_image_url | escape }}" alt="{{ section.settings.feature_image_alt | escape }}" loading="lazy">
+          {% endif %}
+        </div>
+        <div class="recognition-split__feature-copy">
+          {% if section.settings.feature_eyebrow != blank %}<p class="recognition-split__eyebrow">{{ section.settings.feature_eyebrow }}</p>{% endif %}
+          {% if section.settings.feature_title != blank %}<h2 class="recognition-split__title">{{ section.settings.feature_title }}</h2>{% endif %}
+          {% if section.settings.feature_body != blank %}<p class="recognition-split__body">{{ section.settings.feature_body }}</p>{% endif %}
+          {% if section.settings.feature_link != blank %}
+            <a class="recognition-split__arrow" href="{{ section.settings.feature_link }}">{% if section.settings.feature_link_label != blank %}{{ section.settings.feature_link_label }}{% else %}→{% endif %}</a>
+          {% endif %}
+        </div>
+      </div>
+      <div class="recognition-split__cards">
+        <div class="recognition-split__cards-grid">
+          {% for block in section.blocks %}
+            {% if block.type != 'card' %}{% continue %}{% endif %}
+            <article class="recognition-split__card" {{ block.shopify_attributes }}>
+              <div class="recognition-split__card-media">
+                {% if block.settings.media_type == 'video' %}
+                  {% if block.settings.video != blank %}
+                    {{ block.settings.video | video_tag: image_size: '1200x', autoplay: true, loop: true, muted: true, controls: false, playsinline: true, class: 'recognition-split__video' }}
+                  {% elsif block.settings.video_url != blank %}
+                    <video class="recognition-split__video" autoplay muted loop playsinline preload="metadata"{% if block.settings.poster_url != blank %} poster="{{ block.settings.poster_url | escape }}"{% endif %}>
+                      <source src="{{ block.settings.video_url | escape }}" type="video/mp4">
+                    </video>
+                  {% endif %}
+                {% else %}
+                  {% if block.settings.image != blank %}
+                    <img src="{{ block.settings.image | image_url: width: 1000 }}" alt="{{ block.settings.title | escape }}" loading="lazy">
+                  {% elsif block.settings.image_url != blank %}
+                    <img src="{{ block.settings.image_url | escape }}" alt="{{ block.settings.title | escape }}" loading="lazy">
+                  {% endif %}
+                {% endif %}
+              </div>
+              {% if block.settings.title != blank %}<p class="recognition-split__card-title">{{ block.settings.title }}</p>{% endif %}
+              {% if block.settings.caption != blank %}<p class="recognition-split__card-cap">{{ block.settings.caption }}{% if block.settings.link != blank %} →{% endif %}</p>{% endif %}
+              {% if block.settings.link != blank %}<a class="recognition-split__card-hit" href="{{ block.settings.link }}" aria-label="{{ block.settings.title | escape }}"></a>{% endif %}
+            </article>
+          {% endfor %}
+        </div>
+      </div>
+    {% else %}
+      <div class="recognition-split__stage">
+        <div class="recognition-split__stage-video">
+          {% if section.settings.video != blank %}
+            {{ section.settings.video | video_tag: image_size: '2000x', autoplay: true, loop: true, muted: true, controls: false, playsinline: true, class: 'recognition-split__video' }}
+          {% elsif section.settings.video_url != blank %}
+            <video class="recognition-split__video" autoplay muted loop playsinline preload="metadata"{% if section.settings.poster_url != blank %} poster="{{ section.settings.poster_url | escape }}"{% endif %}>
+              <source src="{{ section.settings.video_url | escape }}" type="video/mp4">
+            </video>
+          {% endif %}
+          {% if section.settings.stage_eyebrow != blank %}<p class="recognition-split__stage-eyebrow">{{ section.settings.stage_eyebrow }}</p>{% endif %}
+          {% if section.settings.stage_title != blank %}<p class="recognition-split__stage-title">{{ section.settings.stage_title }}</p>{% endif %}
+        </div>
+        <div class="recognition-split__tiles">
+          {% for block in section.blocks %}
+            {% if block.type != 'tile' %}{% continue %}{% endif %}
+            <a class="recognition-split__tile" href="{{ block.settings.link | default: '#' }}" {{ block.shopify_attributes }}>
+              {% if block.settings.image != blank %}
+                <img src="{{ block.settings.image | image_url: width: 800 }}" alt="{{ block.settings.alt | escape }}" loading="lazy">
+              {% elsif block.settings.image_url != blank %}
+                <img src="{{ block.settings.image_url | escape }}" alt="{{ block.settings.alt | escape }}" loading="lazy">
+              {% endif %}
+              {% if block.settings.label != blank %}<span>{{ block.settings.label }}</span>{% endif %}
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="recognition-split__rail">
+        {% for block in section.blocks %}
+          {% if block.type != 'rail_image' and block.type != 'card' %}{% continue %}{% endif %}
+          <a class="recognition-split__rail-item" href="{{ block.settings.link | default: '#' }}" {{ block.shopify_attributes }}>
+            {% if block.type == 'card' and block.settings.media_type == 'video' %}
+              <div class="recognition-split__rail-media">
+                {% if block.settings.video != blank %}
+                  {{ block.settings.video | video_tag: image_size: '1200x', autoplay: true, loop: true, muted: true, controls: false, playsinline: true, class: 'recognition-split__video' }}
+                {% elsif block.settings.video_url != blank %}
+                  <video class="recognition-split__video" autoplay muted loop playsinline preload="metadata"{% if block.settings.poster_url != blank %} poster="{{ block.settings.poster_url | escape }}"{% endif %}>
+                    <source src="{{ block.settings.video_url | escape }}" type="video/mp4">
+                  </video>
+                {% endif %}
+              </div>
+            {% else %}
+              {% if block.settings.image != blank %}
+                <img src="{{ block.settings.image | image_url: width: 1200 }}" alt="{{ block.settings.title | escape }}" loading="lazy">
+              {% elsif block.settings.image_url != blank %}
+                <img src="{{ block.settings.image_url | escape }}" alt="{{ block.settings.title | escape }}" loading="lazy">
+              {% endif %}
+            {% endif %}
+            {% if block.settings.title != blank %}<p class="recognition-split__card-title">{{ block.settings.title }}</p>{% endif %}
+            {% if block.settings.caption != blank %}<p class="recognition-split__card-cap">{{ block.settings.caption }}</p>{% endif %}
+          </a>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  #shopify-section-{{ section.id }} { background: var(--rs-bg, #faf8f6); font-family: var(--font-family, 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif); }
+  #shopify-section-{{ section.id }} .recognition-split { background: var(--rs-bg, #faf8f6); padding: 28px 20px 0; }
+  #shopify-section-{{ section.id }} .recognition-split__heading {
+    margin: 0 0 16px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 11px;
+    font-weight: 700;
+    color: #1c1916;
+  }
+  #shopify-section-{{ section.id }} .recognition-split__inner { display: grid; gap: 0; }
+  @media (min-width: 750px) {
+    #shopify-section-{{ section.id }} .recognition-split__inner {
+      height: min(480px, 58vh);
+      max-height: min(480px, 58vh);
+      overflow: hidden;
+      align-items: stretch;
+    }
+    #shopify-section-{{ section.id }} .recognition-split--coperni_rail .recognition-split__inner {
+      grid-template-columns: 1.15fr 1fr;
+    }
+    #shopify-section-{{ section.id }} .recognition-split--interni_press .recognition-split__inner {
+      grid-template-columns: 1.1fr 1fr;
+    }
+    #shopify-section-{{ section.id }} .recognition-split__stage,
+    #shopify-section-{{ section.id }} .recognition-split__rail,
+    #shopify-section-{{ section.id }} .recognition-split__feature,
+    #shopify-section-{{ section.id }} .recognition-split__cards {
+      height: 100%;
+      min-height: 0;
+    }
+    #shopify-section-{{ section.id }} .recognition-split__stage-video {
+      aspect-ratio: auto;
+      height: 100%;
+      min-height: 0;
+    }
+    #shopify-section-{{ section.id }} .recognition-split__tiles { height: 100%; min-height: 0; }
+    #shopify-section-{{ section.id }} .recognition-split__rail-item { height: 100%; }
+    #shopify-section-{{ section.id }} .recognition-split__rail-item img {
+      aspect-ratio: auto;
+      flex: 1 1 auto;
+      min-height: 0;
+      height: auto;
+    }
+    #shopify-section-{{ section.id }} .recognition-split__feature-media { height: 100%; min-height: 0; }
+    #shopify-section-{{ section.id }} .recognition-split__cards { padding: 12px 14px; gap: 10px; }
+    #shopify-section-{{ section.id }} .recognition-split__cards-grid {
+      flex: 1 1 auto;
+      min-height: 0;
+      align-items: stretch;
+      gap: 10px;
+      height: 100%;
+    }
+    #shopify-section-{{ section.id }} .recognition-split__card { height: 100%; min-height: 0; }
+    #shopify-section-{{ section.id }} .recognition-split__card-media {
+      aspect-ratio: auto;
+      flex: 1 1 auto;
+      min-height: 0;
+    }
+    #shopify-section-{{ section.id }} .recognition-split__card-title { min-height: 1.25em; flex: 0 0 auto; }
+    #shopify-section-{{ section.id }} .recognition-split__card-cap {
+      min-height: 1.35em;
+      flex: 0 0 auto;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    #shopify-section-{{ section.id }} .recognition-split__feature-copy {
+      padding: 18px 18px;
+      gap: 10px;
+      min-height: 0;
+      overflow: hidden;
+    }
+    #shopify-section-{{ section.id }} .recognition-split__body {
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  }
+  #shopify-section-{{ section.id }} .recognition-split__stage { display: grid; grid-template-columns: 1.4fr 0.7fr; gap: 8px; min-height: 0; padding: 6px; }
+  #shopify-section-{{ section.id }} .recognition-split__stage-video { position: relative; background: #111; overflow: hidden; aspect-ratio: 16 / 11; }
+  #shopify-section-{{ section.id }} .recognition-split__video,
+  #shopify-section-{{ section.id }} .recognition-split__stage-video img,
+  #shopify-section-{{ section.id }} .recognition-split__tile img,
+  #shopify-section-{{ section.id }} .recognition-split__rail-item img,
+  #shopify-section-{{ section.id }} .recognition-split__feature-media img,
+  #shopify-section-{{ section.id }} .recognition-split__card-media img,
+  #shopify-section-{{ section.id }} .recognition-split__card-media video,
+  #shopify-section-{{ section.id }} .recognition-split__rail-media video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  #shopify-section-{{ section.id }} .recognition-split__stage-eyebrow { position: absolute; left: 16px; top: 16px; color: rgba(255,255,255,0.88); font-size: var(--type-label-size, 11px); font-weight: var(--type-label-weight, 600); letter-spacing: var(--type-label-tracking, 0.08em); text-transform: uppercase; margin: 0; }
+  #shopify-section-{{ section.id }} .recognition-split__stage-title { position: absolute; left: 16px; bottom: 20px; color: #faf8f6; margin: 0; font-size: var(--type-statement-size, clamp(28px, 3vw, 36px)); font-weight: var(--type-statement-weight, 500); line-height: var(--type-statement-leading, 1.12); letter-spacing: var(--type-statement-tracking, -0.022em); max-width: 15ch; }
+  #shopify-section-{{ section.id }} .recognition-split__tiles { display: grid; grid-template-rows: 1fr 1fr; gap: 8px; }
+  #shopify-section-{{ section.id }} .recognition-split__tile { position: relative; display: block; overflow: hidden; background: #eee; min-height: 0; }
+  #shopify-section-{{ section.id }} .recognition-split__tile span { position: absolute; left: 10px; bottom: 10px; color: #fff; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; }
+  #shopify-section-{{ section.id }} .recognition-split__rail { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; padding: 6px; min-height: 0; align-items: stretch; }
+  #shopify-section-{{ section.id }} .recognition-split__rail-media { flex: 1 1 auto; min-height: 0; overflow: hidden; background: #111; }
+  #shopify-section-{{ section.id }} .recognition-split__rail-item { display: flex; flex-direction: column; gap: 8px; text-decoration: none; color: inherit; min-height: 0; }
+  #shopify-section-{{ section.id }} .recognition-split__rail-item img { aspect-ratio: 4 / 5; }
+  #shopify-section-{{ section.id }} .recognition-split__feature { display: grid; grid-template-columns: 1fr 1fr; min-height: 0; align-items: stretch; }
+  #shopify-section-{{ section.id }} .recognition-split__feature-media { background: #eee; min-height: 0; overflow: hidden; }
+  #shopify-section-{{ section.id }} .recognition-split__feature-copy { padding: 24px 22px; display: flex; flex-direction: column; justify-content: center; gap: 12px; }
+  #shopify-section-{{ section.id }} .recognition-split__eyebrow { margin: 0; font-size: var(--type-label-size, 11px); font-weight: var(--type-label-weight, 600); letter-spacing: var(--type-label-tracking, 0.08em); text-transform: uppercase; color: var(--type-label-color, #6b645a); }
+  #shopify-section-{{ section.id }} .recognition-split__title { margin: 0; font-size: var(--type-h2-supporting-size, 40px); font-weight: var(--type-h2-supporting-weight, 400); line-height: var(--type-h2-supporting-leading, 1.1); letter-spacing: var(--type-h2-supporting-tracking, -0.02em); color: var(--text-primary, #1c1916); }
+  #shopify-section-{{ section.id }} .recognition-split__body { margin: 0; font-size: var(--type-body-size, 16px); font-weight: var(--type-body-weight, 400); line-height: var(--type-body-leading, 1.72); color: var(--text-body, #4a4a4a); }
+  #shopify-section-{{ section.id }} .recognition-split__arrow { margin-top: 12px; color: inherit; text-decoration: none; }
+  #shopify-section-{{ section.id }} .recognition-split__cards { padding: 16px 16px; display: flex; flex-direction: column; gap: 16px; min-height: 0; }
+  #shopify-section-{{ section.id }} .recognition-split__cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; align-items: stretch; }
+  #shopify-section-{{ section.id }} .recognition-split__card { position: relative; display: flex; flex-direction: column; gap: 8px; min-height: 0; }
+  #shopify-section-{{ section.id }} .recognition-split__card-media { aspect-ratio: 5 / 6; overflow: hidden; background: #eee; }
+  #shopify-section-{{ section.id }} .recognition-split__card-title { margin: 0; font-weight: 600; font-size: 14px; }
+  #shopify-section-{{ section.id }} .recognition-split__card-cap { margin: 0; font-size: 13px; color: #6b6560; }
+  #shopify-section-{{ section.id }} .recognition-split__card-hit { position: absolute; inset: 0; }
+  @media (max-width: 749px) {
+    #shopify-section-{{ section.id }} .recognition-split__inner { height: auto; max-height: none; }
+    #shopify-section-{{ section.id }} .recognition-split__stage { grid-template-columns: 1fr; }
+    #shopify-section-{{ section.id }} .recognition-split__tiles { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+    #shopify-section-{{ section.id }} .recognition-split__rail { grid-template-columns: 1fr; }
+    #shopify-section-{{ section.id }} .recognition-split__feature { grid-template-columns: 1fr; }
+    #shopify-section-{{ section.id }} .recognition-split__cards-grid { grid-template-columns: 1fr; }
+    #shopify-section-{{ section.id }} .recognition-split__card-media { aspect-ratio: 5 / 6; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Press",
+  "tag": "section",
+  "class": "section-recognition-split",
+  "settings": [
+    { "type": "select", "id": "layout", "label": "Layout", "default": "coperni_rail", "options": [
+      { "value": "coperni_rail", "label": "Coperni stage | large cards" },
+      { "value": "interni_press", "label": "Interni feature | press cards" }
+    ]},
+    { "type": "text", "id": "heading", "label": "Section label", "default": "Press" },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#faf8f6" },
+    { "type": "text", "id": "aria_label", "label": "Aria label", "default": "Press and collaborations" },
+    { "type": "header", "content": "Coperni stage" },
+    { "type": "video", "id": "video", "label": "Video" },
+    { "type": "text", "id": "video_url", "label": "Video URL fallback" },
+    { "type": "text", "id": "poster_url", "label": "Poster URL" },
+    { "type": "text", "id": "stage_eyebrow", "label": "Stage eyebrow", "default": "BARRELETICS × COPERNI" },
+    { "type": "text", "id": "stage_title", "label": "Stage title", "default": "Barreletics × Coperni" },
+    { "type": "header", "content": "Interni feature" },
+    { "type": "image_picker", "id": "feature_image", "label": "Interni image" },
+    { "type": "text", "id": "feature_image_url", "label": "Interni image URL fallback" },
+    { "type": "text", "id": "feature_image_alt", "label": "Interni alt" },
+    { "type": "text", "id": "feature_eyebrow", "label": "Eyebrow", "default": "AS SEEN IN INTERNI MAGAZINE" },
+    { "type": "text", "id": "feature_title", "label": "Title", "default": "Where performance, design and fashion meet." },
+    { "type": "textarea", "id": "feature_body", "label": "Body" },
+    { "type": "url", "id": "feature_link", "label": "Feature link" },
+    { "type": "text", "id": "feature_link_label", "label": "Feature link label", "default": "→" },
+    { "type": "checkbox", "id": "hide_on_mobile", "label": "Hide on mobile", "default": false },
+    { "type": "checkbox", "id": "hide_on_desktop", "label": "Hide on desktop", "default": false }
+  ],
+  "blocks": [
+    { "type": "tile", "name": "Stage tile", "settings": [
+      { "type": "image_picker", "id": "image", "label": "Image" },
+      { "type": "text", "id": "image_url", "label": "Image URL" },
+      { "type": "text", "id": "alt", "label": "Alt" },
+      { "type": "text", "id": "label", "label": "Label" },
+      { "type": "url", "id": "link", "label": "Link" }
+    ]},
+    { "type": "rail_image", "name": "Press card (large)", "settings": [
+      { "type": "image_picker", "id": "image", "label": "Image" },
+      { "type": "text", "id": "image_url", "label": "Image URL" },
+      { "type": "text", "id": "title", "label": "Title" },
+      { "type": "text", "id": "caption", "label": "Caption" },
+      { "type": "url", "id": "link", "label": "Link" }
+    ]},
+    { "type": "card", "name": "Press card", "settings": [
+      { "type": "select", "id": "media_type", "label": "Media", "default": "image", "options": [
+        { "value": "image", "label": "Image" }, { "value": "video", "label": "Video" }
+      ]},
+      { "type": "image_picker", "id": "image", "label": "Image" },
+      { "type": "text", "id": "image_url", "label": "Image URL" },
+      { "type": "video", "id": "video", "label": "Video" },
+      { "type": "text", "id": "video_url", "label": "Video URL" },
+      { "type": "text", "id": "poster_url", "label": "Poster URL" },
+      { "type": "text", "id": "title", "label": "Title" },
+      { "type": "text", "id": "caption", "label": "Caption" },
+      { "type": "url", "id": "link", "label": "Link" }
+    ]}
+  ],
+  "presets": [{ "name": "Press" }]
+}
+{% endschema %}
