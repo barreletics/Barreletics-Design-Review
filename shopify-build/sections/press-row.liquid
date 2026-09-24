@@ -20,7 +20,7 @@
 
 <section
   id="press-row-{{ section.id }}"
-  class="press-row"
+  class="press-row{% if section.settings.hide_on_mobile %} press-row--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} press-row--hide-desktop{% endif %}"
   style="--pr-bg: {{ bg }};"
   aria-label="{{ heading | strip_html | escape }}"
 >
@@ -111,6 +111,12 @@
           elsif pos == 'bottom'
             assign card_class = card_class | append: ' press-row__card--pos-bottom'
           endif
+          if block.settings.hide_on_desktop
+            assign card_class = card_class | append: ' press-row__card--hide-desktop'
+          endif
+          if block.settings.hide_on_mobile
+            assign card_class = card_class | append: ' press-row__card--hide-mobile'
+          endif
         %}
         {% if card_link != blank %}
           <a class="{{ card_class }}" href="{{ card_link }}" {{ block.shopify_attributes }}>
@@ -191,6 +197,15 @@
     grid-template-rows: 1fr 1fr;
     gap: 10px;
     height: {{ section.settings.desktop_height | default: 620 }}px;
+  }
+  /* Per-card + section-level visibility toggles. Cards use display:none; grid keeps its shape (empty cells possible with 3 visible). */
+  @media (min-width: 901px) {
+    #shopify-section-{{ section.id }} .press-row__card--hide-desktop { display: none; }
+    #shopify-section-{{ section.id }} .press-row--hide-desktop { display: none; }
+  }
+  @media (max-width: 900px) {
+    #shopify-section-{{ section.id }} .press-row__card--hide-mobile { display: none; }
+    #shopify-section-{{ section.id }} .press-row--hide-mobile { display: none; }
   }
   #shopify-section-{{ section.id }} .press-row__hero {
     grid-row: 1 / 3;
@@ -442,7 +457,10 @@
       "id": "hero_line",
       "label": "Hero overlay line",
       "default": "Limited edition · Paris 2026"
-    }
+    },
+    { "type": "header", "content": "Visibility" },
+    { "type": "checkbox", "id": "hide_on_mobile", "label": "Hide on mobile", "default": false },
+    { "type": "checkbox", "id": "hide_on_desktop", "label": "Hide on desktop", "default": false }
   ],
   "blocks": [
     {
@@ -503,7 +521,10 @@
           "id": "placeholder_gradient",
           "label": "Placeholder gradient (no image)",
           "default": false
-        }
+        },
+        { "type": "header", "content": "Visibility" },
+        { "type": "checkbox", "id": "hide_on_desktop", "label": "Hide on desktop", "default": false },
+        { "type": "checkbox", "id": "hide_on_mobile", "label": "Hide on mobile", "default": false, "info": "Hidden card leaves an empty grid cell — hide from the end of the list for cleanest layout." }
       ]
     }
   ],
