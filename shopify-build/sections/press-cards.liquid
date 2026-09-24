@@ -7,6 +7,7 @@
   assign heading = section.settings.heading | default: 'PRESS'
   assign bg = section.settings.bg_color | default: '#faf8f6'
   assign cols = section.settings.columns_desktop | default: 3
+  assign cols_mobile = section.settings.columns_mobile | default: 1
   assign gap = section.settings.gap | default: 16
   assign radius = section.settings.card_radius | default: 0
   assign pad_y = section.settings.padding_y | default: 48
@@ -27,6 +28,7 @@
     --pc-pad-y: {{ pad_y }}px;
     --pc-pad-x: {{ pad_x }}px;
     --pc-ratio: {{ media_ratio }};
+    --pc-cols-mobile: {{ cols_mobile }};
   "
   aria-label="{{ heading | strip_html | escape }}"
 >
@@ -47,8 +49,15 @@
           assign image_fit = block.settings.image_fit | default: 'cover'
           assign alt_text = card_title | default: card_eyebrow | default: 'Press' | strip_html
           assign pc_sizes = '(max-width: 749px) 100vw, calc(100vw / ' | append: cols | append: ')'
+          assign card_class = 'press-cards__card'
+          if block.settings.hide_on_desktop
+            assign card_class = card_class | append: ' press-cards__card--hide-desktop'
+          endif
+          if block.settings.hide_on_mobile
+            assign card_class = card_class | append: ' press-cards__card--hide-mobile'
+          endif
         %}
-        <article class="press-cards__card" {{ block.shopify_attributes }}>
+        <article class="{{ card_class }}" {{ block.shopify_attributes }}>
           <div class="press-cards__media press-cards__media--{{ image_fit }}">
             {% if media_type == 'video' %}
               {% if block.settings.video != blank %}
@@ -234,6 +243,13 @@
     grid-template-columns: repeat(var(--pc-cols, 3), minmax(0, 1fr));
     gap: var(--pc-gap, 16px);
   }
+  /* Per-card hide toggles. display:none removes from grid so remaining cards fill columns cleanly. */
+  @media (min-width: 750px) {
+    #shopify-section-{{ section.id }} .press-cards__card--hide-desktop { display: none; }
+  }
+  @media (max-width: 749px) {
+    #shopify-section-{{ section.id }} .press-cards__card--hide-mobile { display: none; }
+  }
   #shopify-section-{{ section.id }} .press-cards__card {
     position: relative;
     display: flex;
@@ -255,6 +271,16 @@
     object-fit: cover;
     object-position: center;
     display: block;
+  }
+  /* Over-scale video only — clips baked-in letterbox bars (Coperni video etc.) via parent overflow:hidden. */
+  #shopify-section-{{ section.id }} .press-cards__video {
+    position: absolute;
+    top: -8%;
+    left: -8%;
+    width: 116%;
+    height: 116%;
+    max-width: none;
+    max-height: none;
   }
   #shopify-section-{{ section.id }} .press-cards__media--contain .press-cards__img,
   #shopify-section-{{ section.id }} .press-cards__media--contain .press-cards__video {
@@ -341,7 +367,7 @@
       padding: 32px 20px;
     }
     #shopify-section-{{ section.id }} .press-cards__grid {
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(var(--pc-cols-mobile, 1), minmax(0, 1fr));
     }
   }
 </style>
@@ -393,6 +419,17 @@
       "max": 4,
       "step": 1,
       "default": 3
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Mobile columns",
+      "options": [
+        { "value": "1", "label": "1 column (stack)" },
+        { "value": "2", "label": "2 columns" }
+      ],
+      "default": "1",
+      "info": "1 = stack. 2 = tighter grid on phone."
     },
     {
       "type": "range",
@@ -514,7 +551,10 @@
         { "type": "text", "id": "title", "label": "Title" },
         { "type": "textarea", "id": "caption", "label": "Caption" },
         { "type": "url", "id": "link", "label": "Link" },
-        { "type": "text", "id": "link_label", "label": "Link label" }
+        { "type": "text", "id": "link_label", "label": "Link label" },
+        { "type": "header", "content": "Visibility" },
+        { "type": "checkbox", "id": "hide_on_desktop", "label": "Hide on desktop", "default": false },
+        { "type": "checkbox", "id": "hide_on_mobile", "label": "Hide on mobile", "default": false, "info": "Row auto-shrinks to remaining visible cards." }
       ]
     }
   ],
