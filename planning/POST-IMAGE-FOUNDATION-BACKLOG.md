@@ -18,9 +18,12 @@ Items deferred during Image Foundation Steps 1–6. Address AFTER all foundation
 ## Step 5 dead-code / cleanup
 
 - [ ] `sections/fifty-fifty.liquid` — clean up inline-style `!important` cascade (deferred from Gate 1 rollout, commit `3379447`).
-- [ ] `sections/fullbleed-statement.liquid` — migrate poster `<img class="fullbleed-statement__poster-cover">` at L104/137/146 to `media-img`.
+- [ ] Poster/video-fallback img sweep — migrate to `media-img` together:
+  - `sections/fullbleed-statement.liquid` — `<img class="fullbleed-statement__poster-cover">` at L104/137/146.
+  - `sections/collab-hero.liquid` — 4 `<img class="collab-hero__video">` at L120/122/176/178 (editorial + stage_grid video-slot fallbacks).
 - [ ] `sections/press-feature.liquid` — drop `!important` from `.twin-frame__img` width/height/max/display rules (only if img-only cascade lets us; keep if video needs them).
 - [ ] Section CSS audit: consolidate `!important` markers that were carried over during image foundation gates.
+- [ ] `.media-fill` retirement — after collab-hero Gate 4 verified. Path: drop `.media-fill*` class from render calls (leaving only `.media-img[--contain]`), then remove `.media-fill` + modifier rules from `barreletics-base.css` and the `.collab-hero--stage_grid .collab-hero__tile .media-fill { object-fit: cover; }` override. Verify tile fit/focus still work via `.media-img[--contain]` + a section-scoped focus system (add object-position vars if needed).
 
 ---
 
