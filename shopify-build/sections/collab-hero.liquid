@@ -38,6 +38,12 @@
   elsif tile_focus == 'right'
     assign media_fill_class = media_fill_class | append: ' media-fill--right'
   endif
+  if tile_grid == '2x2'
+    assign ch_tile_sizes = '(max-width: 900px) 50vw, 50vw'
+  else
+    assign ch_tile_sizes = '(max-width: 900px) 50vw, 25vw'
+  endif
+  assign ch_pos_css = 'css'
   assign cta_target = section.settings.cta_link_target | default: 'custom'
   if cta_target != blank and cta_target != 'custom'
     assign cta_href = cta_target
@@ -205,19 +211,26 @@
           <div class="collab-hero__tile" {{ block.shopify_attributes }}>
         {% endif %}
           {% if block.settings.image != blank %}
-            <img
-              class="{{ media_fill_class }}"
-              src="{{ block.settings.image | image_url: width: 1200 }}"
-              alt="{{ block.settings.alt | escape }}"
-              loading="lazy"
-            >
+            {% render 'media-img',
+               image: block.settings.image,
+               alt: block.settings.alt,
+               fit: tile_fit,
+               class: media_fill_class,
+               sizes: ch_tile_sizes,
+               widths: '600, 900, 1200, 1600',
+               width_default: 1200,
+               loading: 'lazy',
+               position: ch_pos_css %}
           {% elsif block.settings.image_url != blank %}
-            <img
-              class="{{ media_fill_class }}"
-              src="{{ block.settings.image_url | escape }}"
-              alt="{{ block.settings.alt | escape }}"
-              loading="lazy"
-            >
+            {% render 'media-img',
+               url: block.settings.image_url,
+               alt: block.settings.alt,
+               fit: tile_fit,
+               class: media_fill_class,
+               loading: 'lazy',
+               position: ch_pos_css,
+               width_attr: 1200,
+               height_attr: 1200 %}
           {% endif %}
           {% if block.settings.tile_title != blank or block.settings.tile_body != blank or block.settings.tile_eyebrow != blank %}
             <div class="collab-hero__tile-copy">
