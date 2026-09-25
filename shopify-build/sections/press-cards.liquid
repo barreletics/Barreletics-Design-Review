@@ -221,10 +221,15 @@
 <style>
   #shopify-section-{{ section.id }} {
     background: var(--pc-bg, #faf8f6);
+    /* TE mobile preview defensive: opt out of any inherited content-visibility skipping */
+    content-visibility: visible;
+    contain: none;
   }
   #shopify-section-{{ section.id }} .press-cards {
     background: var(--pc-bg, #faf8f6);
     padding: var(--pc-pad-y, 48px) var(--pc-pad-x, 40px);
+    /* Fallback so section always has intrinsic size even if grid hasn't laid out yet */
+    min-height: 300px;
   }
   #shopify-section-{{ section.id }} .press-cards__inner {
     max-width: 1280px;
