@@ -43,6 +43,7 @@ Items deferred during Image Foundation Steps 1–6. Address AFTER all foundation
 ## Dead sections (Claude ruling 2026-09-25)
 
 - [ ] Delete `sections/recognition-split.liquid` — zero templates reference it on M4 QA (187144929571) or in local `templates/`. Do NOT delete now; log for a later cleanup PR.
+- [ ] Delete `sections/social-proof.liquid` — zero templates reference it on M4 QA (187144929571) or in local `templates/` (2026-09-25 Gate 6 check). Only mentions are comment references in `sections/pdp-reviews.liquid`. Do NOT delete now; log for later cleanup PR.
 
 ---
 
