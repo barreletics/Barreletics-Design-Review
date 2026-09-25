@@ -10,8 +10,23 @@ Items deferred during Image Foundation Steps 1–6. Address AFTER all foundation
 - [ ] Add site-wide `heading_size_role` control per section.
 - [ ] Migrate `press-row.liquid` `heading_style` toggle (commit `8ce514f`) INTO the shared snippet.
 - [ ] Remove per-section eyebrow/heading style branches once the shared snippet ships.
+- [ ] **Eyebrow token** (Claude 2026-09-25): unify eyebrow values `font-weight: 700; letter-spacing: 0.14em; color: #1c1916;` into ONE shared CSS token (e.g. `.type-eyebrow` in `barreletics-base.css`). Press-row (commit `1f67538`) + press-cards migrate to the token. No more per-section eyebrow overrides.
 
 **Rule (from Claude, 2026-09-23):** No new per-section heading toggles in the interim.
+
+---
+
+## Visibility utility (Claude ruling 2026-09-25)
+
+- [ ] Build shared `.hide-mobile` / `.hide-desktop` utility classes in `barreletics-base.css` (based on the pattern in `section-frame--hide-mobile/desktop` at L379–386).
+- [ ] Migrate press-row + press-cards per-card and section-level toggles (commits `411231c` / `e1e5d9a` / `f47fa69` / `7225cef`) to use the shared utility.
+- [ ] **Rule:** NO new per-section visibility toggles until the shared utility ships.
+
+---
+
+## Dead sections (Claude ruling 2026-09-25)
+
+- [ ] Delete `sections/recognition-split.liquid` — zero templates reference it on M4 QA (187144929571) or in local `templates/`. Do NOT delete now; log for a later cleanup PR.
 
 ---
 
