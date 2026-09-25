@@ -46,6 +46,28 @@ Items deferred during Image Foundation Steps 1–6. Address AFTER all foundation
 
 ---
 
+## Section Frame step (Claude ruling 2026-09-25 — runs AFTER Type OS)
+
+**Goal:** one shared section-frame contract that every home/marketing section inherits, so mobile controls stop being per-section improvisations.
+
+### Missing mobile inset controls (add to shared frame, not per section)
+Sections currently WITHOUT `inset_top_mobile` / `inset_bottom_mobile` / `inset_x_mobile`:
+- `problem-section.liquid`
+- `fifty-fifty.liquid` (×2 instances: fifty-fifty-grip + fifty-fifty-one-pair)
+- `press-feature.liquid`
+- `fullbleed-statement.liquid`
+- `press-cards.liquid`
+- `press-row.liquid`
+
+### Missing shared column control
+- `columns_mobile` currently only exists on `press-cards.liquid` (commit `411231c`). Build as ONE shared setting in the section-frame contract; every grid/list section inherits (visual-mosaic, variant-grid, reviews, disciplines, home-juicer, press-row, press-cards).
+
+### Naming ambiguity to fix (from 2026-09-25 QA sweep)
+- `press-cards.liquid` + `press-row.liquid` currently use the same `hide_on_mobile` / `hide_on_desktop` id at BOTH section root scope AND block scope (intentional but confusing in TE).
+- When the shared `.hide-mobile` / `.hide-desktop` utility ships (Type OS), rename block-level ids to `hide_card_on_mobile` / `hide_card_on_desktop` so section vs card is unambiguous in TE.
+
+---
+
 ## Step 5 dead-code / cleanup
 
 - [ ] `sections/fifty-fifty.liquid` — clean up inline-style `!important` cascade (deferred from Gate 1 rollout, commit `3379447`).
