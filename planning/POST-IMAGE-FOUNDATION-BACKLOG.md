@@ -2,6 +2,22 @@
 
 Items deferred during Image Foundation Steps 1–6. Address AFTER all foundation gates land.
 
+## Plan reference (Claude confirmed 2026-09-25)
+
+- **Step 1 — spine** (media-img snippet + base CSS + 4 spine sections migrated): split-hero, fifty-fifty, problem-section, fullbleed-statement. Commit `3379447`.
+- **Step 2 — gates**:
+  - Gate 1a — base CSS
+  - Gate 1b — press-row
+  - Gate 2 — press-cards
+  - Gate 3 — press-feature (`3e8cca4`)
+  - Gate 4 — collab-hero (`0d57d1a`)
+  - Gate 5 — recognition-split (NO-OP; log-for-delete)
+  - Remaining: social-proof, page-about-hero, page-about-split, page-about-joseph, page-compare, sole-cards, blog-listing, article-content, visual-mosaic, collection-hero
+- **Step 3 — focal unify** — runs AFTER Step 2. **No bundling with Step 2.**
+- **Step 4** — picker migration (URL fallback → Shopify picker)
+- **Step 5** — cleanup (see below)
+- **Step 6** — Type OS gate (see below)
+
 ---
 
 ## Type OS gate (one deliverable, do together)
