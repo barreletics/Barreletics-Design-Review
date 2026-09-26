@@ -27,6 +27,7 @@ Items deferred during Image Foundation Steps 1–6. Address AFTER all foundation
 - [ ] Migrate `press-row.liquid` `heading_style` toggle (commit `8ce514f`) INTO the shared snippet.
 - [ ] Remove per-section eyebrow/heading style branches once the shared snippet ships.
 - [ ] **Eyebrow token** (Claude 2026-09-25): unify eyebrow values `font-weight: 700; letter-spacing: 0.14em; color: #1c1916;` into ONE shared CSS token (e.g. `.type-eyebrow` in `barreletics-base.css`). Press-row (commit `1f67538`) + press-cards migrate to the token. No more per-section eyebrow overrides.
+- [ ] **`--section-cta-bg` token** (Claude 2026-09-25 evening): `page-about-close` bg was forced cream `#faf8f6` after black-on-black stack with `footer-studio-trust--dark`. Build a shared design-system token for close/CTA-band section backgrounds so this doesn't recur ad-hoc.
 
 **Rule (from Claude, 2026-09-23):** No new per-section heading toggles in the interim.
 
@@ -66,6 +67,14 @@ Sections currently WITHOUT `inset_top_mobile` / `inset_bottom_mobile` / `inset_x
 ### Naming ambiguity to fix (from 2026-09-25 QA sweep)
 - `press-cards.liquid` + `press-row.liquid` currently use the same `hide_on_mobile` / `hide_on_desktop` id at BOTH section root scope AND block scope (intentional but confusing in TE).
 - When the shared `.hide-mobile` / `.hide-desktop` utility ships (Type OS), rename block-level ids to `hide_card_on_mobile` / `hide_card_on_desktop` so section vs card is unambiguous in TE.
+
+### Landed early (Step 2 gates that also set section-frame precedent)
+- **`page-about-hero`** (2026-09-25 evening): standardized to `media_height` (desktop) + `media_position` + `aspect_ratio_mobile` + `media_position_mobile` + `media_height_mobile`. Pattern from `collection-hero` + `press-row`. Fold into the shared Section Frame contract when it lands.
+- **`page-about-split`** (2026-09-25 evening): mobile img sizing fix — moved from `width: auto; max-height: X; object-fit: contain` (width-bound, slider dead) → `width: 100%; height: X; object-fit: cover`. Consolidated `vh` + `px` sliders → `px` only per breakpoint. Roll into shared frame during Section Frame step so every split section gets the same treatment.
+
+### Page-about-joseph (deferred from Step 2)
+- Step 2 covers image migration to `media-img` only.
+- **Controls owed to Section Frame step**: currently has hardcoded mobile heights (`max-height: min(44vh, 340px)` etc, no TE control). Add TE size controls matching the `page-about-split` pattern (single `px` per breakpoint) when Section Frame ships.
 
 ---
 
