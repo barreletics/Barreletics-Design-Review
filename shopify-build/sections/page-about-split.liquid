@@ -65,7 +65,7 @@
   #shopify-section-{{ section.id }} .page-about-split__img {
     width: auto;
     max-width: 100%;
-    max-height: min({{ section.settings.media_max_vh }}vh, {{ section.settings.media_max_px }}px);
+    max-height: {{ section.settings.media_max_px | default: 760 }}px;
     object-fit: contain;
   }
   #shopify-section-{{ section.id }} .page-about-split__copy {
@@ -96,7 +96,11 @@
     #shopify-section-{{ section.id }} .page-about-split--reverse { direction: ltr; }
     #shopify-section-{{ section.id }} .page-about-split__media { padding: 16px 16px 0; }
     #shopify-section-{{ section.id }} .page-about-split__img {
-      max-height: min({{ section.settings.media_max_vh_mobile }}vh, {{ section.settings.media_max_px_mobile }}px);
+      width: 100%;
+      height: {{ section.settings.media_max_px_mobile | default: 480 }}px;
+      max-height: none;
+      object-fit: cover;
+      object-position: center center;
     }
     #shopify-section-{{ section.id }} .page-about-split__copy { padding: 8px 20px 32px; }
   }
@@ -208,11 +212,9 @@
       "default": 50
     },
     { "type": "checkbox", "id": "cream_bg", "label": "Cream background", "default": false },
-    { "type": "header", "content": "Media size caps" },
-    { "type": "range", "id": "media_max_vh", "label": "Max height desktop (vh)", "min": 44, "max": 84, "step": 2, "unit": "vh", "default": 78 },
-    { "type": "range", "id": "media_max_px", "label": "Max height desktop (px)", "min": 360, "max": 820, "step": 20, "unit": "px", "default": 760 },
-    { "type": "range", "id": "media_max_vh_mobile", "label": "Max height mobile (vh)", "min": 36, "max": 60, "step": 2, "unit": "vh", "default": 58 },
-    { "type": "range", "id": "media_max_px_mobile", "label": "Max height mobile (px)", "min": 280, "max": 520, "step": 10, "unit": "px", "default": 480 }
+    { "type": "header", "content": "Media size" },
+    { "type": "range", "id": "media_max_px", "label": "Photo height desktop", "min": 360, "max": 820, "step": 20, "unit": "px", "default": 760 },
+    { "type": "range", "id": "media_max_px_mobile", "label": "Photo height mobile", "min": 280, "max": 900, "step": 10, "unit": "px", "default": 480 }
   ],
   "presets": [{ "name": "About — Split" }]
 }
