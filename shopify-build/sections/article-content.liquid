@@ -85,12 +85,17 @@
           <a href="{{ related.url }}" class="article__related-card" aria-label="Read {{ related.title }}">
             <div class="article__related-image-wrap">
               {% if related.image %}
-                <img
-                  src="{{ related.image | image_url: width: 480 }}"
-                  alt="{{ related.image.alt | escape }}"
-                  loading="lazy"
-                  class="article__related-image"
-                >
+                {% render 'media-img',
+                  image: related.image,
+                  alt: related.image.alt,
+                  fit: 'cover',
+                  position: 'css',
+                  class: 'article__related-image',
+                  sizes: '(max-width: 768px) 100vw, 33vw',
+                  widths: '360, 480, 720',
+                  width_default: 480,
+                  loading: 'lazy'
+                %}
               {% else %}
                 <div class="article__related-placeholder"></div>
               {% endif %}
@@ -334,6 +339,7 @@
   }
 
   .article__related-image-wrap {
+    position: relative;
     aspect-ratio: 16 / 10;
     border-radius: var(--radius-card-sm);
     overflow: hidden;
