@@ -77,11 +77,13 @@
     border: 1px solid var(--line-soft, #e8e2d8);
     border-radius: 4px;
   }
-  #shopify-section-{{ section.id }} .page-about-joseph__frame .media-img {
-    inset: clamp(12px, 2vw, 20px);
-    width: auto;
-    height: auto;
-  }
+  /* Base .media-img (inset:0; w:100%; h:100%; object-fit:contain via --contain modifier) fills
+     the frame. The letterbox from object-fit:contain sits over the frame's white background,
+     which naturally creates the mat effect around the archival photo.
+     The prior inset override (removed) hit a CSS spec edge case: for position:absolute replaced
+     elements (img) with width:auto + height:auto + all four insets set, used width/height fall
+     back to intrinsic image size instead of filling the derived box. That produced Grok's
+     "native file size" bug: gap on landscape aspects at 1440, right-clip, mobile crop at 390. */
   #shopify-section-{{ section.id }} .page-about-joseph__copy {
     padding: clamp(40px, 7vh, 72px) clamp(20px, 8vw, 8vw);
   }
