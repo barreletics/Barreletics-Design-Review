@@ -9,33 +9,37 @@
   style="{% render 'type-override-vars', title_size: section.settings.title_size, title_weight: section.settings.title_weight, body_size: section.settings.body_size, body_weight: section.settings.body_weight %}"
 >
   <div class="page-about-joseph__gallery" aria-label="{{ section.settings.gallery_aria | escape }}">
-    {% if section.settings.image_1 != blank %}
-      {{
-        section.settings.image_1
-        | image_url: width: 1600
-        | image_tag:
-          widths: '600, 900, 1200, 1600',
-          sizes: '(max-width: 768px) 100vw, 50vw',
+    {% if section.settings.image_1 != blank or section.settings.image_1_url != blank %}
+      <div class="page-about-joseph__frame">
+        {% render 'media-img',
+          image: section.settings.image_1,
+          url: section.settings.image_1_url,
           alt: section.settings.image_1_alt,
-          loading: 'lazy',
-          class: 'page-about-joseph__img'
-      }}
-    {% elsif section.settings.image_1_url != blank %}
-      <img class="page-about-joseph__img" src="{{ section.settings.image_1_url | escape }}" alt="{{ section.settings.image_1_alt | escape }}" loading="lazy">
-    {% endif %}
-    {% if section.settings.image_2 != blank %}
-      {{
-        section.settings.image_2
-        | image_url: width: 1400
-        | image_tag:
-          widths: '600, 900, 1200, 1400',
+          fit: 'contain',
+          position: 'css',
+          class: 'page-about-joseph__img',
           sizes: '(max-width: 768px) 100vw, 50vw',
+          widths: '600, 900, 1200, 1600',
+          width_default: 1600,
+          loading: 'lazy'
+        %}
+      </div>
+    {% endif %}
+    {% if section.settings.image_2 != blank or section.settings.image_2_url != blank %}
+      <div class="page-about-joseph__frame">
+        {% render 'media-img',
+          image: section.settings.image_2,
+          url: section.settings.image_2_url,
           alt: section.settings.image_2_alt,
-          loading: 'lazy',
-          class: 'page-about-joseph__img'
-      }}
-    {% elsif section.settings.image_2_url != blank %}
-      <img class="page-about-joseph__img" src="{{ section.settings.image_2_url | escape }}" alt="{{ section.settings.image_2_alt | escape }}" loading="lazy">
+          fit: 'contain',
+          position: 'css',
+          class: 'page-about-joseph__img',
+          sizes: '(max-width: 768px) 100vw, 50vw',
+          widths: '600, 900, 1200, 1400',
+          width_default: 1400,
+          loading: 'lazy'
+        %}
+      </div>
     {% endif %}
   </div>
   <div class="page-about-joseph__copy">
@@ -65,16 +69,18 @@
     border-top: 1px solid var(--line-soft, #e8e2d8);
     border-bottom: 1px solid var(--line-soft, #e8e2d8);
   }
-  #shopify-section-{{ section.id }} .page-about-joseph__img {
-    width: 100%;
-    height: auto;
-    max-height: min(68vh, 620px);
-    object-fit: contain;
+  #shopify-section-{{ section.id }} .page-about-joseph__frame {
+    position: relative;
+    overflow: hidden;
+    height: min(68vh, 620px);
     background: #fff;
     border: 1px solid var(--line-soft, #e8e2d8);
     border-radius: 4px;
-    padding: clamp(12px, 2vw, 20px);
-    box-sizing: border-box;
+  }
+  #shopify-section-{{ section.id }} .page-about-joseph__frame .media-img {
+    inset: clamp(12px, 2vw, 20px);
+    width: auto;
+    height: auto;
   }
   #shopify-section-{{ section.id }} .page-about-joseph__copy {
     padding: clamp(40px, 7vh, 72px) clamp(20px, 8vw, 8vw);
@@ -104,8 +110,8 @@
       grid-template-columns: 1fr;
       padding: 28px 20px;
     }
-    #shopify-section-{{ section.id }} .page-about-joseph__img {
-      max-height: min(44vh, 340px);
+    #shopify-section-{{ section.id }} .page-about-joseph__frame {
+      height: min(44vh, 340px);
     }
     #shopify-section-{{ section.id }} .page-about-joseph__copy {
       padding: 28px 20px 36px;
