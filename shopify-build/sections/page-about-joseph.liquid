@@ -10,7 +10,11 @@
 >
   <div class="page-about-joseph__gallery" aria-label="{{ section.settings.gallery_aria | escape }}">
     {% if section.settings.image_1 != blank or section.settings.image_1_url != blank %}
-      <div class="page-about-joseph__frame">
+      {%- assign frame_1_aspect = '4 / 3' -%}
+      {%- if section.settings.image_1 != blank -%}
+        {%- assign frame_1_aspect = section.settings.image_1.width | append: ' / ' | append: section.settings.image_1.height -%}
+      {%- endif -%}
+      <div class="page-about-joseph__frame" style="aspect-ratio: {{ frame_1_aspect }};">
         {% render 'media-img',
           image: section.settings.image_1,
           url: section.settings.image_1_url,
@@ -26,7 +30,11 @@
       </div>
     {% endif %}
     {% if section.settings.image_2 != blank or section.settings.image_2_url != blank %}
-      <div class="page-about-joseph__frame">
+      {%- assign frame_2_aspect = '4 / 3' -%}
+      {%- if section.settings.image_2 != blank -%}
+        {%- assign frame_2_aspect = section.settings.image_2.width | append: ' / ' | append: section.settings.image_2.height -%}
+      {%- endif -%}
+      <div class="page-about-joseph__frame" style="aspect-ratio: {{ frame_2_aspect }};">
         {% render 'media-img',
           image: section.settings.image_2,
           url: section.settings.image_2_url,
@@ -72,18 +80,17 @@
   #shopify-section-{{ section.id }} .page-about-joseph__frame {
     position: relative;
     overflow: hidden;
-    height: min(68vh, 620px);
+    width: 100%;
     background: #fff;
     border: 1px solid var(--line-soft, #e8e2d8);
     border-radius: 4px;
+    padding: clamp(12px, 2vw, 20px);
+    box-sizing: border-box;
+    /* Aspect-ratio is set inline per-image from image.width / image.height so each frame
+       matches its own photo (no crop, no letterbox). CSS abs children (.media-img inset:0)
+       fill to the padding edge of the containing block, so the frame's padding becomes an
+       even white mat on all four sides. */
   }
-  /* Base .media-img (inset:0; w:100%; h:100%; object-fit:contain via --contain modifier) fills
-     the frame. The letterbox from object-fit:contain sits over the frame's white background,
-     which naturally creates the mat effect around the archival photo.
-     The prior inset override (removed) hit a CSS spec edge case: for position:absolute replaced
-     elements (img) with width:auto + height:auto + all four insets set, used width/height fall
-     back to intrinsic image size instead of filling the derived box. That produced Grok's
-     "native file size" bug: gap on landscape aspects at 1440, right-clip, mobile crop at 390. */
   #shopify-section-{{ section.id }} .page-about-joseph__copy {
     padding: clamp(40px, 7vh, 72px) clamp(20px, 8vw, 8vw);
   }
@@ -112,9 +119,7 @@
       grid-template-columns: 1fr;
       padding: 28px 20px;
     }
-    #shopify-section-{{ section.id }} .page-about-joseph__frame {
-      height: min(44vh, 340px);
-    }
+    /* Mobile: frame aspect-ratio + padding drive size from inline style; no fixed height. */
     #shopify-section-{{ section.id }} .page-about-joseph__copy {
       padding: 28px 20px 36px;
     }
