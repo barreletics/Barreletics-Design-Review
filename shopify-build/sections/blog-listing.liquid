@@ -132,18 +132,17 @@
       <article class="journal-feature">
         <a class="journal-feature__media" href="{{ featured.url }}" aria-label="Read {{ featured.title | escape }}" tabindex="-1">
           {% if featured.image %}
-            <img
-              src="{{ featured.image | image_url: width: 1200 }}"
-              srcset="{{ featured.image | image_url: width: 600 }} 600w,
-                      {{ featured.image | image_url: width: 900 }} 900w,
-                      {{ featured.image | image_url: width: 1200 }} 1200w"
-              sizes="(max-width: 1024px) 100vw, 55vw"
-              alt="{{ featured.image.alt | escape }}"
-              width="1200"
-              height="900"
-              loading="eager"
-              class="journal-feature__image"
-            >
+            {% render 'media-img',
+              image: featured.image,
+              alt: featured.image.alt,
+              fit: 'cover',
+              position: 'css',
+              class: 'journal-feature__image',
+              sizes: '(max-width: 1024px) 100vw, 55vw',
+              widths: '600, 900, 1200',
+              width_default: 1200,
+              loading: 'eager'
+            %}
           {% else %}
             <div class="journal-feature__placeholder"></div>
           {% endif %}
@@ -199,18 +198,17 @@
             <a href="{{ article.url }}" class="blog-card" aria-label="Read {{ article.title | escape }}">
               <div class="blog-card__media">
                 {% if article.image %}
-                  <img
-                    src="{{ article.image | image_url: width: 720 }}"
-                    srcset="{{ article.image | image_url: width: 360 }} 360w,
-                            {{ article.image | image_url: width: 540 }} 540w,
-                            {{ article.image | image_url: width: 720 }} 720w"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    alt="{{ article.image.alt | escape }}"
-                    width="720"
-                    height="540"
-                    loading="lazy"
-                    class="blog-card__image"
-                  >
+                  {% render 'media-img',
+                    image: article.image,
+                    alt: article.image.alt,
+                    fit: 'cover',
+                    position: 'css',
+                    class: 'blog-card__image',
+                    sizes: '(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw',
+                    widths: '360, 540, 720',
+                    width_default: 720,
+                    loading: 'lazy'
+                  %}
                 {% else %}
                   <div class="blog-card__image-placeholder"></div>
                 {% endif %}
