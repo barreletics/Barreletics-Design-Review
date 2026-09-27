@@ -25,18 +25,17 @@
     assign grid_width = tile_size
     assign tile_height_scale = 100
   endif
-  assign media_fill_class = 'media-fill'
-  if tile_fit == 'contain'
-    assign media_fill_class = media_fill_class | append: ' media-fill--contain'
-  endif
+  # Retired .media-fill classes → media-img now emits inline object-position via `position:` param.
+  # tile_fit still goes to media-img `fit:` (maps to .media-img / .media-img--contain).
+  assign ch_focus_css = 'center center'
   if tile_focus == 'top'
-    assign media_fill_class = media_fill_class | append: ' media-fill--top'
+    assign ch_focus_css = 'center top'
   elsif tile_focus == 'bottom'
-    assign media_fill_class = media_fill_class | append: ' media-fill--bottom'
+    assign ch_focus_css = 'center bottom'
   elsif tile_focus == 'left'
-    assign media_fill_class = media_fill_class | append: ' media-fill--left'
+    assign ch_focus_css = 'left center'
   elsif tile_focus == 'right'
-    assign media_fill_class = media_fill_class | append: ' media-fill--right'
+    assign ch_focus_css = 'right center'
   endif
   if tile_grid == '2x2'
     assign ch_tile_sizes = '(max-width: 900px) 50vw, 50vw'
@@ -215,20 +214,18 @@
                image: block.settings.image,
                alt: block.settings.alt,
                fit: tile_fit,
-               class: media_fill_class,
                sizes: ch_tile_sizes,
                widths: '600, 900, 1200, 1600',
                width_default: 1200,
                loading: 'lazy',
-               position: ch_pos_css %}
+               position: ch_focus_css %}
           {% elsif block.settings.image_url != blank %}
             {% render 'media-img',
                url: block.settings.image_url,
                alt: block.settings.alt,
                fit: tile_fit,
-               class: media_fill_class,
                loading: 'lazy',
-               position: ch_pos_css,
+               position: ch_focus_css,
                width_attr: 1200,
                height_attr: 1200 %}
           {% endif %}
@@ -469,8 +466,8 @@
     min-width: 0;
     border-radius: var(--ch-tile-radius, 0);
   }
-  /* Home Coperni pair: fill the 80% squares. No cream mat. */
-  .collab-hero--stage_grid .collab-hero__tile .media-fill {
+  /* Home Coperni pair: fill the 80% squares. No cream mat. Force cover even if tile_fit=contain elsewhere. */
+  .collab-hero--stage_grid .collab-hero__tile .media-img {
     object-fit: cover;
   }
   .collab-hero__tile-copy {
