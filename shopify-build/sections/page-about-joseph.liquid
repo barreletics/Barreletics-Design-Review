@@ -10,7 +10,8 @@
 >
   <div class="page-about-joseph__gallery" aria-label="{{ section.settings.gallery_aria | escape }}">
     {% if section.settings.image_1 != blank or section.settings.image_1_url != blank %}
-      {%- assign frame_1_aspect = '4 / 3' -%}
+      {%- comment -%} Image 1 defaults to CDN Screenshot_2026-06-06_at_6.59.10_PM.png (554×600) when URL-only. {%- endcomment -%}
+      {%- assign frame_1_aspect = '554 / 600' -%}
       {%- if section.settings.image_1 != blank -%}
         {%- assign frame_1_aspect = section.settings.image_1.width | append: ' / ' | append: section.settings.image_1.height -%}
       {%- endif -%}
@@ -30,7 +31,8 @@
       </div>
     {% endif %}
     {% if section.settings.image_2 != blank or section.settings.image_2_url != blank %}
-      {%- assign frame_2_aspect = '4 / 3' -%}
+      {%- comment -%} Image 2 defaults to CDN Screenshot_2026-06-06_at_9.58.53_PM.png (748×960) when URL-only. {%- endcomment -%}
+      {%- assign frame_2_aspect = '748 / 960' -%}
       {%- if section.settings.image_2 != blank -%}
         {%- assign frame_2_aspect = section.settings.image_2.width | append: ' / ' | append: section.settings.image_2.height -%}
       {%- endif -%}
@@ -70,7 +72,9 @@
   #shopify-section-{{ section.id }} .page-about-joseph__gallery {
     background: var(--color-warm-cream, #faf8f6);
     display: grid;
-    grid-template-columns: 1.15fr 0.85fr;
+    /* fr weights ≈ each image's aspect (554/600 = 0.923, 748/960 = 0.779) so both frames render
+       at the same height when placed side-by-side with matching mat. Grok 2026-09-27. */
+    grid-template-columns: 0.923fr 0.779fr;
     gap: clamp(20px, 3vw, 32px);
     align-items: center;
     padding: clamp(48px, 8vh, 80px) clamp(20px, 6vw, 6vw);
@@ -84,12 +88,16 @@
     background: #fff;
     border: 1px solid var(--line-soft, #e8e2d8);
     border-radius: 4px;
-    padding: clamp(12px, 2vw, 20px);
-    box-sizing: border-box;
-    /* Aspect-ratio is set inline per-image from image.width / image.height so each frame
-       matches its own photo (no crop, no letterbox). CSS abs children (.media-img inset:0)
-       fill to the padding edge of the containing block, so the frame's padding becomes an
-       even white mat on all four sides. */
+    --mat: clamp(12px, 2vw, 20px);
+    /* Aspect-ratio is set inline per-image (image.width / image.height, with hardcoded
+       fallbacks per image for URL-only case). Mat is applied via .media-img inset+dims
+       below — NOT via padding — because abs children fill to the padding-edge and
+       overrun any padding on the containing block. */
+  }
+  #shopify-section-{{ section.id }} .page-about-joseph__frame .media-img {
+    inset: var(--mat);
+    width: calc(100% - 2 * var(--mat));
+    height: calc(100% - 2 * var(--mat));
   }
   #shopify-section-{{ section.id }} .page-about-joseph__copy {
     padding: clamp(40px, 7vh, 72px) clamp(20px, 8vw, 8vw);
