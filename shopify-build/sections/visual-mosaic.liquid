@@ -253,26 +253,22 @@
           >
             <source src="{{ block.settings.video_url | escape }}" type="video/mp4">
           </video>
-        {% elsif block.settings.image != blank %}
-          <img
-            src="{{ block.settings.image | image_url: width: 1200 }}"
-            srcset="{{ block.settings.image | image_url: width: 600 }} 600w,
-                    {{ block.settings.image | image_url: width: 900 }} 900w,
-                    {{ block.settings.image | image_url: width: 1200 }} 1200w"
-            sizes="(max-width: 900px) 50vw, 33vw"
-            alt="{{ block.settings.alt | escape }}"
-            loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
-            width="800"
-            height="800"
-          >
-        {% elsif block.settings.image_url != blank %}
-          <img
-            src="{{ block.settings.image_url | escape }}"
-            alt="{{ block.settings.alt | escape }}"
-            loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
-            width="800"
-            height="800"
-          >
+        {% elsif block.settings.image != blank or block.settings.image_url != blank %}
+          {%- assign tile_loading = 'lazy' -%}
+          {%- if forloop.first -%}{%- assign tile_loading = 'eager' -%}{%- endif -%}
+          {% render 'media-img',
+            image: block.settings.image,
+            url: block.settings.image_url,
+            alt: block.settings.alt,
+            fit: 'cover',
+            position: 'css',
+            sizes: '(max-width: 900px) 50vw, 33vw',
+            widths: '600, 900, 1200',
+            width_default: 1200,
+            loading: tile_loading,
+            width_attr: 800,
+            height_attr: 800
+          %}
         {% else %}
           <span class="vm-tile__placeholder" aria-hidden="true"></span>
         {% endif %}
