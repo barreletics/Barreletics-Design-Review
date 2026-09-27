@@ -2,11 +2,11 @@
   Full-bleed statement / stage — lifestyle image or video + optional copy.
   Multi-use: PDP commit line, tall stage heroes, image-only media bands.
   Separate from statement-band (cream solo slogan).
+  GLOBAL HEADING SYSTEM (2026-09-27): line is locked 52 / 36 phone / 400 on every template
+  (Closed Sole "TRANSFORM YOUR PRACTICE" no longer falls back to the 36/28 statement role).
+  title_role / title_size / title_weight stay in the schema but are ignored.
 {% endcomment %}
 {% liquid
-  assign title_role = section.settings.title_role | default: 'statement'
-  assign title_size = section.settings.title_size | default: 'default'
-  assign title_weight = section.settings.title_weight | default: 'default'
   assign body_size = section.settings.body_size | default: 'default'
   assign body_weight = section.settings.body_weight | default: 'default'
   assign media_radius = section.settings.media_radius | default: 0
@@ -72,8 +72,6 @@
     --fb-cta-bg: {{ cta_bg }};
     --fb-cta-border: {{ cta_border }};
     --fb-cta-text: {{ cta_text_color }};
-    {% if title_size != 'default' %}--fb-title-size: {{ title_size }}px;{% endif %}
-    {% if title_weight != 'default' %}--fb-title-weight: {{ title_weight }};{% endif %}
     {% if body_size != 'default' %}--fb-body-size: {{ body_size }}px;{% endif %}
     {% if body_weight != 'default' %}--fb-body-weight: {{ body_weight }};{% endif %}
   "
@@ -182,7 +180,7 @@
         <p class="fullbleed-statement__eyebrow type-label">{{ section.settings.eyebrow }}</p>
       {% endif %}
       {% if section.settings.title != blank %}
-        <p class="fullbleed-statement__line {% if title_role == 'display' %}h2-display{% else %}type-statement{% endif %}">{{ section.settings.title }}</p>
+        <p class="fullbleed-statement__line h2-display">{{ section.settings.title }}</p>
       {% endif %}
       {% if section.settings.body != blank %}
         <p class="fullbleed-statement__sub">{{ section.settings.body }}</p>
@@ -289,12 +287,27 @@
     margin: 0 0 var(--gap-a, 16px);
   }
   #shopify-section-{{ section.id }} .fullbleed-statement__line {
-    font-size: var(--fb-title-size, {% if title_role == 'display' %}var(--type-h2-display-size){% else %}var(--type-statement-size){% endif %});
-    font-weight: var(--fb-title-weight, {% if title_role == 'display' %}var(--type-h2-display-weight){% else %}var(--type-statement-weight){% endif %});
-    letter-spacing: {% if title_role == 'display' %}var(--type-h2-display-tracking){% else %}var(--type-statement-tracking){% endif %};
-    line-height: {% if title_role == 'display' %}var(--type-h2-display-leading){% else %}var(--type-statement-leading){% endif %};
     color: #fff;
     margin: 0 0 var(--gap-c);
+  }
+  /* GLOBAL HEADING SYSTEM (locked 2026-09-27): one display head for this section type.
+     52 desktop (fluid to 36 on tablet) / 36 phone / 400. Theme Editor title size, weight
+     and role settings are intentionally ignored so every page renders the same. */
+  #shopify-section-{{ section.id }} .fullbleed-statement__line.h2-display {
+    font-size: clamp(36px, 4.6vw, 52px);
+    font-weight: 400;
+    line-height: var(--type-h2-display-leading, 1.1);
+    letter-spacing: var(--type-h2-display-tracking, -0.028em);
+    text-wrap: pretty; /* avoid one-word last lines (2026-09-27, Andrew) */
+  }
+  #shopify-section-{{ section.id }} .fullbleed-statement__line.h2-display strong,
+  #shopify-section-{{ section.id }} .fullbleed-statement__line.h2-display b {
+    font-weight: inherit;
+  }
+  @media (max-width: 749px) {
+    #shopify-section-{{ section.id }} .fullbleed-statement__line.h2-display {
+      font-size: 36px;
+    }
   }
   #shopify-section-{{ section.id }} .fullbleed-statement__sub {
     font-size: var(--fb-body-size, 16px);
@@ -432,7 +445,7 @@
       "id": "title",
       "label": "Heading",
       "default": "You commit to the class. Commit to the gear.",
-      "info": "Family is brand Type OS — use Title size/weight to adjust. No font family picker."
+      "info": "Family is brand Type OS. Heading size and weight are locked by the global type system."
     },
     {
       "type": "select",
@@ -442,7 +455,8 @@
       "options": [
         { "value": "statement", "label": "Statement (video overlay — PDP TRANSFORM)" },
         { "value": "display", "label": "Display 52px (matches Shop All / pose band)" }
-      ]
+      ],
+      "info": "Locked by global type system (2026-09-27). This setting no longer changes the heading."
     },
     {
       "type": "select",
@@ -471,7 +485,7 @@
         { "value": "56", "label": "56px" }
       ],
       "default": "default",
-      "info": "Family is brand Type OS — size only. Default keeps Type OS."
+      "info": "Locked by global type system (2026-09-27). This setting no longer changes the heading."
     },
     {
       "type": "select",
@@ -484,7 +498,8 @@
         { "value": "600", "label": "600" },
         { "value": "700", "label": "700" }
       ],
-      "default": "default"
+      "default": "default",
+      "info": "Locked by global type system (2026-09-27). This setting no longer changes the heading."
     },
     {
       "type": "textarea",

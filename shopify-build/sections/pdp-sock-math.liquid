@@ -2,11 +2,12 @@
   Sock Math
   compact — v18/v19 2-col compare (Coperni / default). Do not change.
   editorial — mock L (docs/pdp-sock-math-directions.html v8). Closed only.
+  GLOBAL HEADING SYSTEM (2026-09-27): headline (incl. the em "Done." line) is locked
+  52 / 36 phone / 400 in both layouts. title_size / title_weight stay in the schema but
+  are ignored (the old schema default "56" also hit phones at 56px).
 {% endcomment %}
 
 {% liquid
-  assign title_size = section.settings.title_size | default: '56'
-  assign title_weight = section.settings.title_weight | default: '400'
   assign body_size = section.settings.body_size | default: 'default'
   assign layout = section.settings.layout | default: 'compact'
   assign show_prices = section.settings.show_prices
@@ -40,7 +41,7 @@
 <section
   class="sock-math sock-math--{{ layout }}{% if image_unframed %} sock-math--unframed{% endif %}"
   aria-label="{{ section.settings.aria_label | default: 'One pair' | escape }}"
-  style="{% if title_size != 'default' and title_size != blank %}--sm-title-size: {{ title_size }}px;{% endif %}{% if title_weight != 'default' and title_weight != blank %}--sm-title-weight: {{ title_weight }};{% endif %}{% if body_size != 'default' %}--sm-body-size: {{ body_size }}px;{% endif %}--sm-pos: {{ image_pos }};--sm-frame: {{ image_frame }}px;--sm-frame-m: {{ image_frame_mobile }}px;--sm-pad-top: {{ pad_top }}px;--sm-pad-bottom: {{ pad_bottom }}px;--sm-bg: {{ sm_bg }};"
+  style="{% if body_size != 'default' %}--sm-body-size: {{ body_size }}px;{% endif %}--sm-pos: {{ image_pos }};--sm-frame: {{ image_frame }}px;--sm-frame-m: {{ image_frame_mobile }}px;--sm-pad-top: {{ pad_top }}px;--sm-pad-bottom: {{ pad_bottom }}px;--sm-bg: {{ sm_bg }};"
 >
   {% if layout == 'editorial' %}
     <div class="sock-math__split">
@@ -189,16 +190,12 @@
   .sock-math--editorial h2.sock-math__headline {
     text-align: left;
     margin: 0 0 8px;
-    font-size: var(--sm-title-size, var(--type-h2-display-size));
-    font-weight: var(--sm-title-weight, var(--type-h2-display-weight));
-    line-height: var(--type-h2-display-leading);
-    letter-spacing: var(--type-h2-display-tracking);
     color: #1c1916;
   }
   .sock-math--editorial h2.sock-math__headline em {
     display: block;
     font-style: normal;
-    font-weight: var(--sm-title-weight, var(--type-h2-display-weight));
+    font-weight: inherit;
     color: #1c1916;
     margin-top: 2px;
   }
@@ -355,12 +352,28 @@
     padding: var(--section-padding-y) 40px 32px;
   }
   .sock-math__headline {
-    font-size: var(--sm-title-size, clamp(36px, 5vw, 52px));
-    font-weight: var(--sm-title-weight, 400);
     color: #1c1916;
     margin: 0;
-    letter-spacing: -0.028em;
-    line-height: 1.1;
+  }
+  /* GLOBAL HEADING SYSTEM (locked 2026-09-27): one display head for this section type.
+     52 desktop (fluid to 36 on tablet) / 36 phone / 400. Theme Editor title size, weight
+     and role settings are intentionally ignored so every page renders the same. */
+  #shopify-section-{{ section.id }} .sock-math h2.sock-math__headline {
+    font-size: clamp(36px, 4.6vw, 52px);
+    font-weight: 400;
+    line-height: var(--type-h2-display-leading, 1.1);
+    letter-spacing: var(--type-h2-display-tracking, -0.028em);
+    text-wrap: pretty; /* avoid one-word last lines (2026-09-27, Andrew) */
+  }
+  #shopify-section-{{ section.id }} .sock-math h2.sock-math__headline strong,
+  #shopify-section-{{ section.id }} .sock-math h2.sock-math__headline em,
+  #shopify-section-{{ section.id }} .sock-math h2.sock-math__headline b {
+    font-weight: inherit;
+  }
+  @media (max-width: 749px) {
+    #shopify-section-{{ section.id }} .sock-math h2.sock-math__headline {
+      font-size: 36px;
+    }
   }
   .sock-math__sub {
     text-align: center;
@@ -482,9 +495,6 @@
     }
     .sock-math--editorial .sock-math__split { grid-template-columns: 1fr; }
     .sock-math--editorial .sock-math__copy { padding: 48px 20px 48px; }
-    .sock-math--editorial h2.sock-math__headline {
-      font-size: var(--sm-title-size, clamp(32px, 9vw, 40px));
-    }
     .sock-math--editorial .sock-math__end { margin: 16px 0 0; }
     .sock-math--editorial .sock-math__visual,
     .sock-math--editorial .sock-math__visual img {
@@ -565,7 +575,8 @@
         { "value": "52", "label": "52px" },
         { "value": "56", "label": "56px" }
       ],
-      "default": "56"
+      "default": "default",
+      "info": "Locked by global type system (2026-09-27). This setting no longer changes the heading."
     },
     {
       "type": "select",
@@ -578,7 +589,8 @@
         { "value": "600", "label": "600" },
         { "value": "700", "label": "700" }
       ],
-      "default": "400"
+      "default": "400",
+      "info": "Locked by global type system (2026-09-27). This setting no longer changes the heading."
     },
     {
       "type": "text",

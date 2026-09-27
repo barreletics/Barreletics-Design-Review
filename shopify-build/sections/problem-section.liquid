@@ -358,6 +358,25 @@
     max-width: none;
     margin: 0 0 var(--gap-b);
   }
+  /* GLOBAL HEADING SYSTEM (locked 2026-09-27): one display head for this section type.
+     52 desktop (fluid to 36 on tablet) / 36 phone / 400. Theme Editor title size, weight
+     and role settings are intentionally ignored so every page renders the same. */
+  #shopify-section-{{ section.id }} .problem-title.h2-display {
+    font-size: clamp(36px, 4.6vw, 52px);
+    font-weight: 400;
+    line-height: var(--type-h2-display-leading, 1.1);
+    letter-spacing: var(--type-h2-display-tracking, -0.028em);
+    text-wrap: balance; /* no lone one-word last line (e.g. Pose) on phone at 36 */
+  }
+  #shopify-section-{{ section.id }} .problem-title.h2-display strong,
+  #shopify-section-{{ section.id }} .problem-title.h2-display b {
+    font-weight: inherit;
+  }
+  @media (max-width: 749px) {
+    #shopify-section-{{ section.id }} .problem-title.h2-display {
+      font-size: 36px;
+    }
+  }
   .problem-body {
     font-size: var(--type-body-size);
     font-weight: var(--type-body-weight);
