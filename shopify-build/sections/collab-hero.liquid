@@ -117,9 +117,9 @@
             <source src="{{ section.settings.video_url | escape }}" type="video/mp4">
           </video>
         {% elsif section.settings.image != blank %}
-          <img class="collab-hero__video" src="{{ section.settings.image | image_url: width: 2000 }}" alt="" loading="lazy">
+          {% render 'media-img', image: section.settings.image, alt: '', class: 'collab-hero__video', widths: '800, 1200, 1600, 2000', width_default: 2000, sizes: '(max-width: 900px) 100vw, 55vw', loading: 'lazy', is_poster: true %}
         {% elsif section.settings.poster_url != blank %}
-          <img class="collab-hero__video" src="{{ section.settings.poster_url | escape }}" alt="" loading="lazy">
+          {% render 'media-img', url: section.settings.poster_url, alt: '', class: 'collab-hero__video', loading: 'lazy', is_poster: true %}
         {% endif %}
       </div>
       <div class="collab-hero__editorial-copy">
@@ -173,9 +173,9 @@
           <source src="{{ section.settings.video_url | escape }}" type="video/mp4">
         </video>
       {% elsif section.settings.image != blank %}
-        <img class="collab-hero__video" src="{{ section.settings.image | image_url: width: 2000 }}" alt="" loading="lazy">
+        {% render 'media-img', image: section.settings.image, alt: '', class: 'collab-hero__video', widths: '1000, 1400, 1800, 2400', width_default: 2000, sizes: '100vw', loading: 'lazy', is_poster: true %}
       {% elsif section.settings.poster_url != blank %}
-        <img class="collab-hero__video" src="{{ section.settings.poster_url | escape }}" alt="" loading="lazy">
+        {% render 'media-img', url: section.settings.poster_url, alt: '', class: 'collab-hero__video', loading: 'lazy', is_poster: true %}
       {% endif %}
       <div class="collab-hero__overlay">
         {% if section.settings.badge_text != blank %}
