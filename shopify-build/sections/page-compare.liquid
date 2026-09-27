@@ -37,15 +37,17 @@
       <div class="page-compare__product">
         <div class="page-compare__product-image">
           {% if img_a != blank %}
-            {{ img_a
-              | image_url: width: 1200
-              | image_tag:
-                loading: 'lazy',
-                widths: '480, 720, 1200',
-                sizes: '(max-width: 768px) 90vw, 40vw',
-                class: 'page-compare__img',
-                alt: section.settings.product_a_name
-            }}
+            {% render 'media-img',
+              image: img_a,
+              alt: section.settings.product_a_name,
+              fit: 'contain',
+              position: 'css',
+              class: 'page-compare__img',
+              sizes: '(max-width: 768px) 90vw, 40vw',
+              widths: '480, 720, 1200',
+              width_default: 1200,
+              loading: 'lazy'
+            %}
           {% else %}
             <div class="page-compare__placeholder">{{ section.settings.product_a_name }}</div>
           {% endif %}
@@ -60,15 +62,17 @@
       <div class="page-compare__product">
         <div class="page-compare__product-image">
           {% if img_b != blank %}
-            {{ img_b
-              | image_url: width: 1200
-              | image_tag:
-                loading: 'lazy',
-                widths: '480, 720, 1200',
-                sizes: '(max-width: 768px) 90vw, 40vw',
-                class: 'page-compare__img',
-                alt: section.settings.product_b_name
-            }}
+            {% render 'media-img',
+              image: img_b,
+              alt: section.settings.product_b_name,
+              fit: 'contain',
+              position: 'css',
+              class: 'page-compare__img',
+              sizes: '(max-width: 768px) 90vw, 40vw',
+              widths: '480, 720, 1200',
+              width_default: 1200,
+              loading: 'lazy'
+            %}
           {% else %}
             <div class="page-compare__placeholder">{{ section.settings.product_b_name }}</div>
           {% endif %}
