@@ -22,13 +22,16 @@
     <a class="sole-pair__card" href="{{ closed_href }}">
       {% if section.settings.closed_image != blank %}
         <div class="sole-pair__img">
-          <img
-            src="{{ section.settings.closed_image | image_url: width: 800 }}"
-            alt="Closed Sole"
-            loading="lazy"
-            width="400"
-            height="400"
-          >
+          {% render 'media-img',
+            image: section.settings.closed_image,
+            alt: 'Closed Sole',
+            fit: 'contain',
+            position: 'css',
+            sizes: '(max-width: 768px) 100vw, 550px',
+            widths: '400, 600, 800, 1200',
+            width_default: 800,
+            loading: 'lazy'
+          %}
         </div>
       {% endif %}
       <div class="sole-pair__copy">
@@ -45,13 +48,16 @@
     <a class="sole-pair__card" href="{{ open_href }}">
       {% if section.settings.open_image != blank %}
         <div class="sole-pair__img">
-          <img
-            src="{{ section.settings.open_image | image_url: width: 800 }}"
-            alt="Open Sole"
-            loading="lazy"
-            width="400"
-            height="400"
-          >
+          {% render 'media-img',
+            image: section.settings.open_image,
+            alt: 'Open Sole',
+            fit: 'contain',
+            position: 'css',
+            sizes: '(max-width: 768px) 100vw, 550px',
+            widths: '400, 600, 800, 1200',
+            width_default: 800,
+            loading: 'lazy'
+          %}
         </div>
       {% endif %}
       <div class="sole-pair__copy">
@@ -107,10 +113,13 @@
     padding: var(--sp-img-pad, 0px);
     box-sizing: border-box;
   }
-  .sole-pair__img img {
+  .sole-pair__img .media-img {
+    position: static;
+    inset: auto;
     width: calc(var(--sp-scale, 100) * 1%);
     height: auto;
     max-height: 100%;
+    max-width: 100%;
     object-fit: contain;
     display: block;
   }
