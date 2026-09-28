@@ -6,6 +6,7 @@
 {% liquid
   assign heading = section.settings.heading | default: 'Press'
   assign heading_style = section.settings.heading_style | default: 'eyebrow'
+  assign mobile_layout = section.settings.mobile_layout | default: 'stack'
   assign bg = section.settings.bg_color | default: '#faf8f6'
   assign hero_label = section.settings.hero_label | default: 'Barreletics × Coperni'
   assign hero_line = section.settings.hero_line | default: 'Limited edition · Paris 2026'
@@ -20,7 +21,7 @@
 
 <section
   id="press-row-{{ section.id }}"
-  class="press-row{% if section.settings.hide_on_mobile %} press-row--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} press-row--hide-desktop{% endif %}"
+  class="press-row press-row--m-{{ mobile_layout }}{% if section.settings.hide_on_mobile %} press-row--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} press-row--hide-desktop{% endif %}"
   style="--pr-bg: {{ bg }};"
   aria-label="{{ heading | strip_html | escape }}"
 >
@@ -409,6 +410,70 @@
     #shopify-section-{{ section.id }} .press-row__hero {
       height: 320px;
     }
+    /* Phone layout setting (mobile_layout). stack = default above. grid = two by two, 4:5 crops. list = square thumbnail with title and caption. Phones only. */
+    #shopify-section-{{ section.id }} .press-row--m-grid .press-row__grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 10px;
+    }
+    #shopify-section-{{ section.id }} .press-row--m-grid .press-row__hero {
+      grid-column: 1 / -1;
+    }
+    #shopify-section-{{ section.id }} .press-row--m-grid .press-row__card {
+      min-height: 0;
+      grid-template-rows: auto 1fr;
+    }
+    #shopify-section-{{ section.id }} .press-row--m-grid .press-row__card-media {
+      aspect-ratio: 4 / 5;
+    }
+    #shopify-section-{{ section.id }} .press-row--m-grid .press-row__card-foot {
+      min-height: 0;
+      padding: 10px 12px 12px;
+      justify-content: flex-start;
+    }
+    #shopify-section-{{ section.id }} .press-row--m-grid .press-row__card-title {
+      font-size: 15px;
+      text-wrap: balance;
+    }
+    #shopify-section-{{ section.id }} .press-row--m-grid .press-row__card-cap {
+      font-size: 12.5px;
+    }
+    #shopify-section-{{ section.id }} .press-row--m-grid .press-row__card-cap span {
+      text-wrap: balance;
+    }
+    #shopify-section-{{ section.id }} .press-row--m-grid .press-row__card-arrow {
+      display: none;
+    }
+    #shopify-section-{{ section.id }} .press-row--m-list .press-row__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0;
+    }
+    #shopify-section-{{ section.id }} .press-row--m-list .press-row__hero {
+      margin-bottom: 8px;
+    }
+    #shopify-section-{{ section.id }} .press-row--m-list .press-row__card {
+      grid-template-columns: 104px minmax(0, 1fr);
+      grid-template-rows: auto;
+      align-items: center;
+      gap: 16px;
+      min-height: 0;
+      padding: 14px 0;
+      background: transparent;
+      border: 0;
+      border-bottom: 1px solid #d6cfc0;
+    }
+    #shopify-section-{{ section.id }} .press-row--m-list .press-row__card-media {
+      width: 104px;
+      height: 104px;
+    }
+    #shopify-section-{{ section.id }} .press-row--m-list .press-row__card-foot {
+      min-height: 0;
+      padding: 0;
+      border-top: 0;
+    }
+    #shopify-section-{{ section.id }} .press-row--m-list .press-row__card-title {
+      font-size: 17px;
+      text-wrap: balance;
+    }
   }
   /* Also featured in line. Desktop caps = A3, mobile sentence = M2 (press line 2026-09-27). Breakpoint 900px. */
   #shopify-section-{{ section.id }} .press-row__mentions { margin: 20px 0 0; padding: 0; font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif; text-align: left; }
@@ -508,6 +573,8 @@
       "label": "Hero overlay line",
       "default": "Limited edition · Paris 2026"
     },
+    { "type": "header", "content": "Phone" },
+    { "type": "select", "id": "mobile_layout", "label": "Phone layout", "default": "stack", "info": "Phones only. Desktop and tablet are unchanged.", "options": [ { "value": "stack", "label": "Stack (one per row)" }, { "value": "grid", "label": "Two-by-two" }, { "value": "list", "label": "List with thumbnails" } ] },
     { "type": "header", "content": "Visibility" },
     { "type": "checkbox", "id": "hide_on_mobile", "label": "Hide on mobile", "default": false },
     { "type": "checkbox", "id": "hide_on_desktop", "label": "Hide on desktop", "default": false },
