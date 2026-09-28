@@ -174,7 +174,7 @@
 
 <style>
   {%- if section.settings.heading_size_override != blank %}
-  #shopify-section-{{ section.id }} { {% render 'type-override-vars', title_size: section.settings.heading_size_override %} }
+  #shopify-section-{{ section.id }} { {% render 'type-override-vars', title_size: section.settings.heading_size_override %} --te-title-size-n: {{ section.settings.heading_size_override }}; }
   {%- endif %}
   .problem-section {
     padding: 72px 40px;
@@ -365,7 +365,7 @@
      52 desktop (fluid to 36 on tablet) / 36 phone / 400. Theme Editor title size, weight
      and role settings are intentionally ignored so every page renders the same. */
   #shopify-section-{{ section.id }} .problem-title.h2-display {
-    font-size: clamp(var(--heading-phone, 36px), 4.6vw, var(--te-title-size, var(--heading-band-desktop, 52px)));
+    font-size: clamp(var(--heading-phone, 36px), calc(var(--te-title-size-n, var(--heading-band-desktop-n, 52)) * 4.6vw / 52), var(--te-title-size, var(--heading-band-desktop, 52px)));
     font-weight: 400;
     line-height: var(--type-h2-display-leading, 1.1);
     letter-spacing: var(--type-h2-display-tracking, -0.028em);

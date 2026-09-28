@@ -197,7 +197,7 @@
 
 <style>
   {%- if section.settings.heading_size_override != blank %}
-  #shopify-section-{{ section.id }} { {% render 'type-override-vars', title_size: section.settings.heading_size_override %} }
+  #shopify-section-{{ section.id }} { {% render 'type-override-vars', title_size: section.settings.heading_size_override %} --te-title-size-n: {{ section.settings.heading_size_override }}; }
   {%- endif %}
   #shopify-section-{{ section.id }} .fullbleed-statement {
     position: relative;
@@ -298,7 +298,7 @@
      56 desktop (fluid to 36 on tablet) / 36 phone / 400, same as the fifty-fifty heading (2026-09-28). Theme Editor title size, weight
      and role settings are intentionally ignored so every page renders the same. */
   #shopify-section-{{ section.id }} .fullbleed-statement__line.h2-display {
-    font-size: clamp(var(--heading-phone, 36px), 4.8vw, var(--te-title-size, var(--heading-standard-desktop, 56px)));
+    font-size: clamp(var(--heading-phone, 36px), calc(var(--te-title-size-n, var(--heading-standard-desktop-n, 56)) * 4.8vw / 56), var(--te-title-size, var(--heading-standard-desktop, 56px)));
     font-weight: 400;
     line-height: var(--heading-standard-leading, 1.06);
     letter-spacing: var(--heading-standard-tracking, -0.032em);

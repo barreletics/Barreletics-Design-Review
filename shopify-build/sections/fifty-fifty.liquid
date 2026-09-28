@@ -371,7 +371,7 @@
 
 <style>
   {%- if section.settings.heading_size_override != blank %}
-  #shopify-section-{{ section.id }} { {% render 'type-override-vars', title_size: section.settings.heading_size_override %} }
+  #shopify-section-{{ section.id }} { {% render 'type-override-vars', title_size: section.settings.heading_size_override %} --te-title-size-n: {{ section.settings.heading_size_override }}; }
   {%- endif %}
   /* Section rhythm (fix-forward 2026-08-09): band lives on the Shopify
      section WRAPPER so neighbouring fifty-fifties never weld — without
@@ -590,7 +590,7 @@
   #shopify-section-{{ section.id }} .split-text__title.h2-standard,
   #shopify-section-{{ section.id }} .split-text__title.h2-supporting,
   #shopify-section-{{ section.id }} .split-text__title.type-statement {
-    font-size: clamp(var(--heading-phone, 36px), 4.8vw, var(--te-title-size, var(--heading-standard-desktop, 56px)));
+    font-size: clamp(var(--heading-phone, 36px), calc(var(--te-title-size-n, var(--heading-standard-desktop-n, 56)) * 4.8vw / 56), var(--te-title-size, var(--heading-standard-desktop, 56px)));
     font-weight: 400;
     line-height: var(--heading-standard-leading, 1.06);
     letter-spacing: var(--heading-standard-tracking, -0.032em);
