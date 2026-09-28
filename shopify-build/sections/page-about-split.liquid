@@ -47,6 +47,9 @@
 </section>
 
 <style>
+  {%- if section.settings.heading_size_override != blank %}
+  #shopify-section-{{ section.id }} { {% render 'type-override-vars', title_size: section.settings.heading_size_override %} --te-title-size-n: {{ section.settings.heading_size_override }}; }
+  {%- endif %}
   #shopify-section-{{ section.id }} .page-about-split {
     display: grid;
     grid-template-columns: var(--pas-media-fr, 1fr) var(--pas-text-fr, 1fr);
@@ -73,12 +76,17 @@
     max-width: 36em;
   }
   #shopify-section-{{ section.id }} .page-about-split__title {
-    font-size: var(--te-title-size, clamp(36px, 4.8vw, 56px));
+    font-size: clamp(var(--heading-phone, 36px), calc(var(--te-title-size-n, var(--heading-standard-desktop-n, 56)) * 4.8vw / 56), var(--te-title-size, var(--heading-standard-desktop, 56px))); /* standard heading tier (Theme settings > Section headings) */
     font-weight: var(--te-title-weight, 400);
     letter-spacing: -0.032em;
     line-height: 1.06;
     margin: 0 0 24px;
     color: var(--text-primary, #1c1916);
+  }
+  @media (max-width: 749px) {
+    #shopify-section-{{ section.id }} .page-about-split__title {
+      font-size: var(--heading-phone, 36px);
+    }
   }
   #shopify-section-{{ section.id }} .page-about-split__body {
     font-size: var(--te-body-size, 17px);
@@ -117,6 +125,12 @@
     { "type": "text", "id": "image_url", "label": "Image URL fallback" },
     { "type": "text", "id": "image_alt", "label": "Image alt" },
     { "type": "header", "content": "Type — size & weight", "info": "Family is brand Type OS. Default keeps the signed v25 sizing." },
+    {
+      "type": "number",
+      "id": "heading_size_override",
+      "label": "Heading size override (px, desktop)",
+      "info": "Leave blank to follow Theme settings > Section headings. A number sets this section's desktop heading size only. Phones keep the global phone size."
+    },
     {
       "type": "select",
       "id": "title_size",
