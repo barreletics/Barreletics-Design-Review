@@ -2,9 +2,8 @@
   Full-bleed statement / stage — lifestyle image or video + optional copy.
   Multi-use: PDP commit line, tall stage heroes, image-only media bands.
   Separate from statement-band (cream solo slogan).
-  GLOBAL HEADING SYSTEM (2026-09-27): line is locked 52 / 36 phone / 400 on every non-product template
-  PRODUCT PAGES (2026-09-28): clamp(56px, 6vw, 88px) desktop / clamp(46px, 12.5vw, 56px) phone / 400,
-  same as the pdp-features "Why Barreletics" giant title. Collections and other pages keep 52 / 36.
+  GLOBAL HEADING SYSTEM (2026-09-28): line matches the fifty-fifty heading size on every template:
+  clamp(36px, 4.8vw, 56px) desktop / 36 phone / 400 (replaces 52 / 36 and the product-only big size).
   (Closed Sole "TRANSFORM YOUR PRACTICE" no longer falls back to the 36/28 statement role).
   title_role / title_size / title_weight stay in the schema but are ignored.
 {% endcomment %}
@@ -293,10 +292,10 @@
     margin: 0 0 var(--gap-c);
   }
   /* GLOBAL HEADING SYSTEM (locked 2026-09-27): one display head for this section type.
-     52 desktop (fluid to 36 on tablet) / 36 phone / 400. Theme Editor title size, weight
+     56 desktop (fluid to 36 on tablet) / 36 phone / 400, same as the fifty-fifty heading (2026-09-28). Theme Editor title size, weight
      and role settings are intentionally ignored so every page renders the same. */
   #shopify-section-{{ section.id }} .fullbleed-statement__line.h2-display {
-    font-size: clamp(36px, 4.6vw, 52px);
+    font-size: clamp(36px, 4.8vw, 56px);
     font-weight: 400;
     line-height: var(--type-h2-display-leading, 1.1);
     letter-spacing: var(--type-h2-display-tracking, -0.028em);
@@ -311,18 +310,6 @@
       font-size: 36px;
     }
   }
-  {%- if template.name == 'product' %}
-  /* PRODUCT PAGES ONLY (2026-09-28, Andrew): big display size, same as the pdp-features giant title.
-     Collections and other pages keep 52 / 36 above. Balance and weight 400 are inherited. */
-  #shopify-section-{{ section.id }} .fullbleed-statement__line.h2-display {
-    font-size: clamp(56px, 6vw, 88px);
-  }
-  @media (max-width: 749px) {
-    #shopify-section-{{ section.id }} .fullbleed-statement__line.h2-display {
-      font-size: clamp(46px, 12.5vw, 56px);
-    }
-  }
-  {%- endif %}
   #shopify-section-{{ section.id }} .fullbleed-statement__sub {
     font-size: var(--fb-body-size, 16px);
     font-weight: var(--fb-body-weight, 400);
