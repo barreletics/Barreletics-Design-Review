@@ -60,6 +60,9 @@
 </section>
 
 <style>
+  {%- if section.settings.heading_size_override != blank %}
+  #shopify-section-{{ section.id }} { {% render 'type-override-vars', title_size: section.settings.heading_size_override %} }
+  {%- endif %}
   .pdp-features {
     padding: var(--pf-pad-top, var(--section-padding-y)) var(--section-padding-x) var(--pf-pad-bottom, var(--section-padding-y));
     background: var(--bg-primary);
@@ -90,7 +93,7 @@
   #shopify-section-{{ section.id }} .pdp-features__title {
     margin: 0;
     max-width: 22ch;
-    font-size: clamp(56px, 6vw, 88px);
+    font-size: clamp(var(--heading-giant-phone, 56px), 6vw, var(--te-title-size, var(--heading-giant-desktop, 88px)));
     font-weight: 400;
     line-height: 0.96;
     letter-spacing: -0.04em;
@@ -104,7 +107,7 @@
   }
   @media (max-width: 749px) {
     #shopify-section-{{ section.id }} .pdp-features__title {
-      font-size: clamp(46px, 12.5vw, 56px);
+      font-size: clamp(46px, 12.5vw, var(--heading-giant-phone, 56px));
     }
   }
 
@@ -237,6 +240,12 @@
       "label": "Heading (supports HTML)",
       "default": "Built around<br>one obsession: <strong>Grip.</strong>",
       "info": "Family is brand Type OS. Heading size and weight are locked by the global type system."
+    },
+    {
+      "type": "number",
+      "id": "heading_size_override",
+      "label": "Heading size override (px, desktop)",
+      "info": "Leave blank to follow Theme settings > Section headings > Giant heading. A number sets this section's desktop heading size only. Phones keep the giant phone size."
     },
     {
       "type": "select",

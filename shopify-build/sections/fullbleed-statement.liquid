@@ -196,6 +196,9 @@
 </section>
 
 <style>
+  {%- if section.settings.heading_size_override != blank %}
+  #shopify-section-{{ section.id }} { {% render 'type-override-vars', title_size: section.settings.heading_size_override %} }
+  {%- endif %}
   #shopify-section-{{ section.id }} .fullbleed-statement {
     position: relative;
     width: 100%;
@@ -295,10 +298,10 @@
      56 desktop (fluid to 36 on tablet) / 36 phone / 400, same as the fifty-fifty heading (2026-09-28). Theme Editor title size, weight
      and role settings are intentionally ignored so every page renders the same. */
   #shopify-section-{{ section.id }} .fullbleed-statement__line.h2-display {
-    font-size: clamp(36px, 4.8vw, 56px);
+    font-size: clamp(var(--heading-phone, 36px), 4.8vw, var(--te-title-size, var(--heading-standard-desktop, 56px)));
     font-weight: 400;
-    line-height: var(--type-h2-display-leading, 1.1);
-    letter-spacing: var(--type-h2-display-tracking, -0.028em);
+    line-height: var(--heading-standard-leading, 1.06);
+    letter-spacing: var(--heading-standard-tracking, -0.032em);
     text-wrap: balance; /* avoid one-word last lines (2026-09-27, Andrew) */
   }
   #shopify-section-{{ section.id }} .fullbleed-statement__line.h2-display strong,
@@ -307,7 +310,7 @@
   }
   @media (max-width: 749px) {
     #shopify-section-{{ section.id }} .fullbleed-statement__line.h2-display {
-      font-size: 36px;
+      font-size: var(--heading-phone, 36px);
     }
   }
   #shopify-section-{{ section.id }} .fullbleed-statement__sub {
@@ -447,6 +450,12 @@
       "label": "Heading",
       "default": "You commit to the class. Commit to the gear.",
       "info": "Family is brand Type OS. Heading size and weight are locked by the global type system."
+    },
+    {
+      "type": "number",
+      "id": "heading_size_override",
+      "label": "Heading size override (px, desktop)",
+      "info": "Leave blank to follow Theme settings > Section headings. A number sets this section's desktop heading size only. Phones keep the global phone size."
     },
     {
       "type": "select",

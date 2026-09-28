@@ -173,6 +173,9 @@
 </section>
 
 <style>
+  {%- if section.settings.heading_size_override != blank %}
+  #shopify-section-{{ section.id }} { {% render 'type-override-vars', title_size: section.settings.heading_size_override %} }
+  {%- endif %}
   .problem-section {
     padding: 72px 40px;
     background: {{ panel_bg }};
@@ -362,7 +365,7 @@
      52 desktop (fluid to 36 on tablet) / 36 phone / 400. Theme Editor title size, weight
      and role settings are intentionally ignored so every page renders the same. */
   #shopify-section-{{ section.id }} .problem-title.h2-display {
-    font-size: clamp(36px, 4.6vw, 52px);
+    font-size: clamp(var(--heading-phone, 36px), 4.6vw, var(--te-title-size, var(--heading-band-desktop, 52px)));
     font-weight: 400;
     line-height: var(--type-h2-display-leading, 1.1);
     letter-spacing: var(--type-h2-display-tracking, -0.028em);
@@ -374,7 +377,7 @@
   }
   @media (max-width: 749px) {
     #shopify-section-{{ section.id }} .problem-title.h2-display {
-      font-size: 36px;
+      font-size: var(--heading-phone, 36px);
     }
   }
   .problem-body {
@@ -618,6 +621,12 @@
       "id": "title",
       "label": "Heading",
       "default": "Never slip in Chair Pose"
+    },
+    {
+      "type": "number",
+      "id": "heading_size_override",
+      "label": "Heading size override (px, desktop)",
+      "info": "Leave blank to follow Theme settings > Section headings. A number sets this section's desktop heading size only. Phones keep the global phone size."
     },
     {
       "type": "textarea",
