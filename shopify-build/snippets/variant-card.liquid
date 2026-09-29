@@ -161,13 +161,14 @@
   {%- if vg_variant.available -%}
     <a class="var-card__img var-card__imglink" href="{{ card_url }}">
       {%- if img != blank -%}
-        <img
-          src="{{ img | image_url: width: 600 }}"
-          alt="{{ display_name | escape }}"
-          width="600"
-          height="600"
-          loading="lazy"
-        >
+        {% render 'media-img',
+           image: img,
+           alt: display_name,
+           widths: '400, 600, 800',
+           width_default: 600,
+           sizes: '(max-width: 768px) 50vw, 25vw',
+           loading: 'lazy'
+        %}
       {%- else -%}
         <span class="var-card__placeholder">{{ display_name | slice: 0 }}</span>
       {%- endif -%}
@@ -181,14 +182,15 @@
   {%- else -%}
     <div class="var-card__img">
       {%- if img != blank -%}
-        <img
-          src="{{ img | image_url: width: 600 }}"
-          alt="{{ display_name | escape }}"
-          width="600"
-          height="600"
-          loading="lazy"
-          class="var-card__img--muted"
-        >
+        {% render 'media-img',
+           image: img,
+           alt: display_name,
+           class: 'var-card__img--muted',
+           widths: '400, 600, 800',
+           width_default: 600,
+           sizes: '(max-width: 768px) 50vw, 25vw',
+           loading: 'lazy'
+        %}
       {%- endif -%}
       <span class="var-card__badge var-card__badge--soldout">Sold Out</span>
       {%- if show_sole_badge and vg_sole != blank -%}
