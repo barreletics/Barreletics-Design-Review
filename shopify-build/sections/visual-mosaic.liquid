@@ -108,9 +108,9 @@
     endif
   endif
   if vm_mob_cols == 1
-    assign vm_mob_cols_css = '1fr'
+    assign vm_mob_cols_css = 'minmax(0, 1fr)'
   else
-    assign vm_mob_cols_css = '1fr 1fr'
+    assign vm_mob_cols_css = 'minmax(0, 1fr) minmax(0, 1fr)'
   endif
   assign default_target = section.settings.default_link_target | default: '#variants'
   if default_target != blank and default_target != 'custom'
@@ -463,12 +463,11 @@
   @media (max-width: 900px) {
     #visual-mosaic-{{ section.id }} .visual-mosaic__grid {
       grid-template-columns: var(--vm-mob-cols-css);
-      grid-auto-rows: var(--vm-mob-h);
+      grid-auto-rows: auto;
     }
     #visual-mosaic-{{ section.id }} .vm-tile--hero {
       grid-column: 1 / -1;
       grid-row: span 1;
-      min-height: 280px;
     }
     #visual-mosaic-{{ section.id }} .vm-tile {
       grid-column: span 1;
@@ -482,29 +481,21 @@
   @media (max-width: 767px) {
     #visual-mosaic-{{ section.id }} .visual-mosaic__grid {
       grid-template-columns: var(--vm-mob-cols-css);
-      grid-auto-rows: var(--vm-mob-h);
+      grid-auto-rows: auto;
     }
     #visual-mosaic-{{ section.id }} .vm-tile--hero-m {
       grid-column: var(--vm-hero-col-m, 1 / -1);
       grid-row: span var(--vm-hero-span-m, 2);
       aspect-ratio: var(--vm-aspect-m, 3 / 4);
-      {%- if vm_aspect_uses_height -%}
-      min-height: var(--vm-hero-min-m, calc(var(--vm-mob-h) * 2 + var(--vm-gap, 4px)));
-      {%- else -%}
       min-height: 0;
       height: auto;
-      {%- endif -%}
     }
     #visual-mosaic-{{ section.id }} .vm-tile--sm-m {
       grid-column: span 1;
       grid-row: span 1;
       aspect-ratio: var(--vm-aspect-m, 3 / 4);
-      {%- if vm_aspect_uses_height -%}
-      min-height: var(--vm-mob-h);
-      {%- else -%}
       min-height: 0;
       height: auto;
-      {%- endif -%}
     }
     #visual-mosaic-{{ section.id }} .vm-tile img {
       object-fit: var(--vm-fit-img-m, var(--vm-fit, cover));
