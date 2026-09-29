@@ -22,8 +22,11 @@
     role_hidden     boolean — emits aria-hidden without touching alt
     width_attr      optional integer for width= (when url mode)
     height_attr     optional integer for height= (when url mode)
+    img_id          optional id="" on the <img> (for JS hooks that must address
+                    a single element by id, e.g. pdp-main-img gallery/zoom).
+                    Additive — omit to preserve prior behavior.
 
-  Not for: <video>, background-image, SVG icons, logos, product-card thumbs, swatches.
+  Not for: <video>, background-image, SVG icons, logos, swatches.
 {% endcomment %}
 
 {%- liquid
@@ -42,6 +45,7 @@
   assign mi_role_hidden = role_hidden | default: false
   assign mi_width_attr = width_attr | default: ''
   assign mi_height_attr = height_attr | default: ''
+  assign mi_img_id = img_id | default: ''
 
   assign mi_final_class = 'media-img'
   if mi_fit == 'contain'
@@ -85,6 +89,7 @@
   {%- endcapture -%}
   <img
     class="{{ mi_final_class }}"
+    {% if mi_img_id != blank %}id="{{ mi_img_id }}"{% endif %}
     src="{{ mi_src }}"
     srcset="{{ mi_srcset | strip }}"
     sizes="{{ mi_sizes }}"
@@ -100,6 +105,7 @@
 {%- elsif mi_url != blank -%}
   <img
     class="{{ mi_final_class }}"
+    {% if mi_img_id != blank %}id="{{ mi_img_id }}"{% endif %}
     src="{{ mi_url | escape }}"
     alt="{{ mi_alt_final | escape }}"
     {% if mi_width_attr != blank %}width="{{ mi_width_attr }}"{% endif %}

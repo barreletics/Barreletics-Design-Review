@@ -26,14 +26,15 @@
   <a href="{{ product.url }}" class="product-card__link" aria-label="{{ product.title }}">
     <div class="product-card__media">
       {% if product.featured_image %}
-        <img
-          src="{{ product.featured_image | image_url: width: 600 }}"
-          alt="{{ product.featured_image.alt | escape | default: product.title }}"
-          width="600"
-          height="600"
-          loading="lazy"
-          class="product-card__img"
-        />
+        {% render 'media-img',
+           image: product.featured_image,
+           alt: product.featured_image.alt | default: product.title,
+           class: 'product-card__img',
+           widths: '400, 600, 800',
+           width_default: 600,
+           sizes: '(max-width: 768px) 50vw, 25vw',
+           loading: 'lazy'
+        %}
       {% else %}
         <div class="product-card__placeholder">
           {{ product.title | slice: 0 }}
