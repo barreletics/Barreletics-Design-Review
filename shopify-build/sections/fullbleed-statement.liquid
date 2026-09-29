@@ -17,6 +17,15 @@
   endif
   assign height_desktop = section.settings.height_desktop | default: '64'
   assign height_mobile = section.settings.height_mobile | default: '52'
+  # Phone height 0 = theme setting (2026-09-29): video -> Phone full-width video height, photo -> Phone split-image height.
+  assign fb_height_mobile_css = height_mobile | append: 'vh'
+  if height_mobile == 0
+    if section.settings.video != blank or section.settings.video_url != blank
+      assign fb_height_mobile_css = 'var(--fullbleed-video-h-mobile, 500px)'
+    else
+      assign fb_height_mobile_css = 'var(--split-media-h-mobile, 600px)'
+    endif
+  endif
   assign image_fit_mobile = section.settings.image_fit_mobile | default: section.settings.media_fit | default: 'cover'
   if image_fit_mobile == blank
     assign image_fit_mobile = 'cover'
@@ -65,7 +74,8 @@
   style="{% render 'section-inset-vars' %} 
     --fb-media-radius: {{ media_radius }}px;
     --fb-height-desktop: {{ height_desktop }}vh;
-    --fb-height-mobile: {{ height_mobile }}vh;
+    --fb-height-mobile: {{ fb_height_mobile_css }};
+    {% if section.settings.media_bg_mobile != blank %}--fb-bg-mobile: {{ section.settings.media_bg_mobile }};{% endif %}
     --fb-fit-mobile: {{ image_fit_mobile }};
     --fb-video-fit-mobile: {{ video_fit_mobile }};
     --fb-overlay: rgba(28, 25, 22, {{ overlay_alpha }});
@@ -363,6 +373,9 @@
     #shopify-section-{{ section.id }} .fullbleed-statement--fit-m-contain .fullbleed-statement__video {
       object-fit: contain;
     }
+    {%- if section.settings.media_bg_mobile != blank %}
+    #shopify-section-{{ section.id }} .fullbleed-statement--fit-m-contain { background: var(--fb-bg-mobile); }
+    {%- endif %}
     /* Phone photo: full collage, 32 cream breath — taller section, no hard crop. Videos keep vh. */
     #shopify-section-{{ section.id }} .fullbleed-statement--phone-photo {
       height: auto;
@@ -680,13 +693,13 @@
     {
       "type": "range",
       "id": "height_mobile",
-      "label": "Mobile height",
-      "min": 40,
+      "label": "Mobile height (0 = use theme setting)",
+      "min": 0,
       "max": 100,
       "step": 2,
       "unit": "vh",
       "default": 52,
-      "info": "Phone only. Sets how tall this photo band is. Works with Cover or Contain."
+      "info": "Phone only. 0 = Theme settings > Split images: videos use Phone full-width video height, photos use Phone split-image height. Works with Cover or Contain."
     },
     {
       "type": "select",
@@ -698,6 +711,12 @@
         { "value": "contain", "label": "Contain" }
       ],
       "info": "Cover fills the height box. Contain shows the whole photo inside it."
+    },
+    {
+      "type": "color",
+      "id": "media_bg_mobile",
+      "label": "Phone background (Contain)",
+      "info": "Fills the space around the photo when Fit — phone = Contain. Match the photo background."
     },
     {
       "type": "checkbox",
