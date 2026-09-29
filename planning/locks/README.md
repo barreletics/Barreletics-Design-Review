@@ -25,6 +25,7 @@ Scanner: `python3 scripts/lock-scan.py .`
 | Lock | File |
 | --- | --- |
 | **Page Layout OS (Home 860/520)** | [PAGE-LAYOUT-OS-LOCKED.md](./PAGE-LAYOUT-OS-LOCKED.md) |
+| **Split phone height (global 600, 2026-09-29)** | [SPLIT-PHONE-HEIGHT-GLOBAL-LOCKED.md](./SPLIT-PHONE-HEIGHT-GLOBAL-LOCKED.md) |
 | Soft cream | [CREAM-SOFT-LOCKED.md](./CREAM-SOFT-LOCKED.md) |
 | Trusted by dark | [TRUSTED-BY-DARK-LOCKED.md](./TRUSTED-BY-DARK-LOCKED.md) |
 | FAQ Background | [FAQ-BG-LOCKED.md](./FAQ-BG-LOCKED.md) |

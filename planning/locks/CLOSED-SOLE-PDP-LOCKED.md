@@ -1,5 +1,7 @@
 # Closed Sole PDP LOCKED
 
+> **2026-09-29 update:** phone media height for every 50/50 is now GLOBAL (Theme settings > Split images, default 600; section override 0 = global). See [SPLIT-PHONE-HEIGHT-GLOBAL-LOCKED.md](./SPLIT-PHONE-HEIGHT-GLOBAL-LOCKED.md). The phone 550 / 520 values below are superseded; everything else here still stands.
+
 **Andrew 2026-09-14:** Already QC’d (the product we sell). A lot of work — do not re-open.  
 **Template:** `shopify-build/templates/product.json` (Default product)  
 **Product:** `/products/best-reformer-pilates-legree-workout-shoes`  

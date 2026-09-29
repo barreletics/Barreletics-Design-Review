@@ -153,13 +153,19 @@ def scan_sitewide(site: dict, build: Path, only: Path | None):
             )
         if "min_height" in st and st["min_height"] not in (None, "") and st.get("min_height") != 560:
           issues.append(f"{rel} {key}: min_height expected 560, got {st.get('min_height')}")
-        if fit in ("cover", "") and "mobile_media_height" in st and st["mobile_media_height"] not in (None, ""):
+        if "mobile_media_height" in st and st["mobile_media_height"] not in (None, ""):
           mmh = st["mobile_media_height"]
-          # 550 lifestyle lock; 360 = known Chair Pose landscape exception; ~400 = packshot FIT frame
-          if fit == "cover" and mmh not in (550, 360) and mmh != 550:
-            issues.append(
-              f"{rel} {key}: COVER mobile_media_height expected 550 (or locked exception), got {mmh}"
-            )
+          # 2026-09-29: phone height is global (Theme settings > Split images, default 600).
+          # 0 = use global. Any other value must be a named exception in the lock.
+          if mmh != lifestyle.get("mobile_media_height", 0):
+            allowed = {
+              (e.get("template"), e.get("section")): e.get("mobile_media_height")
+              for e in (lifestyle.get("mobile_media_height_exceptions") or [])
+            }
+            if allowed.get((tmpl.name, key)) != mmh:
+              issues.append(
+                f"{rel} {key}: mobile_media_height expected 0 (global) or a named exception, got {mmh}"
+              )
 
       bg = st.get("bg_color")
       if isinstance(bg, str) and bg.lower() in ("#fafafa", "#f8f6f4", "#f7f5f2", "#fff8f0"):
@@ -210,6 +216,8 @@ def scan_sitewide(site: dict, build: Path, only: Path | None):
         issues.append("sections/guarantee-band.liquid: forbidden loud column size clamp(20px, 2.2vw, 26px)")
       if re.search(r"\.guarantee-item h4\s*\{[^}]*font-size:\s*1[45]px", liq_txt):
         issues.append("sections/guarantee-band.liquid: forbidden tiny 14–15px column titles")
+
+  return issues
 
 
 def scan_page_layout_os(site: dict, build: Path, only: Path | None):
@@ -393,8 +401,6 @@ def scan_page_layout_os(site: dict, build: Path, only: Path | None):
       for must in pfi.get("liquid_css_must_contain") or []:
         if must not in liq_txt:
           issues.append(f"sections/press-feature.liquid: missing Interni no-overflow guard {must!r}")
-  return issues
-
 
   # Open Sole Chair Pose yellow — COVER / P5A4949 / mmh 360
   chair = site.get("chair_pose_open") or {}

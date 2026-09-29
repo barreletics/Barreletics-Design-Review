@@ -57,12 +57,19 @@
   assign text_pct = 100 | minus: media_pct
 
   assign min_height = section.settings.min_height | default: 560
-  assign mobile_media_height = section.settings.mobile_media_height | default: 550
+  # Phone media height: global Theme settings > Split images > Phone split-image height (--split-media-h-mobile, default 600).
+  # Section setting mobile_media_height is an optional override; 0 or blank = use global (2026-09-29).
+  assign mobile_media_height = section.settings.mobile_media_height | default: 0
+  if mobile_media_height > 0
+    assign ff_mobile_media_h_css = mobile_media_height | append: 'px'
+  else
+    assign ff_mobile_media_h_css = 'var(--split-media-h-mobile, 600px)'
+  endif
   assign mobile_text_height = section.settings.mobile_text_height | default: 0
   if template.name == 'product'
     assign mobile_text_height = 0
   endif
-  # mobile_media_height comes from section setting (default 550); landscape COVER may use ~360–400
+  # mobile_media_height: 0 = global phone split-image height; set a px value only where the global crops badly
   assign image_position = section.settings.image_position | default: 'center'
   if image_position == 'custom'
     assign focal_x = section.settings.focal_x | default: 50
@@ -145,7 +152,7 @@
   class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} split-section{% if template.name == 'product' %} split-section--pdp{% endif %}{% if section.settings.reverse %} split-section--reverse{% endif %}{% if media_fit == 'contain' %} split-section--contain{% endif %}{% if media_fit == 'fit' %} split-section--fit{% endif %}{% if media_fit == 'cover_inset' %} split-section--cover-inset{% endif %}{% if image_fit_m == 'fit' %} split-section--fit-m{% endif %}{% if image_fit_m == 'contain' %} split-section--contain-m{% endif %}{% if media_aspect == 'square' %} split-section--media-square{% endif %}{% if media_aspect_m == 'square' %} split-section--media-square-m{% endif %}{% render 'split-mobile-stack-class', mobile_stack_order: section.settings.mobile_stack_order %}"
   style="{% render 'section-inset-vars' %} 
     --ff-min-height: {{ min_height }}px;
-    --ff-mobile-media-height: {{ mobile_media_height }}px;
+    --ff-mobile-media-height: {{ ff_mobile_media_h_css }};
     --ff-mobile-text-height: {{ mobile_text_height }}px;
     --ff-media-fr: {{ media_pct }}fr;
     --ff-text-fr: {{ text_pct }}fr;
@@ -684,8 +691,8 @@
     #shopify-section-{{ section.id }} .split-media {
       aspect-ratio: auto;
       width: 100%;
-      height: var(--ff-mobile-media-height, 320px);
-      min-height: var(--ff-mobile-media-height, 320px);
+      height: var(--ff-mobile-media-height, var(--split-media-h-mobile, 600px));
+      min-height: var(--ff-mobile-media-height, var(--split-media-h-mobile, 600px));
     }
     /* Phone square frame — 1/1; height follows width (ignore height slider). */
     #shopify-section-{{ section.id }} .split-section--media-square-m .split-media {
@@ -881,8 +888,8 @@
       position: relative;
       align-self: stretch;
       width: 100%;
-      height: var(--ff-mobile-media-height, 550px);
-      min-height: var(--ff-mobile-media-height, 550px);
+      height: var(--ff-mobile-media-height, var(--split-media-h-mobile, 600px));
+      min-height: var(--ff-mobile-media-height, var(--split-media-h-mobile, 600px));
       aspect-ratio: auto;
       overflow: hidden;
       background: transparent;
@@ -947,8 +954,8 @@
   @media (max-width: 768px) {
     #shopify-section-{{ section.id }} .split-section.split-section--pdp.split-section--fit .split-media,
     #shopify-section-{{ section.id }} .split-section.split-section--pdp.split-section--fit-m .split-media {
-      height: var(--ff-mobile-media-height, 550px);
-      min-height: var(--ff-mobile-media-height, 550px);
+      height: var(--ff-mobile-media-height, var(--split-media-h-mobile, 600px));
+      min-height: var(--ff-mobile-media-height, var(--split-media-h-mobile, 600px));
       background: {{ media_pad_bg }};
     }
     #shopify-section-{{ section.id }} .split-section.split-section--pdp.split-section--fit-m .split-media__clip {
@@ -1218,13 +1225,13 @@
     {
       "type": "range",
       "id": "mobile_media_height",
-      "label": "Photo height — phone",
-      "min": 220,
+      "label": "Phone height override (0 = use global)",
+      "min": 0,
       "max": 700,
       "step": 10,
       "unit": "px",
-      "default": 550,
-      "info": "Default 550. Product pages honor this slider — lower (~360–400) for landscape COVER to avoid zoom/crop."
+      "default": 0,
+      "info": "0 = use Theme settings > Split images > Phone split-image height (default 600). Set a value only where the global height crops the photo badly."
     },
     {
       "type": "range",

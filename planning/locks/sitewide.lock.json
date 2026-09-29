@@ -1,6 +1,6 @@
 {
   "id": "sitewide",
-  "updated": "2026-09-15",
+  "updated": "2026-09-29",
   "description": "Catalog of locked design-system parameters. Scanner walks every template; page locks add spine/feature specifics.",
   "tokens": {
     "cream": "#faf8f6",
@@ -21,13 +21,29 @@
     "vertical_padding": 80,
     "side_padding": 64,
     "min_height": 560,
-    "mobile_media_height": 550,
+    "mobile_media_height": 0,
+    "mobile_media_height_global": {
+      "setting": "split_media_height_mobile",
+      "css_var": "--split-media-h-mobile",
+      "default_px": 600,
+      "approved": "Andrew 2026-09-29 12:25 ET",
+      "letter": "planning/locks/SPLIT-PHONE-HEIGHT-GLOBAL-LOCKED.md"
+    },
+    "mobile_media_height_exceptions": [
+      { "template": "product.in-studio-template.json", "section": "fifty-fifty-lifestyle", "mobile_media_height": 360, "reason": "chair_pose_open hard lock" },
+      { "template": "product.open-sole.json", "section": "fifty-fifty-lifestyle", "mobile_media_height": 360, "reason": "chair_pose_open hard lock" },
+      { "template": "product.coperni.json", "section": "fifty-fifty-lifestyle", "mobile_media_height": 400, "reason": "packshot FIT exception (Grip isn't optional)" },
+      { "template": "product.json", "section": "fifty-fifty-sock-era", "mobile_media_height": 500, "reason": "600 cuts shoe/fist on running video" },
+      { "template": "product.json", "section": "fifty-fifty-commit", "mobile_media_height": 500, "reason": "600 cuts the burned-in wash caption" },
+      { "template": "product.outdoor.json", "section": "fifty-fifty-outdoor-works", "mobile_media_height": 500, "reason": "600 cuts the raised shoe" },
+      { "template": "page.best-grippy-socks.json", "section": "outgrew", "mobile_media_height": 500, "reason": "wide multi-shoe image; needs a new image" }
+    ],
     "image_fit_mobile": "cover",
     "bg_color": "#faf8f6",
     "applies_to_templates": [
       "product*.json"
     ],
-    "note": "Sitewide PDP 50/50 mobile lock 2026-09-10 (560/550). Home uses page_layout_os (860/520 COVER · 32/32 center) — separate family."
+    "note": "2026-09-29: phone media height is GLOBAL (Theme settings > Split images > Phone split-image height, default 600) for every fifty-fifty on every template. mobile_media_height 0 = use global; any other value must be listed in mobile_media_height_exceptions. Supersedes PDP 550 (2026-09-10) and Home 520. Desktop 560 unchanged."
   },
   "fifty_fifty_packshot_exception": {
     "image_fit_mobile": "fit",
@@ -281,7 +297,8 @@
         "section_types": [
           "problem-section"
         ],
-        "role": "problem_list_band"
+        "role": "problem_list_band",
+        "home_chair_pose_phone": "2026-09-29: media_aspect_mobile stretch (was square) + mobile_media_height 600 to match the global split height. problem-section has no global link yet, so change this if the global changes."
       }
     },
     "marketing_split_visual_frame": {
@@ -292,7 +309,7 @@
       "media_fit": "cover",
       "image_fit_mobile": "cover",
       "min_height": 860,
-      "mobile_media_height": 520,
+      "mobile_media_height": 0,
       "mobile_text_height": 520,
       "mobile_justify": "center",
       "image_scale": 100,
@@ -324,7 +341,7 @@
       "section_key": "fifty-fifty-grip",
       "media_fit": "cover",
       "min_height": 860,
-      "mobile_media_height": 520,
+      "mobile_media_height": 0,
       "image_scale": 100,
       "body_size": "16",
       "mobile_text_height": 520,
@@ -371,10 +388,10 @@
     ],
     "scan_key": "page_layout_os",
     "home_fifty_fifty": {
-      "rule": "ALL Home type=fifty-fifty MUST be COVER 860 desk / 520 phone · center · pads 32/32 · body 16 · scale 100",
+      "rule": "ALL Home type=fifty-fifty MUST be COVER 860 desk · phone = global Phone split-image height (mobile_media_height 0, default 600; was 520 until 2026-09-29) · center · pads 32/32 · body 16 · scale 100",
       "media_fit": "cover",
       "min_height": 860,
-      "mobile_media_height": 520,
+      "mobile_media_height": 0,
       "image_scale": 100,
       "body_size": "16",
       "fit_forbidden": true,
@@ -388,7 +405,7 @@
       "section_key": "fifty-fifty-one-pair",
       "media_fit": "cover",
       "min_height": 860,
-      "mobile_media_height": 520,
+      "mobile_media_height": 0,
       "image_scale": 100,
       "body_size": "16",
       "note": "Was FIT (One Pair ruler for pads only). FIT forbidden on Home 50/50 — now COVER 860/520. Pads 32/32 center (32/96 rejected).",

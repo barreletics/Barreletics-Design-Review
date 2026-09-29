@@ -1,5 +1,7 @@
 # PDP 50/50 mobile — LOCKED 2026-09-10
 
+> **2026-09-29 update:** phone media height for every 50/50 is now GLOBAL (Theme settings > Split images, default 600; section override 0 = global). See [locks/SPLIT-PHONE-HEIGHT-GLOBAL-LOCKED.md](./locks/SPLIT-PHONE-HEIGHT-GLOBAL-LOCKED.md). The phone 550 below is superseded; pads and everything else still stand.
+
 **Source:** Coperni Closed Sole QA (draft `187144929571`) → sitewide PDP standard.  
 **Surfaces:** all `product*.json` fifty-fifty sections + `sections/fifty-fifty.liquid` defaults.
 
@@ -20,7 +22,7 @@ Do **not** special-case one block’s text pads (that caused Grip drift).
 | Control | Value |
 |---|---|
 | `min_height` (desktop) | **560** |
-| `mobile_media_height` (lifestyle COVER) | **550** |
+| `mobile_media_height` (lifestyle COVER) | **0 = global 600** (was 550; overrides only per locks/SPLIT-PHONE-HEIGHT-GLOBAL-LOCKED.md) |
 
 ## Packshot / FIT exception (media only)
 

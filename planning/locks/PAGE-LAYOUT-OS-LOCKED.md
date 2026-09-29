@@ -1,5 +1,7 @@
 # Page Layout OS — LOCKED 2026-09-15
 
+> **2026-09-29 update:** phone media height for every 50/50 is now GLOBAL (Theme settings > Split images, default 600; section override 0 = global). See [SPLIT-PHONE-HEIGHT-GLOBAL-LOCKED.md](./SPLIT-PHONE-HEIGHT-GLOBAL-LOCKED.md). The phone 550 / 520 values below are superseded; everything else here still stands.
+
 **Andrew GO.** Coffee-blurt. No marketplace apps.  
 **Source measure:** `planning/home-5050-enlarge-diag-2026-09-15/measure.json` (draft `187144929571`)  
 **Machine lock:** `sitewide.lock.json` → `page_layout_os`  
