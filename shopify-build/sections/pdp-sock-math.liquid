@@ -508,10 +508,10 @@
     }
     .sock-math--editorial.sock-math--unframed .sock-math__visual,
     .sock-math--editorial.sock-math--unframed .sock-math__visual img {
-      height: 320px;
-      min-height: 320px;
-      max-height: 320px;
-      flex-basis: 320px;
+      height: var(--sm-frame-m, 360px);
+      min-height: var(--sm-frame-m, 360px);
+      max-height: var(--sm-frame-m, 360px);
+      flex-basis: var(--sm-frame-m, 360px);
     }
     .sock-math--editorial .sock-math__cycle {
       grid-template-columns: 1fr 1fr;
@@ -525,7 +525,12 @@
       margin-top: 0;
     }
     .sock-math--editorial .sock-math__cycle-item p.sock-math__cycle-price { font-size: 26px; }
-    .sock-math--editorial .sock-math__cycle-item > p:not(.sock-math__cycle-price) { display: none; }
+    .sock-math--editorial .sock-math__cycle-item > p:not(.sock-math__cycle-price) {
+      display: block;
+      font-size: 14px;
+      line-height: 1.45;
+      margin-top: 6px;
+    }
   }
   {% if template.name == 'product' %}
   @media (max-width: 768px) {
@@ -683,7 +688,7 @@
       "type": "range",
       "id": "image_frame_mobile",
       "min": 220,
-      "max": 560,
+      "max": 700,
       "step": 20,
       "unit": "px",
       "label": "Photo height — phone",
