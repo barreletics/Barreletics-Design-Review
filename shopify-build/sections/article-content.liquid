@@ -8,8 +8,18 @@
 <article class="section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
   <div class="section__inner section__inner--narrow">
     <header class="article__header">
+      {%- liquid
+        assign article_label = article.tags.first
+        assign label_order = 'Press Release,Collaboration,Announcement,Movement,Press' | split: ','
+        for wanted in label_order
+          if article.tags contains wanted
+            assign article_label = wanted
+            break
+          endif
+        endfor
+      -%}
       {% if article.tags.size > 0 %}
-        <span class="article__category">{{ article.tags.first }}</span>
+        <span class="article__category">{{ article_label }}</span>
       {% endif %}
       <h1 class="article__title type-hero">{{ article.title }}</h1>
       <div class="article__meta">
@@ -245,11 +255,45 @@
     margin: var(--space-6) 0;
   }
 
-  .article__body img {
+  /* Body media: centered, never letterboxed. Pairs: <div class="article-pair"><figure>…</figure><figure>…</figure></div> */
+  .article__body img,
+  .article__body video {
+    display: block;
     max-width: 100%;
     height: auto;
+    margin: var(--space-6) auto;
     border-radius: var(--radius-gallery);
-    margin: var(--space-6) 0;
+  }
+  .article__body video { object-fit: cover; }
+  .article__body figure { margin: var(--space-6) auto; }
+  .article__body figure img,
+  .article__body figure video { margin: 0 auto; }
+  .article__body figcaption {
+    margin-top: 8px;
+    font-size: 11px;
+    line-height: 1.5;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #77706a;
+    text-align: center;
+  }
+  .article__body .article-pair {
+    --pair-ratio: 4 / 5;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    max-width: 612px;
+    margin: var(--space-6) auto;
+  }
+  .article__body .article-pair--tall { --pair-ratio: 2 / 3; }
+  .article__body .article-pair--square { --pair-ratio: 1 / 1; }
+  .article__body .article-pair figure { margin: 0; min-width: 0; }
+  .article__body .article-pair img,
+  .article__body .article-pair video {
+    width: 100%;
+    aspect-ratio: var(--pair-ratio);
+    object-fit: cover;
+    margin: 0;
   }
 
   .article__footer {
@@ -406,6 +450,7 @@
 
     .article__body .article-dek { font-size: 28px; }
     .article__body .article-lead { font-size: 21px; }
+    .article__body .article-pair:not(.article-pair--square) { grid-template-columns: 1fr; max-width: 300px; }
 
     .article__related-grid {
       grid-template-columns: 1fr;
