@@ -89,6 +89,12 @@
   {% if region_label != blank %}aria-label="{{ region_label | escape }}"{% endif %}
 >
   <div class="fullbleed-statement__bg">
+    {%- comment -%} Phone image (optional): replaces the still image at max-width 768px via <picture>; desktop keeps the main image. {%- endcomment -%}
+    {%- assign fb_pic = false -%}
+    {%- if section.settings.image_mobile != blank and section.settings.video == blank and section.settings.video_url == blank -%}{%- assign fb_pic = true -%}
+    <picture style="display:contents">
+      <source media="(max-width: 768px)" srcset="{{ section.settings.image_mobile | image_url: width: 780 }} 780w, {{ section.settings.image_mobile | image_url: width: 1170 }} 1170w" sizes="100vw" width="{{ section.settings.image_mobile.width }}" height="{{ section.settings.image_mobile.height }}">
+    {%- endif -%}
     {% if section.settings.video != blank %}
       {{
         section.settings.video
@@ -184,6 +190,7 @@
          width_attr: 2000,
          height_attr: 1200 %}
     {% endif %}
+    {%- if fb_pic %}</picture>{% endif %}
   </div>
   {% if show_text %}
     <div class="fullbleed-statement__content">
@@ -671,6 +678,12 @@
       "info": "Used only when Background image + Theme asset are empty and there is no video."
     },
     { "type": "text", "id": "image_alt", "label": "Image alt" },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Phone image (optional)",
+      "info": "Replaces the photo on phones (768px wide and below). Desktop keeps the main image. Use a portrait image framed for the phone height, e.g. 1170x1500. Ignored when a video is set."
+    },
 
     { "type": "header", "content": "Shared — Layout" },
     {

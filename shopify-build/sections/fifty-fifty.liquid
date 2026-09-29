@@ -185,6 +185,12 @@
 >
   <div class="split-media" style="background: {{ media_pad_bg }};">
     <div class="split-media__clip">
+    {%- comment -%} Phone image (optional): replaces the still image at max-width 768px via <picture>; desktop keeps the main image. {%- endcomment -%}
+    {%- assign ff_pic = false -%}
+    {%- if section.settings.image_mobile != blank and section.settings.video == blank and section.settings.video_url == blank -%}{%- assign ff_pic = true -%}
+    <picture style="display:contents">
+      <source media="(max-width: 768px)" srcset="{{ section.settings.image_mobile | image_url: width: 780 }} 780w, {{ section.settings.image_mobile | image_url: width: 1170 }} 1170w" sizes="100vw" width="{{ section.settings.image_mobile.width }}" height="{{ section.settings.image_mobile.height }}">
+    {%- endif -%}
     {% if section.settings.video != blank %}
       {{
         section.settings.video
@@ -247,6 +253,7 @@
         {{ section.settings.image_alt | default: 'Media placeholder' }}
       </div>
     {% endif %}
+    {%- if ff_pic %}</picture>{% endif %}
     </div>
   </div>
 
@@ -1033,6 +1040,12 @@
       "type": "text",
       "id": "image_alt",
       "label": "Image alt text"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Phone image (optional)",
+      "info": "Replaces the image on phones (768px wide and below). Desktop keeps the main image. Use a portrait image framed for the phone height, e.g. 1170x1500. Ignored when a video is set."
     },
     {
       "type": "header",
