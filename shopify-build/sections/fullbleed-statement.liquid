@@ -52,6 +52,19 @@
   if section.settings.mobile_full_bleed
     assign phone_photo = false
   endif
+  # Phone "match image" (2026-09-29): phone photo box takes the photo's own shape (no band, no crop). Default off. Photos only.
+  assign fb_match_ratio = ''
+  assign fb_match_img = nil
+  if section.settings.phone_match_image and section.settings.video == blank and section.settings.video_url == blank
+    if section.settings.image_mobile != blank
+      assign fb_match_img = section.settings.image_mobile
+    elsif section.settings.image != blank
+      assign fb_match_img = section.settings.image
+    endif
+    if fb_match_img != blank and fb_match_img.width > 0 and fb_match_img.height > 0
+      assign fb_match_ratio = fb_match_img.width | append: ' / ' | append: fb_match_img.height
+    endif
+  endif
 
   assign cta_target = section.settings.cta_link_target | default: 'custom'
   if cta_target != blank and cta_target != 'custom'
@@ -70,12 +83,13 @@
 %}
 
 <section
-  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} fullbleed-statement{% unless show_text %} fullbleed-statement--media-only{% endunless %}{% if phone_photo %} fullbleed-statement--phone-photo{% endif %}{% if media_fit == 'contain' %} fullbleed-statement--contain{% endif %}{% if image_fit_mobile == 'contain' %} fullbleed-statement--fit-m-contain{% endif %}"
+  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} fullbleed-statement{% unless show_text %} fullbleed-statement--media-only{% endunless %}{% if phone_photo %} fullbleed-statement--phone-photo{% endif %}{% if media_fit == 'contain' %} fullbleed-statement--contain{% endif %}{% if image_fit_mobile == 'contain' %} fullbleed-statement--fit-m-contain{% endif %}{% if fb_match_ratio != blank %} fullbleed-statement--m-match{% endif %}"
   style="{% render 'section-inset-vars' %} 
     --fb-media-radius: {{ media_radius }}px;
     --fb-height-desktop: {{ height_desktop }}vh;
     --fb-height-mobile: {{ fb_height_mobile_css }};
     {% if section.settings.media_bg_mobile != blank %}--fb-bg-mobile: {{ section.settings.media_bg_mobile }};{% endif %}
+    {% if fb_match_ratio != blank %}--fb-ratio-mobile: {{ fb_match_ratio }};{% endif %}
     --fb-fit-mobile: {{ image_fit_mobile }};
     --fb-video-fit-mobile: {{ video_fit_mobile }};
     --fb-overlay: rgba(28, 25, 22, {{ overlay_alpha }});
@@ -383,6 +397,15 @@
     {%- if section.settings.media_bg_mobile != blank %}
     #shopify-section-{{ section.id }} .fullbleed-statement--fit-m-contain { background: var(--fb-bg-mobile); }
     {%- endif %}
+    /* Phone height: match image (2026-09-29, opt-in): box = photo's own aspect ratio, cover, so no band and no crop. */
+    #shopify-section-{{ section.id }} .fullbleed-statement--m-match {
+      height: auto;
+      min-height: 0;
+      aspect-ratio: var(--fb-ratio-mobile);
+    }
+    #shopify-section-{{ section.id }} .fullbleed-statement--m-match .fullbleed-statement__bg img {
+      object-fit: cover;
+    }
     /* Phone photo: full collage, 32 cream breath — taller section, no hard crop. Videos keep vh. */
     #shopify-section-{{ section.id }} .fullbleed-statement--phone-photo {
       height: auto;
@@ -713,6 +736,13 @@
       "unit": "vh",
       "default": 0,
       "info": "Phone only. 0 = use Theme settings > Split images: videos use Phone full-width video height, photos use Phone split-image height. Any other value is a share of the screen height (vh). Works with Cover or Contain."
+    },
+    {
+      "type": "checkbox",
+      "id": "phone_match_image",
+      "label": "Phone height: match image",
+      "default": false,
+      "info": "Phone only. On = the photo box takes the photo's own shape (Phone image if set, otherwise Image), so there is no band and no crop. Overrides Phone height. Photos only; ignored for video."
     },
     {
       "type": "select",

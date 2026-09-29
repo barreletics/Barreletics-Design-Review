@@ -14,8 +14,8 @@
   assign video_height_mobile = section.settings.video_height_mobile | default: 72
   assign lead_height_mobile = section.settings.lead_image_height_mobile | default: 52
   assign video_max_desktop = section.settings.video_max_height_desktop | default: 720
-  assign video_poster = 'coperni-paris-poster.jpg' | asset_url
-  assign video_src_fast = 'coperni-paris-720.mp4' | asset_url
+  assign video_poster = 'coperni-paris-poster-crop.jpg' | asset_url
+  assign video_src_fast = 'coperni-paris-720-crop.mp4' | asset_url
   assign video_src = section.settings.video_url
   comment
     Prefer compressed theme asset over the original 52MB .mov CDN original.
@@ -323,8 +323,7 @@
       aspect-ratio: auto;
       object-fit: cover;
       object-position: center center;
-      /* crop baked-in letterbox bars in the source */
-      transform: scale(1.12);
+      /* 2026-09-29: source re-exported without the baked-in black bars (coperni-paris-720-crop.mp4, 1280x716), so no scale hack. */
       background: #fff;
     }
     #shopify-section-{{ section.id }} .coperni-story__note {
