@@ -1,0 +1,9 @@
+{%- comment -%}
+  Renders product title (H1) plus optional Second title (H2) when display_title is set.
+  Use in product-template: replace the title block output with:
+  {% render 'product-title-with-h2', product: product, display_title: display_title %}
+{%- endcomment -%}
+<h1 class="product__title">{{ product.title | escape }}</h1>
+{%- if display_title != blank -%}
+  <h2 class="product__short-title">{{ display_title }}</h2>
+{%- endif -%}
