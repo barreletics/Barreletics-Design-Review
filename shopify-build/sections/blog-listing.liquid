@@ -77,6 +77,23 @@
   if current_tags.size > 0
     assign active_tag_handle = current_tags.first | handle
   endif
+
+  # Cover-mode exceptions: comma-separated article handles that should use
+  # object-fit:contain on a backdrop instead of the default cover crop.
+  # Used when a card image would clip meaningfully (e.g. INTERNI logo card).
+  assign contain_list = ''
+  if section.settings.contain_handles != blank
+    assign contain_list = section.settings.contain_handles | replace: ' ', '' | prepend: ',' | append: ','
+  endif
+  assign contain_backdrop = section.settings.contain_backdrop | default: '#faf8f6'
+
+  assign f_contain = false
+  if has_featured and contain_list != '' and featured.handle != blank
+    assign f_check = ',' | append: featured.handle | append: ','
+    if contain_list contains f_check
+      assign f_contain = true
+    endif
+  endif
 -%}
 
 <section class="section blog-listing" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
@@ -130,7 +147,7 @@
 
     {% if has_featured %}
       <article class="journal-feature">
-        <a class="journal-feature__media" href="{{ featured.url }}" aria-label="Read {{ featured.title | escape }}" tabindex="-1">
+        <a class="journal-feature__media{% if f_contain %} journal-feature__media--contain{% endif %}" href="{{ featured.url }}" aria-label="Read {{ featured.title | escape }}" tabindex="-1">
           {% if featured.image %}
             {% render 'media-img',
               image: featured.image,
@@ -193,9 +210,17 @@
               else
                 assign a_dek = a_dek | truncate: 140
               endif
+
+              assign a_contain = false
+              if contain_list != '' and article.handle != blank
+                assign a_check = ',' | append: article.handle | append: ','
+                if contain_list contains a_check
+                  assign a_contain = true
+                endif
+              endif
             -%}
             <a href="{{ article.url }}" class="blog-card" aria-label="Read {{ article.title | escape }}">
-              <div class="blog-card__media">
+              <div class="blog-card__media{% if a_contain %} blog-card__media--contain{% endif %}">
                 {% if article.image %}
                   {% render 'media-img',
                     image: article.image,
@@ -325,6 +350,17 @@
     height: 100%;
     object-fit: cover;
     transition: transform var(--transition-slow);
+  }
+
+  /* Cover-mode exception: named article handles show FULL (contain) on a backdrop.
+     Handles list + backdrop color come from Theme Editor. */
+  .journal-feature__media--contain,
+  .blog-card__media--contain {
+    background: {{ contain_backdrop }};
+  }
+  .journal-feature__media--contain .journal-feature__image,
+  .blog-card__media--contain .blog-card__image {
+    object-fit: contain;
   }
 
   .journal-feature:hover .journal-feature__image {
@@ -644,6 +680,27 @@
       "id": "empty_text",
       "label": "Empty state text",
       "default": "No articles yet. Check back soon."
+    },
+
+    {
+      "type": "header",
+      "content": "Cover-mode exceptions"
+    },
+    {
+      "type": "paragraph",
+      "content": "Comma-separated article handles whose card image should show FULL (contain) instead of cropped (cover). Backdrop fills the empty area. Example: interni-sano-come-un-piede,another-handle"
+    },
+    {
+      "type": "text",
+      "id": "contain_handles",
+      "label": "Contain handles",
+      "info": "Comma-separated article handles. Blank = no exceptions (all cards use cover)."
+    },
+    {
+      "type": "color",
+      "id": "contain_backdrop",
+      "label": "Contain backdrop",
+      "default": "#faf8f6"
     }
   ],
   "blocks": [
