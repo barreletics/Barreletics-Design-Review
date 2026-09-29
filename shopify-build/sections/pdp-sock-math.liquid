@@ -28,6 +28,11 @@
   endif
   assign image_frame = section.settings.image_frame | default: 480
   assign image_frame_mobile = section.settings.image_frame_mobile | default: 360
+  # Phone photo height 0 = use Theme settings > Split images > Phone split-image height (--split-media-h-mobile, 2026-09-29)
+  assign sm_frame_m_css = image_frame_mobile | append: 'px'
+  if image_frame_mobile == 0
+    assign sm_frame_m_css = 'var(--split-media-h-mobile, 500px)'
+  endif
   assign image_unframed = section.settings.image_unframed
   assign image_pos = section.settings.image_crop | default: 'center center'
   assign pad_top = section.settings.pad_top | default: 0
@@ -41,7 +46,7 @@
 <section
   class="sock-math sock-math--{{ layout }}{% if image_unframed %} sock-math--unframed{% endif %}"
   aria-label="{{ section.settings.aria_label | default: 'One pair' | escape }}"
-  style="{% if body_size != 'default' %}--sm-body-size: {{ body_size }}px;{% endif %}--sm-pos: {{ image_pos }};--sm-frame: {{ image_frame }}px;--sm-frame-m: {{ image_frame_mobile }}px;--sm-pad-top: {{ pad_top }}px;--sm-pad-bottom: {{ pad_bottom }}px;--sm-bg: {{ sm_bg }};"
+  style="{% if body_size != 'default' %}--sm-body-size: {{ body_size }}px;{% endif %}--sm-pos: {{ image_pos }};--sm-frame: {{ image_frame }}px;--sm-frame-m: {{ sm_frame_m_css }};--sm-pad-top: {{ pad_top }}px;--sm-pad-bottom: {{ pad_bottom }}px;--sm-bg: {{ sm_bg }};"
 >
   {% if layout == 'editorial' %}
     <div class="sock-math__split">
@@ -687,11 +692,12 @@
     {
       "type": "range",
       "id": "image_frame_mobile",
-      "min": 220,
+      "min": 0,
       "max": 700,
       "step": 20,
       "unit": "px",
       "label": "Photo height — phone",
+      "info": "0 = use Theme settings > Split images > Phone split-image height.",
       "default": 360
     },
     {
