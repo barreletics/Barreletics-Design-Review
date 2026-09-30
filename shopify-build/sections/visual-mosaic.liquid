@@ -153,6 +153,40 @@
       assign hero_used = false
       assign sm_shown = 0
       assign cells_used = 0
+
+      # Phone 2-col: an odd count of small tiles leaves one empty cell (collection in-use mosaic,
+      # QC 2026-09-30). When no tile is a phone hero, the last phone-visible tile spans both columns.
+      assign vm_m_sm_count = 0
+      assign vm_m_has_hero = false
+      assign vm_m_last_id = ''
+      unless vm_stack_right
+        for block in section.blocks
+          if block.settings.hide_on_mobile
+            continue
+          endif
+          assign pre_size = block.settings.size | default: 'sm'
+          if vm_featured_row and has_hero == false and forloop.first
+            assign pre_size = 'hero'
+          endif
+          assign pre_size_m = block.settings.size_mobile | default: 'default'
+          if pre_size_m == 'default' or pre_size_m == blank
+            assign pre_size_m = pre_size
+          endif
+          if pre_size_m == 'hero'
+            assign vm_m_has_hero = true
+          else
+            assign vm_m_sm_count = vm_m_sm_count | plus: 1
+            assign vm_m_last_id = block.id
+          endif
+        endfor
+      endunless
+      assign vm_m_span_last = false
+      if vm_mob_cols == 2 and vm_m_has_hero == false and vm_m_sm_count > 1
+        assign vm_m_odd = vm_m_sm_count | modulo: 2
+        if vm_m_odd == 1
+          assign vm_m_span_last = true
+        endif
+      endif
     %}
     {% for block in section.blocks %}
       {% liquid
@@ -183,6 +217,9 @@
           assign tile_class = tile_class | append: ' vm-tile--hero-m'
         else
           assign tile_class = tile_class | append: ' vm-tile--sm-m'
+        endif
+        if vm_m_span_last and block.id == vm_m_last_id
+          assign tile_class = tile_class | append: ' vm-tile--span-m'
         endif
 
         assign link_target = block.settings.link_target | default: 'default'
@@ -496,6 +533,9 @@
       aspect-ratio: var(--vm-aspect-m, 3 / 4);
       min-height: 0;
       height: auto;
+    }
+    #visual-mosaic-{{ section.id }} .vm-tile--sm-m.vm-tile--span-m {
+      grid-column: 1 / -1;
     }
     #visual-mosaic-{{ section.id }} .vm-tile img {
       object-fit: var(--vm-fit-img-m, var(--vm-fit, cover));
