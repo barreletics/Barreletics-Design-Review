@@ -142,7 +142,14 @@
     }
 
     if (els.variantInput) {
+      var changed = String(els.variantInput.value) !== String(variant.id);
       els.variantInput.value = variant.id;
+      /* Shop Pay installments (shopify-payment-terms, rendered by {{ form | payment_terms }})
+         only re-reads the form's name="id" input on a change event; setting .value alone
+         left the old variant's split (e.g. $19.50 for $39 after picking the $34 Tank Top). */
+      if (changed) {
+        els.variantInput.dispatchEvent(new Event('change', { bubbles: true }));
+      }
     }
 
     if (els.priceNow) {
