@@ -236,7 +236,7 @@
 
     {%- if title != blank -%}
       {%- comment -%}
-        No lone last word: bind the last two words with a non-breaking space
+        No lone last word: bind the last two words with a non-breaking space (literal U+00A0; the &nbsp; entity was being escaped)
         ("The Pilates Sock Era is Over" never leaves "Over" alone on phone; QC 2026-09-30).
       {%- endcomment -%}
       {%- liquid
@@ -253,7 +253,7 @@
               assign sh_title_html = sh_title_html | append: ' ' | append: sh_w_esc
             endif
           endfor
-          assign sh_title_html = sh_title_html | append: '&nbsp;' | append: sh_title_last
+          assign sh_title_html = sh_title_html | append: ' ' | append: sh_title_last
         else
           assign sh_title_html = title | escape
         endif
