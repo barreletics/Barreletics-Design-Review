@@ -50,28 +50,90 @@
     </div>
 
     <footer class="article__footer">
+      {%- assign share_url = shop.url | append: article.url -%}
+      {%- assign share_url_enc = share_url | url_encode -%}
+      {%- assign share_title_enc = article.title | url_encode | replace: '+', '%20' -%}
       <div class="article__share">
         <span class="article__share-label">Share:</span>
         <a
-          href="https://twitter.com/intent/tweet?text={{ article.title | url_encode }}&url={{ shop.url }}{{ article.url }}"
+          href="https://twitter.com/intent/tweet?text={{ share_title_enc }}&url={{ share_url_enc }}"
           target="_blank"
           rel="noopener noreferrer"
           class="article__share-link"
           aria-label="Share on X (Twitter)"
         >X</a>
         <a
-          href="https://www.facebook.com/sharer/sharer.php?u={{ shop.url }}{{ article.url }}"
+          href="https://www.facebook.com/sharer/sharer.php?u={{ share_url_enc }}"
           target="_blank"
           rel="noopener noreferrer"
           class="article__share-link"
           aria-label="Share on Facebook"
         >Facebook</a>
         <a
-          href="mailto:?subject={{ article.title | url_encode }}&body={{ shop.url }}{{ article.url }}"
+          href="https://www.pinterest.com/pin/create/button/?url={{ share_url_enc }}{% if article.image %}&media={{ article.image | image_url: width: 1200 | prepend: 'https:' | url_encode }}{% endif %}&description={{ share_title_enc }}"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="article__share-link"
+          aria-label="Share on Pinterest"
+        >Pinterest</a>
+        <a
+          href="mailto:?subject={{ share_title_enc }}&body={{ share_url_enc }}"
           class="article__share-link"
           aria-label="Share via email"
         >Email</a>
+        <button
+          type="button"
+          class="article__share-link"
+          aria-label="Share on Instagram (copies the link)"
+          data-share-instagram
+          data-url="{{ share_url | escape }}"
+          data-title="{{ article.title | escape }}"
+        >Instagram</button>
+        <p class="article__share-meta">
+          {%- if settings.social_instagram != blank -%}
+            <span class="article__follow">Follow us on Instagram <a href="{{ settings.social_instagram }}" target="_blank" rel="noopener noreferrer">@barreletics</a></span>
+          {%- endif -%}
+          <span class="article__share-status" role="status" aria-live="polite" data-share-status></span>
+        </p>
       </div>
+      <script>
+        (function () {
+          var btn = document.querySelector('[data-share-instagram]');
+          if (!btn) return;
+          var status = document.querySelector('[data-share-status]');
+          var url = btn.getAttribute('data-url');
+          var title = btn.getAttribute('data-title');
+          var timer;
+          function copied() {
+            if (!status) return;
+            status.textContent = 'Link copied';
+            clearTimeout(timer);
+            timer = setTimeout(function () { status.textContent = ''; }, 2500);
+          }
+          function fallbackCopy() {
+            var t = document.createElement('textarea');
+            t.value = url;
+            t.setAttribute('readonly', '');
+            t.style.position = 'fixed';
+            t.style.opacity = '0';
+            document.body.appendChild(t);
+            t.select();
+            try { if (document.execCommand('copy')) copied(); } catch (e) {}
+            document.body.removeChild(t);
+          }
+          btn.addEventListener('click', function () {
+            if (navigator.share && window.matchMedia('(pointer: coarse)').matches) {
+              navigator.share({ title: title, url: url }).catch(function () {});
+              return;
+            }
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(url).then(copied, fallbackCopy);
+            } else {
+              fallbackCopy();
+            }
+          });
+        })();
+      </script>
 
       {% if article.tags.size > 0 %}
         <div class="article__tags">
@@ -318,8 +380,36 @@
   .article__share {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: var(--space-3);
   }
+
+  button.article__share-link {
+    background: none;
+    font-family: inherit;
+    line-height: inherit;
+    cursor: pointer;
+  }
+
+  .article__share-meta {
+    flex-basis: 100%;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    font-size: var(--type-trust-size);
+    color: var(--text-muted);
+  }
+
+  .article__share-meta:empty { display: none; }
+
+  .article__follow a {
+    color: var(--text-primary);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .article__share-status { color: var(--text-primary); font-weight: var(--type-caption-weight); }
 
   .article__share-label {
     font-size: var(--type-trust-size);
@@ -469,6 +559,11 @@
       flex-direction: column;
       align-items: flex-start;
     }
+
+    /* Share row on phones: label on its own line, then 3 + 2 equal buttons filling the width */
+    .article__share { width: 100%; }
+    .article__share-label { flex-basis: 100%; }
+    .article__share-link { flex: 1 1 28%; justify-content: center; }
   }
 </style>
 
