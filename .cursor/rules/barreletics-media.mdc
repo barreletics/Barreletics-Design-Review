@@ -14,10 +14,12 @@ All content images render via `snippets/media-img.liquid`. Frames live in sectio
 - **About Our Story — Joseph photos** — frame matches each photo's shape, even 20px white mat. LOCKED at `8aec1c0`.
 - **Home Press cards** — images fit inside the card, not cropped.
 - **pdp-sock-math editorial photo** — unframed mode = natural-flow; framed mode keeps bespoke `--sm-frame` system (desktop) / `--sm-frame-m` slider (phone).
+- **cart-drawer item thumbs** — fixed 80×80, JS-rendered via `/cart.js` (`assets/cart.js` `renderDrawer`). Liquid (`snippets/cart-drawer.liquid`) + JS markup must stay in sync; do not add `media-img`.
 
 ## Backlog
 
 - **Section order rule:** Section order on any template is set in `templates/*.json` only — never CSS `order:` at any breakpoint. Adding a new section that isn't listed in a CSS-order override will silently float above intended sections (root cause of press-above-hero fix `dbcdf5d`).
+- **Cart Section Rendering API refactor (optional, NOT image foundation):** Promote `snippets/cart-drawer.liquid` to a section and rewrite `assets/cart.js` `addToCart`/`changeItem`/`renderDrawer` to use Shopify's Section Rendering API (`sections: 'cart-drawer'` on `/cart/change.js` + `/cart/add.js` POSTs; replace `itemsContainer.innerHTML = <string>` with `outerHTML = data.sections['cart-drawer']`). Removes the JS/Liquid duplicate-render source-of-truth problem for cart thumbs. Deferred — revenue path, no visible gain on 80×80 thumbs.
 
 ## Skill
 
