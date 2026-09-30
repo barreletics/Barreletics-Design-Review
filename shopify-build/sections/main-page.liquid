@@ -138,6 +138,18 @@
     .page-content__title {
       font-size: var(--te-title-size, clamp(28px, 8vw, 36px));
     }
+    /* Admin size tables wrapped in .table-card (T-shirt / tank sizing pages) arrive with
+       overflow: hidden, which clipped the X-Large column on phone. Tighter side pads make
+       all columns fit at 390; if a table is still wider, it scrolls sideways inside its card. */
+    .page-content__body .table-card {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .page-content__body .table-card th,
+    .page-content__body .table-card td {
+      padding-left: 8px;
+      padding-right: 8px;
+    }
   }
 </style>
 
