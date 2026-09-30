@@ -498,7 +498,8 @@
  </div>
  {% endif %}
 
- {% if section.settings.show_kit_links != false and _cat_outdoor == false %}
+ {%- comment -%} Sock kit is OFF site-wide until Theme settings → Sock kit → Show optional sock kit is ticked (default off). {%- endcomment -%}
+ {% if settings.sock_kit_enabled == true and section.settings.show_kit_links != false and _cat_outdoor == false %}
  {% liquid
  assign kit_label = settings.sock_kit_label | default: 'Complete the kit'
  assign kit_link_1_label = settings.sock_kit_link_label | default: 'Optional sock kit →'
@@ -1379,7 +1380,7 @@
  { "type": "header", "content": "Section — PDP buy box — Complete the kit" },
  {
  "type": "paragraph",
- "content": "Copy is Theme settings → Sock kit. This checkbox only shows or hides the block."
+ "content": "Copy is Theme settings → Sock kit. Shows only when Theme settings → Sock kit → Show optional sock kit is on; this checkbox can then hide it per template."
  },
  {
  "type": "checkbox",
