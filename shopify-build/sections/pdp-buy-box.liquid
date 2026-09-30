@@ -95,6 +95,10 @@
  if _cat_outdoor
  assign sole_badge = 'Outdoor'
  endif
+ # Apparel / non-shoe (T-shirt, yoga pant): no sole badge, whatever the template setting says (2026-09-30)
+ unless is_shoe
+ assign sole_badge = blank
+ endunless
 
  assign badge_color = section.settings.sole_badge_color | default: 'rust'
  # Defaults when blank. Explicit TE black/charcoal/rust/blue ALWAYS honored (2026-08-11).
@@ -295,7 +299,7 @@
  {% assign opt_down = option.name | downcase %}
  {% liquid
  assign is_color_opt = false
- if opt_down == 'color' or opt_down == 'colour' or opt_down contains 'color' or opt_down contains 'style'
+ if opt_down == 'color' or opt_down == 'colour' or opt_down contains 'color'
  assign is_color_opt = true
  endif
  # One-off Admin quirk: option 1 sometimes named after first colorway (e.g. "Grey Swirl") not "Color"
@@ -304,7 +308,7 @@
  endif
  %}
  {% if is_color_opt %}
- <div class="pdp-buy__option" data-option-position="{{ option.position }}">
+ <div class="pdp-buy__option" data-option-position="{{ option.position }}" data-option-kind="color">
  <div class="pdp-buy__option-header">
  <span class="pdp-buy__option-label" id="selected-color">{{ option.selected_value }}</span>
  </div>
@@ -384,6 +388,43 @@
  {% for option in product.options_with_values %}
  {% assign opt_down = option.name | downcase %}
  {% liquid
+ assign skip_other_opt = false
+ if opt_down == 'color' or opt_down == 'colour' or opt_down contains 'color' or opt_down == 'size'
+ assign skip_other_opt = true
+ endif
+ if _cat_oneoff and opt_down != 'size' and option.position == 1
+ assign skip_other_opt = true
+ endif
+ # One-off Size is rendered in the Size loop (position 2) — never duplicate here
+ if _cat_oneoff and option.position == 2
+ assign skip_other_opt = true
+ endif
+ if opt_down contains 'size'
+ assign skip_other_opt = true
+ endif
+ %}
+ {% unless skip_other_opt %}
+ {% comment %} Any other option (e.g. T-shirt Style: V-Neck / Tank Top) = labelled text buttons, wired by variant-selector.js. {% endcomment %}
+ <div class="pdp-buy__option" data-option-position="{{ option.position }}" data-option-kind="other">
+ <div class="pdp-buy__option-header">
+ <span class="pdp-buy__option-label">{{ option.name }}</span>
+ </div>
+ <div class="pdp-buy__sizes" role="group" aria-label="Select {{ option.name | escape }}">
+ {% for value in option.values %}
+ <button
+ type="button"
+ class="pdp-buy__size-btn pdp-buy__opt-btn{% if value == option.selected_value %} is-active{% endif %}"
+ data-option-value="{{ value | escape }}"
+ aria-pressed="{% if value == option.selected_value %}true{% else %}false{% endif %}"
+ >{{ value | escape }}</button>
+ {% endfor %}
+ </div>
+ </div>
+ {% endunless %}
+ {% endfor %}
+ {% for option in product.options_with_values %}
+ {% assign opt_down = option.name | downcase %}
+ {% liquid
  assign is_size_opt = false
  if opt_down == 'size' or opt_down contains 'size'
  assign is_size_opt = true
@@ -398,7 +439,7 @@
  Do NOT hide sold-out sizes on one-offs (that stripped L). Colors still hide OOS. Kids never surface.
  {% endcomment %}
  {% if is_size_opt %}
- <div class="pdp-buy__option" data-option-position="{{ option.position }}">
+ <div class="pdp-buy__option" data-option-position="{{ option.position }}" data-option-kind="size">
  {% if section.settings.show_size_chart_link != false and is_shoe %}
  <div class="pdp-buy__option-header pdp-buy__option-header--chart-only">
  <a href="{{ size_chart_url }}" class="pdp-buy__size-link">Size Chart →</a>
@@ -478,41 +519,6 @@
  {% endif %}
  {% endfor %}
 
- {% for option in product.options_with_values %}
- {% assign opt_down = option.name | downcase %}
- {% liquid
- assign skip_other_opt = false
- if opt_down == 'color' or opt_down == 'colour' or opt_down contains 'color' or opt_down contains 'style' or opt_down == 'size'
- assign skip_other_opt = true
- endif
- if _cat_oneoff and opt_down != 'size' and option.position == 1
- assign skip_other_opt = true
- endif
- # One-off Size is rendered in the Size loop (position 2) — never duplicate here
- if _cat_oneoff and option.position == 2
- assign skip_other_opt = true
- endif
- if opt_down contains 'size'
- assign skip_other_opt = true
- endif
- %}
- {% unless skip_other_opt %}
- <div class="pdp-buy__option" data-option-position="{{ option.position }}">
- <div class="pdp-buy__option-header">
- <span class="pdp-buy__option-label">{{ option.name }}</span>
- </div>
- <div class="pdp-buy__sizes" role="group" aria-label="Select {{ option.name | escape }}">
- {% for value in option.values %}
- <button
- type="button"
- class="pdp-buy__size-btn{% if value == option.selected_value %} is-active{% endif %}"
- data-size="{{ value | escape }}"
- >{{ value }}</button>
- {% endfor %}
- </div>
- </div>
- {% endunless %}
- {% endfor %}
  {% endif %}
 
  {% form 'product', product, id: 'pdp-form' %}
