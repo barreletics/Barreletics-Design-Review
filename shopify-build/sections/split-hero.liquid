@@ -235,19 +235,42 @@
     {%- endif -%}
 
     {%- if title != blank -%}
+      {%- comment -%}
+        No lone last word: bind the last two words with a non-breaking space
+        ("The Pilates Sock Era is Over" never leaves "Over" alone on phone; QC 2026-09-30).
+      {%- endcomment -%}
+      {%- liquid
+        assign sh_title_words = title | strip | split: ' '
+        if sh_title_words.size > 2
+          assign sh_title_last = sh_title_words | last | escape
+          assign sh_title_head_n = sh_title_words.size | minus: 1
+          assign sh_title_html = ''
+          for sh_w in sh_title_words limit: sh_title_head_n
+            assign sh_w_esc = sh_w | escape
+            if forloop.first
+              assign sh_title_html = sh_w_esc
+            else
+              assign sh_title_html = sh_title_html | append: ' ' | append: sh_w_esc
+            endif
+          endfor
+          assign sh_title_html = sh_title_html | append: '&nbsp;' | append: sh_title_last
+        else
+          assign sh_title_html = title | escape
+        endif
+      -%}
       {% case heading_level %}
         {% when 'h2' %}
-          <h2 class="split-hero__title type-hero">{{ title | escape }}</h2>
+          <h2 class="split-hero__title type-hero">{{ sh_title_html }}</h2>
         {% when 'h3' %}
-          <h3 class="split-hero__title type-hero">{{ title | escape }}</h3>
+          <h3 class="split-hero__title type-hero">{{ sh_title_html }}</h3>
         {% when 'h4' %}
-          <h4 class="split-hero__title type-hero">{{ title | escape }}</h4>
+          <h4 class="split-hero__title type-hero">{{ sh_title_html }}</h4>
         {% when 'h5' %}
-          <h5 class="split-hero__title type-hero">{{ title | escape }}</h5>
+          <h5 class="split-hero__title type-hero">{{ sh_title_html }}</h5>
         {% when 'h6' %}
-          <h6 class="split-hero__title type-hero">{{ title | escape }}</h6>
+          <h6 class="split-hero__title type-hero">{{ sh_title_html }}</h6>
         {% else %}
-          <h1 class="split-hero__title type-hero">{{ title | escape }}</h1>
+          <h1 class="split-hero__title type-hero">{{ sh_title_html }}</h1>
       {% endcase %}
     {%- endif -%}
 
