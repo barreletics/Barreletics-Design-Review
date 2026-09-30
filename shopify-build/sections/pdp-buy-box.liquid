@@ -39,6 +39,24 @@
  assign _cat_open = true
  endif
 
+ # Shoe vs apparel (2026-09-30): shoe-size subtext / soon-S / shoe size chart only on shoes.
+ # Apparel (tag "Apparel", T-shirts, yoga pants) shows its own size values only — never shoe ranges.
+ assign is_shoe = false
+ if _cat_outdoor or _cat_open or _cat_oneoff
+ assign is_shoe = true
+ elsif _type_d contains 'shoe' or _type_d contains 'footwear' or _type_d contains 'sample' or _tags_d contains 'grippy shoe'
+ assign is_shoe = true
+ elsif _title_d contains 'sole' or _handle_d contains 'sole' or _handle_d contains 'reformer' or _handle_d contains 'legree' or _title_d contains 'coperni' or _handle_d contains 'coperni'
+ assign is_shoe = true
+ endif
+ if _tags_d contains 'apparel'
+ assign is_shoe = false
+ endif
+ assign show_soon_s = false
+ if is_shoe and section.settings.show_soon_size != false
+ assign show_soon_s = true
+ endif
+
  assign sole_badge = section.settings.sole_badge
  # Outdoor / water shoe must never show Closed Sole (wrong Default template or metafield)
  # One-Off PDPs: same rust Open Sole / Closed Sole badge as core (sole in badge, drop voice in lede).
@@ -381,13 +399,13 @@
  {% endcomment %}
  {% if is_size_opt %}
  <div class="pdp-buy__option" data-option-position="{{ option.position }}">
- {% if section.settings.show_size_chart_link != false %}
+ {% if section.settings.show_size_chart_link != false and is_shoe %}
  <div class="pdp-buy__option-header pdp-buy__option-header--chart-only">
  <a href="{{ size_chart_url }}" class="pdp-buy__size-link">Size Chart →</a>
  </div>
  {% endif %}
- <div class="pdp-buy__sizes{% if section.settings.show_soon_size != false %} pdp-buy__sizes--soon{% endif %}" role="group" aria-label="Select size">
- {% if section.settings.show_soon_size != false %}
+ <div class="pdp-buy__sizes{% if show_soon_s %} pdp-buy__sizes--soon{% endif %}{% unless is_shoe %} pdp-buy__sizes--apparel{% endunless %}" role="group" aria-label="Select size">
+ {% if show_soon_s %}
  <button
  type="button"
  class="pdp-buy__size-btn is-soon"
@@ -402,11 +420,12 @@
  {% assign size_letter = '' %}
  {% assign size_range = '' %}
  {% assign skip_size = false %}
+ {% if is_shoe %}
  {% comment %} Kids variants exist on Outdoor Admin catalog but are undocumented — never surface. {% endcomment %}
  {% if value_up == 'KIDS' or value_up contains 'KIDS' or value_up contains 'YOUTH' %}
  {% assign skip_size = true %}
  {% elsif value_up == 'S' or value_up contains 'S (' or value_up contains 'S(' or value_up contains 'SMALL' %}
- {% if section.settings.show_soon_size != false %}
+ {% if show_soon_s %}
  {% assign skip_size = true %}
  {% else %}
  {% assign size_letter = 'S' %}
@@ -420,6 +439,29 @@
  {% else %}
  {% assign size_letter = value %}
  {% endif %}
+ {% else %}
+ {% comment %}
+ Apparel: letter from the Admin value itself; subtext only from the value's own
+ parenthetical, e.g. "Small (2-4)" → S / 2-4. "X-Large" is XL (never a second L).
+ {% endcomment %}
+ {% assign size_base = value | split: '(' | first | strip %}
+ {% assign base_up = size_base | upcase | replace: ' ', '-' %}
+ {% if value contains '(' %}
+ {% assign size_range = value | split: '(' | last | split: ')' | first | strip %}
+ {% endif %}
+ {% case base_up %}
+ {% when 'XX-SMALL', 'XXS' %}{% assign size_letter = 'XXS' %}
+ {% when 'X-SMALL', 'EXTRA-SMALL', 'XS' %}{% assign size_letter = 'XS' %}
+ {% when 'SMALL', 'S' %}{% assign size_letter = 'S' %}
+ {% when 'MEDIUM', 'M' %}{% assign size_letter = 'M' %}
+ {% when 'LARGE', 'L' %}{% assign size_letter = 'L' %}
+ {% when 'X-LARGE', 'EXTRA-LARGE', 'XL' %}{% assign size_letter = 'XL' %}
+ {% when 'XX-LARGE', '2X-LARGE', 'XXL', '2XL' %}{% assign size_letter = 'XXL' %}
+ {% when 'XXX-LARGE', '3X-LARGE', 'XXXL', '3XL' %}{% assign size_letter = '3XL' %}
+ {% else %}{% assign size_letter = size_base %}
+ {% endcase %}
+ {% if size_letter == blank %}{% assign size_letter = value %}{% endif %}
+ {% endif %}
  {% unless skip_size %}
  <button
  type="button"
@@ -429,7 +471,7 @@
  {% endunless %}
  {% endfor %}
  </div>
- {% if section.settings.show_soon_size != false %}
+ {% if show_soon_s %}
  <p class="pdp-buy__size-note">{{ section.settings.size_soon_note }}</p>
  {% endif %}
  </div>
@@ -891,6 +933,11 @@
  }
  .pdp-buy__sizes--soon {
  grid-template-columns: repeat(3, minmax(0, 1fr));
+ gap: 10px;
+ }
+ /* Apparel (S/M/L/XL): one row, as many columns as sizes (min 64px). */
+ .pdp-buy__sizes--apparel {
+ grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
  gap: 10px;
  }
 
