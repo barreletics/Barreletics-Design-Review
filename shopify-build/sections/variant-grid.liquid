@@ -160,6 +160,13 @@
     endif
   endif
 
+  # Swirl-pattern one-offs never show in grids (Andrew 2026-09-30). The only exception is the
+  # product's own PDP (e.g. One Off Closed Sole), so its own buy grid still lists what it sells.
+  assign vg_page_product_id = ''
+  if request.page_type == 'product' and product != blank
+    assign vg_page_product_id = product.id | append: ''
+  endif
+
   assign label_closed = section.settings.label_closed | default: 'Closed Sole'
   assign label_open = section.settings.label_open | default: 'Open Sole'
   assign label_oneoffs = section.settings.label_oneoffs | default: 'One-Offs'
@@ -267,7 +274,8 @@
         tab_key: 'all',
         max_variants: max_variants,
         is_default: true,
-        messaging_style: card_messaging
+        messaging_style: card_messaging,
+        page_product_id: vg_page_product_id
       %}
     {%- else -%}
       {%- liquid
@@ -296,7 +304,8 @@
           tab_key: 'closed',
           max_variants: max_variants,
           is_default: def_closed,
-          messaging_style: card_messaging
+          messaging_style: card_messaging,
+        page_product_id: vg_page_product_id
         %}
       {% endif %}
       {% if product_open != blank %}
@@ -306,7 +315,8 @@
           tab_key: 'open',
           max_variants: max_variants,
           is_default: def_open,
-          messaging_style: card_messaging
+          messaging_style: card_messaging,
+        page_product_id: vg_page_product_id
         %}
       {% endif %}
       {% if product_oneoffs != blank %}
@@ -316,7 +326,8 @@
           tab_key: 'oneoffs',
           max_variants: max_variants,
           is_default: def_oneoffs,
-          messaging_style: card_messaging
+          messaging_style: card_messaging,
+        page_product_id: vg_page_product_id
         %}
       {% endif %}
       {% if product_outdoor != blank %}
@@ -326,7 +337,8 @@
           tab_key: 'outdoor',
           max_variants: max_variants,
           is_default: def_outdoor,
-          messaging_style: card_messaging
+          messaging_style: card_messaging,
+        page_product_id: vg_page_product_id
         %}
       {% endif %}
     {%- endif -%}
