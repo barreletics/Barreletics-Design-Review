@@ -77,6 +77,16 @@
     assign image_position = focal_x | append: '% ' | append: focal_y | append: '%'
   endif
   assign image_scale = section.settings.image_scale | default: 100
+  comment
+    Phone Fit on PDP used a hardcoded 'center top' and ignored the focal controls.
+    Now: default stays 'center top' (packshots flush), but a chosen preset or moved Custom sliders win.
+  endcomment
+  assign ff_pos_fit_m = 'center top'
+  if section.settings.image_position != blank and section.settings.image_position != 'center'
+    if section.settings.image_position != 'custom' or image_position != '50% 50%'
+      assign ff_pos_fit_m = image_position
+    endif
+  endif
   assign contain_width = section.settings.contain_width | default: 72
   assign media_radius = section.settings.media_radius | default: 0
   assign column_gap = section.settings.column_gap | default: 0
@@ -157,6 +167,7 @@
     --ff-media-fr: {{ media_pct }}fr;
     --ff-text-fr: {{ text_pct }}fr;
     --ff-object-position: {{ image_position }};
+    --ff-object-position-fit-m: {{ ff_pos_fit_m }};
     --ff-image-scale: {{ image_scale_ratio }};
     --ff-contain-width: {{ contain_width }}%;
     --ff-media-radius: {{ media_radius }}px;
@@ -979,10 +990,10 @@
       height: 100%;
       max-width: none;
       object-fit: contain;
-      /* Top-anchor: keeps packshots flush under prior section — no cream band above the shoe */
-      object-position: center top;
+      /* Top-anchor by default (packshots flush under prior section); focal controls win when set */
+      object-position: var(--ff-object-position-fit-m, center top);
       transform: scale(var(--ff-image-scale, 1));
-      transform-origin: center top;
+      transform-origin: var(--ff-object-position-fit-m, center top);
     }
   }
   {% endif %}
@@ -1139,7 +1150,7 @@
         }
       ],
       "default": "center",
-      "info": "Set Custom, then use the two sliders. Presets ignore the sliders."
+      "info": "Applies to desktop AND phone, image or video. The two sliders below only work when this is set to Custom; any other choice ignores them. Shopify's own image focal point is not used here."
     },
     {
       "type": "range",

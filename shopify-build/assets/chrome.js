@@ -117,6 +117,12 @@
     }
   }
 
+  /* Theme editor live preview: a section re-rendered after a setting change gets new <video>
+     nodes that the DOMContentLoaded pass never saw, so they sat unplayed until Save/reload.
+     Re-run the video kick for that section (2026-09-30). */
+  document.addEventListener('shopify:section:load', function () { initAmbientVideos(); });
+  document.addEventListener('shopify:section:select', function () { initAmbientVideos(); });
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function () {
       initAnnouncement();

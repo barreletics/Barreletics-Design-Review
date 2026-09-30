@@ -69,6 +69,7 @@
     });
 
     state.options[position] = value;
+    userPicked = true;
 
     if (els.selectedColor && position === getColorPosition()) {
       els.selectedColor.textContent = value;
@@ -166,7 +167,13 @@
     });
   }
 
+  var userPicked = false;
   function updateUrl(variantId) {
+    /* Theme editor: never rewrite the preview URL. The editor tracks the iframe URL; an
+       unexpected ?variant= rewrite on load made Save jump the preview back to Home (2026-09-30). */
+    if (window.Shopify && window.Shopify.designMode) return;
+    /* Only after a shopper picks a swatch/size, not on page load. */
+    if (!userPicked) return;
     if (!window.history || !window.history.replaceState) return;
     var url = new URL(window.location.href);
     url.searchParams.set('variant', variantId);
