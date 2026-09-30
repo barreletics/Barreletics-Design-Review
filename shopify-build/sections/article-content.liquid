@@ -266,6 +266,13 @@
     border-radius: var(--radius-gallery);
   }
   .article__body video { object-fit: cover; }
+  /* Embeds (YouTube/Vimeo iframes, embed, object) never wider than the text column; video embeds keep 16:9 when shrunk */
+  .article__body iframe,
+  .article__body embed,
+  .article__body object { max-width: 100%; }
+  .article__body iframe[src*="youtube"],
+  .article__body iframe[src*="youtu.be"],
+  .article__body iframe[src*="vimeo"] { height: auto; aspect-ratio: 16 / 9; }
   .article__body figure { margin: var(--space-6) auto; }
   .article__body figure img,
   .article__body figure video { margin: 0 auto; }
