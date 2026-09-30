@@ -587,7 +587,8 @@
  "name": {{ product.title | json }},
  "description": {{ product.description | strip_html | truncate: 200 | json }},
  "brand": { "@type": "Brand", "name": "Barreletics" },
- "image": {{ hero_image | default: product.featured_image | image_url: width: 800 | json }},
+ {%- assign schema_image = hero_image | default: product.featured_image -%}
+ {% if product.featured_image and schema_image != blank %}"image": {{ schema_image | image_url: width: 800 | json }},{% endif %}
  "url": {{ shop.url | append: product.url | json }},
  {% if current_variant.sku != blank %}"sku": {{ current_variant.sku | json }},{% endif %}
  "offers": {
