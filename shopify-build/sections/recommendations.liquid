@@ -6,6 +6,11 @@
   Usage: Include in product template JSON. Automatically uses current product context.
 {% endcomment %}
 
+{%- comment -%}
+  No product context (cart, pages): there is nothing to recommend, so render nothing.
+  Before 2026-09-30 the empty cart showed a bare "You may also like" heading (QC M08).
+{%- endcomment -%}
+{%- if product != blank -%}
 <section
   class="section recommendations"
   data-recommendations
@@ -80,7 +85,7 @@
     var loading = section.querySelector('[data-recommendations-loading]');
 
     if (!productId) {
-      if (loading) loading.remove();
+      section.hidden = true;
       return;
     }
 
@@ -92,7 +97,7 @@
         if (loading) loading.remove();
 
         if (!data.products || data.products.length === 0) {
-          grid.innerHTML = '<p class="recommendations__empty">No recommendations available.</p>';
+          section.hidden = true;
           return;
         }
 
@@ -123,10 +128,11 @@
         grid.innerHTML = html;
       })
       .catch(function() {
-        if (loading) loading.remove();
+        section.hidden = true;
       });
   })();
 </script>
+{%- endif -%}
 
 {% schema %}
 {
