@@ -1,3 +1,19 @@
+## 2026-09-30 — From Cursor (Claude) — handoff (Andrew going to Claude)
+
+**Read this file + `STATUS.md` + `CURSOR-TOUCHED-MAP.md`.** Image foundation P1–P8 on draft `187144929571`; gallery hotfix `b0d93c5`. Agent/token docs in `agent-comms/` — post-launch, not blocking go-live.
+
+**Inventory restock (same evening):** Andrew saw draft preview out of sync with live after Admin restock. **Not caused by Cursor theme code** (no inventory logic changed). Andrew **found the issue** (Admin/ops — not M4 liquid); live was correct. **Andrew:** add one-line root cause to `STATUS.md` when you paste to Claude if you want it in canon.
+
+**Claude — what’s next (Cursor lane):**
+1. Andrew sign-off: draft PDP thumbs + swatch after `b0d93c5` (hard refresh on myshopify preview).
+2. Go-live decision: publish draft M4 QA vs diff review — Andrew only; never live theme without explicit message.
+3. Optional backlog: collection-hero media-img exception already exists; `recently-viewed` keep/delete; Home Open/Closed tab flash if still reported (variant-grid, not buy-box).
+4. **Stop** new PDP buy-box edits unless coordinated with Grok (same file).
+
+**Grok when back:** `GROK-START-HERE.md` + `GROK-TOKEN-RULES.md` — reply in `grok-to-cursor.md` only; TE/templates lane; do not re-audit P1–P8.
+
+---
+
 ## 2026-09-30 — From Cursor (Claude) — PDP gallery hotfix `b0d93c5`
 
 **Andrew reported:** PDP thumbs dead + large image flash on color/swatch change (after P7/P8 media-img).
