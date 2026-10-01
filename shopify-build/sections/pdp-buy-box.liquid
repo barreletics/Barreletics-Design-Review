@@ -225,16 +225,17 @@
  <div class="pdp-gallery">
  <div class="pdp-gallery__hero">
  {% if hero_image %}
- {% render 'media-img',
- image: hero_image,
- alt: hero_image.alt | default: product.title,
- img_id: 'pdp-main-img',
- widths: '400, 600, 800, 1200',
- width_default: 800,
- sizes: '(max-width: 768px) 100vw, 50vw',
- loading: 'eager',
- fetchpriority: 'high'
- %}
+ <img
+ id="pdp-main-img"
+ src="{{ hero_image | image_url: width: 800 }}"
+ srcset="{{ hero_image | image_url: width: 400 }} 400w,
+ {{ hero_image | image_url: width: 600 }} 600w,
+ {{ hero_image | image_url: width: 800 }} 800w"
+ sizes="(max-width: 768px) 100vw, 50vw"
+ alt="{{ hero_image.alt | default: product.title | escape }}"
+ loading="eager"
+ fetchpriority="high"
+ >
  {% endif %}
  </div>
  {% if product.images.size > 1 %}
@@ -242,19 +243,11 @@
  {% assign thumbs_shown = 0 %}
  {% if hero_image %}
  <button
- type="button"
  class="pdp-gallery__thumb is-active"
  data-thumb-src="{{ hero_image | image_url: width: 800 }}"
  aria-label="View hero image"
  >
- {% render 'media-img',
- image: hero_image,
- alt: hero_image.alt | default: product.title,
- widths: '160, 320',
- width_default: 160,
- sizes: '72px',
- loading: 'lazy'
- %}
+ <img src="{{ hero_image | image_url: width: 160 }}" alt="{{ hero_image.alt | default: product.title | escape }}" width="72" height="72" loading="lazy">
  </button>
  {% assign thumbs_shown = 1 %}
  {% endif %}
@@ -262,19 +255,11 @@
  {% if thumbs_shown >= thumb_count %}{% break %}{% endif %}
  {% if hero_image and image.id == hero_image.id %}{% continue %}{% endif %}
  <button
- type="button"
  class="pdp-gallery__thumb{% if thumbs_shown == 0 %} is-active{% endif %}"
  data-thumb-src="{{ image | image_url: width: 800 }}"
  aria-label="View image {{ forloop.index }}"
  >
- {% render 'media-img',
- image: image,
- alt: 'View ' | append: forloop.index,
- widths: '160, 320',
- width_default: 160,
- sizes: '72px',
- loading: 'lazy'
- %}
+ <img src="{{ image | image_url: width: 160 }}" alt="View {{ forloop.index }}" width="72" height="72" loading="lazy">
  </button>
  {% assign thumbs_shown = thumbs_shown | plus: 1 %}
  {% endfor %}
@@ -696,11 +681,17 @@
  }
 
  .pdp-gallery__hero {
- position: relative;
  aspect-ratio: 1;
  background: var(--bg-card);
  overflow: hidden;
  border-radius: var(--radius-gallery);
+ }
+
+ .pdp-gallery__hero img {
+ width: 100%;
+ height: 100%;
+ object-fit: cover;
+ display: block;
  }
 
  .pdp-gallery__thumbs {
@@ -718,7 +709,6 @@
  }
 
  .pdp-gallery__thumb {
- position: relative;
  width: 72px;
  height: 72px;
  border: 1px solid var(--border-default);
@@ -734,10 +724,12 @@
  border: 2px solid var(--text-primary);
  }
 
- .pdp-gallery__thumb .media-img {
- pointer-events: none;
+ .pdp-gallery__thumb img {
+ width: 100%;
+ height: 100%;
+ object-fit: cover;
+ display: block;
  }
-
 
  .pdp-buy {
  display: flex;
@@ -1278,38 +1270,6 @@
 
 {%- comment -%} Variant selector + AJAX cart (PDP only) {%- endcomment -%}
 {{ 'variant-selector.js' | asset_url | script_tag }}
-<script>
- (function() {
-  function sizedUrl(src, width) {
-    if (!src) return '';
-    if (src.indexOf('_') > -1 && src.match(/_\d+x\./)) {
-      return src.replace(/_\d+x\./, '_' + width + 'x.');
-    }
-    return src.replace(/(\.[a-z]+)(\?|$)/, '_' + width + 'x$1$2');
-  }
-  function setMainFromThumbSrc(main, src800) {
-    if (!main || !src800) return;
-    main.src = sizedUrl(src800, 800);
-    main.srcset = [400, 600, 800, 1200].map(function(w) {
-      return sizedUrl(src800, w) + ' ' + w + 'w';
-    }).join(', ');
-  }
-  var main = document.getElementById('pdp-main-img');
-  if (!main) return;
-  document.querySelectorAll('.pdp-gallery__thumb').forEach(function(btn) {
-    if (btn.dataset.galleryBound) return;
-    btn.dataset.galleryBound = 'true';
-    btn.addEventListener('click', function() {
-      var src = btn.getAttribute('data-thumb-src');
-      if (!src) return;
-      document.querySelectorAll('.pdp-gallery__thumb').forEach(function(b) {
-        b.classList.toggle('is-active', b === btn);
-      });
-      setMainFromThumbSrc(main, src);
-    });
-  });
- })();
-</script>
 {{ 'cart.js' | asset_url | script_tag }}
 
 {% schema %}

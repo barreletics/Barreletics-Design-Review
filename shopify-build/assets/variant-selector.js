@@ -163,14 +163,11 @@
     }
 
     if (els.mainImg && variant.featured_image) {
-      var imgBase = variant.featured_image.src;
-      /* Sized src avoids full-res flash in the hero frame (media-img + absolute fill). */
-      els.mainImg.src = getSizedUrl(imgBase, 800);
+      els.mainImg.src = variant.featured_image.src;
       els.mainImg.srcset =
-        getSizedUrl(imgBase, 400) + ' 400w, ' +
-        getSizedUrl(imgBase, 600) + ' 600w, ' +
-        getSizedUrl(imgBase, 800) + ' 800w, ' +
-        getSizedUrl(imgBase, 1200) + ' 1200w';
+        getSizedUrl(variant.featured_image.src, 400) + ' 400w, ' +
+        getSizedUrl(variant.featured_image.src, 600) + ' 600w, ' +
+        getSizedUrl(variant.featured_image.src, 800) + ' 800w';
     }
 
     updateUrl(variant.id);
