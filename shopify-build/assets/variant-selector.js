@@ -162,12 +162,11 @@
       setCta(false, 'Sold Out');
     }
 
-    if (els.mainImg && variant.featured_image) {
-      els.mainImg.src = variant.featured_image.src;
-      els.mainImg.srcset =
-        getSizedUrl(variant.featured_image.src, 400) + ' 400w, ' +
-        getSizedUrl(variant.featured_image.src, 600) + ' 600w, ' +
-        getSizedUrl(variant.featured_image.src, 800) + ' 800w';
+    /* Do not touch the hero on load. Liquid already printed one 1600 URL.
+       A src rewrite here is the flash when a product page opens. */
+    if (userPicked && els.mainImg && variant.featured_image && variant.featured_image.src) {
+      els.mainImg.removeAttribute('srcset');
+      els.mainImg.src = heroUrl(variant.featured_image.src);
     }
 
     updateUrl(variant.id);
@@ -220,9 +219,10 @@
     return '$' + (cents / 100).toFixed(2).replace(/\.00$/, '');
   }
 
-  function getSizedUrl(src, width) {
+  function heroUrl(src) {
     if (!src) return '';
-    return src.replace(/(\.[a-z]+)(\?|$)/, '_' + width + 'x$1$2');
+    var base = src.replace(/([?&])width=\d+/gi, '').replace(/[?&]$/, '').replace(/\?&/, '?').replace(/&&/g, '&');
+    return base + (base.indexOf('?') === -1 ? '?' : '&') + 'width=1600';
   }
 
   if (document.readyState === 'loading') {

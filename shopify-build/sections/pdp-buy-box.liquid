@@ -227,11 +227,7 @@
  {% if hero_image %}
  <img
  id="pdp-main-img"
- src="{{ hero_image | image_url: width: 800 }}"
- srcset="{{ hero_image | image_url: width: 400 }} 400w,
- {{ hero_image | image_url: width: 600 }} 600w,
- {{ hero_image | image_url: width: 800 }} 800w"
- sizes="(max-width: 768px) 100vw, 50vw"
+ src="{{ hero_image | image_url: width: 1600 }}"
  alt="{{ hero_image.alt | default: product.title | escape }}"
  loading="eager"
  fetchpriority="high"
@@ -243,8 +239,9 @@
  {% assign thumbs_shown = 0 %}
  {% if hero_image %}
  <button
+ type="button"
  class="pdp-gallery__thumb is-active"
- data-thumb-src="{{ hero_image | image_url: width: 800 }}"
+ data-thumb-src="{{ hero_image | image_url: width: 1600 }}"
  aria-label="View hero image"
  >
  <img src="{{ hero_image | image_url: width: 160 }}" alt="{{ hero_image.alt | default: product.title | escape }}" width="72" height="72" loading="lazy">
@@ -255,8 +252,9 @@
  {% if thumbs_shown >= thumb_count %}{% break %}{% endif %}
  {% if hero_image and image.id == hero_image.id %}{% continue %}{% endif %}
  <button
+ type="button"
  class="pdp-gallery__thumb{% if thumbs_shown == 0 %} is-active{% endif %}"
- data-thumb-src="{{ image | image_url: width: 800 }}"
+ data-thumb-src="{{ image | image_url: width: 1600 }}"
  aria-label="View image {{ forloop.index }}"
  >
  <img src="{{ image | image_url: width: 160 }}" alt="View {{ forloop.index }}" width="72" height="72" loading="lazy">
@@ -1270,6 +1268,25 @@
 
 {%- comment -%} Variant selector + AJAX cart (PDP only) {%- endcomment -%}
 {{ 'variant-selector.js' | asset_url | script_tag }}
+<script>
+ (function() {
+  var main = document.getElementById('pdp-main-img');
+  if (!main) return;
+  document.querySelectorAll('.pdp-gallery__thumb').forEach(function(btn) {
+    if (btn.dataset.galleryBound) return;
+    btn.dataset.galleryBound = 'true';
+    btn.addEventListener('click', function() {
+      var src = btn.getAttribute('data-thumb-src');
+      if (!src) return;
+      document.querySelectorAll('.pdp-gallery__thumb').forEach(function(b) {
+        b.classList.toggle('is-active', b === btn);
+      });
+      main.removeAttribute('srcset');
+      main.src = src;
+    });
+  });
+ })();
+</script>
 {{ 'cart.js' | asset_url | script_tag }}
 
 {% schema %}
