@@ -10,9 +10,26 @@ This file is the **Git backup of the intended design and verification steps**. A
 
 ## Automated admin audit (Oct 1, 2026)
 
-A [Shopify automations audit](https://cursor.com/agents/bc-3b764a5d-1718-548e-b584-8a001ae50981) run from this environment **did not reach** Marketing → Automations: the store admin login was required and no session was available here.
+Read-only Chrome audit completed after admin login. See **Consent line (Oct 1, 2026)** below.
 
-**To finish verification**, someone with admin access should complete the checklist below (or paste automation names + Active/Draft status into this doc’s as-found table). Optional: authenticate **Shopify CLI** on a machine with store access (`shopify store auth --store barreletics.myshopify.com`) so a future agent can run read-only checks.
+**To finish verification**, complete the testing checklist at the bottom (test send + real abandon). Optional: authenticate **Shopify CLI** on a machine with store access (`shopify store auth --store barreletics.myshopify.com`) for future read-only checks.
+
+### Consent line (Oct 1, 2026)
+
+**Live automation:** `[GROK] Abandoned Checkout – Unique 10% (3-email)` (Active)
+
+**Trigger:** Abandoned **checkout** (customer left without purchasing) — correct path vs the old inactive **cart** series.
+
+**Recipient line on all 3 email steps (exact):** `To: Customers subscribed to email marketing`
+
+**Implication:** Checkout abandoners who did **not** opt in to marketing will **not** get this series. Unique-code Flow may still run; emails are consent-gated.
+
+**“Simple” emails:** There is no separate active “simple” automation name. The live series uses minimal product + CTA templates (not the older fancy cart series).
+
+**Likely unfinished “all customers” rebuild (Inactive — do not enable without review):**
+
+- `[GROK] DRAFT – All-customers abandoned checkout test`
+- `[GROK] TEMP – copy of 3-email for all-customers build`
 
 ---
 
@@ -74,7 +91,7 @@ Fill in **as-found** table when auditing:
 
 | Automation name | Status | Delay | Code type | Last edited |
 |-----------------|--------|-------|-----------|-------------|
-| **[GROK] Abandoned Checkout – Unique 10% (3-email)** | **Active** | 3-email (see editor) | Unique 10% (name) | Audited via admin screenshot Oct 2026 |
+| **[GROK] Abandoned Checkout – Unique 10% (3-email)** | **Active** | 4h / 24h / 48h | Unique 10% (Flow) | Oct 1, 2026 — **To: marketing subscribed only** |
 | **[GROK] Welcome Series** | **Active** | — | — | Same |
 | [GROK] Abandoned Cart – Unique 10% Series | Inactive | — | — | Do not enable without review (duplicate naming) |
 | [GROK] DRAFT – All-customers abandoned checkout test | Inactive | — | — | Test only |
