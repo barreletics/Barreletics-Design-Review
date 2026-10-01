@@ -236,31 +236,33 @@
               assign shown = shown | plus: 1
             %}
             <article class="pdp-reviews__photo-card" {{ block.shopify_attributes }}>
-              {% if block.settings.image != blank %}
-                {{
-                  block.settings.image
-                  | image_url: width: 900
-                  | image_tag:
+              <div class="pdp-reviews__photo-frame">
+                {% if block.settings.image != blank %}
+                  {% render 'media-img',
+                    image: block.settings.image,
+                    alt: block.settings.author | default: 'Customer photo',
+                    class: 'pdp-reviews__photo-img',
+                    widths: '400, 600, 900',
+                    width_default: 900,
+                    sizes: photo_img_sizes,
+                    loading: 'lazy',
+                    position: '50% 50%'
+                  %}
+                {% elsif block.settings.image_url != blank %}
+                  {% render 'media-img',
+                    url: block.settings.image_url,
+                    alt: block.settings.author | default: 'Customer photo',
                     class: 'pdp-reviews__photo-img',
                     loading: 'lazy',
-                    widths: '400, 600, 900',
-                    sizes: photo_img_sizes,
-                    alt: block.settings.author
-                }}
-              {% elsif block.settings.image_url != blank %}
-                <img
-                  class="pdp-reviews__photo-img"
-                  src="{{ block.settings.image_url | escape }}"
-                  alt="{{ block.settings.author | default: 'Customer photo' | escape }}"
-                  loading="lazy"
-                  width="900"
-                  height="900"
-                >
-              {% else %}
-                <div class="pdp-reviews__photo-img pdp-reviews__photo-img--empty" role="img" aria-label="Add customer photo">
-                  <span>Add image</span>
-                </div>
-              {% endif %}
+                    width_attr: 900,
+                    height_attr: 900
+                  %}
+                {% else %}
+                  <div class="pdp-reviews__photo-img pdp-reviews__photo-img--empty" role="img" aria-label="Add customer photo">
+                    <span>Add image</span>
+                  </div>
+                {% endif %}
+              </div>
               <div class="pdp-reviews__photo-pad">
                 <div class="pdp-reviews__photo-stars" aria-label="{{ star_n }} out of 5 stars">
                   {% for i in (1..5) %}
@@ -569,16 +571,16 @@
     width: 100%;
   }
 
-  .pdp-reviews__photo-img {
+  .pdp-reviews__photo-frame {
+    position: relative;
     width: 100%;
     aspect-ratio: 1;
-    object-fit: cover;
-    object-position: center center;
-    display: block;
-    margin-inline: auto;
+    overflow: hidden;
   }
 
   .pdp-reviews__photo-img--empty {
+    width: 100%;
+    height: 100%;
     background: #e8e2d8;
     display: flex;
     align-items: center;
