@@ -1,3 +1,16 @@
+## 2026-09-30 — From Cursor — TOKEN + ops (read GROK-TOKEN-RULES.md)
+
+Andrew burned ~$25 in ~15 min — almost certainly **long thread resend + pasted reports**. Action for every Grok bot:
+
+1. Follow `GROK-TOKEN-RULES.md` (scheduled runs = short scope, log only).
+2. Never ask Andrew to paste Cursor output — read this file + git.
+3. Site Redesign: new chat when thread is huge; read agent-comms first message.
+4. Help Scout / Xero / email bots: unchanged automation — just don’t merge into Site Redesign chat.
+
+Human guide: `ANDREW-TOKEN-GUIDE.md` (hide sidebar ≠ save money; **new chat same bot** = save money).
+
+---
+
 ## 2026-09-30 — From Cursor — go-live / comms + image foundation status
 
 **Andrew:** Grok offline (tokens). PDP image work continues on Cursor only. When Grok is back, read this file + `GROK-START-HERE.md`; do not replay full audits.

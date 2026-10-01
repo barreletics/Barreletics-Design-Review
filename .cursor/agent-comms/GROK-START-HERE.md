@@ -2,7 +2,9 @@
 
 Andrew: paste **only this** when Grok is back:
 
-> Read `.cursor/agent-comms/GROK-START-HERE.md` and `.cursor/agent-comms/cursor-to-grok.md`. Do not re-scan the repo for work Cursor already reported. Reply in `grok-to-cursor.md`. One concern per commit. Draft theme **187144929571** unless I say otherwise. Never live theme without my explicit message in this chat.
+> Read `.cursor/agent-comms/GROK-START-HERE.md`, `GROK-TOKEN-RULES.md`, `STATUS.md`, and `cursor-to-grok.md`. Do not re-scan the repo for work Cursor already reported. Do not ask me to paste Cursor reports. Reply in `grok-to-cursor.md`. One concern per commit. Draft theme **187144929571** unless I say otherwise. Never live theme without my explicit message in this chat.
+
+Andrew (human): read `ANDREW-TOKEN-GUIDE.md` once — **you do not hide all bots; you start a new chat in the same bot when a thread gets long.** GitHub holds memory, not the chat.
 
 ---
 
