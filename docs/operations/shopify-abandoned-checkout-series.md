@@ -24,7 +24,7 @@ Read-only Chrome audit completed after admin login. See **Consent line (Oct 1, 2
 
 | Automation | Status after fix |
 |---|---|
-| `[GROK] DRAFT – All-customers abandoned checkout test` | **Active** — To: **All customers** (3 emails Active) |
+| `[GROK] Abandoned Checkout – All customers (3-email)` | **Active** — To: **All customers** (renamed Oct 1, 2026) |
 | `[GROK] Abandoned Checkout – Unique 10% (3-email)` | **Inactive** (was marketing-subscribers-only) |
 
 **Timing (active series):** ~4h wait → Email 1 → 20h → Email 2 → 24h → Email 3.
@@ -32,6 +32,8 @@ Read-only Chrome audit completed after admin login. See **Consent line (Oct 1, 2
 **Flow:** Unique 10% codes via Shopify Flow (`discountCodeBasicCreate`, customer tags) — verified attached to active path.
 
 **Still inactive:** `[GROK] TEMP – copy of 3-email for all-customers build`, old cart series, OLD – not used rows.
+
+**E2E test (Oct 1, 2026, no marketing opt-in):** `barreletics.abandon.test+cursor2026@gmail.com` — checkout ~$157.95 abandoned ~2:16 PM UTC; marketing checkbox **unchecked**. Email 1 expected ~4h later (~6:16 PM UTC same day). Confirm in **Orders → Abandoned checkouts** and inbox.
 
 ---
 
@@ -93,11 +95,10 @@ Fill in **as-found** table when auditing:
 
 | Automation name | Status | Delay | Code type | Last edited |
 |-----------------|--------|-------|-----------|-------------|
-| **[GROK] DRAFT – All-customers abandoned checkout test** | **Active** | 4h + 20h + 24h | Unique 10% (Flow) | Oct 1, 2026 — **To: All customers** |
+| **[GROK] Abandoned Checkout – All customers (3-email)** | **Active** | 4h + 20h + 24h | Unique 10% (Flow) | Oct 1, 2026 — **To: All customers** |
 | [GROK] Abandoned Checkout – Unique 10% (3-email) | Inactive | was 4h/24h/48h | Unique 10% | Was marketing-subscribers-only |
 | **[GROK] Welcome Series** | **Active** | — | — | Same |
 | [GROK] Abandoned Cart – Unique 10% Series | Inactive | — | — | Do not enable without review (duplicate naming) |
-| [GROK] DRAFT – All-customers abandoned checkout test | Inactive | — | — | Test only |
 | [GROK] TEMP – copy of 3-email for all-customers build | Inactive | — | — | Build copy |
 | [GROK] TEST Abandoned Checkout – Unique Code | Inactive | — | — | Test |
 | OLD – not used [GROK] Abandoned Checkout – Unique 10% (…) | Inactive | — | — | Retired |
