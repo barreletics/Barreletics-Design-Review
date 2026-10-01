@@ -27,7 +27,7 @@ Read-only Chrome audit completed after admin login. See **Consent line (Oct 1, 2
 | `[GROK] Abandoned Checkout – All customers (3-email)` | **Active** — To: **All customers** (renamed Oct 1, 2026) |
 | `[GROK] Abandoned Checkout – Unique 10% (3-email)` | **Inactive** (was marketing-subscribers-only) |
 
-**Timing (active series):** ~4h wait → Email 1 → 20h → Email 2 → 24h → Email 3.
+**Timing (active series, verified in workflow UI Oct 1):** 4h wait → Email 1 → 20h → Email 2 → 20h → Email 3 (~44h to email 3). A 24h wait step appears **after** email 3 (not before it).
 
 **Flow:** Unique 10% codes via Shopify Flow (`discountCodeBasicCreate`, customer tags) — verified attached to active path.
 
@@ -95,7 +95,7 @@ Fill in **as-found** table when auditing:
 
 | Automation name | Status | Delay | Code type | Last edited |
 |-----------------|--------|-------|-----------|-------------|
-| **[GROK] Abandoned Checkout – All customers (3-email)** | **Active** | 4h + 20h + 24h | Unique 10% (Flow) | Oct 1, 2026 — **To: All customers** |
+| **[GROK] Abandoned Checkout – All customers (3-email)** | **Active** | 4h + 20h + 20h | Unique 10% (Flow) | Oct 1, 2026 — **To: All customers** (re-verified) |
 | [GROK] Abandoned Checkout – Unique 10% (3-email) | Inactive | was 4h/24h/48h | Unique 10% | Was marketing-subscribers-only |
 | **[GROK] Welcome Series** | **Active** | — | — | Same |
 | [GROK] Abandoned Cart – Unique 10% Series | Inactive | — | — | Do not enable without review (duplicate naming) |
