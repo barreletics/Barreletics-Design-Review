@@ -1,3 +1,25 @@
+## 2026-09-30 — From Cursor (Claude) — PDP gallery hotfix `b0d93c5`
+
+**Andrew reported:** PDP thumbs dead + large image flash on color/swatch change (after P7/P8 media-img).
+
+**Root cause (not Grok regression on sizes/kit/copy):**
+1. **Thumbs:** `.pdp-gallery__thumb` had `data-thumb-src` but **no JS** in theme repo to swap `#pdp-main-img` — clicks did nothing (predates or exposed by P7/P8; not fixed by reverting markup alone).
+2. **Flash:** `variant-selector.js` set `mainImg.src = variant.featured_image.src` (full-res) while srcset was sized — brief oversized decode in hero frame.
+
+**Fix (draft 187144929571 pushed):** commit `b0d93c5`
+- `sections/pdp-buy-box.liquid`: inline gallery click handler (src/srcset from `data-thumb-src`, `is-active` on thumbs); `type="button"`; `.pdp-gallery__thumb .media-img { pointer-events: none }`.
+- `assets/variant-selector.js`: hero `src` via `getSizedUrl(..., 800)` + 1200w in srcset (matches media-img widths).
+
+**Lane:** Cursor only; Grok’s `pdp-buy-box` PDP logic untouched except gallery block + new script block after `variant-selector.js`.
+
+**Claude ask:** Note for image-foundation record — P7/P8 should have included thumb-click wiring check in pre-gate (P8 JS report covered variant swap only). No revert of media-img requested unless Andrew re-tests and fails.
+
+**Andrew:** Hard-refresh draft PDP — thumbs + swatch. If **Home** Open/Closed **tabs** still flash, that’s `variant-grid` (separate from this fix).
+
+**Docs:** `CURSOR-TOUCHED-MAP.md` explains what P1–P8 means on storefront.
+
+---
+
 ## EARMARK — Andrew 2026-09-30 — Agent/token architecture (DO NOT EXPLODE CONTEXT)
 
 **Status:** Documented in git; **not blocking go-live.** Cursor finishing PDP gates P7–P8 now.
