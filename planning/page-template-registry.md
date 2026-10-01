@@ -55,6 +55,8 @@ Theme Editor: `https://admin.shopify.com/store/barreletics/themes/187144929571/e
 | **Coperni collab** | `/products/barreletics-x-coperni-closed-sole` | `product.coperni.json` | **Product first** (2026-08-21): buy-box → strip → crosslink images → runway story. Not a Locked Closed PDP. | **`coperni`** | `/products/barreletics-x-coperni-closed-sole` |
 | **One-off Closed** | `/products/one-off-colors-closed-sole` | `product.one-off-closed.json` | Closed Sole quality twin; One-Offs tab only; FAQ = Closed + 3 one-off Qs; P-011/D-051 | **`one-off-closed`** | `/products/one-off-colors-closed-sole` |
 | **One-off Open** | `/products/one-off-colors-open-sole` | `product.one-off-open.json` | Same + Open deltas (rust badge · Open copy · handle) | **`one-off-open`** | `/products/one-off-colors-open-sole` |
+| **Yoga pants** | `/products/lightly-padded-knee-yoga-pant-black` | `product.yoga-pants.json` | M4 apparel spine from `collection.apparel.json` (not Closed Sole, not live Impulse PDP) | **`yoga-pants`** (Admin already set) | `/products/lightly-padded-knee-yoga-pant-black` |
+| **V-neck / tank** | `/products/barreletics-performance-fabric-yoga-t-shirts` | `product.v-neck-tops.json` | Same apparel spine; tee-first | **`v-neck-tops`** (Admin already set) | `/products/barreletics-performance-fabric-yoga-t-shirts` |
 
 **Deleted / do not recreate:** `product.closed-sole.json` — Closed Sole **is** the default `product.json`.
 
