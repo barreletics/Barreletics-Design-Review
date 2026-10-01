@@ -225,17 +225,16 @@
  <div class="pdp-gallery">
  <div class="pdp-gallery__hero">
  {% if hero_image %}
- <img
- id="pdp-main-img"
- src="{{ hero_image | image_url: width: 800 }}"
- srcset="{{ hero_image | image_url: width: 400 }} 400w,
- {{ hero_image | image_url: width: 600 }} 600w,
- {{ hero_image | image_url: width: 800 }} 800w"
- sizes="(max-width: 768px) 100vw, 50vw"
- alt="{{ hero_image.alt | default: product.title | escape }}"
- loading="eager"
- fetchpriority="high"
- >
+ {% render 'media-img',
+ image: hero_image,
+ alt: hero_image.alt | default: product.title,
+ img_id: 'pdp-main-img',
+ widths: '400, 600, 800, 1200',
+ width_default: 800,
+ sizes: '(max-width: 768px) 100vw, 50vw',
+ loading: 'eager',
+ fetchpriority: 'high'
+ %}
  {% endif %}
  </div>
  {% if product.images.size > 1 %}
@@ -247,7 +246,14 @@
  data-thumb-src="{{ hero_image | image_url: width: 800 }}"
  aria-label="View hero image"
  >
- <img src="{{ hero_image | image_url: width: 160 }}" alt="{{ hero_image.alt | default: product.title | escape }}" width="72" height="72" loading="lazy">
+ {% render 'media-img',
+ image: hero_image,
+ alt: hero_image.alt | default: product.title,
+ widths: '160, 320',
+ width_default: 160,
+ sizes: '72px',
+ loading: 'lazy'
+ %}
  </button>
  {% assign thumbs_shown = 1 %}
  {% endif %}
@@ -259,7 +265,14 @@
  data-thumb-src="{{ image | image_url: width: 800 }}"
  aria-label="View image {{ forloop.index }}"
  >
- <img src="{{ image | image_url: width: 160 }}" alt="View {{ forloop.index }}" width="72" height="72" loading="lazy">
+ {% render 'media-img',
+ image: image,
+ alt: 'View ' | append: forloop.index,
+ widths: '160, 320',
+ width_default: 160,
+ sizes: '72px',
+ loading: 'lazy'
+ %}
  </button>
  {% assign thumbs_shown = thumbs_shown | plus: 1 %}
  {% endfor %}
@@ -681,17 +694,11 @@
  }
 
  .pdp-gallery__hero {
+ position: relative;
  aspect-ratio: 1;
  background: var(--bg-card);
  overflow: hidden;
  border-radius: var(--radius-gallery);
- }
-
- .pdp-gallery__hero img {
- width: 100%;
- height: 100%;
- object-fit: cover;
- display: block;
  }
 
  .pdp-gallery__thumbs {
@@ -709,6 +716,7 @@
  }
 
  .pdp-gallery__thumb {
+ position: relative;
  width: 72px;
  height: 72px;
  border: 1px solid var(--border-default);
@@ -724,12 +732,6 @@
  border: 2px solid var(--text-primary);
  }
 
- .pdp-gallery__thumb img {
- width: 100%;
- height: 100%;
- object-fit: cover;
- display: block;
- }
 
  .pdp-buy {
  display: flex;
