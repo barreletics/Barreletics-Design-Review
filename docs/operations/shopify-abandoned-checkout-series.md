@@ -31,6 +31,13 @@ Read-only Chrome audit completed after admin login. See **Consent line (Oct 1, 2
 
 **Flow:** Unique 10% codes via Shopify Flow (`discountCodeBasicCreate`, customer tags) — verified attached to active path.
 
+**Discount link test (Grok method — repeat before calling “tested”):**
+
+1. Temporarily set the Flow **first wait** from **4 hours → 1 minute** (restore to 4h after).
+2. Abandon checkout with a real inbox (e.g. `andrewjn220@gmail.com`), marketing **unchecked**, reach **payment**, wait ~30s, then leave.
+3. Confirm row in **Orders → Abandoned checkouts**; within ~1 hour receive Email 1; click **Return to your cart** — **10% must show on checkout**.
+4. **Do not** rely on duplicating the automation for quick tests — Shopify often breaks email template links on duplicates (`[TEST-6415]` blocked Oct 1, 2026).
+
 **Still inactive:** `[GROK] TEMP – copy of 3-email for all-customers build`, old cart series, OLD – not used rows.
 
 **E2E tests (Oct 1, 2026, marketing unchecked):**
