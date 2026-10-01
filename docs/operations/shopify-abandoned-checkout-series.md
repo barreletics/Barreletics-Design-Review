@@ -8,6 +8,14 @@ This file is the **Git backup of the intended design and verification steps**. A
 
 ---
 
+## Automated admin audit (Oct 1, 2026)
+
+A [Shopify automations audit](https://cursor.com/agents/bc-3b764a5d-1718-548e-b584-8a001ae50981) run from this environment **did not reach** Marketing → Automations: the store admin login was required and no session was available here.
+
+**To finish verification**, someone with admin access should complete the checklist below (or paste automation names + Active/Draft status into this doc’s as-found table). Optional: authenticate **Shopify CLI** on a machine with store access (`shopify store auth --store barreletics.myshopify.com`) so a future agent can run read-only checks.
+
+---
+
 ## GitHub backup status
 
 As of October 2026, **this repository does not contain** exported automation JSON, email HTML, or Flow definitions for abandoned checkout. Configuration is **admin-only**. Use this document + periodic admin screenshots as the repo record.
