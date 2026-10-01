@@ -33,7 +33,14 @@ Read-only Chrome audit completed after admin login. See **Consent line (Oct 1, 2
 
 **Still inactive:** `[GROK] TEMP – copy of 3-email for all-customers build`, old cart series, OLD – not used rows.
 
-**E2E test (Oct 1, 2026, no marketing opt-in):** Attempted checkout as `barreletics.abandon.test+cursor2026@gmail.com` (~$157.95, marketing **unchecked**, abandoned ~2:16 PM UTC). **Not yet confirmed** in **Orders → Abandoned checkouts** at ~2:47 PM UTC (may need re-test or longer lag). If registered, Email 1 ~4h after abandon (~6:16 PM UTC).
+**E2E tests (Oct 1, 2026, marketing unchecked):**
+
+| Email | Abandoned (UTC) | In admin? | Email 1 if registered |
+|-------|-----------------|-----------|------------------------|
+| `barreletics.abandon.test+cursor2026@gmail.com` | ~2:16 PM | Not found on search | ~6:16 PM |
+| **`andrewjn220@gmail.com`** (user test) | **~3:12 PM** | **Not found** by ~3:24 PM (~$222, reached payment step) | **~7:12 PM** |
+
+Confirm in **Orders → Abandoned checkouts** and inbox. Automation had **0 sends** in last-30-day stats at re-check.
 
 ### Double-check audit (Oct 1, 2026 ~2:47 PM UTC, read-only)
 
