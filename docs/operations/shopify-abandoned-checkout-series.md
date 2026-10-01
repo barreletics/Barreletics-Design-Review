@@ -14,22 +14,24 @@ Read-only Chrome audit completed after admin login. See **Consent line (Oct 1, 2
 
 **To finish verification**, complete the testing checklist at the bottom (test send + real abandon). Optional: authenticate **Shopify CLI** on a machine with store access (`shopify store auth --store barreletics.myshopify.com`) for future read-only checks.
 
-### Consent line (Oct 1, 2026)
+### Consent line & live series (Oct 1, 2026)
 
-**Live automation:** `[GROK] Abandoned Checkout – Unique 10% (3-email)` (Active)
+**What Grok rebuilt (the “other choice”):** Abandoned **checkout** automation (not cart), with **simple** 3-email templates and **To: All customers** — stored as `[GROK] DRAFT – All-customers abandoned checkout test`. That was the version meant for people **not** subscribed to marketing.
 
-**Trigger:** Abandoned **checkout** (customer left without purchasing) — correct path vs the old inactive **cart** series.
+**Problem found:** The **Active** series was still `[GROK] Abandoned Checkout – Unique 10% (3-email)` with **To: Customers subscribed to email marketing** on all 3 steps — so non-subscribers were blocked.
 
-**Recipient line on all 3 email steps (exact):** `To: Customers subscribed to email marketing`
+**Fix applied (Oct 1, 2026 — admin only, theme untouched):**
 
-**Implication:** Checkout abandoners who did **not** opt in to marketing will **not** get this series. Unique-code Flow may still run; emails are consent-gated.
+| Automation | Status after fix |
+|---|---|
+| `[GROK] DRAFT – All-customers abandoned checkout test` | **Active** — To: **All customers** (3 emails Active) |
+| `[GROK] Abandoned Checkout – Unique 10% (3-email)` | **Inactive** (was marketing-subscribers-only) |
 
-**“Simple” emails:** There is no separate active “simple” automation name. The live series uses minimal product + CTA templates (not the older fancy cart series).
+**Timing (active series):** ~4h wait → Email 1 → 20h → Email 2 → 24h → Email 3.
 
-**Likely unfinished “all customers” rebuild (Inactive — do not enable without review):**
+**Flow:** Unique 10% codes via Shopify Flow (`discountCodeBasicCreate`, customer tags) — verified attached to active path.
 
-- `[GROK] DRAFT – All-customers abandoned checkout test`
-- `[GROK] TEMP – copy of 3-email for all-customers build`
+**Still inactive:** `[GROK] TEMP – copy of 3-email for all-customers build`, old cart series, OLD – not used rows.
 
 ---
 
@@ -91,7 +93,8 @@ Fill in **as-found** table when auditing:
 
 | Automation name | Status | Delay | Code type | Last edited |
 |-----------------|--------|-------|-----------|-------------|
-| **[GROK] Abandoned Checkout – Unique 10% (3-email)** | **Active** | 4h / 24h / 48h | Unique 10% (Flow) | Oct 1, 2026 — **To: marketing subscribed only** |
+| **[GROK] DRAFT – All-customers abandoned checkout test** | **Active** | 4h + 20h + 24h | Unique 10% (Flow) | Oct 1, 2026 — **To: All customers** |
+| [GROK] Abandoned Checkout – Unique 10% (3-email) | Inactive | was 4h/24h/48h | Unique 10% | Was marketing-subscribers-only |
 | **[GROK] Welcome Series** | **Active** | — | — | Same |
 | [GROK] Abandoned Cart – Unique 10% Series | Inactive | — | — | Do not enable without review (duplicate naming) |
 | [GROK] DRAFT – All-customers abandoned checkout test | Inactive | — | — | Test only |
