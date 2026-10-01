@@ -74,7 +74,19 @@ Fill in **as-found** table when auditing:
 
 | Automation name | Status | Delay | Code type | Last edited |
 |-----------------|--------|-------|-----------|-------------|
-| | | | | |
+| **[GROK] Abandoned Checkout – Unique 10% (3-email)** | **Active** | 3-email (see editor) | Unique 10% (name) | Audited via admin screenshot Oct 2026 |
+| **[GROK] Welcome Series** | **Active** | — | — | Same |
+| [GROK] Abandoned Cart – Unique 10% Series | Inactive | — | — | Do not enable without review (duplicate naming) |
+| [GROK] DRAFT – All-customers abandoned checkout test | Inactive | — | — | Test only |
+| [GROK] TEMP – copy of 3-email for all-customers build | Inactive | — | — | Build copy |
+| [GROK] TEST Abandoned Checkout – Unique Code | Inactive | — | — | Test |
+| OLD – not used [GROK] Abandoned Checkout – Unique 10% (…) | Inactive | — | — | Retired |
+| OLD – not used [GROK] TEST Abandoned Cart – Unique 10% … | Inactive | — | — | Retired (4 sent in Aug window on dashboard) |
+| OLD – not used [NEW] Abandoned Cart - 58 Hours | Inactive | 58h | — | 4-email upgrade **not** live |
+| OLD – not used [NEW] Abandoned Cart - 24 Hours | Inactive | 24h | — | Retired |
+| OLD – not used [NEW] Abandoned Cart - 10 Hours | Inactive | 10h | — | Retired |
+
+**Dashboard metrics (Aug 1–31, 2026, all automations):** 408 sent, 9.33% click rate, 8 orders, 15.38% conversion rate — not attributable to a single flow from this list view alone.
 
 ---
 
