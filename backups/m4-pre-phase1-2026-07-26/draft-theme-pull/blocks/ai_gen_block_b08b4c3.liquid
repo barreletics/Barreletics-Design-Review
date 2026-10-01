@@ -1,0 +1,1399 @@
+{% doc %}
+  @prompt
+    create a upsell carousel of all items that has a vibe and is rich and super bass ass, great start but wrong colors dude, there is only one place holder and needs one for all three priducts but should have the ability to make it 2 3 4 or 5  or 6 products and auto scrool on or off, create custom fonts with rich text editor. Create a toggle to add to all product pages, category pages, about us, blog , cart pages total controll to add or remove , we lost the item place holders and images, the title and subtitle need to have rich text editot. The section background needs section color control. Create the ability to turn off and on for product pages, category pages, blog page, about us page, policy pages with toggle swithc, make the shop now buton at the level so all items match. allow the ability to change the title of the product. allow the ability to remove the arrows for the carosol. Allo the ability to pick a collection or varient from a parent item. also allow the ability to change the layout of the image as a square or portrait but make them all the same no matter if the images are different size. allow to size the entire item section with the text and image, separate the image from the title and shop now button. Provide control over the image size and shop now button. Don't make it a whole section but rather more of a smaller section rather than the huge block, separate the image from the title and shop now button. Provide control over the image size and shop now button. Don't make it a whole section but rather more of a smaller section rather than the huge block>
+    
+    here is more dirction:Carousel/Swiper slider with loop, optional autoplay (configurable delay), and prev/next arrow buttons.
+    
+    Active slide reveal: when a slide becomes active, it crossfades from the first image to the second image (if provided or if product has multiple media).
+    
+    Dynamic section background: each slide can set a background color for the whole section while it’s active.
+    
+    Responsive layout with mobile/desktop breakpoints controlling slides per view and gap.
+    
+    Content stack under images: product title, short description (truncate by word count), and an optional button (multiple visual styles, with optional arrow icon).
+    
+    Image aspect ratio & radius controls per mobile/desktop (portrait, square, landscape).
+    
+    Typography controls for title, description, and button (font pickers, sizes, line-heights, colors, and optional custom fonts).
+    
+    Section frame controls: full-width toggle, max content width, padding, margins (including separate mobile values), border thickness/color, and section border-radius.
+    
+    Arrow controls: size, icon size, colors, background, border, radius, show/hide on mobile/desktop, and hover effects (color, scale, or arrow “nudge”).
+    
+    Performance: optional lazy-loading for images.
+    
+    Settings (high level)
+    
+    Collection settings: collection handle, product count limit.
+    
+    Slider settings: slides per view (desktop & mobile), gap (desktop & mobile), autoplay toggle + delay.
+    
+    Image settings: aspect ratio (desktop & mobile), image corner radius.
+    
+    Slide content: horizontal alignment (desktop & mobile), top margin (desktop & mobile).
+    
+    Title: custom font toggle + picker, size (desktop & mobile), line height, color.
+    
+    Description: custom font toggle + picker, size (desktop & mobile), line height, color, margins (desktop & mobile), max word length.
+    
+    Button: l, the collection does not populate , very good. The images seem to be hazey or not fully showing? the bittons are in the way of the product, Also havea way to shut them off and or have the auto carasol . . also make it so the buttons for view product are at the same height. make the auto play flow in one movement rather then ridgid, make the auto play a constant loop for the movement. only populate the title of one item at a time as it scrolls, fix collection, teh coolection sectiomn does not work fix irt, works great but what happened to the other settings?, The toggle buttons to show on each page do not all work. The speed of the slide needs to be able to go slower. The arrow button placment should be on the sides of the title in a light grey, it doesn't work globally on all pages. Adjust the arrows further out to the left and right and add and adjustment. Allow a button to chnage the title from all caps to regular caps., everything is great needs it needs to work on all pages. the arrow adjustment needs to go wide not narrow. Also the title margin need to be wider with adjustor, does not work on every page. Arrows do not adjust wide enough. Product title margin can go out side of image width with adjustor, everything seems great but it needs  to be an active section on every page with on and off capability, works great but doesn't populate on other pages, works great but does not populate on other pages. get rid of description and price section and make sure code does not impact site speed, Find a way to populate on all pages Delete description and price sections. Check code for speed efficiency , enable use on any page, create a workflow o turn off and on each page, page visibility does not work    , write code to turn on and off on all pages
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% liquid
+  assign show_block = false
+  
+  if block.settings.show_on_all_pages
+    assign show_block = true
+  else
+    if template.name == 'index' and block.settings.show_on_home
+      assign show_block = true
+    elsif template.name == 'product' and block.settings.show_on_product
+      assign show_block = true
+    elsif template.name == 'collection' and block.settings.show_on_collection
+      assign show_block = true
+    elsif template.name == 'blog' and block.settings.show_on_blog
+      assign show_block = true
+    elsif template.name == 'article' and block.settings.show_on_blog
+      assign show_block = true
+    elsif template.name == 'cart' and block.settings.show_on_cart
+      assign show_block = true
+    elsif template.name == 'page'
+      if page.handle == 'about' and block.settings.show_on_about
+        assign show_block = true
+      elsif page.handle contains 'polic' and block.settings.show_on_policy
+        assign show_block = true
+      elsif block.settings.show_on_other_pages
+        assign show_block = true
+      endif
+    elsif template.name == 'search' and block.settings.show_on_search
+      assign show_block = true
+    elsif block.settings.show_on_other_pages
+      assign show_block = true
+    endif
+  endif
+
+  if block.settings.image_ratio_desktop == 'square'
+    assign desktop_padding = 100
+  elsif block.settings.image_ratio_desktop == 'portrait'
+    assign desktop_padding = 125
+  elsif block.settings.image_ratio_desktop == 'landscape'
+    assign desktop_padding = 75
+  endif
+
+  if block.settings.image_ratio_mobile == 'square'
+    assign mobile_padding = 100
+  elsif block.settings.image_ratio_mobile == 'portrait'
+    assign mobile_padding = 125
+  elsif block.settings.image_ratio_mobile == 'landscape'
+    assign mobile_padding = 75
+  endif
+%}
+
+{% if show_block %}
+  {% style %}
+    .ai-product-slider-{{ ai_gen_id }} {
+      position: relative;
+      background: {{ block.settings.section_background }};
+      {% if block.settings.full_width == false %}
+        max-width: {{ block.settings.max_content_width }}px;
+        margin: {{ block.settings.section_margin_top }}px auto {{ block.settings.section_margin_bottom }}px;
+      {% else %}
+        margin: {{ block.settings.section_margin_top }}px 0 {{ block.settings.section_margin_bottom }}px;
+      {% endif %}
+      padding: {{ block.settings.section_padding_top }}px {{ block.settings.section_padding_horizontal }}px {{ block.settings.section_padding_bottom }}px;
+      {% if block.settings.section_border_width > 0 %}
+        border: {{ block.settings.section_border_width }}px solid {{ block.settings.section_border_color }};
+      {% endif %}
+      border-radius: {{ block.settings.section_border_radius }}px;
+      overflow: hidden;
+    }
+
+    .ai-product-slider__wrapper-{{ ai_gen_id }} {
+      position: relative;
+      overflow: visible;
+      max-width: {{ block.settings.max_content_width }}px;
+      margin: 0 auto;
+    }
+
+    .ai-product-slider__track-{{ ai_gen_id }} {
+      display: flex;
+      gap: {{ block.settings.gap_desktop }}px;
+      will-change: transform;
+    }
+
+    .ai-product-slider__slide-{{ ai_gen_id }} {
+      flex: 0 0 calc((100% - {{ block.settings.gap_desktop | times: block.settings.slides_per_view_desktop | minus: block.settings.gap_desktop }}px) / {{ block.settings.slides_per_view_desktop }});
+      display: flex;
+      flex-direction: column;
+    }
+
+    .ai-product-slider__image-wrapper-{{ ai_gen_id }} {
+      position: relative;
+      width: 100%;
+      padding-bottom: {{ desktop_padding }}%;
+      overflow: hidden;
+      border-radius: {{ block.settings.image_radius_desktop }}px;
+      background: {{ block.settings.image_background }};
+      margin-bottom: {{ block.settings.content_top_margin_desktop }}px;
+    }
+
+    .ai-product-slider__image-{{ ai_gen_id }} {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: opacity 0.8s ease;
+    }
+
+    .ai-product-slider__image--primary-{{ ai_gen_id }} {
+      opacity: 1;
+      z-index: 1;
+    }
+
+    .ai-product-slider__image--secondary-{{ ai_gen_id }} {
+      opacity: 0;
+      z-index: 2;
+    }
+
+    .ai-product-slider__slide-{{ ai_gen_id }}.center .ai-product-slider__image--secondary-{{ ai_gen_id }} {
+      opacity: 1;
+    }
+
+    .ai-product-slider__image-placeholder-{{ ai_gen_id }} {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: {{ block.settings.image_background }};
+    }
+
+    .ai-product-slider__image-placeholder-{{ ai_gen_id }} svg {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .ai-product-slider__content-{{ ai_gen_id }} {
+      text-align: {{ block.settings.content_alignment_desktop }};
+      display: flex;
+      flex-direction: column;
+      gap: {{ block.settings.content_gap }}px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .ai-product-slider__slide-{{ ai_gen_id }}.center .ai-product-slider__content-{{ ai_gen_id }} {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .ai-product-slider__title-wrapper-{{ ai_gen_id }} {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin: {{ block.settings.title_margin_top }}px -{{ block.settings.title_margin_horizontal }}px {{ block.settings.title_margin_bottom }}px;
+    }
+
+    .ai-product-slider__title-{{ ai_gen_id }} {
+      {% if block.settings.use_custom_title_font %}
+        font-family: {{ block.settings.title_font.family }}, {{ block.settings.title_font.fallback_families }};
+        font-weight: {{ block.settings.title_font.weight }};
+        font-style: {{ block.settings.title_font.style }};
+      {% endif %}
+      font-size: {{ block.settings.title_size_desktop }}px;
+      line-height: {{ block.settings.title_line_height }};
+      color: {{ block.settings.title_color }};
+      margin: 0;
+      {% if block.settings.title_uppercase %}
+        text-transform: uppercase;
+      {% else %}
+        text-transform: none;
+      {% endif %}
+      letter-spacing: 0.5px;
+      flex: 1;
+      text-align: center;
+    }
+
+    .ai-product-slider__button-wrapper-{{ ai_gen_id }} {
+      margin-top: auto;
+    }
+
+    .ai-product-slider__button-{{ ai_gen_id }} {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: {{ block.settings.button_padding_vertical }}px {{ block.settings.button_padding_horizontal }}px;
+      background: {{ block.settings.button_background }};
+      color: {{ block.settings.button_text_color }};
+      border: {{ block.settings.button_border_width }}px solid {{ block.settings.button_border_color }};
+      border-radius: {{ block.settings.button_radius }}px;
+      {% if block.settings.use_custom_button_font %}
+        font-family: {{ block.settings.button_font.family }}, {{ block.settings.button_font.fallback_families }};
+        font-weight: {{ block.settings.button_font.weight }};
+        font-style: {{ block.settings.button_font.style }};
+      {% endif %}
+      font-size: {{ block.settings.button_text_size }}px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      {% if block.settings.content_alignment_desktop == 'center' %}
+        margin: 0 auto;
+      {% elsif block.settings.content_alignment_desktop == 'right' %}
+        margin-left: auto;
+      {% endif %}
+    }
+
+    .ai-product-slider__button-{{ ai_gen_id }}:hover {
+      background: {{ block.settings.button_hover_background }};
+      color: {{ block.settings.button_hover_text_color }};
+      border-color: {{ block.settings.button_hover_border_color }};
+      {% if block.settings.button_hover_effect == 'scale' %}
+        transform: scale(1.05);
+      {% endif %}
+    }
+
+    .ai-product-slider__button-arrow-{{ ai_gen_id }} {
+      width: 16px;
+      height: 16px;
+      transition: transform 0.3s ease;
+    }
+
+    {% if block.settings.button_hover_effect == 'nudge' %}
+      .ai-product-slider__button-{{ ai_gen_id }}:hover .ai-product-slider__button-arrow-{{ ai_gen_id }} {
+        transform: translateX(4px);
+      }
+    {% endif %}
+
+    .ai-product-slider__nav-{{ ai_gen_id }} {
+      width: 32px;
+      height: 32px;
+      background: rgba(200, 200, 200, 0.3);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+    }
+
+    .ai-product-slider__nav-{{ ai_gen_id }}:hover {
+      background: rgba(200, 200, 200, 0.5);
+      transform: scale(1.1);
+    }
+
+    .ai-product-slider__nav-{{ ai_gen_id }} svg {
+      width: 18px;
+      height: 18px;
+      stroke: #999;
+      stroke-width: 2;
+      transition: stroke 0.3s ease;
+    }
+
+    .ai-product-slider__nav-{{ ai_gen_id }}:hover svg {
+      stroke: #666;
+    }
+
+    @media screen and (max-width: 749px) {
+      .ai-product-slider-{{ ai_gen_id }} {
+        margin: {{ block.settings.section_margin_top_mobile }}px 0 {{ block.settings.section_margin_bottom_mobile }}px;
+        padding: {{ block.settings.section_padding_top_mobile }}px {{ block.settings.section_padding_horizontal_mobile }}px {{ block.settings.section_padding_bottom_mobile }}px;
+      }
+
+      .ai-product-slider__track-{{ ai_gen_id }} {
+        gap: {{ block.settings.gap_mobile }}px;
+      }
+
+      .ai-product-slider__slide-{{ ai_gen_id }} {
+        flex: 0 0 calc((100% - {{ block.settings.gap_mobile | times: block.settings.slides_per_view_mobile | minus: block.settings.gap_mobile }}px) / {{ block.settings.slides_per_view_mobile }});
+      }
+
+      .ai-product-slider__image-wrapper-{{ ai_gen_id }} {
+        padding-bottom: {{ mobile_padding }}%;
+        border-radius: {{ block.settings.image_radius_mobile }}px;
+        margin-bottom: {{ block.settings.content_top_margin_mobile }}px;
+      }
+
+      .ai-product-slider__content-{{ ai_gen_id }} {
+        text-align: {{ block.settings.content_alignment_mobile }};
+      }
+
+      .ai-product-slider__title-wrapper-{{ ai_gen_id }} {
+        margin: {{ block.settings.title_margin_top | times: 0.7 }}px -{{ block.settings.title_margin_horizontal | times: 0.7 }}px {{ block.settings.title_margin_bottom | times: 0.7 }}px;
+      }
+
+      .ai-product-slider__title-{{ ai_gen_id }} {
+        font-size: {{ block.settings.title_size_mobile }}px;
+      }
+
+      .ai-product-slider__button-{{ ai_gen_id }} {
+        {% if block.settings.content_alignment_mobile == 'center' %}
+          margin: 0 auto;
+        {% elsif block.settings.content_alignment_mobile == 'right' %}
+          margin-left: auto;
+        {% elsif block.settings.content_alignment_mobile == 'left' %}
+          margin-left: 0;
+        {% endif %}
+      }
+
+      .ai-product-slider__nav-{{ ai_gen_id }} {
+        width: 28px;
+        height: 28px;
+      }
+
+      .ai-product-slider__nav-{{ ai_gen_id }} svg {
+        width: 16px;
+        height: 16px;
+      }
+    }
+  {% endstyle %}
+
+  <product-slider-{{ ai_gen_id }} 
+    class="ai-product-slider-{{ ai_gen_id }}" 
+    data-autoplay="{{ block.settings.autoplay }}"
+    data-scroll-speed="{{ block.settings.scroll_speed }}"
+    {{ block.shopify_attributes }}
+  >
+    <div class="ai-product-slider__wrapper-{{ ai_gen_id }}">
+      <div class="ai-product-slider__track-{{ ai_gen_id }}">
+        {% if block.settings.collection != blank %}
+          {% for product in block.settings.collection.products limit: block.settings.product_limit %}
+            <div class="ai-product-slider__slide-{{ ai_gen_id }}" data-index="{{ forloop.index0 }}">
+              <div class="ai-product-slider__image-wrapper-{{ ai_gen_id }}">
+                {% if product.featured_image %}
+                  <img
+                    srcset="{{ product.featured_image | image_url: width: 400 }} 400w,
+                            {{ product.featured_image | image_url: width: 600 }} 600w,
+                            {{ product.featured_image | image_url: width: 800 }} 800w"
+                    sizes="(max-width: 749px) 100vw, (max-width: 989px) 50vw, 33vw"
+                    src="{{ product.featured_image | image_url: width: 800 }}"
+                    alt="{{ product.featured_image.alt | escape }}"
+                    class="ai-product-slider__image-{{ ai_gen_id }} ai-product-slider__image--primary-{{ ai_gen_id }}"
+                    loading="lazy"
+                    width="800"
+                    height="1000"
+                  >
+                  {% if product.media[1] %}
+                    <img
+                      srcset="{{ product.media[1] | image_url: width: 400 }} 400w,
+                              {{ product.media[1] | image_url: width: 600 }} 600w,
+                              {{ product.media[1] | image_url: width: 800 }} 800w"
+                      sizes="(max-width: 749px) 100vw, (max-width: 989px) 50vw, 33vw"
+                      src="{{ product.media[1] | image_url: width: 800 }}"
+                      alt="{{ product.media[1].alt | escape }}"
+                      class="ai-product-slider__image-{{ ai_gen_id }} ai-product-slider__image--secondary-{{ ai_gen_id }}"
+                      loading="lazy"
+                      width="800"
+                      height="1000"
+                    >
+                  {% endif %}
+                {% else %}
+                  <div class="ai-product-slider__image-placeholder-{{ ai_gen_id }}">
+                    {{ 'product-1' | placeholder_svg_tag }}
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="ai-product-slider__content-{{ ai_gen_id }}">
+                <div class="ai-product-slider__title-wrapper-{{ ai_gen_id }}">
+                  <button class="ai-product-slider__nav-{{ ai_gen_id }} ai-product-slider__nav--prev-{{ ai_gen_id }}" aria-label="Previous" data-slide-nav="prev">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M15 18L9 12L15 6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+
+                  <h3 class="ai-product-slider__title-{{ ai_gen_id }}">{{ product.title }}</h3>
+
+                  <button class="ai-product-slider__nav-{{ ai_gen_id }} ai-product-slider__nav--next-{{ ai_gen_id }}" aria-label="Next" data-slide-nav="next">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M9 18L15 12L9 6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+                </div>
+
+                {% if block.settings.show_button %}
+                  <div class="ai-product-slider__button-wrapper-{{ ai_gen_id }}">
+                    <a href="{{ product.url }}" class="ai-product-slider__button-{{ ai_gen_id }}">
+                      {{ block.settings.button_text }}
+                      {% if block.settings.show_button_arrow %}
+                        <svg class="ai-product-slider__button-arrow-{{ ai_gen_id }}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      {% endif %}
+                    </a>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+
+          {% for product in block.settings.collection.products limit: block.settings.product_limit %}
+            <div class="ai-product-slider__slide-{{ ai_gen_id }}" data-index="{{ forloop.index0 }}" data-clone="true">
+              <div class="ai-product-slider__image-wrapper-{{ ai_gen_id }}">
+                {% if product.featured_image %}
+                  <img
+                    srcset="{{ product.featured_image | image_url: width: 400 }} 400w,
+                            {{ product.featured_image | image_url: width: 600 }} 600w,
+                            {{ product.featured_image | image_url: width: 800 }} 800w"
+                    sizes="(max-width: 749px) 100vw, (max-width: 989px) 50vw, 33vw"
+                    src="{{ product.featured_image | image_url: width: 800 }}"
+                    alt="{{ product.featured_image.alt | escape }}"
+                    class="ai-product-slider__image-{{ ai_gen_id }} ai-product-slider__image--primary-{{ ai_gen_id }}"
+                    loading="lazy"
+                    width="800"
+                    height="1000"
+                  >
+                  {% if product.media[1] %}
+                    <img
+                      srcset="{{ product.media[1] | image_url: width: 400 }} 400w,
+                              {{ product.media[1] | image_url: width: 600 }} 600w,
+                              {{ product.media[1] | image_url: width: 800 }} 800w"
+                      sizes="(max-width: 749px) 100vw, (max-width: 989px) 50vw, 33vw"
+                      src="{{ product.media[1] | image_url: width: 800 }}"
+                      alt="{{ product.media[1].alt | escape }}"
+                      class="ai-product-slider__image-{{ ai_gen_id }} ai-product-slider__image--secondary-{{ ai_gen_id }}"
+                      loading="lazy"
+                      width="800"
+                      height="1000"
+                    >
+                  {% endif %}
+                {% else %}
+                  <div class="ai-product-slider__image-placeholder-{{ ai_gen_id }}">
+                    {{ 'product-1' | placeholder_svg_tag }}
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="ai-product-slider__content-{{ ai_gen_id }}">
+                <div class="ai-product-slider__title-wrapper-{{ ai_gen_id }}">
+                  <button class="ai-product-slider__nav-{{ ai_gen_id }} ai-product-slider__nav--prev-{{ ai_gen_id }}" aria-label="Previous" data-slide-nav="prev">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M15 18L9 12L15 6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+
+                  <h3 class="ai-product-slider__title-{{ ai_gen_id }}">{{ product.title }}</h3>
+
+                  <button class="ai-product-slider__nav-{{ ai_gen_id }} ai-product-slider__nav--next-{{ ai_gen_id }}" aria-label="Next" data-slide-nav="next">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M9 18L15 12L9 6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+                </div>
+
+                {% if block.settings.show_button %}
+                  <div class="ai-product-slider__button-wrapper-{{ ai_gen_id }}">
+                    <a href="{{ product.url }}" class="ai-product-slider__button-{{ ai_gen_id }}">
+                      {{ block.settings.button_text }}
+                      {% if block.settings.show_button_arrow %}
+                        <svg class="ai-product-slider__button-arrow-{{ ai_gen_id }}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      {% endif %}
+                    </a>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          {% for i in (1..6) %}
+            <div class="ai-product-slider__slide-{{ ai_gen_id }}" data-index="{{ forloop.index0 }}">
+              <div class="ai-product-slider__image-wrapper-{{ ai_gen_id }}">
+                <div class="ai-product-slider__image-placeholder-{{ ai_gen_id }}">
+                  {{ 'product-1' | placeholder_svg_tag }}
+                </div>
+              </div>
+
+              <div class="ai-product-slider__content-{{ ai_gen_id }}">
+                <div class="ai-product-slider__title-wrapper-{{ ai_gen_id }}">
+                  <button class="ai-product-slider__nav-{{ ai_gen_id }} ai-product-slider__nav--prev-{{ ai_gen_id }}" aria-label="Previous" data-slide-nav="prev">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M15 18L9 12L15 6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+
+                  <h3 class="ai-product-slider__title-{{ ai_gen_id }}">Product Title</h3>
+
+                  <button class="ai-product-slider__nav-{{ ai_gen_id }} ai-product-slider__nav--next-{{ ai_gen_id }}" aria-label="Next" data-slide-nav="next">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M9 18L15 12L9 6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+                </div>
+
+                {% if block.settings.show_button %}
+                  <div class="ai-product-slider__button-wrapper-{{ ai_gen_id }}">
+                    <a href="#" class="ai-product-slider__button-{{ ai_gen_id }}">
+                      {{ block.settings.button_text }}
+                      {% if block.settings.show_button_arrow %}
+                        <svg class="ai-product-slider__button-arrow-{{ ai_gen_id }}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      {% endif %}
+                    </a>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+          {% for i in (1..6) %}
+            <div class="ai-product-slider__slide-{{ ai_gen_id }}" data-index="{{ forloop.index0 }}" data-clone="true">
+              <div class="ai-product-slider__image-wrapper-{{ ai_gen_id }}">
+                <div class="ai-product-slider__image-placeholder-{{ ai_gen_id }}">
+                  {{ 'product-1' | placeholder_svg_tag }}
+                </div>
+              </div>
+
+              <div class="ai-product-slider__content-{{ ai_gen_id }}">
+                <div class="ai-product-slider__title-wrapper-{{ ai_gen_id }}">
+                  <button class="ai-product-slider__nav-{{ ai_gen_id }} ai-product-slider__nav--prev-{{ ai_gen_id }}" aria-label="Previous" data-slide-nav="prev">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M15 18L9 12L15 6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+
+                  <h3 class="ai-product-slider__title-{{ ai_gen_id }}">Product Title</h3>
+
+                  <button class="ai-product-slider__nav-{{ ai_gen_id }} ai-product-slider__nav--next-{{ ai_gen_id }}" aria-label="Next" data-slide-nav="next">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M9 18L15 12L9 6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+                </div>
+
+                {% if block.settings.show_button %}
+                  <div class="ai-product-slider__button-wrapper-{{ ai_gen_id }}">
+                    <a href="#" class="ai-product-slider__button-{{ ai_gen_id }}">
+                      {{ block.settings.button_text }}
+                      {% if block.settings.show_button_arrow %}
+                        <svg class="ai-product-slider__button-arrow-{{ ai_gen_id }}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      {% endif %}
+                    </a>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </product-slider-{{ ai_gen_id }}>
+
+  <script>
+    (function() {
+      class ProductSlider{{ ai_gen_id }} extends HTMLElement {
+        constructor() {
+          super();
+          this.currentPosition = 0;
+          this.animationId = null;
+        }
+
+        connectedCallback() {
+          this.track = this.querySelector('.ai-product-slider__track-{{ ai_gen_id }}');
+          if (!this.track) return;
+          
+          this.slides = Array.from(this.querySelectorAll('.ai-product-slider__slide-{{ ai_gen_id }}'));
+          this.originalSlides = this.slides.filter(slide => !slide.dataset.clone);
+          this.navButtons = this.querySelectorAll('[data-slide-nav]');
+          this.autoplay = this.dataset.autoplay === 'true';
+          this.scrollSpeed = parseFloat(this.dataset.scrollSpeed) || 0.5;
+
+          this.setupEventListeners();
+          this.updateCenterSlide();
+
+          if (this.autoplay) {
+            this.startAutoScroll();
+          }
+        }
+
+        disconnectedCallback() {
+          this.stopAutoScroll();
+        }
+
+        startAutoScroll() {
+          const scroll = () => {
+            this.currentPosition -= this.scrollSpeed;
+            
+            const gap = window.innerWidth <= 749 ? {{ block.settings.gap_mobile }} : {{ block.settings.gap_desktop }};
+            const slideWidth = this.slides[0].offsetWidth + gap;
+            const resetPoint = -(slideWidth * this.originalSlides.length);
+
+            if (this.currentPosition <= resetPoint) {
+              this.currentPosition = 0;
+            }
+
+            this.track.style.transform = 'translateX(' + this.currentPosition + 'px)';
+            this.updateCenterSlide();
+            
+            this.animationId = requestAnimationFrame(scroll);
+          };
+          
+          this.animationId = requestAnimationFrame(scroll);
+        }
+
+        stopAutoScroll() {
+          if (this.animationId) {
+            cancelAnimationFrame(this.animationId);
+            this.animationId = null;
+          }
+        }
+
+        updateCenterSlide() {
+          const containerWidth = this.offsetWidth;
+          const centerPoint = containerWidth / 2;
+
+          this.slides.forEach(slide => {
+            const rect = slide.getBoundingClientRect();
+            const slideCenter = rect.left + rect.width / 2;
+            const distanceFromCenter = Math.abs(slideCenter - centerPoint);
+
+            if (distanceFromCenter < rect.width / 2) {
+              slide.classList.add('center');
+            } else {
+              slide.classList.remove('center');
+            }
+          });
+        }
+
+        setupEventListeners() {
+          this.navButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+              e.preventDefault();
+              this.stopAutoScroll();
+              
+              const gap = window.innerWidth <= 749 ? {{ block.settings.gap_mobile }} : {{ block.settings.gap_desktop }};
+              const slideWidth = this.slides[0].offsetWidth + gap;
+              
+              if (button.dataset.slideNav === 'prev') {
+                this.currentPosition += slideWidth;
+              } else {
+                this.currentPosition -= slideWidth;
+              }
+              
+              this.track.style.transform = 'translateX(' + this.currentPosition + 'px)';
+              this.updateCenterSlide();
+              
+              if (this.autoplay) {
+                setTimeout(() => this.startAutoScroll(), 2000);
+              }
+            });
+          });
+
+          this.addEventListener('mouseenter', () => {
+            if (this.autoplay) {
+              this.stopAutoScroll();
+            }
+          });
+
+          this.addEventListener('mouseleave', () => {
+            if (this.autoplay) {
+              this.startAutoScroll();
+            }
+          });
+        }
+      }
+
+      customElements.define('product-slider-{{ ai_gen_id }}', ProductSlider{{ ai_gen_id }});
+    })();
+  </script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Product slider",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Page visibility"
+    },
+    {
+      "type": "paragraph",
+      "content": "⚠️ IMPORTANT: These toggles only work if this block is in a global section like Footer. Currently in collection section = toggles won't work."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_on_all_pages",
+      "label": "Show on all pages",
+      "default": true,
+      "info": "Master toggle - when ON, shows everywhere. When OFF, use individual toggles below."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_on_home",
+      "label": "Home page",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_on_product",
+      "label": "Product pages",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_on_collection",
+      "label": "Collection pages",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_on_cart",
+      "label": "Cart page",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_on_blog",
+      "label": "Blog & article pages",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_on_search",
+      "label": "Search page",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_on_about",
+      "label": "About page",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_on_policy",
+      "label": "Policy pages",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_on_other_pages",
+      "label": "All other pages",
+      "default": true,
+      "info": "404, contact, and any other page types"
+    },
+    {
+      "type": "header",
+      "content": "Collection"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "product_limit",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "label": "Product limit (0 = all)",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Slider settings"
+    },
+    {
+      "type": "range",
+      "id": "slides_per_view_desktop",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "label": "Slides per view (desktop)",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "slides_per_view_mobile",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "label": "Slides per view (mobile)",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "gap_desktop",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Gap (desktop)",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "gap_mobile",
+      "min": 10,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Gap (mobile)",
+      "default": 15
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Enable continuous auto-scroll",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "scroll_speed",
+      "min": 0,
+      "max": 2,
+      "step": 0.1,
+      "label": "Scroll speed",
+      "default": 0.5
+    },
+    {
+      "type": "header",
+      "content": "Image settings"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio_desktop",
+      "label": "Aspect ratio (desktop)",
+      "options": [
+        {
+          "value": "landscape",
+          "label": "Landscape"
+        },
+        {
+          "value": "square",
+          "label": "Square"
+        },
+        {
+          "value": "portrait",
+          "label": "Portrait"
+        }
+      ],
+      "default": "portrait"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio_mobile",
+      "label": "Aspect ratio (mobile)",
+      "options": [
+        {
+          "value": "landscape",
+          "label": "Landscape"
+        },
+        {
+          "value": "square",
+          "label": "Square"
+        },
+        {
+          "value": "portrait",
+          "label": "Portrait"
+        }
+      ],
+      "default": "portrait"
+    },
+    {
+      "type": "range",
+      "id": "image_radius_desktop",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Image radius (desktop)",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "image_radius_mobile",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Image radius (mobile)",
+      "default": 8
+    },
+    {
+      "type": "color",
+      "id": "image_background",
+      "label": "Image background",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "header",
+      "content": "Content layout"
+    },
+    {
+      "type": "select",
+      "id": "content_alignment_desktop",
+      "label": "Alignment (desktop)",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "content_alignment_mobile",
+      "label": "Alignment (mobile)",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "content_top_margin_desktop",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Top margin (desktop)",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "content_top_margin_mobile",
+      "min": 10,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Top margin (mobile)",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "content_gap",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "unit": "px",
+      "label": "Content gap",
+      "default": 10
+    },
+    {
+      "type": "header",
+      "content": "Title"
+    },
+    {
+      "type": "checkbox",
+      "id": "title_uppercase",
+      "label": "Uppercase title",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "title_margin_top",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Margin top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "title_margin_bottom",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Margin bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "title_margin_horizontal",
+      "min": 0,
+      "max": 500,
+      "step": 10,
+      "unit": "px",
+      "label": "Arrow spacing (wider)",
+      "default": 20,
+      "info": "Higher values push arrows further apart and outside image width"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_custom_title_font",
+      "label": "Use custom font",
+      "default": false
+    },
+    {
+      "type": "font_picker",
+      "id": "title_font",
+      "label": "Font",
+      "default": "roboto_n7"
+    },
+    {
+      "type": "range",
+      "id": "title_size_desktop",
+      "min": 12,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Size (desktop)",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "min": 12,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Size (mobile)",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "title_line_height",
+      "min": 1,
+      "max": 2,
+      "step": 0.1,
+      "label": "Line height",
+      "default": 1.3
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Color",
+      "default": "#fff6f0"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_button",
+      "label": "Show button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "View Product"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_button_arrow",
+      "label": "Show arrow icon",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "use_custom_button_font",
+      "label": "Use custom font",
+      "default": false
+    },
+    {
+      "type": "font_picker",
+      "id": "button_font",
+      "label": "Font",
+      "default": "roboto_n7"
+    },
+    {
+      "type": "range",
+      "id": "button_text_size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Text size",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "button_padding_vertical",
+      "min": 8,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding vertical",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "button_padding_horizontal",
+      "min": 15,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding horizontal",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_background",
+      "label": "Hover background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_text_color",
+      "label": "Hover text color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "button_border_width",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "label": "Border width",
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "button_border_color",
+      "label": "Border color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_border_color",
+      "label": "Hover border color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 4
+    },
+    {
+      "type": "select",
+      "id": "button_hover_effect",
+      "label": "Hover effect",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "scale",
+          "label": "Scale"
+        },
+        {
+          "value": "nudge",
+          "label": "Nudge arrow"
+        }
+      ],
+      "default": "nudge"
+    },
+    {
+      "type": "header",
+      "content": "Section frame"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "max_content_width",
+      "min": 600,
+      "max": 1400,
+      "step": 50,
+      "unit": "px",
+      "label": "Max content width",
+      "default": 1200
+    },
+    {
+      "type": "color",
+      "id": "section_background",
+      "label": "Background",
+      "default": "#4f1c3a"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding top (desktop)",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding bottom (desktop)",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "section_padding_horizontal",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding horizontal (desktop)",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding top (mobile)",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding bottom (mobile)",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "section_padding_horizontal_mobile",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding horizontal (mobile)",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "section_margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Margin top (desktop)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "section_margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Margin bottom (desktop)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "section_margin_top_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Margin top (mobile)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "section_margin_bottom_mobile",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Margin bottom (mobile)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "section_border_width",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Border width",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "section_border_color",
+      "label": "Border color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "section_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product slider"
+    }
+  ]
+}
+{% endschema %}

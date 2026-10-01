@@ -1,0 +1,798 @@
+/* =============================================================================
+   Global chrome — announcement, header, footer, mobile menu
+   Extracted from Liquid for performance (Phase 1)
+   ============================================================================= */
+
+/* Sale banner — top promo */
+.sale-banner {
+  /* Cream SAVE2 bar — no border (too busy with trust + header lines) */
+  background: var(--sale-banner-bg, #faf8f6);
+  color: var(--sale-banner-color, #1c1916);
+  padding: var(--sale-banner-pad-y, 10px) 24px;
+  text-align: center;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  z-index: calc(var(--z-header) + 2);
+  border-bottom: none;
+}
+.sale-banner__inner {
+  max-width: min(1400px, 100%);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 40px;
+  box-sizing: border-box;
+}
+.sale-banner__text {
+  margin: 0;
+  font-size: var(--sale-banner-font-size, 15px);
+  font-weight: var(--sale-banner-weight, 500);
+  letter-spacing: 0.04em;
+  line-height: 1.25;
+  text-transform: none;
+  color: inherit;
+  text-decoration: none;
+}
+a.sale-banner__text:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+@media (max-width: 768px) {
+  .sale-banner { padding: 6px 16px; }
+  .sale-banner__text {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+  }
+}
+
+/* Trust strip */
+.announcement-strip {
+  /* Trust line under SAVE2 — no bottom line (header border is enough) */
+  background: var(--announce-bg, #ffffff);
+  padding: var(--announce-pad-y, 5px) var(--announce-pad-x, 56px);
+  border-bottom: none;
+  overflow: hidden;
+  position: relative;
+  z-index: calc(var(--z-header) + 1);
+}
+.announcement-strip__inner {
+  max-width: min(var(--announce-max-width, 1320px), 100%);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  gap: 0 var(--announce-item-gap, 12px);
+  text-align: center;
+  white-space: normal;
+  font-size: var(--announce-font-size, 12px);
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: var(--announce-tracking, 0.03em);
+  color: var(--announce-color, #5a544c);
+  line-height: 1.3;
+}
+
+/* Announce layout TE: center = Lulu compact line; spread = edge-to-edge messages */
+.announcement-strip[data-announce-distribute="spread"] .announcement-strip__inner {
+  justify-content: space-between;
+  gap: 0 var(--announce-item-gap, 28px);
+}
+.announcement-strip__item:first-child,
+.announcement-strip__item--promo {
+  font-weight: var(--announce-promo-weight, 600);
+  color: var(--announce-promo-color, #2e2a26);
+}
+.announcement-strip__item {
+  display: inline-flex;
+  align-items: center;
+}
+.announcement-strip__sep {
+  color: #9a9182;
+  margin: 0;
+  opacity: 0.7;
+  flex: 0 0 auto;
+}
+.announcement-strip__link {
+  color: inherit;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+}
+.announcement-strip__link:hover {
+  color: var(--text-primary);
+  text-decoration-thickness: 1.5px;
+}
+
+/* Desktop: one cream line (SAVE2 + trust in announce). Hide sale banner.
+   Mobile: two-bar locked — sale on, hide SAVE2 duplicate in announce.
+   Does not overwrite TE JSON — layout only. */
+@media (min-width: 901px) {
+  .sale-banner-section {
+    display: none !important;
+  }
+  .announcement-strip {
+    background: var(--announce-bg, #faf8f6);
+    padding-top: var(--announce-pad-y, 9px);
+    padding-bottom: var(--announce-pad-y, 9px);
+  }
+  .announcement-strip__inner {
+    font-size: var(--announce-font-size, 14px);
+  }
+  .announcement-strip__item--promo,
+  .announcement-strip__item:first-child {
+    font-weight: var(--announce-promo-weight, 500);
+    color: var(--announce-promo-color, #2e2a26);
+  }
+}
+@media (max-width: 900px) {
+  .announcement-strip__item--promo,
+  .announcement-strip__sep--after-promo {
+    display: none !important;
+  }
+  .announcement-strip {
+    background: var(--announce-bg-mobile, #ffffff);
+    padding: var(--announce-pad-y-mobile, 8px) 16px;
+  }
+  .announcement-strip__inner {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2px 0.35em;
+    font-size: var(--announce-font-size-mobile, 12px);
+  }
+}
+
+/* Shopify wraps each header-group member in its own <div id="shopify-section-…">, and a
+   sticky child can only travel inside its parent's box. That wrapper is exactly header
+   height, so sticking the <header> alone gives it zero scroll room and it scrolls away.
+   `.header-section` comes from the header schema's "class" — stick the wrapper instead.
+   header.liquid scopes this back to static when the Sticky header setting is off. */
+.header-section {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+}
+
+.site-header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-header);
+  background: var(--header-bg, var(--color-white));
+  border-bottom: 1px solid var(--color-warm-border);
+  color: var(--header-text, var(--text-body));
+}
+.site-header--static {
+  position: relative;
+}
+.site-header__inner {
+  /* TE: --header-max-width / pad — defaults match best nav>announce pass */
+  max-width: min(var(--header-max-width, 1320px), 100%);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  min-height: 64px;
+  height: auto;
+  padding: var(--header-pad-y, 12px) var(--header-pad-x, 40px);
+  box-sizing: border-box;
+}
+.site-header__hamburger {
+  display: none;
+  background: none;
+  border: none;
+  padding: 8px;
+  color: var(--header-text, var(--text-primary));
+  min-width: 44px;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+}
+.site-header__logo { text-decoration: none; display: flex; align-items: center; }
+.site-header__logo:hover { text-decoration: none; }
+/* Home WORKING default: 22px; Theme Editor logo_height overrides via --header-logo-height */
+.site-header__logo-img {
+  height: var(--header-logo-height, 22px);
+  width: auto;
+  max-width: min(320px, 40vw);
+  display: block;
+}
+.site-header__logo-text {
+  font-size: var(--type-brand-size);
+  font-weight: var(--type-brand-weight);
+  letter-spacing: var(--type-brand-tracking);
+  text-transform: uppercase;
+  color: var(--header-text, var(--text-primary));
+}
+.site-header__nav {
+  display: flex;
+  align-items: center;
+  flex: 1 1 auto;
+  justify-content: center;
+  min-width: 0;
+  padding: 0 8px;
+}
+.site-header__nav-list {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  gap: var(--header-nav-gap, var(--type-nav-gap, 32px));
+}
+/* center = cluster mid-rail | spread = edge-to-edge | live = logo left, big air, nav+actions pack right (matches live) */
+.site-header[data-nav-distribute="spread"] .site-header__nav {
+  justify-content: stretch;
+}
+.site-header[data-nav-distribute="spread"] .site-header__nav-list {
+  width: 100%;
+  justify-content: space-between;
+}
+.site-header[data-nav-distribute="center"] .site-header__nav {
+  justify-content: center;
+}
+.site-header[data-nav-distribute="center"] .site-header__nav-list {
+  width: auto;
+  justify-content: center;
+}
+@media (min-width: 901px) {
+  .site-header[data-nav-distribute="live"] .site-header__inner {
+    gap: 32px;
+  }
+  .site-header[data-nav-distribute="live"] .site-header__logo {
+    margin-right: auto; /* creates the live air after the mark */
+  }
+  .site-header[data-nav-distribute="live"] .site-header__nav {
+    flex: 0 1 auto;
+    justify-content: flex-end;
+    padding: 0;
+  }
+  .site-header[data-nav-distribute="live"] .site-header__nav-list {
+    width: auto;
+    justify-content: flex-end;
+  }
+  .site-header[data-nav-distribute="live"] .site-header__actions {
+    margin-left: 28px;
+  }
+}
+.site-header__nav-item > a {
+  font-size: var(--header-nav-size, var(--type-nav-size));
+  font-weight: var(--header-nav-weight, var(--type-nav-weight));
+  /* Production paints title case — the capitals were ours, not the menu titles. */
+  text-transform: none;
+  letter-spacing: var(--type-nav-tracking);
+  line-height: 1.6;
+  white-space: nowrap;
+  color: var(--header-text, var(--text-body));
+  text-decoration: none;
+  padding: 4px 0;
+}
+.site-header__nav-item > a:hover { color: var(--text-primary); text-decoration: none; }
+.site-header__nav-item--has-sub { position: relative; }
+.site-header__subnav {
+  position: absolute;
+  top: 100%;
+  left: -12px;
+  background: var(--color-white);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-card-sm);
+  padding: 12px 0;
+  /* 180px wrapped "Shop All Grippy Shoes" onto two lines, which broke the row rhythm of
+     the dropdown. 220px clears the longest label in the approved menu. */
+  min-width: 220px;
+  max-width: calc(100vw - 32px);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(4px);
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+  box-shadow: var(--shadow-md);
+}
+.site-header__nav-item--has-sub:hover .site-header__subnav,
+.site-header__nav-item--has-sub:focus-within .site-header__subnav {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+.site-header__subnav li a {
+  display: block;
+  padding: 8px 20px;
+  font-size: 15px;
+  font-weight: var(--type-nav-weight);
+  text-transform: none;
+  letter-spacing: var(--type-nav-tracking);
+  color: var(--text-body);
+  text-decoration: none;
+}
+.site-header__subnav li a:hover {
+  color: var(--text-primary);
+  background: var(--bg-alternate);
+  text-decoration: none;
+}
+.site-header__actions { display: flex; align-items: center; gap: var(--header-action-gap, 18px); }
+/* Home WORKING text actions (Help / Account / Cart) */
+/* Utility actions read as a quieter sibling of the nav, not a different type system:
+   same family/weight/case, one step down in size. */
+.site-header__action--text {
+  /* TE --header-action-size; keep one step under nav */
+  font-size: var(--header-action-size, 14px);
+  font-weight: var(--type-nav-weight);
+  text-transform: none;
+  letter-spacing: var(--type-nav-tracking);
+  color: var(--header-text, #4a4a4a);
+  text-decoration: none;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  gap: 6px;
+}
+.site-header__action--text:hover { color: var(--text-primary, #1c1916); }
+/* Expandable affordance on Help — quieter than the label it follows. */
+.site-header__caret {
+  font-size: 0.8em;
+  line-height: 1;
+  opacity: 0.7;
+}
+.site-header__cart.site-header__action--text {
+  position: relative;
+  gap: 6px;
+}
+/* Doubled class for specificity: the base .site-header__cart-badge absolute rule is
+   declared further down the file, so an equal-specificity modifier would lose on order
+   and the count would sit on top of the "Cart" label. */
+.site-header__cart-badge.site-header__cart-badge--inline {
+  position: static;
+  top: auto;
+  right: auto;
+  width: auto;
+  height: auto;
+  min-width: 16px;
+  padding: 0 5px;
+  border-radius: 999px;
+  font-size: 11px;
+  line-height: 16px;
+}
+.site-header__help { position: relative; }
+.site-header__help:hover .site-header__subnav--help,
+.site-header__help:focus-within .site-header__subnav--help {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+.site-header__subnav--help {
+  right: 0;
+  left: auto;
+  min-width: 200px;
+}
+.site-header__action {
+  color: var(--header-text, var(--text-body));
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  justify-content: center;
+}
+.site-header__action:hover { color: var(--text-primary); text-decoration: none; }
+.site-header__cart { position: relative; }
+.site-header__cart-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: var(--color-coral);
+  color: var(--color-white);
+  font-size: 9px;
+  font-weight: var(--weight-bold);
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  pointer-events: none;
+  visibility: hidden;
+}
+.mobile-menu.is-open {
+  pointer-events: auto;
+  visibility: visible;
+}
+.mobile-menu__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(28, 25, 22, 0.4);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+.mobile-menu.is-open .mobile-menu__overlay { opacity: 1; }
+.mobile-menu__drawer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 300px;
+  max-width: 85vw;
+  background: var(--color-white);
+  transform: translateX(-100%);
+  transition: transform var(--transition-base);
+  padding: 24px;
+  overflow-y: auto;
+}
+.mobile-menu.is-open .mobile-menu__drawer { transform: translateX(0); }
+.mobile-menu__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  padding: 12px;
+  color: var(--text-primary);
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mobile-menu__list { padding-top: 32px; }
+.mobile-menu__item { border-bottom: 1px solid var(--border-default); }
+/* The utility list draws its own top rule, so the last nav item's rule doubled it. */
+.mobile-menu__item:last-child { border-bottom: none; }
+/* Drawer follows the same nav type as desktop. Production's slide nav measures
+   22px / 400 / normal tracking / no transform; 18px suits our 300px panel. */
+.mobile-menu__item > a,
+.mobile-menu__toggle {
+  display: block;
+  width: 100%;
+  padding: 16px 0;
+  font-size: var(--type-nav-size);
+  font-weight: var(--type-nav-weight);
+  letter-spacing: normal;
+  line-height: 1.35;
+  color: var(--text-primary);
+  text-decoration: none;
+  background: none;
+  border: none;
+  text-align: left;
+  min-height: 44px;
+}
+.mobile-menu__sub {
+  display: none;
+  padding: 0 0 12px 16px;
+}
+.mobile-menu__item--parent[data-expanded="true"] .mobile-menu__sub { display: block; }
+.mobile-menu__sub li a {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  font-size: 16px;
+  font-weight: var(--type-nav-weight);
+  color: var(--text-body);
+  min-height: 44px;
+  text-decoration: none;
+}
+.mobile-menu__utility {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-default);
+}
+.mobile-menu__utility li a {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  font-size: 15px;
+  font-weight: var(--type-nav-weight);
+  color: var(--text-muted);
+  min-height: 44px;
+  text-decoration: none;
+}
+.site-header__action--help { display: flex; }
+
+/* Desktop: nav owns the chrome row — slightly heavier than mobile drawer */
+@media (min-width: 901px) {
+  .site-header__nav-item > a {
+    font-weight: 500;
+    letter-spacing: 0.015em;
+  }
+  .site-header__action--text {
+    letter-spacing: 0.015em;
+  }
+  .site-header__actions {
+    flex-shrink: 0;
+  }
+}
+
+/* Logo + four title-case 18px nav labels + Help/Account/Cart need ~873px to sit in one
+   row; below that the header pushed the whole page into horizontal scroll. Collapsing to
+   the drawer at 900px keeps a margin over that measured floor without touching the
+   approved nav type. Measured by planning/nav-qa/audit.py. */
+@media (max-width: 900px) {
+  .site-header__inner {
+    max-width: var(--max-width);
+    padding: 10px 16px;
+    gap: 16px;
+  }
+  .site-header__nav-list {
+    width: auto;
+    justify-content: flex-start;
+  }
+  .site-header__hamburger { display: flex; }
+  .site-header__nav { display: none; }
+  .site-header__action--help { display: none; }
+}
+
+@media (max-width: 768px) {
+  .site-header__inner { padding: 10px 16px; }
+  .site-header__logo-img {
+    height: var(--header-logo-height-mobile, var(--header-logo-height, 22px));
+  }
+  .announcement-strip { padding: 10px 16px; }
+  .announcement-strip__inner { font-size: 12px; letter-spacing: 0.06em; }
+}
+
+/* Footer — match Home WORKING (Join the list · NO 10%) */
+.site-footer {
+  background: #fff;
+  border-top: none;
+  padding: 0;
+  color: #1c1916;
+  font-family: var(--font-family, 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif);
+}
+.site-footer__body {
+  padding: 64px 40px 40px;
+  border-top: 1px solid #d6cfc0;
+  background: #ffffff;
+}
+.site-footer__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Trusted by — light cream or brand dark */
+.footer-studio-trust {
+  background: #faf8f6;
+  text-align: center;
+  padding: 48px 40px;
+  border-top: 1px solid #e8e2d8;
+}
+.footer-studio-trust__line {
+  font-family: var(--font-family);
+  font-size: var(--ft-trust-title-size, var(--type-statement-size));
+  font-weight: var(--type-statement-weight);
+  color: var(--text-primary);
+  letter-spacing: var(--type-statement-tracking);
+  margin: 0 0 var(--gap-a);
+  line-height: var(--type-statement-leading);
+}
+.footer-studio-trust__sub {
+  font-size: var(--ft-trust-body-size, var(--type-body-size));
+  font-weight: var(--type-body-weight);
+  color: var(--text-warm-muted);
+  margin: 0;
+  line-height: var(--type-body-leading);
+}
+.footer-studio-trust--dark {
+  background: #1c1916;
+  border-top-color: #2a2622;
+}
+.footer-studio-trust--dark .footer-studio-trust__line { color: #fff; }
+.footer-studio-trust--dark .footer-studio-trust__sub { color: rgba(255, 255, 255, 0.72); }
+
+/* Join the list — light or brand dark (independent of columns) */
+.site-footer .footer-newsletter {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 64px;
+  align-items: end;
+  margin: 0 -40px 48px;
+  padding: 48px 40px;
+  border-bottom: 1px solid rgba(28, 25, 22, 0.12);
+  background: #ffffff;
+}
+.site-footer .fn-signup__title,
+.site-footer .fn-signup h2 {
+  font-size: var(--ft-join-title-size, var(--type-section-size)) !important;
+  font-weight: var(--type-section-weight) !important;
+  color: var(--text-primary);
+  margin: 0 0 var(--gap-a) !important;
+  letter-spacing: var(--type-section-tracking) !important;
+  line-height: var(--type-section-leading) !important;
+  max-width: none !important;
+  text-transform: none;
+}
+.site-footer .fn-signup p {
+  font-size: var(--ft-join-body-size, var(--type-body-size));
+  font-weight: var(--type-body-weight);
+  color: var(--text-body);
+  margin: 0;
+  line-height: var(--type-body-leading);
+}
+.site-footer .fn-form-col {
+  min-width: 0;
+}
+@media (max-width: 768px) {
+  .site-footer .footer-newsletter {
+    margin: 0 -16px 40px;
+    padding: 40px 16px;
+  }
+}
+
+.site-footer .footer-newsletter--dark {
+  background: #1c1916;
+  border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+.site-footer .footer-newsletter--dark .fn-signup__title,
+.site-footer .footer-newsletter--dark .fn-signup h2 { color: #fff !important; }
+.site-footer .footer-newsletter--dark .fn-signup p { color: rgba(255, 255, 255, 0.72); }
+.site-footer .footer-newsletter--dark .fn-input {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.22);
+  color: #fff;
+}
+.site-footer .footer-newsletter--dark .fn-input::placeholder { color: rgba(255, 255, 255, 0.45); }
+.site-footer .footer-newsletter--dark .fn-btn {
+  background: #fff;
+  color: #1c1916;
+}
+.site-footer .footer-newsletter--dark .fn-btn:hover {
+  background: #c45c3f;
+  color: #fff;
+}
+.site-footer .footer-newsletter--dark .fn-legal { color: rgba(255, 255, 255, 0.45); }
+.site-footer .footer-newsletter--dark .fn-check-text { color: rgba(255, 255, 255, 0.85); }
+/* Dark: checks match text — no rust */
+.site-footer .footer-newsletter--dark .fn-check { color: rgba(255, 255, 255, 0.85); }
+
+.site-footer__body--dark {
+  background: #1c1916;
+  border-top-color: #2a2622;
+  color: #fff;
+}
+.site-footer__body--dark .site-footer__col h6 { color: #fff; }
+.site-footer__body--dark .site-footer__col a { color: rgba(255, 255, 255, 0.65); }
+.site-footer__body--dark .site-footer__col a:hover { color: #fff; }
+.site-footer__body--dark .site-footer__bottom { border-top-color: rgba(255, 255, 255, 0.12); }
+.site-footer__body--dark .site-footer__copyright,
+.site-footer__body--dark .site-footer__usa { color: rgba(255, 255, 255, 0.45); }
+.site-footer .fn-form {
+  display: flex;
+  gap: 8px;
+}
+.site-footer .fn-input {
+  flex: 1;
+  padding: 14px 16px;
+  border: 1px solid #d6cfc0;
+  background: #fff;
+  font-size: 14px;
+  color: #1c1916;
+  border-radius: 4px;
+  font-family: inherit;
+}
+.site-footer .fn-input::placeholder { color: #9a9182; }
+.site-footer .fn-btn {
+  min-height: var(--type-cta-min-height);
+  padding: var(--type-cta-pad-y) var(--type-cta-pad-x);
+  background: #1c1916;
+  color: #fff;
+  border: none;
+  font-size: var(--type-cta-size);
+  font-weight: var(--type-cta-weight);
+  line-height: var(--type-cta-leading, 1);
+  cursor: pointer;
+  letter-spacing: var(--type-cta-tracking);
+  text-transform: uppercase;
+  border-radius: 4px;
+  transition: background 0.2s;
+  font-family: inherit;
+}
+.site-footer .fn-btn:hover {
+  background: #c45c3f;
+  color: #fff;
+}
+.site-footer .fn-legal {
+  font-size: 11px;
+  color: #8a8a8a;
+  margin: 10px 0 0;
+}
+.site-footer .fn-checks {
+  list-style: none;
+  margin: 0;
+  padding: 8px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.site-footer .fn-checks li {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 0;
+}
+.site-footer .fn-check {
+  flex: 0 0 auto;
+  color: #c45c3f;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.site-footer .fn-check-text {
+  font-size: 14px;
+  font-weight: 400;
+  color: #4a4a4a;
+  line-height: 1.5;
+}
+
+.site-footer__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+}
+.site-footer__col h6 {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #1c1916;
+  margin: 0 0 18px;
+}
+.site-footer__col ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.site-footer__col li { margin: 0 0 10px; }
+.site-footer__col a {
+  font-size: 13px;
+  color: #6b645a;
+  text-decoration: none;
+}
+.site-footer__col a:hover {
+  color: #1c1916;
+  text-decoration: none;
+}
+.site-footer__bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 0 0;
+  margin-top: 40px;
+  border-top: 1px solid #d6cfc0;
+}
+.site-footer__copyright,
+.site-footer__usa {
+  font-size: 12px;
+  color: #8a8a8a;
+}
+@media (max-width: 1024px) {
+  .site-footer__grid { grid-template-columns: repeat(2, 1fr); }
+  .site-footer .footer-newsletter {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+@media (max-width: 768px) {
+  .footer-studio-trust { padding: 36px 16px; }
+  .site-footer__body { padding: 40px 16px 28px; }
+  .site-footer .fn-form {
+    flex-direction: column;
+  }
+  .site-footer .fn-input,
+  .site-footer .fn-btn {
+    width: 100%;
+    min-height: 48px;
+  }
+  .site-footer__grid { grid-template-columns: 1fr; gap: 28px; }
+  .site-footer__bottom {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+}

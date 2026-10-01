@@ -1,0 +1,138 @@
+{% comment %}
+  FAQ Accordion
+  Source: Doc 04 (Components 10, 26), approved prototypes
+
+  Collapsible Q&A pairs. One open at a time. 200ms height animation.
+  Max-width 760px centered. FAQ schema markup included.
+
+  Usage:
+    {% render 'faq-accordion', items: section.blocks, heading: section.settings.heading %}
+
+  Parameters:
+    - items: array of blocks with .settings.question and .settings.answer
+    - heading: optional section heading
+    - bg_class: 'cream' | 'white' (default: 'cream')
+    - include_schema: boolean (default: true) — outputs FAQPage JSON-LD
+{% endcomment %}
+
+{% assign bg_class = bg_class | default: 'cream' %}
+{% assign include_schema = include_schema | default: true %}
+
+{% if items.size > 0 %}
+<div class="faq{% if bg_class == 'cream' %} faq--cream{% endif %}" data-faq-accordion>
+  <div class="faq__inner">
+    {% if heading != blank %}
+      <h2 class="faq__heading">{{ heading }}</h2>
+    {% endif %}
+
+    <div class="faq__list">
+      {% for item in items %}
+        <details class="faq__item" data-faq-item {{ item.shopify_attributes }}>
+          <summary class="faq__trigger" role="button" aria-expanded="false">
+            <span class="faq__question">{{ item.settings.question }}</span>
+            <span class="faq__icon" aria-hidden="true"></span>
+          </summary>
+          <div class="faq__body">
+            {{ item.settings.answer }}
+          </div>
+        </details>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% if include_schema %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {%- for item in items -%}
+    {
+      "@type": "Question",
+      "name": {{ item.settings.question | json }},
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": {{ item.settings.answer | strip_html | json }}
+      }
+    }{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ]
+}
+</script>
+{% endif %}
+{% endif %}
+
+<style>
+  .faq { padding: var(--section-padding-y) var(--section-padding-x); }
+  .faq--cream { background: var(--bg-alternate); }
+  .faq__inner { max-width: var(--max-width-narrow); margin: 0 auto; }
+  .faq__heading {
+    font-size: var(--text-4xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    text-align: center;
+    margin-bottom: 40px;
+    letter-spacing: var(--tracking-tight);
+  }
+  .faq__item {
+    border-top: 1px solid var(--border-default);
+  }
+  .faq__item:last-child { border-bottom: 1px solid var(--border-default); }
+  .faq__trigger {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 20px 0;
+    font-size: 16px;
+    font-weight: var(--weight-medium);
+    color: var(--text-primary);
+    list-style: none;
+    min-height: 44px;
+  }
+  .faq__trigger::-webkit-details-marker { display: none; }
+  .faq__trigger::marker { display: none; }
+  .faq__icon::after {
+    content: "+";
+    font-size: 20px;
+    font-weight: var(--weight-light);
+    color: var(--text-muted);
+    transition: transform var(--transition-fast);
+  }
+  .faq__item[open] .faq__icon::after { content: "\2212"; }
+  .faq__body {
+    padding: 0 0 20px;
+    font-size: var(--text-base);
+    color: var(--text-body);
+    line-height: var(--leading-loose);
+  }
+  .faq__body p { margin-bottom: 12px; }
+  .faq__body p:last-child { margin-bottom: 0; }
+
+  @media (max-width: 768px) {
+    .faq__heading { font-size: var(--text-2xl); }
+    .faq__trigger { font-size: 15px; }
+  }
+</style>
+
+<script>
+  (function() {
+    document.querySelectorAll('[data-faq-accordion]').forEach(function(accordion) {
+      var items = accordion.querySelectorAll('[data-faq-item]');
+      items.forEach(function(item) {
+        item.addEventListener('toggle', function() {
+          if (item.open) {
+            items.forEach(function(other) {
+              if (other !== item && other.open) other.open = false;
+            });
+            item.querySelector('.faq__trigger').setAttribute('aria-expanded', 'true');
+          } else {
+            item.querySelector('.faq__trigger').setAttribute('aria-expanded', 'false');
+          }
+        });
+      });
+    });
+  })();
+</script>

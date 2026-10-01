@@ -1,0 +1,214 @@
+{% comment %}
+  Collection Hero with Open/Closed Sole comparison cards
+  Source: Approved Collection Definitive-v4 prototype
+{% endcomment %}
+
+<section class="coll-hero" aria-label="Collection introduction">
+  <div class="coll-hero__intro">
+    {% if section.settings.eyebrow != blank %}
+      <p class="coll-hero__eyebrow">{{ section.settings.eyebrow }}</p>
+    {% endif %}
+    {% comment %} Shop-first H1 (DP-04): prefer theme setting over Admin collection title {% endcomment %}
+    <h1 class="coll-hero__title">{{ section.settings.title | default: collection.title }}</h1>
+    {% if section.settings.body != blank %}
+      <p class="coll-hero__body">{{ section.settings.body }}</p>
+    {% elsif collection.description != blank %}
+      <div class="coll-hero__body">{{ collection.description }}</div>
+    {% endif %}
+  </div>
+
+  {% if section.settings.show_sole_cards %}
+    {% assign closed_href = section.settings.closed_url | default: '/collections/closed-sole' %}
+    {% assign open_href = section.settings.open_url | default: '/collections/open-sole' %}
+    <div class="sole-cards">
+      <a class="sole-card" href="{{ closed_href }}">
+        {% if section.settings.closed_image != blank %}
+          <div class="sole-card__img">
+            <img
+              src="{{ section.settings.closed_image | image_url: width: 600 }}"
+              alt="Closed Sole"
+              loading="eager"
+              width="300"
+              height="169"
+            >
+          </div>
+        {% endif %}
+        <span class="sole-card__tag">Full Coverage</span>
+        <h3 class="sole-card__title">Closed Sole</h3>
+        {% if section.settings.closed_best_for != blank %}
+          <p class="sole-card__best">Pick this if: {{ section.settings.closed_best_for }}</p>
+        {% endif %}
+        <p class="sole-card__desc">{{ section.settings.closed_desc }}</p>
+        <span class="sole-card__cta">Shop Closed Sole →</span>
+      </a>
+      <a class="sole-card" href="{{ open_href }}">
+        {% if section.settings.open_image != blank %}
+          <div class="sole-card__img">
+            <img
+              src="{{ section.settings.open_image | image_url: width: 600 }}"
+              alt="Open Sole"
+              loading="eager"
+              width="300"
+              height="169"
+            >
+          </div>
+        {% endif %}
+        <span class="sole-card__tag">Barefoot Feel</span>
+        <h3 class="sole-card__title">Open Sole</h3>
+        {% if section.settings.open_best_for != blank %}
+          <p class="sole-card__best">Pick this if: {{ section.settings.open_best_for }}</p>
+        {% endif %}
+        <p class="sole-card__desc">{{ section.settings.open_desc }}</p>
+        <span class="sole-card__cta">Shop Open Sole →</span>
+      </a>
+    </div>
+  {% endif %}
+</section>
+
+<style>
+  .coll-hero {
+    padding: var(--space-13) var(--section-padding-x) var(--space-9);
+    max-width: var(--max-width);
+    margin: 0 auto;
+  }
+
+  .coll-hero__eyebrow {
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-eyebrow);
+    color: var(--accent-primary);
+    font-weight: var(--weight-bold);
+    margin: 0 0 var(--space-3);
+  }
+
+  .coll-hero__title {
+    font-size: var(--text-7xl);
+    font-weight: var(--weight-bold);
+    line-height: var(--leading-tight);
+    color: var(--text-primary);
+    margin: 0 0 var(--space-4);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .coll-hero__body {
+    font-size: var(--text-md);
+    color: var(--text-body);
+    line-height: var(--leading-relaxed);
+    max-width: 56ch;
+    margin: 0;
+  }
+
+  .sole-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-6);
+    margin-top: var(--space-9);
+  }
+
+  .sole-card {
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-gallery);
+    padding: var(--space-7);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: var(--bg-primary);
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .sole-card:hover {
+    border-color: #1c1916;
+    box-shadow: 0 8px 24px rgba(28, 25, 22, 0.08);
+    text-decoration: none;
+  }
+  .sole-card__cta {
+    margin-top: auto;
+    padding-top: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1c1916;
+    border-bottom: 1px solid #1c1916;
+    align-self: flex-start;
+  }
+
+  .sole-card__tag {
+    font-size: var(--text-xs);
+    font-weight: var(--weight-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-eyebrow);
+    color: var(--text-muted);
+  }
+
+  .sole-card__best {
+    margin: 0;
+    font-size: 13px;
+    font-weight: var(--weight-semibold);
+    color: var(--accent-primary, #c45c3f);
+    line-height: 1.4;
+  }
+
+  .sole-card__title {
+    font-size: 22px;
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    margin: 0;
+  }
+
+  .sole-card__desc {
+    font-size: 14px;
+    color: var(--text-body);
+    line-height: var(--leading-relaxed);
+    margin: 0;
+  }
+
+  .sole-card__img {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: var(--bg-alternate);
+    border-radius: var(--radius-button);
+    overflow: hidden;
+    margin-bottom: var(--space-1);
+  }
+
+  .sole-card__img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media (max-width: 768px) {
+    .coll-hero {
+      padding: var(--section-padding-y-mobile) var(--section-padding-x-mobile) var(--space-7);
+    }
+
+    .coll-hero__title {
+      font-size: var(--text-3xl);
+    }
+
+    .sole-cards {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Collection Hero",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Two Versions. One Performance." },
+    { "type": "text", "id": "title", "label": "Shop-first H1", "default": "Shop All Styles & Colors" },
+    { "type": "textarea", "id": "body", "label": "SEO / category subhead", "default": "Performance Skins replace disposable grip socks — one patented 360° grip system, two builds. Closed Sole or Open Sole. Same durability. Same $74. Shop all styles and colors." },
+    { "type": "checkbox", "id": "show_sole_cards", "label": "Show Open/Closed comparison cards", "default": true },
+    { "type": "image_picker", "id": "closed_image", "label": "Closed Sole image" },
+    { "type": "url", "id": "closed_url", "label": "Closed Sole link" },
+    { "type": "text", "id": "closed_best_for", "label": "Closed Sole — Pick this if", "default": "you want full-foot lockdown for reformer, barre, and Lagree." },
+    { "type": "textarea", "id": "closed_desc", "label": "Closed Sole description", "default": "Full coverage including heel — more protection everywhere. 360° grip across the entire underfoot." },
+    { "type": "image_picker", "id": "open_image", "label": "Open Sole image" },
+    { "type": "url", "id": "open_url", "label": "Open Sole link" },
+    { "type": "text", "id": "open_best_for", "label": "Open Sole — Pick this if", "default": "you want a grounded heel feel for mat work, yoga, and heated studios." },
+    { "type": "textarea", "id": "open_desc", "label": "Open Sole description", "default": "Open heel with a mid-foot vent — your heel contacts the surface directly for a grounded, barefoot-like feel." }
+  ],
+  "presets": [{ "name": "Collection Hero" }]
+}
+{% endschema %}

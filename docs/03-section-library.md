@@ -389,7 +389,17 @@ Return policy card, numbered step process, exchange info, international returns,
 
 ### `page-partners.liquid`
 
-Consolidated partner programs page (D-042): Wholesale, Studio Partners, Ambassadors on one page. Unified inquiry form at bottom. Replaces separate wholesale/studio/ambassador pages.
+Partner programs **routing hub** (**D-048**, 2026-08-08): three cards linking out to the dedicated
+`/pages/wholesale`, `/pages/studio-program` and `/pages/ambassador` pages, plus a general-inquiry
+fallback form for people who don't know which program fits. Program CTAs are Theme Editor settings
+(`*_cta_url`).
+
+> **UPDATED 2026-08-08.** This entry previously read: *"Consolidated partner programs page (D-042):
+> Wholesale, Studio Partners, Ambassadors on one page. Unified inquiry form at bottom. Replaces
+> separate wholesale/studio/ambassador pages."* Owner direction 2026-08-08 reversed the fold —
+> **D-048** in `planning/10-decision-log.md` supersedes D-042. `page-partners.liquid` no longer
+> replaces the three program sections; it routes to them. Each program section below carries its own
+> `BL-PARTNER-*` intake form. See `planning/partner-programs.md`.
 
 **Blocks:** `wholesale_benefit`, `studio_benefit`, `ambassador_benefit` — each with `title`, `description`  
 **Templates:** `page.partners.json`  
@@ -462,10 +472,10 @@ Email signup form: eyebrow, headline, body, email input, submit button, legal te
 | Setting | Type | Default |
 |---|---|---|
 | `eyebrow` | text | "Join the list" |
-| `title` | text | "10% off your first pair." |
-| `body` | text | "New drops, studio stories, care tips..." |
+| `title` | text | "Join the list" |
+| `body` | text | "New drops and studio stories. Once or twice a quarter — never spam." |
 | `placeholder` | text | "Email address" |
-| `button_text` | text | "Get 10% off" |
+| `button_text` | text | "Subscribe" |
 | `legal` | text | "By subscribing you agree to receive marketing emails..." |
 
 **Blocks:** None  

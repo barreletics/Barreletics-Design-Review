@@ -1,0 +1,1211 @@
+{% comment %}
+  APPROVED / FROZEN — PDP Buy Box · Definitive-v19 (LOCKED 2026-07-31)
+  Purchase stack A · empty under ATC · kit Option A · accordion Shipping + 30/90.
+  Prior fingerprint v16 @ 691f03b — NEVER overwrite locked mocks (pdp-hub-lock.mdc).
+{% endcomment %}
+
+{% liquid
+  assign thumb_count = section.settings.thumb_count | default: 7
+  # /pages/size-chart 404s on this store. /pages/performance-skins-size-chart ("Shoe Size
+  # Chart") is the real standalone page; /pages/sizing is only tab content.
+  assign size_chart_url = section.settings.size_chart_url | default: '/pages/performance-skins-size-chart'
+  assign reviews_anchor = section.settings.reviews_anchor | default: '#reviews'
+  assign rating_text = section.settings.rating_text | default: 'Trusted by 1,000+ Instructors'
+  assign payment_line = section.settings.payment_line | default: 'or 4 × $18.50'
+  assign lede_line_1 = section.settings.lede_line_1 | default: 'Secure in every hold.'
+  assign lede_line_2 = section.settings.lede_line_2 | default: 'No sliding. No resets.'
+  assign short_desc = section.settings.short_description | default: 'The premium grip system that replaces traditional grip socks—built for reformer, barre, Pilates and Megaformer.'
+  assign shipping_body = section.settings.shipping_accordion | default: 'Complimentary shipping on orders over $150. Orders ship within 1–2 business days. Standard delivery 3–5 business days; express 1–2 business days available at checkout.'
+  assign returns_body = section.settings.returns_accordion | default: '30-day returns on items in new, sellable condition. 90-day warranty covers manufacturing defects only.'
+  assign current_variant = product.selected_or_first_available_variant
+  assign _title_d = product.title | downcase
+  assign _handle_d = product.handle | downcase
+  assign _type_d = product.type | downcase
+  assign _suffix_d = template.suffix | downcase
+  assign _tags_d = product.tags | join: ',' | downcase
+  # Category from template suffix + product identity (water shoe / aquatic = Outdoor)
+  assign _cat_outdoor = false
+  assign _cat_open = false
+  assign _cat_oneoff = false
+  if _suffix_d == 'outdoor' or _handle_d contains 'aquatic' or _handle_d contains 'outdoor' or _title_d contains 'outdoor' or _title_d contains 'aquatic' or _title_d contains 'water shoe' or _type_d contains 'outdoor' or _tags_d contains 'outdoor'
+    assign _cat_outdoor = true
+  elsif _suffix_d == 'open-sole' or _title_d contains 'open sole' or _handle_d contains 'open-sole' or _handle_d contains 'open_sole' or _handle_d contains 'studio-performance'
+    assign _cat_open = true
+  elsif _suffix_d == 'coperni' or _title_d contains 'one-off' or _title_d contains 'one off' or _handle_d contains 'one-off' or _type_d contains 'one-off' or _title_d contains 'coperni' or _handle_d contains 'coperni'
+    assign _cat_oneoff = true
+  endif
+
+  assign sole_badge = section.settings.sole_badge
+  # Outdoor / water shoe must never show Closed Sole (wrong Default template or metafield)
+  if _cat_outdoor
+    assign sole_badge = 'Outdoor'
+  elsif _cat_open
+    if sole_badge == blank or sole_badge == 'Closed Sole'
+      assign sole_badge = 'Open Sole'
+    endif
+  elsif sole_badge == blank and current_variant.metafields.custom.sole_type != blank
+    assign sole_badge = current_variant.metafields.custom.sole_type
+  endif
+  if sole_badge == blank and product.metafields.custom.sole_type != blank
+    assign sole_badge = product.metafields.custom.sole_type
+  endif
+  if sole_badge == blank
+    if _cat_oneoff
+      assign sole_badge = 'One-Off'
+    elsif _cat_open
+      assign sole_badge = 'Open Sole'
+    elsif _title_d contains 'closed sole' or _handle_d contains 'closed-sole' or _handle_d contains 'closed_sole' or _handle_d contains 'reformer' or _handle_d contains 'legree'
+      assign sole_badge = 'Closed Sole'
+    endif
+  endif
+  # Re-assert Outdoor after metafields (Admin sole_type sometimes says Closed Sole)
+  if _cat_outdoor
+    assign sole_badge = 'Outdoor'
+  endif
+
+  assign badge_color = section.settings.sole_badge_color | default: 'rust'
+  # Outdoor: honor TE (CURRENT MESSAGE 2026-08-09 — rust). Blank → charcoal fallback.
+  # Open: force rust when blank/charcoal (wrong Closed/Impulse template).
+  if _cat_outdoor
+    if section.settings.sole_badge_color == blank
+      assign badge_color = 'charcoal'
+    endif
+  elsif _cat_open
+    if badge_color == 'black' or badge_color == 'charcoal' or section.settings.sole_badge_color == blank
+      assign badge_color = 'rust'
+    endif
+  endif
+  case badge_color
+    when 'blue'
+      # Live barreletics.com version-tag accent (LE badges) — #458CD9
+      assign badge_bg = '#458CD9'
+    when 'black', 'charcoal'
+      assign badge_bg = '#1c1916'
+    else
+      assign badge_bg = '#c45c3f'
+  endcase
+
+  # H1 = product name without sole suffix. Badge carries Open / Closed / Outdoor.
+  assign display_title = product.title
+  if display_title contains ' — Open Sole'
+    assign display_title = display_title | remove: ' — Open Sole'
+  endif
+  if display_title contains ' – Open Sole'
+    assign display_title = display_title | remove: ' – Open Sole'
+  endif
+  if display_title contains ' - Open Sole'
+    assign display_title = display_title | remove: ' - Open Sole'
+  endif
+  if display_title contains ' — Closed Sole'
+    assign display_title = display_title | remove: ' — Closed Sole'
+  endif
+  if display_title contains ' – Closed Sole'
+    assign display_title = display_title | remove: ' – Closed Sole'
+  endif
+  if display_title contains ' - Closed Sole'
+    assign display_title = display_title | remove: ' - Closed Sole'
+  endif
+  assign display_title = display_title | strip
+
+  # If water shoe is stuck on Default (Closed) template, replace studio buy-box copy
+  # with approved Outdoor positioning (product.outdoor.json / 09-PK). Full Outdoor spine
+  # still requires Admin Theme template = product.outdoor.
+  if _cat_outdoor
+    if lede_line_1 == 'Secure in every hold.' or lede_line_1 contains 'Secure in every'
+      assign lede_line_1 = 'Perfect for'
+      assign lede_line_2 = 'outdoor adventures.'
+    endif
+    if short_desc contains 'grip socks' or short_desc contains 'reformer, barre' or short_desc contains 'Megaformer'
+      assign short_desc = 'Heel and foot fully covered for outdoor use — grip, stability, and protection from hot sand. Boat decks protect your feet; always be careful on slippery wet tile and stone. Ideal for paddleboarding, boating, beach, and resortwear.'
+    endif
+  endif
+
+  # Hero image priority — Theme settings (global) + optional section override.
+  # Does not require reordering Admin media / variants.
+  assign hero_image = product.featured_image
+  assign hero_mode = settings.pdp_hero_image_mode | default: 'admin_order'
+  assign hero_color = settings.pdp_hero_color | strip
+  assign hero_idx = settings.pdp_hero_media_index | default: 1 | plus: 0
+  if section.settings.hero_image_mode != blank and section.settings.hero_image_mode != 'admin_order'
+    assign hero_mode = section.settings.hero_image_mode
+  endif
+  if section.settings.hero_color != blank
+    assign hero_color = section.settings.hero_color | strip
+    if hero_mode == 'admin_order'
+      assign hero_mode = 'variant_color'
+    endif
+  endif
+  if section.settings.hero_image_mode == 'media_index'
+    assign hero_mode = 'media_index'
+    assign hero_idx = section.settings.hero_media_index | default: hero_idx | plus: 0
+  endif
+  if hero_mode == 'variant_color' and hero_color != blank
+    assign want = hero_color | downcase
+    for v in product.variants
+      assign matched = false
+      for opt in v.options
+        assign od = opt | strip | downcase
+        if od == want or od contains want
+          assign matched = true
+        endif
+      endfor
+      if matched
+        if v.featured_media != blank
+          assign hero_image = v.featured_media.preview_image | default: v.featured_media
+        elsif v.image != blank
+          assign hero_image = v.image
+        endif
+        break
+      endif
+    endfor
+  elsif hero_mode == 'media_index'
+    assign zero = hero_idx | minus: 1
+    if zero < 0
+      assign zero = 0
+    endif
+    if product.images[zero] != blank
+      assign hero_image = product.images[zero]
+    endif
+  endif
+  if hero_image == blank
+    assign hero_image = product.featured_image
+  endif
+%}
+<section id="buy" class="pdp-hero" aria-label="Product details" data-buy-box>
+  <div class="pdp-gallery">
+    <div class="pdp-gallery__hero">
+      {% if hero_image %}
+        <img
+          id="pdp-main-img"
+          src="{{ hero_image | image_url: width: 800 }}"
+          srcset="{{ hero_image | image_url: width: 400 }} 400w,
+                  {{ hero_image | image_url: width: 600 }} 600w,
+                  {{ hero_image | image_url: width: 800 }} 800w"
+          sizes="(max-width: 768px) 100vw, 50vw"
+          alt="{{ hero_image.alt | default: product.title | escape }}"
+          loading="eager"
+          fetchpriority="high"
+        >
+      {% endif %}
+    </div>
+    {% if product.images.size > 1 %}
+      <div class="pdp-gallery__thumbs">
+        {% assign thumbs_shown = 0 %}
+        {% if hero_image %}
+          <button
+            class="pdp-gallery__thumb is-active"
+            data-thumb-src="{{ hero_image | image_url: width: 800 }}"
+            aria-label="View hero image"
+          >
+            <img src="{{ hero_image | image_url: width: 160 }}" alt="{{ hero_image.alt | default: product.title | escape }}" width="72" height="72" loading="lazy">
+          </button>
+          {% assign thumbs_shown = 1 %}
+        {% endif %}
+        {% for image in product.images %}
+          {% if thumbs_shown >= thumb_count %}{% break %}{% endif %}
+          {% if hero_image and image.id == hero_image.id %}{% continue %}{% endif %}
+          <button
+            class="pdp-gallery__thumb{% if thumbs_shown == 0 %} is-active{% endif %}"
+            data-thumb-src="{{ image | image_url: width: 800 }}"
+            aria-label="View image {{ forloop.index }}"
+          >
+            <img src="{{ image | image_url: width: 160 }}" alt="View {{ forloop.index }}" width="72" height="72" loading="lazy">
+          </button>
+          {% assign thumbs_shown = thumbs_shown | plus: 1 %}
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="pdp-buy">
+    {% if section.settings.show_rating_row != false %}
+      <div class="pdp-buy__rating">
+        <span class="pdp-buy__stars" aria-hidden="true">★★★★★</span>
+        <span class="pdp-buy__rating-text">{{ rating_text | escape }}</span>
+        <a href="{{ reviews_anchor | escape }}" class="pdp-buy__reviews-link">Reviews →</a>
+      </div>
+    {% endif %}
+
+    <div class="pdp-buy__header">
+      <h1 class="pdp-buy__seo-title">{{ display_title | escape }}</h1>
+      {% if section.settings.show_sole_badge and sole_badge != blank %}
+        <span class="pdp-buy__badge" style="--pdp-badge-bg: {{ badge_bg }};">{{ sole_badge | escape }}</span>
+      {% endif %}
+    </div>
+
+    <p class="pdp-buy__name">
+      <span style="font-weight:400;">{{ lede_line_1 | escape }}</span><br>
+      <span style="font-weight:400;">{{ lede_line_2 | escape }}</span>
+    </p>
+    {% if short_desc != blank %}
+      <p class="pdp-buy__desc">{{ short_desc | escape }}</p>
+    {% endif %}
+
+    <div class="pdp-buy__price-block">
+      <span class="pdp-buy__price-now">{{ current_variant.price | money }}</span>
+      {% if section.settings.show_payment_line != false %}
+        <span class="pdp-buy__price-meta">{{ payment_line | escape }}</span>
+      {% endif %}
+    </div>
+
+    {% if product.has_only_default_variant == false %}
+      {% comment %} Hub v17 order: Color, then Size (ignore Admin option order). {% endcomment %}
+      {% for option in product.options_with_values %}
+        {% assign opt_down = option.name | downcase %}
+        {% if opt_down == 'color' or opt_down == 'colour' %}
+          <div class="pdp-buy__option" data-option-position="{{ option.position }}">
+            <div class="pdp-buy__option-header">
+              <span class="pdp-buy__option-label">Color · <span id="selected-color">{{ option.selected_value }}</span></span>
+            </div>
+            <div class="pdp-buy__swatches">
+              {% for value in option.values %}
+                {% comment %} Impulse: Files `{handle}.png` exact name, else CSS color from last word of option value. {% endcomment %}
+                {% liquid
+                  assign swatch_file_extension = 'png'
+                  assign swatch_file_name = value | handle | append: '.' | append: swatch_file_extension
+                  assign swatch_bg_img = blank
+                  if images[swatch_file_name] != blank
+                    assign swatch_bg_img = swatch_file_name | file_img_url: '50x50' | prepend: 'https:' | split: '?' | first
+                  endif
+                  assign swatch_bg = value | split: ' ' | last | handle
+                  if value.swatch != blank and value.swatch.color != blank and swatch_bg_img == blank
+                    assign swatch_bg = value.swatch.color
+                  endif
+                  assign swatch_is_white = false
+                  if swatch_bg == 'white' or swatch_bg == '#ffffff' or swatch_bg == '#fff'
+                    assign swatch_is_white = true
+                  endif
+                %}
+                <button
+                  type="button"
+                  class="pdp-buy__swatch{% if value == option.selected_value %} is-active{% endif %}"
+                  aria-label="{{ value }}"
+                  aria-selected="{% if value == option.selected_value %}true{% else %}false{% endif %}"
+                  data-color="{{ value }}"
+                  style="background-color: {{ swatch_bg }};{% if swatch_bg_img != blank %} background-image: url({{ swatch_bg_img }}); background-size: cover; background-position: center; background-repeat: no-repeat;{% endif %} background-clip: padding-box; background-origin: padding-box;{% if swatch_is_white and swatch_bg_img == blank %} box-shadow: inset 0 0 0 1px #ccc;{% endif %}"
+                ></button>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+
+      {% for option in product.options_with_values %}
+        {% assign opt_down = option.name | downcase %}
+        {% if opt_down == 'size' %}
+          <div class="pdp-buy__option" data-option-position="{{ option.position }}">
+            <div class="pdp-buy__option-header">
+              <span class="pdp-buy__option-label">Size</span>
+              {% if section.settings.show_size_chart_link != false %}
+                <a href="{{ size_chart_url }}" class="pdp-buy__size-link">Size Chart →</a>
+              {% endif %}
+            </div>
+            <div class="pdp-buy__sizes{% if section.settings.show_soon_size != false %} pdp-buy__sizes--soon{% endif %}" role="group" aria-label="Select size">
+              {% if section.settings.show_soon_size != false %}
+                <button
+                  type="button"
+                  class="pdp-buy__size-btn is-soon"
+                  disabled
+                  aria-disabled="true"
+                  title="Small — coming soon"
+                  aria-label="Small — coming soon"
+                >S<span class="pdp-buy__size-range">Coming soon</span></button>
+              {% endif %}
+              {% for value in option.values %}
+                {% assign value_up = value | upcase | strip %}
+                {% assign size_letter = '' %}
+                {% assign size_range = '' %}
+                {% assign skip_size = false %}
+                {% comment %} Kids variants exist on Outdoor Admin catalog but are undocumented — never surface. {% endcomment %}
+                {% if value_up == 'KIDS' or value_up contains 'KIDS' or value_up contains 'YOUTH' %}
+                  {% assign skip_size = true %}
+                {% elsif value_up == 'S' or value_up contains 'S (' or value_up contains 'S(' or value_up contains 'SMALL' %}
+                  {% if section.settings.show_soon_size != false %}
+                    {% assign skip_size = true %}
+                  {% else %}
+                    {% assign size_letter = 'S' %}
+                  {% endif %}
+                {% elsif value_up == 'M' or value_up contains 'M (' or value_up contains 'M(' or value_up contains 'MEDIUM' or value_up contains 'W 5' %}
+                  {% assign size_letter = 'M' %}
+                  {% assign size_range = 'Women 5–7.5 · Men 6–8' %}
+                {% elsif value_up == 'L' or value_up contains 'L (' or value_up contains 'L(' or value_up contains 'LARGE' or value_up contains 'W 8' %}
+                  {% assign size_letter = 'L' %}
+                  {% assign size_range = 'Women 8–10 · Men 8.5–11' %}
+                {% else %}
+                  {% assign size_letter = value %}
+                {% endif %}
+                {% unless skip_size %}
+                  <button
+                    type="button"
+                    class="pdp-buy__size-btn{% if value == option.selected_value %} is-active{% endif %}"
+                    data-size="{{ value | escape }}"
+                  >{{ size_letter }}{% if size_range != blank %}<span class="pdp-buy__size-range">{{ size_range }}</span>{% endif %}</button>
+                {% endunless %}
+              {% endfor %}
+            </div>
+            {% if section.settings.show_soon_size != false %}
+              <p class="pdp-buy__size-note">{{ section.settings.size_soon_note }}</p>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endfor %}
+
+      {% for option in product.options_with_values %}
+        {% assign opt_down = option.name | downcase %}
+        {% unless opt_down == 'color' or opt_down == 'colour' or opt_down == 'size' %}
+          <div class="pdp-buy__option" data-option-position="{{ option.position }}">
+            <div class="pdp-buy__option-header">
+              <span class="pdp-buy__option-label">{{ option.name }}</span>
+            </div>
+            <div class="pdp-buy__sizes" role="group" aria-label="Select {{ option.name | escape }}">
+              {% for value in option.values %}
+                <button
+                  type="button"
+                  class="pdp-buy__size-btn{% if value == option.selected_value %} is-active{% endif %}"
+                  data-size="{{ value | escape }}"
+                >{{ value }}</button>
+              {% endfor %}
+            </div>
+          </div>
+        {% endunless %}
+      {% endfor %}
+    {% endif %}
+
+    <form action="/cart/add" method="post" id="pdp-form">
+      <input type="hidden" name="id" value="{{ current_variant.id }}">
+      <button type="submit" class="pdp-buy__cta btn btn--primary">
+        Add to Cart — {{ current_variant.price | money }}
+      </button>
+    </form>
+
+    {% unless section.settings.show_oneoff_link == false %}
+      {% render 'one-off-quiet-link', current_product: product %}
+    {% endunless %}
+
+    {% comment %} v19 trust split: under ATC is empty — value strip + accordion own guarantees {% endcomment %}
+    {% if section.settings.show_trust_row %}
+      <div class="pdp-buy__trust">
+        <span><strong>✓</strong> Ships 1–2 days</span>
+        <span><strong>✓</strong> 30-day returns</span>
+        <span><strong>✓</strong> 90-day warranty</span>
+        <span><strong>✓</strong> Latex- & silicone-free</span>
+        <span><strong>✓</strong> Made in USA</span>
+      </div>
+    {% endif %}
+
+    {% if section.settings.show_kit_links != false and _cat_outdoor == false %}
+      <div class="pdp-buy__kit-links">
+        <span class="pdp-buy__kit-label">{{ section.settings.kit_label | default: 'Complete the kit' }}</span>
+        <div class="pdp-buy__kit-row">
+          {% if section.settings.kit_link_1_label != blank %}
+            <a href="{{ section.settings.kit_link_1_url | default: '/collections/hot-kits' }}">{{ section.settings.kit_link_1_label }}</a>
+          {% endif %}
+          {% if section.settings.kit_link_2_label != blank %}
+            <a href="{{ section.settings.kit_link_2_url | default: '/collections/hot-kits' }}">{{ section.settings.kit_link_2_label }}</a>
+          {% endif %}
+        </div>
+        {% if section.settings.kit_hint != blank %}
+          <p class="pdp-buy__kit-hint">{{ section.settings.kit_hint }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="pdp-buy__accordions">
+      <details class="pdp-accordion" data-pdp-accordion>
+        <summary class="pdp-accordion__trigger" aria-expanded="false">Description <span>+</span></summary>
+        <div class="pdp-accordion__body">
+          {{ product.description }}
+          {% if section.settings.description_footnote != blank %}
+            <p class="pdp-buy__desc-footnote">{{ section.settings.description_footnote | escape | newline_to_br }}</p>
+          {% endif %}
+        </div>
+      </details>
+      <details class="pdp-accordion" data-pdp-accordion>
+        <summary class="pdp-accordion__trigger" aria-expanded="false">Care & how to wear <span>+</span></summary>
+        <div class="pdp-accordion__body">
+          <p><strong>How to put on:</strong> pull from the top of the foot — not the straps — to help extend their lifespan.</p>
+          <p><strong>Cleaning:</strong> warm soapy water, rinse well, air dry. No machine washing.</p>
+        </div>
+      </details>
+      {% if section.settings.note_accordion_label != blank and section.settings.note_accordion_body != blank %}
+        <details class="pdp-accordion" data-pdp-accordion>
+          <summary class="pdp-accordion__trigger" aria-expanded="false">{{ section.settings.note_accordion_label | escape }} <span>+</span></summary>
+          <div class="pdp-accordion__body">
+            <p>{{ section.settings.note_accordion_body | escape | newline_to_br }}</p>
+          </div>
+        </details>
+      {% endif %}
+      <details class="pdp-accordion" data-pdp-accordion>
+        <summary class="pdp-accordion__trigger" aria-expanded="false">Shipping <span>+</span></summary>
+        <div class="pdp-accordion__body">{{ shipping_body | escape }}</div>
+      </details>
+      <details class="pdp-accordion" data-pdp-accordion>
+        <summary class="pdp-accordion__trigger" aria-expanded="false">30-day returns + 90-day warranty <span>+</span></summary>
+        <div class="pdp-accordion__body">{{ returns_body | escape }}</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+{% assign jm_rating_schema = product.metafields.judgeme.average_rating %}
+{% assign jm_count_schema  = product.metafields.judgeme.review_count | plus: 0 %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": {{ product.title | json }},
+  "description": {{ product.description | strip_html | truncate: 200 | json }},
+  "brand": { "@type": "Brand", "name": "Barreletics" },
+  "image": {{ hero_image | default: product.featured_image | image_url: width: 800 | json }},
+  "url": {{ shop.url | append: product.url | json }},
+  {% if current_variant.sku != blank %}"sku": {{ current_variant.sku | json }},{% endif %}
+  "offers": {
+    "@type": "Offer",
+    "price": {{ current_variant.price | money_without_currency | json }},
+    "priceCurrency": "USD",
+    "availability": "{% if current_variant.available %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}",
+    "url": {{ shop.url | append: product.url | json }},
+    "seller": {
+      "@type": "Organization",
+      "name": "Barreletics"
+    }
+  }{% if jm_rating_schema and jm_count_schema > 0 %},
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": {{ jm_rating_schema | json }},
+    "reviewCount": {{ jm_count_schema | json }}
+  }{% endif %}
+}
+</script>
+
+<style>
+  .pdp-hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-12);
+    max-width: var(--max-width-hero);
+    margin: 0 auto;
+    padding: var(--space-12) var(--space-14) var(--space-12) var(--section-padding-x);
+    align-items: flex-start;
+  }
+
+  .pdp-gallery {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    position: sticky;
+    top: var(--space-12);
+  }
+
+  .pdp-gallery__hero {
+    aspect-ratio: 1;
+    background: var(--bg-card);
+    overflow: hidden;
+    border-radius: var(--radius-gallery);
+  }
+
+  .pdp-gallery__hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .pdp-gallery__thumbs {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .pdp-gallery__thumbs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .pdp-gallery__thumb {
+    width: 72px;
+    height: 72px;
+    border: 1px solid var(--border-default);
+    background: var(--bg-card);
+    padding: 0;
+    cursor: pointer;
+    overflow: hidden;
+    flex-shrink: 0;
+    border-radius: var(--radius-button);
+  }
+
+  .pdp-gallery__thumb.is-active {
+    border: 2px solid var(--text-primary);
+  }
+
+  .pdp-gallery__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .pdp-buy {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .pdp-buy__rating {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .pdp-buy__stars {
+    font-size: 14px;
+    color: var(--accent-stars);
+    letter-spacing: 1px;
+  }
+
+  .pdp-buy__rating-text {
+    font-size: 13px;
+    color: var(--text-body);
+  }
+
+  .pdp-buy__reviews-link {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .pdp-buy__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  /* Locked v16 @ 691f03b — SEO 18/600 · lede calm 34–44/400 (NOT Type OS hero 72) */
+  .pdp-buy__seo-title {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: 0;
+    text-transform: none;
+    color: #2d2926;
+    margin: 0;
+  }
+
+  .pdp-buy__badge {
+    display: inline-block;
+    background: var(--pdp-badge-bg, var(--accent-primary, #c45c3f));
+    color: #fff;
+    padding: 4px 10px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border-radius: 3px;
+  }
+
+  .pdp-buy__name {
+    font-size: clamp(34px, 4vw, 44px);
+    font-weight: 400;
+    line-height: 1.08;
+    letter-spacing: 0;
+    text-transform: none;
+    color: #1c1916;
+    margin: 0;
+  }
+  @media (max-width: 768px) {
+    .pdp-buy__name { font-size: 32px; }
+  }
+
+  .pdp-buy__desc {
+    font-size: var(--fs-body);
+    font-weight: 400;
+    line-height: var(--lh-body);
+    color: #5a5248;
+    max-width: 40ch;
+    margin: 20px 0 0;
+  }
+
+  .pdp-buy__price-block {
+    padding: var(--space-4) 0;
+    border-top: 1px solid var(--border-default);
+    border-bottom: 1px solid var(--border-default);
+  }
+
+  .pdp-buy__price-now {
+    font-size: var(--text-4xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+  }
+
+  .pdp-buy__price-meta {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-left: var(--space-2);
+  }
+
+  .pdp-buy__option {
+    padding: var(--space-4) 0;
+    border-bottom: 1px solid var(--border-default);
+  }
+
+  .pdp-buy__option-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 14px;
+  }
+
+  .pdp-buy__option-label {
+    font-size: 12px;
+    font-weight: var(--type-label-weight);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wider);
+  }
+
+  .pdp-buy__size-link {
+    font-size: 12px;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--text-primary);
+    padding-bottom: 1px;
+    text-decoration: none;
+  }
+
+  .pdp-buy__swatches {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .pdp-buy__swatch {
+    width: 23px;
+    height: 23px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    padding: 9px;
+    box-sizing: content-box;
+    /* Fill color/image through the padded circle; border ring sits outside */
+    background-clip: padding-box;
+    background-origin: padding-box;
+  }
+
+  .pdp-buy__swatch:hover {
+    border-color: #9a9182;
+  }
+
+  .pdp-buy__swatch.is-active {
+    border-color: var(--text-primary);
+  }
+
+  /* 2-col M/L. The 3-col rule below is dormant — the Small size was retired
+     2026-08-08 and show_soon_size now defaults off. */
+  .pdp-buy__sizes {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .pdp-buy__sizes--soon {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .pdp-buy__size-btn {
+    padding: 12px 8px;
+    border: 1px solid #d6cfc0;
+    background: #f9f9f9;
+    text-align: center;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 6px;
+    font-family: inherit;
+    color: #1c1916;
+    min-width: 0;
+    transition: border-color var(--transition-fast);
+  }
+
+  .pdp-buy__size-btn.is-active {
+    border: 2px solid #1c1916;
+  }
+
+  .pdp-buy__size-range {
+    display: block;
+    font-size: 10px;
+    color: #8a8a8a;
+    font-weight: 400;
+    margin-top: 4px;
+    line-height: 1.3;
+  }
+
+  .pdp-buy__cta {
+    width: 100%;
+    min-height: var(--type-cta-min-height);
+    padding: var(--type-cta-pad-y) var(--type-cta-pad-x);
+    font-size: var(--type-cta-size);
+    font-weight: var(--type-cta-weight);
+    letter-spacing: var(--type-cta-tracking);
+    line-height: var(--type-cta-leading, 1);
+  }
+
+  .pdp-buy__oneoff-link {
+    display: inline-block;
+    margin: 12px 0 0;
+    font-size: 13px;
+    font-weight: 500;
+    color: #6b645a;
+    text-decoration: none;
+    border-bottom: 1px solid #d6cfc0;
+    padding-bottom: 1px;
+  }
+  .pdp-buy__oneoff-link:hover {
+    color: var(--charcoal, #1c1916);
+    border-bottom-color: var(--charcoal, #1c1916);
+    text-decoration: none;
+  }
+
+  .pdp-buy__cta.btn--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .pdp-buy__size-btn.is-soon,
+  .pdp-buy__size-btn:disabled {
+    color: #9a9182;
+    background: #f5f2ec;
+    border-style: dashed;
+    cursor: not-allowed;
+    opacity: 1;
+  }
+
+  .pdp-buy__size-btn.is-soon .pdp-buy__size-range {
+    color: #c45c3f;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+
+  .pdp-buy__size-note {
+    margin: 10px 0 0;
+    font-size: 11px;
+    color: #8a8a8a;
+    line-height: 1.45;
+  }
+
+  /* Kit Option A — quiet discovery; airy padding; does not compete with ATC */
+  .pdp-buy__kit-links {
+    padding: 24px 0 20px;
+    margin: 0;
+    border-top: 1px solid #d6cfc0;
+  }
+
+  .pdp-buy__kit-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #9a9182;
+    margin: 0 0 12px;
+  }
+
+  .pdp-buy__kit-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px 18px;
+  }
+
+  .pdp-buy__kit-row a {
+    font-size: 13px;
+    font-weight: 500;
+    color: #1c1916;
+    text-decoration: none;
+    border-bottom: 1px solid #d6cfc0;
+    padding-bottom: 1px;
+  }
+
+  .pdp-buy__kit-row a:hover {
+    border-bottom-color: #1c1916;
+  }
+
+  .pdp-buy__kit-hint {
+    margin: 12px 0 0;
+    font-size: 11px;
+    color: #8a8a8a;
+    line-height: 1.45;
+  }
+
+  .pdp-buy__size-btn.is-unavailable {
+    opacity: 0.35;
+    cursor: not-allowed;
+    text-decoration: line-through;
+  }
+
+  .pdp-buy__error {
+    color: #c45c3f;
+    font-size: var(--text-sm);
+    margin: var(--space-2) 0 0;
+  }
+
+  .pdp-buy__trust {
+    display: flex;
+    gap: var(--space-5);
+    flex-wrap: wrap;
+    font-size: 12px;
+    color: var(--text-muted);
+    padding: var(--space-3) 0;
+    border-top: 1px solid var(--border-default);
+  }
+
+  .pdp-buy__trust strong {
+    color: var(--text-primary);
+  }
+
+  .pdp-accordion {
+    border-bottom: 1px solid var(--border-default);
+  }
+
+  .pdp-accordion__trigger {
+    padding: 14px 0;
+    font-size: 14px;
+    font-weight: var(--weight-semibold);
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    font-family: inherit;
+  }
+
+  .pdp-accordion__trigger::-webkit-details-marker {
+    display: none;
+  }
+
+  .pdp-accordion__trigger span {
+    color: var(--text-muted);
+    font-size: 20px;
+    font-weight: var(--weight-light);
+    transition: transform var(--transition-fast);
+  }
+
+  .pdp-accordion[open] .pdp-accordion__trigger span {
+    display: none;
+  }
+
+  .pdp-accordion[open] .pdp-accordion__trigger::after {
+    content: "\2212";
+    color: var(--text-muted);
+    font-size: 20px;
+    font-weight: var(--weight-light);
+  }
+
+  .pdp-accordion__body {
+    padding: 0 0 16px;
+    font-size: 14px;
+    color: var(--text-body);
+    line-height: var(--leading-loose);
+  }
+
+  .pdp-accordion__body p {
+    margin: 0 0 10px;
+  }
+
+  .pdp-accordion__body p:last-child {
+    margin: 0;
+  }
+
+  .pdp-buy__desc-footnote {
+    margin-top: 1em;
+    padding-top: 1em;
+    border-top: 1px solid #e8e2d8;
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--text-body, #4a4a4a);
+  }
+
+  @media (max-width: 1024px) {
+    .pdp-hero {
+      gap: var(--space-9);
+      padding: var(--space-10) var(--space-8);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .pdp-hero {
+      grid-template-columns: 1fr;
+      gap: var(--space-8);
+      padding: var(--space-8) var(--section-padding-x-mobile);
+    }
+
+    .pdp-gallery {
+      position: static;
+    }
+
+    .pdp-buy__name {
+      font-size: 32px;
+    }
+  }
+</style>
+
+<script>
+  (function() {
+    document.querySelectorAll('[data-pdp-accordion]').forEach(function(item) {
+      item.addEventListener('toggle', function() {
+        var summary = item.querySelector('.pdp-accordion__trigger');
+        if (summary) summary.setAttribute('aria-expanded', item.open ? 'true' : 'false');
+      });
+    });
+  })();
+</script>
+
+{%- comment -%} Product JSON for variant selector {%- endcomment -%}
+<script>
+  window.__pdpProduct = {{ product | json }};
+</script>
+
+{%- comment -%} Variant selector + AJAX cart (PDP only) {%- endcomment -%}
+{{ 'variant-selector.js' | asset_url | script_tag }}
+{{ 'cart.js' | asset_url | script_tag }}
+
+{% schema %}
+{
+  "name": "PDP Buy Box",
+  "settings": [
+    { "type": "header", "content": "Shared — Content" },
+    {
+      "type": "paragraph",
+      "content": "Product title comes from Admin (not TE). No title-size override — Type OS owns the PDP H1. Family is brand Type OS. TE edits lede lines and display chrome only."
+    },
+    {
+      "type": "text",
+      "id": "lede_line_1",
+      "label": "Lede line 1",
+      "default": "Secure in every hold."
+    },
+    {
+      "type": "text",
+      "id": "lede_line_2",
+      "label": "Lede line 2",
+      "default": "No sliding. No resets."
+    },
+    {
+      "type": "textarea",
+      "id": "short_description",
+      "label": "Short description (above price)",
+      "default": "The premium grip system that replaces traditional grip socks—built for reformer, barre, Pilates and Megaformer.",
+      "info": "v19 buy-box body. Do not dump Admin product.description here — that stays in the Description accordion."
+    },
+
+    { "type": "header", "content": "Shared — Media" },
+    {
+      "type": "paragraph",
+      "content": "Gallery images come from product media in Admin. Global default: Theme settings → PDP hero image. Section fields below optionally override for this template only — no Admin reorder needed."
+    },
+    {
+      "type": "select",
+      "id": "hero_image_mode",
+      "label": "Hero image priority (section override)",
+      "options": [
+        { "value": "admin_order", "label": "Use theme / Admin default" },
+        { "value": "variant_color", "label": "Variant color / option value" },
+        { "value": "media_index", "label": "Specific media position #" }
+      ],
+      "default": "admin_order",
+      "info": "Leave on Use theme / Admin default to follow Theme settings → PDP hero image."
+    },
+    {
+      "type": "text",
+      "id": "hero_color",
+      "label": "Hero color / option value (override)",
+      "info": "Optional override. e.g. Coral, Bright Yellow, Blue, DarkGrey."
+    },
+    {
+      "type": "range",
+      "id": "hero_media_index",
+      "label": "Hero media position (override)",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "default": 1,
+      "info": "Only when section priority is Specific media position #."
+    },
+    {
+      "type": "range",
+      "id": "thumb_count",
+      "label": "Thumbnail count",
+      "min": 3,
+      "max": 8,
+      "step": 1,
+      "default": 7,
+      "info": "Default 7 · 72px. Wide desktop fits all; narrower + mobile swipe-scroll. No arrows."
+    },
+
+    { "type": "header", "content": "Section — PDP buy box — display" },
+    { "type": "checkbox", "id": "show_rating_row", "label": "Show trust / rating row", "default": true },
+    {
+      "type": "text",
+      "id": "rating_text",
+      "label": "Rating / trust text",
+      "default": "Trusted by 1,000+ Instructors"
+    },
+    {
+      "type": "text",
+      "id": "reviews_anchor",
+      "label": "Reviews link",
+      "default": "#reviews",
+      "info": "Anchor or URL for the Reviews → link."
+    },
+    { "type": "checkbox", "id": "show_payment_line", "label": "Show payment / installment line", "default": true },
+    {
+      "type": "text",
+      "id": "payment_line",
+      "label": "Payment / installment line",
+      "default": "or 4 × $18.50",
+      "info": "Muted line under price (v19). Update if product price changes."
+    },
+    { "type": "checkbox", "id": "show_size_chart_link", "label": "Show size chart link", "default": true },
+    { "type": "url", "id": "size_chart_url", "label": "Size chart URL" },
+    {
+      "type": "checkbox",
+      "id": "show_trust_row",
+      "label": "Show under-ATC trust checklist",
+      "default": false,
+      "info": "v19 LOCKED: leave OFF. Value strip + accordion own guarantees — do not repeat ✓ under ATC."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sole_badge",
+      "label": "Show sole badge next to title",
+      "default": true,
+      "info": "Version tag pill next to the title (v16 pattern). Color via Sole badge color below."
+    },
+    {
+      "type": "text",
+      "id": "sole_badge",
+      "label": "Sole badge override",
+      "info": "Optional. Outdoor/water-shoe products always show Outdoor. Else: TE → metafield custom.sole_type → Open/Closed/One-Off from handle/title/template."
+    },
+    {
+      "type": "select",
+      "id": "sole_badge_color",
+      "label": "Sole badge color",
+      "default": "rust",
+      "info": "Open Sole + Outdoor (CURRENT): Rust #c45c3f. Closed Sole: charcoal/black. Blue = live LE accent.",
+      "options": [
+        { "value": "black", "label": "Black / charcoal" },
+        { "value": "charcoal", "label": "Charcoal" },
+        { "value": "rust", "label": "Rust orange" },
+        { "value": "blue", "label": "Blue (live strip)" }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "show_soon_size",
+      "label": "Show Small as Coming soon",
+      "default": false,
+      "info": "Retired 2026-08-08 — Small is not offered. Leave OFF."
+    },
+    {
+      "type": "paragraph",
+      "content": "Sticky ATC is a separate section (pdp-sticky-atc) — not controlled here."
+    },
+
+    {
+      "type": "header",
+      "content": "Section — PDP buy box — One-off link"
+    },
+    {
+      "type": "paragraph",
+      "content": "Quiet link under ATC. Product + copy live in Theme settings → One-off colors. Shows only when that product has available inventory."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_oneoff_link",
+      "label": "Show one-off quiet link (when live in Theme settings)",
+      "default": true
+    },
+
+    { "type": "header", "content": "Section — PDP buy box — Complete the kit" },
+    {
+      "type": "checkbox",
+      "id": "show_kit_links",
+      "label": "Show Complete the kit links",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "kit_label",
+      "label": "Kit label",
+      "default": "Complete the kit"
+    },
+    {
+      "type": "text",
+      "id": "kit_link_1_label",
+      "label": "Kit link 1 label",
+      "default": "Hot Pilates Kit →"
+    },
+    {
+      "type": "url",
+      "id": "kit_link_1_url",
+      "label": "Kit link 1 URL"
+    },
+    {
+      "type": "text",
+      "id": "kit_link_2_label",
+      "label": "Kit link 2 label",
+      "default": "Hot Yoga Kit →"
+    },
+    {
+      "type": "url",
+      "id": "kit_link_2_url",
+      "label": "Kit link 2 URL"
+    },
+    {
+      "type": "text",
+      "id": "kit_hint",
+      "label": "Kit hint",
+      "default": "Performance Skin + thin liner for heated studios."
+    },
+    {
+      "type": "text",
+      "id": "size_soon_note",
+      "label": "Coming soon size note",
+      "info": "Retired 2026-08-08 — Small is not offered. Leave empty."
+    },
+
+    { "type": "header", "content": "Section — PDP buy box — Accordion" },
+    {
+      "type": "textarea",
+      "id": "description_footnote",
+      "label": "Description accordion — closing note",
+      "info": "Optional. Appended at the end of Admin product description (e.g. Outdoor surface note). Leave blank to hide."
+    },
+    {
+      "type": "text",
+      "id": "note_accordion_label",
+      "label": "Extra accordion label",
+      "info": "Optional. e.g. Good to know. Leave blank to hide the row."
+    },
+    {
+      "type": "textarea",
+      "id": "note_accordion_body",
+      "label": "Extra accordion body",
+      "info": "Shown only when label + body are both set."
+    },
+    {
+      "type": "textarea",
+      "id": "shipping_accordion",
+      "label": "Shipping accordion body",
+      "default": "Complimentary shipping on orders over $150. Orders ship within 1–2 business days. Standard delivery 3–5 business days; express 1–2 business days available at checkout."
+    },
+    {
+      "type": "textarea",
+      "id": "returns_accordion",
+      "label": "Returns / warranty accordion body",
+      "default": "30-day returns on items in new, sellable condition. 90-day warranty covers manufacturing defects only."
+    }
+  ],
+  "presets": [{ "name": "PDP Buy Box" }]
+}
+{% endschema %}

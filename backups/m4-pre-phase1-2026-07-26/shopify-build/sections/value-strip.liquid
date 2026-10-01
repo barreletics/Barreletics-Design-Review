@@ -1,0 +1,88 @@
+{% comment %}
+  Trust/Value Metrics Strip
+  Source: Approved Home + Collection prototypes
+{% endcomment %}
+
+<section class="value-strip-section" aria-label="Value propositions">
+  <div class="value-strip">
+    {% for block in section.blocks %}
+      <div class="value-strip__item" {{ block.shopify_attributes }}>
+        {% if block.settings.icon != blank %}
+          <span class="value-strip__icon" aria-hidden="true">{{ block.settings.icon }}</span>
+        {% endif %}
+        <span class="value-strip__text">{{ block.settings.text }}</span>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+<style>
+  .value-strip-section {
+    background: var(--bg-alternate);
+    border-top: 1px solid var(--border-default);
+    border-bottom: 1px solid var(--border-default);
+    padding: var(--space-7) var(--section-padding-x);
+  }
+
+  .value-strip {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    gap: var(--space-8);
+    flex-wrap: wrap;
+  }
+
+  .value-strip__item {
+    font-size: 12px;
+    font-weight: var(--weight-semibold);
+    color: var(--text-warm-muted);
+    letter-spacing: 0.02em;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .value-strip__icon {
+    color: var(--accent-primary);
+    font-weight: var(--weight-bold);
+  }
+
+  @media (max-width: 768px) {
+    .value-strip-section {
+      padding: var(--space-6) var(--section-padding-x-mobile);
+    }
+
+    .value-strip {
+      gap: var(--space-4) var(--space-6);
+      justify-content: flex-start;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Value Strip",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Value item",
+      "settings": [
+        { "type": "text", "id": "icon", "label": "Icon", "default": "✓" },
+        { "type": "text", "id": "text", "label": "Text", "default": "360° locked grip" }
+      ]
+    }
+  ],
+  "presets": [{
+    "name": "Value Strip",
+    "blocks": [
+      { "type": "item", "settings": { "icon": "✓", "text": "360° locked grip" } },
+      { "type": "item", "settings": { "icon": "✓", "text": "Ships in 1–2 days" } },
+      { "type": "item", "settings": { "icon": "✓", "text": "Free shipping over $150" } },
+      { "type": "item", "settings": { "icon": "✓", "text": "No latex · No silicone" } },
+      { "type": "item", "settings": { "icon": "✓", "text": "Made in USA" } }
+    ]
+  }]
+}
+{% endschema %}

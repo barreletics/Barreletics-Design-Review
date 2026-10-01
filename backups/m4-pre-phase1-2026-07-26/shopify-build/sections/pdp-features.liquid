@@ -1,0 +1,195 @@
+{% comment %}
+  PDP Features — "Built around one obsession: Grip." + discipline icons
+  Source: Approved PDP July 17
+{% endcomment %}
+
+<section class="pdp-features" aria-label="Product features">
+  <div class="pdp-features__inner">
+    <header class="pdp-features__header">
+      <p class="pdp-features__eyebrow">{{ section.settings.eyebrow }}</p>
+      <h2 class="pdp-features__title">{{ section.settings.title }}</h2>
+    </header>
+
+    <div class="pdp-features__grid">
+      {% for block in section.blocks %}
+        {% if block.type == 'feature' %}
+          <div class="pdp-feature" {{ block.shopify_attributes }}>
+            <p class="pdp-feature__title">{{ block.settings.title }}</p>
+            <p class="pdp-feature__desc">{{ block.settings.description }}</p>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    {% if section.settings.show_disciplines %}
+      <div class="pdp-disciplines">
+        <p class="pdp-disciplines__label">Built for every discipline</p>
+        <div class="pdp-disciplines__strip">
+          {% assign disciplines = 'Barre,Pilates,Reformer,Megaformer,Lagree,Yoga,Mat Work' | split: ',' %}
+          {% for d in disciplines %}
+            <div class="pdp-disciplines__item">
+              <div class="pdp-disciplines__icon" aria-hidden="true"></div>
+              <span class="pdp-disciplines__name">{{ d }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  .pdp-features {
+    padding: var(--space-16) var(--section-padding-x) var(--space-13);
+    background: var(--bg-primary);
+    border-top: 1px solid var(--border-default);
+    border-bottom: 1px solid var(--border-default);
+  }
+
+  .pdp-features__inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+  }
+
+  .pdp-features__header {
+    margin-bottom: var(--space-9);
+  }
+
+  .pdp-features__eyebrow {
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-eyebrow);
+    color: #9a9182;
+    font-weight: var(--weight-semibold);
+    margin: 0 0 var(--space-4);
+  }
+
+  .pdp-features__title {
+    font-size: var(--text-5xl);
+    font-weight: var(--weight-regular);
+    line-height: 1.1;
+    color: var(--text-primary);
+    margin: 0;
+    max-width: 18ch;
+  }
+
+  .pdp-features__title strong {
+    font-weight: var(--weight-bold);
+    font-size: var(--text-7xl);
+    font-style: italic;
+  }
+
+  .pdp-features__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-9) var(--space-14);
+  }
+
+  .pdp-feature {
+    border-top: 1px solid var(--border-default);
+    padding-top: var(--space-8);
+  }
+
+  .pdp-feature__title {
+    font-size: 26px;
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    margin: 0 0 var(--space-2);
+    line-height: 1.2;
+  }
+
+  .pdp-feature__desc {
+    font-size: var(--text-md);
+    color: var(--text-warm-muted);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .pdp-disciplines {
+    margin-top: var(--space-10);
+    text-align: center;
+  }
+
+  .pdp-disciplines__label {
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-widest);
+    color: var(--text-muted);
+    font-weight: var(--weight-bold);
+    margin: 0 0 var(--space-8);
+  }
+
+  .pdp-disciplines__strip {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .pdp-disciplines__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .pdp-disciplines__icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 1px solid var(--border-default);
+  }
+
+  .pdp-disciplines__name {
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wider);
+    color: var(--text-primary);
+  }
+
+  @media (max-width: 768px) {
+    .pdp-features {
+      padding: var(--section-padding-y-mobile) var(--section-padding-x-mobile);
+    }
+
+    .pdp-features__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .pdp-disciplines__strip {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: var(--space-6) var(--space-8);
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "PDP Features",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Why Barreletics" },
+    { "type": "html", "id": "title", "label": "Title (supports HTML)", "default": "Built around<br>one obsession: <strong>Grip.</strong>" },
+    { "type": "checkbox", "id": "show_disciplines", "label": "Show discipline icons", "default": true }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "360° Grip" },
+        { "type": "textarea", "id": "description", "label": "Description", "default": "Never slip in side plank. Never slide on the carriage." }
+      ]
+    }
+  ],
+  "presets": [{
+    "name": "PDP Features",
+    "blocks": [
+      { "type": "feature", "settings": { "title": "360° Grip", "description": "Never slip in side plank. Never slide on the carriage. Full-contact grip through every hold and transition." } },
+      { "type": "feature", "settings": { "title": "No Slipping", "description": "No more adjusting mid-lunge. No more stopping to fix your socks. Stay locked in from first position to final stretch." } },
+      { "type": "feature", "settings": { "title": "Stay in the Flow", "description": "50 minutes. Every transition. Zero adjustments. Your focus stays on your form, not your feet." } },
+      { "type": "feature", "settings": { "title": "Built to Last", "description": "Your practice. Your pace. Months to years of the same grip." } }
+    ]
+  }]
+}
+{% endschema %}

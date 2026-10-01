@@ -8,7 +8,8 @@ All collection templates live in `templates/`. Each is a JSON template that comp
 
 | Template File | Assigned To | Section Count |
 |---------------|-------------|---------------|
-| `collection.json` | Base / Shop All | 8 |
+| `collection.json` | Base / Shop All (grippy shoes) | 8 |
+| `collection.apparel.json` | Apparel | 8 |
 | `collection.closed-sole.json` | Closed Sole | 5 |
 | `collection.gift-cards.json` | Gift Cards | 3 |
 | `collection.limited-editions.json` | Limited Editions | 4 |
@@ -36,7 +37,7 @@ collection.limited-editions.json ← suffix: limited-editions
 
 ## Section Composition per Template
 
-### `collection.json` (Base / Shop All)
+### `collection.json` (Base / Shop All — grippy shoes)
 
 ```
 collection-hero      ← "Two Versions. One Performance." + sole comparison cards
@@ -50,6 +51,21 @@ newsletter
 ```
 
 This is the only template with `show_sole_cards: true` in the collection-hero, rendering the Open Sole / Closed Sole comparison cards with descriptions. It is also the only template with `show_all_tab: true` in variant-grid and the only one that includes the `disciplines` and dual `fifty-fifty` sections.
+
+### `collection.apparel.json` (Apparel — `/collections/apparel`)
+
+```
+collection-hero      ← "Performance Apparel Engineered to Move!" · no sole cards
+value-strip
+variant-grid         ← Yoga Pants + T-Shirts tabs · no M/L filter · no Compare · apparel size chart
+fullbleed-workout    ← "BRING YOUR WORKOUT TO LIFE"
+fifty-fifty-tees     ← Performance Fabric V-Neck & Tank
+fifty-fifty-think-outside ← Think Outside the Sock → grippy shoes
+reviews              ← pdp-reviews · store scope
+collection-faq       ← Apparel FAQ (sizing / care / returns)
+```
+
+Live content authority: `https://barreletics.com/collections/apparel`. Structure follows Collection v18 shop-first spine (hero → value → grid → mid proof → reviews → FAQ) without grippy-shoe sole education. Assign theme template suffix **`apparel`** on the Apparel collection in Admin after push.
 
 ### `collection.closed-sole.json`
 

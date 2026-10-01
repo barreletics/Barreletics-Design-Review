@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ambassador — partner page QA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../shopify-build/assets/design-tokens.css">
+<link rel="stylesheet" href="../../shopify-build/assets/barreletics-base.css">
+<link rel="stylesheet" href="../../shopify-build/assets/chrome.css">
+</head><body>
+<div class="header-section" data-qa-sticky>
+  <header class="site-header">
+    <div class="site-header__inner" style="max-width:var(--max-width);margin:0 auto;
+         display:flex;align-items:center;justify-content:space-between;
+         padding:18px var(--section-padding-x);">
+      <span class="type-label">Barreletics</span>
+      <span class="type-label">Shop &nbsp; Learn &nbsp; Journal &nbsp; Help</span>
+    </div>
+  </header>
+</div>
+<section class="section" id="shopify-section-qa-page-ambassador" >
+  <div class="section__inner section__inner--narrow">
+    <h1 class="page-ambassador__title type-hero">Ambassador program</h1>
+    <div class="page-ambassador__body type-lede">
+      <p>For instructors and practitioners who teach barre, reformer Pilates, Lagree, Megaformer, mat Pilates, or yoga. We reply within 5–7 business days.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section section--cream" id="ambassador-apply">
+  <div class="section__inner section__inner--narrow">
+    <form method="post" action="/contact#contact_form" id="contact_form" accept-charset="UTF-8">
+      
+
+      
+
+      <input type="hidden" name="contact[subject]" value="Ambassador Application">
+      <input type="hidden" name="contact[form_id]" value="BL-PARTNER-AMBASSADOR">
+
+      <div class="page-ambassador__fields">
+        <div class="page-ambassador__field-row">
+          <div class="page-ambassador__field">
+            <label for="ambassador-name" class="page-ambassador__label">Your name</label>
+            <input type="text" id="ambassador-name" name="contact[name]" class="page-ambassador__input" required autocomplete="name">
+          </div>
+          <div class="page-ambassador__field">
+            <label for="ambassador-email" class="page-ambassador__label">Email</label>
+            <input type="email" id="ambassador-email" name="contact[email]" class="page-ambassador__input" required autocomplete="email">
+          </div>
+        </div>
+
+        <div class="page-ambassador__field-row">
+          <div class="page-ambassador__field">
+            <label for="ambassador-location" class="page-ambassador__label">City, state / country</label>
+            <input type="text" id="ambassador-location" name="contact[location]" class="page-ambassador__input" required placeholder="Austin, TX">
+          </div>
+          <div class="page-ambassador__field">
+            <label for="ambassador-discipline" class="page-ambassador__label">Primary discipline</label>
+            <select id="ambassador-discipline" name="contact[discipline]" class="page-ambassador__select" required>
+              <option value="" disabled selected>Select discipline</option>
+              <option value="Barre">Barre</option>
+              <option value="Reformer Pilates">Reformer Pilates</option>
+              <option value="Lagree / Megaformer">Lagree / Megaformer</option>
+              <option value="Mat Pilates">Mat Pilates</option>
+              <option value="Yoga">Yoga</option>
+              <option value="Multiple disciplines">Multiple disciplines</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="page-ambassador__field">
+          <label for="ambassador-instagram" class="page-ambassador__label">Instagram handle</label>
+          <input type="text" id="ambassador-instagram" name="contact[instagram]" class="page-ambassador__input" required placeholder="@yourhandle">
+        </div>
+
+        <div class="page-ambassador__field">
+          <label for="ambassador-message" class="page-ambassador__label">Message</label>
+          <textarea id="ambassador-message" name="contact[body]" class="page-ambassador__textarea" rows="5" required placeholder="Tell us about your classes and where you teach."></textarea>
+          
+        </div>
+
+        <div class="page-ambassador__field">
+          <label for="ambassador-consent" class="page-ambassador__consent">
+            <input type="checkbox" id="ambassador-consent" name="contact[terms_agreed]" value="Yes" required>
+            <span>I understand this is an application, not an offer.</span>
+          </label>
+        </div>
+
+        <div class="page-ambassador__field">
+          <button type="submit" class="btn btn--primary btn--lg">Submit application</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<style>
+  /* Nothing on this page links here, but the anchor is kept for inbound links and the
+     site header is sticky, so the form must not land behind it. */
+  #ambassador-apply {
+    scroll-margin-top: 96px;
+  }
+
+  /* Softer warm band, owner pick 2026-08-08 (variant B of the form-band comparison).
+     --bg-alternate #f5f2ec stepped down from white too hard; --bg-alternate-soft #faf8f6
+     halves the step and keeps the warmth. Set here, not as a Theme Editor setting, so the
+     old tone cannot come back on a fresh section add. */
+  #ambassador-apply.section--cream {
+    background: var(--bg-alternate-soft);
+  }
+
+  .page-ambassador__title {
+    text-transform: none;
+    color: var(--text-primary);
+    text-align: center;
+    margin: 0 0 var(--gap-b, 20px);
+  }
+
+  .page-ambassador__body {
+    text-align: center;
+    margin: 0 auto;
+    max-width: var(--max-width-copy);
+  }
+
+  .page-ambassador__body p {
+    margin: 0 0 var(--space-3);
+  }
+
+  .page-ambassador__body p:last-child {
+    margin-bottom: 0;
+  }
+
+  .page-ambassador__fields {
+    display: grid;
+    gap: var(--space-4);
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .page-ambassador__field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+  }
+
+  .page-ambassador__label {
+    display: block;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    margin-bottom: var(--space-1);
+  }
+
+  .page-ambassador__input,
+  .page-ambassador__select,
+  .page-ambassador__textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--border-default);
+    background: var(--bg-primary);
+    font-size: var(--text-base);
+    font-family: var(--font-family);
+    color: var(--text-primary);
+    border-radius: var(--radius-button);
+    transition: border-color var(--transition-fast);
+    min-height: 44px;
+  }
+
+  .page-ambassador__input:focus,
+  .page-ambassador__select:focus,
+  .page-ambassador__textarea:focus {
+    outline: none;
+    border-color: var(--text-primary);
+    box-shadow: 0 0 0 1px var(--text-primary);
+  }
+
+  .page-ambassador__input:focus-visible,
+  .page-ambassador__select:focus-visible,
+  .page-ambassador__textarea:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+  }
+
+  .page-ambassador__textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  .page-ambassador__select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath fill='%234a4a4a' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+  }
+
+  .page-ambassador__consent {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-start;
+    font-size: var(--type-trust-size);
+    color: var(--text-body);
+    line-height: var(--leading-relaxed);
+    min-height: 44px;
+    padding: var(--space-2) 0;
+  }
+
+  .page-ambassador__consent input {
+    margin-top: 3px;
+    flex: 0 0 auto;
+    width: 18px;
+    height: 18px;
+    accent-color: var(--accent-primary);
+  }
+
+  .page-ambassador__success {
+    padding: var(--space-4);
+    background: var(--bg-alternate);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-button);
+    margin-bottom: var(--space-5);
+    color: var(--text-primary);
+    text-align: center;
+  }
+
+  .page-ambassador__errors {
+    padding: var(--space-4);
+    background: rgba(196, 92, 63, 0.08);
+    border: 1px solid var(--accent-primary);
+    border-radius: var(--radius-button);
+    margin-bottom: var(--space-5);
+    color: var(--accent-primary);
+  }
+
+  @media (max-width: 768px) {
+    .page-ambassador__field-row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+
+
+</body></html>

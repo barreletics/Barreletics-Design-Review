@@ -1,0 +1,651 @@
+{% comment %}
+  Page Grip Comparison Section
+  Key category disruption / conversion asset. Barreletics vs Grip Socks
+  with comparison table, Sock Math, Double Failure, customer quotes, and strong CTAs.
+  Used on: page.grip-comparison.json
+{% endcomment %}
+
+<section class="section section--dark" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
+  <div class="section__inner section__inner--narrow">
+    {% if section.settings.eyebrow != blank %}
+      <p class="eyebrow eyebrow--accent">{{ section.settings.eyebrow }}</p>
+    {% endif %}
+    <h1 class="page-grip__hero-title">{{ section.settings.title }}</h1>
+    {% if section.settings.hero_subtitle != blank %}
+      <p class="page-grip__hero-subtitle">{{ section.settings.hero_subtitle }}</p>
+    {% endif %}
+    {% if section.settings.hero_cta_text != blank %}
+      {% render 'button', label: section.settings.hero_cta_text, url: section.settings.hero_cta_url, style: 'primary', size: 'lg' %}
+    {% endif %}
+  </div>
+</section>
+
+<section class="section">
+  <div class="section__inner">
+    <h2 class="page-grip__section-title">{{ section.settings.table_heading }}</h2>
+    <div class="page-grip__table-wrap">
+      <table class="page-grip__table" role="table" aria-label="Barreletics vs Grip Socks comparison">
+        <thead>
+          <tr>
+            <th scope="col" class="page-grip__th page-grip__th--feature">Feature</th>
+            <th scope="col" class="page-grip__th page-grip__th--winner">Barreletics</th>
+            <th scope="col" class="page-grip__th">Traditional Grip Socks</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for block in section.blocks %}
+            {% if block.type == 'comparison_row' %}
+              <tr {{ block.shopify_attributes }}>
+                <td class="page-grip__td page-grip__td--feature">{{ block.settings.feature }}</td>
+                <td class="page-grip__td page-grip__td--winner">{{ block.settings.barreletics }}</td>
+                <td class="page-grip__td page-grip__td--loser">{{ block.settings.grip_socks }}</td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="section section--cream">
+  <div class="section__inner section__inner--narrow">
+    <h2 class="page-grip__section-title">{{ section.settings.double_failure_heading }}</h2>
+    <div class="page-grip__failures">
+      <div class="page-grip__failure">
+        <h3 class="page-grip__failure-title">Failure #1: The Grip Wears Off</h3>
+        <p class="page-grip__failure-text">{{ section.settings.failure_1_text }}</p>
+      </div>
+      <div class="page-grip__failure">
+        <h3 class="page-grip__failure-title">Failure #2: The Fabric Absorbs Sweat</h3>
+        <p class="page-grip__failure-text">{{ section.settings.failure_2_text }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section__inner section__inner--narrow">
+    <h2 class="page-grip__section-title">{{ section.settings.sock_math_heading }}</h2>
+    <div class="page-grip__sock-math">
+      <div class="page-grip__math-col page-grip__math-col--socks">
+        <h3 class="page-grip__math-label">Grip Socks (Annual)</h3>
+        <p class="page-grip__math-calc">{{ section.settings.sock_cost_per_pair }} × {{ section.settings.sock_pairs_per_year }} pairs/year</p>
+        <p class="page-grip__math-total page-grip__math-total--bad">{{ section.settings.sock_annual_cost }}/year</p>
+        <p class="page-grip__math-note">Replacing every 6-8 weeks</p>
+      </div>
+      <div class="page-grip__math-vs">vs</div>
+      <div class="page-grip__math-col page-grip__math-col--barreletics">
+        <h3 class="page-grip__math-label">Barreletics</h3>
+        <p class="page-grip__math-calc">One pair, one time</p>
+        <p class="page-grip__math-total page-grip__math-total--good">{{ section.settings.barreletics_price }}</p>
+        <p class="page-grip__math-note">Lasts 18+ months (many report 3-4 years)</p>
+      </div>
+    </div>
+    <div class="page-grip__math-savings">
+      <p class="page-grip__savings-text">{{ section.settings.savings_text }}</p>
+    </div>
+  </div>
+</section>
+
+{% assign quote_count = 0 %}
+{% for block in section.blocks %}
+  {% if block.type == 'quote' %}
+    {% assign quote_count = quote_count | plus: 1 %}
+  {% endif %}
+{% endfor %}
+
+{% if quote_count > 0 %}
+<section class="section section--cream">
+  <div class="section__inner">
+    <h2 class="page-grip__section-title">What Customers Say</h2>
+    <div class="page-grip__quotes">
+      {% for block in section.blocks %}
+        {% if block.type == 'quote' %}
+          <blockquote class="page-grip__quote-card" {{ block.shopify_attributes }}>
+            <p class="page-grip__quote-text">"{{ block.settings.quote }}"</p>
+            <footer class="page-grip__quote-author">
+              — {{ block.settings.author }}
+              {% if block.settings.context != blank %}, {{ block.settings.context }}{% endif %}
+            </footer>
+          </blockquote>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section class="section section--dark">
+  <div class="section__inner section__inner--narrow" style="text-align: center;">
+    <h2 class="page-grip__cta-title">{{ section.settings.bottom_cta_heading }}</h2>
+    <p class="page-grip__cta-subtitle">{{ section.settings.bottom_cta_body }}</p>
+    {% if section.settings.bottom_cta_text != blank %}
+      {% render 'button', label: section.settings.bottom_cta_text, url: section.settings.bottom_cta_url, style: 'primary', size: 'lg' %}
+    {% endif %}
+  </div>
+</section>
+
+{% comment %} FAQPage structured data for comparison Q&A {% endcomment %}
+{% assign faq_count = 0 %}
+{% for block in section.blocks %}
+  {% if block.type == 'faq_item' %}
+    {% assign faq_count = faq_count | plus: 1 %}
+  {% endif %}
+{% endfor %}
+
+{% if faq_count > 0 %}
+<section class="section">
+  <div class="section__inner section__inner--narrow">
+    <h2 class="page-grip__section-title">Common Questions</h2>
+    <div class="faq" data-faq-accordion>
+      <div class="faq__inner">
+        <div class="faq__list">
+          {% for block in section.blocks %}
+            {% if block.type == 'faq_item' %}
+              <details class="faq__item" data-faq-item {{ block.shopify_attributes }}>
+                <summary class="faq__trigger" role="button" aria-expanded="false">
+                  <span class="faq__question">{{ block.settings.question }}</span>
+                  <span class="faq__icon" aria-hidden="true"></span>
+                </summary>
+                <div class="faq__body">
+                  {{ block.settings.answer }}
+                </div>
+              </details>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'faq_item' -%}
+        {
+          "@type": "Question",
+          "name": {{ block.settings.question | json }},
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": {{ block.settings.answer | strip_html | json }}
+          }
+        }{% unless forloop.last %},{% endunless %}
+      {%- endif -%}
+    {%- endfor -%}
+  ]
+}
+</script>
+{% endif %}
+
+<style>
+  .page-grip__hero-title {
+    font-size: var(--text-6xl);
+    font-weight: var(--weight-bold);
+    color: var(--color-white);
+    text-align: center;
+    margin: 0 0 var(--space-4);
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-tight);
+  }
+
+  .page-grip__hero-subtitle {
+    font-size: var(--text-lg);
+    color: rgba(255, 255, 255, 0.8);
+    text-align: center;
+    line-height: var(--leading-relaxed);
+    margin: 0 0 var(--space-7);
+    max-width: var(--max-width-copy);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .page-grip__section-title {
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    text-align: center;
+    margin: 0 0 var(--space-8);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .page-grip__table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .page-grip__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-base);
+  }
+
+  .page-grip__th {
+    padding: var(--space-4) var(--space-5);
+    text-align: left;
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    border-bottom: 2px solid var(--text-primary);
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+  }
+
+  .page-grip__th--feature {
+    width: 25%;
+  }
+
+  .page-grip__th--winner {
+    color: var(--accent-primary);
+  }
+
+  .page-grip__td {
+    padding: var(--space-4) var(--space-5);
+    border-bottom: 1px solid var(--border-default);
+    line-height: var(--leading-relaxed);
+    vertical-align: top;
+  }
+
+  .page-grip__td--feature {
+    font-weight: var(--weight-medium);
+    color: var(--text-primary);
+  }
+
+  .page-grip__td--winner {
+    color: var(--text-primary);
+    font-weight: var(--weight-medium);
+  }
+
+  .page-grip__td--loser {
+    color: var(--text-muted);
+  }
+
+  .page-grip__failures {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-6);
+  }
+
+  .page-grip__failure {
+    padding: var(--space-6);
+    background: var(--bg-primary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-card);
+    border-top: 3px solid var(--accent-primary);
+  }
+
+  .page-grip__failure-title {
+    font-size: var(--text-lg);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    margin: 0 0 var(--space-3);
+  }
+
+  .page-grip__failure-text {
+    font-size: var(--text-base);
+    color: var(--text-body);
+    line-height: var(--leading-loose);
+    margin: 0;
+  }
+
+  .page-grip__sock-math {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: var(--space-6);
+    align-items: center;
+    margin-bottom: var(--space-6);
+  }
+
+  .page-grip__math-col {
+    text-align: center;
+    padding: var(--space-6);
+    border-radius: var(--radius-card);
+  }
+
+  .page-grip__math-col--socks {
+    background: rgba(196, 92, 63, 0.06);
+    border: 1px solid var(--accent-primary);
+  }
+
+  .page-grip__math-col--barreletics {
+    background: var(--bg-alternate);
+    border: 1px solid var(--text-primary);
+  }
+
+  .page-grip__math-label {
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--text-muted);
+    margin: 0 0 var(--space-3);
+  }
+
+  .page-grip__math-calc {
+    font-size: var(--text-base);
+    color: var(--text-body);
+    margin: 0 0 var(--space-2);
+  }
+
+  .page-grip__math-total {
+    font-size: var(--text-3xl);
+    font-weight: var(--weight-bold);
+    margin: 0 0 var(--space-2);
+  }
+
+  .page-grip__math-total--bad {
+    color: var(--accent-primary);
+  }
+
+  .page-grip__math-total--good {
+    color: var(--text-primary);
+  }
+
+  .page-grip__math-note {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  .page-grip__math-vs {
+    font-size: var(--text-xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  .page-grip__math-savings {
+    text-align: center;
+    padding: var(--space-5);
+    background: var(--bg-alternate);
+    border-radius: var(--radius-card-sm);
+  }
+
+  .page-grip__savings-text {
+    font-size: var(--text-lg);
+    font-weight: var(--weight-medium);
+    color: var(--text-primary);
+    margin: 0;
+  }
+
+  .page-grip__quotes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--grid-gap);
+  }
+
+  .page-grip__quote-card {
+    padding: var(--space-6);
+    background: var(--bg-primary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-card);
+    margin: 0;
+  }
+
+  .page-grip__quote-text {
+    font-size: var(--text-base);
+    color: var(--text-body);
+    line-height: var(--leading-loose);
+    font-style: italic;
+    margin: 0 0 var(--space-3);
+  }
+
+  .page-grip__quote-author {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    font-style: normal;
+  }
+
+  .page-grip__cta-title {
+    font-size: var(--text-3xl);
+    font-weight: var(--weight-bold);
+    color: var(--color-white);
+    margin: 0 0 var(--space-3);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .page-grip__cta-subtitle {
+    font-size: var(--text-md);
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0 0 var(--space-7);
+    line-height: var(--leading-relaxed);
+  }
+
+  @media (max-width: 768px) {
+    .page-grip__hero-title {
+      font-size: var(--text-4xl);
+    }
+
+    .page-grip__failures {
+      grid-template-columns: 1fr;
+    }
+
+    .page-grip__sock-math {
+      grid-template-columns: 1fr;
+      gap: var(--space-3);
+    }
+
+    .page-grip__math-vs {
+      text-align: center;
+    }
+
+    .page-grip__th,
+    .page-grip__td {
+      padding: var(--space-3);
+      font-size: 14px;
+    }
+
+    .page-grip__quotes {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  (function() {
+    document.querySelectorAll('[data-faq-accordion]').forEach(function(accordion) {
+      var items = accordion.querySelectorAll('[data-faq-item]');
+      items.forEach(function(item) {
+        item.addEventListener('toggle', function() {
+          if (item.open) {
+            items.forEach(function(other) {
+              if (other !== item && other.open) other.open = false;
+            });
+            item.querySelector('.faq__trigger').setAttribute('aria-expanded', 'true');
+          } else {
+            item.querySelector('.faq__trigger').setAttribute('aria-expanded', 'false');
+          }
+        });
+      });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Grip Comparison Page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "The Category Is Over"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Hero title",
+      "default": "Barreletics vs Grip Socks"
+    },
+    {
+      "type": "textarea",
+      "id": "hero_subtitle",
+      "label": "Hero subtitle",
+      "default": "The grip sock fails two ways simultaneously. Performance Skins solve both. One pair replaces every grip sock you'll ever buy."
+    },
+    {
+      "type": "text",
+      "id": "hero_cta_text",
+      "label": "Hero CTA text",
+      "default": "Shop Performance Skins — $74"
+    },
+    {
+      "type": "url",
+      "id": "hero_cta_url",
+      "label": "Hero CTA link"
+    },
+    {
+      "type": "text",
+      "id": "table_heading",
+      "label": "Table heading",
+      "default": "Side-by-Side Comparison"
+    },
+    {
+      "type": "text",
+      "id": "double_failure_heading",
+      "label": "Double failure heading",
+      "default": "The Double Failure of Grip Socks"
+    },
+    {
+      "type": "textarea",
+      "id": "failure_1_text",
+      "label": "Failure 1 text",
+      "default": "Silicone dots are a surface application. With friction and heat from studio use, they peel, flake, and lose adhesion. Most grip socks lose meaningful grip within 6-8 weeks of regular use."
+    },
+    {
+      "type": "textarea",
+      "id": "failure_2_text",
+      "label": "Failure 2 text",
+      "default": "Fabric absorbs perspiration during class. Moisture sits between your foot and the floor, reducing grip at the exact moment you need it most — during intense holds and transitions."
+    },
+    {
+      "type": "text",
+      "id": "sock_math_heading",
+      "label": "Sock Math heading",
+      "default": "The Math: Grip Socks vs Barreletics"
+    },
+    {
+      "type": "text",
+      "id": "sock_cost_per_pair",
+      "label": "Sock cost per pair",
+      "default": "$14-18"
+    },
+    {
+      "type": "text",
+      "id": "sock_pairs_per_year",
+      "label": "Sock pairs per year",
+      "default": "6-8"
+    },
+    {
+      "type": "text",
+      "id": "sock_annual_cost",
+      "label": "Sock annual cost",
+      "default": "$112-144"
+    },
+    {
+      "type": "text",
+      "id": "barreletics_price",
+      "label": "Barreletics price",
+      "default": "$74"
+    },
+    {
+      "type": "textarea",
+      "id": "savings_text",
+      "label": "Savings summary",
+      "default": "Save $38-70 in year one alone. Every year after that? Pure savings."
+    },
+    {
+      "type": "text",
+      "id": "bottom_cta_heading",
+      "label": "Bottom CTA heading",
+      "default": "Ready to Upgrade?"
+    },
+    {
+      "type": "textarea",
+      "id": "bottom_cta_body",
+      "label": "Bottom CTA body",
+      "default": "One pair. 360° grip. No more replacing socks every couple of months."
+    },
+    {
+      "type": "text",
+      "id": "bottom_cta_text",
+      "label": "Bottom CTA text",
+      "default": "Shop Now — $74"
+    },
+    {
+      "type": "url",
+      "id": "bottom_cta_url",
+      "label": "Bottom CTA link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "comparison_row",
+      "name": "Comparison Row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "feature",
+          "label": "Feature"
+        },
+        {
+          "type": "text",
+          "id": "barreletics",
+          "label": "Barreletics value"
+        },
+        {
+          "type": "text",
+          "id": "grip_socks",
+          "label": "Grip socks value"
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "name": "Customer Quote",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Quote text"
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Author name"
+        },
+        {
+          "type": "text",
+          "id": "context",
+          "label": "Context (e.g. discipline, time using)"
+        }
+      ]
+    },
+    {
+      "type": "faq_item",
+      "name": "FAQ Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Grip Comparison Page"
+    }
+  ]
+}
+{% endschema %}

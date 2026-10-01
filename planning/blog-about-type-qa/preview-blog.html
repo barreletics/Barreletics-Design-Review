@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blog listing — type QA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../shopify-build/assets/design-tokens.css">
+<link rel="stylesheet" href="../../shopify-build/assets/barreletics-base.css">
+<style>
+/* harness only — image stand-ins, no type rules */
+.qa-img { width: 100%; height: 100%; background: linear-gradient(135deg, #e6e0d4, #cfc6b4); }
+.qa-hero-img { width: 100%; aspect-ratio: 16/9; background: linear-gradient(135deg, #e6e0d4, #cfc6b4); }
+
+</style>
+<style>
+
+  .blog-listing__header {
+    text-align: center;
+    margin-bottom: var(--space-10);
+  }
+
+  .blog-listing__header .eyebrow {
+    margin: 0 0 var(--gap-a);
+  }
+
+  /* Size/weight/tracking come from .type-hero — cadence only here */
+  .blog-listing__title {
+    color: var(--text-primary);
+    margin: 0 0 var(--gap-b);
+  }
+
+  .blog-listing__subtitle {
+    font-size: var(--type-lede-size);
+    font-weight: var(--type-lede-weight);
+    line-height: var(--type-lede-leading);
+    color: var(--text-body);
+    margin: 0;
+  }
+
+  .blog-listing__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--grid-gap);
+  }
+
+  .blog-card {
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-default);
+    transition: box-shadow var(--transition-fast);
+  }
+
+  .blog-card:hover {
+    box-shadow: var(--shadow-md);
+  }
+
+  .blog-card__link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .blog-card__image-wrap {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--bg-alternate);
+  }
+
+  .blog-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform var(--transition-base);
+  }
+
+  .blog-card:hover .blog-card__image {
+    transform: scale(1.03);
+  }
+
+  .blog-card__image-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--bg-alternate), var(--border-default));
+  }
+
+  .blog-card__tag {
+    position: absolute;
+    top: var(--space-3);
+    left: var(--space-3);
+    font-size: var(--type-label-size);
+    font-weight: var(--type-label-weight);
+    text-transform: uppercase;
+    letter-spacing: var(--type-label-tracking);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    padding: 4px 8px;
+    border-radius: var(--radius-badge);
+  }
+
+  .blog-card__content {
+    padding: var(--space-5);
+  }
+
+  /* Card titles take the H3 role — H2 Standard is reserved for section wayfinding */
+  .blog-card__title {
+    font-size: var(--type-h3-size);
+    font-weight: var(--type-h3-weight);
+    line-height: var(--type-h3-leading);
+    letter-spacing: var(--type-h3-tracking);
+    text-transform: none;
+    color: var(--text-primary);
+    margin: 0 0 var(--space-2);
+  }
+
+  .blog-card__excerpt {
+    font-size: var(--type-body-size);
+    font-weight: var(--type-body-weight);
+    color: var(--text-body);
+    line-height: var(--type-body-leading);
+    margin: 0 0 var(--space-3);
+  }
+
+  .blog-card__meta {
+    display: flex;
+    gap: var(--space-3);
+    font-size: var(--type-trust-size);
+    font-weight: var(--type-trust-weight);
+    color: var(--text-muted);
+  }
+
+  .blog-card__author {
+    font-weight: var(--type-caption-weight);
+  }
+
+  .blog-listing__pagination {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-4);
+    margin-top: var(--space-8);
+  }
+
+  .blog-listing__page-info {
+    font-size: var(--type-trust-size);
+    font-weight: var(--type-trust-weight);
+    color: var(--text-muted);
+  }
+
+  .blog-listing__empty {
+    text-align: center;
+    font-size: var(--type-body-size);
+    font-weight: var(--type-body-weight);
+    line-height: var(--type-body-leading);
+    color: var(--text-muted);
+    padding: var(--space-12) 0;
+  }
+
+  @media (max-width: 1024px) {
+    .blog-listing__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .blog-listing__grid {
+      grid-template-columns: 1fr;
+      gap: var(--grid-gap-sm);
+    }
+  }
+
+</style>
+</head><body>
+<section class="section">
+  <div class="section__inner">
+    <div class="blog-listing__header">
+      <p class="eyebrow eyebrow--accent">The Journal</p>
+      <h1 class="blog-listing__title type-hero">The Barreletics Journal</h1>
+      <p class="blog-listing__subtitle">Studio tips, product insights, and performance stories.</p>
+    </div>
+    <div class="blog-listing__grid">
+            <article class="blog-card">
+              <a href="#" class="blog-card__link">
+                <div class="blog-card__image-wrap">
+                  <div class="qa-img"></div>
+                  <span class="blog-card__tag">Education</span>
+                </div>
+                <div class="blog-card__content">
+                  <h2 class="blog-card__title">Why grip socks stop gripping</h2>
+                  <p class="blog-card__excerpt">Silicone dots are a coating, not a structure. Here is what happens to them after thirty washes.</p>
+                  <div class="blog-card__meta">
+                    <span class="blog-card__author">Barreletics Team</span>
+                    <span class="blog-card__date"><time>March 12, 2026</time></span>
+                  </div>
+                </div>
+              </a>
+            </article>
+            <article class="blog-card">
+              <a href="#" class="blog-card__link">
+                <div class="blog-card__image-wrap">
+                  <div class="qa-img"></div>
+                  <span class="blog-card__tag">Reviews</span>
+                </div>
+                <div class="blog-card__content">
+                  <h2 class="blog-card__title">Reformer footwear, ranked honestly</h2>
+                  <p class="blog-card__excerpt">We tested every category of studio footwear on a Megaformer for six weeks.</p>
+                  <div class="blog-card__meta">
+                    <span class="blog-card__author">Barreletics Team</span>
+                    <span class="blog-card__date"><time>March 4, 2026</time></span>
+                  </div>
+                </div>
+              </a>
+            </article>
+            <article class="blog-card">
+              <a href="#" class="blog-card__link">
+                <div class="blog-card__image-wrap">
+                  <div class="qa-img"></div>
+                  <span class="blog-card__tag">Education</span>
+                </div>
+                <div class="blog-card__content">
+                  <h2 class="blog-card__title">The hygiene case for Performance Skins</h2>
+                  <p class="blog-card__excerpt">Fabric absorbs. Molded material does not. That difference matters more than grip.</p>
+                  <div class="blog-card__meta">
+                    <span class="blog-card__author">Barreletics Team</span>
+                    <span class="blog-card__date"><time>February 22, 2026</time></span>
+                  </div>
+                </div>
+              </a>
+            </article>
+            <article class="blog-card">
+              <a href="#" class="blog-card__link">
+                <div class="blog-card__image-wrap">
+                  <div class="qa-img"></div>
+                  <span class="blog-card__tag">Studios</span>
+                </div>
+                <div class="blog-card__content">
+                  <h2 class="blog-card__title">What studio owners tell us</h2>
+                  <p class="blog-card__excerpt">Five instructors on what they wish their clients knew about footwear.</p>
+                  <div class="blog-card__meta">
+                    <span class="blog-card__author">Barreletics Team</span>
+                    <span class="blog-card__date"><time>February 9, 2026</time></span>
+                  </div>
+                </div>
+              </a>
+            </article>
+            <article class="blog-card">
+              <a href="#" class="blog-card__link">
+                <div class="blog-card__image-wrap">
+                  <div class="qa-img"></div>
+                  <span class="blog-card__tag">Product</span>
+                </div>
+                <div class="blog-card__content">
+                  <h2 class="blog-card__title">One pair, three years</h2>
+                  <p class="blog-card__excerpt">Durability math on a product designed to outlast the hype cycle.</p>
+                  <div class="blog-card__meta">
+                    <span class="blog-card__author">Barreletics Team</span>
+                    <span class="blog-card__date"><time>January 30, 2026</time></span>
+                  </div>
+                </div>
+              </a>
+            </article>
+            <article class="blog-card">
+              <a href="#" class="blog-card__link">
+                <div class="blog-card__image-wrap">
+                  <div class="qa-img"></div>
+                  <span class="blog-card__tag">Education</span>
+                </div>
+                <div class="blog-card__content">
+                  <h2 class="blog-card__title">Barre floors are the hardest test</h2>
+                  <p class="blog-card__excerpt">Sprung wood, sweat, and lateral movement — the worst case for any grip.</p>
+                  <div class="blog-card__meta">
+                    <span class="blog-card__author">Barreletics Team</span>
+                    <span class="blog-card__date"><time>January 18, 2026</time></span>
+                  </div>
+                </div>
+              </a>
+            </article>
+            <article class="blog-card">
+              <a href="#" class="blog-card__link">
+                <div class="blog-card__image-wrap">
+                  <div class="qa-img"></div>
+                  <span class="blog-card__tag">Guides</span>
+                </div>
+                <div class="blog-card__content">
+                  <h2 class="blog-card__title">Sizing without guesswork</h2>
+                  <p class="blog-card__excerpt">How to read our size chart if you are between sizes.</p>
+                  <div class="blog-card__meta">
+                    <span class="blog-card__author">Barreletics Team</span>
+                    <span class="blog-card__date"><time>January 6, 2026</time></span>
+                  </div>
+                </div>
+              </a>
+            </article>
+            <article class="blog-card">
+              <a href="#" class="blog-card__link">
+                <div class="blog-card__image-wrap">
+                  <div class="qa-img"></div>
+                  <span class="blog-card__tag">Brand</span>
+                </div>
+                <div class="blog-card__content">
+                  <h2 class="blog-card__title">Made in the USA, start to finish</h2>
+                  <p class="blog-card__excerpt">Material sourcing, molding, and quality control all stay domestic.</p>
+                  <div class="blog-card__meta">
+                    <span class="blog-card__author">Barreletics Team</span>
+                    <span class="blog-card__date"><time>December 14, 2025</time></span>
+                  </div>
+                </div>
+              </a>
+            </article>
+            <article class="blog-card">
+              <a href="#" class="blog-card__link">
+                <div class="blog-card__image-wrap">
+                  <div class="qa-img"></div>
+                  <span class="blog-card__tag">Guides</span>
+                </div>
+                <div class="blog-card__content">
+                  <h2 class="blog-card__title">Open sole vs closed sole</h2>
+                  <p class="blog-card__excerpt">Two constructions, two use cases. A plain-language comparison.</p>
+                  <div class="blog-card__meta">
+                    <span class="blog-card__author">Barreletics Team</span>
+                    <span class="blog-card__date"><time>December 2, 2025</time></span>
+                  </div>
+                </div>
+              </a>
+            </article>
+
+      <nav class="blog-listing__pagination">
+        <span class="blog-listing__page-info">Page 1 of 2</span>
+        <a href="#" class="btn btn--secondary blog-listing__next">Next &rarr;</a>
+      </nav>
+    </div>
+  </div>
+</section>
+
+</body></html>

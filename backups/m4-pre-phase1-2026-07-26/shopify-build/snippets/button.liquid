@@ -1,0 +1,47 @@
+{% comment %}
+  Button Snippet
+  Source: Doc 03 (Design System), Doc 04 (Component Library)
+
+  Renders a styled button or link-as-button.
+
+  Usage:
+    {% render 'button', label: 'Shop Now', url: '/collections/grippy-shoes' %}
+    {% render 'button', label: 'Add to Cart', style: 'primary', size: 'lg', full: true, type: 'submit' %}
+
+  Parameters:
+    - label: button text (required)
+    - url: link URL — renders as <a> if provided
+    - style: 'primary' | 'secondary' | 'inverted' (default: 'primary')
+    - size: 'sm' | 'md' | 'lg' (default: 'md')
+    - full: boolean — full width (default: false)
+    - type: 'button' | 'submit' (default: 'button') — only for non-link buttons
+    - disabled: boolean (default: false)
+    - aria_label: optional accessible label
+    - class: optional additional CSS class
+{% endcomment %}
+
+{% assign btn_style = style | default: 'primary' %}
+{% assign btn_size = size | default: 'md' %}
+{% assign btn_type = type | default: 'button' %}
+
+{% capture btn_classes %}btn btn--{{ btn_style }}{% if btn_size == 'lg' %} btn--lg{% elsif btn_size == 'sm' %} btn--sm{% endif %}{% if full %} btn--full{% endif %}{% if class != blank %} {{ class }}{% endif %}{% endcapture %}
+
+{% if url != blank %}
+  <a
+    href="{{ url }}"
+    class="{{ btn_classes | strip }}"
+    {% if aria_label != blank %}aria-label="{{ aria_label }}"{% endif %}
+    {% if disabled %}aria-disabled="true" tabindex="-1"{% endif %}
+  >
+    {{ label }}
+  </a>
+{% else %}
+  <button
+    type="{{ btn_type }}"
+    class="{{ btn_classes | strip }}"
+    {% if aria_label != blank %}aria-label="{{ aria_label }}"{% endif %}
+    {% if disabled %}disabled aria-disabled="true"{% endif %}
+  >
+    {{ label }}
+  </button>
+{% endif %}

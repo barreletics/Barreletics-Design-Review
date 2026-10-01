@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+  GROK: Port this to ONE Shopify section (theme 187144929571 only).
+  File target: shopify-build/sections/recognition-split.liquid OR new press-row.liquid
+  Home: single section in templates/index.json — remove recognition-before + recognition-after.
+  Fonts: match shopify-build/assets/design-tokens.css + barreletics-base.css (.h2-standard, .type-label, .type-statement). Roboto only. Real asset URLs below.
+-->
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barreletics Press row — reference code</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* Mirror design-tokens.css (Type OS) — theme loads these globally in Liquid */
+  :root {
+    --font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+    --text-primary: #1c1916;
+    --text-body: #4a4a4a;
+    --text-warm-muted: #6b645a;
+    --color-warm-border: #d6cfc0;
+    --type-section-size: clamp(26px, 2.9vw, 32px);
+    --type-section-size-mobile: clamp(24px, 5vw, 28px);
+    --type-section-weight: 600;
+    --type-section-leading: 1.22;
+    --type-section-tracking: -0.012em;
+    --type-statement-size: clamp(28px, 3vw, 36px);
+    --type-statement-size-mobile: clamp(28px, 7vw, 36px);
+    --type-statement-weight: 500;
+    --type-statement-leading: 1.12;
+    --type-statement-tracking: -0.022em;
+    --type-label-size: 11px;
+    --type-label-weight: 600;
+    --type-label-tracking: 0.08em;
+    --type-label-color: #6b645a;
+    --type-body-size: 16px;
+    --type-body-weight: 400;
+    --type-body-leading: 1.72;
+    --type-h3-size: clamp(18px, 2vw, 22px);
+    --type-h3-weight: 600;
+    --type-h3-leading: 1.25;
+    --type-trust-size: 13px;
+    --type-trust-weight: 400;
+    --gap-c: 32px;
+    --max-width: 1200px;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  .h2-standard {
+    font-family: var(--font-family);
+    font-size: var(--type-section-size);
+    font-weight: var(--type-section-weight);
+    line-height: var(--type-section-leading);
+    letter-spacing: var(--type-section-tracking);
+    color: var(--text-primary);
+    text-transform: none;
+  }
+  .type-label {
+    font-family: var(--font-family);
+    font-size: var(--type-label-size);
+    font-weight: var(--type-label-weight);
+    letter-spacing: var(--type-label-tracking);
+    text-transform: uppercase;
+    color: var(--type-label-color);
+  }
+  .type-statement {
+    font-family: var(--font-family);
+    font-size: var(--type-statement-size);
+    font-weight: var(--type-statement-weight);
+    line-height: var(--type-statement-leading);
+    letter-spacing: var(--type-statement-tracking);
+    color: var(--text-primary);
+    text-transform: none;
+  }
+  .type-body {
+    font-family: var(--font-family);
+    font-size: var(--type-body-size);
+    font-weight: var(--type-body-weight);
+    line-height: var(--type-body-leading);
+    color: var(--text-body);
+  }
+  @media (max-width: 768px) {
+    .h2-standard { font-size: var(--type-section-size-mobile); }
+    .type-statement { font-size: var(--type-statement-size-mobile); }
+  }
+
+  .press-band {
+    font-family: var(--font-family);
+    background: #faf8f6;
+    color: var(--text-primary);
+    padding: 64px 40px;
+    max-width: var(--max-width);
+    margin: 0 auto;
+  }
+  @media (max-width: 768px) {
+    .press-band { padding: 48px 16px; }
+  }
+  .press-band__head {
+    margin: 0 0 var(--gap-c);
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--color-warm-border);
+  }
+  .press-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.46fr) minmax(0, 0.46fr);
+    grid-template-rows: 1fr 1fr;
+    gap: 10px;
+    height: clamp(440px, 52vw, 540px);
+  }
+  @media (max-width: 900px) {
+    .press-grid {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto;
+      height: auto;
+    }
+    .press-grid__hero { grid-column: 1 / -1; height: min(400px, 70vw); }
+  }
+  @media (max-width: 520px) {
+    .press-grid { grid-template-columns: 1fr; }
+    .press-grid__hero { height: 320px; }
+  }
+
+  .press-grid__hero {
+    grid-row: 1 / 3;
+    grid-column: 1;
+    position: relative;
+    overflow: hidden;
+    background: #1c1916;
+  }
+  .press-grid__hero video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .press-grid__hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(180deg, transparent 55%, rgba(28, 25, 22, 0.82) 100%);
+  }
+  .press-grid__hero-copy {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    padding: 24px 28px 28px;
+    color: #faf8f6;
+  }
+  .press-grid__hero-copy .type-label {
+    color: rgba(250, 248, 246, 0.88);
+    margin-bottom: 8px;
+  }
+  .press-grid__hero-copy .type-statement {
+    color: #faf8f6;
+    margin: 0;
+    max-width: 15ch;
+  }
+
+  .press-card {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    min-height: 0;
+    background: #fff;
+    border: 1px solid #e8e4dc;
+    text-decoration: none;
+    color: inherit;
+  }
+  .press-card__media {
+    position: relative;
+    overflow: hidden;
+    background: #f5f2ec;
+    min-height: 0;
+  }
+  .press-card__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .press-card--press .press-card__media img {
+    object-fit: contain;
+    object-position: center top;
+    padding: 8px;
+    background: #faf8f6;
+  }
+  .press-card__foot {
+    padding: 12px 14px 14px;
+    border-top: 1px solid #f0ebe4;
+    min-height: 72px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .press-card__title {
+    font-family: var(--font-family);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 2px;
+    color: var(--text-primary);
+  }
+  .press-card__cap {
+    font-family: var(--font-family);
+    font-size: var(--type-trust-size);
+    font-weight: var(--type-trust-weight);
+    color: var(--text-warm-muted);
+    line-height: 1.4;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .press-card__arrow {
+    font-size: 13px;
+    opacity: 0.7;
+  }
+  .press-card--venice .press-card__media {
+    background: linear-gradient(160deg, #2a2420 0%, #3d3530 45%, #1c1916 100%);
+  }
+</style>
+</head>
+<body>
+<section class="press-band" aria-label="Press">
+  <h2 class="press-band__head h2-standard">Press</h2>
+  <div class="press-grid">
+    <div class="press-grid__hero">
+      <video autoplay muted loop playsinline poster="https://barreletics.com/cdn/shop/files/yellow_tone_mix.png?width=2000">
+        <source src="https://barreletics.com/cdn/shop/videos/c/vp/a91000a89fb04c70935becea5180b69e/a91000a89fb04c70935becea5180b69e.HD-1080p-7.2Mbps-43057645.mp4" type="video/mp4">
+      </video>
+      <div class="press-grid__hero-copy">
+        <p class="type-label">Barreletics × Coperni</p>
+        <p class="type-statement">Limited edition · Paris 2026</p>
+      </div>
+    </div>
+
+    <a class="press-card press-card--runway" href="https://barreletics.com/products/barreletics-x-coperni-closed-sole">
+      <div class="press-card__media">
+        <img src="https://barreletics.com/cdn/shop/files/Screenshot_2026-03-20_at_6.53.30_PM.png?width=900" alt="Coperni runway">
+      </div>
+      <div class="press-card__foot">
+        <p class="press-card__title">Runway</p>
+        <p class="press-card__cap"><span>Paris Fashion Week</span><span class="press-card__arrow">→</span></p>
+      </div>
+    </a>
+
+    <a class="press-card press-card--runway" href="https://barreletics.com/products/barreletics-x-coperni-closed-sole">
+      <div class="press-card__media">
+        <img src="https://barreletics.com/cdn/shop/files/Copreni_Final_More_grey.png?v=1774119812&width=900" alt="Coperni detail">
+      </div>
+      <div class="press-card__foot">
+        <p class="press-card__title">Collaboration</p>
+        <p class="press-card__cap"><span>Spring–Summer 2026</span><span class="press-card__arrow">→</span></p>
+      </div>
+    </a>
+
+    <a class="press-card press-card--press" href="https://barreletics.com/blogs/news/barreletics-in-interni">
+      <div class="press-card__media">
+        <img src="https://cdn.shopify.com/s/files/1/0045/0612/4391/files/Interni_Blog_Magazine_Page.png" alt="INTERNI magazine">
+      </div>
+      <div class="press-card__foot">
+        <p class="press-card__title">INTERNI</p>
+        <p class="press-card__cap"><span>Sano come un piede</span><span class="press-card__arrow">→</span></p>
+      </div>
+    </a>
+
+    <a class="press-card press-card--press press-card--venice" href="https://barreletics.com/blogs/news">
+      <div class="press-card__media" aria-hidden="true"></div>
+      <div class="press-card__foot">
+        <p class="press-card__title">ITSLIQUID · Venice</p>
+        <p class="press-card__cap"><span>Biennale arte 2026</span><span class="press-card__arrow">→</span></p>
+      </div>
+    </a>
+  </div>
+</section>
+</body>
+</html>

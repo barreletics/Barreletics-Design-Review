@@ -1,0 +1,159 @@
+{% comment %}
+  Home Instagram / UGC band (DP-09)
+  Static grid fallback until Juicer or native IG embed is wired.
+{% endcomment %}
+
+<section class="home-ugc" aria-label="From Instagram">
+  <div class="home-ugc__inner">
+    {% if section.settings.eyebrow != blank %}
+      <p class="home-ugc__eyebrow">{{ section.settings.eyebrow }}</p>
+    {% endif %}
+    <h2 class="home-ugc__title">{{ section.settings.title }}</h2>
+    {% if section.settings.body != blank %}
+      <p class="home-ugc__body">{{ section.settings.body }}</p>
+    {% endif %}
+
+    <div class="home-ugc__grid">
+      {% for block in section.blocks %}
+        <a
+          class="home-ugc__cell"
+          href="{{ block.settings.link | default: section.settings.profile_url }}"
+          {{ block.shopify_attributes }}
+          {% if block.settings.link != blank or section.settings.profile_url != blank %}
+            target="_blank" rel="noopener noreferrer"
+          {% endif %}
+        >
+          {% if block.settings.image != blank %}
+            <img
+              src="{{ block.settings.image | image_url: width: 600 }}"
+              alt="{{ block.settings.alt | escape }}"
+              loading="lazy"
+              width="280"
+              height="280"
+            >
+          {% else %}
+            <div class="home-ugc__placeholder" aria-hidden="true"></div>
+          {% endif %}
+        </a>
+      {% endfor %}
+    </div>
+
+    {% if section.settings.cta_text != blank %}
+      <a class="home-ugc__cta" href="{{ section.settings.profile_url }}" target="_blank" rel="noopener noreferrer">
+        {{ section.settings.cta_text }}
+      </a>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  .home-ugc {
+    padding: var(--space-13, 64px) var(--section-padding-x, 40px);
+    background: #fff;
+  }
+  .home-ugc__inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .home-ugc__eyebrow {
+    margin: 0 0 8px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #8a8a8a;
+  }
+  .home-ugc__title {
+    margin: 0 0 12px;
+    font-size: 32px;
+    font-weight: 700;
+    color: #1c1916;
+    letter-spacing: -0.02em;
+  }
+  .home-ugc__body {
+    margin: 0 auto 32px;
+    max-width: 48ch;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #4a4a4a;
+  }
+  .home-ugc__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .home-ugc__cell {
+    display: block;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 8px;
+    background: #f5f2ec;
+  }
+  .home-ugc__cell img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .home-ugc__placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #f5f2ec 0%, #e8e2d6 100%);
+  }
+  .home-ugc__cta {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1c1916;
+    text-decoration: none;
+    border-bottom: 1px solid #1c1916;
+    padding-bottom: 2px;
+  }
+  @media (max-width: 768px) {
+    .home-ugc {
+      padding: 48px 16px;
+    }
+    .home-ugc__title {
+      font-size: 28px;
+    }
+    .home-ugc__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Home UGC",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "@barreletics" },
+    { "type": "text", "id": "title", "label": "Title", "default": "Worn in real studios" },
+    { "type": "textarea", "id": "body", "label": "Body", "default": "Instructors and clients posting the grip that actually lasts." },
+    { "type": "url", "id": "profile_url", "label": "Instagram profile URL" },
+    { "type": "text", "id": "cta_text", "label": "CTA text", "default": "Follow on Instagram →" }
+  ],
+  "blocks": [
+    {
+      "type": "tile",
+      "name": "UGC tile",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "alt", "label": "Alt text", "default": "Barreletics in studio" },
+        { "type": "url", "id": "link", "label": "Link (optional)" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Home UGC",
+      "blocks": [
+        { "type": "tile" },
+        { "type": "tile" },
+        { "type": "tile" },
+        { "type": "tile" }
+      ]
+    }
+  ]
+}
+{% endschema %}

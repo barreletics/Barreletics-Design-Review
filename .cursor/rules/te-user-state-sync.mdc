@@ -1,0 +1,79 @@
+---
+description: "HARD — Andrew’s Theme Editor state on draft 187144929571 is user-owned. Tweaks must not overwrite it. Sync into the repo without asking him for a passphrase."
+alwaysApply: true
+---
+
+# Theme Editor user state → repo sync (HARD)
+
+**Draft only:** `187144929571` (🔥🔥 Redesign — Latest / M4 QA).  
+**Live `185687998755` is off-limits.** Never pull/push/sync live.
+
+Andrew’s latest **manual Theme Editor** changes on that draft are **USER-OWNED CURRENT STATE** (images, videos, crop/X-Y-Zoom, section settings, copy values, section order).
+
+They must:
+
+- never be overwritten by a later push
+- never be replaced by stale local JSON / defaults
+- be preserved when code is deployed
+- **be synced into the repository as we tweak** — agent pulls, Andrew does not recite a phrase
+
+Companions (do not weaken): `anti-revert-fail-closed.mdc` · `section-freeze-no-drift.mdc` · `shopify-draft-theme-only.mdc` · `te-photos-stick.mdc` (photos are a subset of this).
+
+## HARD — no passphrase
+
+**Never** tell Andrew to say `photos stuck` · `pull photos` · `sync TE`.  
+He already said the photos (and any TE tweaks) must **stick** while we work. Agents pull / preserve. He does not trigger it.
+
+## During QA tweaks
+
+He edits Theme Editor. Agents do **not** casually push configuration.
+
+**Push only** the exact `.liquid` / CSS / JS / snippet / asset needed for the named fix.
+
+**Do NOT push** unless he names that file in the CURRENT message:
+
+- `templates/index.json`
+- `templates/*.json` (product, collection, page, etc.)
+- `config/settings_data.json`
+- any JSON that stores his current TE picks
+
+Code push must not reset media, position, copy, settings, or order.
+
+**Before** a code tweak that could drift from TE, and **after** he changes the draft in Theme Editor: pull the one relevant JSON yourself (theme ID already this draft). Diff. Keep his values.
+
+## After he approves (`approved` · `looks good` · `lock it`)
+
+Same pull — no extra phrase required:
+
+1. Pull **only** the relevant config file(s) from `187144929571` — **never the whole theme**. One `--only` per file.
+2. Diff remote vs local **before** keeping the pull. Preserve all current approved work.
+3. **Commit** that pulled state when he asked to commit (or when locking).
+4. Later code work starts from that synced repo. Never “fix divergence” by pushing stale repo JSON over Shopify.
+
+Typical pull map:
+
+| He changed in TE | Pull only |
+|---|---|
+| Home images / video / settings / order | `templates/index.json` |
+| A PDP / page / collection | that one `templates/*.json` |
+| Global Theme Settings | `config/settings_data.json` |
+
+```bash
+# example — Home only
+shopify theme pull --theme 187144929571 --path shopify-build --only templates/index.json
+```
+
+If you cannot tell which file to sync → **STOP AND ASK.**
+
+## Priority during this QA
+
+**Theme Editor state sticks through every tweak → pull it into the repo → never push stale JSON over Shopify.**
+
+```
+❌ Push local index.json / settings_data.json over his TE picks
+❌ Ask him to say a stick / pull / sync phrase
+❌ Pull the entire theme
+❌ Pull or push live 185687998755
+✅ Push liquid/CSS/JS only for a named code fix
+✅ Agent pulls the one JSON so photos and TE tweaks stick
+```

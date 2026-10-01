@@ -1,0 +1,181 @@
+{% comment %}
+  Product Style Switch Bar
+  Place in main-product.liquid and featured-product.liquid before {% render 'product-template' %}.
+  Call as: {% render 'product-style-switch', product: product %}
+  JS moves switcher above .product-block[data-dynamic-variants-enabled] (variant/size area). No hide/duplicate logic.
+{% endcomment %}
+
+{%- liquid
+  assign open_sole_handle = 'studio-performance-skin-footwear'
+  assign closed_sole_handle = 'best-reformer-pilates-legree-workout-shoes'
+  assign outdoor_handle = 'aquatic-performance-skins'
+  assign open_sole_url = '/products/studio-performance-skin-footwear'
+  assign closed_sole_url = '/products/best-reformer-pilates-legree-workout-shoes'
+  assign outdoor_url = '/products/aquatic-performance-skins'
+  assign active_open = false
+  assign active_closed = false
+  assign active_outdoor = false
+  if product and product.handle != blank
+    if product.handle == open_sole_handle
+      assign active_open = true
+    elsif product.handle == closed_sole_handle
+      assign active_closed = true
+    elsif product.handle == outdoor_handle
+      assign active_outdoor = true
+    endif
+  endif
+-%}
+
+<style>
+  .br-product-style-switch {
+    --br-switcher-indent: 0;
+    margin-bottom: 20px;
+    margin-left: 0 !important;
+    padding-left: var(--br-switcher-indent) !important;
+    position: relative;
+    text-align: left !important;
+    white-space: nowrap;
+  }
+  .variant-wrapper .br-product-style-switch,
+  .small--text-center .br-product-style-switch,
+  [class*="text-center"] .br-product-style-switch {
+    text-align: left !important;
+  }
+  .br-style-tab {
+    background-color: transparent;
+    border: 2px solid transparent !important;
+    border-radius: 100px;
+    box-sizing: border-box;
+    color: var(--colorTextBody);
+    cursor: pointer;
+    display: inline-block;
+    font-size: calc((var(--typeBaseSize) - 2px) * .85 + 2px);
+    font-weight: 400;
+    line-height: 1;
+    margin: 8px 4px 0 0;
+    min-height: 44px;
+    overflow: visible;
+    padding: 15px 14px;
+    position: relative;
+    text-decoration: none;
+    transition: border-color 0.2s;
+    vertical-align: top;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.08);
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+  }
+  .br-style-tab:first-child {
+    margin-left: 0 !important;
+    margin-right: 4px !important;
+    padding-left: 14px;
+  }
+  .br-style-tab:hover {
+    color: var(--colorTextBody);
+  }
+  .br-product-style-switch a.br-style-tab.is-active,
+  a.br-style-tab.is-active {
+    border: 2px solid #000000 !important;
+    box-shadow: none;
+    outline: none !important;
+  }
+  .product-single_meta .br-product-style-switch {
+    margin-bottom: 20px;
+  }
+  .br-product-style-switch + .br-product-style-switch { display: none !important; }
+  @media (max-width: 749px) {
+    .br-product-style-switch {
+      display: flex;
+      flex-wrap: nowrap;
+      margin-left: 0 !important;
+      overflow-x: auto;
+      overflow-y: visible;
+      padding: 2px 2px 2px 8px;
+      padding-left: max(8px, var(--br-switcher-indent)) !important;
+      -webkit-overflow-scrolling: touch;
+      white-space: nowrap;
+    }
+    .br-style-tab {
+      font-size: calc((var(--typeBaseSize) - 2px) * .85);
+      min-height: 44px;
+      margin: 8px 3px 0 0;
+      padding: 13px 12px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .br-style-tab:first-child {
+      margin-left: 4px !important;
+      margin-right: 3px !important;
+      padding-left: 12px;
+    }
+    .br-product-style-switch a.br-style-tab.is-active,
+    a.br-style-tab.is-active {
+      border: 2px solid #000000 !important;
+      box-shadow: none;
+      outline: none !important;
+    }
+  }
+</style>
+
+<div class="br-product-style-switch">
+  <a href="{{ open_sole_url }}" class="br-style-tab{% if active_open %} is-active{% endif %}" data-handle="{{ open_sole_handle }}">Open Sole</a>
+  <a href="{{ closed_sole_url }}" class="br-style-tab{% if active_closed %} is-active{% endif %}" data-handle="{{ closed_sole_handle }}">Closed Sole</a>
+  <a href="{{ outdoor_url }}" class="br-style-tab{% if active_outdoor %} is-active{% endif %}" data-handle="{{ outdoor_handle }}">Outdoor</a>
+</div>
+
+<script>
+(function() {
+  var scheduled = false;
+  var observer = null;
+
+  function positionSwitcherOnce() {
+    scheduled = false;
+    var switchers = document.querySelectorAll('.br-product-style-switch');
+    if (!switchers.length) return;
+
+    switchers.forEach(function(switcher) {
+      var section = switcher.closest('[id^="shopify-section-"]');
+      if (!section) return;
+      var productSection = section.querySelector('.product-section, [id^="ProductSection-"]');
+      if (!productSection) return;
+      var productBlock = productSection.querySelector('.product-block[data-dynamic-variants-enabled]');
+      if (!productBlock) return;
+      var container = productBlock.parentElement;
+      if (!container) return;
+      if (switcher.parentElement === container && switcher.nextElementSibling === productBlock) return;
+      container.insertBefore(switcher, productBlock);
+    });
+
+    // Hide duplicates (Theme Editor can duplicate sections)
+    document.querySelectorAll('[id^="shopify-section-"]').forEach(function(section) {
+      var list = section.querySelectorAll('.br-product-style-switch');
+      for (var i = 1; i < list.length; i++) list[i].style.setProperty('display', 'none', 'important');
+    });
+  }
+
+  function schedule() {
+    if (scheduled) return;
+    scheduled = true;
+    requestAnimationFrame(positionSwitcherOnce);
+  }
+
+  function init() {
+    schedule();
+
+    // Observe DOM changes only until we successfully place the switcher.
+    // This avoids repeated timeouts that can cause extra reflow on mobile.
+    observer = new MutationObserver(function() { schedule(); });
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+
+    // Stop observing after a short window to avoid long-running overhead.
+    setTimeout(function() {
+      if (observer) observer.disconnect();
+      observer = null;
+    }, 2500);
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>

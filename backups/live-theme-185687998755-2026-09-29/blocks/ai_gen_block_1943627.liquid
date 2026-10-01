@@ -1,0 +1,1209 @@
+{% doc %}
+  @prompt
+    Create a global sales section for up to 4 items. Copy the same functionality as the section you just created called "paper style section".  Allow fields to have rich text editors and font style. , I said copy the Paper style section you created. If needs pricing fields for regular and sale price with sale tag just like the Peper style section which has a color selector too, make the sale tag the same as the "paper style section" you built. Also the sale tag is partially cut off, Match the new section to the existing one. Reuse the same class naming, settings-driven styling, pricing logic (sale badge + compare-at), and button behavior.
+    
+    Add a section title above the grid with editor-controlled text and spacing.
+    
+    Make all product images the same visual size by forcing a fixed aspect ratio (square or portrait), using a shared media wrapper and object-fit: cover so images, videos, and placeholders align evenly., please add two more portrait sizes where the height is taller than 3:4, Update the section so placeholders and “Pick Footwear Size” don’t stretch huge.
+    
+    Constrain media area size: give the media wrapper a fixed aspect-ratio (ex: 3/4) and set a max-height (ex: 520px) with width: 100% so it never grows taller when fewer items show.
+    
+    Make placeholder icon smaller: target the placeholder SVG inside the media wrapper and set a fixed size (ex: width: 56px; height: 56px; opacity: .35;) and center it.
+    
+    Stop 2 items from expanding: on the grid, cap each card width (ex: .card { max-width: 520px; }) and center the grid (justify-content: center; gap: ...).
+    
+    Optional best fix: switch grid columns to responsive min/max so items keep a consistent width: grid-template-columns: repeat(auto-fit, minmax(280px, 420px)); justify-content:center;, this is great. but can you make an option to fit 3 or 4 items also in one section and also keep the current layout option as well? , everything is great, can you please allow up to 4 items in one row, but keep the option to use the current layout as a secondary options too, great. now make a fucntion to reverse the shop now button to solid black or white with a border. Also create small medium and full size width for the shop now button. Also create a simple adjustment for space between the price , title and description. Change nothing else, Perfect, don't change anything but allow the space between each to be tighter. Add a mobile adjustment for the shop now button, stacking items or items in one row, perfect but the image aspect ratio should have a separate setting for mobile too. Don't change anything else. , don't change anything except the following: 
+    
+    Mobile layout tweaks:
+    
+    Make the product image fit inside the media placeholder on mobile the same way as desktop: keep the media wrapper at a fixed aspect ratio, set the <img> to width:100%; height:100%; object-fit: contain; on mobile (so it doesn’t crop), and keep the wrapper overflow:hidden; with the same radius.
+    
+    Add section settings to control spacing: title_margin_bottom, description_margin_top/bottom, price_margin_top, and apply them as margins so I can reduce/eliminate the gaps between title → description → price (including allowing 0px)., Great, keep everything, but update the following: Fix the gray empty space around product images in the sale section.
+    
+    • Set the media wrapper background color to white by default (not transparent or gray).
+    • When using object-fit: contain, ensure the wrapper fills the full height and width so any unused space shows the wrapper background (white), not gray.
+    • Add a section setting for Media background color (default: white) so it can be adjusted if future images are not on white backgrounds. , perfect. Only fix the shop now button sizing function for desktop and mobile- they do not work , perfect. now center the shop now with whatever size is selected in both mobile and desktop. Please add upt to -10 for the space between the product title, description and price lines. Don't change anything else
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-paper-sales-section-{{ ai_gen_id }} {
+    width: 100%;
+    display: block;
+    background-color: {{ block.settings.background_color }};
+    padding: {{ block.settings.section_padding }}px 20px;
+    overflow: visible;
+  }
+
+  .ai-paper-sales-container-{{ ai_gen_id }} {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .ai-paper-sales-header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: {{ block.settings.section_title_spacing }}px;
+  }
+
+  .ai-paper-sales-section-title-{{ ai_gen_id }} {
+    font-family: {{ block.settings.section_title_font.family }}, {{ block.settings.section_title_font.fallback_families }};
+    font-weight: {{ block.settings.section_title_font.weight }};
+    font-style: {{ block.settings.section_title_font.style }};
+    font-size: {{ block.settings.section_title_size }}px;
+    line-height: 1.2;
+    color: {{ block.settings.section_title_color }};
+    margin: 0;
+  }
+
+  .ai-paper-sales-grid-{{ ai_gen_id }} {
+    display: grid;
+    gap: {{ block.settings.grid_gap }}px;
+    justify-content: center;
+  }
+
+  .ai-paper-sales-grid-{{ ai_gen_id }}.layout-responsive.columns-2 {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 420px));
+  }
+
+  .ai-paper-sales-grid-{{ ai_gen_id }}.layout-responsive.columns-3 {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 380px));
+  }
+
+  .ai-paper-sales-grid-{{ ai_gen_id }}.layout-responsive.columns-4 {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 320px));
+  }
+
+  .ai-paper-sales-grid-{{ ai_gen_id }}.layout-fixed {
+    grid-template-columns: repeat({{ block.settings.columns_desktop }}, 1fr);
+  }
+
+  .ai-paper-sales-item-{{ ai_gen_id }} {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+  }
+
+  .ai-paper-sales-grid-{{ ai_gen_id }}.layout-responsive .ai-paper-sales-item-{{ ai_gen_id }} {
+    max-width: 520px;
+  }
+
+  .ai-paper-sales-media-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    aspect-ratio: {{ block.settings.image_aspect_ratio }};
+    max-height: 520px;
+    border-radius: {{ block.settings.media_border_radius }}px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: {{ block.settings.shadow_x }}px {{ block.settings.shadow_y }}px {{ block.settings.shadow_blur }}px {{ block.settings.shadow_color }};
+    background-color: {{ block.settings.media_background_color }};
+  }
+
+  .ai-paper-sales-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .ai-paper-sales-image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: {{ block.settings.media_background_color }};
+  }
+
+  .ai-paper-sales-image-placeholder-{{ ai_gen_id }} svg {
+    width: 56px;
+    height: 56px;
+    opacity: 0.35;
+  }
+
+  .ai-paper-sales-sale-badge-{{ ai_gen_id }} {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: {{ block.settings.sale_tag_bg }};
+    color: {{ block.settings.sale_tag_text_color }};
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    z-index: 2;
+    white-space: nowrap;
+  }
+
+  .ai-paper-sales-content-{{ ai_gen_id }} {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .ai-paper-sales-title-{{ ai_gen_id }} {
+    font-family: {{ block.settings.title_font.family }}, {{ block.settings.title_font.fallback_families }};
+    font-weight: {{ block.settings.title_font.weight }};
+    font-style: {{ block.settings.title_font.style }};
+    font-size: {{ block.settings.title_size }}px;
+    line-height: 1.3;
+    color: {{ block.settings.title_color }};
+    margin: 0 0 {{ block.settings.title_margin_bottom }}px 0;
+    text-align: center;
+    width: 100%;
+  }
+
+  .ai-paper-sales-description-{{ ai_gen_id }} {
+    font-family: {{ block.settings.description_font.family }}, {{ block.settings.description_font.fallback_families }};
+    font-weight: {{ block.settings.description_font.weight }};
+    font-style: {{ block.settings.description_font.style }};
+    font-size: {{ block.settings.description_size }}px;
+    line-height: 1.6;
+    color: {{ block.settings.description_color }};
+    margin: {{ block.settings.description_margin_top }}px 0 {{ block.settings.description_margin_bottom }}px 0;
+    text-align: center;
+    width: 100%;
+  }
+
+  .ai-paper-sales-price-wrapper-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: {{ block.settings.price_margin_top }}px;
+    margin-bottom: {{ block.settings.price_bottom_spacing }}px;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .ai-paper-sales-sale-price-{{ ai_gen_id }} {
+    font-family: {{ block.settings.price_font.family }}, {{ block.settings.price_font.fallback_families }};
+    font-weight: {{ block.settings.price_font.weight }};
+    font-style: {{ block.settings.price_font.style }};
+    font-size: {{ block.settings.price_size }}px;
+    color: {{ block.settings.sale_price_color }};
+    font-weight: 700;
+  }
+
+  .ai-paper-sales-regular-price-{{ ai_gen_id }} {
+    font-family: {{ block.settings.price_font.family }}, {{ block.settings.price_font.fallback_families }};
+    font-weight: {{ block.settings.price_font.weight }};
+    font-style: {{ block.settings.price_font.style }};
+    font-size: {{ block.settings.price_size }}px;
+    color: {{ block.settings.regular_price_color }};
+  }
+
+  .ai-paper-sales-compare-price-{{ ai_gen_id }} {
+    font-family: {{ block.settings.price_font.family }}, {{ block.settings.price_font.fallback_families }};
+    font-size: {{ block.settings.price_size | times: 0.85 }}px;
+    color: {{ block.settings.compare_price_color }};
+    text-decoration: line-through;
+    opacity: 0.7;
+  }
+
+  .ai-paper-sales-button-wrapper-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .ai-paper-sales-button-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: 14px 32px;
+    font-family: {{ block.settings.button_font.family }}, {{ block.settings.button_font.fallback_families }};
+    font-weight: {{ block.settings.button_font.weight }};
+    font-size: {{ block.settings.button_size }}px;
+    text-decoration: none;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: center;
+    border: 2px solid transparent;
+  }
+
+  .ai-paper-sales-button-{{ ai_gen_id }}.style-solid {
+    background-color: {{ block.settings.button_bg }};
+    color: {{ block.settings.button_text_color }};
+    border-color: {{ block.settings.button_bg }};
+  }
+
+  .ai-paper-sales-button-{{ ai_gen_id }}.style-solid:hover {
+    background-color: {{ block.settings.button_hover_bg }};
+    border-color: {{ block.settings.button_hover_bg }};
+    transform: translateY(-2px);
+  }
+
+  .ai-paper-sales-button-{{ ai_gen_id }}.style-outline {
+    background-color: transparent;
+    color: {{ block.settings.button_bg }};
+    border-color: {{ block.settings.button_bg }};
+  }
+
+  .ai-paper-sales-button-{{ ai_gen_id }}.style-outline:hover {
+    background-color: {{ block.settings.button_bg }};
+    color: {{ block.settings.button_text_color }};
+    transform: translateY(-2px);
+  }
+
+  .ai-paper-sales-button-{{ ai_gen_id }}.width-small {
+    width: auto;
+    min-width: 140px;
+    max-width: 180px;
+  }
+
+  .ai-paper-sales-button-{{ ai_gen_id }}.width-medium {
+    width: auto;
+    min-width: 200px;
+    max-width: 280px;
+  }
+
+  .ai-paper-sales-button-{{ ai_gen_id }}.width-full {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-paper-sales-grid-{{ ai_gen_id }}.layout-fixed {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-paper-sales-media-wrapper-{{ ai_gen_id }} {
+      aspect-ratio: {{ block.settings.mobile_image_aspect_ratio }};
+    }
+
+    .ai-paper-sales-image-{{ ai_gen_id }} {
+      object-fit: contain;
+    }
+
+    .ai-paper-sales-grid-{{ ai_gen_id }} {
+      gap: {{ block.settings.mobile_grid_gap }}px;
+    }
+
+    .ai-paper-sales-grid-{{ ai_gen_id }}.mobile-layout-stacked,
+    .ai-paper-sales-grid-{{ ai_gen_id }}.layout-responsive.columns-2.mobile-layout-stacked,
+    .ai-paper-sales-grid-{{ ai_gen_id }}.layout-responsive.columns-3.mobile-layout-stacked,
+    .ai-paper-sales-grid-{{ ai_gen_id }}.layout-responsive.columns-4.mobile-layout-stacked,
+    .ai-paper-sales-grid-{{ ai_gen_id }}.layout-fixed.mobile-layout-stacked {
+      grid-template-columns: 1fr;
+    }
+
+    .ai-paper-sales-grid-{{ ai_gen_id }}.mobile-layout-row,
+    .ai-paper-sales-grid-{{ ai_gen_id }}.layout-responsive.columns-2.mobile-layout-row,
+    .ai-paper-sales-grid-{{ ai_gen_id }}.layout-responsive.columns-3.mobile-layout-row,
+    .ai-paper-sales-grid-{{ ai_gen_id }}.layout-responsive.columns-4.mobile-layout-row,
+    .ai-paper-sales-grid-{{ ai_gen_id }}.layout-fixed.mobile-layout-row {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .ai-paper-sales-item-{{ ai_gen_id }} {
+      max-width: 100%;
+    }
+
+    .ai-paper-sales-section-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.section_title_size | times: 0.8 }}px;
+    }
+
+    .ai-paper-sales-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_size | times: 0.85 }}px;
+    }
+
+    .ai-paper-sales-description-{{ ai_gen_id }} {
+      font-size: {{ block.settings.description_size | times: 0.9 }}px;
+    }
+
+    .ai-paper-sales-button-{{ ai_gen_id }}.width-small,
+    .ai-paper-sales-button-{{ ai_gen_id }}.width-medium,
+    .ai-paper-sales-button-{{ ai_gen_id }}.width-full {
+      width: auto;
+      min-width: auto;
+      max-width: none;
+    }
+
+    .ai-paper-sales-button-{{ ai_gen_id }}.mobile-width-small {
+      width: auto;
+      min-width: 120px;
+      max-width: 160px;
+      padding: 12px 24px;
+    }
+
+    .ai-paper-sales-button-{{ ai_gen_id }}.mobile-width-medium {
+      width: auto;
+      min-width: 180px;
+      max-width: 240px;
+      padding: 12px 28px;
+    }
+
+    .ai-paper-sales-button-{{ ai_gen_id }}.mobile-width-full {
+      width: 100%;
+      max-width: 100%;
+      padding: 12px 28px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-paper-sales-section-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-paper-sales-container-{{ ai_gen_id }}">
+    {% if block.settings.section_title != blank %}
+      <div class="ai-paper-sales-header-{{ ai_gen_id }}">
+        <h2 class="ai-paper-sales-section-title-{{ ai_gen_id }}">{{ block.settings.section_title }}</h2>
+      </div>
+    {% endif %}
+
+    <div class="ai-paper-sales-grid-{{ ai_gen_id }} layout-{{ block.settings.layout_type }} columns-{{ block.settings.columns_desktop }} mobile-layout-{{ block.settings.mobile_layout }}">
+      {% for i in (1..4) %}
+        {% liquid
+          assign item_enabled_key = 'item_' | append: i | append: '_enabled'
+          assign item_image_key = 'item_' | append: i | append: '_image'
+          assign item_title_key = 'item_' | append: i | append: '_title'
+          assign item_description_key = 'item_' | append: i | append: '_description'
+          assign item_regular_price_key = 'item_' | append: i | append: '_regular_price'
+          assign item_sale_price_key = 'item_' | append: i | append: '_sale_price'
+          assign item_show_sale_key = 'item_' | append: i | append: '_show_sale'
+          assign item_button_text_key = 'item_' | append: i | append: '_button_text'
+          assign item_button_link_key = 'item_' | append: i | append: '_button_link'
+
+          assign item_enabled = block.settings[item_enabled_key]
+          assign item_image = block.settings[item_image_key]
+          assign item_title = block.settings[item_title_key]
+          assign item_description = block.settings[item_description_key]
+          assign item_regular_price = block.settings[item_regular_price_key]
+          assign item_sale_price = block.settings[item_sale_price_key]
+          assign item_show_sale = block.settings[item_show_sale_key]
+          assign item_button_text = block.settings[item_button_text_key]
+          assign item_button_link = block.settings[item_button_link_key]
+        %}
+
+        {% if item_enabled %}
+          <div class="ai-paper-sales-item-{{ ai_gen_id }}">
+            <div class="ai-paper-sales-media-wrapper-{{ ai_gen_id }}">
+              {% if item_show_sale and block.settings.sale_tag_label != blank %}
+                <div class="ai-paper-sales-sale-badge-{{ ai_gen_id }}">
+                  {{ block.settings.sale_tag_label }}
+                </div>
+              {% endif %}
+
+              {% if item_image %}
+                <img
+                  src="{{ item_image | image_url: width: 800 }}"
+                  alt="{{ item_image.alt | escape }}"
+                  class="ai-paper-sales-image-{{ ai_gen_id }}"
+                  loading="lazy"
+                  width="{{ item_image.width }}"
+                  height="{{ item_image.height }}"
+                >
+              {% else %}
+                <div class="ai-paper-sales-image-placeholder-{{ ai_gen_id }}">
+                  {{ 'image' | placeholder_svg_tag }}
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="ai-paper-sales-content-{{ ai_gen_id }}">
+              {% if item_title != blank %}
+                <h3 class="ai-paper-sales-title-{{ ai_gen_id }}">{{ item_title }}</h3>
+              {% endif %}
+
+              {% if item_description != blank %}
+                <div class="ai-paper-sales-description-{{ ai_gen_id }}">{{ item_description }}</div>
+              {% endif %}
+
+              <div class="ai-paper-sales-price-wrapper-{{ ai_gen_id }}">
+                {% if item_show_sale and item_sale_price != blank %}
+                  <span class="ai-paper-sales-sale-price-{{ ai_gen_id }}">{{ item_sale_price }}</span>
+                  {% if item_regular_price != blank %}
+                    <span class="ai-paper-sales-compare-price-{{ ai_gen_id }}">{{ item_regular_price }}</span>
+                  {% endif %}
+                {% elsif item_regular_price != blank %}
+                  <span class="ai-paper-sales-regular-price-{{ ai_gen_id }}">{{ item_regular_price }}</span>
+                {% endif %}
+              </div>
+
+              {% if item_button_text != blank and item_button_link != blank %}
+                <div class="ai-paper-sales-button-wrapper-{{ ai_gen_id }}">
+                  <a href="{{ item_button_link }}" class="ai-paper-sales-button-{{ ai_gen_id }} style-{{ block.settings.button_style }} width-{{ block.settings.button_width }} mobile-width-{{ block.settings.mobile_button_width }}">
+                    {{ item_button_text }}
+                  </a>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Global sales section",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout_type",
+      "label": "Layout type",
+      "options": [
+        {
+          "value": "fixed",
+          "label": "Fixed columns (items in one row)"
+        },
+        {
+          "value": "responsive",
+          "label": "Responsive grid (auto-fit)"
+        }
+      ],
+      "default": "responsive",
+      "info": "Fixed layout displays items in a single row. Responsive layout auto-adjusts based on screen size."
+    },
+    {
+      "type": "select",
+      "id": "columns_desktop",
+      "label": "Columns on desktop",
+      "options": [
+        {
+          "value": "2",
+          "label": "2 columns"
+        },
+        {
+          "value": "3",
+          "label": "3 columns"
+        },
+        {
+          "value": "4",
+          "label": "4 columns"
+        }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "select",
+      "id": "mobile_layout",
+      "label": "Mobile layout",
+      "options": [
+        {
+          "value": "stacked",
+          "label": "Stacked (1 column)"
+        },
+        {
+          "value": "row",
+          "label": "2 columns"
+        }
+      ],
+      "default": "stacked"
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "min": 10,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Space between items",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_grid_gap",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile space between items",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Section style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "min": 0,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Section padding",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Section title"
+    },
+    {
+      "type": "richtext",
+      "id": "section_title",
+      "label": "Section title",
+      "default": "<p>Featured Products</p>"
+    },
+    {
+      "type": "font_picker",
+      "id": "section_title_font",
+      "label": "Section title font",
+      "default": "roboto_n4"
+    },
+    {
+      "type": "range",
+      "id": "section_title_size",
+      "min": 24,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Section title size",
+      "default": 40
+    },
+    {
+      "type": "color",
+      "id": "section_title_color",
+      "label": "Section title color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "section_title_spacing",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Section title spacing",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Media style"
+    },
+    {
+      "type": "select",
+      "id": "image_aspect_ratio",
+      "label": "Desktop image aspect ratio",
+      "options": [
+        {
+          "value": "1 / 1",
+          "label": "Square (1:1)"
+        },
+        {
+          "value": "4 / 5",
+          "label": "Portrait (4:5)"
+        },
+        {
+          "value": "3 / 4",
+          "label": "Portrait (3:4)"
+        },
+        {
+          "value": "2 / 3",
+          "label": "Portrait tall (2:3)"
+        },
+        {
+          "value": "9 / 16",
+          "label": "Portrait extra tall (9:16)"
+        },
+        {
+          "value": "16 / 9",
+          "label": "Landscape (16:9)"
+        }
+      ],
+      "default": "4 / 5"
+    },
+    {
+      "type": "select",
+      "id": "mobile_image_aspect_ratio",
+      "label": "Mobile image aspect ratio",
+      "options": [
+        {
+          "value": "1 / 1",
+          "label": "Square (1:1)"
+        },
+        {
+          "value": "4 / 5",
+          "label": "Portrait (4:5)"
+        },
+        {
+          "value": "3 / 4",
+          "label": "Portrait (3:4)"
+        },
+        {
+          "value": "2 / 3",
+          "label": "Portrait tall (2:3)"
+        },
+        {
+          "value": "9 / 16",
+          "label": "Portrait extra tall (9:16)"
+        },
+        {
+          "value": "16 / 9",
+          "label": "Landscape (16:9)"
+        }
+      ],
+      "default": "4 / 5"
+    },
+    {
+      "type": "color",
+      "id": "media_background_color",
+      "label": "Media background color",
+      "default": "#ffffff",
+      "info": "Background color for image area. Use white for images with white backgrounds."
+    },
+    {
+      "type": "range",
+      "id": "media_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Image border radius",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "shadow_x",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Shadow horizontal",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "shadow_y",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Shadow vertical",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "shadow_blur",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Shadow blur",
+      "default": 30
+    },
+    {
+      "type": "color",
+      "id": "shadow_color",
+      "label": "Shadow color",
+      "default": "#00000026"
+    },
+    {
+      "type": "header",
+      "content": "Sale tag"
+    },
+    {
+      "type": "text",
+      "id": "sale_tag_label",
+      "label": "Sale tag text",
+      "default": "SALE"
+    },
+    {
+      "type": "color",
+      "id": "sale_tag_bg",
+      "label": "Sale tag background",
+      "default": "#990000"
+    },
+    {
+      "type": "color",
+      "id": "sale_tag_text_color",
+      "label": "Sale tag text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Content spacing"
+    },
+    {
+      "type": "range",
+      "id": "title_margin_bottom",
+      "min": -10,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Space below title",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "description_margin_top",
+      "min": -10,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Space above description",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "description_margin_bottom",
+      "min": -10,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Space below description",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "price_margin_top",
+      "min": -10,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Space above price",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "price_bottom_spacing",
+      "min": 4,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Space below price",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Title style"
+    },
+    {
+      "type": "font_picker",
+      "id": "title_font",
+      "label": "Title font",
+      "default": "roboto_n4"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 16,
+      "max": 36,
+      "step": 2,
+      "unit": "px",
+      "label": "Title size",
+      "default": 24
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Description style"
+    },
+    {
+      "type": "font_picker",
+      "id": "description_font",
+      "label": "Description font",
+      "default": "roboto_n3"
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Description size",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Description color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Price style"
+    },
+    {
+      "type": "font_picker",
+      "id": "price_font",
+      "label": "Price font",
+      "default": "roboto_n4"
+    },
+    {
+      "type": "range",
+      "id": "price_size",
+      "min": 14,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Price size",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "regular_price_color",
+      "label": "Regular price color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "sale_price_color",
+      "label": "Sale price color",
+      "default": "#990000"
+    },
+    {
+      "type": "color",
+      "id": "compare_price_color",
+      "label": "Compare price color",
+      "default": "#999999"
+    },
+    {
+      "type": "header",
+      "content": "Button style"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "options": [
+        {
+          "value": "solid",
+          "label": "Solid"
+        },
+        {
+          "value": "outline",
+          "label": "Outline"
+        }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "select",
+      "id": "button_width",
+      "label": "Desktop button width",
+      "options": [
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "full",
+          "label": "Full width"
+        }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "select",
+      "id": "mobile_button_width",
+      "label": "Mobile button width",
+      "options": [
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "full",
+          "label": "Full width"
+        }
+      ],
+      "default": "full"
+    },
+    {
+      "type": "font_picker",
+      "id": "button_font",
+      "label": "Button font",
+      "default": "roboto_n4"
+    },
+    {
+      "type": "range",
+      "id": "button_size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Button size",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "button_bg",
+      "label": "Button background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_bg",
+      "label": "Button hover background",
+      "default": "#333333"
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Button border radius",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Item 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_1_enabled",
+      "label": "Enable item 1",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "item_1_image",
+      "label": "Image"
+    },
+    {
+      "type": "richtext",
+      "id": "item_1_title",
+      "label": "Title",
+      "default": "<p>Product Name</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "item_1_description",
+      "label": "Description",
+      "default": "<p>Premium athletic grip socks for studio workouts</p>"
+    },
+    {
+      "type": "text",
+      "id": "item_1_regular_price",
+      "label": "Regular price",
+      "default": "$32.00"
+    },
+    {
+      "type": "text",
+      "id": "item_1_sale_price",
+      "label": "Sale price",
+      "default": "$24.00"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_1_show_sale",
+      "label": "Show as on sale",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "item_1_button_text",
+      "label": "Button text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "item_1_button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Item 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_2_enabled",
+      "label": "Enable item 2",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "item_2_image",
+      "label": "Image"
+    },
+    {
+      "type": "richtext",
+      "id": "item_2_title",
+      "label": "Title",
+      "default": "<p>Product Name</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "item_2_description",
+      "label": "Description",
+      "default": "<p>Premium athletic grip socks for studio workouts</p>"
+    },
+    {
+      "type": "text",
+      "id": "item_2_regular_price",
+      "label": "Regular price",
+      "default": "$32.00"
+    },
+    {
+      "type": "text",
+      "id": "item_2_sale_price",
+      "label": "Sale price",
+      "default": "$24.00"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_2_show_sale",
+      "label": "Show as on sale",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "item_2_button_text",
+      "label": "Button text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "item_2_button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Item 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_3_enabled",
+      "label": "Enable item 3",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "item_3_image",
+      "label": "Image"
+    },
+    {
+      "type": "richtext",
+      "id": "item_3_title",
+      "label": "Title",
+      "default": "<p>Product Name</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "item_3_description",
+      "label": "Description",
+      "default": "<p>Premium athletic grip socks for studio workouts</p>"
+    },
+    {
+      "type": "text",
+      "id": "item_3_regular_price",
+      "label": "Regular price",
+      "default": "$32.00"
+    },
+    {
+      "type": "text",
+      "id": "item_3_sale_price",
+      "label": "Sale price",
+      "default": "$24.00"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_3_show_sale",
+      "label": "Show as on sale",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "item_3_button_text",
+      "label": "Button text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "item_3_button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Item 4"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_4_enabled",
+      "label": "Enable item 4",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "item_4_image",
+      "label": "Image"
+    },
+    {
+      "type": "richtext",
+      "id": "item_4_title",
+      "label": "Title",
+      "default": "<p>Product Name</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "item_4_description",
+      "label": "Description",
+      "default": "<p>Premium athletic grip socks for studio workouts</p>"
+    },
+    {
+      "type": "text",
+      "id": "item_4_regular_price",
+      "label": "Regular price",
+      "default": "$32.00"
+    },
+    {
+      "type": "text",
+      "id": "item_4_sale_price",
+      "label": "Sale price",
+      "default": "$24.00"
+    },
+    {
+      "type": "checkbox",
+      "id": "item_4_show_sale",
+      "label": "Show as on sale",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "item_4_button_text",
+      "label": "Button text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "item_4_button_link",
+      "label": "Button link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Global sales section"
+    }
+  ]
+}
+{% endschema %}

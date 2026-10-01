@@ -1,0 +1,372 @@
+{% comment %}
+  Page Technology Section
+  Patented grip technology, materials, manufacturing, and the Double Failure
+  of grip socks. Used on: page.technology.json
+{% endcomment %}
+
+<section class="section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
+  <div class="section__inner section__inner--narrow">
+    {% if section.settings.eyebrow != blank %}
+      <p class="eyebrow eyebrow--accent">{{ section.settings.eyebrow }}</p>
+    {% endif %}
+    <h1 class="page-tech__title">{{ section.settings.title }}</h1>
+    {% if section.settings.subtitle != blank %}
+      <p class="page-tech__subtitle">{{ section.settings.subtitle }}</p>
+    {% endif %}
+  </div>
+</section>
+
+<section class="section section--cream">
+  <div class="section__inner">
+    <div class="page-tech__features">
+      {% for block in section.blocks %}
+        {% if block.type == 'feature' %}
+          <div class="page-tech__feature" {{ block.shopify_attributes }}>
+            <h3 class="page-tech__feature-title">{{ block.settings.title }}</h3>
+            <p class="page-tech__feature-text">{{ block.settings.description }}</p>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% if section.settings.how_it_works != blank %}
+<section class="section">
+  <div class="section__inner section__inner--narrow">
+    <h2 class="page-tech__section-title">{{ section.settings.how_heading }}</h2>
+    <div class="page-tech__body">
+      {{ section.settings.how_it_works }}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if section.settings.double_failure_heading != blank %}
+<section class="section section--dark">
+  <div class="section__inner section__inner--narrow">
+    <h2 class="page-tech__section-title page-tech__section-title--light">{{ section.settings.double_failure_heading }}</h2>
+    <div class="page-tech__double-failure">
+      {{ section.settings.double_failure_text }}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if section.settings.materials_heading != blank %}
+<section class="section section--cream">
+  <div class="section__inner section__inner--narrow">
+    <h2 class="page-tech__section-title">{{ section.settings.materials_heading }}</h2>
+    <div class="page-tech__materials">
+      {% for block in section.blocks %}
+        {% if block.type == 'material' %}
+          <div class="page-tech__material" {{ block.shopify_attributes }}>
+            <h3 class="page-tech__material-title">{{ block.settings.title }}</h3>
+            <p class="page-tech__material-text">{{ block.settings.description }}</p>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if section.settings.manufacturing_heading != blank %}
+<section class="section">
+  <div class="section__inner section__inner--narrow">
+    <h2 class="page-tech__section-title">{{ section.settings.manufacturing_heading }}</h2>
+    <div class="page-tech__body">
+      {{ section.settings.manufacturing_text }}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if section.settings.cta_text != blank %}
+<section class="section section--cream">
+  <div class="section__inner section__inner--narrow" style="text-align: center;">
+    <h2 class="page-tech__cta-title">{{ section.settings.cta_heading }}</h2>
+    <p class="page-tech__cta-body">{{ section.settings.cta_body }}</p>
+    {% render 'button', label: section.settings.cta_text, url: section.settings.cta_url, style: 'primary', size: 'lg' %}
+  </div>
+</section>
+{% endif %}
+
+<style>
+  .page-tech__title {
+    font-size: var(--text-5xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    text-align: center;
+    margin: 0 0 var(--space-3);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .page-tech__subtitle {
+    font-size: var(--text-md);
+    color: var(--text-body);
+    text-align: center;
+    line-height: var(--leading-relaxed);
+    margin: 0;
+    max-width: var(--max-width-copy);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .page-tech__features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--grid-gap);
+  }
+
+  .page-tech__feature {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-card);
+    padding: var(--space-6);
+    text-align: center;
+  }
+
+  .page-tech__feature-title {
+    font-size: var(--text-lg);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    margin: 0 0 var(--space-2);
+  }
+
+  .page-tech__feature-text {
+    font-size: var(--text-base);
+    color: var(--text-body);
+    line-height: var(--leading-relaxed);
+    margin: 0;
+  }
+
+  .page-tech__section-title {
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    margin: 0 0 var(--space-6);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .page-tech__section-title--light {
+    color: var(--color-white);
+  }
+
+  .page-tech__body {
+    font-size: var(--text-md);
+    color: var(--text-body);
+    line-height: var(--leading-loose);
+  }
+
+  .page-tech__body p {
+    margin-bottom: var(--space-4);
+  }
+
+  .page-tech__body p:last-child {
+    margin-bottom: 0;
+  }
+
+  .page-tech__double-failure {
+    font-size: var(--text-md);
+    color: rgba(255, 255, 255, 0.85);
+    line-height: var(--leading-loose);
+  }
+
+  .page-tech__double-failure p {
+    margin-bottom: var(--space-4);
+  }
+
+  .page-tech__double-failure p:last-child {
+    margin-bottom: 0;
+  }
+
+  .page-tech__materials {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .page-tech__material {
+    padding: var(--space-5);
+    background: var(--bg-primary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-card-sm);
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: var(--space-4);
+    align-items: baseline;
+  }
+
+  .page-tech__material-title {
+    font-size: var(--text-base);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    margin: 0;
+  }
+
+  .page-tech__material-text {
+    font-size: var(--text-base);
+    color: var(--text-body);
+    line-height: var(--leading-relaxed);
+    margin: 0;
+  }
+
+  .page-tech__cta-title {
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    margin: 0 0 var(--space-3);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .page-tech__cta-body {
+    font-size: var(--text-md);
+    color: var(--text-body);
+    margin: 0 0 var(--space-6);
+    line-height: var(--leading-relaxed);
+  }
+
+  @media (max-width: 768px) {
+    .page-tech__title {
+      font-size: var(--text-3xl);
+    }
+
+    .page-tech__features {
+      grid-template-columns: 1fr;
+    }
+
+    .page-tech__material {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Technology Page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "The Technology"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Patented 360° Grip Technology"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Not printed. Not glued. Injection-molded directly into the sole. Full-contact grip that never peels, flakes, or separates."
+    },
+    {
+      "type": "text",
+      "id": "how_heading",
+      "label": "How it works heading",
+      "default": "How It Works"
+    },
+    {
+      "type": "richtext",
+      "id": "how_it_works",
+      "label": "How it works text",
+      "default": "<p>Traditional grip socks use silicone dots printed or glued onto fabric. These dots are surface-level applications that inevitably peel, wear off, or lose adhesion with use.</p><p>Barreletics take a fundamentally different approach. Our grip surface is injection-molded — meaning the grip pattern is created during the manufacturing process itself. It's not added on top; it's part of the sole structure. This makes separation physically impossible.</p>"
+    },
+    {
+      "type": "text",
+      "id": "double_failure_heading",
+      "label": "Double Failure heading",
+      "default": "The Double Failure of Grip Socks"
+    },
+    {
+      "type": "richtext",
+      "id": "double_failure_text",
+      "label": "Double Failure text",
+      "default": "<p><strong>Failure #1: The grip wears off.</strong> Silicone dots are a surface application. With friction and heat from studio use, they peel, flake, and lose adhesion. Most grip socks lose meaningful grip within 6-8 weeks of regular use.</p><p><strong>Failure #2: The fabric absorbs sweat.</strong> Fabric-based socks absorb perspiration during class. This moisture sits between your foot and the floor, reducing the grip coefficient at the exact moment you need it most — during intense holds and transitions.</p><p>Performance Skins solve both failures simultaneously. The injection-molded grip cannot separate. The non-porous material cannot absorb sweat.</p>"
+    },
+    {
+      "type": "text",
+      "id": "materials_heading",
+      "label": "Materials heading",
+      "default": "Materials"
+    },
+    {
+      "type": "text",
+      "id": "manufacturing_heading",
+      "label": "Manufacturing heading",
+      "default": "Made in USA"
+    },
+    {
+      "type": "richtext",
+      "id": "manufacturing_text",
+      "label": "Manufacturing text",
+      "default": "<p>Every pair of Barreletics is manufactured in the United States. Our injection-molding process requires precision equipment and quality oversight that we maintain domestically.</p><p>From raw materials to finished product, the entire supply chain is US-based. This allows us to maintain strict quality standards and respond quickly to demand.</p>"
+    },
+    {
+      "type": "text",
+      "id": "cta_heading",
+      "label": "CTA heading",
+      "default": "Experience the Difference"
+    },
+    {
+      "type": "textarea",
+      "id": "cta_body",
+      "label": "CTA body text",
+      "default": "One pair. 360° grip. Made to last years, not weeks."
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA button text",
+      "default": "Shop Performance Skins"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "CTA link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Technology Feature",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Feature title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Feature description"
+        }
+      ]
+    },
+    {
+      "type": "material",
+      "name": "Material Property",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Property name"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Property description"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Technology Page"
+    }
+  ]
+}
+{% endschema %}

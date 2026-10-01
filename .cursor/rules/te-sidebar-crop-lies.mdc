@@ -1,0 +1,51 @@
+---
+description: HARD — Theme Editor sidebar crop lies; never approve media crop from TE-narrow preview alone
+alwaysApply: true
+---
+
+# Theme Editor sidebar crop lies (HARD)
+
+**Owner 2026-08-31 / current hero 2026-09-01.** Agents kept “fixing” Home split-hero from the Theme Editor preview (sidebar open). That preview is **narrower** than full desktop. `object-fit: cover` in a **width-fluid** media column therefore shows **more figure in TE** and a **tighter crop at full width**. Andrew cannot keep re-litigating this.
+
+## Why it happens (do not re-discover)
+
+| Viewport | Media column | Cover result on portrait photo |
+|---|---|---|
+| TE + left sidebar | ~narrow | Closer to portrait → more of figure visible (“fits”) |
+| Full browser / sidebar closed | Wide (e.g. 62% of 1440) | Landscape-ish box → cover zooms → head/torso gone or feet wrong |
+
+**TE crop ≠ storefront crop.** Never claim done from TE alone.
+
+## HARD — before any “hero crop fixed” claim
+
+1. Verify at **full desktop width ≥ 1280** (preferably **1440**) with TE sidebar **closed** or via storefront preview URL — not the narrow editor pane.
+2. Also check one **TE-narrow** width (~900) — know they will **differ** under cover. That difference is expected. Compose with X/Y/Zoom at full width.
+3. Do **not** “fix” the TE lie by switching to `contain`, padding, or a studio-fill / pink background. That approach was **rejected**.
+4. Screenshot or CDP measure both widths before sending Andrew a link.
+
+## Forbidden
+
+- Approving / linking a hero crop after only looking at Theme Editor with sidebar open
+- Reintroducing **`object-fit: contain`** + studio fill / pink pad / cream bands (rejected 2026-08-31)
+- “Fixed” by changing only `object-position` and claiming TE-narrow = storefront
+- Circling contain ↔ cover ↔ pad without reading the **current** pattern below
+
+## Current locked pattern (Home split-hero) — 2026-09-09
+
+Files: `shopify-build/assets/split-hero.css` · `shopify-build/sections/split-hero.liquid` · `templates/index.json` `split_hero`
+
+- Layout: width split **62/38**. Desktop height = **92vh** (not photo-aspect · not Section height 110).
+- Photo: **`object-fit: cover`**. Full-bleed in the 92vh box. **No contain. No fill bands.**
+- Locked crop: **50 / 22** desktop + phone · zoom **100**.
+- X/Y = `object-position` + `transform-origin`. Zoom = `scale(max(1, zoom))`. TE below 100 stays fill.
+- Trust **left**. Copy column white.
+- One **Corner radius** clips photo + text. Text panel background on the **copy column only**.
+- Media column `background: transparent`.
+- `split-hero` and `fifty-fifty` stay **separate**. Do not merge.
+
+Skill: `barreletics-te-vs-fullwidth-crop`
+
+## Companion
+
+- `.cursor/skills/barreletics-te-vs-fullwidth-crop/SKILL.md`
+- `.cursor/rules/always-give-a-verified-link.mdc` · `test-before-link.mdc`

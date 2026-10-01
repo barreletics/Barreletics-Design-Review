@@ -5,6 +5,19 @@
 **Method:** Systematic page-by-page crawl of all discoverable public URLs  
 **Source:** barreletics.com (Shopify storefront)
 
+> ## ⛔ THIS IS AN EVIDENCE RECORD — DO NOT COPY FROM IT
+> This file is a **crawl snapshot of live copy as of 2026-07-12**. Quoted text is preserved verbatim as evidence; it is **not** approved copy.
+>
+> **Pool positioning is RETIRED (Owner letter 2026-08-07).** Never reuse: pool · poolside · pool deck · water park · tidal pool · spa visits · aqua barre · water aerobics · "in the pool".
+> **Use instead:** resortwear · paddleboarding · beach.
+> Approved copy authority: `docs/09-PRODUCT-KNOWLEDGE.md` + `manychat-kb/`.
+>
+> **Still live on Shopify — needs removal in Admin (not a repo fix):**
+> - Closed Sole / Water Shoe product description — "poolside lounging"
+> - Product FAQ "Great for" list — pool decks, water parks, spa visits, tidal pools
+> - Product FAQ caution line — "spa, pool, and tile areas"
+> - Blog: aqua barre / water-aerobics articles built entirely on pool workouts
+
 ---
 
 ## AUDIT METHODOLOGY

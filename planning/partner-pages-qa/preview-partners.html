@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>partners — partner page QA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../shopify-build/assets/design-tokens.css">
+<link rel="stylesheet" href="../../shopify-build/assets/barreletics-base.css">
+<link rel="stylesheet" href="../../shopify-build/assets/chrome.css">
+</head><body>
+<div class="header-section" data-qa-sticky>
+  <header class="site-header">
+    <div class="site-header__inner" style="max-width:var(--max-width);margin:0 auto;
+         display:flex;align-items:center;justify-content:space-between;
+         padding:18px var(--section-padding-x);">
+      <span class="type-label">Barreletics</span>
+      <span class="type-label">Shop &nbsp; Learn &nbsp; Journal &nbsp; Help</span>
+    </div>
+  </header>
+</div>
+<section class="section" id="shopify-section-qa-page-partners" >
+  <div class="section__inner section__inner--narrow">
+    <h1 class="partners__title type-hero">Partner programs</h1>
+    
+      <p class="partners__subtitle type-lede">Instructors, studios, retailers. Pick the one that describes you.</p>
+    
+
+    <div class="partners__list">
+      <div class="partners__program" id="wholesale">
+        <h2 class="partners__program-title h2-standard">Wholesale</h2>
+        <div class="partners__program-body type-body"><p>For fitness and activewear retailers, boutiques, multi-location studio groups, gyms, wellness centers, and resorts.</p></div>
+        <a href="/pages/wholesale" class="btn btn--primary partners__cta">Open a wholesale account</a>
+      </div>
+
+      <div class="partners__program" id="studio-partners">
+        <h2 class="partners__program-title h2-standard">Studio program</h2>
+        <div class="partners__program-body type-body"><p>For single studios and certified instructors teaching barre, reformer Pilates, Lagree, Megaformer, mat Pilates, or yoga.</p></div>
+        <a href="/pages/studio-program" class="btn btn--primary partners__cta">Apply to the studio program</a>
+      </div>
+
+      <div class="partners__program" id="ambassadors">
+        <h2 class="partners__program-title h2-standard">Ambassador program</h2>
+        <div class="partners__program-body type-body"><p>For instructors and practitioners with an audience. No follower minimum.</p></div>
+        <a href="/pages/ambassador" class="btn btn--primary partners__cta">Apply to the ambassador program</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--cream" id="partner-inquiry">
+  <div class="section__inner section__inner--narrow">
+    <h2 class="partners__form-title h2-standard">Not sure which one?</h2>
+    <p class="partners__form-subtitle type-body">Tell us what you do and we'll point you at the right program. We reply within 3–5 business days.</p>
+
+    <form method="post" action="/contact#contact_form" id="contact_form" accept-charset="UTF-8">
+      
+
+      
+
+      <input type="hidden" name="contact[subject]" value="Partner Program Inquiry">
+      <input type="hidden" name="contact[form_id]" value="BL-PARTNER-GENERAL">
+
+      <div class="partners__fields">
+        <div class="partners__field-row">
+          <div class="partners__field">
+            <label for="partner-name" class="partners__label">Name</label>
+            <input type="text" id="partner-name" name="contact[name]" class="partners__input" required autocomplete="name">
+          </div>
+          <div class="partners__field">
+            <label for="partner-email" class="partners__label">Email</label>
+            <input type="email" id="partner-email" name="contact[email]" class="partners__input" required autocomplete="email">
+          </div>
+        </div>
+
+        <div class="partners__field">
+          <label for="partner-program" class="partners__label">Program</label>
+          <select id="partner-program" name="contact[program]" class="partners__select" required>
+            <option value="" disabled selected>Select a program</option>
+            <option value="Wholesale">Wholesale</option>
+            <option value="Studio Partner">Studio program</option>
+            <option value="Ambassador">Ambassador program</option>
+            <option value="Not sure">Not sure</option>
+          </select>
+        </div>
+
+        <div class="partners__field">
+          <label for="partner-message" class="partners__label">Message</label>
+          <textarea id="partner-message" name="contact[body]" class="partners__textarea" rows="4" required placeholder="Tell us about yourself, your studio, or your business."></textarea>
+        </div>
+
+        <div class="partners__field">
+          <button type="submit" class="btn btn--primary btn--lg">Send inquiry</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<style>
+  /* Softer warm band, owner pick 2026-08-08 (variant B of the form-band comparison).
+     --bg-alternate #f5f2ec stepped down from white too hard; --bg-alternate-soft #faf8f6
+     halves the step and keeps the warmth. Set here, not as a Theme Editor setting, so the
+     old tone cannot come back on a fresh section add. */
+  #partner-inquiry.section--cream {
+    background: var(--bg-alternate-soft);
+  }
+
+  .partners__title {
+    color: var(--text-primary);
+    text-align: center;
+    margin: 0 0 var(--gap-b, 20px);
+  }
+
+  .partners__subtitle {
+    text-align: center;
+    margin: 0 auto;
+    max-width: var(--max-width-copy);
+  }
+
+  .partners__list {
+    display: grid;
+    gap: var(--space-8);
+    margin: var(--space-10, 48px) auto 0;
+    max-width: 640px;
+  }
+
+  .partners__program {
+    padding: var(--space-5) 0 0;
+    border-top: 1px solid var(--border-default);
+    scroll-margin-top: 96px;
+  }
+
+  .partners__program-title {
+    margin: 0 0 var(--space-2);
+  }
+
+  .partners__program-body {
+    margin-bottom: var(--space-5);
+  }
+
+  .partners__program-body p {
+    margin: 0;
+  }
+
+  .partners__cta {
+    width: fit-content;
+  }
+
+  .partners__form-title {
+    text-align: center;
+    margin: 0 0 var(--space-2);
+  }
+
+  .partners__form-subtitle {
+    text-align: center;
+    margin: 0 auto var(--space-8);
+    max-width: var(--max-width-copy);
+  }
+
+  .partners__fields {
+    display: grid;
+    gap: var(--space-4);
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .partners__field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+  }
+
+  .partners__label {
+    display: block;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    margin-bottom: var(--space-1);
+  }
+
+  .partners__input,
+  .partners__select,
+  .partners__textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--border-default);
+    background: var(--bg-primary);
+    font-size: var(--text-base);
+    font-family: var(--font-family);
+    color: var(--text-primary);
+    border-radius: var(--radius-button);
+    transition: border-color var(--transition-fast);
+    min-height: 44px;
+  }
+
+  .partners__input:focus,
+  .partners__select:focus,
+  .partners__textarea:focus {
+    outline: none;
+    border-color: var(--text-primary);
+    box-shadow: 0 0 0 1px var(--text-primary);
+  }
+
+  .partners__input:focus-visible,
+  .partners__select:focus-visible,
+  .partners__textarea:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+  }
+
+  .partners__textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  .partners__select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath fill='%234a4a4a' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+  }
+
+  .partners__success {
+    padding: var(--space-4);
+    background: var(--bg-alternate);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-button);
+    margin-bottom: var(--space-5);
+    color: var(--text-primary);
+    text-align: center;
+  }
+
+  .partners__errors {
+    padding: var(--space-4);
+    background: rgba(196, 92, 63, 0.08);
+    border: 1px solid var(--accent-primary);
+    border-radius: var(--radius-button);
+    margin-bottom: var(--space-5);
+    color: var(--accent-primary);
+  }
+
+  @media (max-width: 768px) {
+    .partners__field-row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+
+
+</body></html>

@@ -1,0 +1,85 @@
+{% comment %}
+  Trust Strip / Value Strip
+  Source: Doc 04 (Component 20), approved prototypes
+
+  Displays trust signals in a horizontal strip.
+  Warm cream background, uppercase text with separators.
+
+  Usage:
+    {% render 'trust-strip' %}
+    {% render 'trust-strip', items: custom_items %}
+
+  Parameters:
+    - items: optional array of strings (defaults to standard trust signals)
+    - style: 'default' | 'value' (default: 'default')
+{% endcomment %}
+
+{% assign style = style | default: 'default' %}
+
+<div class="trust-strip{% if style == 'value' %} trust-strip--value{% endif %}" role="complementary" aria-label="Trust signals">
+  <div class="trust-strip__inner">
+    {% if items != blank %}
+      {% for item in items %}
+        <span>{{ item }}</span>
+        {% unless forloop.last %}<span class="trust-strip__sep" aria-hidden="true">·</span>{% endunless %}
+      {% endfor %}
+    {% else %}
+      <span><span aria-hidden="true">★★★★★</span><span class="visually-hidden">5 out of 5 stars,</span> 1,000+ Reviews</span>
+      <span class="trust-strip__sep" aria-hidden="true">·</span>
+      <span>Free Shipping Over $150</span>
+      <span class="trust-strip__sep" aria-hidden="true">·</span>
+      <span>30-Day Returns</span>
+      <span class="trust-strip__sep" aria-hidden="true">·</span>
+      <span>Made in USA</span>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .trust-strip {
+    background: var(--bg-alternate);
+    padding: 12px var(--section-padding-x);
+    border-bottom: 1px solid #e8e2d8;
+  }
+  .trust-strip__inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    text-align: center;
+    font-size: 11px;
+    font-weight: var(--weight-medium);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-widest);
+    color: var(--text-warm-muted);
+    line-height: 1.4;
+    white-space: nowrap;
+    overflow-x: auto;
+  }
+  .trust-strip__sep {
+    color: var(--text-muted);
+    margin: 0 8px;
+  }
+
+  /* Value strip variant (used below product grids) */
+  .trust-strip--value {
+    background: transparent;
+    border-bottom: 1px solid #eee8de;
+    padding: 18px 0;
+  }
+  .trust-strip--value .trust-strip__inner {
+    font-size: 12px;
+    font-weight: var(--weight-semibold);
+    color: var(--text-warm-muted);
+    letter-spacing: 0.02em;
+    text-transform: none;
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .trust-strip--value .trust-strip__sep { display: none; }
+
+  @media (max-width: 768px) {
+    .trust-strip { padding: 10px 16px; }
+    .trust-strip__inner { font-size: 10px; }
+  }
+</style>

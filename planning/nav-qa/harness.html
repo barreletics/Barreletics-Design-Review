@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>M4 navigation QA harness — full menu</title>
+
+<!-- Real Design System assets, unmodified. This file is QA only and is never shipped;
+     it reproduces sections/header.liquid's output for the complete reconciled M4 Menu
+     (planning/navigation-menu-spec.md §1–2) with the real 200-status URLs, so dropdowns,
+     the drawer accordion and tap targets can be measured. chrome.js is loaded so the
+     accordion and drawer are exercised for real, not simulated. -->
+<link rel="stylesheet" href="../../shopify-build/assets/design-tokens.css">
+<link rel="stylesheet" href="../../shopify-build/assets/barreletics-base.css">
+<link rel="stylesheet" href="../../shopify-build/assets/chrome.css">
+
+<style>
+  body { margin: 0; min-height: 200vh; }
+  .qa-note {
+    font: 12px/1.5 Roboto, sans-serif; color: #6b645a;
+    padding: 24px 40px; border-top: 1px solid #e8e2d8; margin-top: 320px;
+  }
+</style>
+</head>
+<body>
+
+<div class="announcement-strip">
+  <div class="announcement-strip__inner">
+    <span class="announcement-strip__item">Buy 2, Save 15% — Code SAVE15</span>
+    <span class="announcement-strip__sep"> · </span>
+    <span class="announcement-strip__item">Free Shipping Over $150</span>
+    <span class="announcement-strip__sep"> · </span>
+    <span class="announcement-strip__item"><a class="announcement-strip__link" href="/pages/returns">30-Day Returns</a></span>
+    <span class="announcement-strip__sep"> · </span>
+    <span class="announcement-strip__item">Made in USA</span>
+  </div>
+</div>
+
+<!-- Mirrors sections/header.liquid output. Inline vars come from header-group.json
+     (logo_height 45 / logo_height_mobile 39 / nav_link_size 18 / nav_gap 30). -->
+<header
+  class="site-header"
+  data-site-header
+  role="banner"
+  style="
+    --header-logo-height: 45px;
+    --header-logo-height-mobile: 39px;
+    --header-nav-gap: 30px;
+    --header-bg: #ffffff;
+    --header-text: #4a4a4a;
+    --header-nav-size: 18px;
+  "
+>
+  <div class="site-header__inner">
+    <button class="site-header__hamburger" data-mobile-menu-toggle aria-expanded="false"
+            aria-controls="mobile-menu" aria-label="Open menu" type="button">
+      <svg width="20" height="14" viewBox="0 0 20 14" fill="none" aria-hidden="true">
+        <path d="M0 1h20M0 7h20M0 13h20" stroke="currentColor" stroke-width="1.5"/>
+      </svg>
+    </button>
+
+    <a href="/" class="site-header__logo" aria-label="Barreletics">
+      <img class="site-header__logo-img" src="../../shopify-build/assets/barreletics-logo.png"
+           alt="Barreletics" width="138" height="45" decoding="async" loading="eager">
+    </a>
+
+    <nav class="site-header__nav" aria-label="Main navigation">
+      <ul class="site-header__nav-list" role="list">
+        <li class="site-header__nav-item site-header__nav-item--has-sub">
+          <a href="/collections/barre-pilates-yoga-shoe-sock-footwear">Grippy Shoes</a>
+          <ul class="site-header__subnav" role="list">
+            <li><a href="/collections/barre-pilates-yoga-shoe-sock-footwear">Shop All Grippy Shoes</a></li>
+            <li><a href="/products/studio-performance-skin-footwear">Open Sole</a></li>
+            <li><a href="/products/best-reformer-pilates-legree-workout-shoes">Closed Sole</a></li>
+            <li><a href="/products/aquatic-performance-skins">Outdoor</a></li>
+            <li><a href="/pages/compare-open-closed-sole">Compare Styles</a></li>
+          </ul>
+        </li>
+        <li class="site-header__nav-item site-header__nav-item--has-sub">
+          <a href="/collections/apparel">Apparel</a>
+          <ul class="site-header__subnav" role="list">
+            <li><a href="/collections/apparel">Shop All Apparel</a></li>
+            <li><a href="/products/barreletics-performance-fabric-yoga-t-shirts">Tops</a></li>
+            <li><a href="/products/lightly-padded-knee-yoga-pant-black">Bottoms</a></li>
+          </ul>
+        </li>
+        <li class="site-header__nav-item"><a href="/products/barreletics-x-coperni-closed-sole">Collaborations</a></li>
+        <li class="site-header__nav-item"><a href="/blogs/news">Journal</a></li>
+      </ul>
+    </nav>
+
+    <div class="site-header__actions">
+      <div class="site-header__help site-header__nav-item--has-sub">
+        <a href="/pages/our-story" class="site-header__action site-header__action--help site-header__action--text" aria-label="Help" aria-haspopup="true">
+          Help <span class="site-header__caret" aria-hidden="true">▾</span>
+        </a>
+        <ul class="site-header__subnav site-header__subnav--help" role="list">
+          <li><a href="/pages/our-story">About Us</a></li>
+          <li><a href="/pages/faq">FAQ</a></li>
+          <li><a href="/pages/contact-us-form">Contact Us</a></li>
+          <li><a href="/pages/returns">Returns &amp; Exchanges</a></li>
+        </ul>
+      </div>
+      <a href="/account" class="site-header__action site-header__action--text" aria-label="Account">Account</a>
+      <a href="/cart" class="site-header__action site-header__action--text site-header__cart" aria-label="Cart">
+        Cart <span class="site-header__cart-badge site-header__cart-badge--inline">0</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="mobile-menu" id="mobile-menu" data-mobile-menu aria-hidden="true">
+    <div class="mobile-menu__overlay" data-mobile-menu-close></div>
+    <div class="mobile-menu__drawer" role="dialog" aria-label="Navigation menu">
+      <button class="mobile-menu__close" data-mobile-menu-close aria-label="Close menu" type="button">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <nav class="mobile-menu__nav" aria-label="Mobile navigation">
+        <ul class="mobile-menu__list" role="list">
+          <li class="mobile-menu__item mobile-menu__item--parent">
+            <button class="mobile-menu__toggle" aria-expanded="false" type="button">Grippy Shoes</button>
+            <ul class="mobile-menu__sub" role="list">
+              <li><a href="/collections/barre-pilates-yoga-shoe-sock-footwear">Shop All Grippy Shoes</a></li>
+              <li><a href="/products/studio-performance-skin-footwear">Open Sole</a></li>
+              <li><a href="/products/best-reformer-pilates-legree-workout-shoes">Closed Sole</a></li>
+              <li><a href="/products/aquatic-performance-skins">Outdoor</a></li>
+              <li><a href="/pages/compare-open-closed-sole">Compare Styles</a></li>
+            </ul>
+          </li>
+          <li class="mobile-menu__item mobile-menu__item--parent">
+            <button class="mobile-menu__toggle" aria-expanded="false" type="button">Apparel</button>
+            <ul class="mobile-menu__sub" role="list">
+              <li><a href="/collections/apparel">Shop All Apparel</a></li>
+              <li><a href="/products/barreletics-performance-fabric-yoga-t-shirts">Tops</a></li>
+              <li><a href="/products/lightly-padded-knee-yoga-pant-black">Bottoms</a></li>
+            </ul>
+          </li>
+          <li class="mobile-menu__item"><a href="/products/barreletics-x-coperni-closed-sole">Collaborations</a></li>
+          <li class="mobile-menu__item"><a href="/blogs/news">Journal</a></li>
+        </ul>
+        <ul class="mobile-menu__utility" role="list">
+          <li><a href="/pages/our-story">About Us</a></li>
+          <li><a href="/pages/faq">FAQ</a></li>
+          <li><a href="/pages/contact-us-form">Contact Us</a></li>
+          <li><a href="/pages/returns">Returns &amp; Exchanges</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<p class="qa-note">
+  QA harness only — renders <code>sections/header.liquid</code> markup against the real
+  <code>design-tokens.css</code>, <code>chrome.css</code> and <code>chrome.js</code>, with the
+  complete reconciled M4 Menu and Help menu. Behaviour (hamburger, accordion, Escape) is the
+  shipped script, not a stand-in.
+</p>
+
+<script src="../../shopify-build/assets/chrome.js"></script>
+</body>
+</html>

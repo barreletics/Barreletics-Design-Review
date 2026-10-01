@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Barreletics — Footer version gallery (pick a letter)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --charcoal: #1c1916;
+    --rust: #c45c3f;
+    --border: #d6cfc0;
+    --muted: #8a8a8a;
+    --body: #4a4a4a;
+    --warm: #6b645a;
+    --cream: #f5f2ec;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--charcoal);
+    background: #f0ebe3;
+    line-height: 1.45;
+  }
+  .page-head {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 24px 24px;
+  }
+  .page-head h1 {
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    margin: 0 0 12px;
+  }
+  .page-head .lede {
+    font-size: 16px;
+    color: var(--body);
+    max-width: 62ch;
+    margin: 0 0 20px;
+  }
+  .banner {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--rust);
+    padding: 14px 18px;
+    font-size: 14px;
+    margin: 0 0 16px;
+  }
+  .banner strong { color: var(--charcoal); }
+  .toc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 20px 0 0;
+  }
+  .toc a {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 12px;
+    background: #fff;
+    border: 1px solid var(--border);
+    color: var(--charcoal);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .toc a:hover { border-color: var(--charcoal); }
+  .toc a.current-draft {
+    background: var(--charcoal);
+    color: #fff;
+    border-color: var(--charcoal);
+  }
+  .option {
+    margin: 0 0 48px;
+    background: #fff;
+    border: 1px solid var(--border);
+  }
+  .option__meta {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--cream);
+  }
+  .option__meta h2 {
+    margin: 0 0 8px;
+    font-size: 20px;
+    font-weight: 600;
+  }
+  .option__meta .one-liner {
+    margin: 0 0 10px;
+    font-size: 15px;
+    color: var(--body);
+  }
+  .option__meta .src {
+    margin: 0;
+    font-size: 12px;
+    color: var(--muted);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    word-break: break-all;
+  }
+  .option__meta .tag {
+    display: inline-block;
+    margin: 0 0 10px;
+    padding: 4px 8px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: var(--charcoal);
+    color: #fff;
+  }
+  .option__meta .tag.warn { background: var(--rust); }
+  .option__preview {
+    /* footer clips render full-bleed inside card */
+  }
+  .option__notes {
+    padding: 14px 24px 18px;
+    font-size: 13px;
+    color: var(--warm);
+    border-top: 1px solid var(--border);
+    background: #faf8f4;
+  }
+  .page-foot {
+    max-width: 1100px;
+    margin: 0 auto 64px;
+    padding: 0 24px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* ========== Option A+ — APPROVED / current — dark Join the list + light body (no blurb · no checklist) ========== */
+  .opt-a-plus .site-footer { background: #fff; padding: 0; color: #1c1916; }
+  .opt-a-plus .footer-newsletter-band { background: #1c1916; color: #fff; padding: 48px 40px; }
+  .opt-a-plus .footer-newsletter-band__inner { max-width: 640px; margin: 0 auto; }
+  .opt-a-plus .footer-newsletter-band .fn-signup h2 { font-size: clamp(22px, 2.5vw, 28px); font-weight: 400; color: #fff; margin: 0 0 20px; letter-spacing: -0.02em; line-height: 1.15; }
+  .opt-a-plus .footer-newsletter-band .fn-signup p { font-size: 15px; color: rgba(255,255,255,0.72); margin: 0 0 20px; line-height: 1.5; }
+  .opt-a-plus .footer-newsletter-band .fn-form { display: flex; gap: 8px; }
+  .opt-a-plus .footer-newsletter-band .fn-input { flex: 1; padding: 14px 16px; border: 1px solid rgba(255,255,255,0.28); background: #fff; font-size: 14px; color: #1c1916; border-radius: 4px; font-family: inherit; }
+  .opt-a-plus .footer-newsletter-band .fn-btn { padding: 14px 24px; background: #fff; color: #1c1916; border: none; font-size: 12px; font-weight: 700; cursor: pointer; letter-spacing: 0.05em; text-transform: uppercase; border-radius: 4px; }
+  .opt-a-plus .footer-newsletter-band .fn-legal { font-size: 11px; color: rgba(255,255,255,0.5); margin: 10px 0 0; }
+  .opt-a-plus .site-footer__body { padding: 64px 40px 40px; border-top: 1px solid #d6cfc0; }
+  .opt-a-plus .site-footer__inner { max-width: 1200px; margin: 0 auto; }
+  .opt-a-plus .site-footer__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; }
+  .opt-a-plus .site-footer__col h6 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #1c1916; margin: 0 0 18px; }
+  .opt-a-plus .site-footer__col ul { list-style: none; padding: 0; margin: 0; }
+  .opt-a-plus .site-footer__col li { margin: 0 0 10px; }
+  .opt-a-plus .site-footer__col a { font-size: 13px; color: #6b645a; text-decoration: none; }
+  .opt-a-plus .site-footer__bottom { display: flex; justify-content: space-between; align-items: center; padding: 24px 0 0; margin-top: 40px; border-top: 1px solid #d6cfc0; }
+  .opt-a-plus .site-footer__copyright, .opt-a-plus .site-footer__usa { font-size: 12px; color: #8a8a8a; }
+  @media (max-width: 800px) {
+    .opt-a-plus .site-footer__grid { grid-template-columns: 1fr 1fr; }
+    .opt-a-plus .footer-newsletter-band { padding: 40px 16px; }
+    .opt-a-plus .site-footer__body { padding: 40px 16px 28px; }
+    .opt-a-plus .footer-newsletter-band .fn-form { flex-direction: column; }
+  }
+
+  /* ========== Option A / E — WORKING light ========== */
+  .opt-a .site-footer { background: #fff; border-top: 1px solid #d6cfc0; padding: 64px 40px 40px; }
+  .opt-a .site-footer__inner { max-width: 1200px; margin: 0 auto; }
+  .opt-a .footer-newsletter { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 64px; align-items: start; padding-bottom: 48px; border-bottom: 1px solid #d6cfc0; margin-bottom: 48px; }
+  .opt-a .fn-signup h2 { font-size: clamp(22px, 2.5vw, 28px); font-weight: 400; color: #1c1916; margin: 0 0 12px; letter-spacing: -0.02em; line-height: 1.15; }
+  .opt-a .fn-signup p { font-size: 15px; color: #4a4a4a; margin: 0 0 20px; line-height: 1.5; }
+  .opt-a .fn-form { display: flex; gap: 8px; }
+  .opt-a .fn-input { flex: 1; padding: 14px 16px; border: 1px solid #d6cfc0; background: #fff; font-size: 14px; color: #1c1916; border-radius: 4px; font-family: inherit; }
+  .opt-a .fn-btn { padding: 14px 24px; background: #1c1916; color: #fff; border: none; font-size: 12px; font-weight: 700; cursor: pointer; letter-spacing: 0.05em; text-transform: uppercase; border-radius: 4px; }
+  .opt-a .fn-legal { font-size: 11px; color: #8a8a8a; margin: 10px 0 0; }
+  .opt-a .fn-value { display: flex; flex-direction: column; gap: 14px; padding-top: 8px; }
+  .opt-a .fn-value__item { display: flex; align-items: baseline; gap: 12px; }
+  .opt-a .fn-value__check { color: #c45c3f; font-weight: 700; font-size: 14px; }
+  .opt-a .fn-value__text { font-size: 14px; color: #4a4a4a; line-height: 1.5; }
+  .opt-a .site-footer__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; }
+  .opt-a .site-footer__col h6 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #1c1916; margin: 0 0 18px; }
+  .opt-a .site-footer__col ul { list-style: none; padding: 0; margin: 0; }
+  .opt-a .site-footer__col li { margin: 0 0 10px; }
+  .opt-a .site-footer__col a { font-size: 13px; color: #6b645a; text-decoration: none; }
+  .opt-a .site-footer__bottom { display: flex; justify-content: space-between; align-items: center; padding: 24px 0 0; margin-top: 40px; border-top: 1px solid #d6cfc0; }
+  .opt-a .site-footer__copyright, .opt-a .site-footer__usa { font-size: 12px; color: #8a8a8a; }
+  @media (max-width: 800px) {
+    .opt-a .footer-newsletter { grid-template-columns: 1fr; gap: 32px; }
+    .opt-a .site-footer__grid { grid-template-columns: 1fr 1fr; }
+    .opt-a .site-footer { padding: 40px 16px 28px; }
+  }
+
+  /* ========== Option B — Live Impulse (static recreation) ========== */
+  .opt-b .site-footer {
+    text-align: center;
+    background: #faf7f2;
+    color: #1c1916;
+    padding: 0 20px 40px;
+    margin-top: 0;
+  }
+  .opt-b .site-footer__section--newsletter {
+    background: #1c1916;
+    color: #fff;
+    margin: 0 -20px 48px;
+    padding: 64px 24px;
+  }
+  .opt-b .nl-inner { max-width: 640px; margin: 0 auto; }
+  .opt-b .nl-inner h2 {
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 400;
+    margin: 0 0 12px;
+    letter-spacing: -0.02em;
+  }
+  .opt-b .nl-inner p { font-size: 15px; opacity: 0.85; margin: 0 0 24px; }
+  .opt-b .nl-form { display: flex; gap: 0; max-width: 420px; margin: 0 auto; border: 1px solid rgba(255,255,255,0.35); }
+  .opt-b .nl-form input {
+    flex: 1; border: 0; padding: 14px 16px; background: transparent; color: #fff; font: inherit; font-size: 14px;
+  }
+  .opt-b .nl-form input::placeholder { color: rgba(255,255,255,0.45); }
+  .opt-b .nl-form button {
+    border: 0; padding: 14px 20px; background: #fff; color: #1c1916;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer;
+  }
+  .opt-b .footer__social { display: flex; justify-content: center; gap: 18px; margin: 0 0 20px; font-size: 13px; }
+  .opt-b .footer__social a { color: #6b645a; text-decoration: none; }
+  .opt-b .site-footer__linklist {
+    list-style: none; padding: 0; margin: 0 0 24px;
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 0;
+  }
+  .opt-b .site-footer__linklist a {
+    color: #1c1916; text-decoration: none; display: block; padding: 6px 12px; font-size: 13px;
+  }
+  .opt-b .site-footer__copyright { font-size: 11px; color: #8a8a8a; }
+  .opt-b .payment-row { margin: 16px 0 0; font-size: 11px; color: #8a8a8a; letter-spacing: 0.04em; }
+
+  /* ========== Option C/D — Dark Phase 1 shell ========== */
+  .opt-dark .site-footer {
+    background: #1c1916;
+    color: #fff;
+    padding: 56px 40px 32px;
+  }
+  .opt-dark .site-footer__inner { max-width: 1200px; margin: 0 auto; }
+  .opt-dark .site-footer__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(140px, 1fr));
+    gap: 40px;
+  }
+  .opt-dark .site-footer__heading {
+    font-size: 12px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.12em; color: #fff; margin: 0 0 16px;
+  }
+  .opt-dark .site-footer__links { list-style: none; margin: 0; padding: 0; }
+  .opt-dark .site-footer__links li { margin-bottom: 10px; }
+  .opt-dark .site-footer__links a {
+    font-size: 14px; color: rgba(255,255,255,0.7); text-decoration: none;
+  }
+  .opt-dark .site-footer__newsletter-text {
+    font-size: 14px; color: rgba(255,255,255,0.7); margin: 0 0 16px; line-height: 1.5;
+  }
+  .opt-dark .site-footer__form { display: flex; gap: 8px; }
+  .opt-dark .site-footer__input {
+    flex: 1; padding: 12px 14px; background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; font-size: 14px; color: #fff; font-family: inherit;
+  }
+  .opt-dark .site-footer__input::placeholder { color: rgba(255,255,255,0.4); }
+  .opt-dark .site-footer__submit {
+    padding: 12px 20px; background: #fff; color: #1c1916; border: none; border-radius: 4px;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .opt-dark .site-footer__privacy { font-size: 11px; color: rgba(255,255,255,0.4); margin: 10px 0 0; }
+  .opt-dark .site-footer__bottom {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 40px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.1);
+  }
+  .opt-dark .site-footer__social { display: flex; gap: 16px; }
+  .opt-dark .site-footer__social a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 13px; }
+  .opt-dark .site-footer__copyright { font-size: 12px; color: rgba(255,255,255,0.4); }
+  @media (max-width: 800px) {
+    .opt-dark .site-footer__grid { grid-template-columns: 1fr; gap: 32px; }
+    .opt-dark .site-footer { padding: 48px 16px 24px; }
+    .opt-dark .site-footer__bottom { flex-direction: column; gap: 16px; text-align: center; }
+  }
+
+  /* ========== Option F — PDP dark (columns only) ========== */
+  .opt-f .site-footer { background: #1c1916; padding: 64px 40px 40px; color: #fff; }
+  .opt-f .site-footer__inner { max-width: 1200px; margin: 0 auto; }
+  .opt-f .site-footer__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; }
+  .opt-f .site-footer__col h6 {
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+    color: #fff; margin: 0 0 18px;
+  }
+  .opt-f .site-footer__col ul { list-style: none; padding: 0; margin: 0; }
+  .opt-f .site-footer__col li { margin: 0 0 10px; }
+  .opt-f .site-footer__col a { font-size: 13px; color: rgba(255,255,255,0.65); text-decoration: none; }
+  .opt-f .site-footer__bottom {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 24px 0 0; margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.12);
+  }
+  .opt-f .site-footer__copyright, .opt-f .site-footer__usa { font-size: 12px; color: rgba(255,255,255,0.45); }
+  @media (max-width: 800px) {
+    .opt-f .site-footer__grid { grid-template-columns: 1fr 1fr; }
+    .opt-f .site-footer { padding: 40px 16px 28px; }
+  }
+
+  /* ========== Option G/H — early brand-column pdp-footer ========== */
+  .opt-g .pdp-footer {
+    background: #fff;
+    border-top: 1px solid #d6cfc0;
+    padding: 80px 32px 32px;
+    --br-line: #d6cfc0;
+    --br-text: #1c1916;
+    --br-text-soft: #6b645a;
+    --br-text-mute: #8a8a8a;
+    --br-accent: #c45c3f;
+  }
+  .opt-g .pdp-footer__grid {
+    max-width: 1440px; margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.4fr repeat(4, 1fr);
+    gap: 48px;
+    padding-bottom: 56px;
+    border-bottom: 1px solid #d6cfc0;
+  }
+  .opt-g .pdp-footer__brand .logo-mark {
+    display: inline-block;
+    font-size: 18px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: #1c1916; text-decoration: none; margin-bottom: 16px;
+  }
+  .opt-g .pdp-footer__brand p {
+    font-size: 14px; line-height: 1.55; color: #6b645a; max-width: 32ch; margin: 0 0 20px;
+  }
+  .opt-g .pdp-footer__col h6 {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+    margin: 0 0 18px; color: #1c1916;
+  }
+  .opt-g .pdp-footer__col ul {
+    list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px;
+  }
+  .opt-g .pdp-footer__col a { color: #6b645a; text-decoration: none; font-size: 14px; }
+  .opt-g .pdp-footer__bottom {
+    max-width: 1440px; margin: 0 auto; padding-top: 24px;
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    font-size: 12px; color: #8a8a8a;
+  }
+  @media (max-width: 900px) {
+    .opt-g .pdp-footer__grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="page-head">
+  <h1>Footer version gallery</h1>
+  <p class="lede">
+    Evidence only — not a redesign. Pick an option letter. We will not change the draft footer again until you name a letter.
+  </p>
+  <div class="banner">
+    <strong>Currently in repo / on draft:</strong>
+    Option <strong>A+</strong> — <strong>APPROVED / FROZEN</strong> · dark Join the list · columns · no brand blurb · no value checklist · no 10%.
+    Draft theme ID <code>187144929571</code> (M4 Visual QA). Gallery options B–H are historical only — do not deploy.
+  </div>
+
+  <div class="banner" id="a-family" style="border-left-color:#1c1916">
+    <strong>A-family</strong> — light body with 4 columns + Made in USA (A+ has no checklist).
+    <ul style="margin:10px 0 0;padding-left:18px;color:var(--body)">
+      <li style="margin-bottom:8px"><strong><a href="#opt-a-plus">A+</a> — APPROVED / FROZEN (sitewide footer).</strong>
+        Black (charcoal) simplified Join the list · Shop/Learn/Support/Connect · no brand blurb · no value checklist · no 10%.</li>
+      <li style="margin-bottom:8px"><strong><a href="#opt-a">A</a> — original WORKING mock.</strong>
+        Light newsletter + checklist side-by-side (includes 10% offer — historical).</li>
+      <li style="margin-bottom:8px"><strong><a href="#opt-e">E</a> — earlier Shopify port of A.</strong>
+        Superseded by A+.</li>
+      <li><a href="#opt-g">G</a>/<a href="#opt-h">H</a> historical brand-column footers — not used.</li>
+    </ul>
+  </div>
+
+  <div class="banner">
+    <strong>Coperni:</strong> Footer restore (<code>54a2e7e</code>) did <em>not</em> rewrite <code>collab-hero.liquid</code>.
+    Defaults still match Home WORKING (Syne/Cormorant, 105vh stage). Later TE commits only added optional size/radius controls.
+    Not restored. If Coperni still looks wrong on draft, say what you see and we will compare screenshots vs WORKING.
+  </div>
+  <nav class="toc" aria-label="Options">
+    <a class="current-draft" href="#opt-a-plus">A+ · FROZEN</a>
+    <a href="#opt-a">A · WORKING light</a>
+    <a href="#opt-b">B · Live Impulse</a>
+    <a href="#opt-c">C · Dark Phase 1</a>
+    <a href="#opt-d">D · Dark TE menus</a>
+    <a href="#opt-e">E · Shopify port</a>
+    <a href="#opt-f">F · PDP dark</a>
+    <a href="#opt-g">G · Home v23 brand</a>
+    <a href="#opt-h">H · Home Matured</a>
+  </nav>
+</header>
+
+<!-- A+ -->
+<section class="option" id="opt-a-plus">
+  <div class="option__meta">
+    <span class="tag">Option A+ — APPROVED / FROZEN</span>
+    <h2>A+ · Dark Join the list + columns (no blurb · no checklist)</h2>
+    <p class="one-liner">Charcoal signup (Join the list · email + Subscribe · no 10%) → light body: 4 link columns → © / Made in USA. Brand blurb and ✓ checklist removed (Andrew Jul 31).</p>
+    <p class="src">shopify-build/sections/footer.liquid + assets/chrome.css · freeze: planning/m4-section-freeze.md</p>
+  </div>
+  <div class="option__preview opt-a-plus">
+    <footer class="site-footer">
+      <div class="footer-newsletter-band">
+        <div class="footer-newsletter-band__inner">
+          <div class="fn-signup">
+            <h2>Join the list</h2>
+            <form class="fn-form" onsubmit="event.preventDefault();">
+              <input class="fn-input" type="email" placeholder="Email address" required>
+              <button class="fn-btn" type="submit">Subscribe</button>
+            </form>
+            <p class="fn-legal">By subscribing you agree to receive marketing emails. Unsubscribe anytime.</p>
+          </div>
+        </div>
+      </div>
+      <div class="site-footer__body">
+        <div class="site-footer__inner">
+          <div class="site-footer__grid">
+            <div class="site-footer__col"><h6>Shop</h6><ul><li><a href="#">Closed Sole</a></li><li><a href="#">Open Sole</a></li><li><a href="#">All Colors</a></li><li><a href="#">Gift Cards</a></li><li><a href="#">Bundles</a></li></ul></div>
+            <div class="site-footer__col"><h6>Learn</h6><ul><li><a href="#">Our Story</a></li><li><a href="#">How It Works</a></li><li><a href="#">Journal</a></li><li><a href="#">Size Guide</a></li><li><a href="#">Compare</a></li></ul></div>
+            <div class="site-footer__col"><h6>Support</h6><ul><li><a href="#">FAQ</a></li><li><a href="#">Shipping &amp; Returns</a></li><li><a href="#">Warranty</a></li><li><a href="#">Contact Us</a></li><li><a href="#">Track Order</a></li></ul></div>
+            <div class="site-footer__col"><h6>Connect</h6><ul><li><a href="#">Instagram</a></li><li><a href="#">TikTok</a></li><li><a href="#">Facebook</a></li><li><a href="#">Pinterest</a></li><li><a href="#">Email Us</a></li></ul></div>
+          </div>
+          <div class="site-footer__bottom">
+            <span class="site-footer__copyright">© 2026 Barreletics. All rights reserved.</span>
+            <span class="site-footer__usa">Made in USA</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+  <p class="option__notes">
+    <strong>Frozen composition:</strong> charcoal Join the list (headline + form only) ·
+    Shop/Learn/Support/Connect · Made in USA. Brand blurb and ✓ value checklist removed 2026-07-31 (Andrew).
+    Do not restore B–H gallery options without explicit approval.
+  </p>
+</section>
+
+<!-- A -->
+<section class="option" id="opt-a">
+  <div class="option__meta">
+    <span class="tag">Option A — WORKING SOURCE (historical 10%)</span>
+    <h2>A · Home WORKING light footer</h2>
+    <p class="one-liner">White band: newsletter + value checklist → 4 link columns → © / Made in USA.</p>
+    <p class="src">docs/Barreletics Home - Definitive-WORKING.html · also Collection v13–v18 / SEO / Journal / Help (same family, not better)</p>
+  </div>
+  <div class="option__preview opt-a">
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <div class="footer-newsletter">
+          <div class="fn-signup">
+            <h2>10% off your first pair</h2>
+            <p>New drops and studio stories. Once or twice a quarter — never spam.</p>
+            <form class="fn-form" onsubmit="event.preventDefault();">
+              <input class="fn-input" type="email" placeholder="Email address" required>
+              <button class="fn-btn" type="submit">Subscribe</button>
+            </form>
+            <p class="fn-legal">By subscribing you agree to receive marketing emails. Unsubscribe anytime.</p>
+          </div>
+          <div class="fn-value">
+            <div class="fn-value__item"><span class="fn-value__check">✓</span><span class="fn-value__text">10% off your first order</span></div>
+            <div class="fn-value__item"><span class="fn-value__check">✓</span><span class="fn-value__text">Early access to new colorways and limited editions</span></div>
+            <div class="fn-value__item"><span class="fn-value__check">✓</span><span class="fn-value__text">Studio partner discounts and events</span></div>
+            <div class="fn-value__item"><span class="fn-value__check">✓</span><span class="fn-value__text">Care tips to extend the life of your performance skins</span></div>
+          </div>
+        </div>
+        <div class="site-footer__grid">
+          <div class="site-footer__col"><h6>Shop</h6><ul><li><a href="#">Closed Sole</a></li><li><a href="#">Open Sole</a></li><li><a href="#">All Colors</a></li><li><a href="#">Gift Cards</a></li><li><a href="#">Bundles</a></li></ul></div>
+          <div class="site-footer__col"><h6>Learn</h6><ul><li><a href="#">Our Story</a></li><li><a href="#">How It Works</a></li><li><a href="#">Journal</a></li><li><a href="#">Size Guide</a></li><li><a href="#">Compare</a></li></ul></div>
+          <div class="site-footer__col"><h6>Support</h6><ul><li><a href="#">FAQ</a></li><li><a href="#">Shipping &amp; Returns</a></li><li><a href="#">Warranty</a></li><li><a href="#">Contact Us</a></li><li><a href="#">Track Order</a></li></ul></div>
+          <div class="site-footer__col"><h6>Connect</h6><ul><li><a href="#">Instagram</a></li><li><a href="#">TikTok</a></li><li><a href="#">Facebook</a></li><li><a href="#">Pinterest</a></li><li><a href="#">Email Us</a></li></ul></div>
+        </div>
+        <div class="site-footer__bottom">
+          <span class="site-footer__copyright">© 2026 Barreletics. All rights reserved.</span>
+          <span class="site-footer__usa">Made in USA</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+  <p class="option__notes">
+    <strong>Why A wins the family:</strong> light 400-weight signup title with clamp + tracking;
+    full Shop/Learn/Support/Connect lists; mobile stacks the email form (<code>flex-direction: column</code>, 48px controls).
+    No later mock refined this layout — only copy/token drift elsewhere.
+  </p>
+</section>
+
+<!-- B -->
+<section class="option" id="opt-b">
+  <div class="option__meta">
+    <span class="tag">Option B</span>
+    <h2>B · Live Impulse / apr2026 footer</h2>
+    <p class="one-liner">Centered Impulse pattern: full-width newsletter band → social → flat link list → copyright (theme settings drive colors).</p>
+    <p class="src">READ ONLY · /Users/andrewnehra/barreletics-theme-live-apr2026/sections/footer.liquid · also backups/m4-pre-phase1-2026-07-26/draft-theme-pull/sections/footer.liquid (same Impulse liquid)</p>
+  </div>
+  <div class="option__preview opt-b">
+    <footer class="site-footer">
+      <div class="site-footer__section site-footer__section--newsletter">
+        <div class="nl-inner">
+          <h2>Stay in the studio loop</h2>
+          <p>Let customers know about the key benefits of joining your newsletter.</p>
+          <form class="nl-form" onsubmit="event.preventDefault();">
+            <input type="email" placeholder="Email address" required>
+            <button type="submit">Sign up</button>
+          </form>
+        </div>
+      </div>
+      <div class="footer__social">
+        <a href="#">Instagram</a><a href="#">TikTok</a><a href="#">Facebook</a><a href="#">Pinterest</a>
+      </div>
+      <ul class="site-footer__linklist">
+        <li><a href="#">Shop</a></li><li><a href="#">About</a></li><li><a href="#">FAQ</a></li>
+        <li><a href="#">Shipping</a></li><li><a href="#">Returns</a></li><li><a href="#">Contact</a></li>
+      </ul>
+      <div class="site-footer__copyright">
+        <span>© 2026 Barreletics</span>
+      </div>
+      <div class="payment-row">Payment icons · localization selectors (Impulse chrome)</div>
+    </footer>
+  </div>
+  <p class="option__notes">Static recreation of Impulse structure (not a pixel dump of live theme colors — those come from theme settings). Source liquid preserved under docs/footer-gallery-assets/B_live_impulse_footer.liquid.</p>
+</section>
+
+<!-- C -->
+<section class="option" id="opt-c">
+  <div class="option__meta">
+    <span class="tag">Option C</span>
+    <h2>C · Dark Phase 1 shell footer</h2>
+    <p class="one-liner">Charcoal background, 3 menu columns + newsletter column, social row — first shopify-build footer.</p>
+    <p class="src">git 34cfc05 · 2026-07-26 · “Phase 1 shell: Shopify menu chrome…” · shopify-build/sections/footer.liquid</p>
+  </div>
+  <div class="option__preview opt-dark">
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <div class="site-footer__grid">
+          <div>
+            <h3 class="site-footer__heading">Shop</h3>
+            <ul class="site-footer__links">
+              <li><a href="#">Closed Sole</a></li><li><a href="#">Open Sole</a></li><li><a href="#">All Colors</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="site-footer__heading">Support</h3>
+            <ul class="site-footer__links">
+              <li><a href="#">FAQ</a></li><li><a href="#">Shipping</a></li><li><a href="#">Contact</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="site-footer__heading">Company</h3>
+            <ul class="site-footer__links">
+              <li><a href="#">Our Story</a></li><li><a href="#">Journal</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="site-footer__heading">Newsletter</h3>
+            <p class="site-footer__newsletter-text">New drops and studio notes. No spam.</p>
+            <form class="site-footer__form" onsubmit="event.preventDefault();">
+              <input class="site-footer__input" type="email" placeholder="Email address">
+              <button class="site-footer__submit" type="submit">Sign up</button>
+            </form>
+            <p class="site-footer__privacy">Unsubscribe anytime.</p>
+          </div>
+        </div>
+        <div class="site-footer__bottom">
+          <div class="site-footer__social">
+            <a href="#">IG</a><a href="#">TT</a><a href="#">FB</a>
+          </div>
+          <span class="site-footer__copyright">© 2026 Barreletics</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+  <p class="option__notes">Extract: docs/footer-gallery-assets/C_dark_phase1_34cfc05_footer.liquid + chrome.css from that SHA.</p>
+</section>
+
+<!-- D -->
+<section class="option" id="opt-d">
+  <div class="option__meta">
+    <span class="tag warn">Option D — WAS ON DRAFT BEFORE 54a2e7e</span>
+    <h2>D · Dark TE-menus footer (pre-restore)</h2>
+    <p class="one-liner">Same dark charcoal shell as C, with Theme Editor link_list pickers / nested-menu fallback (7e4ea66 → 8326911).</p>
+    <p class="src">git 8326911 · 2026-07-29 · last footer.liquid before WORKING restore · also 7e4ea66 (2026-07-26)</p>
+  </div>
+  <div class="option__preview opt-dark">
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <div class="site-footer__grid">
+          <div>
+            <h3 class="site-footer__heading">Shop</h3>
+            <ul class="site-footer__links">
+              <li><a href="#">Closed Sole</a></li><li><a href="#">Open Sole</a></li><li><a href="#">Bundles</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="site-footer__heading">Support</h3>
+            <ul class="site-footer__links">
+              <li><a href="#">FAQ</a></li><li><a href="#">Returns</a></li><li><a href="#">Track Order</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="site-footer__heading">Company</h3>
+            <ul class="site-footer__links">
+              <li><a href="#">Our Story</a></li><li><a href="#">Journal</a></li><li><a href="#">Contact</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="site-footer__heading">Stay in touch</h3>
+            <p class="site-footer__newsletter-text">Once or twice a quarter — never spam.</p>
+            <form class="site-footer__form" onsubmit="event.preventDefault();">
+              <input class="site-footer__input" type="email" placeholder="Email address">
+              <button class="site-footer__submit" type="submit">Sign up</button>
+            </form>
+            <p class="site-footer__privacy">By subscribing you agree to marketing emails.</p>
+          </div>
+        </div>
+        <div class="site-footer__bottom">
+          <div class="site-footer__social">
+            <a href="#">Instagram</a><a href="#">TikTok</a><a href="#">Pinterest</a>
+          </div>
+          <span class="site-footer__copyright">© 2026 Barreletics. All rights reserved.</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+  <p class="option__notes">Visually nearly identical to C; difference is Liquid menu resolution, not look. This is what draft had immediately before the WORKING light swap.</p>
+</section>
+
+<!-- E -->
+<section class="option" id="opt-e">
+  <div class="option__meta">
+    <span class="tag warn">Option E — A-FAMILY SHOPIFY PORT (INCOMPLETE VS A)</span>
+    <h2>E · Shopify port of WORKING light (54a2e7e)</h2>
+    <p class="one-liner">Same shell as A in Liquid + chrome.css — but TE menus/URLs decide column density, so draft can look emptier than the mock.</p>
+    <p class="src">git 54a2e7e · shopify-build/sections/footer.liquid + assets/chrome.css · footer-group.json</p>
+  </div>
+  <div class="option__preview opt-a">
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <div class="footer-newsletter">
+          <div class="fn-signup">
+            <h2>10% off your first pair</h2>
+            <p>New drops and studio stories. Once or twice a quarter — never spam.</p>
+            <form class="fn-form" onsubmit="event.preventDefault();">
+              <input class="fn-input" type="email" placeholder="Email address">
+              <button class="fn-btn" type="submit">Subscribe</button>
+            </form>
+            <p class="fn-legal">By subscribing you agree to receive marketing emails. Unsubscribe anytime.</p>
+          </div>
+          <div class="fn-value">
+            <div class="fn-value__item"><span class="fn-value__check">✓</span><span class="fn-value__text">10% off your first order</span></div>
+            <div class="fn-value__item"><span class="fn-value__check">✓</span><span class="fn-value__text">Early access to new colorways and limited editions</span></div>
+            <div class="fn-value__item"><span class="fn-value__check">✓</span><span class="fn-value__text">Studio partner discounts and events</span></div>
+            <div class="fn-value__item"><span class="fn-value__check">✓</span><span class="fn-value__text">Care tips to extend the life of your performance skins</span></div>
+          </div>
+        </div>
+        <div class="site-footer__grid">
+          <div class="site-footer__col"><h6>Shop</h6><ul><li><a href="#">Closed Sole</a></li><li><a href="#">Open Sole</a></li><li><a href="#">All Colors</a></li></ul></div>
+          <div class="site-footer__col"><h6>Learn</h6><ul><li><a href="#">Our Story</a></li><li><a href="#">Journal</a></li></ul></div>
+          <div class="site-footer__col"><h6>Support</h6><ul><li><a href="#">FAQ</a></li><li><a href="#">Contact Us</a></li></ul></div>
+          <div class="site-footer__col"><h6>Connect</h6><ul><li><a href="#">Instagram</a></li><li><a href="#">Email Us</a></li></ul></div>
+        </div>
+        <div class="site-footer__bottom">
+          <span class="site-footer__copyright">© 2026 Barreletics. All rights reserved.</span>
+          <span class="site-footer__usa">Made in USA</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+  <p class="option__notes">
+    <strong>Exact gaps vs A</strong> (why E can feel worse — fix only after you confirm A):
+    (1) <code>footer-group.json</code> leaves <code>menu_shop/learn/support/connect</code> empty → falls back to primary <code>footer</code> menu, not A’s four filled columns;
+    (2) Connect URLs only set Instagram + Email (no TikTok / Facebook / Pinterest);
+    (3) <code>chrome.css</code> missing WORKING’s mobile form stack (<code>.fn-form { flex-direction: column }</code> + 48px input/button at ≤768px);
+    (4) Newsletter/value defaults match A, but link labels depend entirely on store Navigation — not hardcoded like the mock.
+  </p>
+</section>
+
+<!-- F -->
+<section class="option" id="opt-f">
+  <div class="option__meta">
+    <span class="tag">Option F</span>
+    <h2>F · PDP Definitive dark (no newsletter band)</h2>
+    <p class="one-liner">Charcoal 4-column links + Made in USA — no signup block (PDP page mock pattern).</p>
+    <p class="src">docs/Barreletics PDP - Definitive-v16.html</p>
+  </div>
+  <div class="option__preview opt-f">
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <div class="site-footer__grid">
+          <div class="site-footer__col"><h6>Shop</h6><ul><li><a href="#">Closed Sole</a></li><li><a href="#">Open Sole</a></li><li><a href="#">All Colors</a></li><li><a href="#">Gift Cards</a></li><li><a href="#">Bundles</a></li></ul></div>
+          <div class="site-footer__col"><h6>Learn</h6><ul><li><a href="#">Our Story</a></li><li><a href="#">How It Works</a></li><li><a href="#">Journal</a></li><li><a href="#">Size Guide</a></li><li><a href="#">Compare</a></li></ul></div>
+          <div class="site-footer__col"><h6>Support</h6><ul><li><a href="#">FAQ</a></li><li><a href="#">Shipping &amp; Returns</a></li><li><a href="#">Warranty</a></li><li><a href="#">Contact Us</a></li><li><a href="#">Track Order</a></li></ul></div>
+          <div class="site-footer__col"><h6>Connect</h6><ul><li><a href="#">Instagram</a></li><li><a href="#">TikTok</a></li><li><a href="#">Facebook</a></li><li><a href="#">Pinterest</a></li><li><a href="#">Email Us</a></li></ul></div>
+        </div>
+        <div class="site-footer__bottom">
+          <span class="site-footer__copyright">© 2026 Barreletics. All rights reserved.</span>
+          <span class="site-footer__usa">Made in USA 🇺🇸</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+</section>
+
+<!-- G -->
+<section class="option" id="opt-g">
+  <div class="option__meta">
+    <span class="tag">Option G — NOT A-FAMILY</span>
+    <h2>G · Early Home v23 brand-column footer</h2>
+    <p class="one-liner">White: logo + brand blurb + hashtag · 4 link columns (Shop / Support / Journal / Follow) · no newsletter.</p>
+    <p class="src">barreletics-design-review/Barreletics_Home_v23.html · same family as Home v11–v24 All_Versions</p>
+  </div>
+  <div class="option__preview opt-g">
+    <footer class="pdp-footer">
+      <div class="pdp-footer__grid">
+        <div class="pdp-footer__col pdp-footer__brand">
+          <a href="#" class="logo-mark">Barreletics</a>
+          <p>The premium performance alternative to grip socks. Superior grip from heel to toe, on the floor and on your foot. Made in USA.</p>
+          <p style="margin-top:14px;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;color:#c45c3f;font-weight:700">#letusknockyoursocksoff</p>
+        </div>
+        <div class="pdp-footer__col"><h6>Shop</h6><ul>
+          <li><a href="#">Studio collection</a></li><li><a href="#">Outdoor &amp; aquatic</a></li>
+          <li><a href="#">Closed vs open sole</a></li><li><a href="#">Studio bundles</a></li>
+          <li><a href="#">Coperni × Barreletics</a></li><li><a href="#">Gift cards</a></li>
+        </ul></div>
+        <div class="pdp-footer__col"><h6>Support</h6><ul>
+          <li><a href="#">Size chart</a></li><li><a href="#">Care guide</a></li>
+          <li><a href="#">Shipping &amp; returns</a></li><li><a href="#">30-day confidence guarantee</a></li>
+          <li><a href="#">FAQ</a></li><li><a href="#">Contact</a></li>
+        </ul></div>
+        <div class="pdp-footer__col"><h6>Journal</h6><ul>
+          <li><a href="#">All articles</a></li><li><a href="#">How to wash your skins</a></li>
+          <li><a href="#">Founder story</a></li><li><a href="#">About Barreletics</a></li>
+        </ul></div>
+        <div class="pdp-footer__col"><h6>Follow</h6><ul>
+          <li><a href="#">Instagram</a></li><li><a href="#">TikTok</a></li>
+          <li><a href="#">YouTube</a></li><li><a href="#">Pinterest</a></li>
+        </ul></div>
+      </div>
+      <div class="pdp-footer__bottom">
+        <span>© 2026 Barreletics. All rights reserved. Made in USA.</span>
+        <span>Privacy · Terms · Accessibility</span>
+      </div>
+    </footer>
+  </div>
+</section>
+
+<!-- H -->
+<section class="option" id="opt-h">
+  <div class="option__meta">
+    <span class="tag">Option H — NOT A-FAMILY</span>
+    <h2>H · Home Matured brand-column footer</h2>
+    <p class="one-liner">Nearly identical to G (same pdp-footer architecture; Matured file variant). Not a refined WORKING light footer.</p>
+    <p class="src">barreletics-design-review/Barreletics Design Review/Barreletics Home - Matured.html · also Home v10 Matured lineage</p>
+  </div>
+  <div class="option__preview opt-g">
+    <footer class="pdp-footer">
+      <div class="pdp-footer__grid">
+        <div class="pdp-footer__col pdp-footer__brand">
+          <a href="#" class="logo-mark">Barreletics</a>
+          <p>The premium performance alternative to grip socks. Superior grip from heel to toe, on the floor and on your foot. Made in USA.</p>
+          <p style="margin-top:14px;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;color:#c45c3f;font-weight:700">#letusknockyoursocksoff</p>
+        </div>
+        <div class="pdp-footer__col"><h6>Shop</h6><ul>
+          <li><a href="#">Studio collection</a></li><li><a href="#">Outdoor &amp; aquatic</a></li>
+          <li><a href="#">Closed vs open sole</a></li><li><a href="#">Gift cards</a></li>
+        </ul></div>
+        <div class="pdp-footer__col"><h6>Support</h6><ul>
+          <li><a href="#">Size chart</a></li><li><a href="#">Shipping &amp; returns</a></li>
+          <li><a href="#">FAQ</a></li><li><a href="#">Contact</a></li>
+        </ul></div>
+        <div class="pdp-footer__col"><h6>Journal</h6><ul>
+          <li><a href="#">All articles</a></li><li><a href="#">Founder story</a></li>
+          <li><a href="#">About Barreletics</a></li>
+        </ul></div>
+        <div class="pdp-footer__col"><h6>Follow</h6><ul>
+          <li><a href="#">Instagram</a></li><li><a href="#">TikTok</a></li>
+          <li><a href="#">YouTube</a></li><li><a href="#">Pinterest</a></li>
+        </ul></div>
+      </div>
+      <div class="pdp-footer__bottom">
+        <span>© 2026 Barreletics. All rights reserved. Made in USA.</span>
+        <span>Privacy · Terms · Accessibility</span>
+      </div>
+    </footer>
+  </div>
+  <p class="option__notes">G and H are the early mock lineage (pre–Definitive WORKING). Reply with the letter you want on draft — nothing else will be pushed for footer until then.</p>
+</section>
+
+<footer class="page-foot">
+  <p>Raw extracts also in <code>docs/footer-gallery-assets/</code>. A+ is <strong>APPROVED / FROZEN</strong> on draft <code>187144929571</code>. Never live theme. Do not deploy B–H.</p>
+</footer>
+
+</body>
+</html>

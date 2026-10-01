@@ -309,7 +309,13 @@
 | Redirect Map (+ verification audit) | ✅ | `planning/m4a-redirect-map.md` |
 | Pre-Deployment Baseline | ✅ | `planning/m4a-pre-deployment-baseline.md` |
 | Hero Alt Concept (D-041) | ✅ | `shopify-build/sections/hero-alt.liquid` |
-| Consolidated Partners Page (D-042) | ✅ | `shopify-build/sections/page-partners.liquid` / `templates/page.partners.json` |
+| Partner Programs — 3 dedicated pages + routing hub (**D-048**, supersedes D-042) | ✅ | `shopify-build/sections/page-{wholesale,studio-program,ambassador,partners}.liquid` / `templates/page.{wholesale,studio-program,ambassador,partners}.json` |
+
+> **UPDATED 2026-08-08.** The row above previously read *"Consolidated Partners Page (D-042)"* against
+> `page-partners.liquid` / `page.partners.json` alone. Owner direction 2026-08-08 reversed the fold:
+> **D-048** delivers three dedicated program pages plus `/pages/partners` as a routing hub. All four
+> are built, type-corrected and mobile-QA'd (`planning/partner-programs.md`, `planning/partner-pages-qa/`).
+> The three folding 301s are retired in `planning/m4a-redirect-map.md`.
 
 ### Key Decisions (M4-6 Roadmap)
 | Decision | Summary |
@@ -320,12 +326,13 @@
 | D-039 | All M4 tasks assigned Builder/Owner/Joint responsibility |
 | D-040 | Policy Freeze Gate required before production QA |
 | D-041 | Homepage hero — two concepts built for side-by-side comparison |
-| D-042 | Partner Programs consolidated into single page |
+| ~~D-042~~ | ~~Partner Programs consolidated into single page~~ — **SUPERSEDED 2026-08-08 by D-048** |
 | D-043 | Collections created only when products/merchandising require them |
 | D-044 | M4A Production Assembly locked |
 | D-045 | Production tracking strategy — Shopify native preferred, theme-level fallback only |
 | D-046 | M4B Integrations locked — credential activation deferred to M4D |
 | D-047 | M4C Validation Gate locked — 109 pass, 6 fixed, 15 deferred to M4D |
+| **D-048** | **Three dedicated partner pages (`/pages/wholesale`, `/pages/studio-program`, `/pages/ambassador`) plus `/pages/partners` as a routing hub — supersedes D-042** |
 
 ## Milestone 5: Growth Platform (v1) — ⚪ Planning
 

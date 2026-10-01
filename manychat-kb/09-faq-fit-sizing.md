@@ -10,7 +10,9 @@ Means the size is likely too small. Move up one size.
 
 We're happy to set up a size exchange — just reach out. Or start an exchange here: https://barreletics.com/pages/returns-portal
 
-💡 Note: Dark Grey, Hot Coral, and Blue naturally run snugger than Light Grey.
+💡 Note: Dark Grey, Hot Coral, and Blue naturally run snugger than Light Grey. Black and Light Grey are the most forgiving, especially for wider feet.
+
+> **Do not offer any heat or stretching workaround here.** ManyChat's answer to a tight fit is the free size exchange, full stop. There is a HelpScout-only saved reply for one specific case, deliberately kept out of automated channels (owner letter 2026-08-12) — see `docs/11-CANONICAL-ANSWERS.md` CA-08b.
 
 ## "They feel too loose / shift during movement"
 
@@ -28,6 +30,10 @@ Or try Dark Grey, Hot Coral, or Blue — they naturally fit tighter than Light G
 
 ## "How do I figure out my correct size before ordering?"
 
-Start with your regular shoe size. If between sizes or narrow feet, we suggest going up half a size and using thin socks to fine-tune.
+Start with your regular shoe size. **M fits women's 5.5–7.5, L fits women's 7.5–11 and men up to 10.5.**
+
+At the 7.5 overlap, width decides — **don't just round up.** Wide foot at 7 or 7.5 → Large. Narrow foot at 7.5 or 8 → Medium. At 8.5 and above, Large regardless of width.
+
+> ⛔ **Retired 2026-08-12:** ~~"going up half a size and using thin socks to fine-tune"~~ — there are no half sizes, and the rule is width, not rounding up.
 
 Check the size chart or ask for a personal recommendation before ordering.

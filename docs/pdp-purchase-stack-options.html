@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PDP purchase stack — Options</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --charcoal: #1c1916;
+      --body: #4a4a4a;
+      --muted: #8a8a8a;
+      --warm: #6b645a;
+      --border: #d6cfc0;
+      --cream: #f5f2ec;
+      --light: #f9f9f9;
+      --rust: #c45c3f;
+      --gold: #d4af37;
+      --white: #fff;
+      --g8: 8px;
+      --g12: 12px;
+      --g16: 16px;
+      --g24: 24px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--cream); color: var(--charcoal); margin: 0; padding: 40px 24px 96px;
+    }
+    .wrap { max-width: 1280px; margin: 0 auto; }
+    h1 { font-size: 28px; font-weight: 400; letter-spacing: -0.03em; margin: 0 0 8px; }
+    .lede { color: var(--body); max-width: 68ch; line-height: 1.55; margin: 0 0 28px; font-size: 15px; }
+    .back { font-size: 13px; color: var(--warm); text-decoration: none; display: inline-block; margin-bottom: 20px; }
+    .back:hover { color: var(--charcoal); }
+    .context {
+      background: var(--white); border: 1px solid var(--border); border-left: 4px solid var(--rust);
+      border-radius: 6px; padding: 18px 20px; margin-bottom: 32px;
+    }
+    .context__tag {
+      display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--rust); margin-bottom: 8px;
+    }
+    .context h3 { font-size: 17px; font-weight: 500; margin: 0 0 8px; letter-spacing: -0.02em; }
+    .context p { margin: 0 0 10px; font-size: 14px; color: var(--body); line-height: 1.55; }
+    .context p:last-child { margin-bottom: 0; }
+    .rule {
+      margin: 0; padding: 10px 12px; background: var(--cream); border-radius: 4px;
+      font-size: 13px; color: var(--charcoal); line-height: 1.45;
+    }
+    .stack { display: flex; flex-direction: column; gap: 28px; }
+    .option {
+      background: var(--white); border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+    }
+    .option--rec { border-left: 4px solid var(--rust); }
+    .option--alt { border-left: 4px solid var(--border); }
+    .option--avoid { border-left: 4px solid #9a6b2f; background: #faf8f4; }
+    .option__head { padding: 18px 20px 14px; }
+    .option__tag {
+      display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--rust); margin-bottom: 6px;
+    }
+    .option__tag--muted { color: var(--muted); }
+    .option__tag--avoid { color: #9a6b2f; }
+    .option h3 { font-size: 18px; font-weight: 500; margin: 0 0 6px; letter-spacing: -0.02em; }
+    .option__what { font-size: 13px; color: var(--body); line-height: 1.5; margin: 0; }
+    .option__hierarchy {
+      margin: 10px 0 0; font-size: 12px; color: var(--warm); line-height: 1.55;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .option__preview {
+      background: #faf8f4; border-top: 1px solid var(--border); padding: 20px;
+    }
+    .option__preview-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--muted); margin: 0 0 14px;
+    }
+    .option__foot {
+      padding: 12px 20px 14px; border-top: 1px solid var(--border);
+      font-size: 12px; color: var(--body); line-height: 1.45;
+    }
+    .option__foot strong { color: var(--charcoal); }
+
+    /* Realistic buy-box column */
+    .stage {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 40px; max-width: 920px;
+      background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 28px;
+    }
+    .gallery-stub {
+      aspect-ratio: 1; background: var(--light); border-radius: 8px; overflow: hidden;
+    }
+    .gallery-stub img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .buy { display: flex; flex-direction: column; max-width: 420px; }
+
+    .badge {
+      display: inline-block; background: var(--rust); color: #fff; padding: 4px 10px;
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; border-radius: 3px;
+    }
+    .stars { font-size: 13px; color: var(--gold); letter-spacing: 1px; }
+    .label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--charcoal);
+    }
+    .label span { font-weight: 500; text-transform: none; letter-spacing: 0; color: var(--warm); }
+    .swatches { display: flex; gap: 6px; flex-wrap: wrap; }
+    .swatch {
+      width: 23px; height: 23px; border-radius: 50%; border: 2px solid transparent;
+      padding: 7px; box-sizing: content-box; background-clip: content-box; cursor: default;
+    }
+    .swatch[aria-selected="true"] { border-color: var(--charcoal); }
+    .sizes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .size-btn {
+      padding: 12px 6px; border: 1px solid var(--border); background: var(--light);
+      text-align: center; font-size: 14px; font-weight: 600; border-radius: 6px; color: var(--charcoal);
+    }
+    .size-btn small { display: block; font-size: 10px; font-weight: 400; color: var(--muted); margin-top: 4px; }
+    .size-btn.is-selected { border: 2px solid var(--charcoal); }
+    .size-btn.is-soon { color: #9a9182; background: var(--cream); border-style: dashed; }
+    .size-btn.is-soon small { color: var(--rust); font-weight: 500; }
+    .cta {
+      width: 100%; padding: 18px; background: var(--charcoal); color: #fff;
+      font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+      border: none; border-radius: 4px; font-family: inherit; cursor: default;
+    }
+    .qty {
+      display: inline-flex; align-items: center; border: 1px solid var(--border); border-radius: 4px;
+      background: var(--white); height: 52px;
+    }
+    .qty button {
+      width: 40px; height: 100%; border: none; background: transparent; color: var(--charcoal);
+      font-size: 18px; font-weight: 400; cursor: default; font-family: inherit;
+    }
+    .qty span {
+      min-width: 28px; text-align: center; font-size: 14px; font-weight: 500;
+    }
+    .kit-label {
+      display: block; font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.1em; color: #9a9182; margin: 0 0 8px;
+    }
+    .kit-row { display: flex; flex-wrap: wrap; gap: 8px 18px; }
+    .kit-row a {
+      font-size: 13px; font-weight: 500; color: var(--charcoal); text-decoration: none;
+      border-bottom: 1px solid var(--border); padding-bottom: 1px;
+    }
+    .kit-hint { margin: 8px 0 0; font-size: 11px; color: var(--muted); line-height: 1.45; }
+
+    /* ── A Recommended: one composition ── */
+    .buy-a { gap: 0; }
+    .buy-a .block-trust { margin-bottom: var(--g12); }
+    .buy-a .block-title { margin-bottom: var(--g24); }
+    .buy-a .block-price { margin-bottom: var(--g24); }
+    .buy-a .block-controls { margin-bottom: var(--g24); display: flex; flex-direction: column; gap: var(--g16); }
+    .buy-a .block-action { margin-bottom: var(--g12); display: flex; gap: var(--g12); align-items: stretch; }
+    .buy-a .block-action .cta { flex: 1; }
+    .buy-a .block-assurances {
+      display: flex; gap: 20px; flex-wrap: wrap;
+      font-size: 12px; color: var(--muted);
+      padding: 12px 0; border-top: 1px solid var(--border);
+      margin-bottom: 0;
+    }
+    .buy-a .block-assurances b { color: var(--charcoal); font-weight: 700; }
+    .buy-a .block-kit { padding: 14px 0 4px; border-top: 1px solid var(--border); }
+
+    .trust-inline {
+      display: flex; align-items: center; flex-wrap: wrap; gap: 6px 8px;
+      font-size: 12px; color: var(--warm);
+    }
+    .trust-inline .badge { flex-shrink: 0; }
+    .trust-inline a { color: var(--muted); text-decoration: none; font-size: 12px; }
+    .trust-inline .sep { color: var(--border); }
+    .title-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px;
+    }
+    .title-row h2 {
+      font-size: 15px; font-weight: 600; color: #2d2926; margin: 0; letter-spacing: 0; line-height: 1.3;
+    }
+    .lede-lines {
+      font-size: clamp(28px, 3.2vw, 36px); font-weight: 400; line-height: 1.1; margin: 0 0 12px; letter-spacing: -0.02em;
+    }
+    .desc { font-size: 14px; color: var(--warm); line-height: 1.6; margin: 0; max-width: 40ch; }
+    .price-now { font-size: 32px; font-weight: 700; color: var(--charcoal); letter-spacing: -0.02em; line-height: 1; }
+    .pay-line {
+      display: block; margin-top: 6px; font-size: 13px; color: var(--muted); font-weight: 400; line-height: 1.4;
+    }
+    .pay-line em { font-style: normal; color: var(--warm); }
+    .ctrl-head {
+      display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px;
+    }
+    .ctrl-head a, .ctrl-head button {
+      font-size: 12px; color: var(--muted); background: none; border: none; padding: 0;
+      font-family: inherit; cursor: default; text-decoration: none;
+    }
+    .ctrl-head button { color: var(--charcoal); border-bottom: 1px solid var(--charcoal); padding-bottom: 1px; }
+    .size-note { margin: 8px 0 0; font-size: 11px; color: var(--muted); line-height: 1.45; }
+    .fine-print {
+      font-size: 12px; color: var(--muted); line-height: 1.5; letter-spacing: 0.01em;
+    }
+    .fine-print .dot { margin: 0 6px; color: var(--border); }
+
+    /* ── B Alternate: price earlier, trust soft under title ── */
+    .buy-b { gap: 0; }
+    .buy-b .b-badge { margin-bottom: var(--g8); }
+    .buy-b .b-title { margin-bottom: var(--g8); }
+    .buy-b .b-trust { margin-bottom: var(--g16); }
+    .buy-b .b-price { margin-bottom: var(--g8); }
+    .buy-b .b-pay { margin-bottom: var(--g16); }
+    .buy-b .b-desc { margin-bottom: var(--g24); }
+    .buy-b .b-controls { margin-bottom: var(--g24); display: flex; flex-direction: column; gap: var(--g16); }
+    .buy-b .b-action { margin-bottom: var(--g12); }
+    .buy-b .b-fine { margin-bottom: var(--g24); }
+    .buy-b .b-kit { padding-top: var(--g16); border-top: 1px solid var(--border); }
+    .buy-b .b-title h2 {
+      font-size: clamp(28px, 3.2vw, 36px); font-weight: 400; line-height: 1.1; margin: 0; letter-spacing: -0.02em;
+    }
+    .buy-b .b-sub { font-size: 14px; color: var(--warm); margin: 8px 0 0; }
+    .qty-row { display: flex; gap: 12px; align-items: stretch; }
+    .qty-row .cta { flex: 1; }
+
+    /* ── C Avoid: current bordered widgets ── */
+    .buy-c { gap: 24px; }
+    .buy-c .widget {
+      padding: 16px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    }
+    .buy-c .widget + .widget { border-top: none; }
+    .buy-c .pay-chip {
+      display: inline-block; margin-left: 8px; padding: 4px 10px; background: #f0ebe3;
+      border: 1px solid var(--border); border-radius: 999px; font-size: 12px; color: var(--body);
+    }
+    .buy-c .trust-icons {
+      display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--muted);
+      padding: 12px 0; border-top: 1px solid var(--border);
+    }
+    .buy-c .trust-icons b { color: var(--charcoal); }
+
+    @media (max-width: 800px) {
+      .stage { grid-template-columns: 1fr; gap: 24px; padding: 20px; }
+      .gallery-stub { max-width: 280px; }
+      .buy { max-width: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <a class="back" href="index.html">← Hub</a>
+    <h1>PDP purchase stack — options</h1>
+    <p class="lede">
+      Refine the buy-box relationship between price · payment · reviews · badges · variants · quantity · CTA · trust
+      into <strong>one intentional composition</strong> — not stacked widgets. Benchmark: Apple · Lululemon · Arc'teryx
+      (quiet, premium, intentional spacing). Payment is subtle convenience under price — never a promo callout.
+      Locked v16 is untouched. <strong>Recommended A LOCKED Jul 31 2026</strong> on v18 Working <code>#buy</code> — do not remove.
+    </p>
+
+    <div class="context">
+      <div class="context__tag">Problem</div>
+      <h3>Current stack reads as bordered panels</h3>
+      <p>
+        Price sits in a top/bottom hairline box with payment + free shipping inline.
+        Color and size each get their own bordered slab. Trust is a checkmark strip.
+        Eye hops panel → panel instead of <em>price → reassurance → purchase</em>.
+      </p>
+      <p class="rule">
+        <strong>Rhythm:</strong> 8 / 12 / 16 / 24 only · <strong>Payment:</strong> amount-first muted line ·
+        <strong>No</strong> Affirm purple · chips · icon circus · widget borders between controls
+      </p>
+    </div>
+
+    <div class="stack">
+
+      <!-- ═══════════════ A RECOMMENDED ═══════════════ -->
+      <section class="option option--rec" id="rec">
+        <div class="option__head">
+          <div class="option__tag">LOCKED · Recommended · A</div>
+          <h3>Price → configure → act</h3>
+          <p class="option__what">
+            Trust soft under identity · price owns the commercial beat · payment as quiet secondary ·
+            color/size as one control group · qty + CTA as one action cluster · under-ATC ✓ trust from v16 prior · quiet kit.
+          </p>
+          <p class="option__hierarchy">
+            reviews · title / lede → PRICE → or 4 × $18.50 → [color + size] → [qty | CTA] → ✓ Ships / returns / warranty / latex-free → quiet Complete the kit · Closed Sole badge removed (meta owns sole type)
+          </p>
+        </div>
+        <div class="option__preview">
+          <p class="option__preview-label">Buy-box column mock</p>
+          <div class="stage">
+            <div class="gallery-stub" aria-hidden="true">
+              <img src="https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=800" alt="" />
+            </div>
+            <div class="buy buy-a">
+              <div class="block-trust trust-inline">
+                <span class="stars" aria-hidden="true">★★★★★</span>
+                <span>Trusted by 1,000+ Instructors</span>
+                <span class="sep">·</span>
+                <a href="#reviews">Reviews</a>
+              </div>
+
+              <div class="block-title">
+                <div class="title-row">
+                  <h2>Best Grippy Shoes for Barre, Pilates &amp; Yoga</h2>
+                </div>
+                <p class="lede-lines">Secure in every hold.<br>No sliding. No resets.</p>
+                <p class="desc">The premium grip system that replaces traditional grip socks—built for reformer, barre, Pilates and Megaformer.</p>
+              </div>
+
+              <div class="block-price">
+                <div class="price-now">$74</div>
+                <span class="pay-line">or <em>4 × $18.50</em></span>
+              </div>
+
+              <div class="block-controls">
+                <div>
+                  <div class="ctrl-head">
+                    <span class="label">Color · <span>Onyx</span></span>
+                    <a href="#variants">View all</a>
+                  </div>
+                  <div class="swatches">
+                    <span class="swatch" style="background:#050505;" aria-selected="true"></span>
+                    <span class="swatch" style="background:#e9d3cb;"></span>
+                    <span class="swatch" style="background:#c9c5b8;"></span>
+                    <span class="swatch" style="background:#7b8c84;"></span>
+                    <span class="swatch" style="background:#fff;border-color:#ccc;"></span>
+                    <span class="swatch" style="background:#d4a78a;"></span>
+                    <span class="swatch" style="background:#3d3530;"></span>
+                    <span class="swatch" style="background:#b8c4c0;"></span>
+                  </div>
+                </div>
+                <div>
+                  <div class="ctrl-head">
+                    <span class="label">Size</span>
+                    <button type="button">Size chart</button>
+                  </div>
+                  <div class="sizes">
+                    <div class="size-btn is-soon">S<small>Coming soon</small></div>
+                    <div class="size-btn">M<small>W 5–7.5</small></div>
+                    <div class="size-btn is-selected">L<small>W 8–10</small></div>
+                  </div>
+                  <p class="size-note">Small is next — same stretch fit, new SKU.</p>
+                </div>
+              </div>
+
+              <div class="block-action">
+                <div class="qty" aria-label="Quantity">
+                  <button type="button" aria-label="Decrease">−</button>
+                  <span>1</span>
+                  <button type="button" aria-label="Increase">+</button>
+                </div>
+                <button class="cta" type="button">Add to cart · $74</button>
+              </div>
+
+              <div class="block-assurances">
+                <span><b>✓</b> Ships 1–2 days</span>
+                <span><b>✓</b> 30-day returns</span>
+                <span><b>✓</b> 90-day warranty</span>
+                <span><b>✓</b> Latex- &amp; silicone-free</span>
+              </div>
+
+              <div class="block-kit">
+                <span class="kit-label">Complete the kit</span>
+                <div class="kit-row">
+                  <a href="#">Hot Pilates Kit →</a>
+                  <a href="#">Hot Yoga Kit →</a>
+                </div>
+                <p class="kit-hint">Performance Skin + thin liner for heated studios.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="option__foot">
+          <strong>Why:</strong> Removes panel borders; payment never competes with CTA;
+          configure then act; under-ATC trust restored from v16 checkmark row (not stripped fine-print); kit stays quiet tertiary.
+          <strong>LOCKED Jul 31 2026</strong> on <a href="Barreletics%20PDP%20-%20Definitive-v19.html#buy">PDP v19 #buy</a>. Freeze: <code>planning/m4-section-freeze.md</code> · <code>specs/frozen/pdp.md</code>.
+        </div>
+      </section>
+
+      <!-- ═══════════════ B ALTERNATE ═══════════════ -->
+      <section class="option option--alt" id="alt-b">
+        <div class="option__head">
+          <div class="option__tag option__tag--muted">Alternate · B</div>
+          <h3>Name → price early → configure</h3>
+          <p class="option__what">
+            More Apple Store: product name first, price immediately under, then short trust,
+            then configure. Same payment restraint and action cluster — different identity placement.
+          </p>
+          <p class="option__hierarchy">
+            badge · name → PRICE → or 4 × $18.50 → trust · desc → [color + size] → [qty | CTA] → fine print → kit
+          </p>
+        </div>
+        <div class="option__preview">
+          <p class="option__preview-label">Buy-box column mock</p>
+          <div class="stage">
+            <div class="gallery-stub" aria-hidden="true">
+              <img src="https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=800" alt="" />
+            </div>
+            <div class="buy buy-b">
+              <div class="b-badge"><span class="badge">Closed Sole</span></div>
+              <div class="b-title">
+                <h2>Studio Performance Skin</h2>
+                <p class="b-sub">Secure in every hold. No sliding. No resets.</p>
+              </div>
+              <div class="b-price price-now">$74</div>
+              <span class="b-pay pay-line">or <em>4 × $18.50</em></span>
+              <div class="b-trust trust-inline">
+                <span class="stars" aria-hidden="true">★★★★★</span>
+                <span>1,000+ instructors</span>
+                <span class="sep">·</span>
+                <a href="#reviews">Reviews</a>
+              </div>
+              <p class="b-desc desc">Premium grip system for reformer, barre, Pilates and Megaformer.</p>
+              <div class="b-controls">
+                <div>
+                  <div class="ctrl-head">
+                    <span class="label">Color · <span>Onyx</span></span>
+                    <a href="#variants">View all</a>
+                  </div>
+                  <div class="swatches">
+                    <span class="swatch" style="background:#050505;" aria-selected="true"></span>
+                    <span class="swatch" style="background:#e9d3cb;"></span>
+                    <span class="swatch" style="background:#c9c5b8;"></span>
+                    <span class="swatch" style="background:#7b8c84;"></span>
+                    <span class="swatch" style="background:#3d3530;"></span>
+                  </div>
+                </div>
+                <div>
+                  <div class="ctrl-head">
+                    <span class="label">Size</span>
+                    <button type="button">Size chart</button>
+                  </div>
+                  <div class="sizes">
+                    <div class="size-btn is-soon">S<small>Coming soon</small></div>
+                    <div class="size-btn">M<small>W 5–7.5</small></div>
+                    <div class="size-btn is-selected">L<small>W 8–10</small></div>
+                  </div>
+                </div>
+              </div>
+              <div class="b-action qty-row">
+                <div class="qty" aria-label="Quantity">
+                  <button type="button">−</button>
+                  <span>1</span>
+                  <button type="button">+</button>
+                </div>
+                <button class="cta" type="button">Add to cart · $74</button>
+              </div>
+              <p class="b-fine fine-print">
+                Ships 1–2 days<span class="dot">·</span>30-day returns<span class="dot">·</span>90-day warranty
+              </p>
+              <div class="b-kit">
+                <span class="kit-label">Complete the kit</span>
+                <div class="kit-row">
+                  <a href="#">Hot Pilates Kit →</a>
+                  <a href="#">Hot Yoga Kit →</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="option__foot">
+          <strong>Tradeoff:</strong> Earlier price is cleaner commerce; SEO H1 / lede hierarchy from locked v16
+          is weaker — keep A if brand statement must lead.
+        </div>
+      </section>
+
+      <!-- ═══════════════ C AVOID ═══════════════ -->
+      <section class="option option--avoid" id="avoid">
+        <div class="option__head">
+          <div class="option__tag option__tag--avoid">Avoid · current fragment</div>
+          <h3>Bordered widget stack</h3>
+          <p class="option__what">
+            Illustrates why the buy box feels fragmented: price box, color box, size box,
+            payment mixed with shipping, checkmark trust strip. Do not ship.
+          </p>
+          <p class="option__hierarchy">
+            reviews → title → | PRICE + payments chip | → | color | → | size | → CTA → ✓ ✓ ✓ ✓
+          </p>
+        </div>
+        <div class="option__preview">
+          <p class="option__preview-label">Anti-pattern (do not use)</p>
+          <div class="stage">
+            <div class="gallery-stub" aria-hidden="true">
+              <img src="https://barreletics.com/cdn/shop/products/Outside_Black-600x600_f1b31d95-ec45-4761-801c-9885e9572232.jpg?v=1776454640&width=800" alt="" />
+            </div>
+            <div class="buy buy-c">
+              <div class="trust-inline">
+                <span class="stars">★★★★★</span>
+                <span>Trusted by 1,000+ Instructors</span>
+                <a href="#reviews">Reviews →</a>
+              </div>
+              <div>
+                <div class="title-row">
+                  <h2>Best Grippy Shoes for Barre, Pilates &amp; Yoga</h2>
+                  <span class="badge">Closed Sole</span>
+                </div>
+                <p class="lede-lines" style="font-size:28px;">Secure in every hold.<br>No sliding. No resets.</p>
+              </div>
+              <div class="widget">
+                <span class="price-now">$74</span>
+                <span class="pay-chip">or 4 payments · free shipping over $150</span>
+              </div>
+              <div class="widget">
+                <div class="ctrl-head"><span class="label">Color · <span>Onyx</span></span></div>
+                <div class="swatches">
+                  <span class="swatch" style="background:#050505;" aria-selected="true"></span>
+                  <span class="swatch" style="background:#e9d3cb;"></span>
+                  <span class="swatch" style="background:#c9c5b8;"></span>
+                </div>
+              </div>
+              <div class="widget">
+                <div class="ctrl-head"><span class="label">Size</span></div>
+                <div class="sizes">
+                  <div class="size-btn is-soon">S<small>Coming soon</small></div>
+                  <div class="size-btn">M<small>W 5–7.5</small></div>
+                  <div class="size-btn is-selected">L<small>W 8–10</small></div>
+                </div>
+              </div>
+              <button class="cta" type="button">Add to cart · $74</button>
+              <div class="trust-icons">
+                <span><b>✓</b> Ships 1–2 days</span>
+                <span><b>✓</b> 30-day returns</span>
+                <span><b>✓</b> 90-day warranty</span>
+                <span><b>✓</b> Latex-free</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="option__foot">
+          <strong>Reject:</strong> Competing chips, hairline cages, icon trust circus — feels like bolted apps, not one purchase.
+        </div>
+      </section>
+
+    </div>
+
+    <div class="context" style="margin-top:32px;border-left-color:var(--charcoal);">
+      <div class="context__tag" style="color:var(--charcoal);">Hierarchy change</div>
+      <h3>What Recommended changes</h3>
+      <p>
+        1) <strong>Price dominates</strong> without a boxed price band.<br>
+        2) <strong>Payment</strong> drops to a muted amount-first line (<code>or 4 × $18.50</code>) — shipping leaves this line.<br>
+        3) <strong>Reviews</strong> soft under identity — Closed Sole title badge removed (meta owns sole).<br>
+        4) <strong>Color + size</strong> share one control group (16px internal, no borders between).<br>
+        5) <strong>Qty + CTA</strong> share one action row; CTA owns weight.<br>
+        6) <strong>Trust</strong> under CTA = v16 ✓ checkmark row (Ships / returns / warranty / latex-free); quiet Complete the kit after.
+      </p>
+    </div>
+  </div>
+</body>
+</html>

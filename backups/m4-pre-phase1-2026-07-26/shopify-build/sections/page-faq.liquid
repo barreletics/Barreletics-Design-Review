@@ -1,0 +1,218 @@
+{% comment %}
+  Page FAQ Section
+  Categorized FAQ accordion groups using the faq-accordion snippet.
+  Includes FAQPage structured data for all categories.
+  Used on: page.faq.json
+{% endcomment %}
+
+<section class="section section--cream" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
+  <div class="section__inner section__inner--narrow">
+    {% if section.settings.title != blank %}
+      <h1 class="page-faq__title">{{ section.settings.title }}</h1>
+    {% endif %}
+    {% if section.settings.subtitle != blank %}
+      <p class="page-faq__subtitle">{{ section.settings.subtitle }}</p>
+    {% endif %}
+  </div>
+</section>
+
+{% assign categories = section.settings.categories | split: ',' %}
+{% for block in section.blocks %}
+  {% if block.type == 'category' %}
+    <section class="section" id="faq-{{ block.settings.slug }}" {{ block.shopify_attributes }}>
+      <div class="section__inner section__inner--narrow">
+        <h2 class="page-faq__category-title">{{ block.settings.category_title }}</h2>
+      </div>
+    </section>
+  {% elsif block.type == 'faq_item' %}
+    {%- comment %} Rendered within the accordion below {% endcomment -%}
+  {% endif %}
+{% endfor %}
+
+{% comment %} Render FAQ items grouped by category {% endcomment %}
+{% assign current_category = '' %}
+{% assign category_items = '' %}
+{% assign all_items_for_schema = '' %}
+
+{% for block in section.blocks %}
+  {% if block.type == 'faq_item' %}
+    <div class="page-faq__item-wrapper" {{ block.shopify_attributes }} style="display:none"
+      data-question="{{ block.settings.question | escape }}"
+      data-answer="{{ block.settings.answer | escape }}"
+      data-category="{{ block.settings.category | escape }}">
+    </div>
+  {% endif %}
+{% endfor %}
+
+{% comment %} Group and render by category using the accordion pattern {% endcomment %}
+{% assign rendered_categories = '' %}
+{% for block in section.blocks %}
+  {% if block.type == 'faq_item' %}
+    {% unless rendered_categories contains block.settings.category %}
+      {% assign rendered_categories = rendered_categories | append: block.settings.category | append: '|' %}
+
+      <section class="section{% cycle '', ' section--cream' %}" id="faq-category-{{ forloop.index }}">
+        <div class="section__inner section__inner--narrow">
+          <h2 class="page-faq__category-heading">{{ block.settings.category }}</h2>
+          <div class="faq" data-faq-accordion>
+            <div class="faq__inner">
+              <div class="faq__list">
+                {% for item in section.blocks %}
+                  {% if item.type == 'faq_item' and item.settings.category == block.settings.category %}
+                    <details class="faq__item" data-faq-item {{ item.shopify_attributes }}>
+                      <summary class="faq__trigger" role="button" aria-expanded="false">
+                        <span class="faq__question">{{ item.settings.question }}</span>
+                        <span class="faq__icon" aria-hidden="true"></span>
+                      </summary>
+                      <div class="faq__body">
+                        {{ item.settings.answer }}
+                      </div>
+                    </details>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    {% endunless %}
+  {% endif %}
+{% endfor %}
+
+{% comment %} FAQPage structured data for all items {% endcomment %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'faq_item' -%}
+        {
+          "@type": "Question",
+          "name": {{ block.settings.question | json }},
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": {{ block.settings.answer | strip_html | json }}
+          }
+        }{% unless forloop.last %},{% endunless %}
+      {%- endif -%}
+    {%- endfor -%}
+  ]
+}
+</script>
+
+<style>
+  .page-faq__title {
+    font-size: var(--text-5xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    text-align: center;
+    margin: 0 0 var(--space-3);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .page-faq__subtitle {
+    font-size: var(--text-md);
+    color: var(--text-body);
+    text-align: center;
+    line-height: var(--leading-relaxed);
+    margin: 0;
+  }
+
+  .page-faq__category-heading {
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    margin: 0 0 var(--space-6);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .page-faq__category-heading::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 3px;
+    background: var(--accent-primary);
+    margin-bottom: var(--space-4);
+    border-radius: 2px;
+  }
+
+  @media (max-width: 768px) {
+    .page-faq__title {
+      font-size: var(--text-3xl);
+    }
+
+    .page-faq__category-heading {
+      font-size: var(--text-xl);
+    }
+  }
+</style>
+
+<script>
+  (function() {
+    document.querySelectorAll('[data-faq-accordion]').forEach(function(accordion) {
+      var items = accordion.querySelectorAll('[data-faq-item]');
+      items.forEach(function(item) {
+        item.addEventListener('toggle', function() {
+          if (item.open) {
+            items.forEach(function(other) {
+              if (other !== item && other.open) other.open = false;
+            });
+            item.querySelector('.faq__trigger').setAttribute('aria-expanded', 'true');
+          } else {
+            item.querySelector('.faq__trigger').setAttribute('aria-expanded', 'false');
+          }
+        });
+      });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "FAQ Page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Page title",
+      "default": "Frequently Asked Questions"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Everything you need to know about your Performance Skins."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "FAQ Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "category",
+          "label": "Category",
+          "default": "General"
+        },
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ Page"
+    }
+  ]
+}
+{% endschema %}

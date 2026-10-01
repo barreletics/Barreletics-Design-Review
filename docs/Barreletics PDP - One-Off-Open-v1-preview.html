@@ -1,0 +1,598 @@
+<!-- One-Off Open Sole PDP preview — lean Closed twin + Open deltas. Preview only — not locked. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PDP One-Off Open — v1 synced from v2 (not locked)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif; color: #1c1916; background: #fff; line-height: 1.5; }
+    a { color: #1c1916; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    img, video { display: block; max-width: 100%; }
+
+    .preview-banner {
+      position: sticky; top: 0; z-index: 200;
+      background: #1c1916; color: #f5f0e8; font-size: 12px; font-weight: 500;
+      letter-spacing: 0.03em; padding: 12px 16px; text-align: center;
+    }
+    .preview-banner strong { color: #e9d3cb; }
+    .preview-banner a { color: #e9d3cb; text-decoration: underline; }
+
+    /* Brand video hero — media-only, no rust eyebrow */
+    .fullbleed-hero {
+      position: relative; min-height: 80vh; background: #1c1916; overflow: hidden;
+    }
+    .fullbleed-hero video {
+      position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+    }
+
+    .pdp-hero {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 48px;
+      max-width: 1400px; margin: 0 auto;
+      padding: 40px 80px 48px 40px; align-items: flex-start;
+    }
+    .pdp-gallery { display: flex; flex-direction: column; gap: 12px; position: sticky; top: 56px; }
+    .pdp-gallery__hero { aspect-ratio: 1; background: #f9f9f9; overflow: hidden; border-radius: 8px; }
+    .pdp-gallery__hero img { width: 100%; height: 100%; object-fit: cover; }
+    .pdp-gallery__thumbs {
+      display: flex; gap: 6px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    }
+    .pdp-gallery__thumbs::-webkit-scrollbar { display: none; }
+    .pdp-gallery__thumb {
+      width: 72px; height: 72px; flex-shrink: 0; border: 1px solid #d6cfc0; background: #f9f9f9;
+      padding: 0; cursor: pointer; overflow: hidden; border-radius: 4px;
+    }
+    .pdp-gallery__thumb.is-active { border: 2px solid #1c1916; }
+    .pdp-gallery__thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+    .pdp-buy { display: flex; flex-direction: column; gap: 14px; }
+    .pdp-buy__rating { display: flex; align-items: center; gap: 10px; font-size: 13px; color: #6b645a; }
+    .pdp-buy__stars { font-size: 14px; color: #d4af37; letter-spacing: 1px; }
+    .pdp-buy__reviews-link { font-size: 12px; color: #8a8a8a; margin-left: 4px; }
+    .pdp-buy__header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .pdp-buy__seo-title { font-size: 18px; font-weight: 600; line-height: 1.25; color: #2d2926; margin: 0; }
+    .pdp-buy__badge {
+      display: inline-block; background: #c45c3f; color: #fff; padding: 4px 10px;
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; border-radius: 3px;
+      flex-shrink: 0;
+    }
+    .pdp-buy__name {
+      font-size: clamp(30px, 3.6vw, 40px); font-weight: 400; line-height: 1.06; color: #1c1916; margin: 0;
+    }
+    .pdp-buy__desc { font-size: 14px; color: #5a5248; line-height: 1.5; max-width: 42ch; margin: 0; }
+    .pdp-buy__price-block {
+      padding: 10px 0; border-top: 1px solid #e8e2d8; border-bottom: 1px solid #e8e2d8;
+    }
+    .pdp-buy__price-now { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; line-height: 1; }
+    .pdp-buy__price-meta { display: block; margin-top: 4px; font-size: 12px; color: #8a8a8a; }
+    .pdp-buy__option { margin: 0; }
+    .pdp-buy__option + .pdp-buy__option { margin-top: 4px; }
+    .pdp-buy__option-header {
+      display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;
+    }
+    .pdp-buy__option-label {
+      font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    .pdp-buy__option-label span { font-weight: 500; text-transform: none; letter-spacing: 0; color: #6b645a; }
+    .pdp-buy__size-link {
+      font-size: 12px; color: #1c1916; border-bottom: 1px solid #1c1916; padding-bottom: 1px;
+    }
+    .pdp-buy__swatches { display: flex; gap: 10px; flex-wrap: wrap; row-gap: 10px; }
+    .pdp-buy__swatch--photo {
+      width: 48px; height: 48px; border-radius: 6px; border: 2px solid transparent;
+      cursor: pointer; padding: 0; background-size: cover; background-position: center;
+      box-sizing: border-box;
+    }
+    .pdp-buy__swatch--photo.is-active { border-color: #1c1916; }
+    .pdp-buy__sizes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .pdp-buy__size-btn {
+      padding: 12px 10px; border: 1px solid #d6cfc0; background: #f9f9f9; border-radius: 6px;
+      font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; color: #1c1916;
+    }
+    .pdp-buy__size-btn.is-active { border-color: #1c1916; background: #1c1916; color: #fff; }
+    .pdp-buy__size-btn.is-active .pdp-buy__size-range { color: rgba(255,255,255,0.75); }
+    .pdp-buy__size-range {
+      display: block; font-size: 10px; font-weight: 400; color: #8a8a8a; margin-top: 4px; line-height: 1.3;
+    }
+    .pdp-buy__cta {
+      width: 100%; padding: 18px; background: #1c1916; color: #fff; border: none; border-radius: 4px;
+      font-family: inherit; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+      cursor: pointer;
+    }
+    .pdp-buy__cta:hover { background: #c45c3f; }
+    .pdp-buy__accordions { margin-top: 8px; }
+    .pdp-accordion { border-top: 1px solid #e8e2d8; }
+    .pdp-accordion summary {
+      list-style: none; cursor: pointer; padding: 16px 0; font-size: 13px; font-weight: 600;
+      display: flex; justify-content: space-between;
+    }
+    .pdp-accordion summary::-webkit-details-marker { display: none; }
+    .pdp-accordion__body { padding: 0 0 16px; font-size: 14px; color: #5a5248; line-height: 1.6; }
+
+    .value-strip-section {
+      background: #f5f2ec; border-top: 1px solid #d6cfc0; border-bottom: 1px solid #d6cfc0; padding: 28px 40px;
+    }
+    .value-strip {
+      max-width: 1200px; margin: 0 auto; text-align: center;
+      font-size: 12px; font-weight: 500; text-transform: uppercase;
+      letter-spacing: 0.08em; color: #6b645a; line-height: 1;
+    }
+    .value-strip__sep { color: #9a9182; margin: 0 8px; }
+
+    /* Features — matured 2×2, taupe eyebrow (NOT rust) */
+    .features {
+      max-width: 1200px; margin: 0 auto; padding: 80px 40px;
+      border-top: 1px solid #e8e2d8; border-bottom: 1px solid #e8e2d8;
+    }
+    .features__eyebrow {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+      color: #6b645a; margin-bottom: 12px;
+    }
+    .features__title {
+      font-size: 40px; font-weight: 400; line-height: 1.1; letter-spacing: -0.02em;
+      max-width: 18ch; margin: 0 0 48px;
+    }
+    .features__grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 40px 80px;
+    }
+    .features__item { border-top: 1px solid #d6cfc0; padding-top: 32px; }
+    .features__item h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+    .features__item p { font-size: 14px; color: #5a5248; line-height: 1.5; }
+
+    /* Fifty-fifty studio video */
+    .ff {
+      display: grid; grid-template-columns: 1fr 1fr; min-height: 560px; background: #f5f2ec;
+    }
+    .ff--reverse .ff__media { order: 2; }
+    .ff--reverse .ff__copy { order: 1; }
+    .ff__media { position: relative; background: #1c1916; min-height: 320px; overflow: hidden; }
+    .ff__media video { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+    .ff__copy {
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 80px 64px; gap: 16px;
+    }
+    .ff__title {
+      font-size: clamp(32px, 3.5vw, 44px); font-weight: 400; line-height: 1.1; letter-spacing: -0.02em;
+    }
+    .ff__body { font-size: 16px; color: #5a5248; max-width: 36ch; line-height: 1.55; }
+    .ff__cta {
+      align-self: flex-start; margin-top: 8px; padding: 14px 22px; background: #c45c3f; color: #fff;
+      border: none; border-radius: 4px; font-family: inherit; font-size: 12px; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer;
+    }
+
+    .variants { max-width: 1200px; margin: 0 auto; padding: 80px 40px; }
+    .variants__title { font-size: clamp(38px, 4.6vw, 52px); font-weight: 500; line-height: 1.1; margin-bottom: 12px; }
+    .variants__body { font-size: 16px; color: #5a5248; margin-bottom: 28px; max-width: 48ch; }
+    .variants-toolbar {
+      border-top: 1px solid #e8e2d8; border-bottom: 1px solid #e8e2d8;
+      padding: 14px 0; display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 16px; margin-bottom: 36px;
+    }
+    .variants-tabs { display: flex; gap: 12px; flex-wrap: wrap; }
+    .variants-tab {
+      padding: 10px 24px; font-size: 12px; font-weight: 700; letter-spacing: 0.05em;
+      text-transform: uppercase; color: #8a8a8a; background: #fff; border: 1px solid #d6cfc0;
+      border-radius: 4px; font-family: inherit; cursor: default;
+    }
+    .variants-tab.is-active { color: #fff; background: #1c1916; border-color: #1c1916; }
+    .var-grid-group__label {
+      margin: 0 0 16px; font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: #9a9182;
+    }
+    .var-grid-group__cards {
+      display: grid; grid-template-columns: repeat(4, 1fr); column-gap: 28px; row-gap: 56px;
+    }
+    .var-card {
+      display: flex; flex-direction: column; border: 1px solid #e8e2d8; border-radius: 6px;
+      overflow: hidden; background: #fff;
+    }
+    .var-card--sold-out { opacity: 0.5; }
+    .var-card__img { aspect-ratio: 1; background: #f5f2ec; position: relative; overflow: hidden; }
+    .var-card__img img { width: 100%; height: 100%; object-fit: cover; }
+    .var-card__badge {
+      position: absolute; top: 10px; left: 10px; font-size: 8px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px;
+    }
+    .var-card__badge--le { background: #458CD9; color: #fff; }
+    .var-card__badge--soldout { background: #1c1916; color: #fff; }
+    .var-card__content {
+      padding: 18px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px;
+    }
+    .var-card__name { font-size: 18px; font-weight: 700; margin: 0; line-height: 1.3; }
+    .var-card__meta {
+      display: inline-block; font-size: 11px; font-weight: 500; color: #6b645a;
+      background: #f0efec; padding: 4px 10px; border-radius: 3px; margin: 2px 0 0;
+    }
+    .var-card__price { font-size: 16px; font-weight: 700; margin: 4px 0 0; }
+    .var-card__installment { font-size: 12px; color: #8a8a8a; }
+    .var-card__add {
+      margin-top: 12px; width: 100%; padding: 14px 12px; background: #1c1916; color: #fff;
+      border: 1px solid #1c1916; border-radius: 4px; font-family: inherit; font-size: 12px;
+      font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer;
+    }
+    .var-card__sold { margin-top: 12px; font-size: 13px; font-weight: 500; color: #8a8a8a; }
+
+    .band { max-width: 1200px; margin: 0 auto; padding: 72px 40px; text-align: center; }
+    .band__eyebrow {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+      color: #9a9182; margin-bottom: 12px;
+    }
+    .band__title { font-size: clamp(28px, 3vw, 36px); font-weight: 500; margin-bottom: 12px; }
+    .band__body { font-size: 16px; color: #5a5248; max-width: 42ch; margin: 0 auto 32px; }
+    .guarantee-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; text-align: left; margin-top: 40px;
+    }
+    .guarantee-grid h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+    .guarantee-grid p { font-size: 14px; color: #5a5248; line-height: 1.55; }
+    .reviews-row {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; text-align: left; margin-top: 32px;
+    }
+    .review-card { background: #f9f9f9; border-radius: 8px; overflow: hidden; }
+    .review-card img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+    .review-card__body { padding: 16px; font-size: 13px; color: #5a5248; line-height: 1.5; }
+    .review-card__author { margin-top: 10px; font-size: 12px; font-weight: 600; color: #1c1916; }
+
+    .juicer-wrap { max-width: 1200px; margin: 0 auto; padding: 72px 40px; text-align: center; }
+    .juicer-wrap .band__eyebrow { margin-bottom: 12px; }
+    .juicer-feed { min-height: 280px; margin: 24px 0; }
+    .juicer-note { font-size: 13px; color: #6b645a; max-width: 48ch; margin: 0 auto 16px; }
+
+    .faq { max-width: 800px; margin: 0 auto; padding: 72px 40px 120px; }
+    .faq h2 {
+      font-size: clamp(28px, 3vw, 36px); font-weight: 500; margin-bottom: 28px; text-align: center;
+    }
+    .faq details { border-top: 1px solid #e8e2d8; }
+    .faq details:last-child { border-bottom: 1px solid #e8e2d8; }
+    .faq summary {
+      list-style: none; cursor: pointer; padding: 18px 0; font-size: 15px; font-weight: 600;
+      display: flex; justify-content: space-between; gap: 16px;
+    }
+    .faq summary::-webkit-details-marker { display: none; }
+    .faq details p { padding: 0 0 18px; font-size: 14px; color: #5a5248; line-height: 1.6; }
+
+    .sticky-atc {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 150;
+      background: #fff; border-top: 1px solid #d6cfc0;
+      padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      box-shadow: 0 -4px 24px rgba(28, 25, 22, 0.06);
+    }
+    .sticky-atc__meta { font-size: 13px; color: #6b645a; }
+    .sticky-atc__meta strong { color: #1c1916; font-size: 14px; }
+    .sticky-atc__btn {
+      padding: 14px 24px; background: #1c1916; color: #fff; border: none; border-radius: 4px;
+      font-family: inherit; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+      cursor: pointer; white-space: nowrap;
+    }
+    .note {
+      max-width: 720px; margin: 0 auto; padding: 24px 40px 100px;
+      font-size: 13px; color: #6b645a; line-height: 1.55;
+    }
+
+    @media (max-width: 900px) {
+      .fullbleed-hero { min-height: 60vh; }
+      .pdp-hero { grid-template-columns: 1fr; gap: 32px; padding: 32px 20px; }
+      .pdp-gallery { position: static; }
+      .value-strip-section { padding: 24px 16px; }
+      .features { padding: 56px 20px; }
+      .features__grid { gap: 28px 24px; }
+      .ff { grid-template-columns: 1fr; }
+      .ff--reverse .ff__media { order: 0; }
+      .ff--reverse .ff__copy { order: 0; }
+      .ff__copy { padding: 40px 20px; }
+      .ff__media { min-height: 320px; aspect-ratio: 4/3; }
+      .variants { padding: 56px 20px; }
+      .var-grid-group__cards { grid-template-columns: 1fr 1fr; column-gap: 10px; row-gap: 20px; }
+      .band, .juicer-wrap { padding: 56px 20px; }
+      .guarantee-grid, .reviews-row { grid-template-columns: 1fr; }
+      .faq { padding: 56px 20px 120px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="preview-banner">
+    PREVIEW ONLY · Open Sole one-off v1=v2 sync · brand video hero · 1 studio 50/50 · one-off FAQ · taupe eyebrows ·
+    <a href="Barreletics%20PDP%20-%20Definitive-v19.html">v19 locked (compare only)</a>
+  </div>
+
+  <!-- 0. Brand film hero (media-only) -->
+  <section class="fullbleed-hero" aria-label="Brand film">
+    <video autoplay muted loop playsinline poster="https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&amp;width=2000">
+      <source src="https://cdn.shopify.com/s/files/1/0045/0612/4391/files/Barre_Short_Video_-nosound.mp4?v=1590451878" type="video/mp4">
+    </video>
+  </section>
+
+  <!-- 1. Buy box -->
+  <section style="background:#fff;" aria-label="Product details">
+    <div class="pdp-hero" id="buy">
+      <div class="pdp-gallery">
+        <div class="pdp-gallery__hero">
+          <img id="main-img" src="https://cdn.shopify.com/s/files/1/0045/0612/4391/files/Purple_Blue_Swatch.jpg?v=1770489337&amp;width=800" alt="Open Sole one-off — Purple Blue" />
+        </div>
+        <div class="pdp-gallery__thumbs">
+          <button type="button" class="pdp-gallery__thumb is-active" onclick="thumb(this,'https://cdn.shopify.com/s/files/1/0045/0612/4391/files/Purple_Blue_Swatch.jpg?v=1770489337&amp;width=800')"><img src="https://cdn.shopify.com/s/files/1/0045/0612/4391/files/Purple_Blue_Swatch.jpg?v=1770489337&amp;width=160" alt=""></button>
+          <button type="button" class="pdp-gallery__thumb" onclick="thumb(this,'https://barreletics.com/cdn/shop/files/Multi_Image.jpg?v=1768346625&amp;width=800')"><img src="https://barreletics.com/cdn/shop/files/Multi_Image.jpg?v=1768346625&amp;width=160" alt=""></button>
+          <button type="button" class="pdp-gallery__thumb" onclick="thumb(this,'https://barreletics.com/cdn/shop/products/barreletixxjumpingtogether.jpg?v=1619360969&amp;width=800')"><img src="https://barreletics.com/cdn/shop/products/barreletixxjumpingtogether.jpg?v=1619360969&amp;width=160" alt=""></button>
+          <button type="button" class="pdp-gallery__thumb" onclick="thumb(this,'https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&amp;width=800')"><img src="https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&amp;width=160" alt=""></button>
+          <button type="button" class="pdp-gallery__thumb" onclick="thumb(this,'https://barreletics.com/cdn/shop/files/Purple_45b2348c-f5a1-45a8-a704-88f8afd10414.jpg?v=1776454640&amp;width=800')"><img src="https://barreletics.com/cdn/shop/files/Purple_45b2348c-f5a1-45a8-a704-88f8afd10414.jpg?v=1776454640&amp;width=160" alt=""></button>
+          <button type="button" class="pdp-gallery__thumb" onclick="thumb(this,'https://barreletics.com/cdn/shop/files/A14_TopBottom_LightGrey-1000x1000_d30b6fcb-229e-4af9-8062-e1c4901df31e.jpg?v=1773920300&amp;width=800')"><img src="https://barreletics.com/cdn/shop/files/A14_TopBottom_LightGrey-1000x1000_d30b6fcb-229e-4af9-8062-e1c4901df31e.jpg?v=1773920300&amp;width=160" alt=""></button>
+          <button type="button" class="pdp-gallery__thumb" onclick="thumb(this,'https://barreletics.com/cdn/shop/products/Rear_3QT_Blue-600x600.jpg?v=1776454640&amp;width=800')"><img src="https://barreletics.com/cdn/shop/products/Rear_3QT_Blue-600x600.jpg?v=1776454640&amp;width=160" alt=""></button>
+        </div>
+      </div>
+
+      <div class="pdp-buy">
+        <div class="pdp-buy__rating">
+          <span class="pdp-buy__stars" aria-hidden="true">★★★★★</span>
+          <span>Trusted by 1,000+ Instructors</span>
+          <a class="pdp-buy__reviews-link" href="#reviews">Reviews →</a>
+        </div>
+        <div class="pdp-buy__header">
+          <h1 class="pdp-buy__seo-title">One Off Colors (Open Sole)</h1>
+          <span class="pdp-buy__badge">One-Off</span>
+        </div>
+        <p class="pdp-buy__name">
+          <span style="font-weight:400;">Limited color. Limited run.</span><br>
+          <span style="font-weight:400;">Once it's gone, it's gone.</span>
+        </p>
+        <p class="pdp-buy__desc">Exclusive Open Sole one-off colorways. Heel exposed, mid-foot breathing hole. Same grip, same stability — when it’s gone, it’s gone.</p>
+        <div class="pdp-buy__price-block">
+          <div class="pdp-buy__price-now">$82.00</div>
+          <span class="pdp-buy__price-meta">or 4 × $18.50</span>
+        </div>
+        <div class="pdp-buy__option">
+          <div class="pdp-buy__option-header">
+            <span class="pdp-buy__option-label">Color · <span id="color-name">Purple Blue</span></span>
+          </div>
+          <div class="pdp-buy__swatches">
+            <button type="button" class="pdp-buy__swatch--photo is-active" style="background-image:url(https://cdn.shopify.com/s/files/1/0045/0612/4391/files/Purple_Blue_Swatch.jpg?v=1770489337&amp;width=120);" aria-label="Purple Blue" onclick="color(this,'Purple Blue')"></button>
+          </div>
+        </div>
+        <div class="pdp-buy__option">
+          <div class="pdp-buy__option-header">
+            <span class="pdp-buy__option-label">Size</span>
+            <a class="pdp-buy__size-link" href="https://barreletics.com/pages/performance-skins-size-chart">Size Chart →</a>
+          </div>
+          <div class="pdp-buy__sizes" role="group" aria-label="Select size">
+            <button type="button" class="pdp-buy__size-btn is-active" onclick="size(this)">M<span class="pdp-buy__size-range">Women 5–7.5 · Men 6–8</span></button>
+            <button type="button" class="pdp-buy__size-btn" onclick="size(this)">L<span class="pdp-buy__size-range">Women 8–10 · Men 8.5–11</span></button>
+          </div>
+        </div>
+        <button type="button" class="pdp-buy__cta">Add to Cart — $82.00</button>
+        <div class="pdp-buy__accordions">
+          <details class="pdp-accordion">
+            <summary>Description <span>+</span></summary>
+            <div class="pdp-accordion__body">Open Sole: heel exposed, mid-foot breathing hole. More grounded, barefoot feel. Natural toe splay. Both perform identically — same grip, same stability. Choice is preference and feel only.</div>
+          </details>
+          <details class="pdp-accordion">
+            <summary>Shipping <span>+</span></summary>
+            <div class="pdp-accordion__body">Complimentary shipping on orders over $150. Orders ship within 1–2 business days.</div>
+          </details>
+          <details class="pdp-accordion">
+            <summary>Returns &amp; warranty <span>+</span></summary>
+            <div class="pdp-accordion__body">30-day returns on items in new, sellable condition. 90-day warranty covers manufacturing defects only.</div>
+          </details>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="value-strip-section" aria-label="Value propositions">
+    <div class="value-strip">
+      <span>Made in USA</span><span class="value-strip__sep" aria-hidden="true"> · </span>
+      <span>Free shipping over $150</span><span class="value-strip__sep" aria-hidden="true"> · </span>
+      <span>30-day returns</span><span class="value-strip__sep" aria-hidden="true"> · </span>
+      <span>90-day warranty</span>
+    </div>
+  </section>
+
+  <section class="features" aria-label="Features">
+    <p class="features__eyebrow">Barreletics</p>
+    <h2 class="features__title">Same grip system.<br>Limited color.</h2>
+    <div class="features__grid">
+      <div class="features__item">
+        <h3>360° Grip</h3>
+        <p>Every direction. Every movement.</p>
+      </div>
+      <div class="features__item">
+        <h3>Secure in Every Hold</h3>
+        <p>No slipping. No resets.</p>
+      </div>
+      <div class="features__item">
+        <h3>Stay in the Flow</h3>
+        <p>No adjusting. No distractions.</p>
+      </div>
+      <div class="features__item">
+        <h3>Built to Last</h3>
+        <p>Class 1 to class 1,000.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1 video fifty-fifty — HD studio motion (same as core commit) -->
+  <section class="ff ff--reverse" aria-label="Studio motion">
+    <div class="ff__media">
+      <video autoplay muted loop playsinline poster="https://barreletics.com/cdn/shop/files/Multi_Image.jpg?v=1768346625&amp;width=1400">
+        <source src="https://barreletics.com/cdn/shop/videos/c/vp/75bddc3407e341c1aab81ca4f2dc8d66/75bddc3407e341c1aab81ca4f2dc8d66.HD-720p-4.5Mbps.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="ff__copy">
+      <h2 class="ff__title">Limited color.<br>Same studio hold.</h2>
+      <p class="ff__body">Exclusive drop. Same 360° grip as core Performance Skin — when it’s gone, it’s gone.</p>
+      <a class="ff__cta" href="#variants">Shop now</a>
+    </div>
+  </section>
+
+  <section class="variants" id="variants" aria-label="One-off colors">
+    <h2 class="variants__title">One-off colors</h2>
+    <p class="variants__body">Available now, then earlier drops. When a color sells out, it’s gone.</p>
+    <div class="variants-toolbar">
+      <div class="variants-tabs" role="tablist">
+        <button type="button" class="variants-tab" role="tab">Closed Sole</button>
+        <button type="button" class="variants-tab" role="tab">Open Sole</button>
+        <button type="button" class="variants-tab is-active" role="tab">One-Offs</button>
+        <button type="button" class="variants-tab" role="tab">Outdoor</button>
+      </div>
+    </div>
+    <div class="var-grid-group" data-oneoff-group="available">
+      <p class="var-grid-group__label">Available now</p>
+      <div class="var-grid-group__cards">
+        <article class="var-card">
+          <div class="var-card__img">
+            <span class="var-card__badge var-card__badge--le">Limited Edition</span>
+            <img src="https://cdn.shopify.com/s/files/1/0045/0612/4391/files/Purple_Blue_Swatch.jpg?v=1770489337&amp;width=600" alt="Purple Blue">
+          </div>
+          <div class="var-card__content">
+            <p class="var-card__name">Purple Blue</p>
+            <p class="var-card__meta">One-Offs · Size M</p>
+            <p class="var-card__price">$82</p>
+            <p class="var-card__installment">or 4 × $18.50</p>
+            <button type="button" class="var-card__add">Quick Add →</button>
+          </div>
+        </article>
+      </div>
+    </div>
+    <div class="var-grid-group" style="margin-top:40px;" data-oneoff-group="earlier">
+      <p class="var-grid-group__label">Earlier one-offs</p>
+      <div class="var-grid-group__cards">
+        <article class="var-card var-card--sold-out">
+          <div class="var-card__img">
+            <span class="var-card__badge var-card__badge--soldout">Sold Out</span>
+            <img src="https://cdn.shopify.com/s/files/1/0045/0612/4391/files/Purple_Blue_Swatch.jpg?v=1770489337&amp;width=600" alt="" style="filter:grayscale(0.4);">
+          </div>
+          <div class="var-card__content">
+            <p class="var-card__name">Purple Blue</p>
+            <p class="var-card__meta">One-Offs · Size L</p>
+            <p class="var-card__price">$82</p>
+            <p class="var-card__sold">Sold out</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="reviews" aria-label="Reviews" style="background:#fff;">
+    <p class="band__eyebrow">Reviews</p>
+    <h2 class="band__title">Real people. Real results.</h2>
+    <p class="band__body">See the difference. Feel the grip.</p>
+    <div class="reviews-row">
+      <article class="review-card">
+        <img src="https://barreletics.com/cdn/shop/products/barreletixxjumpingtogether.jpg?v=1619360969&amp;width=600" alt="">
+        <div class="review-card__body">
+          “Truly valuable to my Pilates practice — I refuse to wear anything else — the security is unmatched.”
+          <p class="review-card__author">Kimberly · Knoxville</p>
+        </div>
+      </article>
+      <article class="review-card">
+        <img src="https://barreletics.com/cdn/shop/files/Multi_Image.jpg?v=1768346625&amp;width=600" alt="">
+        <div class="review-card__body">
+          “The best invention known to Pilates devotees… your foot has to be gripping the bar without fail.”
+          <p class="review-card__author">Dvorah S. · Fairfield</p>
+        </div>
+      </article>
+      <article class="review-card">
+        <img src="https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&amp;width=600" alt="">
+        <div class="review-card__body">
+          “No more slipping… Big improvement over grippy socks. I definitely feel more stable and secure now.”
+          <p class="review-card__author">Dorothy · Bronxville</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="band" aria-label="Guarantee" style="background:#f5f2ec;">
+    <p class="band__eyebrow">Our promise</p>
+    <h2 class="band__title">Built on guarantees, not guesses.</h2>
+    <div class="guarantee-grid">
+      <div>
+        <h3>30-Day Returns</h3>
+        <p>Try on for fit. Return in new, sellable condition within 30 days for a full refund.</p>
+      </div>
+      <div>
+        <h3>90-Day Warranty</h3>
+        <p>Covers manufacturing defects only. Not normal wear — because normal wear doesn't affect grip.</p>
+      </div>
+      <div>
+        <h3>Built to Last</h3>
+        <p>18+ months. Same grip on day 1 as day 500. That's not marketing — it's materials science.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="juicer-wrap" id="instagram" aria-label="Instagram">
+    <p class="band__eyebrow">Follow the movement</p>
+    <h2 class="band__title">@barreletics</h2>
+    <p class="band__body">Real practitioners. Real studios. Real grip.</p>
+    <p class="juicer-note">Juicer embed below may load on localhost if juicer.io allows it. Theme settings match core PDP (<code>feed_id: barreletics</code>). Full feed QA needs M4 push.</p>
+    <ul class="juicer-feed" data-feed-id="barreletics" data-per="12" data-pages="1"></ul>
+    <a href="https://www.instagram.com/barreletics/" style="font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid #1c1916;padding-bottom:2px;">Follow on Instagram →</a>
+  </section>
+  <script src="https://www.juicer.io/embed/barreletics/embed-code.js?per=12&amp;pages=1" async defer></script>
+
+  <section class="faq" aria-label="FAQ">
+    <h2>Everything you need to know.</h2>
+    <details open>
+      <summary>What are One-Off colors? <span>+</span></summary>
+      <p>One-Offs are exclusive Performance Skin colorways outside the core lineup. Same grip system, same studio performance — limited color only. When a color sells out, it’s gone.</p>
+    </details>
+    <details>
+      <summary>When a color sells out, will it come back? <span>+</span></summary>
+      <p>No. One-Offs are limited runs. Available now, then earlier drops stay sold out. If you want a color, grab it while it’s here.</p>
+    </details>
+    <details>
+      <summary>Are One-Offs the same shoe as core Closed Sole / Open Sole? <span>+</span></summary>
+      <p>Yes. Same 360° grip, same stability, same Performance Skin construction. The difference is the exclusive colorway and limited availability — not a different product system.</p>
+    </details>
+    <details>
+      <summary>What size should I order? <span>+</span></summary>
+      <p>Available now: M (Women 5–7.5, Men 6–8) and L (Women 8–10, Men 8.5–11). If you're between sizes, go larger.</p>
+    </details>
+    <details>
+      <summary>Closed Sole or Open Sole — which one? <span>+</span></summary>
+      <p>Both perform identically — same grip, same stability. Closed Sole: heel and foot fully covered. Open Sole: heel exposed, mid-foot breathing hole. More grounded, barefoot feel. Natural toe splay. Choice is preference and feel only.</p>
+    </details>
+    <details>
+      <summary>What’s the return and warranty policy? <span>+</span></summary>
+      <p>30-day returns on items in new, sellable condition. 90-day warranty covers manufacturing defects only. Free shipping on orders over $150.</p>
+    </details>
+    <details>
+      <summary>How do I clean them? <span>+</span></summary>
+      <p>Warm soapy water, rinse, air dry. Never machine wash or bleach.</p>
+    </details>
+  </section>
+
+  <p class="note">
+    Local HTML preview of lean <code>product.one-off-open.json</code> (twins Closed).
+    Shopify M4 visual QA + live Juicer needs <strong>push to 187144929571</strong>.
+  </p>
+
+  <div class="sticky-atc" aria-label="Sticky add to cart">
+    <div class="sticky-atc__meta">
+      <strong>One Off Colors (Open Sole)</strong><br>
+      Purple Blue · $82.00
+    </div>
+    <button type="button" class="sticky-atc__btn">Add to Cart</button>
+  </div>
+
+  <script>
+    function thumb(btn, src) {
+      document.getElementById('main-img').src = src;
+      btn.parentElement.querySelectorAll('.pdp-gallery__thumb').forEach(function (b) { b.classList.remove('is-active'); });
+      btn.classList.add('is-active');
+    }
+    function color(btn, name) {
+      document.getElementById('color-name').textContent = name;
+      btn.parentElement.querySelectorAll('.pdp-buy__swatch--photo').forEach(function (b) { b.classList.remove('is-active'); });
+      btn.classList.add('is-active');
+    }
+    function size(btn) {
+      btn.parentElement.querySelectorAll('.pdp-buy__size-btn').forEach(function (b) { b.classList.remove('is-active'); });
+      btn.classList.add('is-active');
+    }
+  </script>
+</body>
+</html>

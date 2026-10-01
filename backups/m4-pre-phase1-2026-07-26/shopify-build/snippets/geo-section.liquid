@@ -1,0 +1,117 @@
+{% comment %}
+  GEO/SEO Content Section (D-022)
+  Accordion-style expandable content with FAQPage schema.
+  Premium editorial styling — not keyword filler.
+
+  Usage: {% render 'geo-section', items: geo_items, heading: 'Trusted in studios everywhere' %}
+  items = array of objects with .question and .answer properties
+{% endcomment %}
+
+{% assign geo_heading = heading | default: 'Trusted in studios everywhere' %}
+
+<div class="geo-section">
+  <div class="geo-section__container">
+    <p class="geo-section__eyebrow">{{ geo_heading }}</p>
+
+    {% for item in items %}
+      <details class="geo-section__item">
+        <summary class="geo-section__trigger">
+          {{ item.question }}
+        </summary>
+        <div class="geo-section__content">
+          {{ item.answer }}
+        </div>
+      </details>
+    {% endfor %}
+  </div>
+</div>
+
+{% if items.size > 0 %}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {% for item in items %}
+          {
+            "@type": "Question",
+            "name": {{ item.question | json }},
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": {{ item.answer | strip_html | json }}
+            }
+          }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ]
+    }
+  </script>
+{% endif %}
+
+<style>
+  .geo-section {
+    padding: 0 var(--section-padding-x) var(--section-padding-y);
+  }
+
+  .geo-section__container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .geo-section__eyebrow {
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-widest);
+    color: var(--text-muted);
+    font-weight: var(--weight-bold);
+    margin: 0 0 var(--space-4);
+  }
+
+  .geo-section__item {
+    border-top: 1px solid #eee8de;
+  }
+
+  .geo-section__item:last-child {
+    border-bottom: 1px solid #eee8de;
+  }
+
+  .geo-section__trigger {
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: var(--weight-medium);
+    color: #9a9182;
+    padding: 12px 0;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .geo-section__trigger::-webkit-details-marker {
+    display: none;
+  }
+
+  .geo-section__trigger::after {
+    content: "+";
+    font-size: 14px;
+    color: var(--border-default);
+    flex-shrink: 0;
+    margin-left: var(--space-4);
+  }
+
+  .geo-section__item[open] .geo-section__trigger::after {
+    content: "\2212";
+  }
+
+  .geo-section__content {
+    padding: 0 0 12px;
+    font-size: 12px;
+    color: #9a9182;
+    line-height: var(--leading-loose);
+  }
+
+  @media (max-width: 768px) {
+    .geo-section {
+      padding: 0 var(--section-padding-x-mobile) var(--section-padding-y-mobile);
+    }
+  }
+</style>

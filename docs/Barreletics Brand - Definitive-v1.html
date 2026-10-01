@@ -1,0 +1,692 @@
+<!--
+  VERSION: Brand Definitive-v1 — NEW FILE. First HTML mock of the brand story page.
+  Prior artifact = shopify-build/templates/page.about.json + sections/page-about.liquid
+  (built, never mocked). Live equivalent = /pages/our-story.
+  Every headline traces to: live /pages/our-story (docs/08-LIVE-SITE-COPY-AUDIT.md URL 12),
+  page.about.json / page-about.liquid schema defaults, docs/01-BRAND-NORTH-STAR.md,
+  or the approved slogan inventory. No invented slogans.
+  Type OS SETTLED 2026-07-29. Footer = locked light "Join the list" (NO 10%).
+  Do not overwrite. New versions only (Definitive-v2.html, etc.).
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Barreletics Brand — Definitive-v1</title>
+  <meta name="description" content="The Barreletics story with founder Stefanie Miller. Patented Performance Skins for barre, Pilates, reformer Pilates, Megaformer workouts, yoga and studio fitness. Designed and made in the USA.">
+  <link rel="icon" type="image/png" href="barreletics-mark.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+
+    /* === TYPE OS SETTLED 2026-07-29 — single source (planning/m4-type-hierarchy.md) === */
+    :root {
+      --fw-hero: 700;
+      --fw-h2-display: 500;
+      --fw-h2-standard: 600;
+      --fw-statement: 500;
+      --fw-body: 400;
+      --fw-label: 600;
+      --fw-emphasis: 700;
+      --fs-hero: clamp(50px, 6.4vw, 72px);
+      --fs-hero-mobile: clamp(38px, 9vw, 50px);
+      --fs-h2-display: clamp(38px, 4.6vw, 52px);
+      --fs-h2-display-mobile: clamp(32px, 7vw, 40px);
+      --fs-h2-standard: clamp(26px, 2.9vw, 32px);
+      --fs-h2-standard-mobile: clamp(24px, 5vw, 28px);
+      --fs-statement: clamp(28px, 3vw, 36px);
+      --fs-statement-mobile: clamp(24px, 5.5vw, 30px);
+      --fs-lede: 17px;
+      --fs-body: 16px;
+      --fs-label: 11px;
+      --ls-hero: -0.028em;
+      --ls-h2-display: -0.028em;
+      --ls-h2-standard: -0.012em;
+      --ls-statement: -0.022em;
+      --ls-label: 0.08em;
+      --lh-hero: 1.06;
+      --lh-h2-display: 1.10;
+      --lh-h2-standard: 1.22;
+      --lh-lede: 1.60;
+      --lh-body: 1.72;
+      --gap-a: 16px;
+      --gap-b: 20px;
+      --gap-c: 32px;
+    }
+    .em { font-weight: var(--fw-emphasis); }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; overflow-x: hidden; }
+    body {
+      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-weight: 400; color: #1c1916; background: #fff;
+      line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden;
+    }
+    a { color: #1c1916; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    img, video { display: block; max-width: 100%; }
+    button { font-family: inherit; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+    /* === REVIEW CHROME === */
+    .mock-banner {
+      position: sticky; top: 0; z-index: 100;
+      background: #1c1916; color: #fff;
+      padding: 12px 20px; text-align: center;
+      font-size: 12px; font-weight: 500; letter-spacing: 0.04em; line-height: 1.45;
+    }
+    .mock-banner strong { color: #e8c4b8; font-weight: 700; }
+    .mock-banner a { color: #fff; text-decoration: underline; text-underline-offset: 2px; }
+
+    /* === TRUST STRIP — locked 4-up scan === */
+    .trust-strip { background: #f5f2ec; padding: 10px 40px; border-bottom: 1px solid #e8e2d8; }
+    .trust-strip__inner {
+      max-width: 1200px; margin: 0 auto; text-align: center;
+      font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em;
+      color: #6b645a; line-height: 1.4; white-space: nowrap; overflow-x: auto;
+    }
+    .trust-strip__sep { color: #9a9182; margin: 0 8px; }
+
+    /* === NAV === */
+    .site-nav { background: #fff; border-bottom: 1px solid #d6cfc0; padding: 0 40px; position: sticky; top: 44px; z-index: 50; }
+    .site-nav__inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 56px; }
+    .site-nav__brand { font-size: 14px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #1c1916; text-decoration: none; }
+    .site-nav__brand:hover { text-decoration: none; }
+    .site-nav__brand img { height: 22px; width: auto; display: block; }
+    .site-nav__links { display: flex; align-items: center; gap: 28px; }
+    .site-nav__links a {
+      font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em;
+      color: #4a4a4a; text-decoration: none;
+    }
+    .site-nav__links a:hover,
+    .site-nav__links a[aria-current="page"] { color: #1c1916; text-decoration: none; }
+    .site-nav__links a[aria-current="page"] { border-bottom: 1px solid #1c1916; padding-bottom: 2px; }
+    .site-nav__actions { display: flex; align-items: center; gap: 20px; }
+    .site-nav__actions a { font-size: 12px; font-weight: 500; letter-spacing: 0.04em; color: #4a4a4a; text-decoration: none; }
+    .site-nav__cart { position: relative; }
+    .site-nav__cart-badge {
+      position: absolute; top: -6px; right: -10px; background: #e8927c; color: #fff;
+      font-size: 9px; font-weight: 700; width: 16px; height: 16px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* === SHARED === */
+    .eyebrow {
+      font-size: var(--fs-label); font-weight: var(--fw-label); text-transform: uppercase;
+      letter-spacing: 0.14em; color: #c45c3f; margin: 0 0 14px;
+    }
+    .eyebrow--muted { color: #8a8a8a; }
+    .h2-display {
+      font-size: var(--fs-h2-display); font-weight: var(--fw-h2-display);
+      letter-spacing: var(--ls-h2-display); line-height: var(--lh-h2-display);
+      color: #1c1916; margin: 0 0 var(--gap-b);
+    }
+    .h2-standard {
+      font-size: var(--fs-h2-standard); font-weight: var(--fw-h2-standard);
+      letter-spacing: var(--ls-h2-standard); line-height: var(--lh-h2-standard);
+      color: #1c1916; margin: 0 0 var(--gap-a);
+    }
+    .prose p { font-size: var(--fs-body); color: #4a4a4a; line-height: var(--lh-body); margin: 0 0 var(--gap-a); }
+    .prose p:last-child { margin-bottom: 0; }
+    .lede { font-size: var(--fs-lede); color: #4a4a4a; line-height: var(--lh-lede); }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-height: 48px; padding: 14px 28px; border-radius: 4px;
+      font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      background: #1c1916; color: #fff; border: 1px solid #1c1916;
+      text-decoration: none; transition: background 0.2s, border-color 0.2s, color 0.2s;
+    }
+    .btn:hover { background: #c45c3f; border-color: #c45c3f; text-decoration: none; }
+    .btn--ghost { background: transparent; color: #1c1916; }
+    .btn--ghost:hover { background: #1c1916; border-color: #1c1916; color: #fff; }
+    .btn--on-dark { background: #fff; color: #1c1916; border-color: #fff; }
+    .btn--on-dark:hover { background: #c45c3f; border-color: #c45c3f; color: #fff; }
+    .btn--ghost-dark { background: transparent; color: #fff; border-color: rgba(255,255,255,0.5); }
+    .btn--ghost-dark:hover { background: #fff; border-color: #fff; color: #1c1916; }
+
+    /* === HERO === */
+    .brand-hero { position: relative; background: #1c1916; }
+    .brand-hero__media { position: relative; height: clamp(420px, 62vh, 620px); overflow: hidden; }
+    .brand-hero__media img { width: 100%; height: 100%; object-fit: cover; object-position: center 4%; }
+    .brand-hero__scrim {
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(28,25,22,0.12) 0%, rgba(28,25,22,0.45) 45%, rgba(28,25,22,0.72) 72%, rgba(28,25,22,0.86) 100%);
+    }
+    .brand-hero__copy {
+      position: absolute; left: 0; right: 0; bottom: 0;
+      padding: 0 40px 56px;
+    }
+    .brand-hero__inner { max-width: 1200px; margin: 0 auto; }
+    .brand-hero .eyebrow { color: #e8c4b8; }
+    .brand-hero__title {
+      font-size: var(--fs-hero); font-weight: var(--fw-hero);
+      line-height: var(--lh-hero); letter-spacing: var(--ls-hero);
+      color: #fff; margin: 0 0 var(--gap-a); max-width: 14ch;
+    }
+    .brand-hero__lede {
+      font-size: var(--fs-lede); line-height: var(--lh-lede);
+      color: rgba(255,255,255,0.86); margin: 0; max-width: 56ch;
+    }
+
+    /* === STATEMENT BANDS === */
+    .statement { background: #1c1916; padding: 80px 40px; }
+    .statement__inner { max-width: 900px; margin: 0 auto; text-align: center; }
+    .statement__text {
+      font-size: var(--fs-statement); font-weight: var(--fw-statement);
+      letter-spacing: var(--ls-statement); line-height: 1.22; color: #fff; margin: 0;
+    }
+    .statement__sub { font-size: var(--fs-body); color: rgba(255,255,255,0.7); margin: var(--gap-b) 0 0; }
+
+    .statement--media { position: relative; padding: 0; }
+    .statement--media .statement__bg { position: relative; height: clamp(360px, 48vh, 480px); overflow: hidden; }
+    .statement--media .statement__bg img { width: 100%; height: 100%; object-fit: cover; }
+    .statement--media .statement__overlay {
+      position: absolute; inset: 0; background: rgba(28,25,22,0.58);
+      display: flex; align-items: center; justify-content: center; padding: 48px 40px;
+    }
+
+    /* === EDITORIAL SPLIT === */
+    .split { padding: 88px 40px; }
+    .split--cream { background: #f5f2ec; }
+    .split__inner {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+    }
+    .split--reverse .split__media { order: 2; }
+    .split__media { border-radius: 8px; overflow: hidden; background: #f5f2ec; aspect-ratio: 4/5; }
+    .split__media img { width: 100%; height: 100%; object-fit: cover; }
+    .split__byline {
+      font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em;
+      color: #8a8a8a; margin: 0 0 var(--gap-c);
+      padding-bottom: var(--gap-a); border-bottom: 1px solid #d6cfc0;
+    }
+
+    /* === NARROW EDITORIAL === */
+    .editorial { padding: 88px 40px; }
+    .editorial--cream { background: #f5f2ec; }
+    .editorial__inner { max-width: 720px; margin: 0 auto; }
+    .editorial__rule { width: 40px; height: 2px; background: #c45c3f; margin: 0 0 var(--gap-c); }
+
+    /* === VALUES === */
+    .values { padding: 88px 40px; background: #fff; border-top: 1px solid #d6cfc0; }
+    .values__inner { max-width: 1200px; margin: 0 auto; }
+    .values__head { text-align: center; max-width: 560px; margin: 0 auto 48px; }
+    .values__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .value-card {
+      padding: 32px; background: #fff; border: 1px solid #e8e2d8; border-radius: 8px;
+      border-left: 4px solid #c45c3f;
+    }
+    .value-card__title { font-size: 18px; font-weight: 600; letter-spacing: -0.01em; color: #1c1916; margin: 0 0 10px; }
+    .value-card__body { font-size: 15px; color: #4a4a4a; line-height: 1.65; margin: 0; }
+
+    /* === MADE IN USA === */
+    .usa { padding: 88px 40px; background: #f5f2ec; text-align: center; }
+    .usa__inner { max-width: 720px; margin: 0 auto; }
+
+    /* === LOOKBOOK === */
+    .lookbook { padding: 88px 40px; background: #fff; }
+    .lookbook__inner { max-width: 1200px; margin: 0 auto; }
+    .lookbook__head { text-align: center; margin: 0 auto 40px; max-width: 520px; }
+    .lookbook__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .lookbook__tile { position: relative; overflow: hidden; border-radius: 8px; background: #f5f2ec; aspect-ratio: 3/4; }
+    .lookbook__tile--wide { grid-column: span 2; aspect-ratio: 3/2; }
+    .lookbook__tile img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+    .lookbook__tile:hover img { transform: scale(1.03); }
+
+    /* === CREDIBILITY === */
+    .cred { padding: 88px 40px; background: #f5f2ec; border-top: 1px solid #e8e2d8; }
+    .cred__inner { max-width: 1200px; margin: 0 auto; }
+    .cred__head { text-align: center; margin: 0 auto 44px; max-width: 560px; }
+    .cred__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+    .cred__item { text-align: center; padding: 28px 20px; background: #fff; border: 1px solid #e8e2d8; border-radius: 8px; }
+    .cred__label {
+      font-size: var(--fs-label); font-weight: var(--fw-label); text-transform: uppercase;
+      letter-spacing: 0.12em; color: #c45c3f; margin: 0 0 10px;
+    }
+    .cred__text { font-size: 15px; color: #4a4a4a; line-height: 1.55; margin: 0; }
+
+    /* === SIGN-OFF === */
+    .signoff__signature {
+      margin: var(--gap-c) 0 0; padding-top: var(--gap-a); border-top: 1px solid #d6cfc0;
+      font-size: 15px; color: #1c1916; line-height: 1.5;
+    }
+    .signoff__signature strong { display: block; font-weight: 600; }
+    .signoff__signature span { font-size: 13px; color: #8a8a8a; }
+
+    /* === CLOSING CTA === */
+    .closing { background: #1c1916; padding: 88px 40px; text-align: center; }
+    .closing__inner { max-width: 720px; margin: 0 auto; }
+    .closing__title {
+      font-size: var(--fs-h2-display); font-weight: var(--fw-h2-display);
+      letter-spacing: var(--ls-h2-display); line-height: var(--lh-h2-display);
+      color: #fff; margin: 0 0 var(--gap-a);
+    }
+    .closing__sub { font-size: var(--fs-lede); color: rgba(255,255,255,0.72); margin: 0 0 var(--gap-c); }
+    .closing__actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+    /* === FOOTER — locked light "Join the list" (NO 10%) === */
+    .site-footer { background: #fff; border-top: 1px solid #d6cfc0; padding: 64px 40px 40px; }
+    .site-footer__inner { max-width: 1200px; margin: 0 auto; }
+    .footer-newsletter {
+      display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 64px; align-items: start;
+      padding-bottom: 48px; border-bottom: 1px solid #d6cfc0; margin-bottom: 48px;
+    }
+    .fn-signup h2 { font-size: clamp(22px, 2.5vw, 28px); font-weight: 400; letter-spacing: -0.02em; line-height: 1.15; color: #1c1916; margin: 0 0 12px; }
+    .fn-signup p { font-size: 15px; color: #4a4a4a; margin: 0 0 20px; line-height: 1.5; }
+    .fn-form { display: flex; gap: 8px; }
+    .fn-input {
+      flex: 1; padding: 14px 16px; border: 1px solid #d6cfc0; background: #fff;
+      font-size: 14px; color: #1c1916; border-radius: 4px; font-family: inherit; min-height: 48px;
+    }
+    .fn-input::placeholder { color: #9a9182; }
+    .fn-btn {
+      padding: 14px 24px; background: #1c1916; color: #fff; border: none; font-size: 12px;
+      font-weight: 700; cursor: pointer; letter-spacing: 0.05em; text-transform: uppercase;
+      border-radius: 4px; transition: background 0.2s; min-height: 48px;
+    }
+    .fn-btn:hover { background: #c45c3f; }
+    .fn-legal { font-size: 12px; color: #8a8a8a; margin: 10px 0 0; line-height: 1.5; }
+    .fn-value { display: flex; flex-direction: column; gap: 14px; padding-top: 8px; }
+    .fn-value__item { display: flex; align-items: baseline; gap: 12px; }
+    .fn-value__check { color: #c45c3f; font-weight: 700; font-size: 14px; }
+    .fn-value__text { font-size: 14px; color: #4a4a4a; line-height: 1.5; }
+    .site-footer__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; }
+    .site-footer__col h6 {
+      font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+      color: #1c1916; margin: 0 0 18px;
+    }
+    .site-footer__col ul { list-style: none; padding: 0; margin: 0; }
+    .site-footer__col li { margin: 0 0 10px; }
+    .site-footer__col a { font-size: 13px; color: #6b645a; text-decoration: none; display: inline-block; padding: 4px 0; }
+    .site-footer__col a:hover { color: #1c1916; text-decoration: none; }
+    .site-footer__bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 24px 0 0; margin-top: 40px; border-top: 1px solid #d6cfc0;
+    }
+    .site-footer__copyright, .site-footer__usa { font-size: 12px; color: #8a8a8a; }
+
+    @media (max-width: 1024px) {
+      .site-nav__links { display: none; }
+      .split__inner { grid-template-columns: 1fr; gap: 32px; }
+      .split--reverse .split__media { order: 0; }
+      .split__media { aspect-ratio: 4/3; }
+      .values__grid { grid-template-columns: repeat(2, 1fr); }
+      .cred__grid { grid-template-columns: repeat(2, 1fr); }
+      .lookbook__grid { grid-template-columns: repeat(2, 1fr); }
+      .lookbook__tile--wide { grid-column: span 2; }
+      .footer-newsletter { grid-template-columns: 1fr; gap: 32px; }
+      .site-footer__grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      .mock-banner { position: static; }
+      .site-nav { top: 0; padding: 0 16px; }
+      .site-nav__inner { height: 52px; }
+      .trust-strip { padding: 10px 16px; }
+      .trust-strip__inner { white-space: normal; letter-spacing: 0.06em; }
+      .brand-hero__media { height: clamp(400px, 72vh, 560px); }
+      .brand-hero__media img { object-position: center 30%; }
+      .brand-hero__copy { padding: 0 16px 40px; }
+      .brand-hero__title { font-size: var(--fs-hero-mobile); max-width: none; }
+      .statement { padding: 56px 16px; }
+      .statement__text { font-size: var(--fs-statement-mobile); }
+      .statement--media .statement__overlay { padding: 32px 16px; }
+      .split, .editorial, .values, .usa, .lookbook, .cred { padding: 56px 16px; }
+      .closing { padding: 64px 16px; }
+      .h2-display, .closing__title { font-size: var(--fs-h2-display-mobile); }
+      .h2-standard { font-size: var(--fs-h2-standard-mobile); }
+      .values__grid { grid-template-columns: 1fr; }
+      .cred__grid { grid-template-columns: 1fr; }
+      .lookbook__grid { grid-template-columns: 1fr; }
+      .lookbook__tile--wide { grid-column: span 1; aspect-ratio: 3/4; }
+      .closing__actions { flex-direction: column; }
+      .closing__actions .btn { width: 100%; }
+      .site-footer { padding: 40px 16px 28px; }
+      .site-footer__grid { grid-template-columns: 1fr; gap: 28px; }
+      .site-footer__bottom { flex-direction: column; gap: 8px; text-align: center; }
+      .fn-form { flex-direction: column; }
+      .fn-input, .fn-btn { width: 100%; }
+
+      /* Touch targets — 44px minimum on phones */
+      .site-nav__brand,
+      .site-nav__actions a { min-height: 44px; display: inline-flex; align-items: center; }
+      .site-footer__col li { margin: 0; }
+      .site-footer__col a { min-height: 44px; display: flex; align-items: center; padding: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="mock-banner" role="note">
+  <strong>BRAND v1</strong> — New page. Brand story / lookbook. Copy sourced from live <code>/pages/our-story</code>, <code>page.about.json</code> defaults, and the approved slogan inventory. No new slogans written.
+</div>
+
+<div class="trust-strip">
+  <div class="trust-strip__inner">
+    Made in USA<span class="trust-strip__sep"> · </span>Free Shipping Over $150<span class="trust-strip__sep"> · </span>30-Day Returns<span class="trust-strip__sep"> · </span>90-Day Warranty
+  </div>
+</div>
+
+<header class="site-nav">
+  <div class="site-nav__inner">
+    <a href="Barreletics Home - Definitive-WORKING.html" class="site-nav__brand" aria-label="Barreletics"><img src="barreletics-logo.png" alt="" width="68" height="22" decoding="async"><span class="sr-only">Barreletics</span></a>
+    <nav class="site-nav__links" aria-label="Primary">
+      <a href="Barreletics Collection - Definitive-v19.html">Grippy Footwear</a>
+      <a href="Barreletics Home - Definitive-WORKING.html#hot-kits">Hot Pilates &amp; Yoga Kits</a>
+      <a href="#">Apparel</a>
+      <a href="Barreletics Home - Definitive-WORKING.html#coperni">Collaborations</a>
+      <a href="Barreletics Journal - Definitive-v6.html">Journal</a>
+    </nav>
+    <div class="site-nav__actions">
+      <a href="#">Help ▾</a>
+      <a href="#">Account</a>
+      <a href="#" class="site-nav__cart">Cart <span class="site-nav__cart-badge">0</span></a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- HERO — H1 + lede verbatim from live /pages/our-story -->
+  <section class="brand-hero" aria-label="The Barreletics story">
+    <div class="brand-hero__media">
+      <img src="https://barreletics.com/cdn/shop/products/barreletixxjumpingtogether.jpg?v=1619360969&width=2400" alt="Barreletics Performance Skins in motion" width="2400" height="1600" fetchpriority="high">
+      <div class="brand-hero__scrim"></div>
+    </div>
+    <div class="brand-hero__copy">
+      <div class="brand-hero__inner">
+        <p class="eyebrow">Our story</p>
+        <h1 class="brand-hero__title">The Barreletics Story</h1>
+        <p class="brand-hero__lede">Patented Performance Skins® for Barre, Pilates, Reformer Pilates, Megaformer Workouts, Yoga &amp; Studio Fitness.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MANIFESTO — page.about.json "manifesto" default -->
+  <section class="statement" aria-label="Manifesto">
+    <div class="statement__inner">
+      <p class="statement__text">We didn’t improve the grip sock. We made it obsolete.</p>
+    </div>
+  </section>
+
+  <!-- FOUNDER — live /pages/our-story "How it all began" + "Filling a Void" -->
+  <section class="split" aria-label="How it all began">
+    <div class="split__inner">
+      <div class="split__media">
+        <img src="https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=1600" alt="Stefanie Miller, founder of Barreletics" width="1600" height="2000" loading="lazy">
+      </div>
+      <div class="split__copy">
+        <p class="eyebrow">Filling a void for barre, Pilates &amp; yoga</p>
+        <h2 class="h2-display">How it all began</h2>
+        <p class="split__byline">By Stefanie Miller, Founder</p>
+        <div class="prose">
+          <p>At the time, grippy yoga socks were the only tool available. Instead of supporting my workout, they consistently disrupted it. They slipped when grip mattered most, required constant adjusting mid-exercise, and never delivered the control they promised.</p>
+          <p>I found myself breaking focus to fix my socks instead of holding positions, sliding out of side planks, resetting my feet, and losing stability where it mattered most.</p>
+          <p>I was investing time, energy, commitment, and resources into my workout without having the right tool to fully support it. If I was dedicating an hour to my practice, I wanted that hour to count. I wanted to feel secure, grounded, connected, and confident — not distracted by what was happening beneath my feet.</p>
+          <p>And I knew I was not the only one.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE IDEA — live /pages/our-story -->
+  <section class="editorial editorial--cream" aria-label="The idea">
+    <div class="editorial__inner">
+      <div class="editorial__rule"></div>
+      <h2 class="h2-standard">The idea</h2>
+      <div class="prose">
+        <p>One day, stuck in side plank and sliding yet again, it became clear: this was not just inconvenient. It was holding us back. That moment sparked the question: why didn’t a better tool exist? What if there were flexible, non-slip, in-studio workout footwear with true all-over grip, something that could move from side plank to flat-back chair without slipping, shifting, or interrupting flow? That same evening, I tore the silicone sleeve off a water bottle, cut it up, and created my very first prototype. It was far from perfect. But it worked.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRIAL AND ERROR — live /pages/our-story -->
+  <section class="split split--reverse" aria-label="Trial and error">
+    <div class="split__inner">
+      <div class="split__media">
+        <img src="https://barreletics.com/cdn/shop/files/Multi_Image.jpg?v=1768346625&width=1600" alt="Performance Skins in Closed Sole and Open Sole" width="1600" height="2000" loading="lazy">
+      </div>
+      <div class="split__copy">
+        <p class="eyebrow">Two years of prototypes</p>
+        <h2 class="h2-display">Trial and error led to 100% grip all the time</h2>
+        <div class="prose">
+          <p>That wild idea and on-the-fly prototype became the starting point for what would eventually become Barreletics Performance Skins. What followed was two years of trial and error, testing, redesigning, refining, and perfecting the details that mattered most: pressure points, fit, flexibility, materiality, and true all-over grip.</p>
+          <p>After countless iterations, Barreletics Performance Skins were born: patented workout footwear designed for barre, Pilates, reformer Pilates, Megaformer workouts, yoga, mat work, and studio fitness. Designed and manufactured in Michigan, USA, they were built to help you feel secure, stable, and connected without getting in the way of the workout.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATEMENT over media — live /pages/our-story closing line -->
+  <section class="statement statement--media" aria-label="A better way to grip">
+    <div class="statement__bg">
+      <img src="https://barreletics.com/cdn/shop/files/IMG_2917.jpg?v=1741040637&width=2400" alt="" width="2400" height="1200" loading="lazy">
+      <div class="statement__overlay">
+        <div class="statement__inner">
+          <p class="statement__text">The Pilates sock era is over. A better way to grip is here.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PILATES CONNECTION — live /pages/our-story -->
+  <section class="editorial" aria-label="The Pilates connection">
+    <div class="editorial__inner">
+      <div class="editorial__rule"></div>
+      <p class="eyebrow eyebrow--muted">The Pilates connection</p>
+      <h2 class="h2-standard">A bridge between original Pilates principles and modern studio fitness</h2>
+      <div class="prose">
+        <p>Joseph Pilates developed his method, originally called Contrology, around breath, concentration, control, precision, alignment, flow, and full body awareness. He also created apparatus to support that method, including the Reformer, Cadillac, Wunda Chair, Ladder Barrel, Spine Corrector, Foot Corrector, Toe Corrector, and Ped O Pul.</p>
+        <p>The feet were always part of the system. In Pilates, the foot connects the body to the floor, mat, Reformer, Cadillac, Wunda Chair, Megaformer, and every piece of equipment beneath you. That connection matters.</p>
+        <p>Pilates depends on feedback. The foot has to sense, press, articulate, stabilize, and respond. A traditional grip sock that slips, shifts, bunches, or traps moisture can dull the connection between the foot and the work. When that happens, your focus moves away from form, strength, breath, and control and toward correcting your footing.</p>
+        <p>It is like trying to hold a plank while a towel is sliding under your foot. You can still do the move, but your body is compensating instead of fully engaging.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- VALUES — page-about.liquid "values_heading" + page.about.json value blocks -->
+  <section class="values" aria-label="What we stand for">
+    <div class="values__inner">
+      <div class="values__head">
+        <p class="eyebrow">Our values</p>
+        <h2 class="h2-standard">What We Stand For</h2>
+      </div>
+      <div class="values__grid">
+        <div class="value-card">
+          <h3 class="value-card__title">Performance Over Promise</h3>
+          <p class="value-card__body">Every claim we make is backed by the product itself. Injection-molded grip that never peels. Materials that never absorb. Results you can feel from day one.</p>
+        </div>
+        <div class="value-card">
+          <h3 class="value-card__title">Category Creation</h3>
+          <p class="value-card__body">We’re not competing in the grip sock market — we’re replacing it. Performance Skins are a new category of studio footwear built from first principles.</p>
+        </div>
+        <div class="value-card">
+          <h3 class="value-card__title">Durability as Design</h3>
+          <p class="value-card__body">Products should outlast the hype cycle. Many customers report 3-4 years of daily use. One purchase replaces years of disposable socks.</p>
+        </div>
+        <div class="value-card">
+          <h3 class="value-card__title">Commitment Match</h3>
+          <p class="value-card__body">You show up 6 days a week. Your gear should match that commitment. Built for people who take their practice seriously.</p>
+        </div>
+        <div class="value-card">
+          <h3 class="value-card__title">Studio-First</h3>
+          <p class="value-card__body">Designed for the demands of real studio environments — reformer carriages, Megaformer platforms, barre floors. Every detail serves the practice.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MADE IN USA — page-about.liquid defaults + live Michigan detail -->
+  <section class="usa" aria-label="Made in USA">
+    <div class="usa__inner">
+      <p class="eyebrow">Made in USA</p>
+      <h2 class="h2-standard">Designed and Made in the USA</h2>
+      <div class="prose">
+        <p>Every pair of Barreletics is manufactured in the United States. From material sourcing to injection molding to quality control — the entire process stays domestic. No overseas factories. No compromises on quality oversight.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOOKBOOK — "From the studio" is the approved imagery head -->
+  <section class="lookbook" aria-label="From the studio">
+    <div class="lookbook__inner">
+      <div class="lookbook__head">
+        <p class="eyebrow">@barreletics</p>
+        <h2 class="h2-standard">From the studio</h2>
+      </div>
+      <div class="lookbook__grid">
+        <div class="lookbook__tile lookbook__tile--wide">
+          <img src="https://barreletics.com/cdn/shop/files/Screenshot_2026-03-21_at_3.04.37_PM.png?width=1600" alt="Barreletics × Coperni collaboration look" width="1600" height="1067" loading="lazy">
+        </div>
+        <div class="lookbook__tile">
+          <img src="https://barreletics.com/cdn/shop/files/Square_Pink.png?v=1764627088&width=1200" alt="Performance Skins in studio" width="1200" height="1600" loading="lazy">
+        </div>
+        <div class="lookbook__tile">
+          <img src="https://barreletics.com/cdn/shop/files/A14_TopBottom_LightGrey-1000x1000_d30b6fcb-229e-4af9-8062-e1c4901df31e.jpg?v=1773920300&width=1200" alt="Performance Skin top and bottom detail" width="1200" height="1600" loading="lazy">
+        </div>
+        <div class="lookbook__tile">
+          <img src="https://barreletics.com/cdn/shop/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063&width=1200" alt="Dusty Rose Performance Skin" width="1200" height="1600" loading="lazy">
+        </div>
+        <div class="lookbook__tile">
+          <img src="https://barreletics.com/cdn/shop/products/Yellow_Image-Blue_Shoe_1200x1200_59ef7b79-1661-4c2f-a2da-c6b9211e2c42.jpg?width=1200" alt="Performance Skin colorway detail" width="1200" height="1600" loading="lazy">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CREDIBILITY — docs/01-BRAND-NORTH-STAR.md "Brand Credibility" -->
+  <section class="cred" aria-label="Brand credibility">
+    <div class="cred__inner">
+      <div class="cred__head">
+        <p class="eyebrow">Proof</p>
+        <h2 class="h2-standard">Trusted by 1,000’s of instructors &amp; studios</h2>
+      </div>
+      <div class="cred__grid">
+        <div class="cred__item">
+          <p class="cred__label">Runway</p>
+          <p class="cred__text">Coperni Spring–Summer 2026 runway, Paris</p>
+        </div>
+        <div class="cred__item">
+          <p class="cred__label">Retail</p>
+          <p class="cred__text">Free People partnership, Spring 2026</p>
+        </div>
+        <div class="cred__item">
+          <p class="cred__label">Manufacturing</p>
+          <p class="cred__text">Made in USA</p>
+        </div>
+        <div class="cred__item">
+          <p class="cred__label">Durability</p>
+          <p class="cred__text">4+ years proven durability</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIFE INSPIRATION / SIGN-OFF — live /pages/our-story -->
+  <section class="split split--reverse signoff" aria-label="Life inspiration">
+    <div class="split__inner">
+      <div class="split__media">
+        <img src="https://barreletics.com/cdn/shop/files/Copreni_Final_More_grey.png?v=1774119812&width=1600" alt="Barreletics × Coperni" width="1600" height="2000" loading="lazy">
+      </div>
+      <div class="split__copy">
+        <p class="eyebrow">Life inspiration</p>
+        <h2 class="h2-display">Designed and crafted with care</h2>
+        <div class="prose">
+          <p>My former career as a fashion model took me around the world, where I developed a deep appreciation for design, textiles, architecture, craftsmanship, innovation, and the details that elevate an experience. That foundation in fashion now meets my passion for fitness, wellness, self-care, and living an active, healthy lifestyle.</p>
+          <p>Every pair of Barreletics is intentionally designed and crafted with care, not just to perform at the highest level, but to support how you move, feel, and show up. I hope you love them as much as I do.</p>
+        </div>
+        <p class="signoff__signature"><strong>Stefanie Miller</strong><span>Founder, Barreletics</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLOSING CTA — live /pages/our-story CTA + approved inventory line -->
+  <section class="closing" aria-label="Shop Barreletics">
+    <div class="closing__inner">
+      <h2 class="closing__title">Let Us Knock Your Socks Off</h2>
+      <p class="closing__sub">Trusted by 1,000’s of studios.</p>
+      <div class="closing__actions">
+        <a class="btn btn--on-dark" href="Barreletics Collection - Definitive-v19.html">Shop all colors &amp; styles</a>
+        <a class="btn btn--ghost-dark" href="#">See our reviews</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div class="footer-newsletter">
+      <div class="fn-signup">
+        <h2>Join the list</h2>
+        <p>New drops and studio stories. Once or twice a quarter — never spam.</p>
+        <form class="fn-form" onsubmit="event.preventDefault();">
+          <label class="sr-only" for="fn-email">Email address</label>
+          <input class="fn-input" id="fn-email" type="email" placeholder="Email address" required>
+          <button class="fn-btn" type="submit">Subscribe</button>
+        </form>
+        <p class="fn-legal">By subscribing you agree to receive marketing emails. Unsubscribe anytime.</p>
+      </div>
+      <div class="fn-value">
+        <div class="fn-value__item"><span class="fn-value__check">✓</span><span class="fn-value__text">New drops and studio stories first</span></div>
+        <div class="fn-value__item"><span class="fn-value__check">✓</span><span class="fn-value__text">Early access to new colorways and limited editions</span></div>
+        <div class="fn-value__item"><span class="fn-value__check">✓</span><span class="fn-value__text">Studio partner discounts and events</span></div>
+        <div class="fn-value__item"><span class="fn-value__check">✓</span><span class="fn-value__text">Care tips to extend the life of your performance skins</span></div>
+      </div>
+    </div>
+
+    <div class="site-footer__grid">
+      <div class="site-footer__col">
+        <h6>Shop</h6>
+        <ul>
+          <li><a href="Barreletics Collection - Definitive-v19.html">Closed Sole</a></li>
+          <li><a href="Barreletics Collection - Definitive-v19.html">Open Sole</a></li>
+          <li><a href="Barreletics Collection - Definitive-v19.html">All Colors</a></li>
+          <li><a href="#">Gift Cards</a></li>
+          <li><a href="#">Bundles</a></li>
+        </ul>
+      </div>
+      <div class="site-footer__col">
+        <h6>Learn</h6>
+        <ul>
+          <li><a href="Barreletics Brand - Definitive-v1.html" aria-current="page">Our Story</a></li>
+          <li><a href="#">How It Works</a></li>
+          <li><a href="Barreletics Journal - Definitive-v6.html">Journal</a></li>
+          <li><a href="Barreletics Size Chart - Definitive-v1.html">Size Guide</a></li>
+          <li><a href="#">Compare</a></li>
+        </ul>
+      </div>
+      <div class="site-footer__col">
+        <h6>Support</h6>
+        <ul>
+          <li><a href="Barreletics FAQ - Definitive-v7.html">FAQ</a></li>
+          <li><a href="Barreletics Returns - Definitive-v3.html">Shipping &amp; Returns</a></li>
+          <li><a href="#">Warranty</a></li>
+          <li><a href="Barreletics Contact - Definitive-v1.html">Contact Us</a></li>
+          <li><a href="Barreletics Track Order - Definitive-v1.html">Track Order</a></li>
+        </ul>
+      </div>
+      <div class="site-footer__col">
+        <h6>Connect</h6>
+        <ul>
+          <li><a href="#">Instagram</a></li>
+          <li><a href="#">TikTok</a></li>
+          <li><a href="#">Facebook</a></li>
+          <li><a href="#">Pinterest</a></li>
+          <li><a href="#">Email Us</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="site-footer__bottom">
+      <span class="site-footer__copyright">© 2026 Barreletics. All rights reserved.</span>
+      <span class="site-footer__usa">Made in USA</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

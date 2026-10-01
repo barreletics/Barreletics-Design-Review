@@ -1,0 +1,264 @@
+{% comment %}
+  Site footer — Theme Editor menu pickers only.
+  Adapts to the store: no required Navigation handles.
+  Priority: optional column menus → else primary menu (nested = columns, flat = one list).
+  CSS: assets/chrome.css
+{% endcomment %}
+
+{% assign menu_primary = section.settings.menu %}
+{% assign menu_shop = section.settings.menu_shop %}
+{% assign menu_support = section.settings.menu_support %}
+{% assign menu_company = section.settings.menu_company %}
+{% assign use_column_pickers = false %}
+{% if menu_shop != blank or menu_support != blank or menu_company != blank %}
+  {% assign use_column_pickers = true %}
+{% endif %}
+
+<footer class="site-footer" data-theme="dark" role="contentinfo" {{ section.shopify_attributes }}>
+  <div class="site-footer__inner">
+    <div class="site-footer__grid{% unless use_column_pickers or menu_primary != blank %} site-footer__grid--newsletter-only{% endunless %}">
+
+      {% if use_column_pickers %}
+        {% if menu_shop != blank %}
+          <div class="site-footer__col">
+            <h3 class="site-footer__heading">{{ section.settings.shop_heading }}</h3>
+            <ul class="site-footer__links" role="list">
+              {% for link in menu_shop.links %}
+                <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+        {% if menu_support != blank %}
+          <div class="site-footer__col">
+            <h3 class="site-footer__heading">{{ section.settings.support_heading }}</h3>
+            <ul class="site-footer__links" role="list">
+              {% for link in menu_support.links %}
+                <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+        {% if menu_company != blank %}
+          <div class="site-footer__col">
+            <h3 class="site-footer__heading">{{ section.settings.company_heading }}</h3>
+            <ul class="site-footer__links" role="list">
+              {% for link in menu_company.links %}
+                <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+
+      {% elsif menu_primary != blank %}
+        {% assign nested_columns = false %}
+        {% for link in menu_primary.links %}
+          {% if link.links != blank %}
+            {% assign nested_columns = true %}
+          {% endif %}
+        {% endfor %}
+
+        {% if nested_columns %}
+          {% for link in menu_primary.links %}
+            <div class="site-footer__col">
+              {% if link.links != blank %}
+                <h3 class="site-footer__heading">{{ link.title }}</h3>
+                <ul class="site-footer__links" role="list">
+                  {% for child in link.links %}
+                    <li><a href="{{ child.url }}">{{ child.title }}</a></li>
+                  {% endfor %}
+                </ul>
+              {% else %}
+                <h3 class="site-footer__heading">{{ link.title }}</h3>
+                <ul class="site-footer__links" role="list">
+                  <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                </ul>
+              {% endif %}
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="site-footer__col">
+            {% if section.settings.menu_heading != blank %}
+              <h3 class="site-footer__heading">{{ section.settings.menu_heading }}</h3>
+            {% endif %}
+            <ul class="site-footer__links" role="list">
+              {% for link in menu_primary.links %}
+                <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+      {% endif %}
+
+      {% if section.settings.show_newsletter %}
+        <div class="site-footer__col site-footer__col--newsletter">
+          <h3 class="site-footer__heading">{{ section.settings.newsletter_heading }}</h3>
+          {% if section.settings.newsletter_text != blank %}
+            <p class="site-footer__newsletter-text">{{ section.settings.newsletter_text }}</p>
+          {% endif %}
+          {% form 'customer', id: 'footer-newsletter' %}
+            <div class="site-footer__form">
+              <input
+                type="email"
+                name="contact[email]"
+                placeholder="Your email"
+                required
+                autocomplete="email"
+                aria-label="Email address"
+                class="site-footer__input"
+              >
+              <input type="hidden" name="contact[tags]" value="newsletter">
+              <button type="submit" class="site-footer__submit">{{ section.settings.newsletter_cta }}</button>
+            </div>
+            {% if section.settings.newsletter_privacy != blank %}
+              <p class="site-footer__privacy">{{ section.settings.newsletter_privacy }}</p>
+            {% endif %}
+          {% endform %}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="site-footer__bottom">
+      <div class="site-footer__social">
+        {% if section.settings.instagram_url != blank %}
+          <a href="{{ section.settings.instagram_url }}" aria-label="Instagram" rel="noopener noreferrer" target="_blank">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="1" y="1" width="16" height="16" rx="4" stroke="currentColor" stroke-width="1.3"/><circle cx="9" cy="9" r="4" stroke="currentColor" stroke-width="1.3"/><circle cx="13.5" cy="4.5" r="1" fill="currentColor"/></svg>
+          </a>
+        {% endif %}
+        {% if section.settings.tiktok_url != blank %}
+          <a href="{{ section.settings.tiktok_url }}" aria-label="TikTok" rel="noopener noreferrer" target="_blank">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M10 2v10a3 3 0 1 1-2-2.8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M10 2c2 0 3.5 1.5 4 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          </a>
+        {% endif %}
+        {% if section.settings.facebook_url != blank %}
+          <a href="{{ section.settings.facebook_url }}" aria-label="Facebook" rel="noopener noreferrer" target="_blank">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M10 16V10h2.5l.5-3H10V5.5c0-1 .5-1.5 1.5-1.5H13V1.5c-.5 0-1.5-.1-2.5-.1C8 1.4 7 3 7 5.2V7H4.5v3H7v6h3z" fill="currentColor"/></svg>
+          </a>
+        {% endif %}
+      </div>
+      <p class="site-footer__copyright">
+        &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. All rights reserved.
+      </p>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "class": "footer-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Menus"
+    },
+    {
+      "type": "paragraph",
+      "content": "Assign menus in the Theme Editor. No special Navigation handles are required. If column menus are empty, the primary footer menu is used (nested items become columns)."
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Primary footer menu",
+      "info": "Used when column menus below are left blank. Nested top-level items render as columns."
+    },
+    {
+      "type": "text",
+      "id": "menu_heading",
+      "label": "Heading for flat primary menu",
+      "info": "Only used when the primary menu has no nested items.",
+      "default": "Explore"
+    },
+    {
+      "type": "header",
+      "content": "Optional column menus"
+    },
+    {
+      "type": "text",
+      "id": "shop_heading",
+      "label": "Column 1 heading",
+      "default": "Shop"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_shop",
+      "label": "Column 1 menu"
+    },
+    {
+      "type": "text",
+      "id": "support_heading",
+      "label": "Column 2 heading",
+      "default": "Support"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_support",
+      "label": "Column 2 menu"
+    },
+    {
+      "type": "text",
+      "id": "company_heading",
+      "label": "Column 3 heading",
+      "default": "Company"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_company",
+      "label": "Column 3 menu"
+    },
+    {
+      "type": "header",
+      "content": "Newsletter"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_newsletter",
+      "label": "Show newsletter",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "newsletter_heading",
+      "label": "Newsletter heading",
+      "default": "Join the list"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_text",
+      "label": "Newsletter text",
+      "default": "Sign up for 10% off your first order."
+    },
+    {
+      "type": "text",
+      "id": "newsletter_cta",
+      "label": "Newsletter CTA",
+      "default": "SIGN UP"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_privacy",
+      "label": "Newsletter privacy line",
+      "default": "No spam. Unsubscribe anytime."
+    },
+    {
+      "type": "header",
+      "content": "Social"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "url",
+      "id": "tiktok_url",
+      "label": "TikTok URL"
+    },
+    {
+      "type": "url",
+      "id": "facebook_url",
+      "label": "Facebook URL"
+    }
+  ]
+}
+{% endschema %}
