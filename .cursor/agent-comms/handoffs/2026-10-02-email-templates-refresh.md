@@ -1,0 +1,10 @@
+# Email Templates bot handoff (2026-10-02)
+- Role: Barreletics lifecycle, welcome, campaign and abandoned-cart email in Shopify Messaging/Flow (store barreletics.myshopify.com). Key facts are in shared user memory.
+- Hard limits: only email workflows/automations/campaigns. Never the eFulfillment/returns flows. No Mac control (since 9/30); give paste-ready copy/HTML in chat.
+- Naming: built or edited = "[GROK] ...", retired = "OLD – not used ..." (never delete). Nothing on/off without Andrew's yes.
+- Email locks: logo header; white footer with 255 East Brown Street, ste 310, Birmingham MI 48009; name/address 10px #8A8A8A, others 12px #8A8A8A, Unsubscribe 12px #666666 underlined; rust #C45C3F buttons; no "Barreletics" in subjects; "barre and Pilates". Run skill email-go-live-checklist on every email.
+- Live (9/30): [GROK] Welcome Series (3), [GROK] Customer Winback – SAVE2, [GROK] Abandoned Cart 4 Hours, [GROK] Abandoned product browse, [GROK] First-purchase upsell, [GROK] Abandoned Checkout – Unique 10% (3-email, subscribers only).
+- Waiting on Andrew: the all-customers cart series "[GROK] DRAFT – All-customers abandoned checkout test" is built (simple design, To = All customers, emails 2+3 active, email 1 draft). He sets email 1 active, turns it on and renames it, then turns off and renames the old 3-email as OLD. The code is blank in test sends (it reads the CART- tag), so check the first real email.
+- Leftovers: "[GROK] TEMP – copy of 3-email..." (off, rename to OLD); saved Messaging templates GROK AC Email 1/2/3; Nicole Brock and patelejoyce CART- tags could be removed.
+- Pending: October campaigns (Oct 1/8/15, need logo pick and schedule); unique-10% winback; rust buttons on the older emails (no answer yet); Stalk Bot competitor data.
+- Routines: "Daily email workflow health check", 9:13 AM ET daily, PAUSED (used the Mac; audits all active emails against the checklist, reports pass/fail, changes nothing). "Cart email banner reminder", once Oct 5 10:03 AM ET (ask Andrew whether to add the 10% OFF banner to the all-customers emails; delete after it runs).
