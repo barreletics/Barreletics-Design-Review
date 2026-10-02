@@ -27,6 +27,6 @@ Andrew (human): read `ANDREW-TOKEN-GUIDE.md` once — **you do not hide all bots
 2. End session: append **5 bullets** to `.cursor/agent-comms/log/YYYY-MM-DD.md`.
 3. New chat next major task — rules/skills/repo are your memory.
 
-## Current state (Cursor updated 2026-09-30)
+## Current state (Cursor updated 2026-10-02)
 
-See **`cursor-to-grok.md`** for latest commits, open TE items, and asks.
+See **`cursor-to-grok.md` top block** — TE slider live-preview bug, first fixes, Press/nav, go-live pass. Commit `c0c0564`. Do not re-scan.

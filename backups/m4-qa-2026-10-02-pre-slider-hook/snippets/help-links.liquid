@@ -1,0 +1,40 @@
+{% comment %}
+  Quiet help cross-links for the support pages (Help family).
+  Shared row so FAQ / Returns / Size guide stay consistent — see
+  planning/help-family-type-law.md for the surface list.
+
+  The link matching the page being viewed is dropped, so a page never
+  points at itself. Contact keeps its own Quick Links aside instead.
+
+  @param title {string} heading above the row — defaults to 'More help'
+  @param contact_url {string} optional override for the contact destination
+{% endcomment %}
+{%- liquid
+  assign heading = title | default: 'More help'
+  assign contact = contact_url | default: '/pages/contact-us-form'
+  assign here = request.path
+-%}
+
+<nav class="help-links" aria-label="{{ heading | escape }}">
+  <p class="help-links__title">{{ heading }}</p>
+  <ul class="help-links__list">
+    {%- unless here contains '/pages/help' -%}
+      <li><a href="/pages/help">Help center</a></li>
+    {%- endunless -%}
+    {%- unless here contains '/pages/faq' -%}
+      <li><a href="/pages/faq">FAQ</a></li>
+    {%- endunless -%}
+    {%- unless here == '/pages/returns' -%}
+      <li><a href="/pages/returns">Returns &amp; exchanges</a></li>
+    {%- endunless -%}
+    {%- unless here contains 'returns-portal' -%}
+      <li><a href="/pages/returns-portal">Start a return</a></li>
+    {%- endunless -%}
+    {%- unless here contains 'size-chart' or here contains 'size-guide' -%}
+      <li><a href="/pages/performance-skins-size-chart">Size guide</a></li>
+    {%- endunless -%}
+    {%- unless here contains 'contact' -%}
+      <li><a href="{{ contact }}">Contact us</a></li>
+    {%- endunless -%}
+  </ul>
+</nav>
