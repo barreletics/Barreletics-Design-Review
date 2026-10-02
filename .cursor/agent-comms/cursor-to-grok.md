@@ -1,3 +1,86 @@
+## 2026-10-02 — From Cursor (Grok 4.6) — TE live-preview + Press/nav + go-live slider pass
+
+**Read this block. Do not re-scan the theme. Do not ask Andrew to paste the Cursor thread.**
+
+**Theme:** draft `187144929571` only. Never live `185687998755`.
+**Git:** `c0c0564` on `cursor/apparel-pdps-c982`
+**File backup of current M4:** `backups/m4-qa-2026-10-02-pre-slider-hook/` (Shopify Theme Library is at the **20-theme cap** — no new unpublished copy).
+
+### The issue Andrew hit
+
+Theme Editor sliders / selects / checkboxes **do not move the page until Save**. He is on the page (Home, then Closed Sole). Not a wrong-tab bug. Save also used to write the last page he was on (Press) — treat that as a separate Admin/TE path issue; the **visual** bug is in our Liquid.
+
+### What Cursor found
+
+Shopify TE live-patches **only** `{% style %}` that contains `{{ section.settings.id }}`.
+
+Save-only (broken live preview):
+- inline `style="--var: {{ assign }}"`
+- raw `<style>` that uses Liquid assigns
+- HTML classes / `{% if %}` that change layout (reviews 3 vs 4 cols)
+
+**Inventory (looked only, no mass edit):** almost every range slider in `shopify-build/sections/` is Save-only. Biggest: **`fifty-fifty.liquid`** — 16 sliders, every PDP + Home.
+
+Already have a `{% style %}` hook (partial):
+- `problem-section` — **Desktop min height** only
+- `pdp-reviews` — photo show / desk 3|4 / rows / phone 1|2 + text-cards show
+- `press-row` — desktop height
+- `split-hero` / `visual-mosaic` — have `{% style %}` but most values are **assigns**, not `{{ section.settings.id }}` — may still need Save
+
+### How the first ones were fixed (recipe — copy this)
+
+Dual-write. Do **not** delete inline / `<style>`. Do **not** change schema, JSON, defaults, crops, or copy.
+
+```liquid
+{% style %}
+  #shopify-section-{{ section.id }} {
+    --pr-desk-media-min: {{ section.settings.min_height }}px;
+  }
+{% endstyle %}
+```
+
+Hard rules:
+- `{{ section.settings.THE_ID }}` in the `{% style %}` block — **not** an assign
+- **No** `{% render %}` inside `{% style %}` (broke fifty-fifty / problem when we tried; those two were reverted to `<style>`)
+- One `.liquid` file per turn. Push that file only. He hard-refresh + drag, **no Save**. He says approved. Next file.
+
+**Problem (Home “Never slip in Chair Pose”):** `sections/problem-section.liquid` — Desktop min height live. Leftover Save-only: phone photo height, space above bullets.
+
+**Reviews (Closed Sole):** `sections/pdp-reviews.liquid` — photo cards were Liquid `{% if %}` + classes; TE did nothing. Now always render photo blocks (if they exist), show/cols/rows/phone via `{% style %}` CSS vars. Closed JSON still `show_photo_cards: false` (signed text-only). 2 rows needs more Photo review blocks (Closed has 3). Do not turn photos on in `product.json`.
+
+### Andrew: fix ALL remaining sections before go-live
+
+Safe order (one file, then stop):
+1. **`fifty-fifty.liquid`** — wait for Andrew to say `go 50/50` if not already said in **his** Grok message
+2. Problem leftovers (phone height, bullet gap)
+3. `fullbleed-statement` → `pdp-sock-math` → `pdp-features`
+4. About hero / About split → Press feature / press cards → Coperni story / crosslink / collab-hero
+5. Collection hero, then shared insets last
+
+**Do not touch unless Andrew names them in THAT message:** `pdp-buy-box`, footer, `home-juicer`, `proof-numbers`, `value-strip`, `product.json`, `index.json`. Chair Pose lock values stay (`chair-pose-yellow-fit.mdc` — COVER · 100 · P5A4949 · mmh 360). Never push Home `index.json` over TE.
+
+### Other updates this session (already on draft + in `c0c0564`)
+
+**Press + nav (Andrew: go):**
+- Header `m4-menu`: **About Us** after Journal. Children: Our Story + Press
+- Help dropdown: support only — FAQ · Contact · Returns (About Us **out**)
+- Footer Learn: About Us · Press · Journal (+ existing). `footer.liquid` fallbacks include Press
+- New page `/pages/press` = Home `press-row` (video + 4 cards), template `page.press.json`, handle `press`
+- Docs forward: `planning/navigation-menu-spec.md`, `page-template-registry.md`, freeze banner 2026-10-02
+- Live `Main menu` untouched
+
+**Apparel:** yoga pants + v-neck templates on draft; Andrew said they look great. Buy-box liquid **not** touched.
+
+**chrome.js:** scoped `shopify:section:load` video kick (did **not** fix sliders; leave it).
+
+### Ask for Grok
+
+1. New chat. Read this + `GROK-START-HERE.md`. Reply in `grok-to-cursor.md` (≤10 bullets).
+2. Continue the `{% style %}` dual-write pass for go-live. One section per turn.
+3. Do not restore. Do not batch-edit. Do not invent a shared snippet inside `{% style %}`.
+
+---
+
 ## 2026-09-30 — From Cursor (Claude) — handoff (Andrew going to Claude)
 
 **Read this file + `STATUS.md` + `CURSOR-TOUCHED-MAP.md`.** Image foundation P1–P8 on draft `187144929571`; gallery hotfix `b0d93c5`. Agent/token docs in `agent-comms/` — post-launch, not blocking go-live.
