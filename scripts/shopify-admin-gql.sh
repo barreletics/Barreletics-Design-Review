@@ -15,6 +15,11 @@ if [[ -z "$QUERY" ]]; then
   exit 1
 fi
 
+if echo "$QUERY" | grep -qiE '\bmutation\b'; then
+  echo "Blocked: read-only script (no mutations)." >&2
+  exit 2
+fi
+
 export SHOPIFY_API_VERSION="${SHOPIFY_API_VERSION:-2025-10}"
 
 python3 - "$QUERY" <<'PY'
