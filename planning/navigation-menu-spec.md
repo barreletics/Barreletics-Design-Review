@@ -1,13 +1,14 @@
 # Navigation menu spec — ready to enter in Shopify Admin
 
+> **FORWARD 2026-10-02 (Andrew: go).** `m4-menu` now ends **Journal · About Us**. About Us children = Our Story `/pages/our-story` · Press `/pages/press`. Help menu is FAQ · Contact · Returns only. Footer Learn first two = About Us · Press. Live `Main menu` untouched.
+
 ---
 document: Navigation menu spec (Admin entry sheet)
-version: 3.0
+version: 3.1
 status: >
-  As-built. M4 Menu + Help menu + Kits collection applied via Admin API 2026-08-08.
-  Remaining owner work = 3 footer menus, publish hot-kits, Theme Editor picks (§0).
+  As-built. M4 Menu + Help menu + footer menus applied. About Us + Press added 2026-10-02.
 created: 2026-08-07
-last_modified: 2026-08-08
+last_modified: 2026-10-02
 depends_on: [planning/11-navigation-architecture.md, shopify-build/sections/header.liquid, planning/nav-qa/]
 authority: planning/11-navigation-architecture.md (🔒 Locked 2026-07-18)
 ---
@@ -60,6 +61,9 @@ Recorded here as the authoritative item list.
 | 13 | under 12 | `Coperni` | `/products/barreletics-x-coperni-closed-sole` |
 | 14 | under 12 | `Free People` | `/pages/free-people` |
 | 15 | top | `Journal` | `/blogs/news` |
+| 16 | top | `About Us` | `/pages/our-story` |
+| 17 | under 16 | `Our Story` | `/pages/our-story` |
+| 18 | under 16 | `Press` | `/pages/press` |
 
 Do **not** touch `Main menu` — that is the published theme's menu.
 
@@ -71,14 +75,13 @@ Collection handle stays `hot-kits`. Title/copy = optional sock kit (J). Still un
 ### Step 2 — Menu `Help menu` ✅ done
 
 Admin → **Content → Menus**. Title: `Help menu` (handle reads `help-menu`).
-Four items, flat, in this order:
+Three items, flat, in this order (About Us moved to `m4-menu` 2026-10-02):
 
 | # | Name | Link |
 |---|---|---|
-| 1 | `About Us` | `/pages/our-story` |
-| 2 | `FAQ` | `/pages/faq` |
-| 3 | `Contact Us` | `/pages/contact-us-form` |
-| 4 | `Returns & Exchanges` | `/pages/returns` |
+| 1 | `FAQ` | `/pages/faq` |
+| 2 | `Contact Us` | `/pages/contact-us-form` |
+| 3 | `Returns & Exchanges` | `/pages/returns` |
 
 ### Step 3 — Create the three footer menus
 
@@ -100,12 +103,11 @@ Same place, three separate menus. Titles must produce handles `footer-shop`,
 | # | Name | Link |
 |---|---|---|
 | 1 | `About Us` | `/pages/our-story` |
-| 2 | `Journal` | `/blogs/news` |
-| 3 | `Collaborations` | `/pages/collaborations` |
-| 4 | `Wholesale` | `/pages/wholesale` |
-| 5 | `Ambassador` | `/pages/ambassador` |
+| 2 | `Press` | `/pages/press` |
+| 3 | `Journal` | `/blogs/news` |
+| 4 | `Collaborations` | `/pages/collaborations` |
+| 5 | `Wholesale` | `/pages/wholesale` |
 | 6 | `Compare Styles` | `/pages/compare-open-closed-sole` |
-| 7 | `Better Than Grippy Socks` | `/pages/best-barre-pilates-yoga-grippy-socks` |
 
 **Title `Footer Support`**
 
