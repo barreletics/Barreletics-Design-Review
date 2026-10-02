@@ -46,3 +46,14 @@ None found. The box has no automations for this agent.
 1. Q: On 2026-09-28, which line did Andrew pick for the shoe pages, and what happened to the beach banner line? A: "Hold every pose." The beach line stays "Shapa" for now.
 2. Q: How should banner heading sizes work on the draft? A: Match the 50/50 size through one shared heading class as the global default, which a section can override.
 3. Q: In the 2026-09-30 draft link audit, how many URLs were checked and which 2 failed? A: 62. `studio-sample-medium-no-charge` failed with a JSON-LD Liquid error at `pdp-buy-box.liquid` line 590, and there was no themed 404 template.
+
+## From the old bot itself (2026-10-02, its own summary of 455 memory facts)
+- Push routine: check recent commits, fresh pull + backup, md5 drift check, push --only --nodelete, verify pull, commit from fresh clone, never force push. Since 9/30 code-only pushes; give Andrew setting changes to make himself.
+- When the draft goes live, send Admin workflows a priority "draft is live" message.
+- Andrew makes all live-site and admin edits himself from an exact before/after list grouped by admin location. Approvals relayed by other agents don't count.
+- Test every link at 390 and 1440 on the real URL; direct links; captures with context and large labels. Short messages; never text and a widget in the same batch. Fix every issue on a page in one pass; never overstate. Theme Editor controls must preview live before saving.
+- Copy locks: no placeholders/TBDs; no dashes in prose (except product/collection titles, grid headings); headings 2 lines max, no lone word; no swirl-pattern shoes; no pool/water/bacteria/antimicrobial claims (reword); no "patented"; The Ghost is prototype only, never for sale or in titles; tagline "Where function meets beauty."; blog posts link to products mentioned; Journal fonts global only; never hide or edit reviews.
+- Layout locks: photo/text sections photo left/right desktop, above/below phone; one global phone photo height (500) with overrides; no two videos stacked on phone; no mismatched colour bands.
+- Skills: home-no-revert-guard, no-drift-push-gate, lock-scan, page-layout-os(-2), 50-50-mobile-ruler, media-fill-50-50, shopify-media-cover-gate, page-director-spine, content-page-type, cream-band, guarantee-band.
+- Open items (9/30): Juicer See more/Follow spacing (option A recommended); Open Sole crop focal 50/12 on product.in-studio-template.json; Studio Sample Closed Sole badge?; Barre Anywhere 3 fixes unconfirmed; Venice post title/SEO still names the Ghost; Press page page.press.json.PROPOSED not pushed; Kids sizes option B waiting on colours/sizes, clean "Kids 2-5" leftovers; remaining dashes in locked files; Socks header link to empty Hot Kits; redirects list is Andrew's; yellow-shoot photos already in Shopify Files.
+- Routines: none.
