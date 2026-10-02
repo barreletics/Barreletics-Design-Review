@@ -999,6 +999,100 @@
   {% endif %}
 </style>
 
+{%- comment -%}
+  TE live preview (Grok 2026-10-02): dual-write of the inline/<style> values above.
+  Shopify TE live-patches only a style tag block that reads section.settings.ID directly.
+  !important is required because the same vars are set inline on .split-section.
+  No assigns from the top of the file and no render/snippet inside this block.
+{%- endcomment -%}
+{% style %}
+  #shopify-section-{{ section.id }},
+  #shopify-section-{{ section.id }} .split-section {
+    --ff-min-height: {{ section.settings.min_height }}px !important;
+    {%- if section.settings.mobile_media_height > 0 %}
+    --ff-mobile-media-height: {{ section.settings.mobile_media_height }}px !important;
+    {%- else %}
+    --ff-mobile-media-height: var(--split-media-h-mobile, 500px) !important;
+    {%- endif %}
+    {%- if template.name == 'product' %}
+    --ff-mobile-text-height: 0px !important;
+    {%- else %}
+    --ff-mobile-text-height: {{ section.settings.mobile_text_height }}px !important;
+    {%- endif %}
+    --ff-media-fr: {{ section.settings.media_column_pct }}fr !important;
+    --ff-text-fr: {{ 100 | minus: section.settings.media_column_pct }}fr !important;
+    {%- if section.settings.image_position == 'custom' %}
+    --ff-object-position: {{ section.settings.focal_x }}% {{ section.settings.focal_y }}% !important;
+    {%- if section.settings.focal_x != 50 or section.settings.focal_y != 50 %}
+    --ff-object-position-fit-m: {{ section.settings.focal_x }}% {{ section.settings.focal_y }}% !important;
+    {%- else %}
+    --ff-object-position-fit-m: center top !important;
+    {%- endif %}
+    {%- elsif section.settings.image_position != blank and section.settings.image_position != 'center' %}
+    --ff-object-position: {{ section.settings.image_position }} !important;
+    --ff-object-position-fit-m: {{ section.settings.image_position }} !important;
+    {%- else %}
+    --ff-object-position: center !important;
+    --ff-object-position-fit-m: center top !important;
+    {%- endif %}
+    --ff-image-scale: {{ section.settings.image_scale | times: 1.0 | divided_by: 100.0 }} !important;
+    --ff-contain-width: {{ section.settings.contain_width }}% !important;
+    --ff-media-radius: {{ section.settings.media_radius }}px !important;
+    --ff-text-radius: {{ section.settings.media_radius }}px !important;
+    --ff-column-gap: {{ section.settings.column_gap }}px !important;
+    --ff-side-padding: {{ section.settings.side_padding }}px !important;
+    --ff-vertical-padding: {{ section.settings.vertical_padding }}px !important;
+    --ff-section-gap: {{ section.settings.section_gap | default: 32 }}px !important;
+    {%- if template.name == 'product' %}
+    --ff-section-gap-m: 0px !important;
+    {%- else %}
+    --ff-section-gap-m: {{ section.settings.section_gap_mobile | default: 0 }}px !important;
+    {%- endif %}
+    --ff-text-pad-top-m: {{ section.settings.text_pad_top_mobile | default: 96 }}px !important;
+    --ff-text-pad-bottom-m: {{ section.settings.text_pad_bottom_mobile | default: section.settings.text_pad_top_mobile | default: 96 }}px !important;
+    {%- if section.settings.bg_preset == 'white' %}
+    --ff-panel-bg: #ffffff !important;
+    {%- elsif section.settings.bg_preset == 'cream' %}
+    --ff-panel-bg: #faf8f6 !important;
+    {%- else %}
+    --ff-panel-bg: {{ section.settings.bg_color | default: '#ffffff' }} !important;
+    {%- endif %}
+    {%- if section.settings.media_bg_preset == 'cream' %}
+    --ff-media-pad-bg: #faf8f6 !important;
+    {%- elsif section.settings.media_bg_preset == 'white' %}
+    --ff-media-pad-bg: #ffffff !important;
+    {%- else %}
+    --ff-media-pad-bg: {{ section.settings.media_bg | default: '#ffffff' }} !important;
+    {%- endif %}
+    --ff-cta-bg: {{ section.settings.cta_bg_color | default: '#c45c3f' }} !important;
+    --ff-cta-border: {{ section.settings.cta_border_color | default: section.settings.cta_bg_color | default: '#c45c3f' }} !important;
+    --ff-cta-text: {{ section.settings.cta_text_color | default: '#ffffff' }} !important;
+    --ff-quote-star: {{ section.settings.quote_star_color | default: '#d4af37' }} !important;
+    --ff-quote-style: {% if section.settings.quote_italic == false %}normal{% else %}italic{% endif %} !important;
+    --ff-stat-bar: {{ section.settings.stat_bar_color | default: '#c45c3f' }} !important;
+  }
+  /* Panel + media pad colours (inline background on wrapper / .split-text / .split-media). */
+  #shopify-section-{{ section.id }},
+  #shopify-section-{{ section.id }} .split-text {
+    background: var(--ff-panel-bg) !important;
+  }
+  #shopify-section-{{ section.id }} .split-media {
+    background: var(--ff-media-pad-bg) !important;
+  }
+  {%- if template.name != 'product' and section.settings.mobile_text_height > 0 %}
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .split-text {
+      min-height: {{ section.settings.mobile_text_height }}px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: {{ section.settings.text_pad_top_mobile | default: 96 }}px;
+      padding-bottom: {{ section.settings.text_pad_top_mobile | default: 96 }}px;
+    }
+  }
+  {%- endif %}
+{% endstyle %}
+
 {% schema %}
 {
   "name": "50/50 Split",
