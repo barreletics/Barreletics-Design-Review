@@ -2,6 +2,12 @@
 
 **Goal:** Restore v-neck-tops and yoga-pants pages to draft theme without risk.
 
+## AJ rules (2026-10-02) — non‑negotiable
+
+1. **Do not edit `shopify-build/sections/pdp-buy-box.liquid`** (no liquid, no schema, no buy-box “fixes”).
+2. **Do not `shopify theme push`** to draft `187144929571` (or any theme) until AJ has reviewed built pages locally and approved in writing on the PR.
+3. Build/review on Mac first: `docs/apparel_preview.html` + template JSON only.
+
 ---
 
 ## Role Clarity

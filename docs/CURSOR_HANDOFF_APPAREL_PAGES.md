@@ -1,5 +1,10 @@
 # Cursor Handoff: Apparel PDP Pages Recovery
 
+## AJ rules (Mac review first)
+
+- **No changes to `pdp-buy-box.liquid`.**
+- **No draft theme push** until AJ reviews and approves on GitHub PR #30.
+
 ## Problem
 The Tops and Bottoms pages in Shopify draft theme (187144929571) were overwritten with wrong content (Closed Sole copy/images).
 
