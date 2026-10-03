@@ -28,13 +28,21 @@
   assign pfq_side_d_def = 40
   assign pfq_y_m_def = 64
   assign pfq_x_m_def = 20
-  assign pfq_fixed_q_d = false
-  if section.settings.text_pad_y != pfq_y_d_def or section.settings.side_padding != pfq_side_d_def
-    assign pfq_fixed_q_d = true
+  assign pfq_fixed_q_d_y = false
+  if section.settings.text_pad_y != pfq_y_d_def
+    assign pfq_fixed_q_d_y = true
   endif
-  assign pfq_fixed_q_m = false
-  if section.settings.text_pad_y_mobile != pfq_y_m_def or section.settings.text_pad_x_mobile != pfq_x_m_def
-    assign pfq_fixed_q_m = true
+  assign pfq_fixed_q_d_x = false
+  if section.settings.side_padding != pfq_side_d_def
+    assign pfq_fixed_q_d_x = true
+  endif
+  assign pfq_fixed_q_m_y = false
+  if section.settings.text_pad_y_mobile != pfq_y_m_def
+    assign pfq_fixed_q_m_y = true
+  endif
+  assign pfq_fixed_q_m_x = false
+  if section.settings.text_pad_x_mobile != pfq_x_m_def
+    assign pfq_fixed_q_m_x = true
   endif
 -%}
 <section
@@ -93,7 +101,7 @@
     </div>
   {% endif %}
 
-  <div class="page-faq__questions{% if pfq_fixed_q_d %} page-faq__questions--fixed-pad-d{% endif %}{% if pfq_fixed_q_m %} page-faq__questions--fixed-pad-m{% endif %}" id="faq-{{ section.id }}">
+  <div class="page-faq__questions{% if pfq_fixed_q_d_y %} page-faq__questions--fixed-pad-d-y{% endif %}{% if pfq_fixed_q_d_x %} page-faq__questions--fixed-pad-d-x{% endif %}{% if pfq_fixed_q_m_y %} page-faq__questions--fixed-pad-m-y{% endif %}{% if pfq_fixed_q_m_x %} page-faq__questions--fixed-pad-m-x{% endif %}" id="faq-{{ section.id }}">
     <p class="faq-count" data-faq-count role="status" aria-live="polite"></p>
 
     <div class="faq-empty" data-faq-empty role="status">
@@ -293,11 +301,15 @@
     margin: 0 auto;
     padding: 72px 40px 96px;
   }
-  .page-faq__questions--fixed-pad-d {
-    padding-top: var(--utp-y-d, 96px);
-    padding-bottom: var(--utp-y-d, 96px);
-    padding-left: var(--utp-side-d, 40px);
-    padding-right: var(--utp-side-d, 40px);
+  @media (min-width: 769px) {
+    .page-faq__questions--fixed-pad-d-y {
+      padding-top: var(--utp-y-d);
+      padding-bottom: var(--utp-y-d);
+    }
+    .page-faq__questions--fixed-pad-d-x {
+      padding-left: var(--utp-side-d);
+      padding-right: var(--utp-side-d);
+    }
   }
 
   .faq-count {
@@ -410,11 +422,13 @@
     .faq-search__icon { left: 0; }
     .faq-topics { gap: 0 20px; margin-top: 22px; }
     .page-faq__questions { padding: 40px 20px 64px; }
-    .page-faq__questions--fixed-pad-m {
-      padding-top: var(--utp-y-m, 64px);
-      padding-bottom: var(--utp-y-m, 64px);
-      padding-left: var(--utp-x-m, 20px);
-      padding-right: var(--utp-x-m, 20px);
+    .page-faq__questions--fixed-pad-m-y {
+      padding-top: var(--utp-y-m);
+      padding-bottom: var(--utp-y-m);
+    }
+    .page-faq__questions--fixed-pad-m-x {
+      padding-left: var(--utp-x-m);
+      padding-right: var(--utp-x-m);
     }
     .faq-row__q { font-size: var(--te-sub-size, 16px); padding: 19px 0; }
     .faq-group { margin-bottom: 44px; }
@@ -796,7 +810,7 @@
     {
       "type": "range",
       "id": "text_pad_y",
-      "label": "Text pad top & bottom — desktop (default 96 — questions 72 top / 96 bottom)",
+      "label": "Text pad Y desktop (96 default; questions 72 top/96 bottom)",
       "min": 0,
       "max": 120,
       "step": 2,
@@ -816,7 +830,7 @@
     {
       "type": "range",
       "id": "text_pad_y_mobile",
-      "label": "Text pad top & bottom — phone (default 64 — questions 40 top / 64 bottom)",
+      "label": "Text pad Y phone (64 default; questions 40 top/64 bottom)",
       "min": 0,
       "max": 120,
       "step": 2,
