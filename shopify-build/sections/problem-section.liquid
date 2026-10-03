@@ -114,16 +114,16 @@
   assign image_scale = section.settings.image_scale | default: 100
   assign contain_width = section.settings.contain_width | default: 72
   assign media_radius = section.settings.media_radius | default: 0
-  assign side_padding = section.settings.side_padding | default: 64
+  assign side_padding = section.settings.side_padding | default: 40
   assign text_pad_y_d = section.settings.text_pad_y | default: 96
   assign text_pad_top_d = text_pad_y_d
   assign text_pad_bottom_d = text_pad_y_d
   assign text_pad_y_m = section.settings.text_pad_y_mobile | default: 80
   assign text_pad_m = text_pad_y_m
   assign text_pad_bottom_m = text_pad_y_m
-  assign text_pad_x_m = section.settings.text_pad_x_mobile | default: 20
-  assign section_gap = 32
-  if section.settings.section_gap == 0 or section.settings.section_gap != blank
+  assign text_pad_x_m = section.settings.text_pad_x_mobile | default: 16
+  assign section_gap = 0
+  if section.settings.section_gap != blank
     assign section_gap = section.settings.section_gap
   endif
   assign section_gap_m = 0
@@ -335,7 +335,7 @@
         </ul>
       {% endif %}
       {% if section.settings.cta_text != blank %}
-        <a href="{{ cta_href | default: '#variants' }}" class="btn {{ cta_btn_class }} split-cta">{{ section.settings.cta_text }}</a>
+        <a href="{{ cta_href | default: '#variants' }}" class="btn {{ cta_btn_class }} split-cta problem-section__cta">{{ section.settings.cta_text }}</a>
       {% endif %}
     </div>
   </div>
@@ -917,9 +917,30 @@
   }
   #shopify-section-{{ section.id }} .split-text__body {
     margin-bottom: 0;
+    max-width: 38ch;
   }
-  #shopify-section-{{ section.id }} .split-cta {
+  #shopify-section-{{ section.id }} .split-cta.problem-section__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    min-height: var(--type-cta-min-height);
+    padding: var(--type-cta-pad-y) var(--type-cta-pad-x);
+    font-size: var(--type-cta-size);
+    font-weight: var(--type-cta-weight);
+    letter-spacing: var(--type-cta-tracking);
+    line-height: var(--type-cta-leading, 1);
+    text-transform: uppercase;
+    border-radius: 4px;
     margin-top: 28px;
+    transition: opacity 0.15s ease;
+  }
+  #shopify-section-{{ section.id }} .split-cta.problem-section__cta:hover {
+    opacity: 0.92;
+  }
+  #shopify-section-{{ section.id }} .split-cta.problem-section__cta.btn--brand-outline:hover,
+  #shopify-section-{{ section.id }} .split-cta.problem-section__cta.btn--secondary:hover {
+    opacity: 0.85;
   }
   #shopify-section-{{ section.id }} .split-text__title {
     text-wrap: balance;
@@ -979,14 +1000,14 @@
     --ff-contain-width: {{ section.settings.contain_width | default: 72 }}% !important;
     --ff-media-radius: {{ section.settings.media_radius | default: 0 }}px !important;
     --ff-text-radius: {{ section.settings.media_radius | default: 0 }}px !important;
-    --ff-side-padding: {{ section.settings.side_padding }}px !important;
+    --ff-side-padding: {{ section.settings.side_padding | default: 40 }}px !important;
     --ff-text-pad-top-d: {{ section.settings.text_pad_y | default: 96 }}px !important;
     --ff-text-pad-bottom-d: {{ section.settings.text_pad_y | default: 96 }}px !important;
-    --ff-section-gap: {{ section.settings.section_gap | default: 32 }}px !important;
+    --ff-section-gap: {{ section.settings.section_gap | default: 0 }}px !important;
     --ff-section-gap-m: {{ section.settings.section_gap_mobile | default: 0 }}px !important;
     --ff-text-pad-top-m: {{ section.settings.text_pad_y_mobile | default: 80 }}px !important;
     --ff-text-pad-bottom-m: {{ section.settings.text_pad_y_mobile | default: 80 }}px !important;
-    --ff-text-pad-x-m: {{ section.settings.text_pad_x_mobile | default: 20 }}px !important;
+    --ff-text-pad-x-m: {{ section.settings.text_pad_x_mobile | default: 16 }}px !important;
     {%- if section.settings.bg_style == 'white' -%}
     --ff-panel-bg: #ffffff !important;
     {%- elsif section.settings.bg_style == 'cream' -%}
@@ -1511,12 +1532,12 @@
     {
       "type": "range",
       "id": "side_padding",
-      "label": "Text pad left & right — desktop (default 64)",
+      "label": "Text pad left & right — desktop (default 40)",
       "min": 16,
       "max": 96,
       "step": 4,
       "unit": "px",
-      "default": 64
+      "default": 40
     },
     {
       "type": "range",
@@ -1531,12 +1552,12 @@
     {
       "type": "range",
       "id": "text_pad_x_mobile",
-      "label": "Text pad left & right — phone (default 20)",
+      "label": "Text pad left & right — phone (default 16)",
       "min": 12,
       "max": 48,
       "step": 4,
       "unit": "px",
-      "default": 20
+      "default": 16
     },
     {
       "type": "select",
@@ -1577,12 +1598,12 @@
     {
       "type": "range",
       "id": "section_gap",
-      "label": "Space above & below — desktop (default 32)",
+      "label": "Space above & below — desktop (default 0)",
       "min": 0,
       "max": 96,
       "step": 4,
       "unit": "px",
-      "default": 32
+      "default": 0
     },
     {
       "type": "range",
