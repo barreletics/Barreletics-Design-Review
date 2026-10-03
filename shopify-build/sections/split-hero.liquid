@@ -77,7 +77,10 @@
     assign media_pct = 50
   endif
   assign media_radius = section.settings.media_radius | default: 0
-  assign media_height = section.settings.media_height | default: 100
+  assign media_height = section.settings.media_height | default: 0
+  if media_height == blank or media_height == 0
+    assign media_height = 100
+  endif
 
   assign media_fit = section.settings.media_fit | default: 'cover'
   assign image_fit_m = section.settings.image_fit_mobile | default: 'cover'
@@ -278,7 +281,7 @@
   aria-label="{{ region_label | escape }}"
   style="{% render 'section-inset-vars' %}"
 >
-  <div class="split-hero__media" data-media-type="{{ sh_media_kind }}" style="background: {{ media_pad_bg }};">
+  <div class="split-hero__media" data-media-type="{{ sh_media_kind }}">
     {%- assign sh_pic = false -%}
     {%- if section.settings.image_mobile != blank and has_video == false -%}{%- assign sh_pic = true -%}
     <picture style="display:contents">
@@ -352,7 +355,7 @@
     {%- if sh_pic %}</picture>{% endif %}
   </div>
 
-  <div class="split-hero__copy" style="background: {{ panel_bg }};">
+  <div class="split-hero__copy">
     <div class="split-hero__stack">
       {%- if show_trust_row -%}
         {%- assign trust_plain = trust_text | strip_html | strip -%}
@@ -433,52 +436,134 @@
   </div>
 </div>
 
+{%- comment -%}
+  TE live preview: Shopify hot-patches this {% style %} block when sliders change.
+  Values must read section.settings.* directly (not top-of-file assigns) — same pattern as fifty-fifty.liquid.
+  !important beats split-hero.css and the section-frame inset inline style.
+{%- endcomment -%}
 {% style %}
+  {%- liquid
+    assign sh_te_pos = section.settings.image_position
+    if sh_te_pos == blank
+      assign sh_te_lpx = section.settings.image_pos_x | default: 50
+      assign sh_te_lpy = section.settings.image_pos_y | default: 50
+      if sh_te_lpx == 50 and sh_te_lpy == 50
+        assign sh_te_pos = 'center'
+      else
+        assign sh_te_pos = 'custom'
+      endif
+    endif
+    if sh_te_pos == 'custom'
+      assign sh_te_ix = section.settings.focal_x | default: section.settings.image_pos_x | default: 50
+      assign sh_te_iy = section.settings.focal_y | default: section.settings.image_pos_y | default: 50
+    elsif sh_te_pos == 'top left'
+      assign sh_te_ix = 0
+      assign sh_te_iy = 0
+    elsif sh_te_pos == 'top'
+      assign sh_te_ix = 50
+      assign sh_te_iy = 0
+    elsif sh_te_pos == 'top right'
+      assign sh_te_ix = 100
+      assign sh_te_iy = 0
+    elsif sh_te_pos == 'left'
+      assign sh_te_ix = 0
+      assign sh_te_iy = 50
+    elsif sh_te_pos == 'right'
+      assign sh_te_ix = 100
+      assign sh_te_iy = 50
+    elsif sh_te_pos == 'bottom left'
+      assign sh_te_ix = 0
+      assign sh_te_iy = 100
+    elsif sh_te_pos == 'bottom'
+      assign sh_te_ix = 50
+      assign sh_te_iy = 100
+    elsif sh_te_pos == 'bottom right'
+      assign sh_te_ix = 100
+      assign sh_te_iy = 100
+    else
+      assign sh_te_ix = 50
+      assign sh_te_iy = 50
+    endif
+    assign sh_te_scale = section.settings.image_scale | default: section.settings.image_zoom | default: 100
+    assign sh_te_pm = section.settings.image_position_mobile | default: 'same'
+    if sh_te_pm == 'same' or sh_te_pm == blank
+      assign sh_te_ixm = sh_te_ix
+      assign sh_te_iym = sh_te_iy
+      assign sh_te_scale_m = section.settings.image_scale_mobile | default: section.settings.image_zoom_mobile | default: sh_te_scale
+    elsif sh_te_pm == 'custom'
+      assign sh_te_ixm = section.settings.focal_x_mobile | default: section.settings.image_pos_x_mobile | default: sh_te_ix
+      assign sh_te_iym = section.settings.focal_y_mobile | default: section.settings.image_pos_y_mobile | default: sh_te_iy
+      assign sh_te_scale_m = section.settings.image_scale_mobile | default: section.settings.image_zoom_mobile | default: sh_te_scale
+    elsif sh_te_pm == 'top left'
+      assign sh_te_ixm = 0
+      assign sh_te_iym = 0
+      assign sh_te_scale_m = section.settings.image_scale_mobile | default: section.settings.image_zoom_mobile | default: sh_te_scale
+    elsif sh_te_pm == 'top'
+      assign sh_te_ixm = 50
+      assign sh_te_iym = 0
+      assign sh_te_scale_m = section.settings.image_scale_mobile | default: section.settings.image_zoom_mobile | default: sh_te_scale
+    elsif sh_te_pm == 'top right'
+      assign sh_te_ixm = 100
+      assign sh_te_iym = 0
+      assign sh_te_scale_m = section.settings.image_scale_mobile | default: section.settings.image_zoom_mobile | default: sh_te_scale
+    elsif sh_te_pm == 'left'
+      assign sh_te_ixm = 0
+      assign sh_te_iym = 50
+      assign sh_te_scale_m = section.settings.image_scale_mobile | default: section.settings.image_zoom_mobile | default: sh_te_scale
+    elsif sh_te_pm == 'right'
+      assign sh_te_ixm = 100
+      assign sh_te_iym = 50
+      assign sh_te_scale_m = section.settings.image_scale_mobile | default: section.settings.image_zoom_mobile | default: sh_te_scale
+    elsif sh_te_pm == 'bottom left'
+      assign sh_te_ixm = 0
+      assign sh_te_iym = 100
+      assign sh_te_scale_m = section.settings.image_scale_mobile | default: section.settings.image_zoom_mobile | default: sh_te_scale
+    elsif sh_te_pm == 'bottom'
+      assign sh_te_ixm = 50
+      assign sh_te_iym = 100
+      assign sh_te_scale_m = section.settings.image_scale_mobile | default: section.settings.image_zoom_mobile | default: sh_te_scale
+    elsif sh_te_pm == 'bottom right'
+      assign sh_te_ixm = 100
+      assign sh_te_iym = 100
+      assign sh_te_scale_m = section.settings.image_scale_mobile | default: section.settings.image_zoom_mobile | default: sh_te_scale
+    else
+      assign sh_te_ixm = 50
+      assign sh_te_iym = 50
+      assign sh_te_scale_m = section.settings.image_scale_mobile | default: section.settings.image_zoom_mobile | default: sh_te_scale
+    endif
+    assign sh_te_mh = section.settings.media_height | default: 0
+    if sh_te_mh == blank or sh_te_mh == 0
+      assign sh_te_mh = 100
+    endif
+    assign sh_te_pct = section.settings.media_column_pct | default: 50
+  -%}
   #shopify-section-{{ section.id }} {
-    padding-block: {{ section_gap }}px;
+    padding-block: {{ section.settings.section_gap | default: 0 }}px !important;
     box-sizing: border-box;
   }
   @media (max-width: 768px) {
     #shopify-section-{{ section.id }} {
-      padding-block-start: 0;
-      padding-block-end: {{ section_gap_m }}px;
+      padding-block-start: 0 !important;
+      padding-block-end: {{ section.settings.section_gap_mobile | default: 0 }}px !important;
     }
   }
+  #shopify-section-{{ section.id }},
   #split-hero-{{ section.id }} {
-    --sh-media-pct: {{ media_pct }}% !important;
-    --sh-height-scale: {{ media_height | times: 0.01 }} !important;
-    --sh-media-radius: {{ media_radius }}px !important;
-    --sh-copy-bg: {{ panel_bg }} !important;
-    --sh-img-x: {{ img_x }}% !important;
-    --sh-img-y: {{ img_y }}% !important;
-    --sh-img-zoom: {{ img_scale | at_least: 100 | times: 0.01 }} !important;
-    --sh-img-x-m: {{ img_x_m }}% !important;
-    --sh-img-y-m: {{ img_y_m }}% !important;
-    --sh-img-zoom-m: {{ img_scale_m | at_least: 100 | times: 0.01 }} !important;
-    --sh-star-color: {{ star_color }} !important;
-    --sh-star-size: {{ star_size }}px !important;
-    --sh-trust-gap: {{ trust_gap }}px !important;
-    --sh-trust-below: {{ trust_below }}px !important;
-    --hero-copy-pad-y-mobile: {{ text_pad_y_m }}px !important;
-    --hero-copy-pad-x-mobile: {{ text_pad_x_m }}px !important;
-    {%- if trust_text_size != 'default' %}
-    --sh-trust-size: {{ trust_text_size }}px !important;
-    {%- endif %}
-    {%- if title_size != 'default' %}
-    --sh-title-size: {{ title_size }}px !important;
-    {%- endif %}
-    {%- if title_weight != 'default' %}
-    --sh-title-weight: {{ title_weight }} !important;
-    {%- endif %}
-    {%- if body_size != 'default' %}
-    --sh-body-size: {{ body_size }}px !important;
-    {%- endif %}
-    {%- if body_weight != 'default' %}
-    --sh-body-weight: {{ body_weight }} !important;
-    {%- endif %}
-    {%- if cta_size != 'default' %}
-    --sh-cta-size: {{ cta_size }}px !important;
-    {%- endif %}
+    --sh-media-pct: {{ sh_te_pct }}% !important;
+    --sh-height-scale: {{ sh_te_mh | times: 0.01 }} !important;
+    --sh-media-radius: {{ section.settings.media_radius | default: 0 }}px !important;
+    --sh-img-x: {{ sh_te_ix }}% !important;
+    --sh-img-y: {{ sh_te_iy }}% !important;
+    --sh-img-zoom: {{ sh_te_scale | at_least: 100 | times: 0.01 }} !important;
+    --sh-img-x-m: {{ sh_te_ixm }}% !important;
+    --sh-img-y-m: {{ sh_te_iym }}% !important;
+    --sh-img-zoom-m: {{ sh_te_scale_m | at_least: 100 | times: 0.01 }} !important;
+    --sh-star-color: {{ section.settings.star_color | default: '#d4af37' }} !important;
+    --sh-star-size: {{ section.settings.star_size | default: 14 }}px !important;
+    --sh-trust-gap: {{ section.settings.trust_gap | default: 10 }}px !important;
+    --sh-trust-below: {{ section.settings.trust_below | default: 16 }}px !important;
+    --hero-copy-pad-y-mobile: {{ section.settings.text_pad_y_mobile | default: 52 }}px !important;
+    --hero-copy-pad-x-mobile: {{ section.settings.text_pad_x_mobile | default: 24 }}px !important;
     {%- if section.settings.inset_custom_mobile -%}
     --section-inset-top-m: {{ section.settings.inset_top_mobile | default: 0 }}px !important;
     --section-inset-bottom-m: {{ section.settings.inset_bottom_mobile | default: 0 }}px !important;
@@ -494,13 +579,44 @@
     --section-inset-bottom: {{ section.settings.inset_bottom | default: 0 }}px !important;
     --section-inset-left: {{ section.settings.inset_x | default: 0 }}px !important;
     --section-inset-right: {{ section.settings.inset_x | default: 0 }}px !important;
+    {%- if section.settings.trust_text_size != blank and section.settings.trust_text_size != 'default' -%}
+    --sh-trust-size: {{ section.settings.trust_text_size }}px !important;
+    {%- endif -%}
+    {%- if section.settings.title_size != blank and section.settings.title_size != 'default' -%}
+    --sh-title-size: {{ section.settings.title_size }}px !important;
+    {%- endif -%}
+    {%- if section.settings.title_weight != blank and section.settings.title_weight != 'default' -%}
+    --sh-title-weight: {{ section.settings.title_weight }} !important;
+    {%- endif -%}
+    {%- if section.settings.body_size != blank and section.settings.body_size != 'default' -%}
+    --sh-body-size: {{ section.settings.body_size }}px !important;
+    {%- endif -%}
+    {%- if section.settings.body_weight != blank and section.settings.body_weight != 'default' -%}
+    --sh-body-weight: {{ section.settings.body_weight }} !important;
+    {%- endif -%}
+    {%- if section.settings.cta_size != blank and section.settings.cta_size != 'default' -%}
+    --sh-cta-size: {{ section.settings.cta_size }}px !important;
+    {%- endif -%}
+    {%- if section.settings.bg_style == 'white' -%}
+    --sh-copy-bg: #ffffff !important;
+    {%- elsif section.settings.bg_style == 'cream' -%}
+    --sh-copy-bg: #faf8f6 !important;
+    {%- elsif section.settings.bg_style == 'darker_cream' -%}
+    --sh-copy-bg: #efe9dd !important;
+    {%- else -%}
+    --sh-copy-bg: {{ section.settings.bg_color | default: '#ffffff' }} !important;
+    {%- endif -%}
+  }
+  #split-hero-{{ section.id }} .split-hero__media {
+    background: {{ section.settings.media_bg | default: '#ffffff' }} !important;
   }
   #split-hero-{{ section.id }} .split-hero__copy {
-    padding: {{ text_pad_y_d }}px {{ side_padding }}px !important;
+    background: var(--sh-copy-bg, #ffffff) !important;
+    padding: {{ section.settings.text_pad_y | default: 72 }}px {{ section.settings.side_padding | default: 56 }}px !important;
   }
   @media (min-width: 769px) {
     #split-hero-{{ section.id }} .split-hero__copy {
-      min-height: calc(92vh * var(--sh-height-scale, 1));
+      min-height: calc(92vh * var(--sh-height-scale, 1)) !important;
     }
     #split-hero-{{ section.id }} .split-hero__stack {
       display: flex;
@@ -569,16 +685,16 @@
       max-height: none !important;
       height: auto !important;
     }
-    {%- if mobile_media_height > 0 %}
+    {%- if section.settings.mobile_media_height > 0 %}
     #split-hero-{{ section.id }} .split-hero__media {
-      height: {{ mobile_media_height }}px !important;
-      min-height: {{ mobile_media_height }}px !important;
-      max-height: {{ mobile_media_height }}px !important;
+      height: {{ section.settings.mobile_media_height }}px !important;
+      min-height: {{ section.settings.mobile_media_height }}px !important;
+      max-height: {{ section.settings.mobile_media_height }}px !important;
       aspect-ratio: auto !important;
     }
     {%- endif %}
     #split-hero-{{ section.id }} .split-hero__media {
-      width: {{ mobile_media_width }}% !important;
+      width: {{ section.settings.mobile_media_width | default: 100 }}% !important;
       margin-left: auto;
       margin-right: auto;
     }
@@ -780,13 +896,13 @@
     {
       "type": "range",
       "id": "media_height",
-      "label": "Section height (92vh scale)",
-      "min": 50,
+      "label": "Height — desktop (default 0 = 92vh)",
+      "min": 0,
       "max": 150,
       "step": 2,
       "unit": "%",
-      "default": 100,
-      "info": "100 = default desk frame 92vh. Scales media + copy together."
+      "default": 0,
+      "info": "0 = theme default (100% of 92vh frame). Scales media + copy together."
     },
     {
       "type": "range",
@@ -802,13 +918,13 @@
     {
       "type": "range",
       "id": "mobile_media_height",
-      "label": "Image height — phone (default 0 = theme 4:5)",
+      "label": "Image height — phone (default 0 = theme 500px)",
       "min": 0,
       "max": 700,
       "step": 10,
       "unit": "px",
       "default": 0,
-      "info": "0 keeps split-hero.css 4:5 aspect. Set px to override."
+      "info": "0 = theme default (hero uses 4:5 aspect). Set px to override height."
     },
     {
       "type": "range",
