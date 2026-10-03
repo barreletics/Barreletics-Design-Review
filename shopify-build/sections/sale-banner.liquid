@@ -45,6 +45,8 @@
   </div>
 {% endif %}
 
+{% render 'unified-text-pads-te-style', selector: '.sale-banner', y_d: 10, side_d: 56, y_m: 10, x_m: 20 %}
+
 {% schema %}
 {
   "name": "Sale banner",
@@ -130,8 +132,17 @@
       "step": 1,
       "unit": "px",
       "default": 10
-    }
+    , "visible_if": "{{ section.settings.title == '__legacy_hidden__' }}" }
   ],
+
+    { "type": "header", "content": "Layout — text padding" },
+    { "type": "range", "id": "text_pad_y", "label": "Text pad top & bottom — desktop (default 96)", "min": 32, "max": 120, "step": 4, "unit": "px", "default": 96 },
+    { "type": "range", "id": "side_padding", "label": "Text pad left & right — desktop (default 64)", "min": 16, "max": 96, "step": 4, "unit": "px", "default": 64 },
+    { "type": "range", "id": "text_pad_y_mobile", "label": "Text pad top & bottom — phone (default 80)", "min": 16, "max": 120, "step": 4, "unit": "px", "default": 80 },
+    { "type": "range", "id": "text_pad_x_mobile", "label": "Text pad left & right — phone (default 20)", "min": 12, "max": 48, "step": 4, "unit": "px", "default": 20 },
+    { "type": "header", "content": "Legacy (hidden — do not edit)" },
+    { "type": "paragraph", "content": "Preserves stored values on Theme Editor save." },
+    { "type": "range", "id": "pad_y", "label": "Legacy: pad_y", "visible_if": "{{ section.settings.title == '__legacy_hidden__' }}" },
   "presets": [
     {
       "name": "Sale banner"
