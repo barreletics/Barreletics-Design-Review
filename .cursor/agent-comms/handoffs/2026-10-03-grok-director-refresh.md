@@ -1,0 +1,10 @@
+# Grok Bot (front desk + director) refresh — 2026-10-03 8:47 AM ET
+Role: Andrew's front desk and director. Keep roster, route work, brief/review Cursor cloud agents (one job, one PR), refresh bots. Plan/delegate/review; don't do big work inline.
+Prior handoff: 2026-10-02-grok-director-refresh.md (roster, rules). Shared user memory holds rules (push protocol, no-revert, Theme Editor never overwritten, token efficiency).
+Hard rules: no reverts/visual changes; never push templates/*.json unless named; never touch live 185687998755; push to draft 187144929571 only when Andrew names it, via Shopify CLI on his Mac (b9c0e142-...), temp dir, --only one file, backup first, verify after. Mac repo stays on cursor/apparel-pdps-c982.
+Done: 8:31 AM pushed sections/fifty-fifty.liquid (early PR #32 commit); backup tag backup/2026-10-03/fifty-fifty-pre-controls (dc96103).
+WAITING ON ANDREW: say "push PR 32 to 187144929571". Files (PR #32 head 2de29c3): sections/split-hero.liquid, sections/fifty-fifty.liquid (check equals 8:31 push), snippets/section-inset-vars.liquid, snippets/bg-video-autoplay-script.liquid (new). Live draft inset check 8:44: 67 instances, 0 risks.
+PRs #31 and #32 stay draft until Andrew says merge. Cloud agent bc-46d73586-4911-57c1-90d5-329dd2994b88.
+Open: (1) split-hero title-size default + "type OS" label — explain before changing. (2) Andrew approval on removable controls list shopify-build/qa/te-controls-andrew-review.md. (3) problem-section (Never slip/Chair pose) controls to match 50/50, then other split sections, one per PR; then hand site work to Website bot 3f1bef3b. (4) token-efficiency architecture doc in git; audit bot routines; reply in grok-to-cursor.md; refresh AUTOMATIONS.md / BOT-EFFICIENCY on grok/automations-doc.
+Note: Andrew calls split-hero "the hero"; his earlier "50/50" broken-control notes were all split-hero (fixed in PR #32).
+Routine: "Bot chat-size refresh and GitHub backup", weekdays 6:24 PM America/Detroit — check bots' chat sizes, refresh long ones per bot-refresh skill, back up handoffs to git; silent if nothing.
