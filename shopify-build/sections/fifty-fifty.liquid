@@ -163,7 +163,10 @@
 
   assign region_label = section.settings.aria_label | strip
   if region_label == blank
-    assign region_label = section.settings.title | replace: '[[em]]', '' | replace: '[[/em]]', '' | strip_html | truncate: 60
+    assign region_label = section.settings.title | replace: '[[em]]', '' | replace: '[[/em]]', '' | strip_html | strip | truncate: 60
+  endif
+  if region_label == blank
+    assign region_label = '50/50 section'
   endif
 
   assign content_style = section.settings.content_style | default: 'standard'
@@ -231,7 +234,7 @@
     {% if title_weight != 'default' %}--ff-title-weight: {{ title_weight }};{% endif %}
     {% if body_weight != 'default' %}--ff-body-weight: {{ body_weight }};{% endif %}
   "
-  {% if region_label != blank %}aria-label="{{ region_label | escape }}"{% endif %}
+  aria-label="{{ region_label | escape }}"
 >
   <div class="split-media" style="background: {{ media_pad_bg }};">
     <div class="split-media__clip">

@@ -55,19 +55,110 @@
   assign body_size = section.settings.body_size | default: 'default'
   assign title_weight = section.settings.title_weight | default: 'default'
   assign body_weight = section.settings.body_weight | default: 'default'
-  assign star_color = settings.star_color_global | default: '#E5C71F'
-  assign star_size = settings.star_size_global | default: 14
+  assign star_color = section.settings.star_color | default: settings.star_color_global | default: '#E5C71F'
+  assign star_size = section.settings.star_size | default: settings.star_size_global | default: 14
   assign trust_text_size = section.settings.trust_text_size | default: 'default'
   assign trust_gap = section.settings.trust_gap | default: 10
   assign trust_below = section.settings.trust_below | default: 16
   assign media_column_pct = section.settings.media_column_pct | default: 62
   assign media_radius = section.settings.media_radius | default: 0
-  assign img_x = section.settings.image_pos_x | default: 50
-  assign img_y = section.settings.image_pos_y | default: 50
-  assign img_zoom = section.settings.image_zoom | default: 100
-  assign img_x_m = section.settings.image_pos_x_mobile | default: img_x
-  assign img_y_m = section.settings.image_pos_y_mobile | default: img_y
-  assign img_zoom_m = section.settings.image_zoom_mobile | default: img_zoom
+  assign sh_pos = section.settings.image_position
+  if sh_pos == blank
+    assign sh_px = section.settings.image_pos_x | default: 50
+    assign sh_py = section.settings.image_pos_y | default: 50
+    if sh_px == 50 and sh_py == 50
+      assign sh_pos = 'center'
+    else
+      assign sh_pos = 'custom'
+    endif
+  endif
+  if sh_pos == 'custom'
+    assign img_x = section.settings.image_pos_x | default: 50
+    assign img_y = section.settings.image_pos_y | default: 50
+    assign img_zoom = section.settings.image_zoom | default: 100
+  elsif sh_pos == 'top left'
+    assign img_x = 0
+    assign img_y = 0
+    assign img_zoom = section.settings.image_zoom | default: 100
+  elsif sh_pos == 'top'
+    assign img_x = 50
+    assign img_y = 0
+    assign img_zoom = section.settings.image_zoom | default: 100
+  elsif sh_pos == 'top right'
+    assign img_x = 100
+    assign img_y = 0
+    assign img_zoom = section.settings.image_zoom | default: 100
+  elsif sh_pos == 'left'
+    assign img_x = 0
+    assign img_y = 50
+    assign img_zoom = section.settings.image_zoom | default: 100
+  elsif sh_pos == 'right'
+    assign img_x = 100
+    assign img_y = 50
+    assign img_zoom = section.settings.image_zoom | default: 100
+  elsif sh_pos == 'bottom left'
+    assign img_x = 0
+    assign img_y = 100
+    assign img_zoom = section.settings.image_zoom | default: 100
+  elsif sh_pos == 'bottom'
+    assign img_x = 50
+    assign img_y = 100
+    assign img_zoom = section.settings.image_zoom | default: 100
+  elsif sh_pos == 'bottom right'
+    assign img_x = 100
+    assign img_y = 100
+    assign img_zoom = section.settings.image_zoom | default: 100
+  else
+    assign img_x = 50
+    assign img_y = 50
+    assign img_zoom = section.settings.image_zoom | default: 100
+  endif
+  assign sh_pos_m = section.settings.image_position_mobile | default: 'same'
+  if sh_pos_m == 'same' or sh_pos_m == blank
+    assign img_x_m = img_x
+    assign img_y_m = img_y
+    assign img_zoom_m = img_zoom
+  elsif sh_pos_m == 'custom'
+    assign img_x_m = section.settings.image_pos_x_mobile | default: img_x
+    assign img_y_m = section.settings.image_pos_y_mobile | default: img_y
+    assign img_zoom_m = section.settings.image_zoom_mobile | default: img_zoom
+  elsif sh_pos_m == 'top left'
+    assign img_x_m = 0
+    assign img_y_m = 0
+    assign img_zoom_m = section.settings.image_zoom_mobile | default: img_zoom
+  elsif sh_pos_m == 'top'
+    assign img_x_m = 50
+    assign img_y_m = 0
+    assign img_zoom_m = section.settings.image_zoom_mobile | default: img_zoom
+  elsif sh_pos_m == 'top right'
+    assign img_x_m = 100
+    assign img_y_m = 0
+    assign img_zoom_m = section.settings.image_zoom_mobile | default: img_zoom
+  elsif sh_pos_m == 'left'
+    assign img_x_m = 0
+    assign img_y_m = 50
+    assign img_zoom_m = section.settings.image_zoom_mobile | default: img_zoom
+  elsif sh_pos_m == 'right'
+    assign img_x_m = 100
+    assign img_y_m = 50
+    assign img_zoom_m = section.settings.image_zoom_mobile | default: img_zoom
+  elsif sh_pos_m == 'bottom left'
+    assign img_x_m = 0
+    assign img_y_m = 100
+    assign img_zoom_m = section.settings.image_zoom_mobile | default: img_zoom
+  elsif sh_pos_m == 'bottom'
+    assign img_x_m = 50
+    assign img_y_m = 100
+    assign img_zoom_m = section.settings.image_zoom_mobile | default: img_zoom
+  elsif sh_pos_m == 'bottom right'
+    assign img_x_m = 100
+    assign img_y_m = 100
+    assign img_zoom_m = section.settings.image_zoom_mobile | default: img_zoom
+  else
+    assign img_x_m = 50
+    assign img_y_m = 50
+    assign img_zoom_m = section.settings.image_zoom_mobile | default: img_zoom
+  endif
   assign media_ratio_w = 2400
   assign media_ratio_h = 2750
   if image != blank and image.width > 0 and image.height > 0
@@ -81,8 +172,11 @@
   assign cta_text_color = section.settings.cta_text_color | default: '#ffffff'
 
   assign region_label = section.settings.aria_label | strip
+  if region_label == blank and title != blank
+    assign region_label = title | strip_html | strip
+  endif
   if region_label == blank
-    assign region_label = title
+    assign region_label = 'Split hero'
   endif
 
   # media-img shared params — object-position stays on CSS class (--sh-img-x/y)
@@ -96,75 +190,13 @@
   assign sh_alt_fallback = 'Barreletics Performance Skins — grip that holds in every studio workout'
 -%}
 
-{% style %}
-  #split-hero-{{ section.id }} {
-    --sh-media-pct: {{ media_column_pct }}%;
-    --sh-media-pct-num: {{ media_column_pct }};
-    --sh-media-ratio: {{ media_ratio_w }} / {{ media_ratio_h }};
-    --sh-ratio-w: {{ media_ratio_w }};
-    --sh-ratio-h: {{ media_ratio_h }};
-    --sh-height-scale: {{ section.settings.media_height | default: 100 | times: 0.01 }};
-    --sh-media-h: {{ section.settings.media_height | default: 100 }}%;
-    --sh-media-radius: {{ media_radius }}px;
-    --sh-copy-bg: {{ section.settings.bg_color | default: '#ffffff' }};
-    --sh-img-x: {{ img_x }}%;
-    --sh-img-y: {{ img_y }}%;
-    --sh-img-zoom: {{ img_zoom | at_least: 100 | times: 0.01 }};
-    --sh-img-x-m: {{ img_x_m }}%;
-    --sh-img-y-m: {{ img_y_m }}%;
-    --sh-img-zoom-m: {{ img_zoom_m | at_least: 100 | times: 0.01 }};
-    --sh-star-color: {{ star_color }};
-    --sh-star-size: {{ star_size }}px;
-    --sh-trust-gap: {{ trust_gap }}px;
-    --sh-trust-below: {{ trust_below }}px;
-    --sh-cta-bg: {{ cta_bg }};
-    --sh-cta-border: {{ cta_border }};
-    --sh-cta-text: {{ cta_text_color }};
-    {% if trust_text_size != 'default' %}--sh-trust-size: {{ trust_text_size }}px;{% endif %}
-    {% if title_size != 'default' %}--sh-title-size: {{ title_size }}px;{% endif %}
-    {% if body_size != 'default' %}--sh-body-size: {{ body_size }}px;{% endif %}
-    {% if title_weight != 'default' %}--sh-title-weight: {{ title_weight }};{% endif %}
-    {% if body_weight != 'default' %}--sh-body-weight: {{ body_weight }};{% endif %}
-    {% if cta_size != 'default' %}--sh-cta-size: {{ cta_size }}px;{% endif %}
-  }
-{% endstyle %}
-
 <div
   class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} split-hero{% if reverse_layout %} split-hero--reverse{% endif %}{% render 'split-mobile-stack-class', mobile_stack_order: section.settings.mobile_stack_order %}"
   id="split-hero-{{ section.id }}"
   role="region"
-  {% if region_label != blank %}aria-label="{{ region_label | escape }}"{% endif %}
-  style="
-    {% render 'section-inset-vars' %}
-    --sh-media-pct: {{ media_column_pct }}%;
-    --sh-media-pct-num: {{ media_column_pct }};
-    --sh-media-ratio: {{ media_ratio_w }} / {{ media_ratio_h }};
-    --sh-ratio-w: {{ media_ratio_w }};
-    --sh-ratio-h: {{ media_ratio_h }};
-    --sh-height-scale: {{ section.settings.media_height | default: 100 | times: 0.01 }};
-    --sh-media-h: {{ section.settings.media_height | default: 100 }}%;
-    --sh-media-radius: {{ media_radius }}px;
-    --sh-copy-bg: {{ section.settings.bg_color | default: '#ffffff' }};
-    --sh-img-x: {{ img_x }}%;
-    --sh-img-y: {{ img_y }}%;
-    --sh-img-zoom: {{ img_zoom | at_least: 100 | times: 0.01 }};
-    --sh-img-x-m: {{ img_x_m }}%;
-    --sh-img-y-m: {{ img_y_m }}%;
-    --sh-img-zoom-m: {{ img_zoom_m | at_least: 100 | times: 0.01 }};
-    --sh-star-color: {{ star_color }};
-    --sh-star-size: {{ star_size }}px;
-    --sh-trust-gap: {{ trust_gap }}px;
-    --sh-trust-below: {{ trust_below }}px;
-    --sh-cta-bg: {{ cta_bg }};
-    --sh-cta-border: {{ cta_border }};
-    --sh-cta-text: {{ cta_text_color }};
-    {% if trust_text_size != 'default' %}--sh-trust-size: {{ trust_text_size }}px;{% endif %}
-    {% if title_size != 'default' %}--sh-title-size: {{ title_size }}px;{% endif %}
-    {% if body_size != 'default' %}--sh-body-size: {{ body_size }}px;{% endif %}
-    {% if title_weight != 'default' %}--sh-title-weight: {{ title_weight }};{% endif %}
-    {% if body_weight != 'default' %}--sh-body-weight: {{ body_weight }};{% endif %}
-    {% if cta_size != 'default' %}--sh-cta-size: {{ cta_size }}px;{% endif %}
-  "
+  aria-label="{{ region_label | escape }}"
+  data-video-controls="{% if section.settings.video_controls %}true{% else %}false{% endif %}"
+  style="{% render 'section-inset-vars' %}"
 >
   <div class="split-hero__media" data-media-type="{{ media_type }}">
     {%- if media_type == 'video' -%}
@@ -329,6 +361,164 @@
     {%- endif -%}
   </div>
 </div>
+
+{%- comment -%} TE live preview: patch CSS vars here (!important beats stale inline). {%- endcomment -%}
+{% style %}
+  {%- liquid
+    assign sh_pos = section.settings.image_position
+    if sh_pos == blank
+      assign sh_px = section.settings.image_pos_x | default: 50
+      assign sh_py = section.settings.image_pos_y | default: 50
+      if sh_px == 50 and sh_py == 50
+        assign sh_pos = 'center'
+      else
+        assign sh_pos = 'custom'
+      endif
+    endif
+    if sh_pos == 'custom'
+      assign te_ix = section.settings.image_pos_x | default: 50
+      assign te_iy = section.settings.image_pos_y | default: 50
+    elsif sh_pos == 'top left'
+      assign te_ix = 0
+      assign te_iy = 0
+    elsif sh_pos == 'top'
+      assign te_ix = 50
+      assign te_iy = 0
+    elsif sh_pos == 'top right'
+      assign te_ix = 100
+      assign te_iy = 0
+    elsif sh_pos == 'left'
+      assign te_ix = 0
+      assign te_iy = 50
+    elsif sh_pos == 'right'
+      assign te_ix = 100
+      assign te_iy = 50
+    elsif sh_pos == 'bottom left'
+      assign te_ix = 0
+      assign te_iy = 100
+    elsif sh_pos == 'bottom'
+      assign te_ix = 50
+      assign te_iy = 100
+    elsif sh_pos == 'bottom right'
+      assign te_ix = 100
+      assign te_iy = 100
+    else
+      assign te_ix = 50
+      assign te_iy = 50
+    endif
+    assign te_iz = section.settings.image_zoom | default: 100
+    assign sh_pos_m = section.settings.image_position_mobile | default: 'same'
+    if sh_pos_m == 'same' or sh_pos_m == blank
+      assign te_ixm = te_ix
+      assign te_iym = te_iy
+      assign te_izm = te_iz
+    elsif sh_pos_m == 'custom'
+      assign te_ixm = section.settings.image_pos_x_mobile | default: te_ix
+      assign te_iym = section.settings.image_pos_y_mobile | default: te_iy
+      assign te_izm = section.settings.image_zoom_mobile | default: te_iz
+    elsif sh_pos_m == 'top left'
+      assign te_ixm = 0
+      assign te_iym = 0
+      assign te_izm = section.settings.image_zoom_mobile | default: te_iz
+    elsif sh_pos_m == 'top'
+      assign te_ixm = 50
+      assign te_iym = 0
+      assign te_izm = section.settings.image_zoom_mobile | default: te_iz
+    elsif sh_pos_m == 'top right'
+      assign te_ixm = 100
+      assign te_iym = 0
+      assign te_izm = section.settings.image_zoom_mobile | default: te_iz
+    elsif sh_pos_m == 'left'
+      assign te_ixm = 0
+      assign te_iym = 50
+      assign te_izm = section.settings.image_zoom_mobile | default: te_iz
+    elsif sh_pos_m == 'right'
+      assign te_ixm = 100
+      assign te_iym = 50
+      assign te_izm = section.settings.image_zoom_mobile | default: te_iz
+    elsif sh_pos_m == 'bottom left'
+      assign te_ixm = 0
+      assign te_iym = 100
+      assign te_izm = section.settings.image_zoom_mobile | default: te_iz
+    elsif sh_pos_m == 'bottom'
+      assign te_ixm = 50
+      assign te_iym = 100
+      assign te_izm = section.settings.image_zoom_mobile | default: te_iz
+    elsif sh_pos_m == 'bottom right'
+      assign te_ixm = 100
+      assign te_iym = 100
+      assign te_izm = section.settings.image_zoom_mobile | default: te_iz
+    else
+      assign te_ixm = 50
+      assign te_iym = 50
+      assign te_izm = section.settings.image_zoom_mobile | default: te_iz
+    endif
+    assign te_star = section.settings.star_size | default: 14
+    assign te_star_c = section.settings.star_color | default: '#d4af37'
+  -%}
+  #split-hero-{{ section.id }} {
+    --sh-media-pct: {{ section.settings.media_column_pct | default: 62 }}% !important;
+    --sh-height-scale: {{ section.settings.media_height | default: 100 | times: 0.01 }} !important;
+    --sh-media-radius: {{ section.settings.media_radius | default: 0 }}px !important;
+    --sh-copy-bg: {{ section.settings.bg_color | default: '#ffffff' }} !important;
+    --sh-img-x: {{ te_ix }}% !important;
+    --sh-img-y: {{ te_iy }}% !important;
+    --sh-img-zoom: {{ te_iz | at_least: 100 | times: 0.01 }} !important;
+    --sh-img-x-m: {{ te_ixm }}% !important;
+    --sh-img-y-m: {{ te_iym }}% !important;
+    --sh-img-zoom-m: {{ te_izm | at_least: 100 | times: 0.01 }} !important;
+    --sh-star-color: {{ te_star_c }} !important;
+    --sh-star-size: {{ te_star }}px !important;
+    --sh-trust-gap: {{ section.settings.trust_gap | default: 10 }}px !important;
+    --sh-trust-below: {{ section.settings.trust_below | default: 16 }}px !important;
+    --sh-cta-bg: {{ section.settings.cta_bg_color | default: '#c45c3f' }} !important;
+    --sh-cta-border: {{ section.settings.cta_border_color | default: section.settings.cta_bg_color | default: '#c45c3f' }} !important;
+    --sh-cta-text: {{ section.settings.cta_text_color | default: '#ffffff' }} !important;
+    {%- if section.settings.inset_custom_mobile -%}
+    --section-inset-top-m: {{ section.settings.inset_top_mobile | default: 0 }}px !important;
+    --section-inset-bottom-m: {{ section.settings.inset_bottom_mobile | default: 0 }}px !important;
+    --section-inset-left-m: {{ section.settings.inset_x_mobile | default: 0 }}px !important;
+    --section-inset-right-m: {{ section.settings.inset_x_mobile | default: 0 }}px !important;
+    {%- else -%}
+    --section-inset-top-m: {{ section.settings.inset_top | default: 0 }}px !important;
+    --section-inset-bottom-m: {{ section.settings.inset_bottom | default: 0 }}px !important;
+    --section-inset-left-m: {{ section.settings.inset_x | default: 0 }}px !important;
+    --section-inset-right-m: {{ section.settings.inset_x | default: 0 }}px !important;
+    {%- endif -%}
+    --section-inset-top: {{ section.settings.inset_top | default: 0 }}px !important;
+    --section-inset-bottom: {{ section.settings.inset_bottom | default: 0 }}px !important;
+    --section-inset-left: {{ section.settings.inset_x | default: 0 }}px !important;
+    --section-inset-right: {{ section.settings.inset_x | default: 0 }}px !important;
+  }
+{% endstyle %}
+
+<script>
+  (function () {
+    function syncSplitHeroVideoControls(root) {
+      if (!root || !root.id || root.id.indexOf('split-hero-') !== 0) return;
+      var show = root.getAttribute('data-video-controls') === 'true';
+      root.querySelectorAll('video.split-hero__video, .split-hero__media video').forEach(function (v) {
+        if (show) v.setAttribute('controls', '');
+        else v.removeAttribute('controls');
+      });
+    }
+    function onSectionLoad(evt) {
+      var target = evt.target;
+      if (!target) return;
+      target.querySelectorAll('.split-hero[id^="split-hero-"]').forEach(syncSplitHeroVideoControls);
+      if (target.classList && target.classList.contains('split-hero')) syncSplitHeroVideoControls(target);
+    }
+    document.addEventListener('shopify:section:load', onSectionLoad);
+    document.addEventListener('shopify:section:select', onSectionLoad);
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.split-hero[id^="split-hero-"]').forEach(syncSplitHeroVideoControls);
+      });
+    } else {
+      document.querySelectorAll('.split-hero[id^="split-hero-"]').forEach(syncSplitHeroVideoControls);
+    }
+  })();
+</script>
 
 {% schema %}
 {
@@ -599,7 +789,7 @@
       "id": "image_url",
       "label": "Image URL fallback",
       "default": "https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=2400",
-      "info": "Used only when Shopify image picker is empty and media type is Image — for CDN/external stills. Leave blank if Shopify image is set."
+      "info": "Backup still only when Shopify image picker is empty (image mode). Home hero uses the picker; this URL is unused while picker is set. Not related to trust links."
     },
     {
       "type": "text",
@@ -614,75 +804,119 @@
       "default": false
     },
 
-    { "type": "header", "content": "Desktop Hero Image" },
+    { "type": "header", "content": "Desktop hero image" },
     {
       "type": "paragraph",
-      "content": "Move and zoom the photo inside the media box. Hero height and left/right split are under Shared — Layout. Cover — no fill bands."
+      "content": "Focal point and zoom apply in the desktop preview. Height and left/right split are under Shared — Layout."
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Focal point — desktop (default: Center)",
+      "default": "center",
+      "options": [
+        { "value": "top left", "label": "Top left" },
+        { "value": "top", "label": "Top" },
+        { "value": "top right", "label": "Top right" },
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center (default)" },
+        { "value": "right", "label": "Right" },
+        { "value": "bottom left", "label": "Bottom left" },
+        { "value": "bottom", "label": "Bottom" },
+        { "value": "bottom right", "label": "Bottom right" },
+        { "value": "custom", "label": "Custom (sliders below)" }
+      ]
     },
     {
       "type": "range",
       "id": "image_pos_x",
-      "label": "Image Position X",
+      "label": "Custom focal — horizontal (default 50)",
       "min": 0,
       "max": 100,
       "step": 1,
       "unit": "%",
       "default": 50,
-      "info": "0 = left · 50 = center · 100 = right"
+      "visible_if": "{{ section.settings.image_position == 'custom' }}"
     },
     {
       "type": "range",
       "id": "image_pos_y",
-      "label": "Image Position Y",
+      "label": "Custom focal — vertical (default 50)",
       "min": 0,
       "max": 100,
       "step": 1,
       "unit": "%",
       "default": 50,
-      "info": "0 = top · 50 = center · 100 = bottom (feet)"
+      "visible_if": "{{ section.settings.image_position == 'custom' }}"
     },
     {
       "type": "range",
       "id": "image_zoom",
-      "label": "Image Zoom",
+      "label": "Zoom — desktop (default 100)",
       "min": 50,
       "max": 160,
       "step": 2,
       "unit": "%",
       "default": 100,
-      "info": "100 = fill. Below 100 stays fill (no gaps). Above 100 = tighter crop."
+      "info": "Shown when focal = Custom. 100 = fill; above 100 = tighter crop.",
+      "visible_if": "{{ section.settings.image_position == 'custom' }}"
     },
-    { "type": "header", "content": "Mobile Hero Image" },
+    { "type": "header", "content": "Phone hero image" },
+    {
+      "type": "paragraph",
+      "content": "Switch the Theme Editor to mobile preview to see these. Same as desktop keeps desktop focal/zoom on phone."
+    },
+    {
+      "type": "select",
+      "id": "image_position_mobile",
+      "label": "Focal point — phone (default: Same as desktop)",
+      "default": "same",
+      "options": [
+        { "value": "same", "label": "Same as desktop (default)" },
+        { "value": "top left", "label": "Top left" },
+        { "value": "top", "label": "Top" },
+        { "value": "top right", "label": "Top right" },
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" },
+        { "value": "bottom left", "label": "Bottom left" },
+        { "value": "bottom", "label": "Bottom" },
+        { "value": "bottom right", "label": "Bottom right" },
+        { "value": "custom", "label": "Custom (sliders below)" }
+      ]
+    },
     {
       "type": "range",
       "id": "image_pos_x_mobile",
-      "label": "Position X",
+      "label": "Custom phone focal — horizontal",
       "min": 0,
       "max": 100,
       "step": 1,
       "unit": "%",
-      "default": 50
+      "default": 50,
+      "visible_if": "{{ section.settings.image_position_mobile == 'custom' }}"
     },
     {
       "type": "range",
       "id": "image_pos_y_mobile",
-      "label": "Position Y",
+      "label": "Custom phone focal — vertical",
       "min": 0,
       "max": 100,
       "step": 1,
       "unit": "%",
-      "default": 50
+      "default": 50,
+      "visible_if": "{{ section.settings.image_position_mobile == 'custom' }}"
     },
     {
       "type": "range",
       "id": "image_zoom_mobile",
-      "label": "Zoom",
+      "label": "Zoom — phone (default 100)",
       "min": 50,
       "max": 160,
       "step": 2,
       "unit": "%",
       "default": 100,
-      "info": "100 = fill. Below 100 stays fill (no gaps). Above 100 = tighter crop."
+      "visible_if": "{{ section.settings.image_position_mobile == 'custom' }}"
     },
     { "type": "header", "content": "Shared — Layout" },
     {
@@ -853,22 +1087,15 @@
       "label": "Section aria-label",
       "info": "Accessibility name for screen readers — not visible on the page. Leave blank to use the Heading."
     },
-    { "type": "header", "content": "Shared — Section frame" },
+    { "type": "header", "content": "Shared — Section frame (outer margin)" },
     {
       "type": "paragraph",
-      "content": "OUTER inset from the page edges (margin). Top and bottom are independent; left & right = one control. Custom mobile OFF = mobile uses the same inset as desktop. Defaults 0 = full bleed."
-    },
-    {
-      "type": "checkbox",
-      "id": "inset_custom_mobile",
-      "label": "Custom mobile inset",
-      "default": false,
-      "info": "OFF (default): ignore the mobile inset sliders — mobile uses desktop Inset top / bottom / left & right. ON: use the mobile inset sliders instead."
+      "content": "Desktop inset sliders apply in the desktop preview. Phone inset sliders apply only when “Separate phone inset” is ON and you are in the mobile preview."
     },
     {
       "type": "range",
       "id": "inset_top",
-      "label": "Inset top",
+      "label": "Inset top — desktop",
       "min": 0,
       "max": 96,
       "step": 4,
@@ -878,7 +1105,7 @@
     {
       "type": "range",
       "id": "inset_bottom",
-      "label": "Inset bottom",
+      "label": "Inset bottom — desktop",
       "min": 0,
       "max": 96,
       "step": 4,
@@ -888,45 +1115,53 @@
     {
       "type": "range",
       "id": "inset_x",
-      "label": "Inset left & right",
+      "label": "Inset left & right — desktop",
       "min": 0,
       "max": 96,
       "step": 4,
       "unit": "px",
       "default": 0,
-      "info": "Same value on both sides."
+      "info": "Same value on both sides. Desktop preview only."
+    },
+    {
+      "type": "checkbox",
+      "id": "inset_custom_mobile",
+      "label": "Separate phone inset (mobile preview only)",
+      "default": false,
+      "info": "OFF (default): phone uses the desktop inset values above. ON: use the phone sliders below (visible in mobile preview)."
     },
     {
       "type": "range",
       "id": "inset_top_mobile",
-      "label": "Inset top — mobile",
+      "label": "Inset top — phone",
       "min": 0,
       "max": 64,
       "step": 4,
       "unit": "px",
       "default": 0,
-      "info": "Only when Custom mobile inset is on."
+      "visible_if": "{{ section.settings.inset_custom_mobile }}"
     },
     {
       "type": "range",
       "id": "inset_bottom_mobile",
-      "label": "Inset bottom — mobile",
-      "min": 0,
-      "max": 64,
-      "step": 4,
-      "unit": "px",
-      "default": 0
-    },
-    {
-      "type": "range",
-      "id": "inset_x_mobile",
-      "label": "Inset left & right — mobile",
+      "label": "Inset bottom — phone",
       "min": 0,
       "max": 64,
       "step": 4,
       "unit": "px",
       "default": 0,
-      "info": "Only when Custom mobile inset is on."
+      "visible_if": "{{ section.settings.inset_custom_mobile }}"
+    },
+    {
+      "type": "range",
+      "id": "inset_x_mobile",
+      "label": "Inset left & right — phone",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ section.settings.inset_custom_mobile }}"
     },
     {
       "type": "checkbox",
