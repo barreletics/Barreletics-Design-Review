@@ -7,17 +7,25 @@
   assign paf_side_d_def = 20
   assign paf_y_m_def = 48
   assign paf_x_m_def = 20
-  assign paf_fixed_d = false
-  if section.settings.text_pad_y != paf_y_d_def or section.settings.side_padding != paf_side_d_def
-    assign paf_fixed_d = true
+  assign paf_fixed_d_y = false
+  if section.settings.text_pad_y != paf_y_d_def
+    assign paf_fixed_d_y = true
   endif
-  assign paf_fixed_m = false
-  if section.settings.text_pad_y_mobile != paf_y_m_def or section.settings.text_pad_x_mobile != paf_x_m_def
-    assign paf_fixed_m = true
+  assign paf_fixed_d_x = false
+  if section.settings.side_padding != paf_side_d_def
+    assign paf_fixed_d_x = true
+  endif
+  assign paf_fixed_m_y = false
+  if section.settings.text_pad_y_mobile != paf_y_m_def
+    assign paf_fixed_m_y = true
+  endif
+  assign paf_fixed_m_x = false
+  if section.settings.text_pad_x_mobile != paf_x_m_def
+    assign paf_fixed_m_x = true
   endif
 -%}
 <section
-  class="page-about-facts{% if paf_fixed_d %} page-about-facts--fixed-pad-d{% endif %}{% if paf_fixed_m %} page-about-facts--fixed-pad-m{% endif %}"
+  class="page-about-facts{% if paf_fixed_d_y %} page-about-facts--fixed-pad-d-y{% endif %}{% if paf_fixed_d_x %} page-about-facts--fixed-pad-d-x{% endif %}{% if paf_fixed_m_y %} page-about-facts--fixed-pad-m-y{% endif %}{% if paf_fixed_m_x %} page-about-facts--fixed-pad-m-x{% endif %}"
   id="shopify-section-{{ section.id }}"
   {{ section.shopify_attributes }}
   aria-label="{{ section.settings.aria_label | escape }}"
@@ -75,11 +83,15 @@
     justify-content: center;
     padding: clamp(64px, 12vh, 120px) clamp(20px, 8vw, 8vw);
   }
-  #shopify-section-{{ section.id }} .page-about-facts--fixed-pad-d {
-    padding-top: var(--utp-y-d, 48px);
-    padding-bottom: var(--utp-y-d, 48px);
-    padding-left: var(--utp-side-d, 20px);
-    padding-right: var(--utp-side-d, 20px);
+  @media (min-width: 769px) {
+    #shopify-section-{{ section.id }} .page-about-facts--fixed-pad-d-y {
+      padding-top: var(--utp-y-d);
+      padding-bottom: var(--utp-y-d);
+    }
+    #shopify-section-{{ section.id }} .page-about-facts--fixed-pad-d-x {
+      padding-left: var(--utp-side-d);
+      padding-right: var(--utp-side-d);
+    }
   }
   /* Desktop width matches the other content pages (Andrew 2026-09-30): heading uses the grid width so
      "Made in the USA." stays on one line; the lede caps at the 760px content-page measure. */
@@ -130,11 +142,13 @@
       min-height: auto;
       padding: 48px 20px;
     }
-    #shopify-section-{{ section.id }} .page-about-facts--fixed-pad-m {
-      padding-top: var(--utp-y-m, 48px);
-      padding-bottom: var(--utp-y-m, 48px);
-      padding-left: var(--utp-x-m, 20px);
-      padding-right: var(--utp-x-m, 20px);
+    #shopify-section-{{ section.id }} .page-about-facts--fixed-pad-m-y {
+      padding-top: var(--utp-y-m);
+      padding-bottom: var(--utp-y-m);
+    }
+    #shopify-section-{{ section.id }} .page-about-facts--fixed-pad-m-x {
+      padding-left: var(--utp-x-m);
+      padding-right: var(--utp-x-m);
     }
     #shopify-section-{{ section.id }} .page-about-facts__title {
       font-size: var(--te-title-size, clamp(40px, 11vw, 56px));
