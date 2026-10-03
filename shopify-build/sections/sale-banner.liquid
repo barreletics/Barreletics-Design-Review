@@ -5,7 +5,6 @@
 
 {% if section.settings.enabled %}
   {%- assign _fs = section.settings.font_size | default: 15 -%}
-  {%- assign _pad = section.settings.pad_y | default: 10 -%}
   {%- assign _wt = section.settings.font_weight | default: '500' -%}
   {%- assign _desk = section.settings.show_on_desktop -%}
   {%- if _desk == nil -%}{%- assign _desk = true -%}{%- endif -%}
@@ -24,11 +23,12 @@
     class="sale-banner"
     role="region"
     aria-label="Promotion"
-    style="
+    style="{% render 'unified-text-pads-vars', y_d: 10, side_d: 56, y_m: 10, x_m: 24, legacy_y_d: section.settings.pad_y %}
       --sale-banner-bg: {{ section.settings.bg_color | default: '#faf8f6' }};
       --sale-banner-color: {{ section.settings.text_color | default: '#1c1916' }};
       --sale-banner-font-size: {{ _fs }}px;
-      --sale-banner-pad-y: {{ _pad }}px;
+      --sale-banner-pad-y: var(--utp-y-d, 10px);
+      --sale-banner-pad-x: var(--utp-side-d, 56px);
       --sale-banner-weight: {{ _wt }};
     "
     {{ section.shopify_attributes }}
