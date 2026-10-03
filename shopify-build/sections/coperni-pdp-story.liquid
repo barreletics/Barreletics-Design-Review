@@ -30,7 +30,7 @@
 <section
   id="{{ section.settings.anchor_id | default: 'coperni-story' | handleize }}"
   class="coperni-story section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %}"
-  style="{% render 'section-inset-vars' %} --cs-video-h-m: {{ video_height_mobile }}vh; --cs-lead-h-m: {{ lead_height_mobile }}vh; --cs-video-max-d: {{ video_max_desktop }}px;"
+  style="{% render 'section-inset-vars' %}{% render 'unified-text-pads-vars', y_d: 28, side_d: 32, y_m: 80, x_m: 20 %} --cs-video-h-m: {{ video_height_mobile }}vh; --cs-lead-h-m: {{ lead_height_mobile }}vh; --cs-video-max-d: {{ video_max_desktop }}px;"
   aria-label="{{ section.settings.aria_label | default: 'Coperni collaboration story' | escape }}"
 >
   <div class="coperni-story__inner">
@@ -216,7 +216,7 @@
     margin: 0 0 18px;
   }
   #shopify-section-{{ section.id }} .coperni-story__note {
-    padding: 28px 32px;
+    padding: var(--utp-y-d, 28px) var(--utp-side-d, 32px);
     border: 1px solid #d6cfc0;
     background: #ffffff;
     margin: 8px 0 48px;
@@ -339,6 +339,8 @@
   video_selector: 'video.coperni-story__video, .coperni-story__video-wrap video'
 %}
 
+{% render 'unified-text-pads-te-style', selector: '.coperni-story__note', y_d: 28, side_d: 32, y_m: 80, x_m: 20 %}
+
 {% schema %}
 {
   "name": "Coperni PDP story",
@@ -437,6 +439,12 @@
       ]
     }
   ],
+
+    { "type": "header", "content": "Layout — text padding" },
+    { "type": "range", "id": "text_pad_y", "label": "Text pad top & bottom — desktop (default 96)", "min": 32, "max": 120, "step": 4, "unit": "px", "default": 96 },
+    { "type": "range", "id": "side_padding", "label": "Text pad left & right — desktop (default 64)", "min": 16, "max": 96, "step": 4, "unit": "px", "default": 64 },
+    { "type": "range", "id": "text_pad_y_mobile", "label": "Text pad top & bottom — phone (default 80)", "min": 16, "max": 120, "step": 4, "unit": "px", "default": 80 },
+    { "type": "range", "id": "text_pad_x_mobile", "label": "Text pad left & right — phone (default 20)", "min": 12, "max": 48, "step": 4, "unit": "px", "default": 20 },
   "presets": [
     {
       "name": "Coperni PDP story",
