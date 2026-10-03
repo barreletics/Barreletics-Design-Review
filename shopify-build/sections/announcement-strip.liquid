@@ -8,9 +8,7 @@
   {% assign slides = section.blocks %}
   {% if slides.size > 0 %}
     {%- assign _fs = section.settings.font_size | default: 13 -%}
-    {%- assign _pad = section.settings.pad_y | default: 7 -%}
     {%- assign _fs_m = section.settings.font_size_mobile | default: 12 -%}
-    {%- assign _pad_m = section.settings.pad_y_mobile | default: 8 -%}
     {%- assign _track = section.settings.letter_spacing | default: 3 -%}
     {%- assign _promo_w = section.settings.promo_weight | default: '600' -%}
     {%- assign _dist = section.settings.announce_distribute | default: 'center' -%}
@@ -19,12 +17,12 @@
       data-announce-distribute="{{ _dist }}"
       role="region"
       aria-label="Promotional messages"
-      style="
+      style="{% render 'unified-text-pads-vars', y_d: 5, side_d: 56, y_m: 8, x_m: 16, legacy_y_d: section.settings.pad_y, legacy_side_d: section.settings.pad_x, legacy_y_m: section.settings.pad_y_mobile %}
         --announce-font-size: {{ _fs }}px;
-        --announce-pad-y: {{ _pad }}px;
+        --announce-pad-y: var(--utp-y-d, 5px);
         --announce-font-size-mobile: {{ _fs_m }}px;
-        --announce-pad-y-mobile: {{ _pad_m }}px;
-        --announce-pad-x: {{ section.settings.pad_x | default: 56 }}px;
+        --announce-pad-y-mobile: var(--utp-y-m, 8px);
+        --announce-pad-x: var(--utp-side-d, 56px);
         --announce-item-gap: {{ section.settings.item_gap | default: 12 }}px;
         --announce-bg: {{ section.settings.bg_color | default: '#faf8f6' }};
         --announce-bg-mobile: {{ section.settings.bg_color_mobile | default: '#ffffff' }};
