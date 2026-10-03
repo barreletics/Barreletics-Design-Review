@@ -7,17 +7,25 @@
   assign paj_side_d_def = 48
   assign paj_y_m_def = 28
   assign paj_x_m_def = 20
-  assign paj_fixed_d = false
-  if section.settings.text_pad_y != paj_y_d_def or section.settings.side_padding != paj_side_d_def
-    assign paj_fixed_d = true
+  assign paj_fixed_d_y = false
+  if section.settings.text_pad_y != paj_y_d_def
+    assign paj_fixed_d_y = true
   endif
-  assign paj_fixed_m = false
-  if section.settings.text_pad_y_mobile != paj_y_m_def or section.settings.text_pad_x_mobile != paj_x_m_def
-    assign paj_fixed_m = true
+  assign paj_fixed_d_x = false
+  if section.settings.side_padding != paj_side_d_def
+    assign paj_fixed_d_x = true
+  endif
+  assign paj_fixed_m_y = false
+  if section.settings.text_pad_y_mobile != paj_y_m_def
+    assign paj_fixed_m_y = true
+  endif
+  assign paj_fixed_m_x = false
+  if section.settings.text_pad_x_mobile != paj_x_m_def
+    assign paj_fixed_m_x = true
   endif
 -%}
 <article
-  class="page-about-joseph{% if paj_fixed_d %} page-about-joseph--fixed-pad-d{% endif %}{% if paj_fixed_m %} page-about-joseph--fixed-pad-m{% endif %}{% render 'split-mobile-stack-class', mobile_stack_order: section.settings.mobile_stack_order %}"
+  class="page-about-joseph{% if paj_fixed_d_y %} page-about-joseph--fixed-pad-d-y{% endif %}{% if paj_fixed_d_x %} page-about-joseph--fixed-pad-d-x{% endif %}{% if paj_fixed_m_y %} page-about-joseph--fixed-pad-m-y{% endif %}{% if paj_fixed_m_x %} page-about-joseph--fixed-pad-m-x{% endif %}{% render 'split-mobile-stack-class', mobile_stack_order: section.settings.mobile_stack_order %}"
   id="shopify-section-{{ section.id }}"
   {{ section.shopify_attributes }}
   style="{% render 'unified-text-pads-vars', y_d: 56, side_d: 48, y_m: 28, x_m: 20 %}{% render 'type-override-vars', title_weight: section.settings.title_weight, body_size: section.settings.body_size, body_weight: section.settings.body_weight %}"
@@ -119,11 +127,15 @@
   #shopify-section-{{ section.id }} .page-about-joseph__copy {
     padding: clamp(40px, 7vh, 72px) clamp(20px, 8vw, 8vw);
   }
-  #shopify-section-{{ section.id }} .page-about-joseph--fixed-pad-d .page-about-joseph__copy {
-    padding-top: var(--utp-y-d, 56px);
-    padding-bottom: var(--utp-y-d, 56px);
-    padding-left: var(--utp-side-d, 48px);
-    padding-right: var(--utp-side-d, 48px);
+  @media (min-width: 769px) {
+    #shopify-section-{{ section.id }} .page-about-joseph--fixed-pad-d-y .page-about-joseph__copy {
+      padding-top: var(--utp-y-d);
+      padding-bottom: var(--utp-y-d);
+    }
+    #shopify-section-{{ section.id }} .page-about-joseph--fixed-pad-d-x .page-about-joseph__copy {
+      padding-left: var(--utp-side-d);
+      padding-right: var(--utp-side-d);
+    }
   }
   #shopify-section-{{ section.id }} .page-about-joseph__inner { max-width: 32em; }
   #shopify-section-{{ section.id }} .page-about-joseph__title {
@@ -159,8 +171,13 @@
     #shopify-section-{{ section.id }} .page-about-joseph__copy {
       padding: 28px 20px 36px;
     }
-    #shopify-section-{{ section.id }} .page-about-joseph--fixed-pad-m .page-about-joseph__copy {
-      padding: var(--utp-y-m, 28px) var(--utp-x-m, 20px) 36px;
+    #shopify-section-{{ section.id }} .page-about-joseph--fixed-pad-m-y .page-about-joseph__copy {
+      padding-top: var(--utp-y-m);
+      padding-bottom: var(--utp-y-m);
+    }
+    #shopify-section-{{ section.id }} .page-about-joseph--fixed-pad-m-x .page-about-joseph__copy {
+      padding-left: var(--utp-x-m);
+      padding-right: var(--utp-x-m);
     }
   }
 </style>
