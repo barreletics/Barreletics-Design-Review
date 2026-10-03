@@ -2,8 +2,30 @@
   About page — intro + pull quote (v25 Locked)
 {% endcomment %}
 
+{%- liquid
+  assign pai_y_d_def = 32
+  assign pai_side_d_def = 20
+  assign pai_y_m_def = 32
+  assign pai_x_m_def = 20
+  assign pai_fixed_d_y = false
+  if section.settings.text_pad_y != pai_y_d_def
+    assign pai_fixed_d_y = true
+  endif
+  assign pai_fixed_d_x = false
+  if section.settings.side_padding != pai_side_d_def
+    assign pai_fixed_d_x = true
+  endif
+  assign pai_fixed_m_y = false
+  if section.settings.text_pad_y_mobile != pai_y_m_def
+    assign pai_fixed_m_y = true
+  endif
+  assign pai_fixed_m_x = false
+  if section.settings.text_pad_x_mobile != pai_x_m_def
+    assign pai_fixed_m_x = true
+  endif
+-%}
 <section
-  class="page-about-intro"
+  class="page-about-intro{% if pai_fixed_d_y %} page-about-intro--fixed-pad-d-y{% endif %}{% if pai_fixed_d_x %} page-about-intro--fixed-pad-d-x{% endif %}{% if pai_fixed_m_y %} page-about-intro--fixed-pad-m-y{% endif %}{% if pai_fixed_m_x %} page-about-intro--fixed-pad-m-x{% endif %}"
   id="shopify-section-{{ section.id }}"
   {{ section.shopify_attributes }}
   aria-label="{{ section.settings.aria_label | default: 'Our story' | escape }}"
@@ -27,6 +49,16 @@
   #shopify-section-{{ section.id }} .page-about-intro {
     padding: clamp(40px, 8vh, 72px) clamp(20px, 8vw, 8vw) clamp(36px, 6vh, 64px);
     border-bottom: 1px solid var(--line-soft, #e8e2d8);
+  }
+  @media (min-width: 769px) {
+    #shopify-section-{{ section.id }} .page-about-intro--fixed-pad-d-y {
+      padding-top: var(--utp-y-d);
+      padding-bottom: var(--utp-y-d);
+    }
+    #shopify-section-{{ section.id }} .page-about-intro--fixed-pad-d-x {
+      padding-left: var(--utp-side-d);
+      padding-right: var(--utp-side-d);
+    }
   }
   /* Desktop width matches the other content pages (Andrew 2026-09-30): the inner row uses the full
      section width so "Our story" stays on one line; body copy caps at the 760px content-page measure. */
@@ -61,7 +93,14 @@
     color: var(--text-primary, #1c1916);
   }
   @media (max-width: 768px) {
-    #shopify-section-{{ section.id }} .page-about-intro { padding: var(--utp-y-m, 32px) var(--utp-x-m, 20px); }
+    #shopify-section-{{ section.id }} .page-about-intro { padding: 32px 20px 28px; }
+    #shopify-section-{{ section.id }} .page-about-intro--fixed-pad-m-y {
+      padding-top: var(--utp-y-m);
+    }
+    #shopify-section-{{ section.id }} .page-about-intro--fixed-pad-m-x {
+      padding-left: var(--utp-x-m);
+      padding-right: var(--utp-x-m);
+    }
     #shopify-section-{{ section.id }} .page-about-intro__title {
       font-size: var(--te-title-size, clamp(40px, 10vw, 52px));
       margin-bottom: 16px;
@@ -73,11 +112,11 @@
   }
 </style>
 
-{% render 'unified-text-pads-te-style', selector: '.page-about-intro', y_d: 32, side_d: 20, y_m: 32, x_m: 20 %}
+{% render 'unified-text-pads-te-style', selector: '.page-about-intro', y_d: 32, side_d: 20, y_m: 32, x_m: 20, y_m_bottom_px: 28 %}
 
 {% schema %}
 {
-  "name": "About — Intro",
+  "name": "About \u2014 Intro",
   "settings": [
     {
       "type": "text",
@@ -111,7 +150,7 @@
     },
     {
       "type": "header",
-      "content": "Type — size & weight",
+      "content": "Type \u2014 size & weight",
       "info": "Family is brand Type OS. Default keeps the signed v25 sizing."
     },
     {
@@ -356,23 +395,23 @@
     },
     {
       "type": "header",
-      "content": "Layout — text padding"
+      "content": "Layout \u2014 text padding"
     },
     {
       "type": "range",
       "id": "text_pad_y",
-      "label": "Text pad top & bottom — desktop (default 32)",
-      "min": 8,
+      "label": "Text pad Y desktop (fluid ~40\u201372 / ~36\u201364)",
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 32
     },
     {
       "type": "range",
       "id": "side_padding",
-      "label": "Text pad left & right — desktop (default 20)",
-      "min": 8,
+      "label": "Text pad X desktop (20 off; live padding ~8vw)",
+      "min": 0,
       "max": 96,
       "step": 1,
       "unit": "px",
@@ -381,18 +420,18 @@
     {
       "type": "range",
       "id": "text_pad_y_mobile",
-      "label": "Text pad top & bottom — phone (default 32)",
-      "min": 8,
+      "label": "Text pad Y phone (default 32 top / 28 bottom)",
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 32
     },
     {
       "type": "range",
       "id": "text_pad_x_mobile",
-      "label": "Text pad left & right — phone (default 20)",
-      "min": 8,
+      "label": "Text pad left & right \u2014 phone (default 20)",
+      "min": 0,
       "max": 48,
       "step": 1,
       "unit": "px",
@@ -401,7 +440,7 @@
   ],
   "presets": [
     {
-      "name": "About — Intro"
+      "name": "About \u2014 Intro"
     }
   ]
 }
