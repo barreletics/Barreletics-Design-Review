@@ -2,8 +2,22 @@
   About page — Made in USA facts band (v25 Locked)
 {% endcomment %}
 
+{%- liquid
+  assign paf_y_d_def = 48
+  assign paf_side_d_def = 20
+  assign paf_y_m_def = 48
+  assign paf_x_m_def = 20
+  assign paf_fixed_d = false
+  if section.settings.text_pad_y != paf_y_d_def or section.settings.side_padding != paf_side_d_def
+    assign paf_fixed_d = true
+  endif
+  assign paf_fixed_m = false
+  if section.settings.text_pad_y_mobile != paf_y_m_def or section.settings.text_pad_x_mobile != paf_x_m_def
+    assign paf_fixed_m = true
+  endif
+-%}
 <section
-  class="page-about-facts"
+  class="page-about-facts{% if paf_fixed_d %} page-about-facts--fixed-pad-d{% endif %}{% if paf_fixed_m %} page-about-facts--fixed-pad-m{% endif %}"
   id="shopify-section-{{ section.id }}"
   {{ section.shopify_attributes }}
   aria-label="{{ section.settings.aria_label | escape }}"
@@ -61,6 +75,12 @@
     justify-content: center;
     padding: clamp(64px, 12vh, 120px) clamp(20px, 8vw, 8vw);
   }
+  #shopify-section-{{ section.id }} .page-about-facts--fixed-pad-d {
+    padding-top: var(--utp-y-d, 48px);
+    padding-bottom: var(--utp-y-d, 48px);
+    padding-left: var(--utp-side-d, 20px);
+    padding-right: var(--utp-side-d, 20px);
+  }
   /* Desktop width matches the other content pages (Andrew 2026-09-30): heading uses the grid width so
      "Made in the USA." stays on one line; the lede caps at the 760px content-page measure. */
   #shopify-section-{{ section.id }} .page-about-facts__intro {
@@ -108,7 +128,13 @@
   @media (max-width: 768px) {
     #shopify-section-{{ section.id }} .page-about-facts {
       min-height: auto;
-      padding: var(--utp-y-m, 48px) var(--utp-x-m, 20px);
+      padding: 48px 20px;
+    }
+    #shopify-section-{{ section.id }} .page-about-facts--fixed-pad-m {
+      padding-top: var(--utp-y-m, 48px);
+      padding-bottom: var(--utp-y-m, 48px);
+      padding-left: var(--utp-x-m, 20px);
+      padding-right: var(--utp-x-m, 20px);
     }
     #shopify-section-{{ section.id }} .page-about-facts__title {
       font-size: var(--te-title-size, clamp(40px, 11vw, 56px));
@@ -143,7 +169,7 @@
 
 {% schema %}
 {
-  "name": "About — Facts",
+  "name": "About \u2014 Facts",
   "settings": [
     {
       "type": "text",
@@ -155,7 +181,7 @@
       "type": "richtext",
       "id": "lede",
       "label": "Lede",
-      "default": "<p>Designed and manufactured in Michigan. 360° injection-molded grip. Same grip, same stability in Open Sole or Closed Sole — choice is preference and feel only.</p>"
+      "default": "<p>Designed and manufactured in Michigan. 360\u00b0 injection-molded grip. Same grip, same stability in Open Sole or Closed Sole \u2014 choice is preference and feel only.</p>"
     },
     {
       "type": "text",
@@ -165,7 +191,7 @@
     },
     {
       "type": "header",
-      "content": "Type — size & weight",
+      "content": "Type \u2014 size & weight",
       "info": "Family is brand Type OS. Default keeps the signed v25 sizing."
     },
     {
@@ -480,23 +506,23 @@
     },
     {
       "type": "header",
-      "content": "Layout — text padding"
+      "content": "Layout \u2014 text padding"
     },
     {
       "type": "range",
       "id": "text_pad_y",
-      "label": "Text pad top & bottom — desktop (default 48)",
-      "min": 8,
+      "label": "Text pad top & bottom \u2014 desktop (default 48)",
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 48
     },
     {
       "type": "range",
       "id": "side_padding",
-      "label": "Text pad left & right — desktop (default 20)",
-      "min": 8,
+      "label": "Text pad left & right \u2014 desktop (default 20)",
+      "min": 0,
       "max": 96,
       "step": 1,
       "unit": "px",
@@ -505,18 +531,18 @@
     {
       "type": "range",
       "id": "text_pad_y_mobile",
-      "label": "Text pad top & bottom — phone (default 48)",
-      "min": 8,
+      "label": "Text pad top & bottom \u2014 phone (default 48)",
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 48
     },
     {
       "type": "range",
       "id": "text_pad_x_mobile",
-      "label": "Text pad left & right — phone (default 20)",
-      "min": 8,
+      "label": "Text pad left & right \u2014 phone (default 20)",
+      "min": 0,
       "max": 48,
       "step": 1,
       "unit": "px",
@@ -543,13 +569,13 @@
   ],
   "presets": [
     {
-      "name": "About — Facts",
+      "name": "About \u2014 Facts",
       "blocks": [
         {
           "type": "fact",
           "settings": {
             "title": "Coperni",
-            "description": "Spring–Summer 2026 runway, Paris."
+            "description": "Spring\u2013Summer 2026 runway, Paris."
           }
         },
         {
