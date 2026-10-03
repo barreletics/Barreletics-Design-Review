@@ -149,7 +149,7 @@
   }
 </style>
 
-{% render 'unified-text-pads-te-style', selector: '.discipline-film__inner', y_d: 64, side_d: 40, y_m: 48, x_m: 16 %}
+{% render 'unified-text-pads-te-style', selector: '.discipline-film__inner', y_d: 64, side_d: 40, y_m: 48, x_m: 16 , legacy_y_d: section.settings.pad_y , legacy_y_m: section.settings.pad_y_mobile %}
 
 {% schema %}
 {
@@ -157,7 +157,7 @@
   "settings": [
     {
       "type": "header",
-      "content": "Shared — Content"
+      "content": "Shared \u2014 Content"
     },
     {
       "type": "textarea",
@@ -177,8 +177,14 @@
       "id": "heading_role",
       "label": "Heading Type OS role",
       "options": [
-        { "value": "display", "label": "H2 Display" },
-        { "value": "statement", "label": "Statement" }
+        {
+          "value": "display",
+          "label": "H2 Display"
+        },
+        {
+          "value": "statement",
+          "label": "Statement"
+        }
       ],
       "default": "display",
       "info": "Locked by global type system (2026-09-27). This setting no longer changes the heading."
@@ -188,13 +194,34 @@
       "id": "title_size",
       "label": "Title size",
       "options": [
-        { "value": "default", "label": "Default / Type OS" },
-        { "value": "32", "label": "32px" },
-        { "value": "36", "label": "36px" },
-        { "value": "40", "label": "40px" },
-        { "value": "44", "label": "44px" },
-        { "value": "48", "label": "48px" },
-        { "value": "52", "label": "52px" }
+        {
+          "value": "default",
+          "label": "Default / Type OS"
+        },
+        {
+          "value": "32",
+          "label": "32px"
+        },
+        {
+          "value": "36",
+          "label": "36px"
+        },
+        {
+          "value": "40",
+          "label": "40px"
+        },
+        {
+          "value": "44",
+          "label": "44px"
+        },
+        {
+          "value": "48",
+          "label": "48px"
+        },
+        {
+          "value": "52",
+          "label": "52px"
+        }
       ],
       "default": "default",
       "info": "Locked by global type system (2026-09-27). This setting no longer changes the heading."
@@ -204,9 +231,18 @@
       "id": "title_weight",
       "label": "Title weight",
       "options": [
-        { "value": "default", "label": "Default / Type OS" },
-        { "value": "400", "label": "400" },
-        { "value": "500", "label": "500" }
+        {
+          "value": "default",
+          "label": "Default / Type OS"
+        },
+        {
+          "value": "400",
+          "label": "400"
+        },
+        {
+          "value": "500",
+          "label": "500"
+        }
       ],
       "default": "default",
       "info": "Locked by global type system (2026-09-27). This setting no longer changes the heading."
@@ -220,41 +256,43 @@
     {
       "type": "range",
       "id": "pad_y",
-      "label": "Section padding — desktop",
+      "label": "Section padding \u2014 desktop",
       "min": 48,
       "max": 96,
       "step": 4,
       "unit": "px",
-      "default": 64
-    , "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}" },
+      "default": 64,
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
+    },
     {
       "type": "range",
       "id": "pad_y_mobile",
-      "label": "Section padding — phone",
+      "label": "Section padding \u2014 phone",
       "min": 16,
       "max": 80,
       "step": 4,
       "unit": "px",
       "default": 64,
-      "info": "Closed model = 32. Soft cream #faf8f6 (sitewide.lock) — same as sock-era. NEVER #f5f2ec darker cream. NEVER invent white unless Andrew says."
-    , "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}" },
+      "info": "Closed model = 32. Soft cream #faf8f6 (sitewide.lock) \u2014 same as sock-era. NEVER #f5f2ec darker cream. NEVER invent white unless Andrew says.",
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
+    },
     {
       "type": "checkbox",
       "id": "hide_tags_mobile",
-      "label": "Hide discipline tags — phone",
+      "label": "Hide discipline tags \u2014 phone",
       "default": false,
-      "info": "Keeps Upgrade your grip. Hides Barre · Reformer · etc on phone only."
+      "info": "Keeps Upgrade your grip. Hides Barre \u00b7 Reformer \u00b7 etc on phone only."
     },
     {
       "type": "range",
       "id": "space_below_mobile",
-      "label": "Extra space below — phone",
+      "label": "Extra space below \u2014 phone",
       "min": 0,
       "max": 80,
       "step": 4,
       "unit": "px",
       "default": 0,
-      "info": "Cream air under the tags, before the next section. 0 = none. Stays cream — not a white strip."
+      "info": "Cream air under the tags, before the next section. 0 = none. Stays cream \u2014 not a white strip."
     },
     {
       "type": "color",
@@ -264,7 +302,7 @@
     },
     {
       "type": "header",
-      "content": "Section — Disciplines"
+      "content": "Section \u2014 Disciplines"
     },
     {
       "type": "text",
@@ -272,19 +310,49 @@
       "label": "Aria label",
       "default": "Built for every studio discipline"
     },
-
-    { "type": "header", "content": "Layout — text padding" },
-    { "type": "range", "id": "text_pad_y", "label": "Text pad top & bottom — desktop (default 96)", "min": 32, "max": 120, "step": 4, "unit": "px", "default": 96 },
-    { "type": "range", "id": "side_padding", "label": "Text pad left & right — desktop (default 64)", "min": 16, "max": 96, "step": 4, "unit": "px", "default": 64 },
-    { "type": "range", "id": "text_pad_y_mobile", "label": "Text pad top & bottom — phone (default 80)", "min": 16, "max": 120, "step": 4, "unit": "px", "default": 80 },
-    { "type": "range", "id": "text_pad_x_mobile", "label": "Text pad left & right — phone (default 20)", "min": 12, "max": 48, "step": 4, "unit": "px", "default": 20 },
-    { "type": "header", "content": "Legacy (hidden — do not edit)" },
-    { "type": "paragraph", "content": "Preserves stored values on Theme Editor save." },
-    { "type": "range", "id": "pad_y", "label": "Legacy: pad_y", "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}" },
-    { "type": "range", "id": "pad_y_mobile", "label": "Legacy: pad_y_mobile", "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}" },
     {
       "type": "header",
-      "content": "Shared — Section frame"
+      "content": "Layout \u2014 text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 64)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 40)",
+      "min": 8,
+      "max": 96,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 48)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 16)",
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Shared \u2014 Section frame"
     },
     {
       "type": "paragraph",
@@ -295,7 +363,7 @@
       "id": "inset_custom_mobile",
       "label": "Custom mobile inset",
       "default": false,
-      "info": "OFF (default): ignore the mobile inset sliders — mobile uses desktop Inset top / bottom / left & right. ON: use the mobile inset sliders instead."
+      "info": "OFF (default): ignore the mobile inset sliders \u2014 mobile uses desktop Inset top / bottom / left & right. ON: use the mobile inset sliders instead."
     },
     {
       "type": "range",
@@ -331,7 +399,7 @@
     {
       "type": "range",
       "id": "inset_top_mobile",
-      "label": "Inset top — mobile",
+      "label": "Inset top \u2014 mobile",
       "min": 0,
       "max": 64,
       "step": 4,
@@ -342,7 +410,7 @@
     {
       "type": "range",
       "id": "inset_bottom_mobile",
-      "label": "Inset bottom — mobile",
+      "label": "Inset bottom \u2014 mobile",
       "min": 0,
       "max": 64,
       "step": 4,
@@ -352,7 +420,7 @@
     {
       "type": "range",
       "id": "inset_x_mobile",
-      "label": "Inset left & right — mobile",
+      "label": "Inset left & right \u2014 mobile",
       "min": 0,
       "max": 64,
       "step": 4,
