@@ -41,7 +41,7 @@ https://github.com/barreletics/barreletics-ops/pull/8
 2. GCC shelf prices: about $89 UAE, $95 KSA at $29. Lower if the price drops.
 3. US price list ($37 studios / $36 for 500+ retail) and whether to use sales reps (10–15%).
 4. Exclusivity model: channel-limited, performance-gated, Year 1 minimum about 1,500 pairs.
-5. **Intro emails to the shortlist: drafted/discussed, NOT approved. Do not send.**
+5. **Intro emails to shortlist: not drafted, not approved; offer to draft when Andrew asks.**
 6. **Origin letter from PDS** (for EU 0% duty): offered, no answer yet.
 7. **Distribution/Ops sidebar section:** requested from Grok Bot, not confirmed.
 8. Approve the $27/$25 volume-tier thresholds (2,500 / 7,500 pairs per year).
