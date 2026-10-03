@@ -35,7 +35,7 @@
 
   assign pas_y_d_def = 56
   assign pas_side_d_def = 48
-  assign pas_y_m_def = 36
+  assign pas_y_m_def = 8
   assign pas_x_m_def = 20
   assign pas_fixed_pad_d_y = false
   if section.settings.text_pad_y != pas_y_d_def
@@ -65,7 +65,7 @@
   id="shopify-section-{{ section.id }}"
   {{ section.shopify_attributes }}
   aria-label="{{ section.settings.aria_label | escape }}"
-  style="--pas-media-fr: {{ media_pct }}fr; --pas-text-fr: {{ text_pct }}fr; --pas-min-height: {{ min_height }}px; --pas-mobile-media-height: {{ mobile_media_height }}px; --pas-section-gap: {{ section_gap }}px; --pas-section-gap-m: {{ section_gap_m }}px;{% render 'unified-text-pads-vars', y_d: 56, side_d: 48, y_m: 36, x_m: 20 %}{% render 'type-override-vars', title_weight: section.settings.title_weight, body_size: section.settings.body_size, body_weight: section.settings.body_weight %}"
+  style="--pas-media-fr: {{ media_pct }}fr; --pas-text-fr: {{ text_pct }}fr; --pas-min-height: {{ min_height }}px; --pas-mobile-media-height: {{ mobile_media_height }}px; --pas-section-gap: {{ section_gap }}px; --pas-section-gap-m: {{ section_gap_m }}px;{% render 'unified-text-pads-vars', y_d: 56, side_d: 48, y_m: 8, x_m: 20 %}{% render 'type-override-vars', title_weight: section.settings.title_weight, body_size: section.settings.body_size, body_weight: section.settings.body_weight %}"
 >
   <div class="page-about-split__media">
     {% if section.settings.image != blank %}
@@ -183,7 +183,6 @@
     #shopify-section-{{ section.id }} .page-about-split__copy { padding: 8px 20px 32px; }
     #shopify-section-{{ section.id }} .page-about-split--fixed-pad-m-y .page-about-split__copy {
       padding-top: var(--utp-y-m);
-      padding-bottom: var(--utp-y-m);
     }
     #shopify-section-{{ section.id }} .page-about-split--fixed-pad-m-x .page-about-split__copy {
       padding-left: var(--utp-x-m);
@@ -192,7 +191,7 @@
   }
 </style>
 
-{% render 'unified-text-pads-te-style', selector: '.page-about-split__copy', y_d: 56, side_d: 48, y_m: 36, x_m: 20 %}
+{% render 'unified-text-pads-te-style', selector: '.page-about-split__copy', y_d: 56, side_d: 48, y_m: 8, x_m: 20, y_m_bottom_px: 32 %}
 
 {%- comment -%} TE live preview: read section.settings.* directly (not top-of-file assigns). {%- endcomment -%}
 {% style %}
@@ -370,7 +369,7 @@
     {
       "type": "range",
       "id": "text_pad_y",
-      "label": "Text pad top & bottom \u2014 desktop (default 56)",
+      "label": "Text pad Y desktop (default fluid ~28\u201356)",
       "min": 0,
       "max": 120,
       "step": 2,
@@ -391,12 +390,12 @@
     {
       "type": "range",
       "id": "text_pad_y_mobile",
-      "label": "Text pad top & bottom \u2014 phone (default 36)",
+      "label": "Text pad Y phone (default 8 top / 32 bottom)",
       "min": 0,
       "max": 120,
       "step": 2,
       "unit": "px",
-      "default": 36
+      "default": 8
     },
     {
       "type": "range",
