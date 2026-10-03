@@ -1,39 +1,35 @@
 {%- comment -%}
-  Resolves fifty-fifty unified text padding to CSS variables (storefront).
-  Pass render defaults (y_d, side_d, y_m, x_m) = look when no TE/JSON keys exist.
-  Optional legacy_* = old setting ids to read when unified keys are blank (zero-change migration).
+  Storefront CSS variables for unified text pads.
+  Priority: legacy (template JSON) → unified slider (when non-blank) → render defaults y_d/side_d/y_m/x_m.
+  Unified range settings must omit schema default so unsaved instances stay blank until migrated.
 {%- endcomment -%}
 {%- liquid
-  assign _y_d = section.settings.text_pad_y
-  if _y_d == blank and legacy_y_d != blank
+  assign _y_d = y_d
+  if legacy_y_d != blank
     assign _y_d = legacy_y_d
-  endif
-  if _y_d == blank
-    assign _y_d = y_d
+  elsif section.settings.text_pad_y != blank
+    assign _y_d = section.settings.text_pad_y
   endif
 
-  assign _side_d = section.settings.side_padding
-  if _side_d == blank and legacy_side_d != blank
+  assign _side_d = side_d
+  if legacy_side_d != blank
     assign _side_d = legacy_side_d
-  endif
-  if _side_d == blank
-    assign _side_d = side_d
+  elsif section.settings.side_padding != blank
+    assign _side_d = section.settings.side_padding
   endif
 
-  assign _y_m = section.settings.text_pad_y_mobile
-  if _y_m == blank and legacy_y_m != blank
+  assign _y_m = y_m
+  if legacy_y_m != blank
     assign _y_m = legacy_y_m
-  endif
-  if _y_m == blank
-    assign _y_m = y_m
+  elsif section.settings.text_pad_y_mobile != blank
+    assign _y_m = section.settings.text_pad_y_mobile
   endif
 
-  assign _x_m = section.settings.text_pad_x_mobile
-  if _x_m == blank and legacy_x_m != blank
+  assign _x_m = x_m
+  if legacy_x_m != blank
     assign _x_m = legacy_x_m
-  endif
-  if _x_m == blank
-    assign _x_m = x_m
+  elsif section.settings.text_pad_x_mobile != blank
+    assign _x_m = section.settings.text_pad_x_mobile
   endif
 -%}
 --utp-y-d: {{ _y_d }}px; --utp-side-d: {{ _side_d }}px; --utp-y-m: {{ _y_m }}px; --utp-x-m: {{ _x_m }}px;
