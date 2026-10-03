@@ -7,7 +7,7 @@
   id="shopify-section-{{ section.id }}"
   {{ section.shopify_attributes }}
   aria-label="{{ section.settings.aria_label | escape }}"
-  style="{% render 'type-override-vars', title_size: section.settings.title_size, title_weight: section.settings.title_weight, body_size: section.settings.body_size, body_weight: section.settings.body_weight, sub_size: section.settings.cta_size %}"
+  style="{% render 'unified-text-pads-vars', y_d: 14, side_d: 28, y_m: 56, x_m: 20 %}{% render 'type-override-vars', title_size: section.settings.title_size, title_weight: section.settings.title_weight, body_size: section.settings.body_size, body_weight: section.settings.body_weight, sub_size: section.settings.cta_size %}"
 >
   {% if section.settings.heading != blank %}
     <h2 class="page-about-close__title">{{ section.settings.heading }}</h2>
@@ -48,7 +48,7 @@
     display: inline-block;
     background: #1c1916;
     color: #fff;
-    padding: 14px 28px;
+    padding: var(--utp-y-d, 14px) var(--utp-side-d, 28px);
     font-size: var(--te-sub-size, 14px);
     font-weight: 500;
     text-decoration: none;
@@ -66,6 +66,8 @@
     }
   }
 </style>
+
+{% render 'unified-text-pads-te-style', selector: '.page-about-close__cta', y_d: 14, side_d: 28, y_m: 56, x_m: 20 %}
 
 {% schema %}
 {
@@ -158,6 +160,12 @@
       ]
     }
   ],
+
+    { "type": "header", "content": "Layout — text padding" },
+    { "type": "range", "id": "text_pad_y", "label": "Text pad top & bottom — desktop (default 96)", "min": 32, "max": 120, "step": 4, "unit": "px", "default": 96 },
+    { "type": "range", "id": "side_padding", "label": "Text pad left & right — desktop (default 64)", "min": 16, "max": 96, "step": 4, "unit": "px", "default": 64 },
+    { "type": "range", "id": "text_pad_y_mobile", "label": "Text pad top & bottom — phone (default 80)", "min": 16, "max": 120, "step": 4, "unit": "px", "default": 80 },
+    { "type": "range", "id": "text_pad_x_mobile", "label": "Text pad left & right — phone (default 20)", "min": 12, "max": 48, "step": 4, "unit": "px", "default": 20 },
   "presets": [{ "name": "About — Close" }]
 }
 {% endschema %}
