@@ -4,7 +4,7 @@
   of grip socks. Used on: page.technology.json
 {% endcomment %}
 
-<section class="section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }} style="{% render 'unified-text-pads-vars', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}">
+<section class="page-tech__root section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }} style="{% render 'unified-text-pads-vars', y_d: 32, side_d: 40, y_m: 48, x_m: 16 %}">
   <div class="section__inner section__inner--narrow">
     {% if section.settings.eyebrow != blank %}
       <p class="eyebrow eyebrow--accent">{{ section.settings.eyebrow }}</p>
@@ -245,7 +245,25 @@
   }
 </style>
 
-{% render 'unified-text-pads-te-style', selector: '.section-frame', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}
+
+<style>
+  #shopify-section-{{ section.id }} .page-tech__root {
+    padding-top: var(--utp-y-d, var(--section-padding-y));
+    padding-bottom: var(--utp-y-d, var(--section-padding-y));
+    padding-left: var(--utp-side-d, var(--section-padding-x));
+    padding-right: var(--utp-side-d, var(--section-padding-x));
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .page-tech__root {
+      padding-top: var(--utp-y-m, var(--section-padding-y));
+      padding-bottom: var(--utp-y-m, var(--section-padding-y));
+      padding-left: var(--utp-x-m, var(--section-padding-x));
+      padding-right: var(--utp-x-m, var(--section-padding-x));
+    }
+  }
+</style>
+
+{% render 'unified-text-pads-te-style', selector: '.page-tech__root', y_d: 32, side_d: 40, y_m: 48, x_m: 16 %}
 
 {% schema %}
 {
@@ -261,7 +279,7 @@
       "type": "text",
       "id": "title",
       "label": "Title",
-      "default": "Patented 360° Grip Technology"
+      "default": "Patented 360\u00b0 Grip Technology"
     },
     {
       "type": "textarea",
@@ -279,7 +297,7 @@
       "type": "richtext",
       "id": "how_it_works",
       "label": "How it works text",
-      "default": "<p>Traditional grip socks use silicone dots printed or glued onto fabric. These dots are surface-level applications that inevitably peel, wear off, or lose adhesion with use.</p><p>Barreletics take a fundamentally different approach. Our grip surface is injection-molded — meaning the grip pattern is created during the manufacturing process itself. It's not added on top; it's part of the sole structure. This makes separation physically impossible.</p>"
+      "default": "<p>Traditional grip socks use silicone dots printed or glued onto fabric. These dots are surface-level applications that inevitably peel, wear off, or lose adhesion with use.</p><p>Barreletics take a fundamentally different approach. Our grip surface is injection-molded \u2014 meaning the grip pattern is created during the manufacturing process itself. It's not added on top; it's part of the sole structure. This makes separation physically impossible.</p>"
     },
     {
       "type": "text",
@@ -291,7 +309,7 @@
       "type": "richtext",
       "id": "double_failure_text",
       "label": "Double Failure text",
-      "default": "<p><strong>Failure #1: The grip wears off.</strong> Silicone dots are a surface application. With friction and heat from studio use, they peel, flake, and lose adhesion. Most grip socks lose meaningful grip within 6-8 weeks of regular use.</p><p><strong>Failure #2: The fabric absorbs sweat.</strong> Fabric-based socks absorb perspiration during class. This moisture sits between your foot and the floor, reducing the grip coefficient at the exact moment you need it most — during intense holds and transitions.</p><p>Performance Skins solve both failures simultaneously. The injection-molded grip cannot separate. The non-porous material cannot absorb sweat.</p>"
+      "default": "<p><strong>Failure #1: The grip wears off.</strong> Silicone dots are a surface application. With friction and heat from studio use, they peel, flake, and lose adhesion. Most grip socks lose meaningful grip within 6-8 weeks of regular use.</p><p><strong>Failure #2: The fabric absorbs sweat.</strong> Fabric-based socks absorb perspiration during class. This moisture sits between your foot and the floor, reducing the grip coefficient at the exact moment you need it most \u2014 during intense holds and transitions.</p><p>Performance Skins solve both failures simultaneously. The injection-molded grip cannot separate. The non-porous material cannot absorb sweat.</p>"
     },
     {
       "type": "text",
@@ -321,7 +339,7 @@
       "type": "textarea",
       "id": "cta_body",
       "label": "CTA body text",
-      "default": "One pair. 360° grip. Made to last years, not weeks."
+      "default": "One pair. 360\u00b0 grip. Made to last years, not weeks."
     },
     {
       "type": "text",
@@ -336,23 +354,23 @@
     },
     {
       "type": "header",
-      "content": "Layout — text padding"
+      "content": "Layout \u2014 text padding"
     },
     {
       "type": "range",
       "id": "text_pad_y",
-      "label": "Text pad top & bottom — desktop (default 96)",
-      "min": 8,
+      "label": "Text pad top & bottom \u2014 desktop (default 32)",
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
-      "default": 96
+      "default": 32
     },
     {
       "type": "range",
       "id": "side_padding",
-      "label": "Text pad left & right — desktop (default 40)",
-      "min": 8,
+      "label": "Text pad left & right \u2014 desktop (default 40)",
+      "min": 0,
       "max": 96,
       "step": 1,
       "unit": "px",
@@ -361,22 +379,22 @@
     {
       "type": "range",
       "id": "text_pad_y_mobile",
-      "label": "Text pad top & bottom — phone (default 80)",
-      "min": 8,
+      "label": "Text pad top & bottom \u2014 phone (default 48)",
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
-      "default": 80
+      "default": 48
     },
     {
       "type": "range",
       "id": "text_pad_x_mobile",
-      "label": "Text pad left & right — phone (default 20)",
-      "min": 8,
+      "label": "Text pad left & right \u2014 phone (default 16)",
+      "min": 0,
       "max": 48,
       "step": 1,
       "unit": "px",
-      "default": 20
+      "default": 16
     }
   ],
   "blocks": [
