@@ -79,8 +79,16 @@
     var nodes = root.querySelectorAll('video');
     if (!nodes.length) return;
 
+    function isAmbientAutoplay(video) {
+      if (!video || video.tagName !== 'VIDEO') return false;
+      if (video.hasAttribute('controls')) return false;
+      if (video.classList && video.classList.contains('press-cards__video--deferred')) return false;
+      if (video.dataset && video.dataset.src && !video.getAttribute('src')) return false;
+      return video.autoplay || video.hasAttribute('autoplay');
+    }
+
     function kick(video) {
-      if (!video || video.hasAttribute('controls')) return;
+      if (!isAmbientAutoplay(video)) return;
       if (video.hasAttribute('data-ambient-kicked') && !video.paused) return;
       video.muted = true;
       video.setAttribute('muted', '');
@@ -97,7 +105,7 @@
     }
 
     function watch(video) {
-      if (video.hasAttribute('controls')) return;
+      if (!isAmbientAutoplay(video)) return;
       if (video.getAttribute('data-ambient-bound') === '1') {
         kick(video);
         return;

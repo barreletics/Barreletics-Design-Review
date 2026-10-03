@@ -10,8 +10,16 @@
     var rootClass = {{ root_class | json }};
     var videoSel = {{ video_selector | json }};
 
+    function isAmbientAutoplay(v) {
+      if (!v || v.tagName !== 'VIDEO') return false;
+      if (v.hasAttribute('controls')) return false;
+      if (v.classList && v.classList.contains('press-cards__video--deferred')) return false;
+      if (v.dataset && v.dataset.src && !v.getAttribute('src')) return false;
+      return v.autoplay || v.hasAttribute('autoplay');
+    }
+
     function primeVideo(v) {
-      if (!v || v.tagName !== 'VIDEO') return;
+      if (!isAmbientAutoplay(v)) return;
       v.muted = true;
       v.defaultMuted = true;
       v.setAttribute('muted', '');

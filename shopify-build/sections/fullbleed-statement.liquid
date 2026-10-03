@@ -119,6 +119,7 @@
           muted: true,
           controls: false,
           playsinline: true,
+          preload: 'metadata',
           class: 'fullbleed-statement__video'
       }}
       {%- liquid
@@ -468,6 +469,12 @@
     kick();
   })();
 </script>
+
+{% render 'bg-video-autoplay-script',
+  section_id: section.id,
+  root_class: 'fullbleed-statement',
+  video_selector: 'video.fullbleed-statement__video, .fullbleed-statement__bg video'
+%}
 
 {% schema %}
 {

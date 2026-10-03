@@ -272,7 +272,8 @@
               loop: true,
               muted: true,
               controls: false,
-              playsinline: true
+              playsinline: true,
+              preload: 'metadata'
           }}
         {% elsif block.settings.video_url != blank %}
           <video
@@ -617,6 +618,12 @@
     }
   }
 {% endstyle %}
+
+{% render 'bg-video-autoplay-script',
+  section_id: section.id,
+  root_class: 'visual-mosaic',
+  video_selector: '.vm-tile video, video'
+%}
 
 {% schema %}
 {
