@@ -2,7 +2,7 @@
   Contact-primary terminal CTA (R-08) — FAQ closing, not newsletter Subscribe
 {% endcomment %}
 
-<section class="contact-cta" aria-label="Contact">
+<section class="contact-cta" aria-label="Contact" style="{% render 'unified-text-pads-vars', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}">
   <div class="contact-cta__inner">
     {% if section.settings.eyebrow != blank %}
       <p class="contact-cta__eyebrow">{{ section.settings.eyebrow }}</p>
@@ -63,21 +63,90 @@
   }
 </style>
 
+{% render 'unified-text-pads-te-style', selector: '.section-frame', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}
+
 {% schema %}
 {
   "name": "Contact CTA",
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Still have questions?" },
-    { "type": "text", "id": "title", "label": "Title", "default": "Get in touch." },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Still have questions?"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Get in touch."
+    },
     {
       "type": "textarea",
       "id": "body",
       "label": "Body",
       "default": "Can't find what you're looking for? Contact us and we'll get back within 24–48 hours."
     },
-    { "type": "text", "id": "cta_text", "label": "CTA text", "default": "Contact Us" },
-    { "type": "url", "id": "cta_url", "label": "CTA URL" }
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA text",
+      "default": "Contact Us"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "CTA URL"
+    },
+    {
+      "type": "header",
+      "content": "Layout — text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 96)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 40)",
+      "min": 8,
+      "max": 96,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 80)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 20)",
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    }
   ],
-  "presets": [{ "name": "Contact CTA" }]
+  "presets": [
+    {
+      "name": "Contact CTA"
+    }
+  ]
 }
 {% endschema %}

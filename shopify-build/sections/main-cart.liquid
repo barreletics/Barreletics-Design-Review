@@ -4,7 +4,7 @@
   SSR uses data-line-key + data-qty-change to match assets/cart.js.
 {% endcomment %}
 
-<section class="main-cart" aria-label="Shopping cart">
+<section class="main-cart" aria-label="Shopping cart" style="{% render 'unified-text-pads-vars', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}">
   <div class="main-cart__inner">
     <header class="main-cart__header">
       <h1 class="main-cart__title h2-standard">Your Cart</h1>
@@ -289,10 +289,61 @@
   })();
 </script>
 
+{% render 'unified-text-pads-te-style', selector: '.section-frame', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}
+
 {% schema %}
 {
   "name": "Main Cart",
-  "settings": [],
-  "presets": [{ "name": "Main Cart" }]
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout — text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 96)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 40)",
+      "min": 8,
+      "max": 96,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 80)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 20)",
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    }
+  ],
+  "presets": [
+    {
+      "name": "Main Cart"
+    }
+  ]
 }
 {% endschema %}

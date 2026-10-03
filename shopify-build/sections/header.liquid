@@ -12,8 +12,10 @@
 {%- assign nav_link_size = section.settings.nav_link_size | default: 'default' -%}
 {%- assign nav_gap = section.settings.nav_gap | default: 30 -%}
 {%- assign action_link_size = section.settings.action_link_size | default: '14' -%}
-{%- assign header_pad_y = section.settings.header_pad_y | default: 12 -%}
-{%- assign header_pad_x = section.settings.header_pad_x | default: 40 -%}
+{%- assign header_pad_y = section.settings.text_pad_y -%}
+{%- if header_pad_y == blank -%}{%- assign header_pad_y = section.settings.header_pad_y | default: 12 -%}{%- endif -%}
+{%- assign header_pad_x = section.settings.side_padding -%}
+{%- if header_pad_x == blank -%}{%- assign header_pad_x = section.settings.header_pad_x | default: 40 -%}{%- endif -%}
 {%- assign header_max_width = section.settings.header_max_width | default: 1320 -%}
 {%- assign action_gap = section.settings.action_gap | default: 18 -%}
 {%- assign nav_weight = section.settings.nav_weight | default: '500' -%}
@@ -42,7 +44,7 @@
   data-site-header
   data-nav-distribute="{{ nav_distribute }}"
   role="banner"
-  style="
+  style="{% render 'unified-text-pads-vars', y_d: 12, side_d: 40, y_m: 12, x_m: 16, legacy_y_d: section.settings.header_pad_y, legacy_side_d: section.settings.header_pad_x %}
     --header-logo-height: {{ logo_height }}px;
     --header-logo-height-mobile: {{ logo_height_mobile }}px;
     --header-nav-gap: {{ nav_gap }}px;
@@ -248,6 +250,8 @@
   </div>
 </header>
 
+{% render 'unified-text-pads-te-style', selector: '.site-header__inner', y_d: 12, side_d: 40, y_m: 12, x_m: 16, legacy_y_d: section.settings.header_pad_y, legacy_side_d: section.settings.header_pad_x %}
+
 {% schema %}
 {
   "name": "Header",
@@ -342,18 +346,54 @@
       "id": "nav_link_size",
       "label": "Nav link size",
       "options": [
-        { "value": "default", "label": "Default / Type OS" },
-        { "value": "10", "label": "10px" },
-        { "value": "11", "label": "11px" },
-        { "value": "12", "label": "12px" },
-        { "value": "13", "label": "13px" },
-        { "value": "14", "label": "14px" },
-        { "value": "15", "label": "15px" },
-        { "value": "16", "label": "16px" },
-        { "value": "17", "label": "17px" },
-        { "value": "18", "label": "18px (live match)" },
-        { "value": "20", "label": "20px" },
-        { "value": "22", "label": "22px" }
+        {
+          "value": "default",
+          "label": "Default / Type OS"
+        },
+        {
+          "value": "10",
+          "label": "10px"
+        },
+        {
+          "value": "11",
+          "label": "11px"
+        },
+        {
+          "value": "12",
+          "label": "12px"
+        },
+        {
+          "value": "13",
+          "label": "13px"
+        },
+        {
+          "value": "14",
+          "label": "14px"
+        },
+        {
+          "value": "15",
+          "label": "15px"
+        },
+        {
+          "value": "16",
+          "label": "16px"
+        },
+        {
+          "value": "17",
+          "label": "17px"
+        },
+        {
+          "value": "18",
+          "label": "18px (live match)"
+        },
+        {
+          "value": "20",
+          "label": "20px"
+        },
+        {
+          "value": "22",
+          "label": "22px"
+        }
       ],
       "default": "default",
       "info": "Best recent desktop pass: 17px with announce at 12px (nav larger than announce)."
@@ -374,9 +414,18 @@
       "id": "nav_weight",
       "label": "Nav weight",
       "options": [
-        { "value": "400", "label": "400 Regular" },
-        { "value": "500", "label": "500 Medium" },
-        { "value": "600", "label": "600 Semibold" }
+        {
+          "value": "400",
+          "label": "400 Regular"
+        },
+        {
+          "value": "500",
+          "label": "500 Medium"
+        },
+        {
+          "value": "600",
+          "label": "600 Semibold"
+        }
       ],
       "default": "400",
       "info": "Live nav is regular — not bold."
@@ -386,12 +435,30 @@
       "id": "action_link_size",
       "label": "Help / Account / Cart size",
       "options": [
-        { "value": "12", "label": "12px" },
-        { "value": "13", "label": "13px" },
-        { "value": "14", "label": "14px" },
-        { "value": "15", "label": "15px" },
-        { "value": "16", "label": "16px" },
-        { "value": "17", "label": "17px" }
+        {
+          "value": "12",
+          "label": "12px"
+        },
+        {
+          "value": "13",
+          "label": "13px"
+        },
+        {
+          "value": "14",
+          "label": "14px"
+        },
+        {
+          "value": "15",
+          "label": "15px"
+        },
+        {
+          "value": "16",
+          "label": "16px"
+        },
+        {
+          "value": "17",
+          "label": "17px"
+        }
       ],
       "default": "14",
       "info": "Keep one step under nav size."
@@ -411,9 +478,18 @@
       "id": "nav_distribute",
       "label": "Nav layout",
       "options": [
-        { "value": "live", "label": "Live — logo left, nav right" },
-        { "value": "center", "label": "Center — mid-rail group" },
-        { "value": "spread", "label": "Spread — edge to edge" }
+        {
+          "value": "live",
+          "label": "Live — logo left, nav right"
+        },
+        {
+          "value": "center",
+          "label": "Center — mid-rail group"
+        },
+        {
+          "value": "spread",
+          "label": "Spread — edge to edge"
+        }
       ],
       "default": "center",
       "info": "Live = big air after logo; nav items together before Help/Cart."
@@ -421,6 +497,52 @@
     {
       "type": "header",
       "content": "Desktop — Rail & padding"
+    },
+    {
+      "type": "header",
+      "content": "Layout — text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 12)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "info": "Header vertical band. Unset uses legacy header_pad_y (default 12).",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 40)",
+      "min": 8,
+      "max": 96,
+      "step": 1,
+      "unit": "px",
+      "info": "Logo inset. Unset uses legacy header_pad_x.",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 12)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 16)",
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 16
     },
     {
       "type": "range",
@@ -441,7 +563,8 @@
       "max": 24,
       "step": 1,
       "unit": "px",
-      "default": 12
+      "default": 12,
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
     },
     {
       "type": "range",
@@ -452,11 +575,19 @@
       "step": 4,
       "unit": "px",
       "default": 56,
-      "info": "Pulls logo + utilities in from the viewport edge."
+      "info": "Pulls logo + utilities in from the viewport edge.",
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
     },
     {
       "type": "header",
       "content": "Section — Header"
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Accessibility label",
+      "default": "Site header",
+      "info": "Used for aria-label on the header landmark."
     },
     {
       "type": "color",

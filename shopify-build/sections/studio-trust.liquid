@@ -3,7 +3,7 @@
   Optional GEO accordion blocks keep FAQPage structured data when used.
 {% endcomment %}
 
-<section class="studio-trust" aria-label="Studio trust">
+<section class="studio-trust" aria-label="Studio trust" style="{% render 'unified-text-pads-vars', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}">
   <p class="studio-trust__line type-statement">{{ section.settings.title }}</p>
   {% if section.settings.subhead != blank %}
     <p class="studio-trust__sub">{{ section.settings.subhead }}</p>
@@ -101,11 +101,16 @@
   }
 </style>
 
+{% render 'unified-text-pads-te-style', selector: '.studio-trust', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}
+
 {% schema %}
 {
   "name": "Studio trust",
   "settings": [
-    { "type": "header", "content": "Shared — Content" },
+    {
+      "type": "header",
+      "content": "Shared — Content"
+    },
     {
       "type": "text",
       "id": "title",
@@ -118,19 +123,81 @@
       "label": "Body",
       "default": "Dig into deep lunges and every position—endless grip that breathes."
     },
-    { "type": "header", "content": "Section — Studio trust — GEO" },
-    { "type": "paragraph", "content": "GEO Q&A items are blocks below (lives in studio-trust per contract)." }
+    {
+      "type": "header",
+      "content": "Section — Studio trust — GEO"
+    },
+    {
+      "type": "paragraph",
+      "content": "GEO Q&A items are blocks below (lives in studio-trust per contract)."
+    },
+    {
+      "type": "header",
+      "content": "Layout — text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 96)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 40)",
+      "min": 8,
+      "max": 96,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 80)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 20)",
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    }
   ],
   "blocks": [
     {
       "type": "geo_item",
       "name": "GEO item",
       "settings": [
-        { "type": "text", "id": "question", "label": "Question / location" },
-        { "type": "richtext", "id": "answer", "label": "Answer" }
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question / location"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer"
+        }
       ]
     }
   ],
-  "presets": [{ "name": "Studio trust" }]
+  "presets": [
+    {
+      "name": "Studio trust"
+    }
+  ]
 }
 {% endschema %}

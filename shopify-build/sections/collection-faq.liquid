@@ -10,19 +10,35 @@
   studio_core: section.settings.use_studio_bank
 %}
 <style>
+  #shopify-section-{{ section.id }} {
+    {% render 'unified-text-pads-vars', y_d: 32, side_d: 40, y_m: 24, x_m: 20 %}
+  }
+  #shopify-section-{{ section.id }} .faq {
+    padding: var(--utp-y-d, 32px) var(--utp-side-d, 40px);
+  }
   /* Per-page TE: Background cream = soft #faf8f6, white = #fff. Sitewide cream lock. */
   #shopify-section-{{ section.id }} .faq--cream { background: #faf8f6; }
   #shopify-section-{{ section.id }} .faq--white { background: #fff; }
   #shopify-section-{{ section.id }} .faq__heading {
     /* Type OS H2 Section on Shop All / PDP FAQ */
   }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .faq {
+      padding: var(--utp-y-m, 24px) var(--utp-x-m, 20px);
+    }
+  }
 </style>
+
+{% render 'unified-text-pads-te-style', selector: '.faq', y_d: 32, side_d: 40, y_m: 24, x_m: 20 %}
 
 {% schema %}
 {
   "name": "Collection FAQ",
   "settings": [
-    { "type": "header", "content": "Shared — Content" },
+    {
+      "type": "header",
+      "content": "Shared — Content"
+    },
     {
       "type": "text",
       "id": "heading",
@@ -30,15 +46,24 @@
       "default": "Questions from the studio",
       "info": "Family is brand Type OS — no font family picker."
     },
-    { "type": "header", "content": "Section — FAQ" },
+    {
+      "type": "header",
+      "content": "Section — FAQ"
+    },
     {
       "type": "select",
       "id": "bg_class",
       "label": "Background",
       "info": "Cream = soft #faf8f6. White = #fff. Set per page in Theme Editor.",
       "options": [
-        { "value": "cream", "label": "Cream (#faf8f6)" },
-        { "value": "white", "label": "White" }
+        {
+          "value": "cream",
+          "label": "Cream (#faf8f6)"
+        },
+        {
+          "value": "white",
+          "label": "White"
+        }
       ],
       "default": "cream"
     },
@@ -52,6 +77,50 @@
     {
       "type": "paragraph",
       "content": "When shared studio FAQ is off, items are the blocks below."
+    },
+    {
+      "type": "header",
+      "content": "Layout — text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 32)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 40)",
+      "min": 8,
+      "max": 96,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 24)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 20)",
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 20
     }
   ],
   "blocks": [
@@ -59,9 +128,21 @@
       "type": "faq_item",
       "name": "FAQ item",
       "settings": [
-        { "type": "header", "content": "Shared — Content" },
-        { "type": "text", "id": "question", "label": "Heading", "info": "Question line." },
-        { "type": "richtext", "id": "answer", "label": "Body" }
+        {
+          "type": "header",
+          "content": "Shared — Content"
+        },
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Heading",
+          "info": "Question line."
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Body"
+        }
       ]
     }
   ],

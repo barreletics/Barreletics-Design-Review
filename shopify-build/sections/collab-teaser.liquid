@@ -6,7 +6,7 @@
 <section
   id="{{ section.settings.anchor_id | default: 'collab-teaser' | handleize }}"
   class="collab-teaser section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %}"
-  style="{% render 'section-inset-vars' %} --ct-accent: {{ section.settings.accent_color | default: '#C4859B' }}; --ct-bg: {{ section.settings.bg_color | default: '#FBF7F2' }}; --ct-badge-bg: {{ section.settings.badge_bg_color | default: section.settings.accent_color | default: '#C4859B' }};"
+  style="{% render 'section-inset-vars' %}{% render 'unified-text-pads-vars', y_d: 40, side_d: 20, y_m: 40, x_m: 16 %} --ct-accent: {{ section.settings.accent_color | default: '#C4859B' }}; --ct-bg: {{ section.settings.bg_color | default: '#FBF7F2' }}; --ct-badge-bg: {{ section.settings.badge_bg_color | default: section.settings.accent_color | default: '#C4859B' }};"
   aria-label="{{ section.settings.aria_label | default: section.settings.headline | strip_html | truncate: 60 | escape }}"
 >
   <div class="collab-teaser__inner">
@@ -48,7 +48,7 @@
     color: #1c1916;
     width: 100%;
     box-sizing: border-box;
-    padding: 40px 20px 64px;
+    padding: var(--utp-y-d, 40px) var(--utp-side-d, 20px) 64px;
     text-align: center;
   }
   #shopify-section-{{ section.id }} .collab-teaser__inner {
@@ -152,7 +152,7 @@
   }
   @media (max-width: 768px) {
     #shopify-section-{{ section.id }} .collab-teaser {
-      padding: 40px 16px 48px;
+      padding: var(--utp-y-m, 40px) var(--utp-x-m, 16px);
     }
     #shopify-section-{{ section.id }} .collab-teaser__eyebrow {
       margin-bottom: 32px;
@@ -160,14 +160,26 @@
   }
 </style>
 
+{% render 'unified-text-pads-te-style', selector: '.collab-teaser', y_d: 40, side_d: 20, y_m: 40, x_m: 16 %}
+
 {% schema %}
 {
   "name": "Collab teaser",
   "tag": "section",
   "class": "section-collab-teaser",
   "settings": [
-    { "type": "text", "id": "anchor_id", "label": "Anchor ID", "default": "collab-teaser" },
-    { "type": "text", "id": "aria_label", "label": "Accessibility label", "default": "Collaboration" },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor ID",
+      "default": "collab-teaser"
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Accessibility label",
+      "default": "Collaboration"
+    },
     {
       "type": "text",
       "id": "eyebrow",
@@ -175,7 +187,12 @@
       "default": "In Collaboration with Free People",
       "info": "Partner credit — keep secondary to the headline."
     },
-    { "type": "checkbox", "id": "show_ornament", "label": "Show ornament", "default": true },
+    {
+      "type": "checkbox",
+      "id": "show_ornament",
+      "label": "Show ornament",
+      "default": true
+    },
     {
       "type": "html",
       "id": "headline",
@@ -195,22 +212,126 @@
       "label": "Badge",
       "info": "Short pill — e.g. Only at Free People"
     },
-    { "type": "color", "id": "badge_bg_color", "label": "Badge background" },
+    {
+      "type": "color",
+      "id": "badge_bg_color",
+      "label": "Badge background"
+    },
     {
       "type": "textarea",
       "id": "body",
       "label": "Body",
       "default": "Performance meets poetry. A footwear story for free spirits — rooted in movement, made to wander. Available exclusively at Free People."
     },
-    { "type": "text", "id": "meta", "label": "Meta line", "default": "Spring 2026 · Stay wild" },
-    { "type": "color", "id": "bg_color", "label": "Background", "default": "#FBF7F2" },
-    { "type": "color", "id": "accent_color", "label": "Accent", "default": "#C4859B" },
-    { "type": "checkbox", "id": "hide_on_mobile", "label": "Hide on mobile", "default": false },
-    { "type": "checkbox", "id": "hide_on_desktop", "label": "Hide on desktop", "default": false },
-    { "type": "range", "id": "inset_top", "label": "Inset top", "min": 0, "max": 96, "step": 4, "unit": "px", "default": 0 },
-    { "type": "range", "id": "inset_bottom", "label": "Inset bottom", "min": 0, "max": 96, "step": 4, "unit": "px", "default": 0 },
-    { "type": "range", "id": "inset_x", "label": "Inset left & right", "min": 0, "max": 96, "step": 4, "unit": "px", "default": 0 }
+    {
+      "type": "text",
+      "id": "meta",
+      "label": "Meta line",
+      "default": "Spring 2026 · Stay wild"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#FBF7F2"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#C4859B"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_desktop",
+      "label": "Hide on desktop",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "inset_top",
+      "label": "Inset top",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom",
+      "label": "Inset bottom",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x",
+      "label": "Inset left & right",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Layout — text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 40)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 20)",
+      "min": 8,
+      "max": 96,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 40)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 16)",
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    }
   ],
-  "presets": [{ "name": "Collab teaser" }]
+  "presets": [
+    {
+      "name": "Collab teaser"
+    }
+  ]
 }
 {% endschema %}

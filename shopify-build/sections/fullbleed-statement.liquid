@@ -84,7 +84,7 @@
 
 <section
   class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} fullbleed-statement{% unless show_text %} fullbleed-statement--media-only{% endunless %}{% if phone_photo %} fullbleed-statement--phone-photo{% endif %}{% if media_fit == 'contain' %} fullbleed-statement--contain{% endif %}{% if image_fit_mobile == 'contain' %} fullbleed-statement--fit-m-contain{% endif %}{% if fb_match_ratio != blank %} fullbleed-statement--m-match{% endif %}"
-  style="{% render 'section-inset-vars' %} 
+  style="{% render 'section-inset-vars' %}{% render 'unified-text-pads-vars', y_d: 80, side_d: 40, y_m: 80, x_m: 20 %} 
     --fb-media-radius: {{ media_radius }}px;
     --fb-height-desktop: {{ height_desktop }}vh;
     --fb-height-mobile: {{ fb_height_mobile_css }};
@@ -315,7 +315,7 @@
     position: relative;
     z-index: 2;
     text-align: center;
-    padding: 80px 40px;
+    padding: var(--utp-y-d, 80px) var(--utp-side-d, 40px);
     max-width: 720px;
   }
   #shopify-section-{{ section.id }} .fullbleed-statement__eyebrow {
@@ -389,7 +389,7 @@
     #shopify-section-{{ section.id }} .fullbleed-statement__video {
       object-fit: var(--fb-video-fit-mobile, var(--fb-fit-mobile, cover));
     }
-    #shopify-section-{{ section.id }} .fullbleed-statement__content { padding: 56px 16px; }
+    #shopify-section-{{ section.id }} .fullbleed-statement__content { padding: var(--utp-y-m, 80px) var(--utp-x-m, 20px); }
     /* Contain stays inside the Mobile height box. Do not zero height — slider must work. */
     #shopify-section-{{ section.id }} .fullbleed-statement--fit-m-contain .fullbleed-statement__bg img,
     #shopify-section-{{ section.id }} .fullbleed-statement--fit-m-contain .fullbleed-statement__video {
@@ -476,11 +476,16 @@
   video_selector: 'video.fullbleed-statement__video, .fullbleed-statement__bg video'
 %}
 
+{% render 'unified-text-pads-te-style', selector: '.fullbleed-statement__content', y_d: 80, side_d: 40, y_m: 80, x_m: 20 %}
+
 {% schema %}
 {
   "name": "Fullbleed statement",
   "settings": [
-    { "type": "header", "content": "Shared — Content" },
+    {
+      "type": "header",
+      "content": "Shared — Content"
+    },
     {
       "type": "checkbox",
       "id": "show_text",
@@ -513,8 +518,14 @@
       "label": "Heading style",
       "default": "statement",
       "options": [
-        { "value": "statement", "label": "Statement (video overlay — PDP TRANSFORM)" },
-        { "value": "display", "label": "Display 52px (matches Shop All / pose band)" }
+        {
+          "value": "statement",
+          "label": "Statement (video overlay — PDP TRANSFORM)"
+        },
+        {
+          "value": "display",
+          "label": "Display 52px (matches Shop All / pose band)"
+        }
       ],
       "info": "Locked by global type system (2026-09-27). This setting no longer changes the heading."
     },
@@ -523,26 +534,86 @@
       "id": "title_size",
       "label": "Title size",
       "options": [
-        { "value": "default", "label": "Default / Type OS" },
-        { "value": "12", "label": "12px" },
-        { "value": "13", "label": "13px" },
-        { "value": "14", "label": "14px" },
-        { "value": "15", "label": "15px" },
-        { "value": "16", "label": "16px" },
-        { "value": "17", "label": "17px" },
-        { "value": "18", "label": "18px" },
-        { "value": "20", "label": "20px" },
-        { "value": "22", "label": "22px" },
-        { "value": "24", "label": "24px" },
-        { "value": "26", "label": "26px" },
-        { "value": "28", "label": "28px" },
-        { "value": "30", "label": "30px" },
-        { "value": "32", "label": "32px" },
-        { "value": "36", "label": "36px" },
-        { "value": "40", "label": "40px" },
-        { "value": "44", "label": "44px" },
-        { "value": "48", "label": "48px" },
-        { "value": "56", "label": "56px" }
+        {
+          "value": "default",
+          "label": "Default / Type OS"
+        },
+        {
+          "value": "12",
+          "label": "12px"
+        },
+        {
+          "value": "13",
+          "label": "13px"
+        },
+        {
+          "value": "14",
+          "label": "14px"
+        },
+        {
+          "value": "15",
+          "label": "15px"
+        },
+        {
+          "value": "16",
+          "label": "16px"
+        },
+        {
+          "value": "17",
+          "label": "17px"
+        },
+        {
+          "value": "18",
+          "label": "18px"
+        },
+        {
+          "value": "20",
+          "label": "20px"
+        },
+        {
+          "value": "22",
+          "label": "22px"
+        },
+        {
+          "value": "24",
+          "label": "24px"
+        },
+        {
+          "value": "26",
+          "label": "26px"
+        },
+        {
+          "value": "28",
+          "label": "28px"
+        },
+        {
+          "value": "30",
+          "label": "30px"
+        },
+        {
+          "value": "32",
+          "label": "32px"
+        },
+        {
+          "value": "36",
+          "label": "36px"
+        },
+        {
+          "value": "40",
+          "label": "40px"
+        },
+        {
+          "value": "44",
+          "label": "44px"
+        },
+        {
+          "value": "48",
+          "label": "48px"
+        },
+        {
+          "value": "56",
+          "label": "56px"
+        }
       ],
       "default": "default",
       "info": "Locked by global type system (2026-09-27). This setting no longer changes the heading."
@@ -552,11 +623,26 @@
       "id": "title_weight",
       "label": "Title weight",
       "options": [
-        { "value": "default", "label": "Default" },
-        { "value": "400", "label": "400" },
-        { "value": "500", "label": "500" },
-        { "value": "600", "label": "600" },
-        { "value": "700", "label": "700" }
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "400",
+          "label": "400"
+        },
+        {
+          "value": "500",
+          "label": "500"
+        },
+        {
+          "value": "600",
+          "label": "600"
+        },
+        {
+          "value": "700",
+          "label": "700"
+        }
       ],
       "default": "default",
       "info": "Locked by global type system (2026-09-27). This setting no longer changes the heading."
@@ -572,26 +658,86 @@
       "id": "body_size",
       "label": "Body size",
       "options": [
-        { "value": "default", "label": "Default / Type OS" },
-        { "value": "12", "label": "12px" },
-        { "value": "13", "label": "13px" },
-        { "value": "14", "label": "14px" },
-        { "value": "15", "label": "15px" },
-        { "value": "16", "label": "16px" },
-        { "value": "17", "label": "17px" },
-        { "value": "18", "label": "18px" },
-        { "value": "20", "label": "20px" },
-        { "value": "22", "label": "22px" },
-        { "value": "24", "label": "24px" },
-        { "value": "26", "label": "26px" },
-        { "value": "28", "label": "28px" },
-        { "value": "30", "label": "30px" },
-        { "value": "32", "label": "32px" },
-        { "value": "36", "label": "36px" },
-        { "value": "40", "label": "40px" },
-        { "value": "44", "label": "44px" },
-        { "value": "48", "label": "48px" },
-        { "value": "56", "label": "56px" }
+        {
+          "value": "default",
+          "label": "Default / Type OS"
+        },
+        {
+          "value": "12",
+          "label": "12px"
+        },
+        {
+          "value": "13",
+          "label": "13px"
+        },
+        {
+          "value": "14",
+          "label": "14px"
+        },
+        {
+          "value": "15",
+          "label": "15px"
+        },
+        {
+          "value": "16",
+          "label": "16px"
+        },
+        {
+          "value": "17",
+          "label": "17px"
+        },
+        {
+          "value": "18",
+          "label": "18px"
+        },
+        {
+          "value": "20",
+          "label": "20px"
+        },
+        {
+          "value": "22",
+          "label": "22px"
+        },
+        {
+          "value": "24",
+          "label": "24px"
+        },
+        {
+          "value": "26",
+          "label": "26px"
+        },
+        {
+          "value": "28",
+          "label": "28px"
+        },
+        {
+          "value": "30",
+          "label": "30px"
+        },
+        {
+          "value": "32",
+          "label": "32px"
+        },
+        {
+          "value": "36",
+          "label": "36px"
+        },
+        {
+          "value": "40",
+          "label": "40px"
+        },
+        {
+          "value": "44",
+          "label": "44px"
+        },
+        {
+          "value": "48",
+          "label": "48px"
+        },
+        {
+          "value": "56",
+          "label": "56px"
+        }
       ],
       "default": "default"
     },
@@ -600,23 +746,48 @@
       "id": "body_weight",
       "label": "Body weight",
       "options": [
-        { "value": "default", "label": "Default" },
-        { "value": "400", "label": "400" },
-        { "value": "500", "label": "500" },
-        { "value": "600", "label": "600" },
-        { "value": "700", "label": "700" }
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "400",
+          "label": "400"
+        },
+        {
+          "value": "500",
+          "label": "500"
+        },
+        {
+          "value": "600",
+          "label": "600"
+        },
+        {
+          "value": "700",
+          "label": "700"
+        }
       ],
       "default": "default"
     },
-    { "type": "text", "id": "cta_text", "label": "CTA label", "default": "Shop Now" },
-    
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA label",
+      "default": "Shop Now"
+    },
     {
       "type": "select",
       "id": "cta_style",
       "label": "CTA style",
       "options": [
-        { "value": "solid", "label": "Solid fill" },
-        { "value": "outline", "label": "Outline only" }
+        {
+          "value": "solid",
+          "label": "Solid fill"
+        },
+        {
+          "value": "outline",
+          "label": "Outline only"
+        }
       ],
       "default": "solid"
     },
@@ -645,15 +816,42 @@
       "id": "cta_link_target",
       "label": "CTA link",
       "options": [
-        { "value": "custom", "label": "Custom URL…" },
-        { "value": "#variants", "label": "#variants — Shop styles" },
-        { "value": "#knock-socks", "label": "#knock-socks — Statement" },
-        { "value": "#reviews", "label": "#reviews" },
-        { "value": "#guarantee", "label": "#guarantee" },
-        { "value": "#never-loses-grip", "label": "#never-loses-grip" },
-        { "value": "#one-pair", "label": "#one-pair" },
-        { "value": "#coperni", "label": "#coperni — Collab" },
-        { "value": "#problem", "label": "#problem" }
+        {
+          "value": "custom",
+          "label": "Custom URL…"
+        },
+        {
+          "value": "#variants",
+          "label": "#variants — Shop styles"
+        },
+        {
+          "value": "#knock-socks",
+          "label": "#knock-socks — Statement"
+        },
+        {
+          "value": "#reviews",
+          "label": "#reviews"
+        },
+        {
+          "value": "#guarantee",
+          "label": "#guarantee"
+        },
+        {
+          "value": "#never-loses-grip",
+          "label": "#never-loses-grip"
+        },
+        {
+          "value": "#one-pair",
+          "label": "#one-pair"
+        },
+        {
+          "value": "#coperni",
+          "label": "#coperni — Collab"
+        },
+        {
+          "value": "#problem",
+          "label": "#problem"
+        }
       ],
       "default": "custom",
       "info": "Homepage section anchors jump on the same page. Choose Custom URL… for a full URL or any other #hash. Blank custom → all-products collection."
@@ -664,8 +862,10 @@
       "label": "Custom CTA URL",
       "info": "Used when CTA link = Custom URL…."
     },
-
-    { "type": "header", "content": "Shared — Media" },
+    {
+      "type": "header",
+      "content": "Shared — Media"
+    },
     {
       "type": "paragraph",
       "content": "Pick ONE media path. Priority: Shopify video → Video URL → Shopify image → Image URL fallback. Leave unused fields blank."
@@ -707,28 +907,58 @@
       "default": "https://barreletics.com/cdn/shop/files/IMG_2917.jpg?v=1741040637&width=2000",
       "info": "Used only when Background image + Theme asset are empty and there is no video."
     },
-    { "type": "text", "id": "image_alt", "label": "Image alt" },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image alt"
+    },
     {
       "type": "image_picker",
       "id": "image_mobile",
       "label": "Phone image (optional)",
       "info": "Replaces the photo on phones (768px wide and below). Desktop keeps the main image. Use a portrait image framed for the phone height, e.g. 1170x1500. Ignored when a video is set."
     },
-
-    { "type": "header", "content": "Shared — Layout" },
+    {
+      "type": "header",
+      "content": "Shared — Layout"
+    },
     {
       "type": "select",
       "id": "height_desktop",
       "label": "Desktop height",
       "options": [
-        { "value": "64", "label": "64vh — default stage" },
-        { "value": "70", "label": "70vh" },
-        { "value": "80", "label": "80vh" },
-        { "value": "90", "label": "90vh" },
-        { "value": "100", "label": "100vh — full viewport" },
-        { "value": "120", "label": "120vh — tall" },
-        { "value": "140", "label": "140vh — supersize" },
-        { "value": "160", "label": "160vh — full-body cover" }
+        {
+          "value": "64",
+          "label": "64vh — default stage"
+        },
+        {
+          "value": "70",
+          "label": "70vh"
+        },
+        {
+          "value": "80",
+          "label": "80vh"
+        },
+        {
+          "value": "90",
+          "label": "90vh"
+        },
+        {
+          "value": "100",
+          "label": "100vh — full viewport"
+        },
+        {
+          "value": "120",
+          "label": "120vh — tall"
+        },
+        {
+          "value": "140",
+          "label": "140vh — supersize"
+        },
+        {
+          "value": "160",
+          "label": "160vh — full-body cover"
+        }
       ],
       "default": "64",
       "info": "Existing PDP/Home instances keep 64vh unless you change this. Use 140–160vh when a portrait lifestyle must show full body/feet under Cover."
@@ -757,8 +987,14 @@
       "label": "Fit — phone",
       "default": "cover",
       "options": [
-        { "value": "cover", "label": "Cover" },
-        { "value": "contain", "label": "Contain" }
+        {
+          "value": "cover",
+          "label": "Cover"
+        },
+        {
+          "value": "contain",
+          "label": "Contain"
+        }
       ],
       "info": "Cover fills the height box. Contain shows the whole photo inside it."
     },
@@ -798,13 +1034,22 @@
       "id": "media_fit",
       "label": "Image fit",
       "options": [
-        { "value": "cover", "label": "Cover — fill (crop)" },
-        { "value": "contain", "label": "Contain — whole photo" }
+        {
+          "value": "cover",
+          "label": "Cover — fill (crop)"
+        },
+        {
+          "value": "contain",
+          "label": "Contain — whole photo"
+        }
       ],
       "default": "cover",
       "info": "Cover is the sitewide default. Contain only when a tall photo must show face + product (e.g. Outdoor lake paddle)."
     },
-    { "type": "header", "content": "Image crop — focal point" },
+    {
+      "type": "header",
+      "content": "Image crop — focal point"
+    },
     {
       "type": "paragraph",
       "content": "When the image is cropped (object-fit: cover), drag these to keep feet / product in frame. Same idea as fifty-fifty focal controls. Per-section — not a global theme setting."
@@ -848,7 +1093,54 @@
       "label": "Section aria-label",
       "info": "Accessibility name for screen readers — not visible on the page. Leave blank to use the Heading."
     },
-    { "type": "header", "content": "Shared — Section frame" },
+    {
+      "type": "header",
+      "content": "Layout — text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 80)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 40)",
+      "min": 8,
+      "max": 96,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 80)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 20)",
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Shared — Section frame"
+    },
     {
       "type": "paragraph",
       "content": "Desktop only. Phone is always full bleed."
@@ -897,7 +1189,10 @@
       "default": false
     }
   ],
-
-  "presets": [{ "name": "Fullbleed statement" }]
+  "presets": [
+    {
+      "name": "Fullbleed statement"
+    }
+  ]
 }
 {% endschema %}

@@ -206,7 +206,7 @@
   data-see-all="{{ see_all_mode }}"
   data-variants-expanded="false"
   data-default-tab="{{ default_tab }}"
-  style="{% render 'section-inset-vars' %} 
+  style="{% render 'section-inset-vars' %}{% render 'unified-text-pads-vars', y_d: 10, side_d: 24, y_m: 80, x_m: 20 %} 
     {% if title_size != 'default' %}--vg-title-size: {{ title_size }}px;{% endif %}
     {% if body_size != 'default' %}--vg-body-size: {{ body_size }}px;{% endif %}
     {% if title_weight != 'default' %}--vg-title-weight: {{ title_weight }};{% endif %}
@@ -436,7 +436,7 @@
   }
 
   #shopify-section-{{ section.id }} .variants-tab {
-    padding: 10px 24px;
+    padding: var(--utp-y-d, 10px) var(--utp-side-d, 24px);
     font-size: 12px;
     font-weight: var(--weight-bold);
     letter-spacing: 0.05em;
@@ -1127,40 +1127,119 @@
   })();
 </script>
 
+{% render 'unified-text-pads-te-style', selector: '.variants-tab', y_d: 10, side_d: 24, y_m: 80, x_m: 20 %}
+
 {% schema %}
 {
   "name": "Variant Grid",
   "settings": [
-    { "type": "color", "id": "bg_color", "label": "Section background" },
-    { "type": "header", "content": "Shared — Content" },
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Two versions. One performance." },
-    { "type": "text", "id": "title", "label": "Heading", "default": "Shop all colors & styles", "info": "Family is brand Type OS — use Title size/weight to adjust. No font family picker. Header chrome locked — keep title/body structure." },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section background"
+    },
+    {
+      "type": "header",
+      "content": "Shared — Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Two versions. One performance."
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Shop all colors & styles",
+      "info": "Family is brand Type OS — use Title size/weight to adjust. No font family picker. Header chrome locked — keep title/body structure."
+    },
     {
       "type": "select",
       "id": "title_size",
       "label": "Title size",
       "options": [
-        { "value": "default", "label": "Default / Type OS" },
-        { "value": "12", "label": "12px" },
-        { "value": "13", "label": "13px" },
-        { "value": "14", "label": "14px" },
-        { "value": "15", "label": "15px" },
-        { "value": "16", "label": "16px" },
-        { "value": "17", "label": "17px" },
-        { "value": "18", "label": "18px" },
-        { "value": "20", "label": "20px" },
-        { "value": "22", "label": "22px" },
-        { "value": "24", "label": "24px" },
-        { "value": "26", "label": "26px" },
-        { "value": "28", "label": "28px" },
-        { "value": "30", "label": "30px" },
-        { "value": "32", "label": "32px" },
-        { "value": "36", "label": "36px" },
-        { "value": "40", "label": "40px" },
-        { "value": "44", "label": "44px" },
-        { "value": "48", "label": "48px" },
-        { "value": "56", "label": "56px" }
-
+        {
+          "value": "default",
+          "label": "Default / Type OS"
+        },
+        {
+          "value": "12",
+          "label": "12px"
+        },
+        {
+          "value": "13",
+          "label": "13px"
+        },
+        {
+          "value": "14",
+          "label": "14px"
+        },
+        {
+          "value": "15",
+          "label": "15px"
+        },
+        {
+          "value": "16",
+          "label": "16px"
+        },
+        {
+          "value": "17",
+          "label": "17px"
+        },
+        {
+          "value": "18",
+          "label": "18px"
+        },
+        {
+          "value": "20",
+          "label": "20px"
+        },
+        {
+          "value": "22",
+          "label": "22px"
+        },
+        {
+          "value": "24",
+          "label": "24px"
+        },
+        {
+          "value": "26",
+          "label": "26px"
+        },
+        {
+          "value": "28",
+          "label": "28px"
+        },
+        {
+          "value": "30",
+          "label": "30px"
+        },
+        {
+          "value": "32",
+          "label": "32px"
+        },
+        {
+          "value": "36",
+          "label": "36px"
+        },
+        {
+          "value": "40",
+          "label": "40px"
+        },
+        {
+          "value": "44",
+          "label": "44px"
+        },
+        {
+          "value": "48",
+          "label": "48px"
+        },
+        {
+          "value": "56",
+          "label": "56px"
+        }
       ],
       "default": "default",
       "info": "Family is brand Type OS — size only. Default keeps Type OS."
@@ -1170,47 +1249,132 @@
       "id": "title_weight",
       "label": "Title weight",
       "options": [
-        { "value": "default", "label": "Default" },
-        { "value": "400", "label": "400" },
-        { "value": "500", "label": "500" },
-        { "value": "600", "label": "600" },
-        { "value": "700", "label": "700" }
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "400",
+          "label": "400"
+        },
+        {
+          "value": "500",
+          "label": "500"
+        },
+        {
+          "value": "600",
+          "label": "600"
+        },
+        {
+          "value": "700",
+          "label": "700"
+        }
       ],
       "default": "default"
     },
-    { "type": "textarea", "id": "body", "label": "Body", "default": "Grip shoes for Barre, Pilates, Yoga—secure in every hold. No slipping. No resets.", "info": "Family is brand Type OS — use Body size to adjust. No font family picker." },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Body",
+      "default": "Grip shoes for Barre, Pilates, Yoga—secure in every hold. No slipping. No resets.",
+      "info": "Family is brand Type OS — use Body size to adjust. No font family picker."
+    },
     {
       "type": "select",
       "id": "body_size",
       "label": "Body size",
       "options": [
-        { "value": "default", "label": "Default / Type OS" },
-        { "value": "12", "label": "12px" },
-        { "value": "13", "label": "13px" },
-        { "value": "14", "label": "14px" },
-        { "value": "15", "label": "15px" },
-        { "value": "16", "label": "16px" },
-        { "value": "17", "label": "17px" },
-        { "value": "18", "label": "18px" },
-        { "value": "20", "label": "20px" },
-        { "value": "22", "label": "22px" },
-        { "value": "24", "label": "24px" },
-        { "value": "26", "label": "26px" },
-        { "value": "28", "label": "28px" },
-        { "value": "30", "label": "30px" },
-        { "value": "32", "label": "32px" },
-        { "value": "36", "label": "36px" },
-        { "value": "40", "label": "40px" },
-        { "value": "44", "label": "44px" },
-        { "value": "48", "label": "48px" },
-        { "value": "56", "label": "56px" }
-
+        {
+          "value": "default",
+          "label": "Default / Type OS"
+        },
+        {
+          "value": "12",
+          "label": "12px"
+        },
+        {
+          "value": "13",
+          "label": "13px"
+        },
+        {
+          "value": "14",
+          "label": "14px"
+        },
+        {
+          "value": "15",
+          "label": "15px"
+        },
+        {
+          "value": "16",
+          "label": "16px"
+        },
+        {
+          "value": "17",
+          "label": "17px"
+        },
+        {
+          "value": "18",
+          "label": "18px"
+        },
+        {
+          "value": "20",
+          "label": "20px"
+        },
+        {
+          "value": "22",
+          "label": "22px"
+        },
+        {
+          "value": "24",
+          "label": "24px"
+        },
+        {
+          "value": "26",
+          "label": "26px"
+        },
+        {
+          "value": "28",
+          "label": "28px"
+        },
+        {
+          "value": "30",
+          "label": "30px"
+        },
+        {
+          "value": "32",
+          "label": "32px"
+        },
+        {
+          "value": "36",
+          "label": "36px"
+        },
+        {
+          "value": "40",
+          "label": "40px"
+        },
+        {
+          "value": "44",
+          "label": "44px"
+        },
+        {
+          "value": "48",
+          "label": "48px"
+        },
+        {
+          "value": "56",
+          "label": "56px"
+        }
       ],
       "default": "default"
     },
-
-    { "type": "header", "content": "Section — Variant grid — tabs" },
-    { "type": "paragraph", "content": "Each enabled tab needs a product. Cards = that product’s color×size variants (KEEP model). No image picker — media comes from product variants." },
+    {
+      "type": "header",
+      "content": "Section — Variant grid — tabs"
+    },
+    {
+      "type": "paragraph",
+      "content": "Each enabled tab needs a product. Cards = that product’s color×size variants (KEEP model). No image picker — media comes from product variants."
+    },
     {
       "type": "checkbox",
       "id": "use_current_product",
@@ -1223,57 +1387,187 @@
       "id": "card_messaging",
       "label": "Card messaging style",
       "options": [
-        { "value": "meta", "label": "A — Meta: Closed Sole · Size M" },
-        { "value": "badge", "label": "B — Badge pill on image" },
-        { "value": "eyebrow", "label": "C — Eyebrow + color name" },
-        { "value": "minimal", "label": "D — Minimal: color + soft sole" }
+        {
+          "value": "meta",
+          "label": "A — Meta: Closed Sole · Size M"
+        },
+        {
+          "value": "badge",
+          "label": "B — Badge pill on image"
+        },
+        {
+          "value": "eyebrow",
+          "label": "C — Eyebrow + color name"
+        },
+        {
+          "value": "minimal",
+          "label": "D — Minimal: color + soft sole"
+        }
       ],
       "default": "meta",
       "info": "PDP freeze default = A (meta). Do not set B/C/D as PDP default without Andrew letter. Gallery: docs/variant-card-messaging-gallery.html."
     },
-
-    { "type": "checkbox", "id": "show_closed", "label": "Show Closed Sole tab", "default": true },
-    { "type": "text", "id": "label_closed", "label": "Closed Sole tab label", "default": "Closed Sole" },
-    { "type": "product", "id": "product_closed", "label": "Closed Sole product" },
-
-    { "type": "checkbox", "id": "show_open", "label": "Show Open Sole tab", "default": true },
-    { "type": "text", "id": "label_open", "label": "Open Sole tab label", "default": "Open Sole" },
-    { "type": "product", "id": "product_open", "label": "Open Sole product" },
-
-    { "type": "checkbox", "id": "show_oneoffs", "label": "Show One-Offs tab", "default": true },
-    { "type": "text", "id": "label_oneoffs", "label": "One-Offs tab label", "default": "One-Offs" },
+    {
+      "type": "checkbox",
+      "id": "show_closed",
+      "label": "Show Closed Sole tab",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "label_closed",
+      "label": "Closed Sole tab label",
+      "default": "Closed Sole"
+    },
+    {
+      "type": "product",
+      "id": "product_closed",
+      "label": "Closed Sole product"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_open",
+      "label": "Show Open Sole tab",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "label_open",
+      "label": "Open Sole tab label",
+      "default": "Open Sole"
+    },
+    {
+      "type": "product",
+      "id": "product_open",
+      "label": "Open Sole product"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_oneoffs",
+      "label": "Show One-Offs tab",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "label_oneoffs",
+      "label": "One-Offs tab label",
+      "default": "One-Offs"
+    },
     {
       "type": "product",
       "id": "product_oneoffs",
       "label": "One-Offs product",
       "info": "Ignored when Theme settings → One-off colors has a product (that picker wins). Fallback only if Theme setting is empty."
     },
-
-    { "type": "checkbox", "id": "show_outdoor", "label": "Show Outdoor tab", "default": true },
-    { "type": "text", "id": "label_outdoor", "label": "Outdoor tab label", "default": "Outdoor" },
-    { "type": "product", "id": "product_outdoor", "label": "Outdoor product" },
-
-    { "type": "checkbox", "id": "show_all_tab", "label": "Show 'All' tab", "default": false },
-    { "type": "select", "id": "default_tab", "label": "Default tab", "options": [
-      { "value": "closed", "label": "Closed Sole" },
-      { "value": "open", "label": "Open Sole" },
-      { "value": "oneoffs", "label": "One-Offs" },
-      { "value": "outdoor", "label": "Outdoor" },
-      { "value": "all", "label": "All" }
-    ], "default": "closed", "info": "On product pages, template suffix / product category (Outdoor · Open · Closed · Coperni) overrides this so the matching tab opens." },
-
-    { "type": "header", "content": "Section — Variant grid — see all" },
-    { "type": "range", "id": "initial_rows", "min": 1, "max": 6, "step": 1, "default": 2, "label": "Initial rows visible" },
-    { "type": "select", "id": "see_all", "label": "See all behavior", "options": [
-      { "value": "expand", "label": "Expand on page" },
-      { "value": "link", "label": "Link to URL" },
-      { "value": "off", "label": "Show full grid" }
-    ], "default": "expand" },
-    { "type": "text", "id": "see_all_label", "label": "See all label", "default": "See all colors & styles" },
-    { "type": "url", "id": "see_all_url", "label": "See all link URL" },
-    { "type": "range", "id": "max_variants", "min": 8, "max": 80, "step": 4, "default": 48, "label": "Max variants per tab" },
-
-    { "type": "header", "content": "Section — Variant grid — links" },
+    {
+      "type": "checkbox",
+      "id": "show_outdoor",
+      "label": "Show Outdoor tab",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "label_outdoor",
+      "label": "Outdoor tab label",
+      "default": "Outdoor"
+    },
+    {
+      "type": "product",
+      "id": "product_outdoor",
+      "label": "Outdoor product"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_all_tab",
+      "label": "Show 'All' tab",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "default_tab",
+      "label": "Default tab",
+      "options": [
+        {
+          "value": "closed",
+          "label": "Closed Sole"
+        },
+        {
+          "value": "open",
+          "label": "Open Sole"
+        },
+        {
+          "value": "oneoffs",
+          "label": "One-Offs"
+        },
+        {
+          "value": "outdoor",
+          "label": "Outdoor"
+        },
+        {
+          "value": "all",
+          "label": "All"
+        }
+      ],
+      "default": "closed",
+      "info": "On product pages, template suffix / product category (Outdoor · Open · Closed · Coperni) overrides this so the matching tab opens."
+    },
+    {
+      "type": "header",
+      "content": "Section — Variant grid — see all"
+    },
+    {
+      "type": "range",
+      "id": "initial_rows",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 2,
+      "label": "Initial rows visible"
+    },
+    {
+      "type": "select",
+      "id": "see_all",
+      "label": "See all behavior",
+      "options": [
+        {
+          "value": "expand",
+          "label": "Expand on page"
+        },
+        {
+          "value": "link",
+          "label": "Link to URL"
+        },
+        {
+          "value": "off",
+          "label": "Show full grid"
+        }
+      ],
+      "default": "expand"
+    },
+    {
+      "type": "text",
+      "id": "see_all_label",
+      "label": "See all label",
+      "default": "See all colors & styles"
+    },
+    {
+      "type": "url",
+      "id": "see_all_url",
+      "label": "See all link URL"
+    },
+    {
+      "type": "range",
+      "id": "max_variants",
+      "min": 8,
+      "max": 80,
+      "step": 4,
+      "default": 48,
+      "label": "Max variants per tab"
+    },
+    {
+      "type": "header",
+      "content": "Section — Variant grid — links"
+    },
     {
       "type": "text",
       "id": "anchor_id",
@@ -1281,13 +1575,84 @@
       "default": "variants",
       "info": "Same-page jump target (homepage CTAs use #variants). Default: variants."
     },
-    { "type": "checkbox", "id": "show_size_filter", "label": "Show M/L size filter", "default": true, "info": "Off for Apparel (S–XL). On for Performance Skins (M/L KEEP filter)." },
-    { "type": "checkbox", "id": "show_utility_links", "label": "Show size chart link", "default": true },
-    { "type": "checkbox", "id": "show_compare_link", "label": "Show Compare link", "default": true, "info": "Off for Apparel. On for Open/Closed sole collections." },
-    { "type": "url", "id": "size_chart_url", "label": "Size chart URL" },
-    { "type": "url", "id": "compare_url", "label": "Compare URL" }
-    ,
-    { "type": "header", "content": "Shared — Section frame" },
+    {
+      "type": "checkbox",
+      "id": "show_size_filter",
+      "label": "Show M/L size filter",
+      "default": true,
+      "info": "Off for Apparel (S–XL). On for Performance Skins (M/L KEEP filter)."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_utility_links",
+      "label": "Show size chart link",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_compare_link",
+      "label": "Show Compare link",
+      "default": true,
+      "info": "Off for Apparel. On for Open/Closed sole collections."
+    },
+    {
+      "type": "url",
+      "id": "size_chart_url",
+      "label": "Size chart URL"
+    },
+    {
+      "type": "url",
+      "id": "compare_url",
+      "label": "Compare URL"
+    },
+    {
+      "type": "header",
+      "content": "Layout — text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 10)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 24)",
+      "min": 8,
+      "max": 96,
+      "step": 1,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 80)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 20)",
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Shared — Section frame"
+    },
     {
       "type": "paragraph",
       "content": "OUTER inset from the page edges (margin). Top and bottom are independent; left & right = one control. Custom mobile OFF = mobile uses the same inset as desktop. Defaults 0 = full bleed."
@@ -1375,7 +1740,10 @@
       "default": false
     }
   ],
-
-  "presets": [{ "name": "Variant Grid" }]
+  "presets": [
+    {
+      "name": "Variant Grid"
+    }
+  ]
 }
 {% endschema %}

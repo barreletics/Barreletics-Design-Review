@@ -13,7 +13,7 @@
   {% if product %}data-current-handle="{{ product.handle }}"{% endif %}
   {% if product %}data-current-product='{{ product | json | escape }}'{% endif %}
   aria-labelledby="recently-viewed-heading"
-  style="display:none;"
+  style="{% render 'unified-text-pads-vars', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}display:none;"
 >
   <div class="section__inner">
     <h2 class="recently-viewed__heading h2-standard" id="recently-viewed-heading">
@@ -180,6 +180,8 @@
   })();
 </script>
 
+{% render 'unified-text-pads-te-style', selector: '.section-frame', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}
+
 {% schema %}
 {
   "name": "Recently Viewed",
@@ -190,6 +192,50 @@
       "id": "heading",
       "label": "Heading",
       "default": "Recently Viewed"
+    },
+    {
+      "type": "header",
+      "content": "Layout — text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 96)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 40)",
+      "min": 8,
+      "max": 96,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 80)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 20)",
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 20
     }
   ],
   "presets": [

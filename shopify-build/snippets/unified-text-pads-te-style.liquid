@@ -1,0 +1,76 @@
+{%- comment -%}
+  Theme Editor live preview — only override padding for sliders moved off schema default.
+  Per side/axis; no output when all sliders are at default (section CSS wins). No !important.
+{%- endcomment -%}
+{%- liquid
+  assign u_y_d = section.settings.text_pad_y
+  assign te_emit_y_d = false
+  if u_y_d != blank and u_y_d != y_d
+    assign te_emit_y_d = true
+    assign te_y_d = u_y_d
+  endif
+
+  assign u_side_d = section.settings.side_padding
+  assign te_emit_side_d = false
+  if u_side_d != blank and u_side_d != side_d
+    assign te_emit_side_d = true
+    assign te_side_d = u_side_d
+  endif
+
+  assign u_y_m = section.settings.text_pad_y_mobile
+  assign te_emit_y_m = false
+  if u_y_m != blank and u_y_m != y_m
+    assign te_emit_y_m = true
+    assign te_y_m = u_y_m
+  endif
+
+  assign u_x_m = section.settings.text_pad_x_mobile
+  assign te_emit_x_m = false
+  if u_x_m != blank and u_x_m != x_m
+    assign te_emit_x_m = true
+    assign te_x_m = u_x_m
+  endif
+
+  assign te_emit_desktop = false
+  if te_emit_y_d or te_emit_side_d
+    assign te_emit_desktop = true
+  endif
+  assign te_emit_mobile = false
+  if te_emit_y_m or te_emit_x_m
+    assign te_emit_mobile = true
+  endif
+  assign te_emit_any = false
+  if te_emit_desktop or te_emit_mobile
+    assign te_emit_any = true
+  endif
+-%}
+{%- if te_emit_any -%}
+{% style %}
+  {%- if te_emit_desktop -%}
+  #shopify-section-{{ section.id }} {{ selector }} {
+    {%- if te_emit_y_d -%}
+    padding-top: {{ te_y_d }}px;
+    padding-bottom: {{ te_y_d }}px;
+    {%- endif -%}
+    {%- if te_emit_side_d -%}
+    padding-left: {{ te_side_d }}px;
+    padding-right: {{ te_side_d }}px;
+    {%- endif -%}
+  }
+  {%- endif -%}
+  {%- if te_emit_mobile -%}
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} {{ selector }} {
+      {%- if te_emit_y_m -%}
+      padding-top: {{ te_y_m }}px;
+      padding-bottom: {{ te_y_m }}px;
+      {%- endif -%}
+      {%- if te_emit_x_m -%}
+      padding-left: {{ te_x_m }}px;
+      padding-right: {{ te_x_m }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+{% endstyle %}
+{%- endif -%}

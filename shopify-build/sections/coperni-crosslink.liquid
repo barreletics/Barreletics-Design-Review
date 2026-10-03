@@ -33,7 +33,7 @@
 <section
   id="{{ section.settings.anchor_id | default: 'coperni' | handleize }}"
   class="coperni-crosslink section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %}"
-  style="{% render 'section-inset-vars' %}"
+  style="{% render 'section-inset-vars' %}{% render 'unified-text-pads-vars', y_d: 24, side_d: 40, y_m: 80, x_m: 20 %}"
   aria-label="{{ section.settings.aria_label | default: 'Barreletics × Coperni' | escape }}"
 >
   <div class="csb" style="--csb-height: {{ banner_height }}px; --csb-shoe-size: {{ shoe_size }}%; --csb-shoe-y: {{ shoe_y }}%;">
@@ -124,7 +124,7 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    padding: 24px 40px 32px 48px;
+    padding: var(--utp-y-d, 24px) var(--utp-side-d, 40px) 32px 48px;
   }
   #shopify-section-{{ section.id }} .csb-eye {
     font-family: var(--font-body), Roboto, sans-serif;
@@ -215,7 +215,7 @@
       max-width: 100%;
       min-height: 58vh;
       inset: auto;
-      padding: 56px 28px 52px;
+      padding: var(--utp-y-d, 24px) var(--utp-side-d, 40px) 52px;
       justify-content: flex-end;
       box-sizing: border-box;
     }
@@ -268,15 +268,32 @@
   }
 </style>
 
+{% render 'unified-text-pads-te-style', selector: '.csb-content', y_d: 24, side_d: 40, y_m: 80, x_m: 20 %}
+
 {% schema %}
 {
   "name": "Coperni crosslink",
   "tag": "section",
   "class": "section-coperni-crosslink",
   "settings": [
-    { "type": "text", "id": "anchor_id", "label": "Anchor ID", "default": "coperni" },
-    { "type": "text", "id": "aria_label", "label": "Accessibility label", "default": "Barreletics × Coperni" },
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "This style has a limited edition · 2026" },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor ID",
+      "default": "coperni"
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Accessibility label",
+      "default": "Barreletics × Coperni"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "This style has a limited edition · 2026"
+    },
     {
       "type": "html",
       "id": "title",
@@ -289,37 +306,203 @@
       "label": "Body",
       "default": "The Closed Sole, as seen on the Coperni 2026 runway in Paris. One run, limited release."
     },
-    { "type": "text", "id": "meta", "label": "Meta line", "default": "Closed Sole · Special Release · One Run" },
-    { "type": "text", "id": "btn_label", "label": "Button label", "default": "Shop the collaboration" },
-    { "type": "url", "id": "btn_url", "label": "Button link", "info": "Leave empty to jump to #buy on this PDP." },
-    { "type": "checkbox", "id": "btn_new_tab", "label": "Open link in new tab", "default": false },
-    { "type": "header", "content": "Media" },
-    { "type": "image_picker", "id": "bg_image", "label": "Background image" },
+    {
+      "type": "text",
+      "id": "meta",
+      "label": "Meta line",
+      "default": "Closed Sole · Special Release · One Run"
+    },
+    {
+      "type": "text",
+      "id": "btn_label",
+      "label": "Button label",
+      "default": "Shop the collaboration"
+    },
+    {
+      "type": "url",
+      "id": "btn_url",
+      "label": "Button link",
+      "info": "Leave empty to jump to #buy on this PDP."
+    },
+    {
+      "type": "checkbox",
+      "id": "btn_new_tab",
+      "label": "Open link in new tab",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background image"
+    },
     {
       "type": "text",
       "id": "bg_image_url",
       "label": "Background image URL",
       "default": "https://cdn.shopify.com/s/files/1/0045/0612/4391/files/yellow_tone_mix.png?v=1770580561"
     },
-    { "type": "image_picker", "id": "shoe_image", "label": "Product image" },
+    {
+      "type": "image_picker",
+      "id": "shoe_image",
+      "label": "Product image"
+    },
     {
       "type": "text",
       "id": "shoe_image_url",
       "label": "Product image URL",
       "default": "https://cdn.shopify.com/s/files/1/0045/0612/4391/files/Copreni_Final_More_grey.png?v=1774119812"
     },
-    { "type": "header", "content": "Layout" },
-    { "type": "range", "id": "banner_height", "label": "Banner height (desktop)", "min": 300, "max": 1200, "step": 10, "unit": "px", "default": 480, "info": "Desktop only — mobile stays ~420px so the collab band keeps working on phones." },
-    { "type": "range", "id": "shoe_size", "label": "Product image size", "min": 50, "max": 140, "step": 5, "unit": "%", "default": 100, "info": "Desktop. Lower can help show full figure when height is already maxed; higher zooms in." },
-    { "type": "range", "id": "shoe_position_y", "label": "Shoe vertical position", "min": 0, "max": 100, "step": 5, "unit": "%", "default": 0 },
-    { "type": "range", "id": "overlay_opacity", "label": "Desktop overlay strength", "min": 0, "max": 80, "step": 5, "unit": "%", "default": 55 },
-    { "type": "range", "id": "overlay_opacity_mobile", "label": "Mobile overlay strength", "min": 0, "max": 80, "step": 5, "unit": "%", "default": 40 },
-    { "type": "checkbox", "id": "hide_on_mobile", "label": "Hide on mobile", "default": false },
-    { "type": "checkbox", "id": "hide_on_desktop", "label": "Hide on desktop", "default": false },
-    { "type": "range", "id": "inset_top", "label": "Inset top", "min": 0, "max": 96, "step": 4, "unit": "px", "default": 0 },
-    { "type": "range", "id": "inset_bottom", "label": "Inset bottom", "min": 0, "max": 96, "step": 4, "unit": "px", "default": 0 },
-    { "type": "range", "id": "inset_x", "label": "Inset left & right", "min": 0, "max": 96, "step": 4, "unit": "px", "default": 0 }
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "banner_height",
+      "label": "Banner height (desktop)",
+      "min": 300,
+      "max": 1200,
+      "step": 10,
+      "unit": "px",
+      "default": 480,
+      "info": "Desktop only — mobile stays ~420px so the collab band keeps working on phones."
+    },
+    {
+      "type": "range",
+      "id": "shoe_size",
+      "label": "Product image size",
+      "min": 50,
+      "max": 140,
+      "step": 5,
+      "unit": "%",
+      "default": 100,
+      "info": "Desktop. Lower can help show full figure when height is already maxed; higher zooms in."
+    },
+    {
+      "type": "range",
+      "id": "shoe_position_y",
+      "label": "Shoe vertical position",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Desktop overlay strength",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 55
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity_mobile",
+      "label": "Mobile overlay strength",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 40
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_desktop",
+      "label": "Hide on desktop",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "inset_top",
+      "label": "Inset top",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom",
+      "label": "Inset bottom",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x",
+      "label": "Inset left & right",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Layout — text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 24)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 40)",
+      "min": 8,
+      "max": 96,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 80)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 20)",
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    }
   ],
-  "presets": [{ "name": "Coperni crosslink" }]
+  "presets": [
+    {
+      "name": "Coperni crosslink"
+    }
+  ]
 }
 {% endschema %}

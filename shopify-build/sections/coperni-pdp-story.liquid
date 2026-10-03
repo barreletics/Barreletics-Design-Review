@@ -30,7 +30,7 @@
 <section
   id="{{ section.settings.anchor_id | default: 'coperni-story' | handleize }}"
   class="coperni-story section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %}"
-  style="{% render 'section-inset-vars' %} --cs-video-h-m: {{ video_height_mobile }}vh; --cs-lead-h-m: {{ lead_height_mobile }}vh; --cs-video-max-d: {{ video_max_desktop }}px;"
+  style="{% render 'section-inset-vars' %}{% render 'unified-text-pads-vars', y_d: 28, side_d: 32, y_m: 80, x_m: 20 %} --cs-video-h-m: {{ video_height_mobile }}vh; --cs-lead-h-m: {{ lead_height_mobile }}vh; --cs-video-max-d: {{ video_max_desktop }}px;"
   aria-label="{{ section.settings.aria_label | default: 'Coperni collaboration story' | escape }}"
 >
   <div class="coperni-story__inner">
@@ -216,7 +216,7 @@
     margin: 0 0 18px;
   }
   #shopify-section-{{ section.id }} .coperni-story__note {
-    padding: 28px 32px;
+    padding: var(--utp-y-d, 28px) var(--utp-side-d, 32px);
     border: 1px solid #d6cfc0;
     background: #ffffff;
     margin: 8px 0 48px;
@@ -339,14 +339,24 @@
   video_selector: 'video.coperni-story__video, .coperni-story__video-wrap video'
 %}
 
+{% render 'unified-text-pads-te-style', selector: '.coperni-story__note', y_d: 28, side_d: 32, y_m: 80, x_m: 20 %}
+
 {% schema %}
 {
   "name": "Coperni PDP story",
   "tag": "section",
   "class": "section-coperni-pdp-story",
   "settings": [
-    { "type": "header", "content": "Story copy" },
-    { "type": "text", "id": "label", "label": "Small label above the quote", "default": "The collaboration" },
+    {
+      "type": "header",
+      "content": "Story copy"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Small label above the quote",
+      "default": "The collaboration"
+    },
     {
       "type": "textarea",
       "id": "quote",
@@ -365,22 +375,39 @@
       "label": "Story paragraph 2",
       "default": "These shoes were created to support the collection's overarching theme of merging biotechnology, wellness, and human-centered design — aligning with Coperni's focus on innovation and the body's natural rhythms."
     },
-    { "type": "text", "id": "note_label", "label": "Callout label", "default": "On the runway" },
+    {
+      "type": "text",
+      "id": "note_label",
+      "label": "Callout label",
+      "default": "On the runway"
+    },
     {
       "type": "textarea",
       "id": "note_text",
       "label": "Callout text",
       "default": "Footwear shifts too: the collection includes this Pilates shoe collaboration with Barreletics, designed for comfort, grounding, and athletic poise — a sense of balance, even on the runway."
     },
-    { "type": "header", "content": "Paris video" },
-    { "type": "video", "id": "video", "label": "Upload video (Shopify Files)" },
+    {
+      "type": "header",
+      "content": "Paris video"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Upload video (Shopify Files)"
+    },
     {
       "type": "text",
       "id": "video_url",
       "label": "Or paste an MP4 link",
       "info": "Leave blank to use the fast compressed Paris clip in the theme (~0.5MB). Do not paste the original huge .mov (~50MB). Prefer Upload video (Shopify Files) when you can."
     },
-    { "type": "text", "id": "video_caption", "label": "Caption under the video", "default": "Coperni 2026 · Paris" },
+    {
+      "type": "text",
+      "id": "video_caption",
+      "label": "Caption under the video",
+      "default": "Coperni 2026 · Paris"
+    },
     {
       "type": "range",
       "id": "video_height_mobile",
@@ -403,7 +430,10 @@
       "default": 720,
       "info": "Caps how tall the video can get on large screens."
     },
-    { "type": "header", "content": "Runway photos (phone)" },
+    {
+      "type": "header",
+      "content": "Runway photos (phone)"
+    },
     {
       "type": "range",
       "id": "lead_image_height_mobile",
@@ -415,25 +445,138 @@
       "default": 52,
       "info": "The large still right under the video on phones. The two smaller photos below the text stay a side-by-side pair. Desktop keeps the 3-across strip."
     },
-    { "type": "paragraph", "content": "Add or reorder runway photos in the blocks list below (usually 3)." },
-    { "type": "header", "content": "Show / hide" },
-    { "type": "checkbox", "id": "hide_on_mobile", "label": "Hide this section on phones", "default": false },
-    { "type": "checkbox", "id": "hide_on_desktop", "label": "Hide this section on desktop", "default": false },
-    { "type": "header", "content": "Spacing from page edges" },
-    { "type": "range", "id": "inset_top", "label": "Gap above", "min": 0, "max": 96, "step": 4, "unit": "px", "default": 0 },
-    { "type": "range", "id": "inset_bottom", "label": "Gap below", "min": 0, "max": 96, "step": 4, "unit": "px", "default": 0 },
-    { "type": "range", "id": "inset_x", "label": "Gap left & right", "min": 0, "max": 96, "step": 4, "unit": "px", "default": 0 },
-    { "type": "header", "content": "Advanced" },
-    { "type": "text", "id": "anchor_id", "label": "Jump-link ID", "default": "coperni-story", "info": "Used for in-page links like #coperni-story." },
-    { "type": "text", "id": "aria_label", "label": "Screen-reader name", "default": "Coperni collaboration story" }
+    {
+      "type": "paragraph",
+      "content": "Add or reorder runway photos in the blocks list below (usually 3)."
+    },
+    {
+      "type": "header",
+      "content": "Show / hide"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide this section on phones",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_desktop",
+      "label": "Hide this section on desktop",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Spacing from page edges"
+    },
+    {
+      "type": "range",
+      "id": "inset_top",
+      "label": "Gap above",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom",
+      "label": "Gap below",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x",
+      "label": "Gap left & right",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Advanced"
+    },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Jump-link ID",
+      "default": "coperni-story",
+      "info": "Used for in-page links like #coperni-story."
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Screen-reader name",
+      "default": "Coperni collaboration story"
+    },
+    {
+      "type": "header",
+      "content": "Layout — text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 28)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 32)",
+      "min": 8,
+      "max": 96,
+      "step": 1,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 80)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 20)",
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    }
   ],
   "blocks": [
     {
       "type": "runway_image",
       "name": "Runway photo",
       "settings": [
-        { "type": "image_picker", "id": "image", "label": "Photo" },
-        { "type": "text", "id": "image_url", "label": "Or paste image link", "info": "Used only if no photo is picked above." }
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Photo"
+        },
+        {
+          "type": "text",
+          "id": "image_url",
+          "label": "Or paste image link",
+          "info": "Used only if no photo is picked above."
+        }
       ]
     }
   ],

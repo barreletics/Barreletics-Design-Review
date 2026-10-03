@@ -15,7 +15,7 @@
   endif
 %}
 
-<section class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} discipline-film{% if section.settings.headline == blank %} discipline-film--tags-only{% endif %}{% if section.settings.hide_tags_mobile %} discipline-film--hide-tags-m{% endif %}" aria-label="{{ section.settings.aria_label | default: 'Built for every studio discipline' | escape }}" style="--df-bg: {{ section.settings.bg_color | default: '#faf8f6' }}; --df-pad-y: {{ pad_y }}px; --df-pad-y-m: {{ pad_y_m }}px; --df-space-below-m: {{ space_below_m }}px; {% render 'section-inset-vars' %}">
+<section class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} discipline-film{% if section.settings.headline == blank %} discipline-film--tags-only{% endif %}{% if section.settings.hide_tags_mobile %} discipline-film--hide-tags-m{% endif %}" aria-label="{{ section.settings.aria_label | default: 'Built for every studio discipline' | escape }}" style="--df-bg: {{ section.settings.bg_color | default: '#faf8f6' }}; --df-pad-y: {{ pad_y }}px; --df-pad-y-m: {{ pad_y_m }}px; --df-space-below-m: {{ space_below_m }}px; {% render 'section-inset-vars' %}{% render 'unified-text-pads-vars', y_d: 64, side_d: 40, y_m: 48, x_m: 16, legacy_y_d: section.settings.pad_y, legacy_y_m: section.settings.pad_y_mobile %}">
   <div class="discipline-film__inner">
     {% if section.settings.headline != blank %}
       <p class="discipline-film__line h2-display">{{ section.settings.headline | newline_to_br }}</p>
@@ -53,7 +53,7 @@
     width: 100%;
     max-width: 1100px;
     margin: 0 auto;
-    padding: var(--df-pad-y, var(--section-padding-y, 64px)) var(--section-padding-x, 40px);
+    padding: var(--utp-y-d, 64px) var(--utp-side-d, 40px);
     text-align: center;
   }
   /* Same H2 Display as 50/50 “Never loses…” — desktop size token on all widths (not the smaller mobile shrink). */
@@ -135,7 +135,7 @@
   }
   @media (max-width: 768px) {
     .discipline-film__inner {
-      padding: var(--df-pad-y-m, var(--df-pad-y, 48px)) var(--section-padding-x-mobile, 16px) calc(var(--df-pad-y-m, var(--df-pad-y, 48px)) + var(--df-space-below-m, 0px));
+      padding: var(--utp-y-m, 48px) var(--utp-x-m, 16px) calc(var(--utp-y-m, 48px) + var(--df-space-below-m, 0px));
     }
     .discipline-film__line.type-statement {
       font-size: var(--df-title-size, var(--type-statement-size-mobile));
@@ -148,6 +148,8 @@
     }
   }
 </style>
+
+{% render 'unified-text-pads-te-style', selector: '.discipline-film__inner', y_d: 64, side_d: 40, y_m: 48, x_m: 16 , legacy_y_d: section.settings.pad_y , legacy_y_m: section.settings.pad_y_mobile %}
 
 {% schema %}
 {
@@ -175,8 +177,14 @@
       "id": "heading_role",
       "label": "Heading Type OS role",
       "options": [
-        { "value": "display", "label": "H2 Display" },
-        { "value": "statement", "label": "Statement" }
+        {
+          "value": "display",
+          "label": "H2 Display"
+        },
+        {
+          "value": "statement",
+          "label": "Statement"
+        }
       ],
       "default": "display",
       "info": "Locked by global type system (2026-09-27). This setting no longer changes the heading."
@@ -186,13 +194,34 @@
       "id": "title_size",
       "label": "Title size",
       "options": [
-        { "value": "default", "label": "Default / Type OS" },
-        { "value": "32", "label": "32px" },
-        { "value": "36", "label": "36px" },
-        { "value": "40", "label": "40px" },
-        { "value": "44", "label": "44px" },
-        { "value": "48", "label": "48px" },
-        { "value": "52", "label": "52px" }
+        {
+          "value": "default",
+          "label": "Default / Type OS"
+        },
+        {
+          "value": "32",
+          "label": "32px"
+        },
+        {
+          "value": "36",
+          "label": "36px"
+        },
+        {
+          "value": "40",
+          "label": "40px"
+        },
+        {
+          "value": "44",
+          "label": "44px"
+        },
+        {
+          "value": "48",
+          "label": "48px"
+        },
+        {
+          "value": "52",
+          "label": "52px"
+        }
       ],
       "default": "default",
       "info": "Locked by global type system (2026-09-27). This setting no longer changes the heading."
@@ -202,9 +231,18 @@
       "id": "title_weight",
       "label": "Title weight",
       "options": [
-        { "value": "default", "label": "Default / Type OS" },
-        { "value": "400", "label": "400" },
-        { "value": "500", "label": "500" }
+        {
+          "value": "default",
+          "label": "Default / Type OS"
+        },
+        {
+          "value": "400",
+          "label": "400"
+        },
+        {
+          "value": "500",
+          "label": "500"
+        }
       ],
       "default": "default",
       "info": "Locked by global type system (2026-09-27). This setting no longer changes the heading."
@@ -223,7 +261,8 @@
       "max": 96,
       "step": 4,
       "unit": "px",
-      "default": 64
+      "default": 64,
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
     },
     {
       "type": "range",
@@ -234,7 +273,8 @@
       "step": 4,
       "unit": "px",
       "default": 64,
-      "info": "Closed model = 32. Soft cream #faf8f6 (sitewide.lock) — same as sock-era. NEVER #f5f2ec darker cream. NEVER invent white unless Andrew says."
+      "info": "Closed model = 32. Soft cream #faf8f6 (sitewide.lock) — same as sock-era. NEVER #f5f2ec darker cream. NEVER invent white unless Andrew says.",
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
     },
     {
       "type": "checkbox",
@@ -269,6 +309,50 @@
       "id": "aria_label",
       "label": "Aria label",
       "default": "Built for every studio discipline"
+    },
+    {
+      "type": "header",
+      "content": "Layout — text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 64)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 40)",
+      "min": 8,
+      "max": 96,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 48)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 16)",
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 16
     },
     {
       "type": "header",

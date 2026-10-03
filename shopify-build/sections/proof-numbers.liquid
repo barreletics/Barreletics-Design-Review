@@ -22,7 +22,7 @@
   class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} proof-numbers proof-numbers--{{ tone }}"
   data-proof-numbers
   aria-label="{{ region_label | escape }}"
- style="{% render 'section-inset-vars' %}">
+ style="{% render 'section-inset-vars' %}{% render 'unified-text-pads-vars', y_d: 88, side_d: 40, y_m: 64, x_m: 20 %}">
   <div class="proof-numbers__inner">
     {% if section.settings.eyebrow != blank or section.settings.title != blank %}
       <div class="proof-numbers__head">
@@ -62,7 +62,7 @@
   #shopify-section-{{ section.id }} .proof-numbers {
     position: relative;
     overflow: hidden;
-    padding: 88px 40px;
+    padding: var(--utp-y-d, 88px) var(--utp-side-d, 40px);
     text-align: center;
   }
   #shopify-section-{{ section.id }} .proof-numbers--cream {
@@ -234,7 +234,7 @@
   }
   @media (max-width: 768px) {
     #shopify-section-{{ section.id }} .proof-numbers {
-      padding: 64px 20px;
+      padding: var(--utp-y-m, 64px) var(--utp-x-m, 20px);
     }
     #shopify-section-{{ section.id }} .proof-numbers__grid {
       grid-template-columns: 1fr;
@@ -292,6 +292,8 @@
 </script>
 {% endif %}
 
+{% render 'unified-text-pads-te-style', selector: '.proof-numbers', y_d: 88, side_d: 40, y_m: 64, x_m: 20 %}
+
 {% schema %}
 {
   "name": "Proof numbers",
@@ -341,13 +343,69 @@
       "id": "tone",
       "label": "Tone",
       "options": [
-        { "value": "white", "label": "White (clean · charcoal type)" },
-        { "value": "cream", "label": "Cream (energy wash)" },
-        { "value": "charcoal", "label": "Charcoal (high energy)" }
+        {
+          "value": "white",
+          "label": "White (clean · charcoal type)"
+        },
+        {
+          "value": "cream",
+          "label": "Cream (energy wash)"
+        },
+        {
+          "value": "charcoal",
+          "label": "Charcoal (high energy)"
+        }
       ],
       "default": "white"
     },
-    { "type": "header", "content": "Shared — Section frame" },
+    {
+      "type": "header",
+      "content": "Layout — text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 88)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 88
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 40)",
+      "min": 8,
+      "max": 96,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 64)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 20)",
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Shared — Section frame"
+    },
     {
       "type": "paragraph",
       "content": "OUTER inset from the page edges (margin). Top and bottom are independent; left & right = one control. Custom mobile OFF = mobile uses the same inset as desktop. Defaults 0 = full bleed."

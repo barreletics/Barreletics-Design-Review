@@ -40,7 +40,7 @@
   assign form_token = section.settings.form_token | default: 'BL-PARTNER-APPLY'
 -%}
 
-<section class="section page-wholesale__head" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
+<section class="section page-wholesale__head" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }} style="{% render 'unified-text-pads-vars', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}">
   <div class="section__inner section__inner--narrow">
     <h1 class="page-wholesale__title">{{ section.settings.title }}</h1>
     <div class="page-wholesale__body type-lede">
@@ -301,6 +301,8 @@
   }
 </style>
 
+{% render 'unified-text-pads-te-style', selector: '.section-frame', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}
+
 {% schema %}
 {
   "name": "Wholesale Page",
@@ -315,7 +317,7 @@
       "type": "richtext",
       "id": "body",
       "label": "Body text",
-      "default": "<p>Studios, instructors, retailers, and brand collaborations. We reply within 2\u20133 business days.</p>",
+      "default": "<p>Studios, instructors, retailers, and brand collaborations. We reply within 2–3 business days.</p>",
       "info": "Who it is for, and the response time. Nothing else. No process-speak — a sentence like \"pricing and terms are worked out after we review your application\" describes a procedure without telling the reader anything and was cut. Only concrete numbers, timeframes, and requirements belong here."
     },
     {
@@ -328,7 +330,7 @@
       "type": "textarea",
       "id": "success_message",
       "label": "Success message",
-      "default": "Got it. We reply within 2\u20133 business days."
+      "default": "Got it. We reply within 2–3 business days."
     },
     {
       "type": "text",
@@ -336,6 +338,50 @@
       "label": "Routing token",
       "default": "BL-PARTNER-APPLY",
       "info": "Hidden value included in the submission email. The mail rule matches this string to route applications to the partner applications inbox. Do not change without updating the rule — see planning/partner-programs.md."
+    },
+    {
+      "type": "header",
+      "content": "Layout — text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 96)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 40)",
+      "min": 8,
+      "max": 96,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 80)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 20)",
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 20
     }
   ],
   "presets": [

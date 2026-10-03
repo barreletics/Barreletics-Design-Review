@@ -7,13 +7,23 @@
   assign media_pct = section.settings.media_column_pct | default: 50
   assign text_pct = 100 | minus: media_pct
 
-  assign min_height = section.settings.min_height
-  if min_height == blank
-    assign min_height = section.settings.media_max_px | default: 760
+  assign pas_mh_default = 760
+  assign pas_mh = section.settings.min_height
+  if pas_mh != blank and pas_mh != pas_mh_default
+    assign min_height = pas_mh
+  elsif section.settings.media_max_px != blank
+    assign min_height = section.settings.media_max_px
+  else
+    assign min_height = pas_mh | default: pas_mh_default
   endif
-  assign mobile_media_height = section.settings.mobile_media_height
-  if mobile_media_height == blank or mobile_media_height == 0
-    assign mobile_media_height = section.settings.media_max_px_mobile | default: 480
+  assign pas_mmh_default = 480
+  assign pas_mmh = section.settings.mobile_media_height
+  if pas_mmh != blank and pas_mmh != 0 and pas_mmh != pas_mmh_default
+    assign mobile_media_height = pas_mmh
+  elsif section.settings.media_max_px_mobile != blank
+    assign mobile_media_height = section.settings.media_max_px_mobile
+  else
+    assign mobile_media_height = pas_mmh | default: pas_mmh_default
   endif
 
   assign panel_cream = false
@@ -25,8 +35,14 @@
 
   assign text_pad_y_d = section.settings.text_pad_y
   assign text_pad_y_m = section.settings.text_pad_y_mobile
-  assign side_padding = section.settings.side_padding | default: 48
-  assign text_pad_x_m = section.settings.text_pad_x_mobile | default: 20
+  assign side_padding = section.settings.side_padding
+  if side_padding == blank
+    assign side_padding = 48
+  endif
+  assign text_pad_x_m = section.settings.text_pad_x_mobile
+  if text_pad_x_m == blank
+    assign text_pad_x_m = 20
+  endif
   assign section_gap = section.settings.section_gap
   if section_gap == blank
     assign section_gap = 0
@@ -64,7 +80,9 @@
   </div>
   <div class="page-about-split__copy">
     {% if section.settings.title != blank %}
-      <h2 class="page-about-split__title">{{ section.settings.title }}</h2>
+      {% assign hl = section.settings.heading_level | default: 'h2' %}
+      {% if hl != 'h2' and hl != 'h3' %}{% assign hl = 'h2' %}{% endif %}
+      <{{ hl }} class="page-about-split__title">{{ section.settings.title }}</{{ hl }}>
     {% endif %}
     {% if section.settings.body != blank %}
       <div class="page-about-split__body rte">{{ section.settings.body }}</div>
@@ -78,7 +96,6 @@
   {%- endif %}
   #shopify-section-{{ section.id }} {
     padding-block: var(--pas-section-gap, 0px);
-    padding-bottom: var(--pas-section-gap-m, 0px);
   }
   #shopify-section-{{ section.id }} .page-about-split {
     display: grid;
@@ -129,6 +146,9 @@
   }
   #shopify-section-{{ section.id }} .page-about-split__body p + p { margin-top: 1em; }
   @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} {
+      padding-bottom: var(--pas-section-gap-m, 0px);
+    }
     #shopify-section-{{ section.id }} .page-about-split {
       grid-template-columns: 1fr;
       display: flex;
@@ -155,26 +175,36 @@
 {%- endcomment -%}
 {% style %}
   {%- liquid
+    assign te_mh_default = 760
     assign te_min_h = section.settings.min_height
-    if te_min_h == blank
-      assign te_min_h = section.settings.media_max_px | default: 760
+    if te_min_h != blank and te_min_h != te_mh_default
+      assign te_min_h = te_min_h
+    elsif section.settings.media_max_px != blank
+      assign te_min_h = section.settings.media_max_px
+    else
+      assign te_min_h = te_min_h | default: te_mh_default
     endif
+    assign te_mmh_default = 480
     assign te_mmh = section.settings.mobile_media_height
-    if te_mmh == blank or te_mmh == 0
-      assign te_mmh = section.settings.media_max_px_mobile | default: 480
+    if te_mmh != blank and te_mmh != 0 and te_mmh != te_mmh_default
+      assign te_mmh = te_mmh
+    elsif section.settings.media_max_px_mobile != blank
+      assign te_mmh = section.settings.media_max_px_mobile
+    else
+      assign te_mmh = te_mmh | default: te_mmh_default
     endif
     assign te_mcp = section.settings.media_column_pct | default: 50
   -%}
   #shopify-section-{{ section.id }},
   #shopify-section-{{ section.id }} .page-about-split {
-    --pas-min-height: {{ te_min_h }}px !important;
-    --pas-mobile-media-height: {{ te_mmh }}px !important;
-    --pas-media-fr: {{ te_mcp }}fr !important;
-    --pas-text-fr: {{ 100 | minus: te_mcp }}fr !important;
-    --pas-section-gap: {{ section.settings.section_gap | default: 0 }}px !important;
-    --pas-section-gap-m: {{ section.settings.section_gap_mobile | default: 0 }}px !important;
-    --pas-side-padding: {{ section.settings.side_padding | default: 48 }}px !important;
-    --pas-text-pad-x-m: {{ section.settings.text_pad_x_mobile | default: 20 }}px !important;
+    --pas-min-height: {{ te_min_h }}px;
+    --pas-mobile-media-height: {{ te_mmh }}px;
+    --pas-media-fr: {{ te_mcp }}fr;
+    --pas-text-fr: {{ 100 | minus: te_mcp }}fr;
+    --pas-section-gap: {{ section.settings.section_gap | default: 0 }}px;
+    --pas-section-gap-m: {{ section.settings.section_gap_mobile | default: 0 }}px;
+    --pas-side-padding: {{ section.settings.side_padding | default: 48 }}px;
+    --pas-text-pad-x-m: {{ section.settings.text_pad_x_mobile | default: 20 }}px;
   }
   {%- if section.settings.text_pad_y != blank %}
   #shopify-section-{{ section.id }} .page-about-split__copy {
@@ -209,12 +239,34 @@
 {
   "name": "About — Split",
   "settings": [
-    { "type": "header", "content": "1 — Photo / video" },
-    { "type": "paragraph", "content": "Pick ONE. Priority: Shopify image → Image URL." },
-    { "type": "image_picker", "id": "image", "label": "Image / poster (Shopify)" },
-    { "type": "text", "id": "image_url", "label": "Image URL", "info": "Used when Shopify image is empty." },
-    { "type": "text", "id": "image_alt", "label": "Image alt text" },
-    { "type": "header", "content": "2 — Focus + height" },
+    {
+      "type": "header",
+      "content": "1 — Photo / video"
+    },
+    {
+      "type": "paragraph",
+      "content": "Pick ONE. Priority: Shopify image → Image URL."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image / poster (Shopify)"
+    },
+    {
+      "type": "text",
+      "id": "image_url",
+      "label": "Image URL",
+      "info": "Used when Shopify image is empty."
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image alt text"
+    },
+    {
+      "type": "header",
+      "content": "2 — Focus + height"
+    },
     {
       "type": "range",
       "id": "min_height",
@@ -223,8 +275,8 @@
       "max": 820,
       "step": 20,
       "unit": "px",
-      "default": 760,
-      "info": "Contain-fit photo max height on desktop."
+      "info": "Contain-fit photo max height on desktop.",
+      "default": 760
     },
     {
       "type": "range",
@@ -244,25 +296,51 @@
       "max": 900,
       "step": 10,
       "unit": "px",
-      "default": 0,
-      "info": "0 uses legacy saved phone height when present (see hidden keys)."
+      "info": "0 uses legacy saved phone height when present (see hidden keys).",
+      "default": 480
     },
-    { "type": "header", "content": "3 — Heading / body / CTA" },
-    { "type": "text", "id": "title", "label": "Heading" },
+    {
+      "type": "header",
+      "content": "3 — Heading / body / CTA"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading"
+    },
     {
       "type": "select",
       "id": "heading_level",
       "label": "Heading level (default H2)",
       "default": "h2",
       "options": [
-        { "value": "h2", "label": "H2" },
-        { "value": "h3", "label": "H3" }
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        }
       ]
     },
-    { "type": "richtext", "id": "body", "label": "Body" },
-    { "type": "header", "content": "4 — Trust strip" },
-    { "type": "paragraph", "content": "Not used on About splits." },
-    { "type": "header", "content": "5 — Layout" },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body"
+    },
+    {
+      "type": "header",
+      "content": "4 — Trust strip"
+    },
+    {
+      "type": "paragraph",
+      "content": "Not used on About splits."
+    },
+    {
+      "type": "header",
+      "content": "5 — Layout"
+    },
     {
       "type": "checkbox",
       "id": "reverse",
@@ -276,48 +354,54 @@
       "label": "Phone stack (default: image on top)",
       "default": "media_first",
       "options": [
-        { "value": "media_first", "label": "Image above copy (default)" },
-        { "value": "copy_first", "label": "Copy above image" }
+        {
+          "value": "media_first",
+          "label": "Image above copy (default)"
+        },
+        {
+          "value": "copy_first",
+          "label": "Copy above image"
+        }
       ]
     },
     {
       "type": "range",
       "id": "text_pad_y",
-      "label": "Text pad top & bottom — desktop (default 96)",
-      "min": 32,
+      "label": "Text pad top & bottom — desktop (default 56)",
+      "min": 8,
       "max": 120,
-      "step": 4,
+      "step": 1,
       "unit": "px",
-      "default": 96,
-      "info": "Leave unset in JSON keeps legacy clamp padding until you set this in TE."
+      "info": "Leave unset in JSON keeps legacy clamp padding until you set this in TE.",
+      "default": 56
     },
     {
       "type": "range",
       "id": "side_padding",
       "label": "Text pad left & right — desktop (default 48)",
-      "min": 16,
+      "min": 8,
       "max": 96,
-      "step": 4,
+      "step": 1,
       "unit": "px",
       "default": 48
     },
     {
       "type": "range",
       "id": "text_pad_y_mobile",
-      "label": "Text pad top & bottom — phone (default 80)",
-      "min": 16,
+      "label": "Text pad top & bottom — phone (default 36)",
+      "min": 8,
       "max": 120,
-      "step": 4,
+      "step": 1,
       "unit": "px",
-      "default": 80
+      "default": 36
     },
     {
       "type": "range",
       "id": "text_pad_x_mobile",
       "label": "Text pad left & right — phone (default 20)",
-      "min": 12,
+      "min": 8,
       "max": 48,
-      "step": 4,
+      "step": 1,
       "unit": "px",
       "default": 20
     },
@@ -327,12 +411,26 @@
       "label": "Text panel background (default: White)",
       "default": "white",
       "options": [
-        { "value": "white", "label": "White (#ffffff)" },
-        { "value": "cream", "label": "Cream (#faf8f6)" }
+        {
+          "value": "white",
+          "label": "White (#ffffff)"
+        },
+        {
+          "value": "cream",
+          "label": "Cream (#faf8f6)"
+        }
       ]
     },
-    { "type": "text", "id": "aria_label", "label": "Accessibility name (aria-label)", "default": "Story section" },
-    { "type": "header", "content": "6 — Section gap" },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Accessibility name (aria-label)",
+      "default": "Story section"
+    },
+    {
+      "type": "header",
+      "content": "6 — Section gap"
+    },
     {
       "type": "range",
       "id": "section_gap",
@@ -353,16 +451,153 @@
       "unit": "px",
       "default": 0
     },
-    { "type": "header", "content": "Legacy (hidden — do not edit)" },
-    { "type": "paragraph", "content": "Preserves stored values on Theme Editor save." },
-    { "type": "range", "id": "media_max_px", "label": "Legacy: Photo height desktop", "min": 360, "max": 820, "step": 20, "unit": "px", "default": 760, "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}" },
-    { "type": "range", "id": "media_max_px_mobile", "label": "Legacy: Photo height mobile", "min": 280, "max": 900, "step": 10, "unit": "px", "default": 480, "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}" },
-    { "type": "checkbox", "id": "cream_bg", "label": "Legacy: Cream background", "default": false, "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}" },
-    { "type": "number", "id": "heading_size_override", "label": "Legacy: Heading size override", "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}" },
-    { "type": "select", "id": "title_weight", "label": "Legacy: Heading weight", "default": "default", "options": [{ "value": "default", "label": "Default" }, { "value": "400", "label": "400" }, { "value": "500", "label": "500" }, { "value": "600", "label": "600" }, { "value": "700", "label": "700" }], "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}" },
-    { "type": "select", "id": "body_size", "label": "Legacy: Body size", "default": "default", "options": [{ "value": "default", "label": "Default" }, { "value": "14", "label": "14px" }, { "value": "15", "label": "15px" }, { "value": "16", "label": "16px" }, { "value": "17", "label": "17px" }, { "value": "18", "label": "18px" }, { "value": "20", "label": "20px" }, { "value": "22", "label": "22px" }, { "value": "24", "label": "24px" }], "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}" },
-    { "type": "select", "id": "body_weight", "label": "Legacy: Body weight", "default": "default", "options": [{ "value": "default", "label": "Default" }, { "value": "400", "label": "400" }, { "value": "500", "label": "500" }, { "value": "600", "label": "600" }], "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}" }
+    {
+      "type": "header",
+      "content": "Legacy (hidden — do not edit)"
+    },
+    {
+      "type": "paragraph",
+      "content": "Preserves stored values on Theme Editor save."
+    },
+    {
+      "type": "range",
+      "id": "media_max_px",
+      "label": "Legacy: Photo height desktop",
+      "min": 360,
+      "max": 820,
+      "step": 20,
+      "unit": "px",
+      "default": 760,
+      "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "range",
+      "id": "media_max_px_mobile",
+      "label": "Legacy: Photo height mobile",
+      "min": 280,
+      "max": 900,
+      "step": 10,
+      "unit": "px",
+      "default": 480,
+      "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "cream_bg",
+      "label": "Legacy: Cream background",
+      "default": false,
+      "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "number",
+      "id": "heading_size_override",
+      "label": "Legacy: Heading size override",
+      "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Legacy: Heading weight",
+      "default": "default",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "400",
+          "label": "400"
+        },
+        {
+          "value": "500",
+          "label": "500"
+        },
+        {
+          "value": "600",
+          "label": "600"
+        },
+        {
+          "value": "700",
+          "label": "700"
+        }
+      ],
+      "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "select",
+      "id": "body_size",
+      "label": "Legacy: Body size",
+      "default": "default",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "14",
+          "label": "14px"
+        },
+        {
+          "value": "15",
+          "label": "15px"
+        },
+        {
+          "value": "16",
+          "label": "16px"
+        },
+        {
+          "value": "17",
+          "label": "17px"
+        },
+        {
+          "value": "18",
+          "label": "18px"
+        },
+        {
+          "value": "20",
+          "label": "20px"
+        },
+        {
+          "value": "22",
+          "label": "22px"
+        },
+        {
+          "value": "24",
+          "label": "24px"
+        }
+      ],
+      "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "select",
+      "id": "body_weight",
+      "label": "Legacy: Body weight",
+      "default": "default",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "400",
+          "label": "400"
+        },
+        {
+          "value": "500",
+          "label": "500"
+        },
+        {
+          "value": "600",
+          "label": "600"
+        }
+      ],
+      "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"
+    }
   ],
-  "presets": [{ "name": "About — Split" }]
+  "presets": [
+    {
+      "name": "About — Split"
+    }
+  ]
 }
 {% endschema %}

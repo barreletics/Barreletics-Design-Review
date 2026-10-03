@@ -5,7 +5,6 @@
 
 {% if section.settings.enabled %}
   {%- assign _fs = section.settings.font_size | default: 15 -%}
-  {%- assign _pad = section.settings.pad_y | default: 10 -%}
   {%- assign _wt = section.settings.font_weight | default: '500' -%}
   {%- assign _desk = section.settings.show_on_desktop -%}
   {%- if _desk == nil -%}{%- assign _desk = true -%}{%- endif -%}
@@ -24,11 +23,12 @@
     class="sale-banner"
     role="region"
     aria-label="Promotion"
-    style="
+    style="{% render 'unified-text-pads-vars', y_d: 10, side_d: 56, y_m: 10, x_m: 24, legacy_y_d: section.settings.pad_y %}
       --sale-banner-bg: {{ section.settings.bg_color | default: '#faf8f6' }};
       --sale-banner-color: {{ section.settings.text_color | default: '#1c1916' }};
       --sale-banner-font-size: {{ _fs }}px;
-      --sale-banner-pad-y: {{ _pad }}px;
+      --sale-banner-pad-y: var(--utp-y-d, 10px);
+      --sale-banner-pad-x: var(--utp-side-d, 56px);
       --sale-banner-weight: {{ _wt }};
     "
     {{ section.shopify_attributes }}
@@ -44,6 +44,8 @@
     </div>
   </div>
 {% endif %}
+
+{% render 'unified-text-pads-te-style', selector: '.sale-banner', y_d: 10, side_d: 56, y_m: 10, x_m: 24 , legacy_y_d: section.settings.pad_y %}
 
 {% schema %}
 {
@@ -103,10 +105,22 @@
       "id": "font_weight",
       "label": "Text weight",
       "options": [
-        { "value": "400", "label": "400 Regular" },
-        { "value": "500", "label": "500 Medium" },
-        { "value": "600", "label": "600 Semibold" },
-        { "value": "700", "label": "700 Bold" }
+        {
+          "value": "400",
+          "label": "400 Regular"
+        },
+        {
+          "value": "500",
+          "label": "500 Medium"
+        },
+        {
+          "value": "600",
+          "label": "600 Semibold"
+        },
+        {
+          "value": "700",
+          "label": "700 Bold"
+        }
       ],
       "default": "500",
       "info": "Live SAVE2 is not bold."
@@ -122,6 +136,12 @@
       "default": 15
     },
     {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Accessibility label",
+      "default": "Sale"
+    },
+    {
       "type": "range",
       "id": "pad_y",
       "label": "Vertical padding",
@@ -129,7 +149,60 @@
       "max": 16,
       "step": 1,
       "unit": "px",
+      "default": 10,
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "header",
+      "content": "Layout — text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 10)",
+      "min": 0,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
       "default": 10
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 56)",
+      "min": 8,
+      "max": 96,
+      "step": 1,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 10)",
+      "min": 0,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 24)",
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Legacy (hidden — do not edit)"
+    },
+    {
+      "type": "paragraph",
+      "content": "Preserves stored values on Theme Editor save."
     }
   ],
   "presets": [

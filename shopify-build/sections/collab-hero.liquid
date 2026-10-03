@@ -63,7 +63,7 @@
   id="{{ section.settings.anchor_id | default: 'coperni' | handleize }}"
   class="collab-hero collab-hero--{{ layout }} section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %}"
   style="
-    {% render 'section-inset-vars' %}
+    {% render 'section-inset-vars' %}{% render 'unified-text-pads-vars', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}
     --ch-media-radius: {{ media_radius }}px;
     --ch-tile-radius: {{ tile_radius }}px;
     --ch-height-desktop: {{ height_desktop }}vh;
@@ -565,19 +565,34 @@
   video_selector: 'video.collab-hero__video, .collab-hero__stage video, .collab-hero__editorial-media video'
 %}
 
+{% render 'unified-text-pads-te-style', selector: '.section-frame', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}
+
 {% schema %}
 {
   "name": "Collab hero",
   "settings": [
-    { "type": "header", "content": "Shared — Content" },
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Limited Edition × Paris 2026" },
+    {
+      "type": "header",
+      "content": "Shared — Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Limited Edition × Paris 2026"
+    },
     {
       "type": "text",
       "id": "badge_text",
       "label": "Badge",
       "info": "Short pill — e.g. Available at Free People"
     },
-    { "type": "color", "id": "badge_bg_color", "label": "Badge background", "default": "#C4859B" },
+    {
+      "type": "color",
+      "id": "badge_bg_color",
+      "label": "Badge background",
+      "default": "#C4859B"
+    },
     {
       "type": "textarea",
       "id": "title",
@@ -590,29 +605,94 @@
       "id": "title_size",
       "label": "Title size",
       "options": [
-        { "value": "default", "label": "Default / Type OS" },
-        { "value": "12", "label": "12px" },
-        { "value": "13", "label": "13px" },
-        { "value": "14", "label": "14px" },
-        { "value": "15", "label": "15px" },
-        { "value": "16", "label": "16px" },
-        { "value": "17", "label": "17px" },
-        { "value": "18", "label": "18px" },
-        { "value": "20", "label": "20px" },
-        { "value": "22", "label": "22px" },
-        { "value": "24", "label": "24px" },
-        { "value": "26", "label": "26px" },
-        { "value": "28", "label": "28px" },
-        { "value": "30", "label": "30px" },
-        { "value": "32", "label": "32px" },
-        { "value": "36", "label": "36px" },
-        { "value": "40", "label": "40px" },
-        { "value": "44", "label": "44px" },
-        { "value": "48", "label": "48px" },
-        { "value": "56", "label": "56px" },
-        { "value": "64", "label": "64px" },
-        { "value": "72", "label": "72px" }
-
+        {
+          "value": "default",
+          "label": "Default / Type OS"
+        },
+        {
+          "value": "12",
+          "label": "12px"
+        },
+        {
+          "value": "13",
+          "label": "13px"
+        },
+        {
+          "value": "14",
+          "label": "14px"
+        },
+        {
+          "value": "15",
+          "label": "15px"
+        },
+        {
+          "value": "16",
+          "label": "16px"
+        },
+        {
+          "value": "17",
+          "label": "17px"
+        },
+        {
+          "value": "18",
+          "label": "18px"
+        },
+        {
+          "value": "20",
+          "label": "20px"
+        },
+        {
+          "value": "22",
+          "label": "22px"
+        },
+        {
+          "value": "24",
+          "label": "24px"
+        },
+        {
+          "value": "26",
+          "label": "26px"
+        },
+        {
+          "value": "28",
+          "label": "28px"
+        },
+        {
+          "value": "30",
+          "label": "30px"
+        },
+        {
+          "value": "32",
+          "label": "32px"
+        },
+        {
+          "value": "36",
+          "label": "36px"
+        },
+        {
+          "value": "40",
+          "label": "40px"
+        },
+        {
+          "value": "44",
+          "label": "44px"
+        },
+        {
+          "value": "48",
+          "label": "48px"
+        },
+        {
+          "value": "56",
+          "label": "56px"
+        },
+        {
+          "value": "64",
+          "label": "64px"
+        },
+        {
+          "value": "72",
+          "label": "72px"
+        }
       ],
       "default": "default",
       "info": "Family is brand Type OS — size only. Default keeps collab display size."
@@ -622,11 +702,26 @@
       "id": "title_weight",
       "label": "Title weight",
       "options": [
-        { "value": "default", "label": "Default" },
-        { "value": "400", "label": "400" },
-        { "value": "500", "label": "500" },
-        { "value": "600", "label": "600" },
-        { "value": "700", "label": "700" }
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "400",
+          "label": "400"
+        },
+        {
+          "value": "500",
+          "label": "500"
+        },
+        {
+          "value": "600",
+          "label": "600"
+        },
+        {
+          "value": "700",
+          "label": "700"
+        }
       ],
       "default": "default"
     },
@@ -641,39 +736,108 @@
       "id": "body_size",
       "label": "Body size",
       "options": [
-        { "value": "default", "label": "Default / Type OS" },
-        { "value": "12", "label": "12px" },
-        { "value": "13", "label": "13px" },
-        { "value": "14", "label": "14px" },
-        { "value": "15", "label": "15px" },
-        { "value": "16", "label": "16px" },
-        { "value": "17", "label": "17px" },
-        { "value": "18", "label": "18px" },
-        { "value": "20", "label": "20px" },
-        { "value": "22", "label": "22px" },
-        { "value": "24", "label": "24px" },
-        { "value": "26", "label": "26px" },
-        { "value": "28", "label": "28px" },
-        { "value": "30", "label": "30px" },
-        { "value": "32", "label": "32px" },
-        { "value": "36", "label": "36px" },
-        { "value": "40", "label": "40px" },
-        { "value": "44", "label": "44px" },
-        { "value": "48", "label": "48px" },
-        { "value": "56", "label": "56px" }
-
+        {
+          "value": "default",
+          "label": "Default / Type OS"
+        },
+        {
+          "value": "12",
+          "label": "12px"
+        },
+        {
+          "value": "13",
+          "label": "13px"
+        },
+        {
+          "value": "14",
+          "label": "14px"
+        },
+        {
+          "value": "15",
+          "label": "15px"
+        },
+        {
+          "value": "16",
+          "label": "16px"
+        },
+        {
+          "value": "17",
+          "label": "17px"
+        },
+        {
+          "value": "18",
+          "label": "18px"
+        },
+        {
+          "value": "20",
+          "label": "20px"
+        },
+        {
+          "value": "22",
+          "label": "22px"
+        },
+        {
+          "value": "24",
+          "label": "24px"
+        },
+        {
+          "value": "26",
+          "label": "26px"
+        },
+        {
+          "value": "28",
+          "label": "28px"
+        },
+        {
+          "value": "30",
+          "label": "30px"
+        },
+        {
+          "value": "32",
+          "label": "32px"
+        },
+        {
+          "value": "36",
+          "label": "36px"
+        },
+        {
+          "value": "40",
+          "label": "40px"
+        },
+        {
+          "value": "44",
+          "label": "44px"
+        },
+        {
+          "value": "48",
+          "label": "48px"
+        },
+        {
+          "value": "56",
+          "label": "56px"
+        }
       ],
       "default": "default"
     },
-    { "type": "text", "id": "cta_text", "label": "CTA label", "default": "See the collaboration" },
-    
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA label",
+      "default": "See the collaboration"
+    },
     {
       "type": "select",
       "id": "cta_style",
       "label": "CTA style",
       "options": [
-        { "value": "solid", "label": "Solid fill" },
-        { "value": "outline", "label": "Outline only" }
+        {
+          "value": "solid",
+          "label": "Solid fill"
+        },
+        {
+          "value": "outline",
+          "label": "Outline only"
+        }
       ],
       "default": "solid"
     },
@@ -702,15 +866,42 @@
       "id": "cta_link_target",
       "label": "CTA link",
       "options": [
-        { "value": "custom", "label": "Custom URL…" },
-        { "value": "#variants", "label": "#variants — Shop styles" },
-        { "value": "#knock-socks", "label": "#knock-socks — Statement" },
-        { "value": "#reviews", "label": "#reviews" },
-        { "value": "#guarantee", "label": "#guarantee" },
-        { "value": "#never-loses-grip", "label": "#never-loses-grip" },
-        { "value": "#one-pair", "label": "#one-pair" },
-        { "value": "#coperni", "label": "#coperni — Collab" },
-        { "value": "#problem", "label": "#problem" }
+        {
+          "value": "custom",
+          "label": "Custom URL…"
+        },
+        {
+          "value": "#variants",
+          "label": "#variants — Shop styles"
+        },
+        {
+          "value": "#knock-socks",
+          "label": "#knock-socks — Statement"
+        },
+        {
+          "value": "#reviews",
+          "label": "#reviews"
+        },
+        {
+          "value": "#guarantee",
+          "label": "#guarantee"
+        },
+        {
+          "value": "#never-loses-grip",
+          "label": "#never-loses-grip"
+        },
+        {
+          "value": "#one-pair",
+          "label": "#one-pair"
+        },
+        {
+          "value": "#coperni",
+          "label": "#coperni — Collab"
+        },
+        {
+          "value": "#problem",
+          "label": "#problem"
+        }
       ],
       "default": "custom",
       "info": "Homepage section anchors jump on the same page. Choose Custom URL… for a full URL (typical for PDP) or any other #hash."
@@ -722,7 +913,10 @@
       "default": "https://barreletics.com/products/barreletics-x-coperni-closed-sole",
       "info": "Used when CTA link = Custom URL…."
     },
-    { "type": "header", "content": "Shared — Media" },
+    {
+      "type": "header",
+      "content": "Shared — Media"
+    },
     {
       "type": "paragraph",
       "content": "Pick ONE media path. Priority: Shopify video → Video URL → Shopify image → Poster URL. Leave unused fields blank."
@@ -753,19 +947,75 @@
       "default": "https://barreletics.com/cdn/shop/files/yellow_tone_mix.png?width=2000",
       "info": "Poster for Video URL only when Image / poster (Shopify) is empty. Leave blank if Shopify image is set."
     },
-    { "type": "header", "content": "Shared — Layout" },
+    {
+      "type": "header",
+      "content": "Shared — Layout"
+    },
     {
       "type": "select",
       "id": "layout",
       "label": "Hero layout",
       "options": [
-        { "value": "stage_grid", "label": "Runway stage (default — keep)" },
-        { "value": "editorial", "label": "Editorial (optional)" }
+        {
+          "value": "stage_grid",
+          "label": "Runway stage (default — keep)"
+        },
+        {
+          "value": "editorial",
+          "label": "Editorial (optional)"
+        }
       ],
       "default": "stage_grid",
       "info": "Keep Runway stage for the main Coperni hero. Tile row below is separate."
     },
-    { "type": "header", "content": "Shared — Section frame" },
+    {
+      "type": "header",
+      "content": "Layout — text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 96)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 40)",
+      "min": 8,
+      "max": 96,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 80)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 20)",
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Shared — Section frame"
+    },
     {
       "type": "paragraph",
       "content": "Stage size + OUTER inset from the page edges (margin). Top/bottom independent; left & right = one control. Custom mobile OFF = mobile matches desktop. Defaults keep the current look."
@@ -797,13 +1047,34 @@
       "id": "height_desktop",
       "label": "Size — desktop (stage height)",
       "options": [
-        { "value": "70", "label": "70vh" },
-        { "value": "80", "label": "80vh" },
-        { "value": "90", "label": "90vh" },
-        { "value": "100", "label": "100vh" },
-        { "value": "105", "label": "105vh — default" },
-        { "value": "110", "label": "110vh" },
-        { "value": "120", "label": "120vh" }
+        {
+          "value": "70",
+          "label": "70vh"
+        },
+        {
+          "value": "80",
+          "label": "80vh"
+        },
+        {
+          "value": "90",
+          "label": "90vh"
+        },
+        {
+          "value": "100",
+          "label": "100vh"
+        },
+        {
+          "value": "105",
+          "label": "105vh — default"
+        },
+        {
+          "value": "110",
+          "label": "110vh"
+        },
+        {
+          "value": "120",
+          "label": "120vh"
+        }
       ],
       "default": "105"
     },
@@ -812,12 +1083,30 @@
       "id": "height_mobile",
       "label": "Size — mobile (stage height)",
       "options": [
-        { "value": "60", "label": "60vh" },
-        { "value": "70", "label": "70vh" },
-        { "value": "78", "label": "78vh — default" },
-        { "value": "85", "label": "85vh" },
-        { "value": "90", "label": "90vh" },
-        { "value": "100", "label": "100vh" }
+        {
+          "value": "60",
+          "label": "60vh"
+        },
+        {
+          "value": "70",
+          "label": "70vh"
+        },
+        {
+          "value": "78",
+          "label": "78vh — default"
+        },
+        {
+          "value": "85",
+          "label": "85vh"
+        },
+        {
+          "value": "90",
+          "label": "90vh"
+        },
+        {
+          "value": "100",
+          "label": "100vh"
+        }
       ],
       "default": "78",
       "info": "Sticky default matches current mobile runway. No need to change unless intended."
@@ -909,8 +1198,14 @@
       "id": "tile_grid",
       "label": "Tile row layout",
       "options": [
-        { "value": "row", "label": "Single row — 4 across (original)" },
-        { "value": "2x2", "label": "2 × 2 — larger squares" }
+        {
+          "value": "row",
+          "label": "Single row — 4 across (original)"
+        },
+        {
+          "value": "2x2",
+          "label": "2 × 2 — larger squares"
+        }
       ],
       "default": "row",
       "info": "Always under the Coperni hero. Toggle between original one-row and larger 2×2 squares."
@@ -931,8 +1226,14 @@
       "id": "tile_fit",
       "label": "Tile image fit",
       "options": [
-        { "value": "contain", "label": "Contain — full image, no crop" },
-        { "value": "cover", "label": "Cover — fill cell (may crop)" }
+        {
+          "value": "contain",
+          "label": "Contain — full image, no crop"
+        },
+        {
+          "value": "cover",
+          "label": "Cover — fill cell (may crop)"
+        }
       ],
       "default": "contain",
       "info": "Contain keeps the whole photo. Cover fills the box edge-to-edge."
@@ -942,11 +1243,26 @@
       "id": "tile_focus",
       "label": "Tile image focus",
       "options": [
-        { "value": "center", "label": "Center" },
-        { "value": "top", "label": "Top" },
-        { "value": "bottom", "label": "Bottom" },
-        { "value": "left", "label": "Left" },
-        { "value": "right", "label": "Right" }
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        },
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
       ],
       "default": "center",
       "info": "Focus point when fit is Cover (also nudges Contain alignment)."
@@ -984,10 +1300,28 @@
       "default": 0,
       "info": "Secondary square tiles under the hero — all four corners."
     },
-    { "type": "header", "content": "Section — Collab hero" },
-    { "type": "checkbox", "id": "enabled", "label": "Enabled", "default": true },
-    { "type": "text", "id": "meta", "label": "Meta line", "default": "Closed Sole · Special Release · One Run" },
-    { "type": "text", "id": "anchor_id", "label": "Anchor ID", "default": "coperni" },
+    {
+      "type": "header",
+      "content": "Section — Collab hero"
+    },
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Enabled",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "meta",
+      "label": "Meta line",
+      "default": "Closed Sole · Special Release · One Run"
+    },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor ID",
+      "default": "coperni"
+    },
     {
       "type": "text",
       "id": "aria_label",
@@ -1001,13 +1335,41 @@
       "type": "tile",
       "name": "Grid tile",
       "settings": [
-        { "type": "image_picker", "id": "image", "label": "Image" },
-        { "type": "text", "id": "image_url", "label": "Image URL fallback" },
-        { "type": "text", "id": "alt", "label": "Alt text" },
-        { "type": "url", "id": "link", "label": "Link" },
-        { "type": "text", "id": "tile_eyebrow", "label": "Overlay eyebrow" },
-        { "type": "text", "id": "tile_title", "label": "Overlay title" },
-        { "type": "textarea", "id": "tile_body", "label": "Overlay body" }
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "image_url",
+          "label": "Image URL fallback"
+        },
+        {
+          "type": "text",
+          "id": "alt",
+          "label": "Alt text"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "text",
+          "id": "tile_eyebrow",
+          "label": "Overlay eyebrow"
+        },
+        {
+          "type": "text",
+          "id": "tile_title",
+          "label": "Overlay title"
+        },
+        {
+          "type": "textarea",
+          "id": "tile_body",
+          "label": "Overlay body"
+        }
       ]
     }
   ],

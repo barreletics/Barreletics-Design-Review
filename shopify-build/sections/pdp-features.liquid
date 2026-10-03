@@ -17,7 +17,7 @@
   class="pdp-features"
   {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | handleize }}"{% endif %}
   aria-label="{{ section.settings.aria_label | default: 'Product features' | escape }}"
-  style="{% if body_size != 'default' %}--pf-body-size: {{ body_size }}px;{% endif %}--pf-pad-top: {{ pad_top }}px;--pf-pad-bottom: {{ pad_bottom }}px;--pf-pad-top-m: {{ pad_top_mobile }}px;--pf-pad-bottom-m: {{ pad_bottom_mobile }}px;{% if section.settings.bg_color != blank %} background: {{ section.settings.bg_color }};{% endif %}"
+  style="{% render 'unified-text-pads-vars', y_d: 32, side_d: 40, y_m: 24, x_m: 20, legacy_y_d: section.settings.pad_top, legacy_y_m: section.settings.pad_top_mobile %}{% if body_size != 'default' %}--pf-body-size: {{ body_size }}px;{% endif %}--pf-pad-top: {{ pad_top }}px;--pf-pad-bottom: {{ pad_bottom }}px;--pf-pad-top-m: {{ pad_top_mobile }}px;--pf-pad-bottom-m: {{ pad_bottom_mobile }}px;{% if section.settings.bg_color != blank %} background: {{ section.settings.bg_color }};{% endif %}"
 >
   <div class="pdp-features__inner">
     <header class="pdp-features__header">
@@ -64,7 +64,7 @@
   #shopify-section-{{ section.id }} { {% render 'type-override-vars', title_size: section.settings.heading_size_override %} --te-title-size-n: {{ section.settings.heading_size_override }}; }
   {%- endif %}
   .pdp-features {
-    padding: var(--pf-pad-top, var(--section-padding-y)) var(--section-padding-x) var(--pf-pad-bottom, var(--section-padding-y));
+    padding: var(--utp-y-d, var(--pf-pad-top, var(--section-padding-y))) var(--utp-side-d, var(--section-padding-x)) var(--utp-y-d, var(--pf-pad-bottom, var(--section-padding-y)));
     background: var(--bg-primary);
     border-top: 1px solid var(--border-default);
     border-bottom: 1px solid var(--border-default);
@@ -195,7 +195,7 @@
 
   @media (max-width: 768px) {
     .pdp-features {
-      padding: var(--pf-pad-top-m, var(--section-padding-y-mobile)) var(--section-padding-x-mobile) var(--pf-pad-bottom-m, var(--section-padding-y-mobile));
+      padding: var(--utp-y-m, var(--pf-pad-top-m, var(--section-padding-y-mobile))) var(--utp-x-m, var(--section-padding-x-mobile)) var(--utp-y-m, var(--pf-pad-bottom-m, var(--section-padding-y-mobile)));
     }
 
     /* Mobile: stack features — 2-col wraps titles too hard (Andrew trial 2026-09-10) */
@@ -228,12 +228,22 @@
   }
 </style>
 
+{% render 'unified-text-pads-te-style', selector: '.pdp-features', y_d: 32, side_d: 40, y_m: 24, x_m: 20 , legacy_y_d: section.settings.pad_top , legacy_y_m: section.settings.pad_top_mobile %}
+
 {% schema %}
 {
   "name": "PDP Features",
   "settings": [
-    { "type": "header", "content": "Shared — Content" },
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Why Barreletics" },
+    {
+      "type": "header",
+      "content": "Shared — Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Why Barreletics"
+    },
     {
       "type": "html",
       "id": "title",
@@ -252,15 +262,42 @@
       "id": "title_size",
       "label": "Title size",
       "options": [
-        { "value": "default", "label": "Default / Type OS" },
-        { "value": "24", "label": "24px" },
-        { "value": "28", "label": "28px" },
-        { "value": "32", "label": "32px" },
-        { "value": "36", "label": "36px" },
-        { "value": "40", "label": "40px" },
-        { "value": "44", "label": "44px" },
-        { "value": "48", "label": "48px" },
-        { "value": "56", "label": "56px" }
+        {
+          "value": "default",
+          "label": "Default / Type OS"
+        },
+        {
+          "value": "24",
+          "label": "24px"
+        },
+        {
+          "value": "28",
+          "label": "28px"
+        },
+        {
+          "value": "32",
+          "label": "32px"
+        },
+        {
+          "value": "36",
+          "label": "36px"
+        },
+        {
+          "value": "40",
+          "label": "40px"
+        },
+        {
+          "value": "44",
+          "label": "44px"
+        },
+        {
+          "value": "48",
+          "label": "48px"
+        },
+        {
+          "value": "56",
+          "label": "56px"
+        }
       ],
       "default": "56",
       "info": "Locked by global type system (2026-09-27). This setting no longer changes the heading."
@@ -270,11 +307,26 @@
       "id": "title_weight",
       "label": "Title weight",
       "options": [
-        { "value": "default", "label": "Default" },
-        { "value": "400", "label": "400" },
-        { "value": "500", "label": "500" },
-        { "value": "600", "label": "600" },
-        { "value": "700", "label": "700" }
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "400",
+          "label": "400"
+        },
+        {
+          "value": "500",
+          "label": "500"
+        },
+        {
+          "value": "600",
+          "label": "600"
+        },
+        {
+          "value": "700",
+          "label": "700"
+        }
       ],
       "default": "400",
       "info": "Locked by global type system (2026-09-27). This setting no longer changes the heading."
@@ -284,13 +336,34 @@
       "id": "body_size",
       "label": "Body size",
       "options": [
-        { "value": "default", "label": "Default / Type OS" },
-        { "value": "14", "label": "14px" },
-        { "value": "15", "label": "15px" },
-        { "value": "16", "label": "16px" },
-        { "value": "17", "label": "17px" },
-        { "value": "18", "label": "18px" },
-        { "value": "20", "label": "20px" }
+        {
+          "value": "default",
+          "label": "Default / Type OS"
+        },
+        {
+          "value": "14",
+          "label": "14px"
+        },
+        {
+          "value": "15",
+          "label": "15px"
+        },
+        {
+          "value": "16",
+          "label": "16px"
+        },
+        {
+          "value": "17",
+          "label": "17px"
+        },
+        {
+          "value": "18",
+          "label": "18px"
+        },
+        {
+          "value": "20",
+          "label": "20px"
+        }
       ],
       "default": "default",
       "info": "Applies to feature descriptions."
@@ -301,7 +374,10 @@
       "label": "Background",
       "default": "#ffffff"
     },
-    { "type": "header", "content": "Padding" },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
     {
       "type": "range",
       "id": "pad_top",
@@ -310,7 +386,8 @@
       "step": 4,
       "unit": "px",
       "label": "Padding top — desktop",
-      "default": 32
+      "default": 32,
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
     },
     {
       "type": "range",
@@ -330,7 +407,8 @@
       "step": 4,
       "unit": "px",
       "label": "Padding top — phone",
-      "default": 24
+      "default": 24,
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
     },
     {
       "type": "range",
@@ -342,7 +420,10 @@
       "label": "Padding bottom — phone",
       "default": 24
     },
-    { "type": "header", "content": "Section — PDP features" },
+    {
+      "type": "header",
+      "content": "Section — PDP features"
+    },
     {
       "type": "textarea",
       "id": "footnote",
@@ -368,6 +449,58 @@
       "id": "anchor_id",
       "label": "Anchor ID",
       "info": "Optional jump target (e.g. no-socks). Leave blank on PDP."
+    },
+    {
+      "type": "header",
+      "content": "Layout — text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 32)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 40)",
+      "min": 8,
+      "max": 96,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 24)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 20)",
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Legacy (hidden — do not edit)"
+    },
+    {
+      "type": "paragraph",
+      "content": "Preserves stored values on Theme Editor save."
     }
   ],
   "blocks": [
@@ -375,20 +508,59 @@
       "type": "feature",
       "name": "Feature",
       "settings": [
-        { "type": "header", "content": "Shared — Content" },
-        { "type": "text", "id": "title", "label": "Heading", "default": "360° Grip" },
-        { "type": "textarea", "id": "description", "label": "Body", "default": "Every direction. Every movement." }
+        {
+          "type": "header",
+          "content": "Shared — Content"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "360° Grip"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Body",
+          "default": "Every direction. Every movement."
+        }
       ]
     }
   ],
-  "presets": [{
-    "name": "PDP Features",
-    "blocks": [
-      { "type": "feature", "settings": { "title": "360° Grip", "description": "Every direction. Every movement." } },
-      { "type": "feature", "settings": { "title": "Secure in Every Hold", "description": "No slipping. No resets." } },
-      { "type": "feature", "settings": { "title": "Stay in the Flow", "description": "No adjusting. No distractions." } },
-      { "type": "feature", "settings": { "title": "Built to Last", "description": "Class 1 to class 1,000." } }
-    ]
-  }]
+  "presets": [
+    {
+      "name": "PDP Features",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "title": "360° Grip",
+            "description": "Every direction. Every movement."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Secure in Every Hold",
+            "description": "No slipping. No resets."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Stay in the Flow",
+            "description": "No adjusting. No distractions."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Built to Last",
+            "description": "Class 1 to class 1,000."
+          }
+        }
+      ]
+    }
+  ]
 }
 {% endschema %}

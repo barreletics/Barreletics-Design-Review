@@ -126,7 +126,7 @@
   data-vm-overlay="{% if section.settings.show_overlay == false %}off{% else %}on{% endif %}"
   id="visual-mosaic-{{ section.id }}"
   aria-label="{{ section.settings.aria_label | default: 'Studio proof' | escape }}"
-  style="{% render 'section-inset-vars' %} 
+  style="{% render 'section-inset-vars' %}{% render 'unified-text-pads-vars', y_d: 16, side_d: 16, y_m: 12, x_m: 12, legacy_y_d: section.settings.pad_top, legacy_y_m: section.settings.pad_bottom, legacy_side_d: section.settings.pad_x %} 
     --vm-cols-css: {{ vm_cols_css }};
     --vm-mob-cols-css: {{ vm_mob_cols_css }};
     --vm-gap: {{ vm_gap }}px;
@@ -604,7 +604,7 @@
   }
   @media (max-width: 560px) {
     #visual-mosaic-{{ section.id }}.visual-mosaic {
-      padding: 12px 12px var(--vm-gap);
+      padding: var(--utp-y-d, 16px) var(--utp-side-d, 16px) var(--vm-gap);
     }
     #visual-mosaic-{{ section.id }} .visual-mosaic__grid {
       gap: var(--vm-gap);
@@ -624,6 +624,8 @@
   root_class: 'visual-mosaic',
   video_selector: '.vm-tile video, video'
 %}
+
+{% render 'unified-text-pads-te-style', selector: '.visual-mosaic', y_d: 16, side_d: 16, y_m: 12, x_m: 12 , legacy_y_d: section.settings.pad_top , legacy_side_d: section.settings.pad_x %}
 
 {% schema %}
 {
@@ -817,7 +819,8 @@
       "max": 48,
       "step": 2,
       "unit": "px",
-      "default": 16
+      "default": 16,
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
     },
     {
       "type": "range",
@@ -827,7 +830,8 @@
       "max": 48,
       "step": 2,
       "unit": "px",
-      "default": 16
+      "default": 16,
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
     },
     {
       "type": "range",
@@ -837,7 +841,8 @@
       "max": 48,
       "step": 2,
       "unit": "px",
-      "default": 16
+      "default": 16,
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
     },
     {
       "type": "header",
@@ -1133,6 +1138,58 @@
       "id": "hide_on_desktop",
       "label": "Hide on desktop",
       "default": false
+    },
+    {
+      "type": "header",
+      "content": "Layout — text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 16)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 16)",
+      "min": 8,
+      "max": 96,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 12)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 12)",
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Legacy (hidden — do not edit)"
+    },
+    {
+      "type": "paragraph",
+      "content": "Preserves stored values on Theme Editor save."
     }
   ],
   "blocks": [

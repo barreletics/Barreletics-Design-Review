@@ -20,7 +20,7 @@
   id="press-cards-{{ section.id }}"
   class="press-cards section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %}"
   style="
-    {% render 'section-inset-vars' %}
+    {% render 'section-inset-vars' %}{% render 'unified-text-pads-vars', y_d: 48, side_d: 40, y_m: 32, x_m: 20, legacy_y_d: section.settings.padding_y, legacy_side_d: section.settings.padding_x %}
     --pc-bg: {{ bg }};
     --pc-cols: {{ cols }};
     --pc-gap: {{ gap }}px;
@@ -363,7 +363,7 @@
   }
   @media (max-width: 749px) {
     #shopify-section-{{ section.id }} .press-cards {
-      padding: 32px 20px;
+      padding: var(--utp-y-d, 48px) var(--utp-side-d, 40px);
     }
     #shopify-section-{{ section.id }} .press-cards__grid {
       grid-template-columns: repeat(var(--pc-cols-mobile, 1), minmax(0, 1fr));
@@ -401,6 +401,8 @@
   video_selector: 'video.press-cards__video:not(.press-cards__video--deferred)'
 %}
 
+{% render 'unified-text-pads-te-style', selector: '.press-cards', y_d: 48, side_d: 40, y_m: 32, x_m: 20 , legacy_y_d: section.settings.padding_y , legacy_side_d: section.settings.padding_x %}
+
 {% schema %}
 {
   "name": "Press cards",
@@ -412,6 +414,12 @@
       "id": "heading",
       "label": "Section label",
       "default": "PRESS"
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Accessibility label",
+      "default": "Press"
     },
     {
       "type": "color",
@@ -433,8 +441,14 @@
       "id": "columns_mobile",
       "label": "Mobile columns",
       "options": [
-        { "value": "1", "label": "1 column (stack)" },
-        { "value": "2", "label": "2 columns" }
+        {
+          "value": "1",
+          "label": "1 column (stack)"
+        },
+        {
+          "value": "2",
+          "label": "2 columns"
+        }
       ],
       "default": "1",
       "info": "1 = stack. 2 = tighter grid on phone."
@@ -467,7 +481,8 @@
       "max": 120,
       "step": 4,
       "unit": "px",
-      "default": 48
+      "default": 48,
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
     },
     {
       "type": "range",
@@ -477,17 +492,30 @@
       "max": 80,
       "step": 4,
       "unit": "px",
-      "default": 40
+      "default": 40,
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
     },
     {
       "type": "select",
       "id": "media_ratio",
       "label": "Media aspect ratio",
       "options": [
-        { "value": "1 / 1", "label": "1:1" },
-        { "value": "4 / 5", "label": "4:5" },
-        { "value": "3 / 4", "label": "3:4" },
-        { "value": "16 / 9", "label": "16:9" }
+        {
+          "value": "1 / 1",
+          "label": "1:1"
+        },
+        {
+          "value": "4 / 5",
+          "label": "4:5"
+        },
+        {
+          "value": "3 / 4",
+          "label": "3:4"
+        },
+        {
+          "value": "16 / 9",
+          "label": "16:9"
+        }
       ],
       "default": "4 / 5"
     },
@@ -496,14 +524,85 @@
       "id": "video_mode",
       "label": "Video behavior",
       "options": [
-        { "value": "autoplay", "label": "Muted autoplay loop" },
-        { "value": "click", "label": "Click to play (poster)" }
+        {
+          "value": "autoplay",
+          "label": "Muted autoplay loop"
+        },
+        {
+          "value": "click",
+          "label": "Click to play (poster)"
+        }
       ],
       "default": "autoplay"
     },
-    { "type": "header", "content": "Visibility" },
-    { "type": "checkbox", "id": "hide_on_mobile", "label": "Hide on mobile", "default": false },
-    { "type": "checkbox", "id": "hide_on_desktop", "label": "Hide on desktop", "default": false }
+    {
+      "type": "header",
+      "content": "Visibility"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_desktop",
+      "label": "Hide on desktop",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Layout — text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 48)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 40)",
+      "min": 8,
+      "max": 96,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 32)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 20)",
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Legacy (hidden — do not edit)"
+    },
+    {
+      "type": "paragraph",
+      "content": "Preserves stored values on Theme Editor save."
+    }
   ],
   "blocks": [
     {
@@ -515,8 +614,14 @@
           "id": "media_type",
           "label": "Media type",
           "options": [
-            { "value": "image", "label": "Image" },
-            { "value": "video", "label": "Video" }
+            {
+              "value": "image",
+              "label": "Image"
+            },
+            {
+              "value": "video",
+              "label": "Video"
+            }
           ],
           "default": "image"
         },
@@ -525,13 +630,23 @@
           "id": "image_fit",
           "label": "Image fit",
           "options": [
-            { "value": "cover", "label": "Fill card (crop)" },
-            { "value": "contain", "label": "Fit inside (no crop)" }
+            {
+              "value": "cover",
+              "label": "Fill card (crop)"
+            },
+            {
+              "value": "contain",
+              "label": "Fit inside (no crop)"
+            }
           ],
           "default": "cover",
           "info": "Use Fit inside for magazine/editorial art so the full page shows."
         },
-        { "type": "image_picker", "id": "image", "label": "Image (Shopify)" },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image (Shopify)"
+        },
         {
           "type": "text",
           "id": "image_url",
@@ -550,20 +665,58 @@
           "label": "Video URL (mp4)",
           "info": "CDN/mp4 when not using Shopify video."
         },
-        { "type": "image_picker", "id": "poster", "label": "Poster (Shopify)" },
+        {
+          "type": "image_picker",
+          "id": "poster",
+          "label": "Poster (Shopify)"
+        },
         {
           "type": "text",
           "id": "poster_url",
           "label": "Poster URL fallback"
         },
-        { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
-        { "type": "text", "id": "title", "label": "Title" },
-        { "type": "textarea", "id": "caption", "label": "Caption" },
-        { "type": "url", "id": "link", "label": "Link" },
-        { "type": "text", "id": "link_label", "label": "Link label" },
-        { "type": "header", "content": "Visibility" },
-        { "type": "checkbox", "id": "hide_on_desktop", "label": "Hide on desktop", "default": false },
-        { "type": "checkbox", "id": "hide_on_mobile", "label": "Hide on mobile", "default": false, "info": "Row auto-shrinks to remaining visible cards." }
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "textarea",
+          "id": "caption",
+          "label": "Caption"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "Link label"
+        },
+        {
+          "type": "header",
+          "content": "Visibility"
+        },
+        {
+          "type": "checkbox",
+          "id": "hide_on_desktop",
+          "label": "Hide on desktop",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "hide_on_mobile",
+          "label": "Hide on mobile",
+          "default": false,
+          "info": "Row auto-shrinks to remaining visible cards."
+        }
       ]
     }
   ],
@@ -571,9 +724,30 @@
     {
       "name": "Press cards",
       "blocks": [
-        { "type": "card", "settings": { "media_type": "video", "eyebrow": "Coperni", "title": "Barreletics × Coperni" } },
-        { "type": "card", "settings": { "media_type": "image", "eyebrow": "Runway", "title": "Paris" } },
-        { "type": "card", "settings": { "media_type": "image", "eyebrow": "INTERNI", "title": "As seen in INTERNI" } }
+        {
+          "type": "card",
+          "settings": {
+            "media_type": "video",
+            "eyebrow": "Coperni",
+            "title": "Barreletics × Coperni"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "media_type": "image",
+            "eyebrow": "Runway",
+            "title": "Paris"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "media_type": "image",
+            "eyebrow": "INTERNI",
+            "title": "As seen in INTERNI"
+          }
+        }
       ]
     }
   ]

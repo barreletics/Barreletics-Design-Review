@@ -16,7 +16,7 @@
 <section
   class="sole-pair"
   aria-label="{{ section.settings.aria_label | default: 'Choose Closed Sole or Open Sole' | escape }}"
-  style="--sp-scale: {{ img_scale }}; --sp-frame: {{ frame_h }}px; --sp-pad: {{ card_pad }}px; --sp-img-pad: {{ img_pad }}px; --sp-band-pad: {{ band_pad }}px; --sp-bg: {{ band_bg }};"
+  style="{% render 'unified-text-pads-vars', y_d: 24, side_d: 40, y_m: 24, x_m: 16, legacy_y_d: section.settings.section_pad %}--sp-scale: {{ img_scale }}; --sp-frame: {{ frame_h }}px; --sp-pad: {{ card_pad }}px; --sp-img-pad: {{ img_pad }}px; --sp-band-pad: {{ band_pad }}px; --sp-bg: {{ band_bg }};"
 >
   <div class="sole-pair__inner">
     <a class="sole-pair__card" href="{{ closed_href }}">
@@ -178,31 +178,191 @@
   }
 </style>
 
+{% render 'unified-text-pads-te-style', selector: '.sole-cards-band', y_d: 24, side_d: 40, y_m: 24, x_m: 16 , legacy_y_d: section.settings.section_pad %}
+
 {% schema %}
 {
   "name": "Sole cards",
   "settings": [
-    { "type": "header", "content": "Layout" },
-    { "type": "color", "id": "bg_color", "label": "Section background", "default": "#ffffff" },
-    { "type": "range", "id": "image_scale", "label": "Image size", "min": 40, "max": 100, "step": 2, "unit": "%", "default": 100, "info": "Contain — whole shoe stays visible." },
-    { "type": "range", "id": "image_frame", "label": "Image area height", "min": 280, "max": 560, "step": 10, "unit": "px", "default": 400 },
-    { "type": "range", "id": "image_pad", "label": "Image inset", "min": 0, "max": 48, "step": 2, "unit": "px", "default": 0, "info": "0 = no cream/white mat around the shoe." },
-    { "type": "range", "id": "section_pad", "label": "Section padding", "min": 0, "max": 64, "step": 4, "unit": "px", "default": 24 },
-    { "type": "range", "id": "card_padding", "label": "Card text padding", "min": 16, "max": 48, "step": 2, "unit": "px", "default": 28 },
-    { "type": "text", "id": "aria_label", "label": "ARIA label" },
-
-    { "type": "header", "content": "Closed Sole" },
-    { "type": "image_picker", "id": "closed_image", "label": "Closed Sole image" },
-    { "type": "url", "id": "closed_url", "label": "Closed Sole link" },
-    { "type": "text", "id": "closed_best_for", "label": "Closed Sole — Pick this if", "default": "you want heel and foot fully covered.", "info": "Feel and coverage only — never assign a discipline to a sole." },
-    { "type": "textarea", "id": "closed_desc", "label": "Closed Sole description", "default": "Heel and foot fully covered. 360° grip across the entire underfoot. Both perform identically — same grip, same stability." },
-
-    { "type": "header", "content": "Open Sole" },
-    { "type": "image_picker", "id": "open_image", "label": "Open Sole image" },
-    { "type": "url", "id": "open_url", "label": "Open Sole link" },
-    { "type": "text", "id": "open_best_for", "label": "Open Sole — Pick this if", "default": "you want a more grounded, barefoot feel with natural toe splay.", "info": "Feel and coverage only — never assign a discipline to a sole." },
-    { "type": "textarea", "id": "open_desc", "label": "Open Sole description", "default": "Heel exposed, mid-foot breathing hole. More grounded, barefoot feel. Natural toe splay. Both perform identically — same grip, same stability." }
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "image_scale",
+      "label": "Image size",
+      "min": 40,
+      "max": 100,
+      "step": 2,
+      "unit": "%",
+      "default": 100,
+      "info": "Contain — whole shoe stays visible."
+    },
+    {
+      "type": "range",
+      "id": "image_frame",
+      "label": "Image area height",
+      "min": 280,
+      "max": 560,
+      "step": 10,
+      "unit": "px",
+      "default": 400
+    },
+    {
+      "type": "range",
+      "id": "image_pad",
+      "label": "Image inset",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 0,
+      "info": "0 = no cream/white mat around the shoe."
+    },
+    {
+      "type": "range",
+      "id": "section_pad",
+      "label": "Section padding",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 24,
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "label": "Card text padding",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "ARIA label"
+    },
+    {
+      "type": "header",
+      "content": "Closed Sole"
+    },
+    {
+      "type": "image_picker",
+      "id": "closed_image",
+      "label": "Closed Sole image"
+    },
+    {
+      "type": "url",
+      "id": "closed_url",
+      "label": "Closed Sole link"
+    },
+    {
+      "type": "text",
+      "id": "closed_best_for",
+      "label": "Closed Sole — Pick this if",
+      "default": "you want heel and foot fully covered.",
+      "info": "Feel and coverage only — never assign a discipline to a sole."
+    },
+    {
+      "type": "textarea",
+      "id": "closed_desc",
+      "label": "Closed Sole description",
+      "default": "Heel and foot fully covered. 360° grip across the entire underfoot. Both perform identically — same grip, same stability."
+    },
+    {
+      "type": "header",
+      "content": "Open Sole"
+    },
+    {
+      "type": "image_picker",
+      "id": "open_image",
+      "label": "Open Sole image"
+    },
+    {
+      "type": "url",
+      "id": "open_url",
+      "label": "Open Sole link"
+    },
+    {
+      "type": "text",
+      "id": "open_best_for",
+      "label": "Open Sole — Pick this if",
+      "default": "you want a more grounded, barefoot feel with natural toe splay.",
+      "info": "Feel and coverage only — never assign a discipline to a sole."
+    },
+    {
+      "type": "textarea",
+      "id": "open_desc",
+      "label": "Open Sole description",
+      "default": "Heel exposed, mid-foot breathing hole. More grounded, barefoot feel. Natural toe splay. Both perform identically — same grip, same stability."
+    },
+    {
+      "type": "header",
+      "content": "Layout — text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 24)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 40)",
+      "min": 8,
+      "max": 96,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 24)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 16)",
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Legacy (hidden — do not edit)"
+    },
+    {
+      "type": "paragraph",
+      "content": "Preserves stored values on Theme Editor save."
+    }
   ],
-  "presets": [{ "name": "Sole cards" }]
+  "presets": [
+    {
+      "name": "Sole cards"
+    }
+  ]
 }
 {% endschema %}

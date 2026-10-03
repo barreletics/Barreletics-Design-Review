@@ -22,7 +22,7 @@
 <section
   id="press-row-{{ section.id }}"
   class="press-row press-row--m-{{ mobile_layout }}{% if section.settings.hide_on_mobile %} press-row--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} press-row--hide-desktop{% endif %}"
-  style="--pr-bg: {{ bg }}; --pr-desk-h: {{ section.settings.desktop_height | default: 620 }}px;"
+  style="{% render 'unified-text-pads-vars', y_d: 64, side_d: 40, y_m: 48, x_m: 16 %}--pr-bg: {{ bg }}; --pr-desk-h: {{ section.settings.desktop_height | default: 620 }}px;"
   aria-label="{{ heading | strip_html | escape }}"
 >
   <div class="press-row__inner">
@@ -193,7 +193,7 @@
     font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
     background: var(--pr-bg, #faf8f6);
     color: #1c1916;
-    padding: 64px 40px;
+    padding: var(--utp-y-d, 64px) var(--utp-side-d, 40px);
     /* Fallback so section always has intrinsic size even during TE preview layout */
     min-height: 400px;
   }
@@ -395,7 +395,7 @@
   }
   @media (max-width: 768px) {
     #shopify-section-{{ section.id }} .press-row {
-      padding: 48px 16px;
+      padding: var(--utp-y-m, 48px) var(--utp-x-m, 16px);
     }
     #shopify-section-{{ section.id }} .press-row__eyebrow {
       margin: 0 0 20px;
@@ -508,6 +508,8 @@
   video_selector: 'video.press-row__hero-video, .press-row__hero video'
 %}
 
+{% render 'unified-text-pads-te-style', selector: '.press-row', y_d: 64, side_d: 40, y_m: 48, x_m: 16 %}
+
 {% schema %}
 {
   "name": "Press row",
@@ -526,8 +528,14 @@
       "label": "Heading style",
       "info": "Eyebrow = small caps label. Standard = grid section header (matches other sections).",
       "options": [
-        { "value": "eyebrow", "label": "Eyebrow (small caps)" },
-        { "value": "standard", "label": "Standard heading" }
+        {
+          "value": "eyebrow",
+          "label": "Eyebrow (small caps)"
+        },
+        {
+          "value": "standard",
+          "label": "Standard heading"
+        }
       ],
       "default": "eyebrow"
     },
@@ -583,19 +591,169 @@
       "label": "Hero overlay line",
       "default": "Limited edition · Paris 2026"
     },
-    { "type": "header", "content": "Phone" },
-    { "type": "select", "id": "mobile_layout", "label": "Phone layout", "default": "stack", "info": "Phones only. Desktop and tablet are unchanged.", "options": [ { "value": "stack", "label": "Stack (one per row)" }, { "value": "grid", "label": "Two-by-two" }, { "value": "list", "label": "List with thumbnails" } ] },
-    { "type": "header", "content": "Visibility" },
-    { "type": "checkbox", "id": "hide_on_mobile", "label": "Hide on mobile", "default": false },
-    { "type": "checkbox", "id": "hide_on_desktop", "label": "Hide on desktop", "default": false },
-    { "type": "header", "content": "Also featured in line" },
-    { "type": "checkbox", "id": "show_mentions", "label": "Show text line", "default": true },
-    { "type": "checkbox", "id": "mentions_hide_mobile", "label": "Hide on mobile", "default": false, "info": "Hides the line at 900px and below." },
-    { "type": "select", "id": "mentions_style_desktop", "label": "Desktop text style", "default": "caps", "options": [ { "value": "caps", "label": "Caps lead-in, bold names" }, { "value": "sentence", "label": "Sentence case" } ] },
-    { "type": "select", "id": "mentions_style_mobile", "label": "Mobile text style", "default": "sentence", "options": [ { "value": "sentence", "label": "Sentence case" }, { "value": "caps", "label": "Caps lead-in, bold names" } ] },
-    { "type": "select", "id": "mentions_name_size", "label": "Name size", "default": "16", "options": [ { "value": "16", "label": "16px" }, { "value": "18", "label": "18px" } ] },
-    { "type": "text", "id": "mentions_lead", "label": "Lead-in text", "default": "Also featured in" },
-    { "type": "text", "id": "mentions_items", "label": "Names (comma separated)", "default": "Free People, Anthropologie (Fall 2026)", "info": "Shown with a middle dot between names." }
+    {
+      "type": "header",
+      "content": "Phone"
+    },
+    {
+      "type": "select",
+      "id": "mobile_layout",
+      "label": "Phone layout",
+      "default": "stack",
+      "info": "Phones only. Desktop and tablet are unchanged.",
+      "options": [
+        {
+          "value": "stack",
+          "label": "Stack (one per row)"
+        },
+        {
+          "value": "grid",
+          "label": "Two-by-two"
+        },
+        {
+          "value": "list",
+          "label": "List with thumbnails"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Visibility"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_desktop",
+      "label": "Hide on desktop",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Also featured in line"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_mentions",
+      "label": "Show text line",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "mentions_hide_mobile",
+      "label": "Hide on mobile",
+      "default": false,
+      "info": "Hides the line at 900px and below."
+    },
+    {
+      "type": "select",
+      "id": "mentions_style_desktop",
+      "label": "Desktop text style",
+      "default": "caps",
+      "options": [
+        {
+          "value": "caps",
+          "label": "Caps lead-in, bold names"
+        },
+        {
+          "value": "sentence",
+          "label": "Sentence case"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "mentions_style_mobile",
+      "label": "Mobile text style",
+      "default": "sentence",
+      "options": [
+        {
+          "value": "sentence",
+          "label": "Sentence case"
+        },
+        {
+          "value": "caps",
+          "label": "Caps lead-in, bold names"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "mentions_name_size",
+      "label": "Name size",
+      "default": "16",
+      "options": [
+        {
+          "value": "16",
+          "label": "16px"
+        },
+        {
+          "value": "18",
+          "label": "18px"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "mentions_lead",
+      "label": "Lead-in text",
+      "default": "Also featured in"
+    },
+    {
+      "type": "text",
+      "id": "mentions_items",
+      "label": "Names (comma separated)",
+      "default": "Free People, Anthropologie (Fall 2026)",
+      "info": "Shown with a middle dot between names."
+    },
+    {
+      "type": "header",
+      "content": "Layout — text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 64)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 40)",
+      "min": 8,
+      "max": 96,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 48)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 16)",
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    }
   ],
   "blocks": [
     {
@@ -634,8 +792,14 @@
           "id": "media_fit",
           "label": "Image fit",
           "options": [
-            { "value": "cover", "label": "Cover (fill card)" },
-            { "value": "contain", "label": "Contain (fit inside)" }
+            {
+              "value": "cover",
+              "label": "Cover (fill card)"
+            },
+            {
+              "value": "contain",
+              "label": "Contain (fit inside)"
+            }
           ],
           "default": "cover"
         },
@@ -645,9 +809,18 @@
           "label": "Image position",
           "info": "For Cover — Top keeps heads in frame.",
           "options": [
-            { "value": "center", "label": "Center" },
-            { "value": "top", "label": "Top" },
-            { "value": "bottom", "label": "Bottom" }
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "top",
+              "label": "Top"
+            },
+            {
+              "value": "bottom",
+              "label": "Bottom"
+            }
           ],
           "default": "center"
         },
@@ -657,9 +830,23 @@
           "label": "Placeholder gradient (no image)",
           "default": false
         },
-        { "type": "header", "content": "Visibility" },
-        { "type": "checkbox", "id": "hide_on_desktop", "label": "Hide on desktop", "default": false },
-        { "type": "checkbox", "id": "hide_on_mobile", "label": "Hide on mobile", "default": false, "info": "Hidden card leaves an empty grid cell — hide from the end of the list for cleanest layout." }
+        {
+          "type": "header",
+          "content": "Visibility"
+        },
+        {
+          "type": "checkbox",
+          "id": "hide_on_desktop",
+          "label": "Hide on desktop",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "hide_on_mobile",
+          "label": "Hide on mobile",
+          "default": false,
+          "info": "Hidden card leaves an empty grid cell — hide from the end of the list for cleanest layout."
+        }
       ]
     }
   ],

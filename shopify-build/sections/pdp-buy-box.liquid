@@ -221,7 +221,7 @@
  assign hero_image = product.featured_image
  endif
 %}
-<section id="buy" class="pdp-hero" aria-label="Product details" data-buy-box>
+<section id="buy" class="pdp-hero" aria-label="Product details" data-buy-box style="{% render 'unified-text-pads-vars', y_d: 40, side_d: 40, y_m: 32, x_m: 16 %}">
  <div class="pdp-gallery">
  <div class="pdp-gallery__hero">
  {% if hero_image %}
@@ -682,7 +682,7 @@
  max-width: var(--max-width-hero);
  margin: 0 auto;
  /* v20c under v20d chrome — tighter top pad so ATC clears fold */
- padding: 40px var(--space-14) 48px var(--section-padding-x);
+ padding: var(--utp-y-d, 40px) var(--utp-side-d, 40px) 48px;
  align-items: flex-start;
  }
 
@@ -1198,7 +1198,7 @@
  @media (max-width: 1024px) {
  .pdp-hero {
  gap: var(--space-9);
- padding: var(--space-10) var(--space-8);
+ padding: var(--utp-y-d, 40px) var(--utp-side-d, 40px);
  }
  }
 
@@ -1206,7 +1206,7 @@
  .pdp-hero {
  grid-template-columns: minmax(0, 1fr);
  gap: var(--space-8);
- padding: var(--space-8) var(--section-padding-x-mobile) 0;
+ padding: var(--utp-y-m, 32px) var(--utp-x-m, 16px) 0;
  min-width: 0;
  }
 
@@ -1312,222 +1312,322 @@
 </script>
 {{ 'cart.js' | asset_url | script_tag }}
 
+{% render 'unified-text-pads-te-style', selector: '.pdp-hero', y_d: 40, side_d: 40, y_m: 32, x_m: 16 %}
+
 {% schema %}
 {
- "name": "PDP Buy Box",
- "settings": [
- { "type": "header", "content": "Shared — Content" },
- {
- "type": "paragraph",
- "content": "Product title comes from Admin (not TE). No title-size override — Type OS owns the PDP H1. Family is brand Type OS. TE edits lede lines and display chrome only."
- },
- {
- "type": "text",
- "id": "lede_line_1",
- "label": "Lede line 1",
- "default": "Secure in every hold."
- },
- {
- "type": "text",
- "id": "lede_line_2",
- "label": "Lede line 2",
- "default": "No sliding. No resets."
- },
- {
- "type": "textarea",
- "id": "short_description",
- "label": "Short description (above price)",
- "default": "The premium grip system that replaces traditional grip socks—built for reformer, barre, Pilates and Megaformer.",
- "info": "Buy-column body under the lede ONLY. NEVER replace this with Admin product.description. Accordion copy = separate field below."
- },
-
- { "type": "header", "content": "Shared — Media" },
- {
- "type": "paragraph",
- "content": "Gallery images come from product media in Admin. Global default: Theme settings → PDP hero image. Section fields below optionally override for this template only — no Admin reorder needed."
- },
- {
- "type": "select",
- "id": "hero_image_mode",
- "label": "Hero image priority (section override)",
- "options": [
- { "value": "admin_order", "label": "Use theme / Admin default" },
- { "value": "variant_color", "label": "Variant color / option value" },
- { "value": "media_index", "label": "Specific media position #" }
- ],
- "default": "admin_order",
- "info": "Default = Theme settings → PDP hero image. Change this FIRST before using Hero color or Hero media position."
- },
- {
- "type": "text",
- "id": "hero_color",
- "label": "Hero color / option value (override)",
- "info": "Only used when priority is Variant color (or when this field is filled and priority is still Admin default — then switches to variant color). e.g. Coral, Blue."
- },
- {
- "type": "range",
- "id": "hero_media_index",
- "label": "Hero media position (override)",
- "min": 1,
- "max": 12,
- "step": 1,
- "default": 1,
- "info": "ONLY applies when Hero image priority = Specific media position #. Ignored on Admin default. 1 = first product image."
- },
- {
- "type": "range",
- "id": "thumb_count",
- "label": "Thumbnail count",
- "min": 3,
- "max": 8,
- "step": 1,
- "default": 7,
- "info": "Default 7 · 72px. Wide desktop fits all; narrower + mobile swipe-scroll. No arrows."
- },
-
- { "type": "header", "content": "Section — PDP buy box — display" },
- { "type": "checkbox", "id": "show_rating_row", "label": "Show trust / rating row", "default": true },
- {
- "type": "text",
- "id": "rating_text",
- "label": "Rating / trust text",
- "default": "Trusted by 1,000+ Instructors"
- },
- {
- "type": "text",
- "id": "reviews_anchor",
- "label": "Reviews link",
- "default": "#reviews",
- "info": "Anchor or URL for the Reviews → link."
- },
- { "type": "checkbox", "id": "show_payment_line", "label": "Show payment / installment line", "default": false },
- {
- "type": "text",
- "id": "payment_line",
- "label": "Payment / installment line",
- "default": "or 4 × $18.50",
- "info": "Unused. Shop Pay under Add to Cart owns the split."
- },
- { "type": "checkbox", "id": "show_size_chart_link", "label": "Show size chart link", "default": true },
- { "type": "url", "id": "size_chart_url", "label": "Size chart URL" },
- {
- "type": "checkbox",
- "id": "show_trust_row",
- "label": "Show under-ATC trust checklist",
- "default": false,
- "info": "v19 LOCKED: leave OFF. Value strip + accordion own guarantees — do not repeat ✓ under ATC."
- },
- {
- "type": "checkbox",
- "id": "show_sole_badge",
- "label": "Show sole badge next to title",
- "default": true,
- "info": "Version tag pill next to the title (v16 pattern). Color via Sole badge color below."
- },
- {
- "type": "text",
- "id": "sole_badge",
- "label": "Sole badge override",
- "info": "Optional. Outdoor always shows Outdoor. One-offs show Open Sole / Closed Sole (same as core). Else: TE → metafield → Open/Closed from identity."
- },
- {
- "type": "select",
- "id": "sole_badge_color",
- "label": "Sole badge color",
- "default": "rust",
- "info": "Default rust for Closed/Open/Outdoor/one-offs. TE black / charcoal / rust / blue are all honored — never forced.",
- "options": [
- { "value": "black", "label": "Black / charcoal" },
- { "value": "charcoal", "label": "Charcoal" },
- { "value": "rust", "label": "Rust orange" },
- { "value": "blue", "label": "Blue (live strip)" }
- ]
- },
- {
- "type": "checkbox",
- "id": "show_soon_size",
- "label": "Show Small as Coming soon",
- "default": false,
- "info": "Retired 2026-08-08 — Small is not offered. Leave OFF."
- },
- {
- "type": "paragraph",
- "content": "Sticky ATC is a separate section (pdp-sticky-atc) — not controlled here."
- },
-
- {
- "type": "header",
- "content": "Section — PDP buy box — One-off link"
- },
- {
- "type": "paragraph",
- "content": "Quiet link under ATC. Product + copy live in Theme settings → One-off colors. Shows only when that product has available inventory."
- },
- {
- "type": "checkbox",
- "id": "show_oneoff_link",
- "label": "Show one-off quiet link (when live in Theme settings)",
- "default": true
- },
-
- { "type": "header", "content": "Section — PDP buy box — Complete the kit" },
- {
- "type": "paragraph",
- "content": "Copy is Theme settings → Sock kit. Shows only when Theme settings → Sock kit → Show optional sock kit is on; this checkbox can then hide it per template."
- },
- {
- "type": "checkbox",
- "id": "show_kit_links",
- "label": "Show Complete the kit",
- "default": true
- },
- {
- "type": "text",
- "id": "size_soon_note",
- "label": "Coming soon size note",
- "info": "Retired 2026-08-08 — Small is not offered. Leave empty."
- },
-
- { "type": "header", "content": "Section — PDP buy box — Accordion" },
- {
- "type": "paragraph",
- "content": "Description accordion: use TE body below to control storefront copy. If TE body is blank, Admin product description shows (fallback). Closing note appends after either. Extra accordion is a separate optional row (needs label AND body)."
- },
- {
- "type": "textarea",
- "id": "description_accordion_body",
- "label": "Description accordion — body (TE)",
- "info": "SIGNED copy for the Description accordion. NEVER uses Admin product description. If blank, falls back to Short description (above price) — not Admin."
- },
- {
- "type": "textarea",
- "id": "description_footnote",
- "label": "Description accordion — closing note",
- "info": "Optional. Appended AFTER the Description accordion body (TE or Admin). Leave blank to hide. Does nothing by itself if you expect a full rewrite — use Description accordion body."
- },
- {
- "type": "text",
- "id": "note_accordion_label",
- "label": "Extra accordion label",
- "info": "Optional separate row (e.g. Good to know). Hidden unless Extra accordion body is also filled."
- },
- {
- "type": "textarea",
- "id": "note_accordion_body",
- "label": "Extra accordion body",
- "info": "Required with Extra accordion label — both must be set or the row stays hidden."
- },
- {
- "type": "textarea",
- "id": "shipping_accordion",
- "label": "Shipping accordion body",
- "default": "Complimentary shipping on orders over $150. Orders ship within 1–2 business days. Standard delivery 3–5 business days; express 1–2 business days available at checkout."
- },
- {
- "type": "paragraph",
- "content": "Shipping, returns & 90-day warranty (one accordion) copy is LOCKED in Liquid (2026-09-12). Short PDP wording with links to /pages/help#returns and #warranty. Longer variants live in planning/earmark-returns-warranty-long-copy.md for FAQ/Help/policy surfaces."
- }
- ],
- "presets": [{ "name": "PDP Buy Box" }]
+  "name": "PDP Buy Box",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Shared — Content"
+    },
+    {
+      "type": "paragraph",
+      "content": "Product title comes from Admin (not TE). No title-size override — Type OS owns the PDP H1. Family is brand Type OS. TE edits lede lines and display chrome only."
+    },
+    {
+      "type": "text",
+      "id": "lede_line_1",
+      "label": "Lede line 1",
+      "default": "Secure in every hold."
+    },
+    {
+      "type": "text",
+      "id": "lede_line_2",
+      "label": "Lede line 2",
+      "default": "No sliding. No resets."
+    },
+    {
+      "type": "textarea",
+      "id": "short_description",
+      "label": "Short description (above price)",
+      "default": "The premium grip system that replaces traditional grip socks—built for reformer, barre, Pilates and Megaformer.",
+      "info": "Buy-column body under the lede ONLY. NEVER replace this with Admin product.description. Accordion copy = separate field below."
+    },
+    {
+      "type": "header",
+      "content": "Shared — Media"
+    },
+    {
+      "type": "paragraph",
+      "content": "Gallery images come from product media in Admin. Global default: Theme settings → PDP hero image. Section fields below optionally override for this template only — no Admin reorder needed."
+    },
+    {
+      "type": "select",
+      "id": "hero_image_mode",
+      "label": "Hero image priority (section override)",
+      "options": [
+        {
+          "value": "admin_order",
+          "label": "Use theme / Admin default"
+        },
+        {
+          "value": "variant_color",
+          "label": "Variant color / option value"
+        },
+        {
+          "value": "media_index",
+          "label": "Specific media position #"
+        }
+      ],
+      "default": "admin_order",
+      "info": "Default = Theme settings → PDP hero image. Change this FIRST before using Hero color or Hero media position."
+    },
+    {
+      "type": "text",
+      "id": "hero_color",
+      "label": "Hero color / option value (override)",
+      "info": "Only used when priority is Variant color (or when this field is filled and priority is still Admin default — then switches to variant color). e.g. Coral, Blue."
+    },
+    {
+      "type": "range",
+      "id": "hero_media_index",
+      "label": "Hero media position (override)",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "default": 1,
+      "info": "ONLY applies when Hero image priority = Specific media position #. Ignored on Admin default. 1 = first product image."
+    },
+    {
+      "type": "range",
+      "id": "thumb_count",
+      "label": "Thumbnail count",
+      "min": 3,
+      "max": 8,
+      "step": 1,
+      "default": 7,
+      "info": "Default 7 · 72px. Wide desktop fits all; narrower + mobile swipe-scroll. No arrows."
+    },
+    {
+      "type": "header",
+      "content": "Section — PDP buy box — display"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating_row",
+      "label": "Show trust / rating row",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "rating_text",
+      "label": "Rating / trust text",
+      "default": "Trusted by 1,000+ Instructors"
+    },
+    {
+      "type": "text",
+      "id": "reviews_anchor",
+      "label": "Reviews link",
+      "default": "#reviews",
+      "info": "Anchor or URL for the Reviews → link."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_line",
+      "label": "Show payment / installment line",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "payment_line",
+      "label": "Payment / installment line",
+      "default": "or 4 × $18.50",
+      "info": "Unused. Shop Pay under Add to Cart owns the split."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_size_chart_link",
+      "label": "Show size chart link",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "size_chart_url",
+      "label": "Size chart URL"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trust_row",
+      "label": "Show under-ATC trust checklist",
+      "default": false,
+      "info": "v19 LOCKED: leave OFF. Value strip + accordion own guarantees — do not repeat ✓ under ATC."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sole_badge",
+      "label": "Show sole badge next to title",
+      "default": true,
+      "info": "Version tag pill next to the title (v16 pattern). Color via Sole badge color below."
+    },
+    {
+      "type": "text",
+      "id": "sole_badge",
+      "label": "Sole badge override",
+      "info": "Optional. Outdoor always shows Outdoor. One-offs show Open Sole / Closed Sole (same as core). Else: TE → metafield → Open/Closed from identity."
+    },
+    {
+      "type": "select",
+      "id": "sole_badge_color",
+      "label": "Sole badge color",
+      "default": "rust",
+      "info": "Default rust for Closed/Open/Outdoor/one-offs. TE black / charcoal / rust / blue are all honored — never forced.",
+      "options": [
+        {
+          "value": "black",
+          "label": "Black / charcoal"
+        },
+        {
+          "value": "charcoal",
+          "label": "Charcoal"
+        },
+        {
+          "value": "rust",
+          "label": "Rust orange"
+        },
+        {
+          "value": "blue",
+          "label": "Blue (live strip)"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "show_soon_size",
+      "label": "Show Small as Coming soon",
+      "default": false,
+      "info": "Retired 2026-08-08 — Small is not offered. Leave OFF."
+    },
+    {
+      "type": "paragraph",
+      "content": "Sticky ATC is a separate section (pdp-sticky-atc) — not controlled here."
+    },
+    {
+      "type": "header",
+      "content": "Section — PDP buy box — One-off link"
+    },
+    {
+      "type": "paragraph",
+      "content": "Quiet link under ATC. Product + copy live in Theme settings → One-off colors. Shows only when that product has available inventory."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_oneoff_link",
+      "label": "Show one-off quiet link (when live in Theme settings)",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Section — PDP buy box — Complete the kit"
+    },
+    {
+      "type": "paragraph",
+      "content": "Copy is Theme settings → Sock kit. Shows only when Theme settings → Sock kit → Show optional sock kit is on; this checkbox can then hide it per template."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_kit_links",
+      "label": "Show Complete the kit",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "size_soon_note",
+      "label": "Coming soon size note",
+      "info": "Retired 2026-08-08 — Small is not offered. Leave empty."
+    },
+    {
+      "type": "header",
+      "content": "Section — PDP buy box — Accordion"
+    },
+    {
+      "type": "paragraph",
+      "content": "Description accordion: use TE body below to control storefront copy. If TE body is blank, Admin product description shows (fallback). Closing note appends after either. Extra accordion is a separate optional row (needs label AND body)."
+    },
+    {
+      "type": "textarea",
+      "id": "description_accordion_body",
+      "label": "Description accordion — body (TE)",
+      "info": "SIGNED copy for the Description accordion. NEVER uses Admin product description. If blank, falls back to Short description (above price) — not Admin."
+    },
+    {
+      "type": "textarea",
+      "id": "description_footnote",
+      "label": "Description accordion — closing note",
+      "info": "Optional. Appended AFTER the Description accordion body (TE or Admin). Leave blank to hide. Does nothing by itself if you expect a full rewrite — use Description accordion body."
+    },
+    {
+      "type": "text",
+      "id": "note_accordion_label",
+      "label": "Extra accordion label",
+      "info": "Optional separate row (e.g. Good to know). Hidden unless Extra accordion body is also filled."
+    },
+    {
+      "type": "textarea",
+      "id": "note_accordion_body",
+      "label": "Extra accordion body",
+      "info": "Required with Extra accordion label — both must be set or the row stays hidden."
+    },
+    {
+      "type": "textarea",
+      "id": "shipping_accordion",
+      "label": "Shipping accordion body",
+      "default": "Complimentary shipping on orders over $150. Orders ship within 1–2 business days. Standard delivery 3–5 business days; express 1–2 business days available at checkout."
+    },
+    {
+      "type": "paragraph",
+      "content": "Shipping, returns & 90-day warranty (one accordion) copy is LOCKED in Liquid (2026-09-12). Short PDP wording with links to /pages/help#returns and #warranty. Longer variants live in planning/earmark-returns-warranty-long-copy.md for FAQ/Help/policy surfaces."
+    },
+    {
+      "type": "header",
+      "content": "Layout — text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 40)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 40)",
+      "min": 8,
+      "max": 96,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 32)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 16)",
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "PDP Buy Box"
+    }
+  ]
 }
 {% endschema %}

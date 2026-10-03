@@ -155,7 +155,7 @@
   aria-label="Customer reviews"
   data-jm-scope="{{ scope }}"
   data-jm-pictures-first="{% if section.settings.pictures_first %}true{% else %}false{% endif %}"
-  style="{% render 'section-inset-vars' %}{% if section.settings.bg_color != blank %} background: {{ section.settings.bg_color }};{% endif %}"
+  style="{% render 'section-inset-vars' %}{% render 'unified-text-pads-vars', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}{% if section.settings.bg_color != blank %} background: {{ section.settings.bg_color }};{% endif %}"
 >
   <div class="pdp-reviews__inner">
     {% if section.settings.title != blank or section.settings.body != blank or has_aggregate %}
@@ -1212,6 +1212,8 @@
   })();
 </script>
 
+{% render 'unified-text-pads-te-style', selector: '.section-frame', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}
+
 {% schema %}
 {
   "name": "Reviews",
@@ -1222,10 +1224,22 @@
       "label": "Where this section lives",
       "default": "pdp",
       "options": [
-        { "value": "reviews_page", "label": "Reviews page — photo row + full Judge.me list" },
-        { "value": "home", "label": "Home — text cards + link to Reviews page" },
-        { "value": "collection", "label": "Collection — same as Home" },
-        { "value": "pdp", "label": "Product — photo + text cards" }
+        {
+          "value": "reviews_page",
+          "label": "Reviews page — photo row + full Judge.me list"
+        },
+        {
+          "value": "home",
+          "label": "Home — text cards + link to Reviews page"
+        },
+        {
+          "value": "collection",
+          "label": "Collection — same as Home"
+        },
+        {
+          "value": "pdp",
+          "label": "Product — photo + text cards"
+        }
       ],
       "info": "Only controls for that layout show below. Do not change unless this section moved pages."
     },
@@ -1274,8 +1288,14 @@
       "visible_if": "{{ section.settings.band_context == 'reviews_page' or section.settings.band_context == 'pdp' }}",
       "default": "3",
       "options": [
-        { "value": "3", "label": "3" },
-        { "value": "4", "label": "4" }
+        {
+          "value": "3",
+          "label": "3"
+        },
+        {
+          "value": "4",
+          "label": "4"
+        }
       ]
     },
     {
@@ -1284,8 +1304,14 @@
       "label": "Photo rows — desktop",
       "default": "1",
       "options": [
-        { "value": "1", "label": "1 row" },
-        { "value": "2", "label": "2 rows (up to 8 blocks)" }
+        {
+          "value": "1",
+          "label": "1 row"
+        },
+        {
+          "value": "2",
+          "label": "2 rows (up to 8 blocks)"
+        }
       ],
       "info": "Sidebar: Photo review blocks. 2 rows needs more than 3 blocks.",
       "visible_if": "{{ section.settings.band_context == 'reviews_page' or section.settings.band_context == 'pdp' }}"
@@ -1296,8 +1322,14 @@
       "label": "Photos per row — phone (768px and below)",
       "default": "1",
       "options": [
-        { "value": "1", "label": "1 (stacked)" },
-        { "value": "2", "label": "2 (grid)" }
+        {
+          "value": "1",
+          "label": "1 (stacked)"
+        },
+        {
+          "value": "2",
+          "label": "2 (grid)"
+        }
       ],
       "visible_if": "{{ section.settings.band_context == 'reviews_page' or section.settings.band_context == 'pdp' }}"
     },
@@ -1483,6 +1515,50 @@
       "id": "hide_on_desktop",
       "label": "Hide on desktop",
       "default": false
+    },
+    {
+      "type": "header",
+      "content": "Layout — text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 96)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 40)",
+      "min": 8,
+      "max": 96,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 80)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 20)",
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 20
     }
   ],
   "blocks": [
