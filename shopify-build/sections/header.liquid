@@ -12,6 +12,10 @@
 {%- assign nav_link_size = section.settings.nav_link_size | default: 'default' -%}
 {%- assign nav_gap = section.settings.nav_gap | default: 30 -%}
 {%- assign action_link_size = section.settings.action_link_size | default: '14' -%}
+{%- assign header_pad_y = section.settings.text_pad_y -%}
+{%- if header_pad_y == blank -%}{%- assign header_pad_y = section.settings.header_pad_y | default: 12 -%}{%- endif -%}
+{%- assign header_pad_x = section.settings.side_padding -%}
+{%- if header_pad_x == blank -%}{%- assign header_pad_x = section.settings.header_pad_x | default: 40 -%}{%- endif -%}
 {%- assign header_max_width = section.settings.header_max_width | default: 1320 -%}
 {%- assign action_gap = section.settings.action_gap | default: 18 -%}
 {%- assign nav_weight = section.settings.nav_weight | default: '500' -%}
@@ -422,6 +426,11 @@
       "type": "header",
       "content": "Desktop — Rail & padding"
     },
+    { "type": "header", "content": "Layout — text padding" },
+    { "type": "range", "id": "text_pad_y", "label": "Text pad top & bottom — desktop (default 96)", "min": 32, "max": 120, "step": 4, "unit": "px", "default": 96, "info": "Header vertical band. Unset uses legacy header_pad_y (default 12)." },
+    { "type": "range", "id": "side_padding", "label": "Text pad left & right — desktop (default 64)", "min": 16, "max": 96, "step": 4, "unit": "px", "default": 64, "info": "Logo inset. Unset uses legacy header_pad_x." },
+    { "type": "range", "id": "text_pad_y_mobile", "label": "Text pad top & bottom — phone (default 80)", "min": 16, "max": 120, "step": 4, "unit": "px", "default": 80 },
+    { "type": "range", "id": "text_pad_x_mobile", "label": "Text pad left & right — phone (default 20)", "min": 12, "max": 48, "step": 4, "unit": "px", "default": 20 },
     {
       "type": "range",
       "id": "header_max_width",
