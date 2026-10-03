@@ -37,13 +37,21 @@
   assign pas_side_d_def = 48
   assign pas_y_m_def = 36
   assign pas_x_m_def = 20
-  assign pas_fixed_pad_d = false
-  if section.settings.text_pad_y != pas_y_d_def or section.settings.side_padding != pas_side_d_def
-    assign pas_fixed_pad_d = true
+  assign pas_fixed_pad_d_y = false
+  if section.settings.text_pad_y != pas_y_d_def
+    assign pas_fixed_pad_d_y = true
   endif
-  assign pas_fixed_pad_m = false
-  if section.settings.text_pad_y_mobile != pas_y_m_def or section.settings.text_pad_x_mobile != pas_x_m_def
-    assign pas_fixed_pad_m = true
+  assign pas_fixed_pad_d_x = false
+  if section.settings.side_padding != pas_side_d_def
+    assign pas_fixed_pad_d_x = true
+  endif
+  assign pas_fixed_pad_m_y = false
+  if section.settings.text_pad_y_mobile != pas_y_m_def
+    assign pas_fixed_pad_m_y = true
+  endif
+  assign pas_fixed_pad_m_x = false
+  if section.settings.text_pad_x_mobile != pas_x_m_def
+    assign pas_fixed_pad_m_x = true
   endif
   assign section_gap = section.settings.section_gap
   if section_gap == blank
@@ -53,7 +61,7 @@
 -%}
 
 <section
-  class="page-about-split{% if reverse %} page-about-split--reverse{% endif %}{% if panel_cream %} page-about-split--cream{% endif %}{% if pas_fixed_pad_d %} page-about-split--fixed-pad-d{% endif %}{% if pas_fixed_pad_m %} page-about-split--fixed-pad-m{% endif %}{% render 'split-mobile-stack-class', mobile_stack_order: section.settings.mobile_stack_order %}"
+  class="page-about-split{% if reverse %} page-about-split--reverse{% endif %}{% if panel_cream %} page-about-split--cream{% endif %}{% if pas_fixed_pad_d_y %} page-about-split--fixed-pad-d-y{% endif %}{% if pas_fixed_pad_d_x %} page-about-split--fixed-pad-d-x{% endif %}{% if pas_fixed_pad_m_y %} page-about-split--fixed-pad-m-y{% endif %}{% if pas_fixed_pad_m_x %} page-about-split--fixed-pad-m-x{% endif %}{% render 'split-mobile-stack-class', mobile_stack_order: section.settings.mobile_stack_order %}"
   id="shopify-section-{{ section.id }}"
   {{ section.shopify_attributes }}
   aria-label="{{ section.settings.aria_label | escape }}"
@@ -124,11 +132,15 @@
     padding: clamp(28px, 4vw, 56px) clamp(20px, 4vw, 48px);
     max-width: 36em;
   }
-  #shopify-section-{{ section.id }} .page-about-split--fixed-pad-d .page-about-split__copy {
-    padding-top: var(--utp-y-d, 56px);
-    padding-bottom: var(--utp-y-d, 56px);
-    padding-left: var(--utp-side-d, 48px);
-    padding-right: var(--utp-side-d, 48px);
+  @media (min-width: 769px) {
+    #shopify-section-{{ section.id }} .page-about-split--fixed-pad-d-y .page-about-split__copy {
+      padding-top: var(--utp-y-d);
+      padding-bottom: var(--utp-y-d);
+    }
+    #shopify-section-{{ section.id }} .page-about-split--fixed-pad-d-x .page-about-split__copy {
+      padding-left: var(--utp-side-d);
+      padding-right: var(--utp-side-d);
+    }
   }
   #shopify-section-{{ section.id }} .page-about-split__title {
     font-size: clamp(var(--heading-phone, 36px), calc(var(--te-title-size-n, var(--heading-standard-desktop-n, 56)) * 4.8vw / 56), var(--te-title-size, var(--heading-standard-desktop, 56px)));
@@ -169,11 +181,13 @@
       object-position: center center;
     }
     #shopify-section-{{ section.id }} .page-about-split__copy { padding: 8px 20px 32px; }
-    #shopify-section-{{ section.id }} .page-about-split--fixed-pad-m .page-about-split__copy {
-      padding-top: var(--utp-y-m, 36px);
-      padding-bottom: var(--utp-y-m, 36px);
-      padding-left: var(--utp-x-m, 20px);
-      padding-right: var(--utp-x-m, 20px);
+    #shopify-section-{{ section.id }} .page-about-split--fixed-pad-m-y .page-about-split__copy {
+      padding-top: var(--utp-y-m);
+      padding-bottom: var(--utp-y-m);
+    }
+    #shopify-section-{{ section.id }} .page-about-split--fixed-pad-m-x .page-about-split__copy {
+      padding-left: var(--utp-x-m);
+      padding-right: var(--utp-x-m);
     }
   }
 </style>
@@ -280,12 +294,12 @@
     {
       "type": "range",
       "id": "mobile_media_height",
-      "label": "Image height \u2014 phone (default 0 = theme 500px)",
+      "label": "Image height — phone (default 480)",
       "min": 0,
       "max": 900,
       "step": 10,
       "unit": "px",
-      "info": "0 uses legacy saved phone height when present (see hidden keys).",
+      "info": "0 falls back to legacy media_max_px_mobile when saved.",
       "default": 480
     },
     {
