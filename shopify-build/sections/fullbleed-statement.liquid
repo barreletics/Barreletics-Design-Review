@@ -84,7 +84,7 @@
 
 <section
   class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} fullbleed-statement{% unless show_text %} fullbleed-statement--media-only{% endunless %}{% if phone_photo %} fullbleed-statement--phone-photo{% endif %}{% if media_fit == 'contain' %} fullbleed-statement--contain{% endif %}{% if image_fit_mobile == 'contain' %} fullbleed-statement--fit-m-contain{% endif %}{% if fb_match_ratio != blank %} fullbleed-statement--m-match{% endif %}"
-  style="{% render 'section-inset-vars' %} 
+  style="{% render 'section-inset-vars' %}{% render 'unified-text-pads-vars', y_d: 80, side_d: 40, y_m: 80, x_m: 20 %} 
     --fb-media-radius: {{ media_radius }}px;
     --fb-height-desktop: {{ height_desktop }}vh;
     --fb-height-mobile: {{ fb_height_mobile_css }};
@@ -315,7 +315,7 @@
     position: relative;
     z-index: 2;
     text-align: center;
-    padding: 80px 40px;
+    padding: var(--utp-y-d, 80px) var(--utp-side-d, 40px);
     max-width: 720px;
   }
   #shopify-section-{{ section.id }} .fullbleed-statement__eyebrow {
@@ -389,7 +389,7 @@
     #shopify-section-{{ section.id }} .fullbleed-statement__video {
       object-fit: var(--fb-video-fit-mobile, var(--fb-fit-mobile, cover));
     }
-    #shopify-section-{{ section.id }} .fullbleed-statement__content { padding: 56px 16px; }
+    #shopify-section-{{ section.id }} .fullbleed-statement__content { padding: var(--utp-y-m, 80px) var(--utp-x-m, 20px); }
     /* Contain stays inside the Mobile height box. Do not zero height — slider must work. */
     #shopify-section-{{ section.id }} .fullbleed-statement--fit-m-contain .fullbleed-statement__bg img,
     #shopify-section-{{ section.id }} .fullbleed-statement--fit-m-contain .fullbleed-statement__video {
@@ -475,6 +475,8 @@
   root_class: 'fullbleed-statement',
   video_selector: 'video.fullbleed-statement__video, .fullbleed-statement__bg video'
 %}
+
+{% render 'unified-text-pads-te-style', selector: '.fullbleed-statement__content', y_d: 80, side_d: 40, y_m: 80, x_m: 20 %}
 
 {% schema %}
 {
@@ -848,6 +850,12 @@
       "label": "Section aria-label",
       "info": "Accessibility name for screen readers — not visible on the page. Leave blank to use the Heading."
     },
+
+    { "type": "header", "content": "Layout — text padding" },
+    { "type": "range", "id": "text_pad_y", "label": "Text pad top & bottom — desktop (default 96)", "min": 32, "max": 120, "step": 4, "unit": "px", "default": 96 },
+    { "type": "range", "id": "side_padding", "label": "Text pad left & right — desktop (default 64)", "min": 16, "max": 96, "step": 4, "unit": "px", "default": 64 },
+    { "type": "range", "id": "text_pad_y_mobile", "label": "Text pad top & bottom — phone (default 80)", "min": 16, "max": 120, "step": 4, "unit": "px", "default": 80 },
+    { "type": "range", "id": "text_pad_x_mobile", "label": "Text pad left & right — phone (default 20)", "min": 12, "max": 48, "step": 4, "unit": "px", "default": 20 },
     { "type": "header", "content": "Shared — Section frame" },
     {
       "type": "paragraph",
