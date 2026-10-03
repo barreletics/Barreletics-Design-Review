@@ -6,9 +6,32 @@
 
 {% assign geo_heading = section.settings.heading | default: 'Trusted in studios everywhere' %}
 
+{%- liquid
+  assign y_d = 32
+  assign side_d = 40
+  assign y_m = 24
+  assign x_m = 20
+  assign emit_y_d = false
+  if section.settings.text_pad_y != blank and section.settings.text_pad_y != y_d
+    assign emit_y_d = true
+  endif
+  assign emit_side_d = false
+  if section.settings.side_padding != blank and section.settings.side_padding != side_d
+    assign emit_side_d = true
+  endif
+  assign emit_y_m = false
+  if section.settings.text_pad_y_mobile != blank and section.settings.text_pad_y_mobile != y_m
+    assign emit_y_m = true
+  endif
+  assign emit_x_m = false
+  if section.settings.text_pad_x_mobile != blank and section.settings.text_pad_x_mobile != x_m
+    assign emit_x_m = true
+  endif
+-%}
+
 <div
   class="geo-section"
-  style="{% render 'unified-text-pads-vars', y_d: 32, side_d: 40, y_m: 24, x_m: 20 %}{% render 'type-override-vars', title_size: section.settings.title_size, body_size: section.settings.body_size, sub_size: section.settings.question_size %}"
+  style="{% render 'type-override-vars', title_size: section.settings.title_size, body_size: section.settings.body_size, sub_size: section.settings.question_size %}"
 >
   <div class="geo-section__container">
     <p class="geo-section__eyebrow">{{ geo_heading }}</p>
@@ -60,7 +83,7 @@
 
 <style>
   .geo-section {
-    padding: 0 var(--utp-side-d, 40px) var(--utp-y-d, 32px);
+    padding: 0 var(--section-padding-x) var(--section-padding-y);
   }
 
   .geo-section__container {
@@ -122,12 +145,39 @@
 
   @media (max-width: 768px) {
     .geo-section {
-      padding: 0 var(--utp-x-m, 20px) var(--utp-y-m, 24px);
+      padding: 0 var(--section-padding-x-mobile) var(--section-padding-y-mobile);
     }
   }
 </style>
 
-{% render 'unified-text-pads-te-style', selector: '.geo-section', y_d: 32, side_d: 40, y_m: 24, x_m: 20 %}
+{%- if emit_y_d or emit_side_d or emit_y_m or emit_x_m -%}
+{% style %}
+  #shopify-section-{{ section.id }} .geo-section {
+    {%- if emit_y_d -%}
+    padding-top: {{ section.settings.text_pad_y }}px;
+    padding-bottom: {{ section.settings.text_pad_y }}px;
+    {%- endif -%}
+    {%- if emit_side_d -%}
+    padding-left: {{ section.settings.side_padding }}px;
+    padding-right: {{ section.settings.side_padding }}px;
+    {%- endif -%}
+  }
+  {%- if emit_y_m or emit_x_m -%}
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .geo-section {
+      {%- if emit_y_m -%}
+      padding-top: {{ section.settings.text_pad_y_mobile }}px;
+      padding-bottom: {{ section.settings.text_pad_y_mobile }}px;
+      {%- endif -%}
+      {%- if emit_x_m -%}
+      padding-left: {{ section.settings.text_pad_x_mobile }}px;
+      padding-right: {{ section.settings.text_pad_x_mobile }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+{% endstyle %}
+{%- endif -%}
 
 {% schema %}
 {
@@ -276,9 +326,9 @@
       "type": "range",
       "id": "text_pad_y",
       "label": "Text pad top & bottom — desktop (default 32)",
-      "min": 8,
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 32
     },
@@ -286,9 +336,9 @@
       "type": "range",
       "id": "side_padding",
       "label": "Text pad left & right — desktop (default 40)",
-      "min": 8,
+      "min": 0,
       "max": 96,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 40
     },
@@ -296,9 +346,9 @@
       "type": "range",
       "id": "text_pad_y_mobile",
       "label": "Text pad top & bottom — phone (default 24)",
-      "min": 8,
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 24
     },
@@ -306,9 +356,9 @@
       "type": "range",
       "id": "text_pad_x_mobile",
       "label": "Text pad left & right — phone (default 20)",
-      "min": 8,
+      "min": 0,
       "max": 48,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 20
     }
