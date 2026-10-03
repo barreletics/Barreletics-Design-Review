@@ -36,7 +36,7 @@
   data-per="{{ posts_per }}"
   data-pages="{{ max_pages }}"
   data-see-more="{% if enable_see_more %}true{% else %}false{% endif %}"
- style="{% render 'section-inset-vars' %}{% render 'unified-text-pads-vars', y_d: 12, side_d: 28, y_m: 80, x_m: 20 %}">
+ style="{% render 'section-inset-vars' %}">
   <div class="home-juicer__inner">
     {% if section.settings.eyebrow != blank %}
       <p class="home-juicer__eyebrow type-label">{{ section.settings.eyebrow }}</p>
@@ -61,6 +61,10 @@
       ></ul>
     </div>
 
+    {%- assign _jc_show_cta = false -%}
+    {%- if section.settings.cta_text != blank and section.settings.profile_url != blank -%}{%- assign _jc_show_cta = true -%}{%- endif -%}
+    {% if enable_see_more or _jc_show_cta %}
+    <div class="home-juicer__actions">
     {% if enable_see_more %}
       <button
         type="button"
@@ -70,13 +74,15 @@
       >See more</button>
     {% endif %}
 
-    {% if section.settings.cta_text != blank and section.settings.profile_url != blank %}
+    {% if _jc_show_cta %}
       <a
         class="home-juicer__cta"
         href="{{ section.settings.profile_url }}"
         target="_blank"
         rel="noopener noreferrer"
       >{{ section.settings.cta_text }}</a>
+    {% endif %}
+    </div>
     {% endif %}
   </div>
 </section>
@@ -290,7 +296,7 @@
   #shopify-section-{{ section.id }} .home-juicer__see-more {
     display: inline-block;
     margin: 0 0 var(--gap-b, 20px);
-    padding: var(--utp-y-d, 12px) var(--utp-side-d, 28px);
+    padding: 12px 28px;
     border: 1px solid var(--text-primary, #1c1916);
     background: transparent;
     color: var(--text-primary, #1c1916);
@@ -325,6 +331,22 @@
   #shopify-section-{{ section.id }} .home-juicer__cta:hover {
     color: var(--accent-primary, #c45c3f);
   }
+  /* See more + Follow on Instagram: 16px apart side by side (desktop), stacked + centered (mobile) */
+  #shopify-section-{{ section.id }} .home-juicer__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+  #shopify-section-{{ section.id }} .home-juicer__actions .home-juicer__see-more {
+    margin: 0;
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .home-juicer__actions {
+      flex-direction: column;
+    }
+  }
   @media (max-width: 768px) {
     #shopify-section-{{ section.id }} .home-juicer {
       padding: var(--section-padding-y-mobile, 48px) var(--section-padding-x-mobile, 16px);
@@ -357,7 +379,60 @@
      juicer heading is the same h2-standard (32 / 24 / 600) on every template. */
 </style>
 
-{% render 'unified-text-pads-te-style', selector: '.home-juicer', y_d: 12, side_d: 28, y_m: 80, x_m: 20 %}
+{%- liquid
+  assign y_d = 32
+  assign side_d = 40
+  assign y_m = 24
+  assign x_m = 20
+  assign emit_y_d = false
+  if section.settings.text_pad_y != blank and section.settings.text_pad_y != y_d
+    assign emit_y_d = true
+  endif
+  assign emit_side_d = false
+  if section.settings.side_padding != blank and section.settings.side_padding != side_d
+    assign emit_side_d = true
+  endif
+  assign emit_y_m = false
+  if section.settings.text_pad_y_mobile != blank and section.settings.text_pad_y_mobile != y_m
+    assign emit_y_m = true
+  endif
+  assign emit_x_m = false
+  if section.settings.text_pad_x_mobile != blank and section.settings.text_pad_x_mobile != x_m
+    assign emit_x_m = true
+  endif
+-%}
+{%- if emit_y_d or emit_side_d or emit_y_m or emit_x_m -%}
+{% style %}
+  {%- if emit_y_d or emit_side_d -%}
+  @media (min-width: 769px) {
+    #shopify-section-{{ section.id }} .home-juicer {
+      {%- if emit_y_d -%}
+      padding-top: {{ section.settings.text_pad_y }}px;
+      padding-bottom: {{ section.settings.text_pad_y }}px;
+      {%- endif -%}
+      {%- if emit_side_d -%}
+      padding-left: {{ section.settings.side_padding }}px;
+      padding-right: {{ section.settings.side_padding }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+  {%- if emit_y_m or emit_x_m -%}
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .home-juicer {
+      {%- if emit_y_m -%}
+      padding-top: {{ section.settings.text_pad_y_mobile }}px;
+      padding-bottom: {{ section.settings.text_pad_y_mobile }}px;
+      {%- endif -%}
+      {%- if emit_x_m -%}
+      padding-left: {{ section.settings.text_pad_x_mobile }}px;
+      padding-right: {{ section.settings.text_pad_x_mobile }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+{% endstyle %}
+{%- endif -%}
 
 {% schema %}
 {
@@ -465,40 +540,40 @@
     {
       "type": "range",
       "id": "text_pad_y",
-      "label": "Text pad top & bottom — desktop (default 12)",
-      "min": 8,
+      "label": "Text pad top & bottom — desktop (default 32)",
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
-      "default": 12
+      "default": 32
     },
     {
       "type": "range",
       "id": "side_padding",
-      "label": "Text pad left & right — desktop (default 28)",
-      "min": 8,
+      "label": "Text pad left & right — desktop (default 40)",
+      "min": 0,
       "max": 96,
-      "step": 1,
+      "step": 2,
       "unit": "px",
-      "default": 28
+      "default": 40
     },
     {
       "type": "range",
       "id": "text_pad_y_mobile",
-      "label": "Text pad top & bottom — phone (default 80)",
-      "min": 8,
+      "label": "Text pad top & bottom — phone (default 24; PDP 32)",
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
-      "default": 80
+      "default": 24
     },
     {
       "type": "range",
       "id": "text_pad_x_mobile",
       "label": "Text pad left & right — phone (default 20)",
-      "min": 8,
+      "min": 0,
       "max": 48,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 20
     },

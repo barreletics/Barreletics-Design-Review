@@ -2,10 +2,44 @@
   Trust / Value scan strip — v19 wording + optional Non-toxic
   Desktop: full ·-separated line. Mobile: short line (hide show_on_mobile=false items).
 {% endcomment %}
+{%- liquid
+  assign y_d = 28
+  assign side_d = 40
+  assign y_m = 20
+  assign x_m = 20
+
+  assign pad_y = section.settings.padding_y | default: y_d
+  if section.settings.text_pad_y != blank and section.settings.text_pad_y != y_d
+    assign pad_y = section.settings.text_pad_y
+  endif
+
+  assign pad_y_m = section.settings.padding_y_mobile | default: pad_y
+  if section.settings.text_pad_y_mobile != blank and section.settings.text_pad_y_mobile != y_m
+    assign pad_y_m = section.settings.text_pad_y_mobile
+  endif
+
+  assign emit_side_d = false
+  if section.settings.side_padding != blank and section.settings.side_padding != side_d
+    assign emit_side_d = true
+  endif
+  assign emit_x_m = false
+  if section.settings.text_pad_x_mobile != blank and section.settings.text_pad_x_mobile != x_m
+    assign emit_x_m = true
+  endif
+  assign emit_y_d = false
+  if section.settings.text_pad_y != blank and section.settings.text_pad_y != y_d
+    assign emit_y_d = true
+  endif
+  assign emit_y_m = false
+  if section.settings.text_pad_y_mobile != blank and section.settings.text_pad_y_mobile != y_m
+    assign emit_y_m = true
+  endif
+-%}
+
 <section
   class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} value-strip-section"
   aria-label="{{ section.settings.aria_label | default: 'Value propositions' | escape }}"
-  style="{% render 'section-inset-vars' %}{% render 'unified-text-pads-vars', y_d: 28, side_d: 40, y_m: 20, x_m: 16, legacy_y_d: section.settings.padding_y, legacy_y_m: section.settings.padding_y_mobile %}{% if section.settings.bg_color != blank %} background: {{ section.settings.bg_color }};{% endif %}"
+  style="{% render 'section-inset-vars' %}--vs-pad-y: {{ pad_y }}px; --vs-pad-y-m: {{ pad_y_m }}px;{% if section.settings.bg_color != blank %} background: {{ section.settings.bg_color }};{% endif %}"
 >
   <div class="value-strip trust-strip__inner">
     <span class="value-strip__full">
@@ -41,8 +75,7 @@
     background: #faf8f6;
     border-top: none;
     border-bottom: 1px solid #d6cfc0;
-    /* Band height via TE padding_y (default 28). Still welded under buy box — not content-section rhythm. */
-    padding: var(--utp-y-d, 28px) var(--utp-side-d, 40px);
+    padding: var(--vs-pad-y, 28px) var(--section-padding-x, 40px);
   }
   .value-strip {
     max-width: 1200px;
@@ -63,11 +96,10 @@
   .value-strip__short { display: none; }
   @media (max-width: 768px) {
     .value-strip-section {
-      padding: var(--utp-y-m, 20px) var(--utp-x-m, 16px);
+      padding: var(--vs-pad-y-m, 20px) var(--section-padding-x-mobile, 16px);
     }
     .value-strip { white-space: normal; line-height: 1.35; }
     .value-strip__full { display: none; }
-    /* Clean 2×2 — no trailing dots, no nowrap overflow */
     .value-strip__short {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -91,7 +123,38 @@
   }
 </style>
 
-{% render 'unified-text-pads-te-style', selector: '.value-strip-section', y_d: 28, side_d: 40, y_m: 20, x_m: 16, legacy_y_d: section.settings.padding_y, legacy_y_m: section.settings.padding_y_mobile %}
+{%- if emit_y_d or emit_side_d or emit_y_m or emit_x_m -%}
+{% style %}
+  {%- if emit_y_d or emit_side_d -%}
+  @media (min-width: 769px) {
+    #shopify-section-{{ section.id }} .value-strip-section {
+      {%- if emit_y_d -%}
+      padding-top: {{ section.settings.text_pad_y }}px;
+      padding-bottom: {{ section.settings.text_pad_y }}px;
+      {%- endif -%}
+      {%- if emit_side_d -%}
+      padding-left: {{ section.settings.side_padding }}px;
+      padding-right: {{ section.settings.side_padding }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+  {%- if emit_y_m or emit_x_m -%}
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .value-strip-section {
+      {%- if emit_y_m -%}
+      padding-top: {{ section.settings.text_pad_y_mobile }}px;
+      padding-bottom: {{ section.settings.text_pad_y_mobile }}px;
+      {%- endif -%}
+      {%- if emit_x_m -%}
+      padding-left: {{ section.settings.text_pad_x_mobile }}px;
+      padding-right: {{ section.settings.text_pad_x_mobile }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+{% endstyle %}
+{%- endif -%}
 
 {% schema %}
 {
@@ -129,9 +192,9 @@
       "type": "range",
       "id": "text_pad_y",
       "label": "Text pad top & bottom — desktop (default 28)",
-      "min": 8,
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "info": "Band height on desktop. Unset uses legacy padding_y (default 28).",
       "default": 28
@@ -140,20 +203,20 @@
       "type": "range",
       "id": "side_padding",
       "label": "Text pad left & right — desktop (default 40)",
-      "min": 8,
+      "min": 0,
       "max": 96,
-      "step": 1,
+      "step": 2,
       "unit": "px",
-      "info": "Default render 40px when unset.",
+      "info": "Default render uses theme section gutter (40px).",
       "default": 40
     },
     {
       "type": "range",
       "id": "text_pad_y_mobile",
       "label": "Text pad top & bottom — phone (default 20)",
-      "min": 8,
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "info": "Unset uses legacy padding_y_mobile or 20px.",
       "default": 20
@@ -161,13 +224,13 @@
     {
       "type": "range",
       "id": "text_pad_x_mobile",
-      "label": "Text pad left & right — phone (default 16)",
-      "min": 8,
+      "label": "Text pad left & right — phone (default 20)",
+      "min": 0,
       "max": 48,
-      "step": 1,
+      "step": 2,
       "unit": "px",
-      "info": "Default render 16px when unset.",
-      "default": 16
+      "info": "Default render uses theme mobile gutter (20px).",
+      "default": 20
     },
     {
       "type": "header",

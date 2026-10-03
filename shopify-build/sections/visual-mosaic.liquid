@@ -12,6 +12,29 @@
   assign vm_pad_top = section.settings.pad_top | default: vm_pad_legacy
   assign vm_pad_bottom = section.settings.pad_bottom | default: vm_pad_legacy
   assign vm_pad_x = section.settings.pad_x | default: vm_pad_legacy
+  if section.settings.text_pad_y != blank and section.settings.text_pad_y != 16
+    assign vm_pad_top = section.settings.text_pad_y
+    assign vm_pad_bottom = section.settings.text_pad_y
+  endif
+  if section.settings.side_padding != blank and section.settings.side_padding != 16
+    assign vm_pad_x = section.settings.side_padding
+  endif
+  assign emit_y_d = false
+  if section.settings.text_pad_y != blank and section.settings.text_pad_y != 16
+    assign emit_y_d = true
+  endif
+  assign emit_side_d = false
+  if section.settings.side_padding != blank and section.settings.side_padding != 16
+    assign emit_side_d = true
+  endif
+  assign emit_y_m = false
+  if section.settings.text_pad_y_mobile != blank and section.settings.text_pad_y_mobile != 12
+    assign emit_y_m = true
+  endif
+  assign emit_x_m = false
+  if section.settings.text_pad_x_mobile != blank and section.settings.text_pad_x_mobile != 12
+    assign emit_x_m = true
+  endif
   assign vm_fit = section.settings.media_fit | default: 'cover'
   assign vm_mob_cols = section.settings.mobile_columns | default: '2' | plus: 0
   assign vm_mob_h = section.settings.mobile_tile_height | default: 320
@@ -126,7 +149,7 @@
   data-vm-overlay="{% if section.settings.show_overlay == false %}off{% else %}on{% endif %}"
   id="visual-mosaic-{{ section.id }}"
   aria-label="{{ section.settings.aria_label | default: 'Studio proof' | escape }}"
-  style="{% render 'section-inset-vars' %}{% render 'unified-text-pads-vars', y_d: 16, side_d: 16, y_m: 12, x_m: 12, legacy_y_d: section.settings.pad_top, legacy_y_m: section.settings.pad_bottom, legacy_side_d: section.settings.pad_x %} 
+  style="{% render 'section-inset-vars' %} 
     --vm-cols-css: {{ vm_cols_css }};
     --vm-mob-cols-css: {{ vm_mob_cols_css }};
     --vm-gap: {{ vm_gap }}px;
@@ -604,7 +627,7 @@
   }
   @media (max-width: 560px) {
     #visual-mosaic-{{ section.id }}.visual-mosaic {
-      padding: var(--utp-y-d, 16px) var(--utp-side-d, 16px) var(--vm-gap);
+      padding: 12px 12px var(--vm-gap);
     }
     #visual-mosaic-{{ section.id }} .visual-mosaic__grid {
       gap: var(--vm-gap);
@@ -625,7 +648,40 @@
   video_selector: '.vm-tile video, video'
 %}
 
-{% render 'unified-text-pads-te-style', selector: '.visual-mosaic', y_d: 16, side_d: 16, y_m: 12, x_m: 12 , legacy_y_d: section.settings.pad_top , legacy_side_d: section.settings.pad_x %}
+{%- if emit_y_d or emit_side_d or emit_y_m or emit_x_m -%}
+{% style %}
+  {%- if emit_y_d or emit_side_d -%}
+  @media (min-width: 561px) {
+    #shopify-section-{{ section.id }} .visual-mosaic {
+      {%- if emit_y_d -%}
+      padding-top: {{ section.settings.text_pad_y }}px;
+      padding-bottom: {{ section.settings.text_pad_y }}px;
+      {%- endif -%}
+      {%- if emit_side_d -%}
+      padding-left: {{ section.settings.side_padding }}px;
+      padding-right: {{ section.settings.side_padding }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+  {%- if emit_y_m or emit_x_m -%}
+  @media (max-width: 560px) {
+    #shopify-section-{{ section.id }} .visual-mosaic {
+      {%- if emit_y_m -%}
+      padding-top: {{ section.settings.text_pad_y_mobile }}px;
+      {%- endif -%}
+      {%- if emit_x_m -%}
+      padding-left: {{ section.settings.text_pad_x_mobile }}px;
+      padding-right: {{ section.settings.text_pad_x_mobile }}px;
+      {%- endif -%}
+      {%- if emit_y_m -%}
+      padding-bottom: {{ section.settings.text_pad_y_mobile }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+{% endstyle %}
+{%- endif -%}
 
 {% schema %}
 {
@@ -1147,9 +1203,9 @@
       "type": "range",
       "id": "text_pad_y",
       "label": "Text pad top & bottom — desktop (default 16)",
-      "min": 8,
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 16
     },
@@ -1157,9 +1213,9 @@
       "type": "range",
       "id": "side_padding",
       "label": "Text pad left & right — desktop (default 16)",
-      "min": 8,
+      "min": 0,
       "max": 96,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 16
     },
@@ -1167,9 +1223,9 @@
       "type": "range",
       "id": "text_pad_y_mobile",
       "label": "Text pad top & bottom — phone (default 12)",
-      "min": 8,
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 12
     },
@@ -1177,9 +1233,9 @@
       "type": "range",
       "id": "text_pad_x_mobile",
       "label": "Text pad left & right — phone (default 12)",
-      "min": 8,
+      "min": 0,
       "max": 48,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 12
     },

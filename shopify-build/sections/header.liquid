@@ -12,10 +12,34 @@
 {%- assign nav_link_size = section.settings.nav_link_size | default: 'default' -%}
 {%- assign nav_gap = section.settings.nav_gap | default: 30 -%}
 {%- assign action_link_size = section.settings.action_link_size | default: '14' -%}
-{%- assign header_pad_y = section.settings.text_pad_y -%}
-{%- if header_pad_y == blank -%}{%- assign header_pad_y = section.settings.header_pad_y | default: 12 -%}{%- endif -%}
-{%- assign header_pad_x = section.settings.side_padding -%}
-{%- if header_pad_x == blank -%}{%- assign header_pad_x = section.settings.header_pad_x | default: 40 -%}{%- endif -%}
+{%- liquid
+  assign y_d = 12
+  assign side_d = 48
+  assign header_pad_y = section.settings.header_pad_y | default: y_d
+  if section.settings.text_pad_y != blank and section.settings.text_pad_y != y_d
+    assign header_pad_y = section.settings.text_pad_y
+  endif
+  assign header_pad_x = section.settings.header_pad_x | default: side_d
+  if section.settings.side_padding != blank and section.settings.side_padding != side_d
+    assign header_pad_x = section.settings.side_padding
+  endif
+  assign emit_y_d = false
+  if section.settings.text_pad_y != blank and section.settings.text_pad_y != y_d
+    assign emit_y_d = true
+  endif
+  assign emit_side_d = false
+  if section.settings.side_padding != blank and section.settings.side_padding != side_d
+    assign emit_side_d = true
+  endif
+  assign emit_y_m = false
+  if section.settings.text_pad_y_mobile != blank and section.settings.text_pad_y_mobile != 10
+    assign emit_y_m = true
+  endif
+  assign emit_x_m = false
+  if section.settings.text_pad_x_mobile != blank and section.settings.text_pad_x_mobile != 16
+    assign emit_x_m = true
+  endif
+-%}
 {%- assign header_max_width = section.settings.header_max_width | default: 1320 -%}
 {%- assign action_gap = section.settings.action_gap | default: 18 -%}
 {%- assign nav_weight = section.settings.nav_weight | default: '500' -%}
@@ -44,7 +68,7 @@
   data-site-header
   data-nav-distribute="{{ nav_distribute }}"
   role="banner"
-  style="{% render 'unified-text-pads-vars', y_d: 12, side_d: 40, y_m: 12, x_m: 16, legacy_y_d: section.settings.header_pad_y, legacy_side_d: section.settings.header_pad_x %}
+  style="
     --header-logo-height: {{ logo_height }}px;
     --header-logo-height-mobile: {{ logo_height_mobile }}px;
     --header-nav-gap: {{ nav_gap }}px;
@@ -250,7 +274,38 @@
   </div>
 </header>
 
-{% render 'unified-text-pads-te-style', selector: '.site-header__inner', y_d: 12, side_d: 40, y_m: 12, x_m: 16, legacy_y_d: section.settings.header_pad_y, legacy_side_d: section.settings.header_pad_x %}
+{%- if emit_y_d or emit_side_d or emit_y_m or emit_x_m -%}
+{% style %}
+  {%- if emit_y_d or emit_side_d -%}
+  @media (min-width: 901px) {
+    #shopify-section-{{ section.id }} .site-header__inner {
+      {%- if emit_y_d -%}
+      padding-top: {{ section.settings.text_pad_y }}px;
+      padding-bottom: {{ section.settings.text_pad_y }}px;
+      {%- endif -%}
+      {%- if emit_side_d -%}
+      padding-left: {{ section.settings.side_padding }}px;
+      padding-right: {{ section.settings.side_padding }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+  {%- if emit_y_m or emit_x_m -%}
+  @media (max-width: 900px) {
+    #shopify-section-{{ section.id }} .site-header__inner {
+      {%- if emit_y_m -%}
+      padding-top: {{ section.settings.text_pad_y_mobile }}px;
+      padding-bottom: {{ section.settings.text_pad_y_mobile }}px;
+      {%- endif -%}
+      {%- if emit_x_m -%}
+      padding-left: {{ section.settings.text_pad_x_mobile }}px;
+      padding-right: {{ section.settings.text_pad_x_mobile }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+{% endstyle %}
+{%- endif -%}
 
 {% schema %}
 {
@@ -506,9 +561,9 @@
       "type": "range",
       "id": "text_pad_y",
       "label": "Text pad top & bottom — desktop (default 12)",
-      "min": 8,
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "info": "Header vertical band. Unset uses legacy header_pad_y (default 12).",
       "default": 12
@@ -516,31 +571,31 @@
     {
       "type": "range",
       "id": "side_padding",
-      "label": "Text pad left & right — desktop (default 40)",
-      "min": 8,
+      "label": "Text pad left & right — desktop (default 48)",
+      "min": 0,
       "max": 96,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "info": "Logo inset. Unset uses legacy header_pad_x.",
-      "default": 40
+      "default": 48
     },
     {
       "type": "range",
       "id": "text_pad_y_mobile",
-      "label": "Text pad top & bottom — phone (default 12)",
-      "min": 8,
+      "label": "Text pad top & bottom — phone (default 10)",
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
-      "default": 12
+      "default": 10
     },
     {
       "type": "range",
       "id": "text_pad_x_mobile",
       "label": "Text pad left & right — phone (default 16)",
-      "min": 8,
+      "min": 0,
       "max": 48,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 16
     },
@@ -574,7 +629,7 @@
       "max": 80,
       "step": 4,
       "unit": "px",
-      "default": 56,
+      "default": 48,
       "info": "Pulls logo + utilities in from the viewport edge.",
       "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
     },

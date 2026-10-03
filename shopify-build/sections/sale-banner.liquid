@@ -4,8 +4,41 @@
 {% endcomment %}
 
 {% if section.settings.enabled %}
-  {%- assign _fs = section.settings.font_size | default: 15 -%}
-  {%- assign _wt = section.settings.font_weight | default: '500' -%}
+  {%- liquid
+    assign y_d = 10
+    assign side_d = 24
+    assign y_m = 6
+    assign x_m = 16
+
+    assign banner_fs = section.settings.font_size | default: 15
+    assign banner_wt = section.settings.font_weight | default: '500'
+
+    assign banner_pad_y = section.settings.pad_y | default: y_d
+    if section.settings.text_pad_y != blank and section.settings.text_pad_y != y_d
+      assign banner_pad_y = section.settings.text_pad_y
+    endif
+    assign banner_pad_x = side_d
+    if section.settings.side_padding != blank and section.settings.side_padding != side_d
+      assign banner_pad_x = section.settings.side_padding
+    endif
+
+    assign emit_y_d = false
+    if section.settings.text_pad_y != blank and section.settings.text_pad_y != y_d
+      assign emit_y_d = true
+    endif
+    assign emit_side_d = false
+    if section.settings.side_padding != blank and section.settings.side_padding != side_d
+      assign emit_side_d = true
+    endif
+    assign emit_y_m = false
+    if section.settings.text_pad_y_mobile != blank and section.settings.text_pad_y_mobile != y_m
+      assign emit_y_m = true
+    endif
+    assign emit_x_m = false
+    if section.settings.text_pad_x_mobile != blank and section.settings.text_pad_x_mobile != x_m
+      assign emit_x_m = true
+    endif
+  -%}
   {%- assign _desk = section.settings.show_on_desktop -%}
   {%- if _desk == nil -%}{%- assign _desk = true -%}{%- endif -%}
   {%- assign _mob = section.settings.show_on_mobile -%}
@@ -23,13 +56,13 @@
     class="sale-banner"
     role="region"
     aria-label="Promotion"
-    style="{% render 'unified-text-pads-vars', y_d: 10, side_d: 56, y_m: 10, x_m: 24, legacy_y_d: section.settings.pad_y %}
+    style="
       --sale-banner-bg: {{ section.settings.bg_color | default: '#faf8f6' }};
       --sale-banner-color: {{ section.settings.text_color | default: '#1c1916' }};
-      --sale-banner-font-size: {{ _fs }}px;
-      --sale-banner-pad-y: var(--utp-y-d, 10px);
-      --sale-banner-pad-x: var(--utp-side-d, 56px);
-      --sale-banner-weight: {{ _wt }};
+      --sale-banner-font-size: {{ banner_fs }}px;
+      --sale-banner-pad-y: {{ banner_pad_y }}px;
+      --sale-banner-pad-x: {{ banner_pad_x }}px;
+      --sale-banner-weight: {{ banner_wt }};
     "
     {{ section.shopify_attributes }}
   >
@@ -45,7 +78,38 @@
   </div>
 {% endif %}
 
-{% render 'unified-text-pads-te-style', selector: '.sale-banner', y_d: 10, side_d: 56, y_m: 10, x_m: 24 , legacy_y_d: section.settings.pad_y %}
+{%- if emit_y_d or emit_side_d or emit_y_m or emit_x_m -%}
+{% style %}
+  {%- if emit_y_d or emit_side_d -%}
+  @media (min-width: 769px) {
+    #shopify-section-{{ section.id }} .sale-banner {
+      {%- if emit_y_d -%}
+      padding-top: {{ section.settings.text_pad_y }}px;
+      padding-bottom: {{ section.settings.text_pad_y }}px;
+      {%- endif -%}
+      {%- if emit_side_d -%}
+      padding-left: {{ section.settings.side_padding }}px;
+      padding-right: {{ section.settings.side_padding }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+  {%- if emit_y_m or emit_x_m -%}
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .sale-banner {
+      {%- if emit_y_m -%}
+      padding-top: {{ section.settings.text_pad_y_mobile }}px;
+      padding-bottom: {{ section.settings.text_pad_y_mobile }}px;
+      {%- endif -%}
+      {%- if emit_x_m -%}
+      padding-left: {{ section.settings.text_pad_x_mobile }}px;
+      padding-right: {{ section.settings.text_pad_x_mobile }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+{% endstyle %}
+{%- endif -%}
 
 {% schema %}
 {
@@ -77,7 +141,7 @@
       "type": "text",
       "id": "text",
       "label": "Text",
-      "default": "Buy 2 save 10% | Use SAVE2"
+      "default": "Buy 2, Save 10% \u00b7 Code SAVE2"
     },
     {
       "type": "url",
@@ -162,39 +226,39 @@
       "label": "Text pad top & bottom — desktop (default 10)",
       "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 10
     },
     {
       "type": "range",
       "id": "side_padding",
-      "label": "Text pad left & right — desktop (default 56)",
-      "min": 8,
+      "label": "Text pad left & right — desktop (default 24)",
+      "min": 0,
       "max": 96,
-      "step": 1,
+      "step": 2,
       "unit": "px",
-      "default": 56
+      "default": 24
     },
     {
       "type": "range",
       "id": "text_pad_y_mobile",
-      "label": "Text pad top & bottom — phone (default 10)",
+      "label": "Text pad top & bottom — phone (default 6)",
       "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
-      "default": 10
+      "default": 6
     },
     {
       "type": "range",
       "id": "text_pad_x_mobile",
-      "label": "Text pad left & right — phone (default 24)",
-      "min": 8,
+      "label": "Text pad left & right — phone (default 16)",
+      "min": 0,
       "max": 48,
-      "step": 1,
+      "step": 2,
       "unit": "px",
-      "default": 24
+      "default": 16
     },
     {
       "type": "header",
