@@ -7,6 +7,10 @@
 {%- liquid
   assign media_type = section.settings.media_type | default: 'image'
   assign media_fill = section.settings.media_fill | default: 'inset'
+  assign min_height = section.settings.min_height
+  if min_height == blank
+    assign min_height = section.settings.media_height | default: 480
+  endif
   assign image = section.settings.image
   assign image_url = section.settings.image_url
   assign image_mobile = section.settings.image_mobile
@@ -26,17 +30,40 @@
   assign video_url = section.settings.video_url
   assign image_alt = section.settings.image_alt | default: section.settings.title
   assign has_media = false
-  if media_type == 'video'
-    if video != blank or video_url != blank
-      assign has_media = true
-    endif
-  elsif image != blank or image_url != blank
+  if video != blank or video_url != blank or image != blank or image_url != blank
     assign has_media = true
   endif
-  assign show_trust = section.settings.show_trust
-  if show_trust == nil
-    assign show_trust = true
+  assign reverse = section.settings.reverse | default: false
+  assign section_gap = section.settings.section_gap | default: 0
+  assign section_gap_m = section.settings.section_gap_mobile | default: 0
+  assign text_pad_y_d = section.settings.text_pad_y
+  assign text_pad_y_m = section.settings.text_pad_y_mobile
+  if text_pad_y_m == blank
+    assign text_pad_y_m = section.settings.text_spacing_mobile | default: 36
   endif
+  assign show_trust_strip = section.settings.show_trust_strip
+  if show_trust_strip == nil
+    assign show_trust_strip = section.settings.show_trust
+  endif
+  if show_trust_strip == nil
+    assign show_trust_strip = true
+  endif
+  assign cta_style = section.settings.cta_style | default: 'rust_solid'
+  if cta_style == 'solid'
+    assign cta_style = 'rust_solid'
+  elsif cta_style == 'outline'
+    assign cta_style = 'rust_outline'
+  endif
+  case cta_style
+    when 'rust_outline', 'outline'
+      assign cta_btn_class = 'btn--brand-outline'
+    when 'black_solid', 'primary'
+      assign cta_btn_class = 'btn--primary'
+    when 'black_outline', 'secondary'
+      assign cta_btn_class = 'btn--secondary'
+    else
+      assign cta_btn_class = 'btn--brand'
+  endcase
   assign media_pct = section.settings.media_column_pct | default: 48
   if media_pct < 35
     assign media_pct = 35
@@ -46,7 +73,7 @@
   if img_zoom < 100
     assign img_zoom = 100
   endif
-  assign media_h = section.settings.media_height | default: 480
+  assign media_h = min_height
   assign layout_class = 'coll-hero'
   if has_media
     assign layout_class = 'coll-hero coll-hero--split'
@@ -54,14 +81,14 @@
 -%}
 
 <section
-  class="{{ layout_class }}{% render 'split-mobile-stack-class', mobile_stack_order: section.settings.mobile_stack_order %}"
+  class="{{ layout_class }}{% if reverse %} coll-hero--reverse{% endif %}{% render 'split-mobile-stack-class', mobile_stack_order: section.settings.mobile_stack_order %}"
   {{ section.shopify_attributes }}
   data-media-fill="{{ media_fill }}"
   aria-label="{{ section.settings.aria_label | default: 'Collection hero' | escape }}"
   style="--ch-text: {{ text_pct }}fr; --ch-media: {{ media_pct }}fr; --ch-zoom: {{ img_zoom | times: 0.01 }}; --ch-media-h: {{ media_h }}px;"
 >
   <div class="coll-hero__copy">
-    {% if show_trust and section.settings.trust_text != blank %}
+    {% if show_trust_strip and section.settings.trust_text != blank %}
       <p class="coll-hero__trust">
         <span class="coll-hero__stars" aria-hidden="true">★★★★★</span>
         {{ section.settings.trust_text }}
@@ -73,7 +100,7 @@
     <h1 class="coll-hero__title type-hero">{{ section.settings.title | default: collection.title }}</h1>
 
     {% if section.settings.body != blank %}
-      <p class="coll-hero__body">{{ section.settings.body }}</p>
+      <div class="coll-hero__body">{{ section.settings.body }}</div>
     {% elsif collection.description != blank %}
       <div class="coll-hero__body">{{ collection.description }}</div>
     {% endif %}
@@ -81,7 +108,7 @@
     {% if section.settings.cta_text != blank or section.settings.secondary_cta_text != blank %}
       <div class="coll-hero__actions">
         {% if section.settings.cta_text != blank %}
-          <a class="coll-hero__cta" href="{{ section.settings.cta_url | default: '#grid' }}">{{ section.settings.cta_text }}</a>
+          <a class="btn {{ cta_btn_class }} coll-hero__cta" href="{{ section.settings.cta_url | default: '#grid' }}">{{ section.settings.cta_text }}</a>
         {% endif %}
         {% if section.settings.secondary_cta_text != blank %}
           <a class="coll-hero__link" href="{{ section.settings.secondary_cta_url | default: '#pose' }}">{{ section.settings.secondary_cta_text }}</a>
@@ -91,26 +118,24 @@
   </div>
 
   {% if has_media %}
-    <div class="coll-hero__media" data-media-type="{{ media_type }}" data-media-fill="{{ media_fill }}" data-mobile-ratio="{{ aspect_ratio_mobile }}">
-      {%- if media_type == 'video' -%}
-        {%- if video != blank -%}
-          {{
-            video
-            | video_tag:
-              image_size: '1600x',
-              autoplay: true,
-              loop: true,
-              muted: true,
-              controls: false,
-              playsinline: true,
-              preload: 'metadata',
-              class: 'coll-hero__video'
-          }}
-        {%- elsif video_url != blank -%}
-          <video class="coll-hero__video" autoplay muted loop playsinline webkit-playsinline preload="metadata"{% if image != blank %} poster="{{ image | image_url: width: 1600 }}"{% elsif image_url != blank %} poster="{{ image_url | escape }}"{% endif %}>
-            <source src="{{ video_url | escape }}" type="video/mp4">
-          </video>
-        {%- endif -%}
+    <div class="coll-hero__media" data-media-type="{% if video != blank or video_url != blank %}video{% else %}image{% endif %}" data-media-fill="{{ media_fill }}" data-mobile-ratio="{{ aspect_ratio_mobile }}">
+      {%- if video != blank -%}
+        {{
+          video
+          | video_tag:
+            image_size: '1600x',
+            autoplay: true,
+            loop: true,
+            muted: true,
+            controls: false,
+            playsinline: true,
+            preload: 'metadata',
+            class: 'coll-hero__video'
+        }}
+      {%- elsif video_url != blank -%}
+        <video class="coll-hero__video" autoplay muted loop playsinline webkit-playsinline preload="metadata"{% if image != blank %} poster="{{ image | image_url: width: 1600 }}"{% elsif image_url != blank %} poster="{{ image_url | escape }}"{% endif %}>
+          <source src="{{ video_url | escape }}" type="video/mp4">
+        </video>
       {%- elsif image != blank -%}
         {%- if image_mobile != blank -%}
           <picture>
@@ -243,6 +268,18 @@
     align-items: center;
     padding: 56px 40px 40px;
   }
+  #shopify-section-{{ section.id }} .coll-hero--split.coll-hero--reverse {
+    direction: rtl;
+  }
+  #shopify-section-{{ section.id }} .coll-hero--split.coll-hero--reverse > * {
+    direction: ltr;
+  }
+  {%- if text_pad_y_d != blank %}
+  #shopify-section-{{ section.id }} .coll-hero--split {
+    padding-top: {{ text_pad_y_d }}px;
+    padding-bottom: {{ text_pad_y_d }}px;
+  }
+  {%- endif %}
   /* Bleed hero → next section: no extra margin — following section's section_gap owns the gutter (one system). */
   #shopify-section-{{ section.id }}:has([data-media-fill="bleed"]) {
     margin-bottom: 32px; /* token between-section before Shop all colors */
@@ -320,14 +357,9 @@
     align-items: center;
   }
 
-  #shopify-section-{{ section.id }} .coll-hero__cta {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+  #shopify-section-{{ section.id }} .coll-hero__cta.btn {
     min-height: var(--type-cta-min-height);
     padding: 14px 28px;
-    background: #c45c3f;
-    color: #fff;
     font-size: var(--type-cta-size);
     font-weight: var(--type-cta-weight);
     letter-spacing: var(--type-cta-tracking);
@@ -335,12 +367,6 @@
     text-transform: uppercase;
     border-radius: 4px;
     text-decoration: none;
-    transition: background 0.2s;
-  }
-  #shopify-section-{{ section.id }} .coll-hero__cta:hover {
-    background: #1c1916;
-    text-decoration: none;
-    color: #fff;
   }
 
   #shopify-section-{{ section.id }} .coll-hero__link {
@@ -462,17 +488,20 @@
 
   @media (max-width: 768px) {
     #shopify-section-{{ section.id }} .coll-hero {
-      padding: {{ text_spacing_mobile }}px 20px {{ text_spacing_mobile }}px;
+      padding: {{ text_pad_y_m }}px 20px {{ text_pad_y_m }}px;
     }
     #shopify-section-{{ section.id }} .coll-hero--split {
       grid-template-columns: 1fr;
       gap: 28px;
     }
+    #shopify-section-{{ section.id }} .coll-hero--split.coll-hero--reverse {
+      direction: ltr;
+    }
     #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="bleed"] {
       gap: 0;
     }
     #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="bleed"] .coll-hero__copy {
-      padding: {{ text_spacing_mobile }}px 20px {{ text_spacing_mobile }}px;
+      padding: {{ text_pad_y_m }}px 20px {{ text_pad_y_m }}px;
       overflow: visible;
     }
     {%- if qa_frame -%}
@@ -617,6 +646,55 @@
   }
 </style>
 
+{%- comment -%} TE live preview: section.settings.* only.{%- endcomment -%}
+{% style %}
+  {%- liquid
+    assign te_mh = section.settings.min_height
+    if te_mh == blank
+      assign te_mh = section.settings.media_height | default: 480
+    endif
+    assign te_pct = section.settings.media_column_pct | default: 48
+    assign te_zoom = section.settings.image_zoom | default: section.settings.image_scale | default: 100
+    assign te_pad_m = section.settings.text_pad_y_mobile
+    if te_pad_m == blank
+      assign te_pad_m = section.settings.text_spacing_mobile | default: 36
+    endif
+  -%}
+  #shopify-section-{{ section.id }} {
+    --ch-text: {{ 100 | minus: te_pct }}fr !important;
+    --ch-media: {{ te_pct }}fr !important;
+    --ch-zoom: {{ te_zoom | times: 0.01 }} !important;
+    --ch-media-h: {{ te_mh }}px !important;
+    margin-top: {{ section.settings.section_gap | default: 0 }}px !important;
+    margin-bottom: {{ section.settings.section_gap | default: 0 }}px !important;
+  }
+  {%- if section.settings.text_pad_y != blank %}
+  #shopify-section-{{ section.id }} .coll-hero--split {
+    padding-top: {{ section.settings.text_pad_y }}px !important;
+    padding-bottom: {{ section.settings.text_pad_y }}px !important;
+  }
+  {%- endif %}
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} {
+      margin-bottom: {{ section.settings.section_gap_mobile | default: 0 }}px !important;
+    }
+    #shopify-section-{{ section.id }} .coll-hero {
+      padding-top: {{ te_pad_m }}px !important;
+      padding-bottom: {{ te_pad_m }}px !important;
+    }
+    #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="bleed"] .coll-hero__copy {
+      padding-top: {{ te_pad_m }}px !important;
+      padding-bottom: {{ te_pad_m }}px !important;
+    }
+    {%- if section.settings.text_height_mobile > 0 %}
+    #shopify-section-{{ section.id }} .coll-hero--split .coll-hero__copy,
+    #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="bleed"] .coll-hero__copy {
+      min-height: {{ section.settings.text_height_mobile }}px !important;
+    }
+    {%- endif %}
+  }
+{% endstyle %}
+
 {% render 'bg-video-autoplay-script',
   section_id: section.id,
   root_class: 'coll-hero',
@@ -627,53 +705,29 @@
 {
   "name": "Collection Hero",
   "settings": [
-    { "type": "header", "content": "Copy" },
-    { "type": "checkbox", "id": "show_trust", "label": "Show trust line (stars)", "default": true },
-    { "type": "text", "id": "trust_text", "label": "Trust line", "default": "Trusted by 1,000's of instructors & studios" },
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow (when trust is off)" },
-    { "type": "text", "id": "title", "label": "H1", "default": "Secure in Every Hold" },
-    { "type": "inline_richtext", "id": "body", "label": "Body", "default": "No sliding. No resets. Pick Closed or Open — $74 — then shop every color below." },
-    { "type": "text", "id": "cta_text", "label": "Primary CTA", "default": "Shop Now" },
-    { "type": "text", "id": "cta_url", "label": "Primary CTA URL", "default": "#grid", "info": "Anchor or path. Default #grid." },
-    { "type": "text", "id": "secondary_cta_text", "label": "Secondary CTA", "default": "See why →" },
-    { "type": "text", "id": "secondary_cta_url", "label": "Secondary CTA URL", "default": "#pose" },
-    { "type": "text", "id": "aria_label", "label": "ARIA label", "default": "Collection hero" },
+    { "type": "header", "content": "1 — Photo / video" },
+    { "type": "paragraph", "content": "Pick one source. Priority: Shopify video → Video URL → Shopify image → Image URL." },
+    { "type": "video", "id": "video", "label": "Shopify video" },
+    { "type": "text", "id": "video_url", "label": "Video URL (mp4)" },
+    { "type": "image_picker", "id": "image", "label": "Image / poster (Shopify)" },
+    { "type": "text", "id": "image_url", "label": "Image URL", "info": "Used when Shopify image is empty. Leave blank for text-only hero." },
+    { "type": "text", "id": "image_alt", "label": "Image alt text" },
+    { "type": "image_picker", "id": "image_mobile", "label": "Phone image (optional)", "info": "Ignored when video is set." },
 
-    { "type": "header", "content": "Layout" },
-    {
-      "type": "select",
-      "id": "mobile_stack_order",
-      "label": "Mobile stack order",
-      "default": "media_first",
-      "options": [
-        { "value": "media_first", "label": "Image above copy" },
-        { "value": "copy_first", "label": "Copy above image" }
-      ],
-      "info": "Split hero only, below 768px. Copy-first in DOM; media_first lifts image above."
-    },
-
-    { "type": "header", "content": "Media (split hero)" },
-    { "type": "select", "id": "media_type", "label": "Media type", "default": "image", "options": [
-      { "value": "image", "label": "Image" },
-      { "value": "video", "label": "Video" }
-    ]},
-    { "type": "range", "id": "media_column_pct", "label": "Photo column width", "min": 35, "max": 70, "step": 1, "unit": "%", "default": 48, "info": "Desktop. Text column is the rest." },
-    { "type": "range", "id": "media_height", "label": "Photo height", "min": 360, "max": 720, "step": 10, "unit": "px", "default": 480 },
-    { "type": "range", "id": "image_zoom", "label": "Photo zoom", "min": 100, "max": 180, "step": 2, "unit": "%", "default": 100, "info": "Never below 100 — no cream gaps." },
-    { "type": "select", "id": "media_fill", "label": "Photo size", "default": "inset", "info": "Inset = rounded card. Column fill = fills the photo column. Full size = photo to the page edge.", "options": [
+    { "type": "header", "content": "2 — Focus + height" },
+    { "type": "range", "id": "image_zoom", "label": "Desktop zoom % (default 100)", "min": 100, "max": 180, "step": 2, "unit": "%", "default": 100, "info": "Never below 100 — no cream gaps." },
+    { "type": "range", "id": "min_height", "label": "Height — desktop (default 480)", "min": 360, "max": 720, "step": 10, "unit": "px", "default": 480 },
+    { "type": "range", "id": "media_column_pct", "label": "Image width — desktop (default 48%)", "min": 35, "max": 70, "step": 1, "unit": "%", "default": 48 },
+    { "type": "select", "id": "media_fill", "label": "Photo size (default: Inset card)", "default": "inset", "info": "Inset = rounded card. Column fill = fills the photo column. Full size = photo to the page edge.", "options": [
       { "value": "inset", "label": "Inset card" },
       { "value": "column", "label": "Fill column" },
       { "value": "bleed", "label": "Full size (edge of page)" }
     ]},
-    { "type": "image_picker", "id": "image", "label": "Desktop image" },
-    { "type": "text", "id": "image_url", "label": "Image URL fallback", "info": "Used when Shopify image is empty. Leave blank for text-only hero (e.g. Apparel)." },
-    { "type": "text", "id": "image_alt", "label": "Image alt" },
-    { "type": "header", "content": "Mobile (phone only)" },
-    { "type": "image_picker", "id": "image_mobile", "label": "Mobile image", "info": "Optional. Leave blank to keep the desktop image on phone." },
+    { "type": "header", "content": "Phone only" },
     {
       "type": "select",
       "id": "aspect_ratio_mobile",
-      "label": "Aspect ratio mobile",
+      "label": "Phone frame shape (default: Natural)",
       "default": "natural",
       "options": [
         { "value": "natural", "label": "Natural — photo’s own ratio" },
@@ -682,12 +736,12 @@
         { "value": "landscape", "label": "Landscape" },
         { "value": "widescreen", "label": "Widescreen" }
       ],
-      "info": "Hero default is natural. Portrait 3:4 is for 50/50 cards, not this hero."
+      "info": "Collection template uses portrait framing on phone."
     },
     {
       "type": "select",
       "id": "image_fit_mobile",
-      "label": "Image fit mobile",
+      "label": "Phone image fit (default: Cover)",
       "default": "cover",
       "options": [
         { "value": "cover", "label": "Cover" },
@@ -698,7 +752,7 @@
     {
       "type": "select",
       "id": "video_fit_mobile",
-      "label": "Video fit mobile",
+      "label": "Phone video fit (default: Cover)",
       "default": "cover",
       "options": [
         { "value": "cover", "label": "Cover" },
@@ -709,27 +763,113 @@
     {
       "type": "range",
       "id": "text_height_mobile",
-      "label": "Mobile text frame height",
+      "label": "Phone text frame height (default 0)",
       "min": 0,
       "max": 700,
       "step": 10,
       "unit": "px",
       "default": 0,
-      "info": "0 = fits the copy. Drag to make the text frame taller. Type size never changes."
+      "info": "0 = fits the copy. Drag to grow the text frame; type size unchanged."
+    },
+
+    { "type": "header", "content": "3 — Heading / body / CTA" },
+    {
+      "type": "select",
+      "id": "heading_level",
+      "label": "Heading level (default H1)",
+      "default": "h1",
+      "options": [
+        { "value": "h1", "label": "H1 — collection page title" }
+      ],
+      "info": "Collection heroes always render as H1 for SEO."
+    },
+    { "type": "text", "id": "title", "label": "Heading", "default": "Secure in Every Hold" },
+    { "type": "inline_richtext", "id": "body", "label": "Body", "default": "No sliding. No resets. Pick Closed or Open — $74 — then shop every color below." },
+    { "type": "text", "id": "cta_text", "label": "Button label", "default": "Shop Now" },
+    { "type": "text", "id": "cta_url", "label": "Button link", "default": "#grid" },
+    {
+      "type": "select",
+      "id": "cta_style",
+      "label": "Button",
+      "default": "rust_solid",
+      "options": [
+        { "value": "rust_solid", "label": "Rust" },
+        { "value": "black_solid", "label": "Black" },
+        { "value": "rust_outline", "label": "Rust outline" },
+        { "value": "black_outline", "label": "Black outline" }
+      ]
+    },
+    { "type": "text", "id": "secondary_cta_text", "label": "Secondary link label", "default": "See why →" },
+    { "type": "text", "id": "secondary_cta_url", "label": "Secondary link URL", "default": "#pose" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow (when trust strip is off)" },
+
+    { "type": "header", "content": "4 — Trust strip" },
+    { "type": "checkbox", "id": "show_trust_strip", "label": "Show trust strip (default: on)", "default": true },
+    { "type": "text", "id": "trust_text", "label": "Trust line", "default": "Trusted by 1,000's of instructors & studios" },
+
+    { "type": "header", "content": "5 — Layout" },
+    {
+      "type": "checkbox",
+      "id": "reverse",
+      "label": "Image on right — desktop (default: off)",
+      "default": false,
+      "info": "769px and up only."
+    },
+    {
+      "type": "select",
+      "id": "mobile_stack_order",
+      "label": "Phone stack (default: image on top)",
+      "default": "media_first",
+      "options": [
+        { "value": "media_first", "label": "Image above copy (default)" },
+        { "value": "copy_first", "label": "Copy above image" }
+      ]
     },
     {
       "type": "range",
-      "id": "text_spacing_mobile",
-      "label": "Mobile text spacing",
-      "min": 16,
-      "max": 80,
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 96)",
+      "min": 32,
+      "max": 120,
       "step": 4,
       "unit": "px",
-      "default": 36,
-      "info": "Higher = taller text area. Left/right stays 20px."
+      "default": 96,
+      "info": "Unset in JSON keeps legacy split padding (56px) until you set this in TE."
     },
-    { "type": "video", "id": "video", "label": "Shopify video" },
-    { "type": "text", "id": "video_url", "label": "Video URL (mp4)", "info": "Used when Media type = Video and Shopify video is empty." },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 80)",
+      "min": 16,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 80,
+      "info": "Unset uses stored mobile spacing (often 36px) until you set this."
+    },
+    { "type": "text", "id": "aria_label", "label": "Accessibility name (aria-label)", "default": "Collection hero" },
+
+    { "type": "header", "content": "6 — Section gap" },
+    {
+      "type": "range",
+      "id": "section_gap",
+      "label": "Space above & below — desktop (default 0)",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "section_gap_mobile",
+      "label": "Space after section — phone (default 0)",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
 
     { "type": "header", "content": "Sole cards (optional — off for Collection v18)" },
     { "type": "checkbox", "id": "show_sole_cards", "label": "Show Open/Closed comparison cards", "default": false, "info": "v18 Locked: off. Sole via grid tabs + FAQ only." },
@@ -740,7 +880,14 @@
     { "type": "image_picker", "id": "open_image", "label": "Open Sole image" },
     { "type": "url", "id": "open_url", "label": "Open Sole link" },
     { "type": "text", "id": "open_best_for", "label": "Open Sole — Pick this if", "default": "you want a more grounded, barefoot feel with natural toe splay.", "info": "Feel and coverage only — never assign a discipline to a sole." },
-    { "type": "textarea", "id": "open_desc", "label": "Open Sole description", "default": "Heel exposed, mid-foot breathing hole. More grounded, barefoot feel. Natural toe splay. Both perform identically — same grip, same stability." }
+    { "type": "textarea", "id": "open_desc", "label": "Open Sole description", "default": "Heel exposed, mid-foot breathing hole. More grounded, barefoot feel. Natural toe splay. Both perform identically — same grip, same stability." },
+
+    { "type": "header", "content": "Legacy (hidden — do not edit)" },
+    { "type": "paragraph", "content": "Preserves stored values on Theme Editor save." },
+    { "type": "select", "id": "media_type", "label": "Legacy: Media type", "default": "image", "options": [{ "value": "image", "label": "Image" }, { "value": "video", "label": "Video" }], "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}" },
+    { "type": "range", "id": "media_height", "label": "Legacy: Photo height", "min": 360, "max": 720, "step": 10, "unit": "px", "default": 480, "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}" },
+    { "type": "checkbox", "id": "show_trust", "label": "Legacy: Show trust line", "default": true, "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}" },
+    { "type": "range", "id": "text_spacing_mobile", "label": "Legacy: Mobile text spacing", "min": 16, "max": 80, "step": 4, "unit": "px", "default": 36, "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}" }
   ],
   "presets": [{ "name": "Collection Hero" }]
 }

@@ -20,6 +20,24 @@ Plain-English list of controls you probably rarely need. **Usage** = instances i
 - **Gap between image & text** (`column_gap`): control removed; grid gap is always **0**.
 - **Eyebrow / quote heading**: label + info for Quote style; quote-mode eyebrow respects **Heading level** (not hardcoded H2).
 
+## collection-hero — 50/50 parity (stacked PR on #36)
+
+- **Photo / video**: Same priority as fifty-fifty; collection-specific **Photo size** (`media_fill`: inset / column / bleed) and phone frame (`aspect_ratio_mobile`, fit selects, `text_height_mobile`).
+- **Focus + height**: `image_zoom`, `min_height` (legacy `media_height` when unset — e.g. **660** on main collection JSON), `media_column_pct`.
+- **Heading / body / CTA**: H1 locked; **Button** (`cta_style` → `.btn--*`); secondary text link unchanged.
+- **Trust strip**: `show_trust_strip` (fallback legacy `show_trust`) + `trust_text`; eyebrow when trust off.
+- **Layout**: Reverse, phone stack, **Text pad top & bottom** (`text_pad_y` optional — unset keeps legacy **56px** split padding; `text_pad_y_mobile` unset uses legacy **`text_spacing_mobile`** e.g. **36**).
+- **Section gap**: `section_gap` / `section_gap_mobile` default **0** (bleed hero keeps separate 32px token before grid).
+- **Legacy hidden**: `media_type`, `media_height`, `show_trust`, `text_spacing_mobile`.
+
+## page-about-split — 50/50 parity (stacked PR on #36)
+
+- Same header order 1–6 as fifty-fifty; About-specific height sliders + legacy clamp pads when unified pads unset in JSON.
+
+## page-about-joseph — 50/50 parity (stacked PR on #36)
+
+- Dual gallery images under section 1; no height sliders (natural aspect); layout + legacy type keys hidden.
+
 ## split-hero — 50/50 parity (stacked PR on #34)
 
 - **Photo / video**: Same priority as fifty-fifty (Shopify video → Video URL → Shopify image → Image URL); optional phone still via `<picture>`; `poster_url` for external mp4; legacy `media_type` hidden.
