@@ -13,13 +13,45 @@
 ## Missing controls (asked for, not in 50/50 today)
 | # | Wanted | Today | Proposal |
 |---|---|---|---|
-| 1 | **Phone focal point** | **None.** Phone *cover* uses the desktop `focal_x/focal_y`. Phone *fit* uses the desktop focal, or `center top` when focal is 50/50 / center. A separate phone image (`image_mobile`, 8 instances) also gets the desktop focal | Add `focal_mobile_custom` (checkbox, default **off** = same as desktop, today's behaviour) + `focal_x_mobile` / `focal_y_mobile` (range 0–100/1 %, default 50). Off on every instance → zero change |
+| 1 | **Phone focal point** | **None.** Phone *cover* uses the desktop focal. Phone *fit* uses the desktop focal, or `center top` when it is center / 50-50 | **Decided (Andrew 2026-10-02): see "Focal point (decided)" below.** Phone preset dropdown `image_position_mobile` with **Same as desktop (default)** + 9 presets + Custom; Custom reveals `focal_x_mobile`/`focal_y_mobile` via `visible_if` |
 | 2 | **Desktop top and bottom text padding, separately** | One `vertical_padding` slider applied to both top and bottom (32–120/4, default 88) | Split into `text_pad_top` + `text_pad_bottom` (32–120/4 px, default **80**, the most used). Migration: write both = the instance's current `vertical_padding` (3 instances rely on implicit 88, so write 88) |
 | 3 | **Phone text side padding** | None. Fixed `var(--section-padding-x-mobile)` = **20px** (design-tokens.css) | Add `text_pad_x_mobile` (range 12–48/4 px, default **20**). Matches today exactly |
 | 4 | **Phone media width** | None. Phone media is always full width | Optional: `mobile_media_width` (range 70–100/5 %, default **100**). Only add if Andrew wants inset phone images |
 | 5 | Desktop cover/fit **and** phone cover/fit | ✅ exist (`media_fit`, `image_fit_mobile`) | Keep. Trim unused options (see table) |
 | 6 | Reverse (desktop) / image top or bottom (phone) | ✅ exist (`reverse`, `mobile_stack_order`) | Keep |
 | 7 | Phone height, phone top/bottom text pads | ✅ exist (`mobile_media_height`, `text_pad_top_mobile`, `text_pad_bottom_mobile`) | Keep. **`text_pad_bottom_mobile` stays separate (not merged)** per Andrew |
+
+## Focal point (decided, Andrew 2026-10-02)
+**Control model:** a preset dropdown first; choosing **Custom** reveals x/y sliders. There are separate desktop and phone dropdowns.
+- **Desktop:** `image_position` (existing id, so no data migration). Options in this order: Top left · Top · Top right · Left · **Center (default)** · Right · Bottom left · Bottom · Bottom right · Custom. Values stay the existing CSS strings (`top left`, `top`, …, `center`, `custom`).
+- **Desktop Custom:** `focal_x` / `focal_y` (0–100 %, step 1) with `"visible_if": "{{ section.settings.image_position == 'custom' }}"`.
+- **Phone:** new `image_position_mobile`: **Same as desktop (default)** · the same 9 presets · Custom.
+- **Phone Custom:** new `focal_x_mobile` / `focal_y_mobile` with `"visible_if": "{{ section.settings.image_position_mobile == 'custom' }}"`.
+- **Phone render rule:** `same` keeps today's logic exactly (cover uses the desktop position; fit uses the desktop position, but `center top` when desktop is center or Custom 50/50; see R2). A preset or Custom sets the phone `object-position` for both cover and fit. All values are dual-written in `{% style %}` for live preview.
+
+**`visible_if` support confirmed:** Shopify docs (Theme settings → *Conditional settings*, changelog 2025-05-21) allow `visible_if` on basic inputs (`select`, `range`, `checkbox`, …) in section schemas. Hidden settings keep their saved data. It is **already used in this theme**: `sections/pdp-reviews.liquid` (`band_context` conditions). Limitation: no resource-type settings, which doesn't matter here.
+
+**Mapping of all 42 instances (git `c0c0564`), nothing moves:**
+| Group | Count | Desktop `image_position` | x/y | Phone `image_position_mobile` |
+|---|---|---|---|---|
+| Custom today | **11** | Custom | exact stored x/y (table below) | Same as desktop |
+| Center today, x/y default | **27** | Center | hidden (50/50) | Same as desktop |
+| Center today with ignored x/y (R1) | **4** | Center | hidden (stored 40/72/72/100 ignored, as today) | Same as desktop |
+| **Total** | **42** | 31 Center · 11 Custom | | 42 Same as desktop |
+
+| Custom instance | focal_x | focal_y | Phone fit | Phone result (unchanged) |
+|---|---|---|---|---|
+| `product.coperni` : `fifty-fifty-lifestyle` | 50 | 50 | **fit** | `center top` (R2) |
+| `product` : `fifty-fifty-lifestyle` | 50 | 85 | cover | 50% 85% |
+| `product.one-off-closed` : `fifty-fifty-lifestyle` | 50 | 85 | cover | 50% 85% |
+| `product.one-off-closed` : `fifty-fifty-numbers` | 50 | 85 | cover | 50% 85% |
+| `product.one-off-open` : `fifty-fifty-lifestyle` | 50 | 85 | cover | 50% 85% |
+| `product.one-off-open` : `fifty-fifty-numbers` | 50 | 85 | cover | 50% 85% |
+| `product.outdoor` : `fifty-fifty-lifestyle` | 50 | 50 | cover | 50% 50% |
+| `product.outdoor` : `fifty-fifty-commit` | 38 | 50 | cover | 38% 50% |
+| `product.outdoor` : `fifty-fifty-numbers` | 50 | 78 | cover | 50% 78% |
+| `product.outdoor` : `fifty-fifty-barefoot` | 50 | 40 | cover | 50% 40% |
+| `product.outdoor` : `fifty-fifty-outdoor-works` | 50 | 50 | cover | 50% 50% |
 
 ## Defaults that would change (each needs explicit write-back first)
 | Control | Current default | Proposed default (most used) | Instances relying on the old default → write explicit value |
@@ -28,7 +60,7 @@
 | Desktop text pad (`vertical_padding` → `text_pad_top`/`text_pad_bottom`) | 88 | **80** (28 vs 14) | `collection.apparel` : `fifty-fifty-tees`, `-think-outside`, `-leggings` (key absent, implicit 88) → write 88/88. 11 others store 88 explicitly, so copy it |
 | `cta_link_target` | `custom` | **`#variants`** (14; #buy 12, custom 10) | All 42 store it explicitly, so no change. ⚠ New instances on collection/pages would default to `#variants`, an anchor that only exists on PDPs. Andrew may prefer to keep `custom` |
 | `cta_text` (content) | "Shop Now" | **"Shop now"** (20 vs 7) | All 42 explicit, so no change |
-| `image_position` | `center` | **removed** (folded into focal) | See risk R1 |
+| `image_position` | `center` | **kept**, `center` (most used, 31). Options reordered; see Focal point (decided) | none: all 42 keep their stored value |
 | Everything else kept | | already equals the most-used value | — |
 
 ## Background: fixed select instead of a colour picker
@@ -70,14 +102,8 @@ Render priority in code: **Shopify `video`** → **`video_url`** → **`image`**
 - Where `poster_url` and `image_url` are both set, they are identical in all 5 cases. So `poster_url` *could* later merge into `image_url` ("still image = poster"). **Not proposed now**, because Andrew wants the explicit poster field.
 
 ## Risky instances (need Andrew's decision; zero-change option given)
-- **R1. Saved focal values that currently do nothing.** These 4 instances store a focal point, but `image_position` = `center`, so the focal is ignored today:
-  - `product.coperni : fifty-fifty-commit` (focal_y 40; position implicit center)
-  - `product.in-studio-template : fifty-fifty-lifestyle` (focal_y 72, position center)
-  - `product.open-sole : fifty-fifty-lifestyle` (focal_y 72, position center)
-  - `index : fifty-fifty-one-pair` (focal_x 100, position center)
-
-  Folding `image_position` into focal (always active) would **move these images**. Zero-change migration: write focal 50/50 on these 4. **Ask Andrew** whether 72/40/100 were intended. If yes, that's a deliberate visual change he approves per instance.
-- **R2. Phone fit focal quirk.** With phone *fit*, focal 50/50 renders `center top`, not `center center`. This affects `product.coperni : fifty-fifty-lifestyle` (custom 50/50, phone fit). Keep this rule exactly, both in the new phone-focal logic and when `focal_mobile_custom` is off.
+- **R1. Saved focal values that currently do nothing (resolved by Andrew's decision).** These 4 instances store focal x/y but have position `center`, so the values are ignored today: `product.coperni : fifty-fifty-commit` (y40, position implicit center), `product.in-studio-template : fifty-fifty-lifestyle` (y72), `product.open-sole : fifty-fifty-lifestyle` (y72), `index : fifty-fifty-one-pair` (x100). **Decision: they become Center.** Desktop dropdown = `center`, and the x/y sliders are hidden by `visible_if` (Shopify keeps the hidden saved values, but code only reads them when Custom is selected). Nothing moves. If Andrew later switches one to Custom, the old 72/40/100 values reappear in the sliders, so reset them to 50 at that point if unwanted.
+- **R2. Phone-fit top behaviour (keep).** With phone = *Same as desktop* and phone *fit*, desktop `center` or Custom 50/50 renders **`center top`** (packshots flush to the section above); any other desktop focal is copied. `product.coperni : fifty-fifty-lifestyle` (Custom 50/50, phone fit) depends on this, so it must stay `center top`. Rule for the new code: only when phone = `same` do we apply today's `ff_pos_fit_m` logic unchanged. An explicit phone preset or Custom always wins.
 - **R3. Desktop fit letterbox.** `page.best-grippy-socks : outgrew` (desktop fit, letterbox `#f9f9f9`). Keep `media_bg` as a picker, or it changes.
 - **R4. Product-template overrides.** On product templates, code forces `section_gap_mobile` = 0 and `mobile_text_height` = 0. The new controls must keep those overrides. None of the 4 instances with `section_gap_mobile` = 24 are on product templates.
 - **R5. Phone pad conflict.** The `text_pad_top_mobile` info text says "LOCKED global PDP standard: 96", but 8 PDP instances use 32 (with bottom at default 96). Keep the values and fix the info text only.
@@ -98,11 +124,11 @@ D = desktop, P = phone. Live: ✅ live via `{% style %}` today · 🆕 make live
 | `image_alt` | Image alt text | text | — | — | D+P | content | 31 | none | keep |
 | `media_fit` | Media fit: desktop | select | **cover (default)**, fit | cover | D | 💾 | cover 41, fit 1 (outgrew) | drop unused `cover_inset`, `contain` (0 uses) | keep |
 | `image_fit_mobile` | Media fit: phone | select | **cover (default)**, fit | cover | P | 💾 | cover 41, fit 1 (coperni/lifestyle) | drop unused `contain` | keep |
-| `image_position` | Image focal point (presets) | select | 10 presets | center | D+P | ✅ | center 31, custom 11 | fold into focal: custom keeps x/y; center → 50/50 (**R1**) | **remove (merge into focal)** |
-| `focal_x` | Focal point: horizontal (default 50) | range | 0–100 / 1 % | 50 | D (+P when no phone focal) | ✅ | 50×40, 100 (index/one-pair, *inert: position center*), 38 (outdoor/commit) | see R1. ⚠ index/one-pair x=100 is also inert (position center) → write 50 | keep |
-| `focal_y` | Focal point: vertical (default 50) | range | 0–100 / 1 % | 50 | D (+P) | ✅ | 50×32, 85×5, 72×2 (*inert*), 40×2 (1 inert), 78×1 | see R1 | keep |
-| `focal_mobile_custom` 🆕 | Separate phone focal point (default off) | checkbox | — | off | P | 🆕 | — | off everywhere = today | **add** |
-| `focal_x_mobile` / `focal_y_mobile` 🆕 | Phone focal point | range | 0–100 / 1 % | 50 | P | 🆕 | — | none | **add** |
+| `image_position` | Focal point: desktop (default: Center) | select | Top left, Top, Top right, Left, **Center (default)**, Right, Bottom left, Bottom, Bottom right, Custom | center | D (+P when phone = same) | ✅ | center 31 (incl. the 4 inert of R1), custom 11 | none: same id and values, options reordered only | **keep** |
+| `focal_x` | Custom focal: horizontal (default 50) | range + `visible_if: {{ section.settings.image_position == 'custom' }}` | 0–100 / 1 % | 50 | D | ✅ | effective only on the 11 Custom: 38 (outdoor/commit), others 50 | none | keep |
+| `focal_y` | Custom focal: vertical (default 50) | range + same `visible_if` | 0–100 / 1 % | 50 | D | ✅ | effective on Custom: 85×5, 78, 40, 50×4 | none | keep |
+| `image_position_mobile` 🆕 | Focal point: phone (default: Same as desktop) | select | **Same as desktop (default)**, Top left, Top, Top right, Left, Center, Right, Bottom left, Bottom, Bottom right, Custom | same | P | 🆕 | — | all 42 = same (today's behaviour incl. R2) | **add** |
+| `focal_x_mobile` / `focal_y_mobile` 🆕 | Custom phone focal (default 50) | range + `visible_if: {{ section.settings.image_position_mobile == 'custom' }}` | 0–100 / 1 % | 50 | P | 🆕 | — | none | **add** |
 | `image_scale` | Image scale | range | 100–150 / 5 | 100 | D+P | ✅ | 100×42 | never changed | remove |
 | `contain_width` | Contain media width | range | 40–100 / 2 | 72 | D+P | ✅ | 72×42 (contain unused) | never changed | remove |
 | `media_bg_preset` | Letterbox preset | select | white/cream/custom | custom | D+P | ✅ | custom×42 | never changed | remove |
@@ -172,11 +198,11 @@ D = desktop, P = phone. Live: ✅ live via `{% style %}` today · 🆕 make live
 | `stat_1…3_value/label`, `stat_3_emphasis`, `stat_bar_color`, block `stat` | Stats mode | — | — | — | D+P | — | stats used by 0 instances (`stat_3_emphasis=false` ×3 has no effect) | none | remove |
 | `anchor_id`, `aria_label` | Anchor ID / accessibility name | text | — | — | — | content | 7 / 5 | none | keep |
 
-**Count after the PR:** 76 current controls → about 40 kept, 7 added (`text_pad_top`, `text_pad_bottom`, `text_pad_x_mobile`, `bg_style`, `focal_mobile_custom`, `focal_x_mobile`, `focal_y_mobile`, plus optional `mobile_media_width`), the rest removed. Every removal is dead or never changed, except `image_asset` (pending approval) and the merged `image_position` / `vertical_padding` / `bg_color` (values migrated).
+**Count after the PR:** 76 current controls → about 40 kept, 7 added (`text_pad_top`, `text_pad_bottom`, `text_pad_x_mobile`, `bg_style`, `image_position_mobile`, `focal_x_mobile`, `focal_y_mobile`, plus optional `mobile_media_width`), the rest removed. Every removal is dead or never changed, except `image_asset` (pending approval) and the merged `vertical_padding` / `bg_color` (values migrated).
 
 ## Implementation checklist (for the later, separately approved PR)
 1. Pull the 15 templates from draft `187144929571` (pull only). Diff them against `c0c0564` and re-run this spec's numbers.
-2. Template JSON migration first: write explicit values (bg white on product/sock-era, 88/88 pads on 3 apparel, focal 50/50 on R1 instances unless Andrew says otherwise, new `bg_style` / `text_pad_top` / `text_pad_bottom` from old keys).
+2. Template JSON migration first: write explicit values (bg white on product/sock-era, 88/88 pads on 3 apparel, no focal writes needed (R1 stays Center), new `bg_style` / `text_pad_top` / `text_pad_bottom` from old keys).
 3. Schema and Liquid changes. Dual-write the new range/select values in `{% style %}`. Keep the PDP overrides (R4) and the phone-fit `center top` rule (R2).
 4. Pull-verify plus before/after screenshots of all 42 instances at desktop and 390px; pixel diff must be zero.
 5. One section per PR. No other sections touched.
