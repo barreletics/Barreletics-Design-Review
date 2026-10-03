@@ -951,22 +951,37 @@
   }
 </style>
 
-
+{%- comment -%}
+  TE live preview: Shopify hot-patches this {% style %} block when sliders change.
+  Values must read section.settings.* directly (not top-of-file assigns) — same pattern as fifty-fifty.liquid.
+  !important beats inline vars on .split-section and the static <style> block.
+{%- endcomment -%}
 {% style %}
+  {%- liquid
+    assign te_media_pct = section.settings.media_column_pct
+    if te_media_pct == blank
+      assign te_ds = section.settings.desktop_split | default: '50_50'
+      if te_ds == '62_38'
+        assign te_media_pct = 62
+      elsif te_ds == '38_62'
+        assign te_media_pct = 38
+      else
+        assign te_media_pct = 50
+      endif
+    endif
+  -%}
   #shopify-section-{{ section.id }},
   #shopify-section-{{ section.id }} .split-section {
-    --ff-min-height: {{ section.settings.min_height }}px !important;
+    --ff-min-height: {{ section.settings.min_height | default: 860 }}px !important;
     {%- if section.settings.mobile_media_height > 0 %}
     --ff-mobile-media-height: {{ section.settings.mobile_media_height }}px !important;
     {%- else %}
     --ff-mobile-media-height: var(--split-media-h-mobile, 500px) !important;
     {%- endif %}
-    {%- if template.name == 'product' %}
-        {%- else %}
-        {%- endif %}
     --ff-mobile-media-width: {{ section.settings.mobile_media_width | default: 100 }}% !important;
-    --ff-media-fr: {{ section.settings.media_column_pct }}fr !important;
-    --ff-text-fr: {{ 100 | minus: section.settings.media_column_pct }}fr !important;
+    --ff-media-fr: {{ te_media_pct }}fr !important;
+    --ff-text-fr: {{ 100 | minus: te_media_pct }}fr !important;
+    --pr-copy-stack-gap: {{ section.settings.copy_stack_gap | default: 12 }}px !important;
     {%- if section.settings.image_position == 'custom' %}
     --ff-object-position: {{ section.settings.focal_x | default: 50 }}% {{ section.settings.focal_y | default: 50 }}% !important;
     {%- elsif section.settings.image_position != blank and section.settings.image_position != 'center' %}
@@ -1287,7 +1302,7 @@
     {
       "type": "range",
       "id": "min_height",
-      "label": "Height — desktop (default 860)",
+      "label": "Height \u2014 desktop (default 860)",
       "min": 400,
       "max": 1200,
       "step": 20,
@@ -1297,7 +1312,7 @@
     {
       "type": "range",
       "id": "media_column_pct",
-      "label": "Image width — desktop (default 50%)",
+      "label": "Image width \u2014 desktop (default 50%)",
       "min": 35,
       "max": 72,
       "step": 1,
@@ -1308,7 +1323,7 @@
     {
       "type": "range",
       "id": "mobile_media_height",
-      "label": "Image height — phone (default 0 = theme 500px)",
+      "label": "Image height \u2014 phone (default 0 = theme 500px)",
       "min": 0,
       "max": 700,
       "step": 10,
@@ -1318,7 +1333,7 @@
     {
       "type": "range",
       "id": "mobile_media_width",
-      "label": "Image width — phone (default 100%)",
+      "label": "Image width \u2014 phone (default 100%)",
       "min": 70,
       "max": 100,
       "step": 5,
