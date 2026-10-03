@@ -106,7 +106,7 @@
               class: 'coll-hero__video'
           }}
         {%- elsif video_url != blank -%}
-          <video class="coll-hero__video" autoplay muted loop playsinline preload="metadata"{% if image != blank %} poster="{{ image | image_url: width: 1600 }}"{% elsif image_url != blank %} poster="{{ image_url | escape }}"{% endif %}>
+          <video class="coll-hero__video" autoplay muted loop playsinline webkit-playsinline preload="metadata"{% if image != blank %} poster="{{ image | image_url: width: 1600 }}"{% elsif image_url != blank %} poster="{{ image_url | escape }}"{% endif %}>
             <source src="{{ video_url | escape }}" type="video/mp4">
           </video>
         {%- endif -%}
@@ -615,6 +615,12 @@
     }
   }
 </style>
+
+{% render 'bg-video-autoplay-script',
+  section_id: section.id,
+  root_class: 'coll-hero',
+  video_selector: 'video.coll-hero__video, .coll-hero__media video'
+%}
 
 {% schema %}
 {
