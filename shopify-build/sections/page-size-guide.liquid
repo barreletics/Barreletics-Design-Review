@@ -7,7 +7,7 @@
 <section
   class="section page-size__head"
   id="shopify-section-{{ section.id }}"
-  style="{% render 'unified-text-pads-vars', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}{% render 'type-override-vars', title_size: section.settings.title_size, title_weight: section.settings.title_weight, body_size: section.settings.body_size, body_weight: section.settings.body_weight %}"
+  style="{% render 'unified-text-pads-vars', y_d: 32, side_d: 40, y_m: 48, x_m: 16 %}{% render 'type-override-vars', title_size: section.settings.title_size, title_weight: section.settings.title_weight, body_size: section.settings.body_size, body_weight: section.settings.body_weight %}"
   {{ section.shopify_attributes }}
 >
   <div class="section__inner section__inner--narrow">
@@ -238,7 +238,25 @@
   }
 </style>
 
-{% render 'unified-text-pads-te-style', selector: '.section-frame', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}
+
+<style>
+  #shopify-section-{{ section.id }} .page-size__head {
+    padding-top: var(--utp-y-d, var(--section-padding-y));
+    padding-bottom: var(--utp-y-d, var(--section-padding-y));
+    padding-left: var(--utp-side-d, var(--section-padding-x));
+    padding-right: var(--utp-side-d, var(--section-padding-x));
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .page-size__head {
+      padding-top: var(--utp-y-m, var(--section-padding-y));
+      padding-bottom: var(--utp-y-m, var(--section-padding-y));
+      padding-left: var(--utp-x-m, var(--section-padding-x));
+      padding-right: var(--utp-x-m, var(--section-padding-x));
+    }
+  }
+</style>
+
+{% render 'unified-text-pads-te-style', selector: '.page-size__head', y_d: 32, side_d: 40, y_m: 48, x_m: 16 %}
 
 {% schema %}
 {
@@ -260,12 +278,12 @@
       "type": "textarea",
       "id": "subtitle",
       "label": "Subtitle",
-      "default": "Two sizes, and at the 7.5 overlap the width of your foot decides — here's how to find yours."
+      "default": "Two sizes, and at the 7.5 overlap the width of your foot decides \u2014 here's how to find yours."
     },
     {
       "type": "header",
-      "content": "Type — size & weight",
-      "info": "Family is brand Type OS. Default keeps the approved Size Guide type. Title caps at 56px — support pages never use the homepage hero size."
+      "content": "Type \u2014 size & weight",
+      "info": "Family is brand Type OS. Default keeps the approved Size Guide type. Title caps at 56px \u2014 support pages never use the homepage hero size."
     },
     {
       "type": "select",
@@ -455,23 +473,23 @@
     },
     {
       "type": "header",
-      "content": "Layout — text padding"
+      "content": "Layout \u2014 text padding"
     },
     {
       "type": "range",
       "id": "text_pad_y",
-      "label": "Text pad top & bottom — desktop (default 96)",
-      "min": 8,
+      "label": "Text pad top & bottom \u2014 desktop (default 32)",
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
-      "default": 96
+      "default": 32
     },
     {
       "type": "range",
       "id": "side_padding",
-      "label": "Text pad left & right — desktop (default 40)",
-      "min": 8,
+      "label": "Text pad left & right \u2014 desktop (default 40)",
+      "min": 0,
       "max": 96,
       "step": 1,
       "unit": "px",
@@ -480,22 +498,22 @@
     {
       "type": "range",
       "id": "text_pad_y_mobile",
-      "label": "Text pad top & bottom — phone (default 80)",
-      "min": 8,
+      "label": "Text pad top & bottom \u2014 phone (default 48)",
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
-      "default": 80
+      "default": 48
     },
     {
       "type": "range",
       "id": "text_pad_x_mobile",
-      "label": "Text pad left & right — phone (default 20)",
-      "min": 8,
+      "label": "Text pad left & right \u2014 phone (default 16)",
+      "min": 0,
       "max": 48,
       "step": 1,
       "unit": "px",
-      "default": 20
+      "default": 16
     }
   ],
   "blocks": [
@@ -512,19 +530,19 @@
           "type": "text",
           "id": "us_size",
           "label": "Women's (US)",
-          "info": "M = 5.5–7.5 · L = 7.5–11. 7.5 sits in both rows on purpose — width is the tiebreaker."
+          "info": "M = 5.5\u20137.5 \u00b7 L = 7.5\u201311. 7.5 sits in both rows on purpose \u2014 width is the tiebreaker."
         },
         {
           "type": "text",
           "id": "mens_size",
           "label": "Men's (US)",
-          "info": "L = Up to 10.5. Leave blank for M — Medium does not fit men's sizing."
+          "info": "L = Up to 10.5. Leave blank for M \u2014 Medium does not fit men's sizing."
         },
         {
           "type": "text",
           "id": "kids_size",
           "label": "Kids' (US)",
-          "info": "M = 2–5. Leave blank for L."
+          "info": "M = 2\u20135. Leave blank for L."
         }
       ]
     },
