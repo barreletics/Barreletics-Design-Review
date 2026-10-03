@@ -1,5 +1,14 @@
 # Unified text pads migration report
 
+All sections use the same four Theme Editor controls as `fifty-fifty.liquid` (ids, labels, order):
+
+1. `text_pad_y` — Text pad top & bottom — desktop (default 96)
+2. `side_padding` — Text pad left & right — desktop (default 64)
+3. `text_pad_y_mobile` — Text pad top & bottom — phone (default 80)
+4. `text_pad_x_mobile` — Text pad left & right — phone (default 20)
+
+Shared snippets: `unified-text-pads-vars.liquid` (storefront CSS variables on the section root), `unified-text-pads-te-style.liquid` (live TE preview via `{% style %}` + `section.settings.*`). Legacy pad keys stay in schema hidden where templates still store them.
+
 | Section | Old pad settings | New pad settings | Render defaults (y_d, side_d, y_m, x_m) | Notes |
 |---|---|---|---|---|
 | announcement-strip | pad_x, pad_y, pad_y_mobile | text_pad_y, side_padding, text_pad_y_mobile, text_pad_x_mobile | 5, 56, 8, 16 | Selector .announcement-strip; TE preview snippet |
