@@ -98,7 +98,7 @@
   endif
 -%}
 
-<section class="section blog-listing blog-listing--shape-{{ image_shape }}" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
+<section class="section blog-listing blog-listing--shape-{{ image_shape }}" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }} style="{% render 'unified-text-pads-vars', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}">
   <div class="section__inner">
     {% if section.settings.title != blank %}
       <header class="blog-listing__header">
@@ -583,6 +583,8 @@
   }
 </style>
 
+{% render 'unified-text-pads-te-style', selector: '.section-frame', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}
+
 {% schema %}
 {
   "name": "Blog Listing",
@@ -746,6 +748,12 @@
       ]
     }
   ],
+
+    { "type": "header", "content": "Layout — text padding" },
+    { "type": "range", "id": "text_pad_y", "label": "Text pad top & bottom — desktop (default 96)", "min": 32, "max": 120, "step": 4, "unit": "px", "default": 96 },
+    { "type": "range", "id": "side_padding", "label": "Text pad left & right — desktop (default 64)", "min": 16, "max": 96, "step": 4, "unit": "px", "default": 64 },
+    { "type": "range", "id": "text_pad_y_mobile", "label": "Text pad top & bottom — phone (default 80)", "min": 16, "max": 120, "step": 4, "unit": "px", "default": 80 },
+    { "type": "range", "id": "text_pad_x_mobile", "label": "Text pad left & right — phone (default 20)", "min": 12, "max": 48, "step": 4, "unit": "px", "default": 20 },
   "presets": [
     {
       "name": "Blog Listing",
