@@ -47,7 +47,7 @@
   assign form_token = section.settings.form_token | default: 'BL-PARTNER-AMBASSADOR'
 -%}
 
-<section class="section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
+<section class="section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }} style="{% render 'unified-text-pads-vars', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}">
   <div class="section__inner section__inner--narrow">
     <h1 class="page-ambassador__title type-hero">{{ section.settings.title }}</h1>
     <div class="page-ambassador__body type-lede">
@@ -285,6 +285,8 @@
   }
 </style>
 
+{% render 'unified-text-pads-te-style', selector: '.section-frame', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}
+
 {% schema %}
 {
   "name": "Ambassador Page",
@@ -328,6 +330,12 @@
       "info": "Hidden value included in the submission email. The mail rule matches this string to route applications to the partner applications inbox. Do not change without updating the rule — see planning/partner-programs.md."
     }
   ],
+
+    { "type": "header", "content": "Layout — text padding" },
+    { "type": "range", "id": "text_pad_y", "label": "Text pad top & bottom — desktop (default 96)", "min": 32, "max": 120, "step": 4, "unit": "px", "default": 96 },
+    { "type": "range", "id": "side_padding", "label": "Text pad left & right — desktop (default 64)", "min": 16, "max": 96, "step": 4, "unit": "px", "default": 64 },
+    { "type": "range", "id": "text_pad_y_mobile", "label": "Text pad top & bottom — phone (default 80)", "min": 16, "max": 120, "step": 4, "unit": "px", "default": 80 },
+    { "type": "range", "id": "text_pad_x_mobile", "label": "Text pad left & right — phone (default 20)", "min": 12, "max": 48, "step": 4, "unit": "px", "default": 20 },
   "presets": [
     {
       "name": "Ambassador Page"
