@@ -1,0 +1,39 @@
+{%- comment -%}
+  Resolves fifty-fifty unified text padding to CSS variables (storefront).
+  Pass render defaults (y_d, side_d, y_m, x_m) = look when no TE/JSON keys exist.
+  Optional legacy_* = old setting ids to read when unified keys are blank (zero-change migration).
+{%- endcomment -%}
+{%- liquid
+  assign _y_d = section.settings.text_pad_y
+  if _y_d == blank and legacy_y_d != blank
+    assign _y_d = legacy_y_d
+  endif
+  if _y_d == blank
+    assign _y_d = y_d
+  endif
+
+  assign _side_d = section.settings.side_padding
+  if _side_d == blank and legacy_side_d != blank
+    assign _side_d = legacy_side_d
+  endif
+  if _side_d == blank
+    assign _side_d = side_d
+  endif
+
+  assign _y_m = section.settings.text_pad_y_mobile
+  if _y_m == blank and legacy_y_m != blank
+    assign _y_m = legacy_y_m
+  endif
+  if _y_m == blank
+    assign _y_m = y_m
+  endif
+
+  assign _x_m = section.settings.text_pad_x_mobile
+  if _x_m == blank and legacy_x_m != blank
+    assign _x_m = legacy_x_m
+  endif
+  if _x_m == blank
+    assign _x_m = x_m
+  endif
+-%}
+--utp-y-d: {{ _y_d }}px; --utp-side-d: {{ _side_d }}px; --utp-y-m: {{ _y_m }}px; --utp-x-m: {{ _x_m }}px;

@@ -1,0 +1,21 @@
+{%- comment -%}
+  Theme Editor live preview for unified text pads (section.settings.* only).
+  @param selector — CSS selector for padded element, e.g. ".value-strip-section"
+  @param y_d, side_d, y_m, x_m — same defaults as unified-text-pads-vars render args
+{%- endcomment -%}
+{% style %}
+  #shopify-section-{{ section.id }} {{ selector }} {
+    padding-top: {{ section.settings.text_pad_y | default: y_d }}px !important;
+    padding-bottom: {{ section.settings.text_pad_y | default: y_d }}px !important;
+    padding-left: {{ section.settings.side_padding | default: side_d }}px !important;
+    padding-right: {{ section.settings.side_padding | default: side_d }}px !important;
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} {{ selector }} {
+      padding-top: {{ section.settings.text_pad_y_mobile | default: y_m }}px !important;
+      padding-bottom: {{ section.settings.text_pad_y_mobile | default: y_m }}px !important;
+      padding-left: {{ section.settings.text_pad_x_mobile | default: x_m }}px !important;
+      padding-right: {{ section.settings.text_pad_x_mobile | default: x_m }}px !important;
+    }
+  }
+{% endstyle %}
