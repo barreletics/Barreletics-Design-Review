@@ -625,7 +625,7 @@
   video_selector: '.vm-tile video, video'
 %}
 
-{% render 'unified-text-pads-te-style', selector: '.visual-mosaic', y_d: 16, side_d: 16, y_m: 12, x_m: 12 %}
+{% render 'unified-text-pads-te-style', selector: '.visual-mosaic', y_d: 16, side_d: 16, y_m: 12, x_m: 12 , legacy_y_d: section.settings.pad_top , legacy_side_d: section.settings.pad_x %}
 
 {% schema %}
 {
@@ -677,7 +677,7 @@
       "options": [
         {
           "value": "default",
-          "label": "Default — 28px hero / 20px small"
+          "label": "Default \u2014 28px hero / 20px small"
         },
         {
           "value": "16",
@@ -726,11 +726,11 @@
     {
       "type": "select",
       "id": "title_size_mobile",
-      "label": "Title size — mobile",
+      "label": "Title size \u2014 mobile",
       "options": [
         {
           "value": "default",
-          "label": "Default — 22px hero / 16px small"
+          "label": "Default \u2014 22px hero / 16px small"
         },
         {
           "value": "16",
@@ -770,7 +770,7 @@
         }
       ],
       "default": "default",
-      "info": "Phone ≤767. Default is the current sizes. Pick a px if type is too small."
+      "info": "Phone \u2264767. Default is the current sizes. Pick a px if type is too small."
     },
     {
       "type": "checkbox",
@@ -798,7 +798,7 @@
       "step": 2,
       "unit": "px",
       "default": 12,
-      "info": "Space between tiles — including the hero photo and the card under it on phone."
+      "info": "Space between tiles \u2014 including the hero photo and the card under it on phone."
     },
     {
       "type": "range",
@@ -819,8 +819,9 @@
       "max": 48,
       "step": 2,
       "unit": "px",
-      "default": 16
-    , "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}" },
+      "default": 16,
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
+    },
     {
       "type": "range",
       "id": "pad_bottom",
@@ -829,8 +830,9 @@
       "max": 48,
       "step": 2,
       "unit": "px",
-      "default": 16
-    , "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}" },
+      "default": 16,
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
+    },
     {
       "type": "range",
       "id": "pad_x",
@@ -839,8 +841,9 @@
       "max": 48,
       "step": 2,
       "unit": "px",
-      "default": 16
-    , "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}" },
+      "default": 16,
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
+    },
     {
       "type": "header",
       "content": "More"
@@ -852,15 +855,15 @@
       "options": [
         {
           "value": "custom",
-          "label": "Custom URL…"
+          "label": "Custom URL\u2026"
         },
         {
           "value": "#variants",
-          "label": "#variants — Shop styles"
+          "label": "#variants \u2014 Shop styles"
         },
         {
           "value": "#knock-socks",
-          "label": "#knock-socks — Statement"
+          "label": "#knock-socks \u2014 Statement"
         },
         {
           "value": "#reviews",
@@ -888,20 +891,20 @@
         }
       ],
       "default": "#variants",
-      "info": "Used when a tile’s link is set to Default. Homepage anchors jump on the same page."
+      "info": "Used when a tile\u2019s link is set to Default. Homepage anchors jump on the same page."
     },
     {
       "type": "text",
       "id": "default_link_url",
       "label": "Custom default URL",
-      "info": "Used when Default tile link = Custom URL…. Full URL, relative path, or #hash."
+      "info": "Used when Default tile link = Custom URL\u2026. Full URL, relative path, or #hash."
     },
     {
       "type": "text",
       "id": "aria_label",
       "label": "Aria label",
       "default": "Studio proof",
-      "info": "Screen-reader name only — not visible on the page."
+      "info": "Screen-reader name only \u2014 not visible on the page."
     },
     {
       "type": "range",
@@ -938,16 +941,16 @@
     },
     {
       "type": "header",
-      "content": "Section — Mosaic — phone"
+      "content": "Section \u2014 Mosaic \u2014 phone"
     },
     {
       "type": "paragraph",
-      "content": "Current Home phone: 2 columns, Large tile full width × 2 rows, one tile hidden. These sliders recreate that. Desk Grid is unchanged."
+      "content": "Current Home phone: 2 columns, Large tile full width \u00d7 2 rows, one tile hidden. These sliders recreate that. Desk Grid is unchanged."
     },
     {
       "type": "select",
       "id": "mobile_columns",
-      "label": "Columns per row — phone",
+      "label": "Columns per row \u2014 phone",
       "options": [
         {
           "value": "1",
@@ -980,7 +983,7 @@
     {
       "type": "select",
       "id": "aspect_ratio_mobile",
-      "label": "Aspect ratio — phone",
+      "label": "Aspect ratio \u2014 phone",
       "default": "portrait",
       "options": [
         {
@@ -1005,7 +1008,7 @@
     {
       "type": "select",
       "id": "image_fit_mobile",
-      "label": "Image fit — phone",
+      "label": "Image fit \u2014 phone",
       "default": "cover",
       "options": [
         {
@@ -1026,7 +1029,7 @@
     {
       "type": "select",
       "id": "video_fit_mobile",
-      "label": "Video fit — phone",
+      "label": "Video fit \u2014 phone",
       "default": "cover",
       "options": [
         {
@@ -1047,7 +1050,7 @@
     {
       "type": "range",
       "id": "mobile_tile_height",
-      "label": "Tile height — phone",
+      "label": "Tile height \u2014 phone",
       "min": 120,
       "max": 696,
       "step": 8,
@@ -1094,7 +1097,7 @@
     {
       "type": "range",
       "id": "inset_top_mobile",
-      "label": "Inset top — mobile",
+      "label": "Inset top \u2014 mobile",
       "min": 0,
       "max": 64,
       "step": 4,
@@ -1105,7 +1108,7 @@
     {
       "type": "range",
       "id": "inset_bottom_mobile",
-      "label": "Inset bottom — mobile",
+      "label": "Inset bottom \u2014 mobile",
       "min": 0,
       "max": 64,
       "step": 4,
@@ -1116,7 +1119,7 @@
     {
       "type": "range",
       "id": "inset_x_mobile",
-      "label": "Inset left & right — mobile",
+      "label": "Inset left & right \u2014 mobile",
       "min": 0,
       "max": 64,
       "step": 4,
@@ -1135,6 +1138,72 @@
       "id": "hide_on_desktop",
       "label": "Hide on desktop",
       "default": false
+    },
+    {
+      "type": "header",
+      "content": "Layout \u2014 text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 16)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 16)",
+      "min": 8,
+      "max": 96,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 12)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 12)",
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Legacy (hidden \u2014 do not edit)"
+    },
+    {
+      "type": "paragraph",
+      "content": "Preserves stored values on Theme Editor save."
+    },
+    {
+      "type": "range",
+      "id": "pad_top",
+      "label": "Legacy: pad_top",
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "range",
+      "id": "pad_bottom",
+      "label": "Legacy: pad_bottom",
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "range",
+      "id": "pad_x",
+      "label": "Legacy: pad_x",
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
     }
   ],
   "blocks": [
@@ -1144,7 +1213,7 @@
       "settings": [
         {
           "type": "header",
-          "content": "Shared — Content"
+          "content": "Shared \u2014 Content"
         },
         {
           "type": "text",
@@ -1168,15 +1237,15 @@
             },
             {
               "value": "custom",
-              "label": "Custom URL…"
+              "label": "Custom URL\u2026"
             },
             {
               "value": "#variants",
-              "label": "#variants — Shop styles"
+              "label": "#variants \u2014 Shop styles"
             },
             {
               "value": "#knock-socks",
-              "label": "#knock-socks — Statement"
+              "label": "#knock-socks \u2014 Statement"
             },
             {
               "value": "#reviews",
@@ -1209,21 +1278,21 @@
           "type": "text",
           "id": "link_url",
           "label": "Custom tile URL",
-          "info": "Used when Tile link = Custom URL…."
+          "info": "Used when Tile link = Custom URL\u2026."
         },
         {
           "type": "header",
-          "content": "Shared — Media"
+          "content": "Shared \u2014 Media"
         },
         {
           "type": "paragraph",
-          "content": "Pick ONE media path per tile. Priority: Shopify video → Video URL → Shopify image → Image URL fallback. Leave unused fields blank."
+          "content": "Pick ONE media path per tile. Priority: Shopify video \u2192 Video URL \u2192 Shopify image \u2192 Image URL fallback. Leave unused fields blank."
         },
         {
           "type": "video",
           "id": "video",
           "label": "Shopify video",
-          "info": "Preferred when the file lives in Shopify Files. Use this OR Video URL — not both. Shopify video wins if both are set."
+          "info": "Preferred when the file lives in Shopify Files. Use this OR Video URL \u2014 not both. Shopify video wins if both are set."
         },
         {
           "type": "text",
@@ -1257,7 +1326,7 @@
         },
         {
           "type": "header",
-          "content": "Section — Tile"
+          "content": "Section \u2014 Tile"
         },
         {
           "type": "select",
@@ -1403,17 +1472,6 @@
       ]
     }
   ],
-
-    { "type": "header", "content": "Layout — text padding" },
-    { "type": "range", "id": "text_pad_y", "label": "Text pad top & bottom — desktop (default 96)", "min": 32, "max": 120, "step": 4, "unit": "px", "default": 96 },
-    { "type": "range", "id": "side_padding", "label": "Text pad left & right — desktop (default 64)", "min": 16, "max": 96, "step": 4, "unit": "px", "default": 64 },
-    { "type": "range", "id": "text_pad_y_mobile", "label": "Text pad top & bottom — phone (default 80)", "min": 16, "max": 120, "step": 4, "unit": "px", "default": 80 },
-    { "type": "range", "id": "text_pad_x_mobile", "label": "Text pad left & right — phone (default 20)", "min": 12, "max": 48, "step": 4, "unit": "px", "default": 20 },
-    { "type": "header", "content": "Legacy (hidden — do not edit)" },
-    { "type": "paragraph", "content": "Preserves stored values on Theme Editor save." },
-    { "type": "range", "id": "pad_top", "label": "Legacy: pad_top", "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}" },
-    { "type": "range", "id": "pad_bottom", "label": "Legacy: pad_bottom", "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}" },
-    { "type": "range", "id": "pad_x", "label": "Legacy: pad_x", "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}" },
   "presets": [
     {
       "name": "Visual mosaic",
