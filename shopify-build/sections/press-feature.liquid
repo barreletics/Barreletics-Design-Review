@@ -12,7 +12,7 @@
 
 <section
   class="twin-frame{% if section.settings.hide_on_mobile %} twin-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} twin-frame--hide-desktop{% endif %}"
-  style="--tf-desk-h: {{ desk_h }}px; --tf-mob-h: {{ mob_h }}px; --tf-bg: {{ bg }}; --tf-caption-bg: {{ caption_bg }};"
+  style="{% render 'unified-text-pads-vars', y_d: 48, side_d: 40, y_m: 80, x_m: 20 %}--tf-desk-h: {{ desk_h }}px; --tf-mob-h: {{ mob_h }}px; --tf-bg: {{ bg }}; --tf-caption-bg: {{ caption_bg }};"
   {% if section.settings.aria_label != blank %}aria-label="{{ section.settings.aria_label | escape }}"{% endif %}
 >
   <div class="twin-frame__inner">
@@ -130,7 +130,7 @@
 <style>
   #shopify-section-{{ section.id }} .twin-frame {
     background: var(--tf-bg, #faf8f6);
-    padding: 48px 40px 56px;
+    padding: var(--utp-y-d, 48px) var(--utp-side-d, 40px) 56px;
     color: #1c1916;
   }
   #shopify-section-{{ section.id }} .twin-frame__inner {
@@ -215,7 +215,7 @@
 
   @media (max-width: 749px) {
     #shopify-section-{{ section.id }} .twin-frame {
-      padding: 40px 16px 48px;
+      padding: var(--utp-y-d, 48px) var(--utp-side-d, 40px) 48px;
     }
     #shopify-section-{{ section.id }} .twin-frame--hide-mobile {
       display: none !important;
@@ -264,6 +264,8 @@
   root_class: 'twin-frame',
   video_selector: 'video.twin-frame__video, .twin-frame__media video'
 %}
+
+{% render 'unified-text-pads-te-style', selector: '.twin-frame', y_d: 48, side_d: 40, y_m: 80, x_m: 20 %}
 
 {% schema %}
 {
@@ -517,6 +519,12 @@
       "default": false
     }
   ],
+
+    { "type": "header", "content": "Layout — text padding" },
+    { "type": "range", "id": "text_pad_y", "label": "Text pad top & bottom — desktop (default 96)", "min": 32, "max": 120, "step": 4, "unit": "px", "default": 96 },
+    { "type": "range", "id": "side_padding", "label": "Text pad left & right — desktop (default 64)", "min": 16, "max": 96, "step": 4, "unit": "px", "default": 64 },
+    { "type": "range", "id": "text_pad_y_mobile", "label": "Text pad top & bottom — phone (default 80)", "min": 16, "max": 120, "step": 4, "unit": "px", "default": 80 },
+    { "type": "range", "id": "text_pad_x_mobile", "label": "Text pad left & right — phone (default 20)", "min": 12, "max": 48, "step": 4, "unit": "px", "default": 20 },
   "presets": [
     {
       "name": "Twin frame"
