@@ -20,29 +20,15 @@ Plain-English list of controls you probably rarely need. **Usage** = instances i
 - **Gap between image & text** (`column_gap`): control removed; grid gap is always **0**.
 - **Eyebrow / quote heading**: label + info for Quote style; quote-mode eyebrow respects **Heading level** (not hardcoded H2).
 
-## split-hero (1 placed instances)
+## split-hero — 50/50 parity (stacked PR on #34)
 
-- **Custom desktop focal — horizontal % (only if focal = Custom)** (`image_pos_x`) — changed from default on **0/1** instances; key absent **0/1**; schema default: `50`.
-- **Custom desktop focal — vertical %** (`image_pos_y`) — changed from default on **0/1** instances; key absent **0/1**; schema default: `50`.
-- **Custom phone focal — horizontal %** (`image_pos_x_mobile`) — changed from default on **0/1** instances; key absent **0/1**; schema default: `50`.
-- **Custom phone focal — vertical %** (`image_pos_y_mobile`) — changed from default on **0/1** instances; key absent **0/1**; schema default: `50`.
-- **Custom trust strip link URL** (`trust_url`) — changed from default on **0/1** instances; key absent **0/1**; schema default: `'—'`.
-- **Desktop zoom % (fine-tune crop)** (`image_zoom`) — changed from default on **0/1** instances; key absent **0/1**; schema default: `100`.
-- **Fallback hero image URL when Shopify picker is empty** (`image_url`) — changed from default on **0/1** instances; key absent **0/1**; schema default: `'https://barreletics.com/cdn/shop/products/barreletixxstefrunningpinkbackground.jpg?v=1710549452&width=2400'`.
-- **Heading tag level (H1 vs H2) — SEO tweak** (`heading_level`) — changed from default on **0/1** instances; key absent **0/1**; schema default: `'h1'`.
-- **Hide the whole hero on desktop** (`hide_on_desktop`) — changed from default on **0/1** instances; key absent **0/1**; schema default: `False`.
-- **Hide the whole hero on phone** (`hide_on_mobile`) — changed from default on **0/1** instances; key absent **0/1**; schema default: `False`.
-- **Legacy: show video controls (hidden; was never on in git)** (`video_controls`) — changed from default on **0/1** instances; key absent **0/1**; schema default: `False`.
-- **Override body font size** (`body_size`) — changed from default on **1/1** instances; key absent **0/1**; schema default: `'default'`.
-- **Override body weight** (`body_weight`) — changed from default on **0/1** instances; key absent **0/1**; schema default: `'default'`.
-- **Override CTA button size** (`cta_size`) — changed from default on **0/1** instances; key absent **0/1**; schema default: `'default'`.
-- **Override hero title font size** (`title_size`) — changed from default on **0/1** instances; key absent **0/1**; schema default: `'default'`.
-- **Override hero title weight** (`title_weight`) — changed from default on **0/1** instances; key absent **0/1**; schema default: `'default'`.
-- **Override screen-reader name (heading is usually enough)** (`aria_label`) — changed from default on **0/1** instances; key absent **0/1**; schema default: `'—'`.
-- **Phone frame margin bottom** (`inset_bottom_mobile`) — changed from default on **0/1** instances; key absent **0/1**; schema default: `0`.
-- **Phone frame margin left/right** (`inset_x_mobile`) — changed from default on **0/1** instances; key absent **0/1**; schema default: `0`.
-- **Phone frame margin top (only when separate phone margins on)** (`inset_top_mobile`) — changed from default on **0/1** instances; key absent **0/1**; schema default: `0`.
-- **Phone zoom %** (`image_zoom_mobile`) — changed from default on **0/1** instances; key absent **0/1**; schema default: `100`.
+- **Photo / video**: Same priority as fifty-fifty (Shopify video → Video URL → Shopify image → Image URL); optional phone still via `<picture>`; `poster_url` for external mp4; legacy `media_type` hidden.
+- **Focus + height**: Focal desktop/phone + `image_scale` (legacy `image_pos_*` / `image_zoom*` map when focal unset); **Section height** `media_height` (% of 92vh, default **100**); `media_column_pct` (default **50** in schema, renders saved JSON); fit cover/fit, frame shape, phone height/width, `media_bg` letterbox.
+- **Heading / body / CTA**: `type-hero` title + nbsp last-two-words; **Button** (`cta_style` → `.btn--*`); typography overrides (`title_size`, weights, `cta_size`); hashtag line under CTA.
+- **Trust strip**: `show_trust_strip` (fallback legacy `show_trust`) + stars, colours, gaps, trust link, `trust_text_size`.
+- **Layout**: Reverse (`reverse` / legacy `reverse_layout`), phone stack, text pads **72** / **56** / **52** / **24**, `bg_style` + legacy `bg_color`, corner radius on media + copy.
+- **Section gap**: `section_gap` default **0** (flush hero); `section_gap_mobile`, hide on phone/desktop; frame **inset_*** in section 6 via `section-inset-vars`.
+- **Legacy hidden**: `image_pos_*`, `image_zoom*`, CTA colour pickers, `video_controls`, old content/media layout headers — preserved on save, not shown in TE.
 
 ## fifty-fifty (41 placed instances)
 
