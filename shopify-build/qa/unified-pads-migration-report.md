@@ -2,7 +2,7 @@
 
 All migrated sections use the same four Theme Editor control **ids** and order as `fifty-fifty.liquid`. **Labels show each section’s real render default** (not a global 96/64/80/20). Range settings have **no schema default** so blank instances fall back to legacy JSON keys, then liquid render defaults.
 
-Shared snippets: `unified-text-pads-vars.liquid`, `unified-text-pads-te-style.liquid` — **legacy → unified (if set) → render default**; TE preview without `!important`.
+Shared snippets: `unified-text-pads-vars.liquid`, `unified-text-pads-te-style.liquid` — **unified ≠ default → unified; else legacy; else default** (schema `default` required on every range); TE preview without `!important`.
 
 See `unified-pads-review-fix-report.md` for the full per-section default table and template legacy instances.
 

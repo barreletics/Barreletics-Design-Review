@@ -1,16 +1,16 @@
-# Unified pads review fix (post a613fdf)
+# Unified pads — second review fix
 
-## Snippet fallback chain
+## Snippet fallback (vars + TE style)
 
-`unified-text-pads-vars.liquid` and `unified-text-pads-te-style.liquid` now resolve pads as:
+Parameters `y_d`, `side_d`, `y_m`, `x_m` **must match** the `default` on the four unified range settings in that section’s schema.
 
-**legacy (template JSON) → unified slider (only when non-blank) → per-section render default** (`y_d` / `side_d` / `y_m` / `x_m` passed into the render).
+1. If unified slider value **≠** schema default → use unified (merchant moved the slider).
+2. Else if legacy argument is **not blank** → use legacy (template JSON still stores old keys).
+3. Else → use unified value (= schema default).
 
-Unified range settings have **no schema `default`**, so unsaved instances stay blank and legacy + render defaults apply (no forced 96/64/80/20). TE preview uses the same chain and **no `!important`**.
+## Per-section schema defaults (labels match)
 
-## Per-section render defaults (new slider labels match these)
-
-| Section | y_d | side_d | y_m | x_m | Legacy keys wired in liquid |
+| Section | text_pad_y | side_padding | text_pad_y_mobile | text_pad_x_mobile | Legacy wired |
 |---|---:|---:|---:|---:|---|
 | announcement-strip | 5 | 56 | 8 | 16 | pad_y, pad_x, pad_y_mobile |
 | article-content | 96 | 40 | 80 | 20 | — |
@@ -36,7 +36,7 @@ Unified range settings have **no schema `default`**, so unsaved instances stay b
 | page-about-hero | 96 | 40 | 80 | 20 | — |
 | page-about-intro | 32 | 20 | 32 | 20 | — |
 | page-about-joseph | 56 | 48 | 28 | 20 | — |
-| page-about-split | 56 | 48 | 36 | 20 | media_max_px / media_max_px_mobile (height TE) |
+| page-about-split | 56 | 48 | 36 | 20 | media_max_px / media_max_px_mobile (height) |
 | page-about-values | 40 | 20 | 40 | 20 | — |
 | page-ambassador | 96 | 40 | 80 | 20 | — |
 | page-compare | 96 | 40 | 80 | 20 | — |
@@ -70,36 +70,15 @@ Unified range settings have **no schema `default`**, so unsaved instances stay b
 | variant-grid | 10 | 24 | 80 | 20 | — |
 | visual-mosaic | 16 | 16 | 12 | 12 | pad_top, pad_x |
 
-`fifty-fifty`, `problem-section`, and `split-hero` keep their existing in-section pad logic (not migrated to shared snippets on this branch).
+**Not modified on this branch (reverted to `108fff6`):** `fifty-fifty`, `problem-section`, `split-hero` — already verified on the split-section stack; no unified-pad migration required there for this PR.
 
-## Template instances with legacy pad values (read-only scan)
+## Theme Check vs `108fff6`
 
-These still store legacy keys; liquid prefers legacy over blank unified sliders:
+| Run | Files | Offenses | Errors | Warnings |
+|---|---:|---:|---:|---:|
+| Baseline `108fff6` | 170 | 155 | 33 | 122 |
+| After second-review fix | 175 | 155 | 33 | 122 |
 
-| Template | Section type | Legacy key | Saved value |
-|---|---|---|---|
-| index.json, collection.json | disciplines | pad_y / pad_y_mobile | 64 / 64 |
-| index.json | press-cards | padding_y / padding_x | 40 / 40 |
-| index.json, collection.json | visual-mosaic | pad_x | 16 |
-| collection.json | collection-hero | text_spacing_mobile | 36 |
-| product.in-studio-template.json, product.open-sole.json | value-strip | padding_y | 28 |
-| several collection/product templates | value-strip | padding_y | 20 |
-| many product/collection templates | fifty-fifty | vertical_padding | 80 or 88 |
+**Offense diff count (unique file + check):** **0 new**, **0 removed** (`ValidSchema` / missing `default`: **0**).
 
-Header group (`sections/header-group.json`) still stores legacy `pad_y` on announcement instances (9–10px).
-
-## Schema / TE fixes in this pass
-
-- Repaired orphaned “Layout — text padding” blocks (all section schemas parse as valid JSON).
-- Removed unified range **defaults** and erroneous **min_height** / **mobile_media_height** defaults where they overwrote legacy height.
-- **announcement-strip:** removed duplicate legacy `pad_y` / `pad_x` / `pad_y_mobile` ids; added `aria_label` gate field.
-- **header:** legacy hide uses `aria_label` (field added); TE targets `.site-header__inner`.
-- **disciplines:** single legacy `pad_y` / `pad_y_mobile` pair (hidden); unified + legacy wired.
-- **guarantee-band / home-juicer / page-about-close:** TE selectors retargeted to section wrappers with correct render defaults.
-- **page-about-split:** `section_gap_mobile` scoped to phone; `heading_level` rendered; height TE prefers legacy `media_max_px` when unified blank.
-
-## Theme Check
-
-Run: `shopify theme check` from `shopify-build/` (log: `/opt/cursor/artifacts/theme-check-unified-pads-fix.log`).
-
-Summary after fix pass: **175 files, 428 offenses (300 errors, 128 warnings)** — pre-existing missing customer account sections and baseline theme noise; **0 invalid section schema JSON** in `sections/*.liquid`.
+Logs: `/opt/cursor/artifacts/theme-check-baseline-108fff6.log`, `/opt/cursor/artifacts/theme-check-second-review-fix.log`.

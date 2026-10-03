@@ -118,41 +118,14 @@
   assign image_scale = section.settings.image_scale | default: 100
   assign contain_width = section.settings.contain_width | default: 72
   assign media_radius = section.settings.media_radius | default: 0
-  assign side_padding = section.settings.side_padding
-  if side_padding == blank
-    assign side_padding = 64
-  endif
-  assign text_pad_y_d = section.settings.text_pad_y
-  if text_pad_y_d == blank
-    assign text_pad_y_d = section.settings.text_pad_top
-  endif
-  if text_pad_y_d == blank
-    assign text_pad_y_d = section.settings.text_pad_bottom
-  endif
-  if text_pad_y_d == blank
-    assign text_pad_y_d = section.settings.vertical_padding
-  endif
-  if text_pad_y_d == blank
-    assign text_pad_y_d = 96
-  endif
+  assign side_padding = section.settings.side_padding | default: 64
+  assign text_pad_y_d = section.settings.text_pad_y | default: 96
   assign text_pad_top_d = text_pad_y_d
   assign text_pad_bottom_d = text_pad_y_d
-  assign text_pad_y_m = section.settings.text_pad_y_mobile
-  if text_pad_y_m == blank
-    assign text_pad_y_m = section.settings.text_pad_top_mobile
-  endif
-  if text_pad_y_m == blank
-    assign text_pad_y_m = section.settings.text_pad_bottom_mobile
-  endif
-  if text_pad_y_m == blank
-    assign text_pad_y_m = 80
-  endif
+  assign text_pad_y_m = section.settings.text_pad_y_mobile | default: 80
   assign text_pad_m = text_pad_y_m
   assign text_pad_bottom_m = text_pad_y_m
-  assign text_pad_x_m = section.settings.text_pad_x_mobile
-  if text_pad_x_m == blank
-    assign text_pad_x_m = 20
-  endif
+  assign text_pad_x_m = section.settings.text_pad_x_mobile | default: 20
   assign section_gap = 32
   if section.settings.section_gap == 0 or section.settings.section_gap != blank
     assign section_gap = section.settings.section_gap
@@ -1444,7 +1417,8 @@
       "min": 400,
       "max": 1200,
       "step": 20,
-      "unit": "px"
+      "unit": "px",
+      "default": 560
     },
     {
       "type": "range",
@@ -1463,7 +1437,8 @@
       "min": 0,
       "max": 700,
       "step": 10,
-      "unit": "px"
+      "unit": "px",
+      "default": 0
     },
     {
       "type": "range",
@@ -1717,6 +1692,7 @@
       "max": 120,
       "step": 4,
       "unit": "px",
+      "default": 96,
       "info": "Same value for top and bottom. One standard for all 50/50s; legacy top/bottom keys in JSON are not used for output."
     },
     {
@@ -1726,7 +1702,8 @@
       "min": 16,
       "max": 96,
       "step": 4,
-      "unit": "px"
+      "unit": "px",
+      "default": 64
     },
     {
       "type": "range",
@@ -1736,6 +1713,7 @@
       "max": 120,
       "step": 4,
       "unit": "px",
+      "default": 80,
       "info": "Same value for top and bottom. Legacy phone top/bottom keys in JSON are not used for output."
     },
     {
@@ -1745,7 +1723,8 @@
       "min": 12,
       "max": 48,
       "step": 4,
-      "unit": "px"
+      "unit": "px",
+      "default": 20
     },
     {
       "type": "select",
