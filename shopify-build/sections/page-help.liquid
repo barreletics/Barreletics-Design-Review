@@ -8,7 +8,7 @@
 <section
   class="page-help section"
   id="shopify-section-{{ section.id }}"
-  style="{% render 'unified-text-pads-vars', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}{% render 'type-override-vars', title_size: section.settings.title_size, title_weight: section.settings.title_weight, body_size: section.settings.body_size, body_weight: section.settings.body_weight, sub_size: section.settings.card_title_size, sub_weight: section.settings.card_title_weight %}"
+  style="{% render 'unified-text-pads-vars', y_d: 32, side_d: 40, y_m: 48, x_m: 16 %}{% render 'type-override-vars', title_size: section.settings.title_size, title_weight: section.settings.title_weight, body_size: section.settings.body_size, body_weight: section.settings.body_weight, sub_size: section.settings.card_title_size, sub_weight: section.settings.card_title_weight %}"
   {{ section.shopify_attributes }}
 >
   <div class="section__inner section__inner--narrow page-help__head">
@@ -160,7 +160,25 @@
   }
 </style>
 
-{% render 'unified-text-pads-te-style', selector: '.section-frame', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}
+
+<style>
+  #shopify-section-{{ section.id }} .page-help {
+    padding-top: var(--utp-y-d, var(--section-padding-y));
+    padding-bottom: var(--utp-y-d, var(--section-padding-y));
+    padding-left: var(--utp-side-d, var(--section-padding-x));
+    padding-right: var(--utp-side-d, var(--section-padding-x));
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .page-help {
+      padding-top: var(--utp-y-m, var(--section-padding-y));
+      padding-bottom: var(--utp-y-m, var(--section-padding-y));
+      padding-left: var(--utp-x-m, var(--section-padding-x));
+      padding-right: var(--utp-x-m, var(--section-padding-x));
+    }
+  }
+</style>
+
+{% render 'unified-text-pads-te-style', selector: '.page-help', y_d: 32, side_d: 40, y_m: 48, x_m: 16 %}
 
 {% schema %}
 {
@@ -176,12 +194,12 @@
       "type": "textarea",
       "id": "lede",
       "label": "Lede",
-      "default": "Answers, policy, sizing, and contact — pick a destination. Full FAQ lives on its own page."
+      "default": "Answers, policy, sizing, and contact \u2014 pick a destination. Full FAQ lives on its own page."
     },
     {
       "type": "header",
-      "content": "Type — size & weight",
-      "info": "Family is brand Type OS. Default keeps the approved Help page type. Title caps at 56px — support pages never use the homepage hero size."
+      "content": "Type \u2014 size & weight",
+      "info": "Family is brand Type OS. Default keeps the approved Help page type. Title caps at 56px \u2014 support pages never use the homepage hero size."
     },
     {
       "type": "select",
@@ -410,23 +428,23 @@
     },
     {
       "type": "header",
-      "content": "Layout — text padding"
+      "content": "Layout \u2014 text padding"
     },
     {
       "type": "range",
       "id": "text_pad_y",
-      "label": "Text pad top & bottom — desktop (default 96)",
-      "min": 8,
+      "label": "Text pad top & bottom \u2014 desktop (default 32)",
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
-      "default": 96
+      "default": 32
     },
     {
       "type": "range",
       "id": "side_padding",
-      "label": "Text pad left & right — desktop (default 40)",
-      "min": 8,
+      "label": "Text pad left & right \u2014 desktop (default 40)",
+      "min": 0,
       "max": 96,
       "step": 1,
       "unit": "px",
@@ -435,22 +453,22 @@
     {
       "type": "range",
       "id": "text_pad_y_mobile",
-      "label": "Text pad top & bottom — phone (default 80)",
-      "min": 8,
+      "label": "Text pad top & bottom \u2014 phone (default 48)",
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
-      "default": 80
+      "default": 48
     },
     {
       "type": "range",
       "id": "text_pad_x_mobile",
-      "label": "Text pad left & right — phone (default 20)",
-      "min": 8,
+      "label": "Text pad left & right \u2014 phone (default 16)",
+      "min": 0,
       "max": 48,
       "step": 1,
       "unit": "px",
-      "default": 20
+      "default": 16
     }
   ],
   "blocks": [
@@ -485,7 +503,7 @@
           "type": "destination",
           "settings": {
             "title": "FAQ",
-            "body": "Questions from the studio — orders, product, fit, care, policies.",
+            "body": "Questions from the studio \u2014 orders, product, fit, care, policies.",
             "url": "/pages/faq"
           }
         },
@@ -493,7 +511,7 @@
           "type": "destination",
           "settings": {
             "title": "Shipping & returns",
-            "body": "30-day returns · 90-day warranty · free shipping over $150 · exchanges.",
+            "body": "30-day returns \u00b7 90-day warranty \u00b7 free shipping over $150 \u00b7 exchanges.",
             "url": "/pages/returns"
           }
         },
@@ -501,7 +519,7 @@
           "type": "destination",
           "settings": {
             "title": "Start a return",
-            "body": "Open the returns portal — refund or exchange with order # and email.",
+            "body": "Open the returns portal \u2014 refund or exchange with order # and email.",
             "url": "/pages/returns-portal"
           }
         },
@@ -509,7 +527,7 @@
           "type": "destination",
           "settings": {
             "title": "Size chart",
-            "body": "M / L ranges · color fit notes.",
+            "body": "M / L ranges \u00b7 color fit notes.",
             "url": "/pages/performance-skins-size-chart"
           }
         },
@@ -517,7 +535,7 @@
           "type": "destination",
           "settings": {
             "title": "Contact",
-            "body": "Sizing help, claims, or stuck returns — usually within 24 hours.",
+            "body": "Sizing help, claims, or stuck returns \u2014 usually within 24 hours.",
             "url": "/pages/contact-us-form"
           }
         }
