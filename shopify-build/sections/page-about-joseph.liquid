@@ -142,12 +142,34 @@
   }
 </style>
 
+{%- comment -%} TE live preview: section.settings.* only.{%- endcomment -%}
+{% style %}
+  {%- if section.settings.heading_size_override != blank %}
+  #shopify-section-{{ section.id }} { {% render 'type-override-vars', title_size: section.settings.heading_size_override %} --te-title-size-n: {{ section.settings.heading_size_override }} !important; }
+  {%- endif %}
+  #shopify-section-{{ section.id }} {
+    padding-block: {{ section.settings.section_gap | default: 0 }}px {{ section.settings.section_gap_mobile | default: 0 }}px !important;
+  }
+  {%- if section.settings.text_pad_y_mobile != blank %}
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .page-about-joseph__copy {
+      padding-top: {{ section.settings.text_pad_y_mobile }}px !important;
+      padding-bottom: {{ section.settings.text_pad_y_mobile }}px !important;
+      padding-left: {{ section.settings.text_pad_x_mobile | default: 20 }}px !important;
+      padding-right: {{ section.settings.text_pad_x_mobile | default: 20 }}px !important;
+    }
+  }
+  {%- endif %}
+{% endstyle %}
+
 {% schema %}
 {
   "name": "About — Joseph",
   "settings": [
-    { "type": "text", "id": "gallery_aria", "label": "Gallery ARIA label", "default": "Joseph Pilates archival photographs" },
-    { "type": "image_picker", "id": "image_1", "label": "Archival image 1" },
+    { "type": "header", "content": "1 — Photo / video" },
+    { "type": "paragraph", "content": "Two archival images (gallery column). Shopify picker → URL fallback for each." },
+    { "type": "text", "id": "gallery_aria", "label": "Gallery accessibility name", "default": "Joseph Pilates archival photographs" },
+    { "type": "image_picker", "id": "image_1", "label": "Archival image 1 (Shopify)" },
     {
       "type": "text",
       "id": "image_1_url",
@@ -163,68 +185,79 @@
       "default": "https://barreletics.com/cdn/shop/files/Screenshot_2026-06-06_at_9.58.53_PM.png?v=1780797556&width=1400"
     },
     { "type": "text", "id": "image_2_alt", "label": "Image 2 alt", "default": "Archival photograph of Joseph Pilates teaching on the Reformer" },
-    { "type": "text", "id": "title", "label": "Essay heading", "default": "Joseph Pilates built the method around the feet." },
-    { "type": "richtext", "id": "body", "label": "Essay body" },
-    { "type": "header", "content": "Type — size & weight", "info": "Family is brand Type OS. Default keeps the signed v25 sizing." },
-    {
-      "type": "number",
-      "id": "heading_size_override",
-      "label": "Heading size override (px, desktop)",
-      "info": "Leave blank to follow Theme settings > Section headings. A number sets this section's desktop heading size only. Phones keep the global phone size."
-    },
+    { "type": "header", "content": "2 — Focus + height" },
+    { "type": "paragraph", "content": "Gallery uses natural aspect ratios; no height sliders on this section." },
+    { "type": "header", "content": "3 — Heading / body / CTA" },
+    { "type": "text", "id": "title", "label": "Heading", "default": "Joseph Pilates built the method around the feet." },
     {
       "type": "select",
-      "id": "title_weight",
-      "label": "Essay heading weight",
-      "default": "default",
-      "options": [
-        { "value": "default", "label": "Default" },
-        { "value": "400", "label": "400" },
-        { "value": "500", "label": "500" },
-        { "value": "600", "label": "600" },
-        { "value": "700", "label": "700" }
-      ]
+      "id": "heading_level",
+      "label": "Heading level (default H2)",
+      "default": "h2",
+      "options": [{ "value": "h2", "label": "H2" }, { "value": "h3", "label": "H3" }]
     },
-    {
-      "type": "select",
-      "id": "body_size",
-      "label": "Essay body size",
-      "default": "default",
-      "options": [
-        { "value": "default", "label": "Default / Type OS" },
-        { "value": "14", "label": "14px" },
-        { "value": "15", "label": "15px" },
-        { "value": "16", "label": "16px" },
-        { "value": "17", "label": "17px" },
-        { "value": "18", "label": "18px" },
-        { "value": "20", "label": "20px" },
-        { "value": "22", "label": "22px" }
-      ]
-    },
-    {
-      "type": "select",
-      "id": "body_weight",
-      "label": "Essay body weight",
-      "default": "default",
-      "options": [
-        { "value": "default", "label": "Default" },
-        { "value": "400", "label": "400" },
-        { "value": "500", "label": "500" },
-        { "value": "600", "label": "600" }
-      ]
-    },
-    { "type": "header", "content": "Layout" },
+    { "type": "richtext", "id": "body", "label": "Body" },
+    { "type": "header", "content": "4 — Trust strip" },
+    { "type": "paragraph", "content": "Not used." },
+    { "type": "header", "content": "5 — Layout" },
     {
       "type": "select",
       "id": "mobile_stack_order",
-      "label": "Mobile stack order",
+      "label": "Phone stack (default: gallery on top)",
       "default": "media_first",
       "options": [
-        { "value": "media_first", "label": "Gallery above essay" },
+        { "value": "media_first", "label": "Gallery above essay (default)" },
         { "value": "copy_first", "label": "Essay above gallery" }
-      ],
-      "info": "Below 768px only."
-    }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 80)",
+      "min": 16,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 80,
+      "info": "Unset in JSON keeps legacy 28/36px gallery copy padding."
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 20)",
+      "min": 12,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "default": 20
+    },
+    { "type": "header", "content": "6 — Section gap" },
+    {
+      "type": "range",
+      "id": "section_gap",
+      "label": "Space above & below — desktop (default 0)",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "section_gap_mobile",
+      "label": "Space after section — phone (default 0)",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    { "type": "header", "content": "Legacy (hidden — do not edit)" },
+    { "type": "paragraph", "content": "Preserves stored values on Theme Editor save." },
+    { "type": "number", "id": "heading_size_override", "label": "Legacy: Heading size override", "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}" },
+    { "type": "select", "id": "title_weight", "label": "Legacy: Heading weight", "default": "default", "options": [{ "value": "default", "label": "Default" }, { "value": "400", "label": "400" }, { "value": "500", "label": "500" }, { "value": "600", "label": "600" }, { "value": "700", "label": "700" }], "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}" },
+    { "type": "select", "id": "body_size", "label": "Legacy: Body size", "default": "default", "options": [{ "value": "default", "label": "Default" }, { "value": "14", "label": "14px" }, { "value": "15", "label": "15px" }, { "value": "16", "label": "16px" }, { "value": "17", "label": "17px" }, { "value": "18", "label": "18px" }, { "value": "20", "label": "20px" }, { "value": "22", "label": "22px" }], "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}" },
+    { "type": "select", "id": "body_weight", "label": "Legacy: Body weight", "default": "default", "options": [{ "value": "default", "label": "Default" }, { "value": "400", "label": "400" }, { "value": "500", "label": "500" }, { "value": "600", "label": "600" }], "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}" }
   ],
   "presets": [{ "name": "About — Joseph" }]
 }
