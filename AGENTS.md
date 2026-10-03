@@ -13,10 +13,13 @@ Do **not** use computer-use / Chrome for Shopify admin unless the user explicitl
 
 ## Store API (required for admin tasks)
 
-Set these in [Cloud environment secrets](https://cursor.com/dashboard/cloud-agents/environments) (never commit tokens):
+Set these in Cloud environment secrets (Shopify no longer shows a copyable `shpat_` token):
 
 - `SHOPIFY_STORE` = `barreletics.myshopify.com`
-- `SHOPIFY_ADMIN_ACCESS_TOKEN` = custom app Admin API token (`read_orders`, `read_customers`, `read_discounts`, `read_checkouts` minimum)
+- `SHOPIFY_CLIENT_ID` = Dev Dashboard → app → Settings → Client ID
+- `SHOPIFY_CLIENT_SECRET` = same page → Client secret
+
+Prefer the **Cursor MCP** app, installed on barreletics. Script exchanges ID+secret for a 24h token and blocks mutations.
 
 **First action** on any Shopify admin diagnosis task:
 
