@@ -10,15 +10,26 @@
   studio_core: section.settings.use_studio_bank
 %}
 <style>
+  #shopify-section-{{ section.id }} {
+    {% render 'unified-text-pads-vars', y_d: 32, side_d: 40, y_m: 24, x_m: 20 %}
+  }
+  #shopify-section-{{ section.id }} .faq {
+    padding: var(--utp-y-d, 32px) var(--utp-side-d, 40px);
+  }
   /* Per-page TE: Background cream = soft #faf8f6, white = #fff. Sitewide cream lock. */
   #shopify-section-{{ section.id }} .faq--cream { background: #faf8f6; }
   #shopify-section-{{ section.id }} .faq--white { background: #fff; }
   #shopify-section-{{ section.id }} .faq__heading {
     /* Type OS H2 Section on Shop All / PDP FAQ */
   }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .faq {
+      padding: var(--utp-y-m, 24px) var(--utp-x-m, 20px);
+    }
+  }
 </style>
 
-{% render 'unified-text-pads-te-style', selector: '.section-frame', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}
+{% render 'unified-text-pads-te-style', selector: '.faq', y_d: 32, side_d: 40, y_m: 24, x_m: 20 %}
 
 {% schema %}
 {
