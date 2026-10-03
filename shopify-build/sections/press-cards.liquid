@@ -70,6 +70,7 @@
                     muted: true,
                     controls: false,
                     playsinline: true,
+                    preload: 'metadata',
                     class: 'press-cards__video'
                 }}
               {% elsif block.settings.video_url != blank %}
@@ -109,7 +110,7 @@
                     loop
                     playsinline
                     webkit-playsinline
-                    preload="none"
+                    preload="metadata"
                     {% if poster_src != blank %}poster="{{ poster_src | escape }}"{% endif %}
                     data-src="{{ block.settings.video_url | escape }}"
                     hidden
@@ -383,6 +384,9 @@
         if (!video.getAttribute('src') && video.dataset.src) {
           video.src = video.dataset.src;
         }
+        video.setAttribute('playsinline', '');
+        video.setAttribute('webkit-playsinline', '');
+        video.playsInline = true;
         btn.hidden = true;
         video.hidden = false;
         video.play().catch(function () {});
