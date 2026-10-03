@@ -21,29 +21,46 @@
   assign media_aspect = section.settings.media_aspect | default: 'stretch'
   assign media_aspect_m = section.settings.media_aspect_mobile | default: 'stretch'
 
-  # Text panel bg: preset white/cream or custom picker (bg_color). No preset → bg_color (compat).
-  assign bg_preset = section.settings.bg_preset | default: ''
-  if bg_preset == 'white'
+  # Text panel bg: bg_style (new) with full legacy bg_preset / bg_color fallback (zero-change migration).
+  assign bg_style = section.settings.bg_style
+  if bg_style == 'white'
     assign panel_bg = '#ffffff'
-  elsif bg_preset == 'cream'
+  elsif bg_style == 'cream'
     assign panel_bg = '#faf8f6'
-  elsif bg_preset == 'custom'
-    assign panel_bg = section.settings.bg_color | default: '#ffffff'
+  elsif bg_style == 'darker_cream'
+    assign panel_bg = '#efe9dd'
   else
-    assign panel_bg = section.settings.bg_color | default: '#ffffff'
+    assign bg_preset = section.settings.bg_preset | default: ''
+    if bg_preset == 'white'
+      assign panel_bg = '#ffffff'
+    elsif bg_preset == 'cream'
+      assign panel_bg = '#faf8f6'
+    elsif bg_preset == 'custom'
+      assign panel_bg = section.settings.bg_color | default: '#ffffff'
+    else
+      assign legacy_bg = section.settings.bg_color | default: ''
+      if legacy_bg == '#faf8f6' or legacy_bg == '#FAF8F6'
+        assign panel_bg = '#faf8f6'
+      elsif legacy_bg == '#efe9dd' or legacy_bg == '#EFE9DD'
+        assign panel_bg = '#efe9dd'
+      elsif legacy_bg != blank
+        assign panel_bg = legacy_bg
+      else
+        assign panel_bg = '#ffffff'
+      endif
+    endif
   endif
 
-  # Media pad / letterbox bg when Fit or Contain.
-  # Schema default for NEW sections = white. Blank preset on older sections → keep media_bg.
-  assign media_bg_preset = section.settings.media_bg_preset
-  if media_bg_preset == 'cream'
-    assign media_pad_bg = '#faf8f6'
-  elsif media_bg_preset == 'white'
-    assign media_pad_bg = '#ffffff'
-  elsif media_bg_preset == 'custom'
-    assign media_pad_bg = section.settings.media_bg | default: '#ffffff'
-  else
-    assign media_pad_bg = section.settings.media_bg | default: '#ffffff'
+  assign media_pad_bg = section.settings.media_bg | default: '#ffffff'
+  if media_pad_bg == blank
+    assign media_bg_preset = section.settings.media_bg_preset
+    if media_bg_preset == 'cream'
+      assign media_pad_bg = '#faf8f6'
+    elsif media_bg_preset == 'white'
+      assign media_pad_bg = '#ffffff'
+    else
+      assign media_pad_bg = '#ffffff'
+    endif
   endif
 
   assign cta_target = section.settings.cta_link_target | default: 'custom'
@@ -69,29 +86,49 @@
   if template.name == 'product'
     assign mobile_text_height = 0
   endif
-  # mobile_media_height: 0 = global phone split-image height; set a px value only where the global crops badly
-  assign image_position = section.settings.image_position | default: 'center'
-  if image_position == 'custom'
+  assign mobile_media_width = section.settings.mobile_media_width | default: 100
+
+  assign image_position_key = section.settings.image_position | default: 'center'
+  assign image_position = image_position_key
+  if image_position_key == 'custom'
     assign focal_x = section.settings.focal_x | default: 50
     assign focal_y = section.settings.focal_y | default: 50
     assign image_position = focal_x | append: '% ' | append: focal_y | append: '%'
   endif
-  assign image_scale = section.settings.image_scale | default: 100
-  comment
-    Phone Fit on PDP used a hardcoded 'center top' and ignored the focal controls.
-    Now: default stays 'center top' (packshots flush), but a chosen preset or moved Custom sliders win.
-  endcomment
+
+  assign image_position_m_key = section.settings.image_position_mobile | default: 'same'
+  assign image_position_m = image_position
   assign ff_pos_fit_m = 'center top'
-  if section.settings.image_position != blank and section.settings.image_position != 'center'
-    if section.settings.image_position != 'custom' or image_position != '50% 50%'
-      assign ff_pos_fit_m = image_position
+  if image_position_m_key == 'same' or image_position_m_key == blank
+    if image_position_key != blank and image_position_key != 'center'
+      if image_position_key != 'custom' or image_position != '50% 50%'
+        assign ff_pos_fit_m = image_position
+      endif
     endif
+  elsif image_position_m_key == 'custom'
+    assign focal_x_m = section.settings.focal_x_mobile | default: 50
+    assign focal_y_m = section.settings.focal_y_mobile | default: 50
+    assign image_position_m = focal_x_m | append: '% ' | append: focal_y_m | append: '%'
+    assign ff_pos_fit_m = image_position_m
+  else
+    assign image_position_m = image_position_m_key
+    assign ff_pos_fit_m = image_position_m_key
   endif
+
+  assign image_scale = section.settings.image_scale | default: 100
   assign contain_width = section.settings.contain_width | default: 72
   assign media_radius = section.settings.media_radius | default: 0
   assign column_gap = section.settings.column_gap | default: 0
   assign side_padding = section.settings.side_padding | default: 64
-  assign vertical_padding = section.settings.vertical_padding | default: 88
+  assign text_pad_top_d = section.settings.text_pad_top
+  assign text_pad_bottom_d = section.settings.text_pad_bottom
+  if text_pad_top_d == blank
+    assign text_pad_top_d = section.settings.vertical_padding | default: 88
+  endif
+  if text_pad_bottom_d == blank
+    assign text_pad_bottom_d = section.settings.vertical_padding | default: 88
+  endif
+  assign text_pad_x_m = section.settings.text_pad_x_mobile | default: 20
   assign section_gap = 32
   if section.settings.section_gap == 0 or section.settings.section_gap != blank
     assign section_gap = section.settings.section_gap
@@ -119,7 +156,6 @@
   assign title_size = section.settings.title_size | default: 'default'
   assign title_weight = section.settings.title_weight | default: '400'
   assign body_weight = section.settings.body_weight | default: 'default'
-  assign cta_size = section.settings.cta_size | default: 'default'
   assign cta_style = section.settings.cta_style | default: 'solid'
   assign cta_bg = section.settings.cta_bg_color | default: '#c45c3f'
   assign cta_text_color = section.settings.cta_text_color | default: '#ffffff'
@@ -135,7 +171,7 @@
   if quote_italic == nil
     assign quote_italic = true
   endif
-  assign quote_star_color = section.settings.quote_star_color | default: '#d4af37'
+  assign quote_star_color = '#d4af37'
   assign show_trust_strip = section.settings.show_trust_strip
   assign show_trust_stars = false
   if show_trust_strip
@@ -149,7 +185,7 @@
     assign show_trust_label = true
   endif
   assign quote_author_case = section.settings.quote_author_case | default: 'uppercase'
-  assign stat_bar_color = section.settings.stat_bar_color | default: '#c45c3f'
+  assign stat_bar_color = '#c45c3f'
 %}
 {% if content_style == 'quote' %}
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -167,7 +203,9 @@
     --ff-media-fr: {{ media_pct }}fr;
     --ff-text-fr: {{ text_pct }}fr;
     --ff-object-position: {{ image_position }};
+    --ff-object-position-m: {{ image_position_m }};
     --ff-object-position-fit-m: {{ ff_pos_fit_m }};
+    --ff-mobile-media-width: {{ mobile_media_width }}%;
     --ff-image-scale: {{ image_scale_ratio }};
     --ff-contain-width: {{ contain_width }}%;
     --ff-media-radius: {{ media_radius }}px;
@@ -176,11 +214,13 @@
     --ff-media-pad-bg: {{ media_pad_bg }};
     --ff-column-gap: {{ column_gap }}px;
     --ff-side-padding: {{ side_padding }}px;
-    --ff-vertical-padding: {{ vertical_padding }}px;
+    --ff-text-pad-top-d: {{ text_pad_top_d }}px;
+    --ff-text-pad-bottom-d: {{ text_pad_bottom_d }}px;
     --ff-section-gap: {{ section_gap }}px;
     --ff-section-gap-m: {{ section_gap_m }}px;
     --ff-text-pad-top-m: {{ text_pad_m }}px;
     --ff-text-pad-bottom-m: {{ text_pad_bottom_m }}px;
+    --ff-text-pad-x-m: {{ text_pad_x_m }}px;
     --ff-cta-bg: {{ cta_bg }};
     --ff-cta-border: {{ cta_border }};
     --ff-cta-text: {{ cta_text_color }};
@@ -190,7 +230,6 @@
     {% if title_size != 'default' %}--ff-title-size: {{ title_size }}px;{% endif %}
     {% if title_weight != 'default' %}--ff-title-weight: {{ title_weight }};{% endif %}
     {% if body_weight != 'default' %}--ff-body-weight: {{ body_weight }};{% endif %}
-    {% if cta_size != 'default' and cta_size != blank %}--ff-cta-size: {{ cta_size }}px;{% endif %}
   "
   {% if region_label != blank %}aria-label="{{ region_label | escape }}"{% endif %}
 >
@@ -405,8 +444,11 @@
   #shopify-section-{{ section.id }} {
     --ff-section-gap: {{ section_gap }}px;
     --ff-section-gap-m: {{ section_gap_m }}px;
+    --ff-text-pad-top-d: {{ text_pad_top_d }}px;
+    --ff-text-pad-bottom-d: {{ text_pad_bottom_d }}px;
     --ff-text-pad-top-m: {{ text_pad_m }}px;
     --ff-text-pad-bottom-m: {{ text_pad_bottom_m }}px;
+    --ff-text-pad-x-m: {{ text_pad_x_m }}px;
     padding-block: var(--ff-section-gap, var(--section-padding-y, 32px));
     box-sizing: border-box;
     background: {{ panel_bg }};
@@ -588,7 +630,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    padding: var(--ff-vertical-padding, 88px) var(--ff-side-padding, 64px);
+    padding: var(--ff-text-pad-top-d, 88px) var(--ff-side-padding, 64px) var(--ff-text-pad-bottom-d, 88px);
     background: var(--ff-panel-bg, {{ panel_bg }});
     overflow: hidden;
     border-radius: var(--ff-text-radius, 0);
@@ -708,7 +750,9 @@
     #shopify-section-{{ section.id }} .split-section--reverse .split-text { order: 0; }
     #shopify-section-{{ section.id }} .split-media {
       aspect-ratio: auto;
-      width: 100%;
+      width: var(--ff-mobile-media-width, 100%);
+      max-width: 100%;
+      margin-inline: auto;
       height: var(--ff-mobile-media-height, var(--split-media-h-mobile, 500px));
       min-height: var(--ff-mobile-media-height, var(--split-media-h-mobile, 500px));
     }
@@ -767,7 +811,7 @@
       border-bottom-right-radius: 0;
     }
     #shopify-section-{{ section.id }} .split-text {
-      padding: var(--ff-text-pad-top-m, 32px) var(--section-padding-x-mobile, 16px) var(--ff-text-pad-bottom-m, 32px);
+      padding: var(--ff-text-pad-top-m, 32px) var(--ff-text-pad-x-m, var(--section-padding-x-mobile, 20px)) var(--ff-text-pad-bottom-m, 32px);
     }
     {%- if mobile_text_height > 0 %}
     /* Fixed phone text column: vertically center copy (desktop uses center already;
@@ -934,7 +978,7 @@
     #shopify-section-{{ section.id }} .split-section:not(.split-section--contain):not(.split-section--fit):not(.split-section--fit-m):not(.split-section--contain-m) .split-media__img,
     #shopify-section-{{ section.id }} .split-section:not(.split-section--contain):not(.split-section--fit):not(.split-section--fit-m):not(.split-section--contain-m) .split-media__video {
       object-fit: cover;
-      object-position: var(--ff-object-position, center);
+      object-position: var(--ff-object-position-m, var(--ff-object-position, center));
     }
   }
   /* PDP 50/50 only (Andrew 2026-09-09). Closed is the standard:
@@ -1017,31 +1061,57 @@
     {%- if template.name == 'product' %}
     --ff-mobile-text-height: 0px !important;
     {%- else %}
-    --ff-mobile-text-height: {{ section.settings.mobile_text_height }}px !important;
+    --ff-mobile-text-height: {{ section.settings.mobile_text_height | default: 0 }}px !important;
     {%- endif %}
+    --ff-mobile-media-width: {{ section.settings.mobile_media_width | default: 100 }}% !important;
     --ff-media-fr: {{ section.settings.media_column_pct }}fr !important;
     --ff-text-fr: {{ 100 | minus: section.settings.media_column_pct }}fr !important;
     {%- if section.settings.image_position == 'custom' %}
-    --ff-object-position: {{ section.settings.focal_x }}% {{ section.settings.focal_y }}% !important;
-    {%- if section.settings.focal_x != 50 or section.settings.focal_y != 50 %}
-    --ff-object-position-fit-m: {{ section.settings.focal_x }}% {{ section.settings.focal_y }}% !important;
-    {%- else %}
-    --ff-object-position-fit-m: center top !important;
-    {%- endif %}
+    --ff-object-position: {{ section.settings.focal_x | default: 50 }}% {{ section.settings.focal_y | default: 50 }}% !important;
     {%- elsif section.settings.image_position != blank and section.settings.image_position != 'center' %}
     --ff-object-position: {{ section.settings.image_position }} !important;
-    --ff-object-position-fit-m: {{ section.settings.image_position }} !important;
     {%- else %}
     --ff-object-position: center !important;
-    --ff-object-position-fit-m: center top !important;
     {%- endif %}
-    --ff-image-scale: {{ section.settings.image_scale | times: 1.0 | divided_by: 100.0 }} !important;
-    --ff-contain-width: {{ section.settings.contain_width }}% !important;
-    --ff-media-radius: {{ section.settings.media_radius }}px !important;
-    --ff-text-radius: {{ section.settings.media_radius }}px !important;
+    {%- assign te_pos_m = section.settings.image_position_mobile | default: 'same' -%}
+    {%- if te_pos_m == 'same' or te_pos_m == blank -%}
+      {%- if section.settings.image_position == 'custom' -%}
+    --ff-object-position-m: {{ section.settings.focal_x | default: 50 }}% {{ section.settings.focal_y | default: 50 }}% !important;
+        {%- if section.settings.focal_x != 50 or section.settings.focal_y != 50 -%}
+    --ff-object-position-fit-m: {{ section.settings.focal_x }}% {{ section.settings.focal_y }}% !important;
+        {%- else -%}
+    --ff-object-position-fit-m: center top !important;
+        {%- endif -%}
+      {%- elsif section.settings.image_position != blank and section.settings.image_position != 'center' -%}
+    --ff-object-position-m: {{ section.settings.image_position }} !important;
+    --ff-object-position-fit-m: {{ section.settings.image_position }} !important;
+      {%- else -%}
+    --ff-object-position-m: center !important;
+    --ff-object-position-fit-m: center top !important;
+      {%- endif -%}
+    {%- elsif te_pos_m == 'custom' -%}
+    --ff-object-position-m: {{ section.settings.focal_x_mobile | default: 50 }}% {{ section.settings.focal_y_mobile | default: 50 }}% !important;
+    --ff-object-position-fit-m: {{ section.settings.focal_x_mobile | default: 50 }}% {{ section.settings.focal_y_mobile | default: 50 }}% !important;
+    {%- else -%}
+    --ff-object-position-m: {{ te_pos_m }} !important;
+    --ff-object-position-fit-m: {{ te_pos_m }} !important;
+    {%- endif -%}
+    --ff-image-scale: {{ section.settings.image_scale | default: 100 | times: 1.0 | divided_by: 100.0 }} !important;
+    --ff-contain-width: {{ section.settings.contain_width | default: 72 }}% !important;
+    --ff-media-radius: {{ section.settings.media_radius | default: 0 }}px !important;
+    --ff-text-radius: {{ section.settings.media_radius | default: 0 }}px !important;
     --ff-column-gap: {{ section.settings.column_gap }}px !important;
     --ff-side-padding: {{ section.settings.side_padding }}px !important;
-    --ff-vertical-padding: {{ section.settings.vertical_padding }}px !important;
+    {%- if section.settings.text_pad_top != blank -%}
+    --ff-text-pad-top-d: {{ section.settings.text_pad_top }}px !important;
+    {%- else -%}
+    --ff-text-pad-top-d: {{ section.settings.vertical_padding | default: 88 }}px !important;
+    {%- endif -%}
+    {%- if section.settings.text_pad_bottom != blank -%}
+    --ff-text-pad-bottom-d: {{ section.settings.text_pad_bottom }}px !important;
+    {%- else -%}
+    --ff-text-pad-bottom-d: {{ section.settings.vertical_padding | default: 88 }}px !important;
+    {%- endif -%}
     --ff-section-gap: {{ section.settings.section_gap | default: 32 }}px !important;
     {%- if template.name == 'product' %}
     --ff-section-gap-m: 0px !important;
@@ -1050,26 +1120,27 @@
     {%- endif %}
     --ff-text-pad-top-m: {{ section.settings.text_pad_top_mobile | default: 96 }}px !important;
     --ff-text-pad-bottom-m: {{ section.settings.text_pad_bottom_mobile | default: section.settings.text_pad_top_mobile | default: 96 }}px !important;
-    {%- if section.settings.bg_preset == 'white' %}
+    --ff-text-pad-x-m: {{ section.settings.text_pad_x_mobile | default: 20 }}px !important;
+    {%- if section.settings.bg_style == 'white' -%}
     --ff-panel-bg: #ffffff !important;
-    {%- elsif section.settings.bg_preset == 'cream' %}
+    {%- elsif section.settings.bg_style == 'cream' -%}
     --ff-panel-bg: #faf8f6 !important;
-    {%- else %}
+    {%- elsif section.settings.bg_style == 'darker_cream' -%}
+    --ff-panel-bg: #efe9dd !important;
+    {%- elsif section.settings.bg_preset == 'white' -%}
+    --ff-panel-bg: #ffffff !important;
+    {%- elsif section.settings.bg_preset == 'cream' -%}
+    --ff-panel-bg: #faf8f6 !important;
+    {%- else -%}
     --ff-panel-bg: {{ section.settings.bg_color | default: '#ffffff' }} !important;
-    {%- endif %}
-    {%- if section.settings.media_bg_preset == 'cream' %}
-    --ff-media-pad-bg: #faf8f6 !important;
-    {%- elsif section.settings.media_bg_preset == 'white' %}
-    --ff-media-pad-bg: #ffffff !important;
-    {%- else %}
+    {%- endif -%}
     --ff-media-pad-bg: {{ section.settings.media_bg | default: '#ffffff' }} !important;
-    {%- endif %}
     --ff-cta-bg: {{ section.settings.cta_bg_color | default: '#c45c3f' }} !important;
     --ff-cta-border: {{ section.settings.cta_border_color | default: section.settings.cta_bg_color | default: '#c45c3f' }} !important;
     --ff-cta-text: {{ section.settings.cta_text_color | default: '#ffffff' }} !important;
-    --ff-quote-star: {{ section.settings.quote_star_color | default: '#d4af37' }} !important;
+    --ff-quote-star: #d4af37 !important;
     --ff-quote-style: {% if section.settings.quote_italic == false %}normal{% else %}italic{% endif %} !important;
-    --ff-stat-bar: {{ section.settings.stat_bar_color | default: '#c45c3f' }} !important;
+    --ff-stat-bar: #c45c3f !important;
   }
   /* Panel + media pad colours (inline background on wrapper / .split-text / .split-media). */
   #shopify-section-{{ section.id }},
@@ -1099,47 +1170,41 @@
   "settings": [
     {
       "type": "header",
-      "content": "1 — Photo / video"
+      "content": "1 \u2014 Photo / video"
     },
     {
       "type": "paragraph",
-      "content": "Pick ONE. Priority: Shopify video → Video URL → Shopify image → Image URL."
+      "content": "Pick ONE. Priority: Shopify video \u2192 Video URL \u2192 Shopify image \u2192 Image URL."
     },
     {
       "type": "video",
       "id": "video",
       "label": "Shopify video",
-      "info": "Preferred when the file lives in Shopify Files. Use this OR Video URL — not both. Shopify video wins if both are set."
+      "info": "Preferred when the file lives in Shopify Files. Use this OR Video URL \u2014 not both."
     },
     {
       "type": "text",
       "id": "video_url",
       "label": "Video URL (mp4)",
-      "info": "External/CDN mp4 when you are not using Shopify Video above. Ignored if Shopify video is set. Leave blank if using Shopify video or a still image."
+      "info": "External/CDN mp4. Ignored if Shopify video is set."
     },
     {
       "type": "image_picker",
       "id": "image",
       "label": "Image / poster (Shopify)",
-      "info": "Still image for image mode, OR poster frame when using Video URL. Prefer this over URL fields when the asset is in Shopify. Leave blank to use Image URL fallback (or poster URL for video)."
+      "info": "Still image, or poster when using Video URL."
     },
     {
       "type": "text",
       "id": "poster_url",
-      "label": "Poster URL fallback",
-      "info": "Poster for Video URL only when Image / poster (Shopify) is empty. Not used for still-image mode. Leave blank if Shopify image/poster is set."
-    },
-    {
-      "type": "text",
-      "id": "image_asset",
-      "label": "Theme asset filename",
-      "info": "Optional. e.g. outdoor-water-50-50-blue.jpg — used when Shopify image picker is empty. Prefer for color-graded theme assets."
+      "label": "Video poster: still before video loads",
+      "info": "Used when Video URL is set and Image / poster (Shopify) is empty."
     },
     {
       "type": "text",
       "id": "image_url",
-      "label": "Image URL (optional fallback)",
-      "info": "Only used when the Shopify image picker and Theme asset are empty (and there is no video). If Shopify image is set, it wins."
+      "label": "Image URL",
+      "info": "Used when Shopify image is empty (and no video)."
     },
     {
       "type": "text",
@@ -1150,89 +1215,82 @@
       "type": "image_picker",
       "id": "image_mobile",
       "label": "Phone image (optional)",
-      "info": "Replaces the image on phones (768px wide and below). Desktop keeps the main image. Use a portrait image framed for the phone height, e.g. 1170x1500. Ignored when a video is set."
+      "info": "Replaces the still on phones (\u2264768px). Ignored when video is set."
     },
     {
       "type": "header",
-      "content": "2 — Focus + height"
-    },
-    {
-      "type": "paragraph",
-      "content": "LOCKED: 560 desktop / 550 phone footprint. Prefer COVER full bleed, scale 100. FIT only with explicit exception after media QC gate (wrong file / asset geometry → notify, do not “fix” with FIT). Product phone height uses the slider (default 550). Home may set a taller desktop min."
+      "content": "2 \u2014 Focus + height"
     },
     {
       "type": "select",
       "id": "media_fit",
-      "label": "Media fit",
+      "label": "Media fit \u2014 desktop (default: Cover)",
+      "default": "cover",
       "options": [
         {
           "value": "cover",
           "label": "Cover (fill half)"
         },
         {
-          "value": "cover_inset",
-          "label": "Cover inset (sit in panel)"
-        },
-        {
           "value": "fit",
-          "label": "Fit (whole photo in the frame)"
-        },
-        {
-          "value": "contain",
-          "label": "Contain (packshot)"
+          "label": "Fit (whole photo in frame)"
         }
       ],
-      "default": "cover",
-      "info": "Cover = edge-to-edge media half. Cover inset = sit in panel (modest pad + radius). Fit/Contain unchanged."
+      "info": "Cover = edge-to-edge. Fit = natural height (1 instance: best-grippy outgrew)."
     },
     {
       "type": "select",
       "id": "image_fit_mobile",
-      "label": "Media fit — phone",
-      "options": [
-        { "value": "cover", "label": "Cover (same as desktop)" },
-        { "value": "fit", "label": "Fit — full photo, no crop" },
-        { "value": "contain", "label": "Contain (packshot)" }
-      ],
+      "label": "Media fit \u2014 phone (default: Cover)",
       "default": "cover",
-      "info": "Desktop Media fit stays. Use Fit when a cover crop chops feet on phone."
+      "options": [
+        {
+          "value": "cover",
+          "label": "Cover (same as desktop)"
+        },
+        {
+          "value": "fit",
+          "label": "Fit \u2014 full photo, no crop"
+        }
+      ]
     },
     {
       "type": "select",
       "id": "image_position",
-      "label": "Image focal point",
+      "label": "Focal point \u2014 desktop (default: Center)",
+      "default": "center",
       "options": [
         {
-          "value": "center",
-          "label": "Center"
+          "value": "top left",
+          "label": "Top left"
         },
         {
           "value": "top",
           "label": "Top"
         },
         {
-          "value": "bottom",
-          "label": "Bottom"
+          "value": "top right",
+          "label": "Top right"
         },
         {
           "value": "left",
           "label": "Left"
         },
         {
+          "value": "center",
+          "label": "Center (default)"
+        },
+        {
           "value": "right",
           "label": "Right"
         },
         {
-          "value": "top left",
-          "label": "Top left"
-        },
-        {
-          "value": "top right",
-          "label": "Top right"
-        },
-        {
           "value": "bottom left",
           "label": "Bottom left"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
         },
         {
           "value": "bottom right",
@@ -1240,216 +1298,190 @@
         },
         {
           "value": "custom",
-          "label": "Custom (use the sliders below)"
+          "label": "Custom (sliders below)"
         }
       ],
-      "default": "center",
-      "info": "Applies to desktop AND phone, image or video. The two sliders below only work when this is set to Custom; any other choice ignores them. Shopify's own image focal point is not used here."
+      "info": "Custom reveals horizontal / vertical sliders below."
     },
     {
       "type": "range",
       "id": "focal_x",
-      "label": "Custom focal point — horizontal",
+      "label": "Custom focal \u2014 horizontal (default 50)",
       "min": 0,
       "max": 100,
       "step": 1,
       "unit": "%",
       "default": 50,
-      "info": "Only when Image focal point = Custom. 0 = show the left edge, 100 = show the right edge."
+      "visible_if": "{{ section.settings.image_position == 'custom' }}"
     },
     {
       "type": "range",
       "id": "focal_y",
-      "label": "Custom focal point — vertical",
+      "label": "Custom focal \u2014 vertical (default 50)",
       "min": 0,
       "max": 100,
       "step": 1,
       "unit": "%",
       "default": 50,
-      "info": "Only when Image focal point = Custom. 0 = keep the top of the photo, 100 = keep the bottom. Lower this when a cover crop is eating the top of a packshot."
-    },
-    {
-      "type": "range",
-      "id": "image_scale",
-      "label": "Image scale",
-      "min": 100,
-      "max": 150,
-      "step": 5,
-      "unit": "%",
-      "default": 100,
-      "info": "Zooms media inside the cell (cover crop / contain packshot)."
-    },
-    {
-      "type": "range",
-      "id": "contain_width",
-      "label": "Contain media width",
-      "min": 40,
-      "max": 100,
-      "step": 2,
-      "unit": "%",
-      "default": 72,
-      "info": "Only when Media fit = Contain. WORKING mock uses ~72%."
+      "visible_if": "{{ section.settings.image_position == 'custom' }}"
     },
     {
       "type": "select",
-      "id": "media_bg_preset",
-      "label": "Media pad / letterbox background",
+      "id": "image_position_mobile",
+      "label": "Focal point \u2014 phone (default: Same as desktop)",
+      "default": "same",
       "options": [
         {
-          "value": "white",
-          "label": "White (#ffffff)"
+          "value": "same",
+          "label": "Same as desktop (default)"
         },
         {
-          "value": "cream",
-          "label": "Cream — sock-era (#faf8f6)"
+          "value": "top left",
+          "label": "Top left"
+        },
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "top right",
+          "label": "Top right"
+        },
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center (default)"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        },
+        {
+          "value": "bottom left",
+          "label": "Bottom left"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        },
+        {
+          "value": "bottom right",
+          "label": "Bottom right"
         },
         {
           "value": "custom",
-          "label": "Custom (picker below)"
+          "label": "Custom (sliders below)"
         }
       ],
-      "default": "custom",
-      "info": "Always paints the media column (Cover included). Pick Custom, then use the color picker below."
+      "info": "Same as desktop keeps today\u2019s cover + fit behaviour (incl. fit center-top when desktop is center)."
+    },
+    {
+      "type": "range",
+      "id": "focal_x_mobile",
+      "label": "Custom phone focal \u2014 horizontal (default 50)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "visible_if": "{{ section.settings.image_position_mobile == 'custom' }}"
+    },
+    {
+      "type": "range",
+      "id": "focal_y_mobile",
+      "label": "Custom phone focal \u2014 vertical (default 50)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "visible_if": "{{ section.settings.image_position_mobile == 'custom' }}"
     },
     {
       "type": "color",
       "id": "media_bg",
-      "label": "Custom media pad / letterbox color",
+      "label": "Letterbox colour \u2014 fit only (default: white)",
       "default": "#ffffff",
-      "info": "Pick Custom above, then set this. White=#ffffff. Cream=#faf8f6 only (never #f5f2ec)."
+      "info": "Media column pad behind fit/contain or while video loads. Keep exact hex for blues/oranges on PDP."
     },
     {
       "type": "range",
       "id": "min_height",
-      "label": "Desktop min height",
+      "label": "Height \u2014 desktop (default 560)",
       "min": 400,
       "max": 1200,
       "step": 20,
       "unit": "px",
-      "default": 560,
-      "info": "Locked 560 desktop (PDP + default). Home may override higher. Do not use this to make a photo fit."
+      "default": 560
     },
     {
       "type": "range",
       "id": "media_column_pct",
-      "label": "Media column %",
+      "label": "Image width \u2014 desktop (default 50%)",
       "min": 35,
       "max": 72,
       "step": 1,
       "unit": "%",
-      "default": 50,
-      "info": "Desktop only. Text column = 100 − media %. Default 50/50."
+      "default": 50
     },
     {
       "type": "range",
       "id": "mobile_media_height",
-      "label": "Phone height override (0 = use theme setting)",
+      "label": "Image height \u2014 phone (default 0 = theme 500px)",
       "min": 0,
       "max": 700,
       "step": 10,
       "unit": "px",
-      "default": 0,
-      "info": "0 = use Theme settings > Split images > Phone split-image height (default 500). Set a value only where the global height crops the photo badly."
+      "default": 0
     },
     {
       "type": "range",
-      "id": "mobile_text_height",
-      "label": "Text column min-height — phone",
-      "min": 0,
-      "max": 700,
-      "step": 10,
-      "unit": "px",
-      "default": 0,
-      "info": "Home 50/50: match photo height (~520) so image≈text visual weight. 0 = natural content height. Product templates force 0 (ignored)."
-    },
-    {
-      "type": "range",
-      "id": "text_pad_top_mobile",
-      "label": "Text pad top — phone",
-      "min": 16,
-      "max": 120,
-      "step": 4,
-      "unit": "px",
-      "default": 96,
-      "info": "LOCKED global PDP standard: 96. Same on every 50/50. Do not special-case one block."
-    },
-    {
-      "type": "range",
-      "id": "text_pad_bottom_mobile",
-      "label": "Text pad bottom — phone",
-      "min": 16,
-      "max": 120,
-      "step": 4,
-      "unit": "px",
-      "default": 96,
-      "info": "LOCKED global PDP standard: 96 (matches top). Packshot FIT letterbox is NOT text pad — fix media frame height instead."
-    },
-    {
-      "type": "header",
-      "content": "Frame shape"
+      "id": "mobile_media_width",
+      "label": "Image width \u2014 phone (default 100%)",
+      "min": 70,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
     },
     {
       "type": "select",
       "id": "media_aspect",
-      "label": "Frame shape — desktop",
+      "label": "Frame shape \u2014 desktop (default: Fill height)",
+      "default": "stretch",
       "options": [
         {
           "value": "stretch",
-          "label": "Fill height"
+          "label": "Fill height (default)"
         },
         {
           "value": "square",
           "label": "Square"
         }
-      ],
-      "default": "stretch",
-      "info": "Fill height keeps value stretch (backward compatible). Square = 1:1 media column on desktop."
-    },
-    {
-      "type": "select",
-      "id": "media_aspect_mobile",
-      "label": "Frame shape — phone",
-      "options": [
-        {
-          "value": "stretch",
-          "label": "Fill height"
-        },
-        {
-          "value": "square",
-          "label": "Square"
-        }
-      ],
-      "default": "stretch",
-      "info": "Fill height uses Photo height — phone slider. Square forces 1:1 on phone (height follows width)."
+      ]
     },
     {
       "type": "header",
-      "content": "3 — Heading / body / CTA"
+      "content": "3 \u2014 Heading / body / CTA"
     },
     {
       "type": "select",
       "id": "content_style",
-      "label": "Content style",
+      "label": "Content style (default: Standard)",
+      "default": "standard",
       "options": [
         {
           "value": "standard",
-          "label": "Standard — heading + body + CTA"
-        },
-        {
-          "value": "statement",
-          "label": "Statement — big slogan + quiet sub"
+          "label": "Standard \u2014 heading + body + CTA"
         },
         {
           "value": "quote",
-          "label": "Quote — stars + italic + author"
-        },
-        {
-          "value": "stats",
-          "label": "Stats — rust-bar metrics"
+          "label": "Quote \u2014 stars + italic + author"
         }
-      ],
-      "default": "standard",
-      "info": "Pick a recipe. Quote + Stats controls appear immediately below. Standard/Statement use Heading + Body + CTA as usual."
+      ]
     },
     {
       "type": "text",
@@ -1457,43 +1489,17 @@
       "label": "Eyebrow"
     },
     {
-      "type": "select",
-      "id": "heading_register",
-      "label": "Heading register",
-      "options": [
-        {
-          "value": "display",
-          "label": "Display — brand statement"
-        },
-        {
-          "value": "supporting",
-          "label": "Supporting Display — 40 / 34 / 500"
-        },
-        {
-          "value": "standard",
-          "label": "Standard — wayfinding"
-        }
-      ],
-      "default": "display",
-      "info": "Locked by global type system (2026-09-27). This setting no longer changes the heading."
-    },
-    {
       "type": "textarea",
       "id": "title",
       "label": "Heading",
       "default": "Never loses shape.\nNever loses grip.",
-      "info": "Plain text. Line breaks become <br>. Quote style: use this field for the quote (no heading tag)."
-    },
-    {
-      "type": "number",
-      "id": "heading_size_override",
-      "label": "Heading size override (px, desktop)",
-      "info": "Leave blank to follow Theme settings > Section headings. A number sets this section's desktop heading size only. Phones keep the global phone size."
+      "info": "Quote style: quote text here (no heading tag)."
     },
     {
       "type": "select",
       "id": "heading_level",
-      "label": "Heading level",
+      "label": "Heading level (default H2)",
+      "default": "h2",
       "options": [
         {
           "value": "h1",
@@ -1519,376 +1525,42 @@
           "value": "h6",
           "label": "H6"
         }
-      ],
-      "default": "h2",
-      "info": "Outputs the real HTML tag (h1–h6) for SEO/accessibility. Visual size is locked by the global type system — not this control."
-    },
-    {
-      "type": "select",
-      "id": "title_size",
-      "label": "Title size",
-      "options": [
-        {
-          "value": "default",
-          "label": "Default / Type OS"
-        },
-        {
-          "value": "12",
-          "label": "12px"
-        },
-        {
-          "value": "13",
-          "label": "13px"
-        },
-        {
-          "value": "14",
-          "label": "14px"
-        },
-        {
-          "value": "15",
-          "label": "15px"
-        },
-        {
-          "value": "16",
-          "label": "16px"
-        },
-        {
-          "value": "17",
-          "label": "17px"
-        },
-        {
-          "value": "18",
-          "label": "18px"
-        },
-        {
-          "value": "20",
-          "label": "20px"
-        },
-        {
-          "value": "22",
-          "label": "22px"
-        },
-        {
-          "value": "24",
-          "label": "24px"
-        },
-        {
-          "value": "26",
-          "label": "26px"
-        },
-        {
-          "value": "28",
-          "label": "28px"
-        },
-        {
-          "value": "30",
-          "label": "30px"
-        },
-        {
-          "value": "32",
-          "label": "32px"
-        },
-        {
-          "value": "36",
-          "label": "36px"
-        },
-        {
-          "value": "38",
-          "label": "38px"
-        },
-        {
-          "value": "40",
-          "label": "40px"
-        },
-        {
-          "value": "42",
-          "label": "42px"
-        },
-        {
-          "value": "44",
-          "label": "44px"
-        },
-        {
-          "value": "48",
-          "label": "48px"
-        },
-        {
-          "value": "56",
-          "label": "56px"
-        }
-      ],
-      "default": "default",
-      "info": "Locked by global type system (2026-09-27): no longer changes the heading. Still scales the quote text in Quote style."
-    },
-    {
-      "type": "select",
-      "id": "title_weight",
-      "label": "Title weight",
-      "options": [
-        {
-          "value": "default",
-          "label": "Default"
-        },
-        {
-          "value": "400",
-          "label": "400"
-        },
-        {
-          "value": "500",
-          "label": "500"
-        },
-        {
-          "value": "600",
-          "label": "600"
-        },
-        {
-          "value": "700",
-          "label": "700"
-        }
-      ],
-      "default": "400",
-      "info": "Locked by global type system (2026-09-27): no longer changes the heading. Still sets the quote text weight in Quote style."
+      ]
     },
     {
       "type": "textarea",
       "id": "body",
       "label": "Body",
-      "default": "Built to hold when it matters most—so you can push deeper, stay longer, and move with confidence.",
-      "info": "Family is brand Type OS — use Body size/weight to adjust. No font family picker."
-    },
-    {
-      "type": "select",
-      "id": "body_size",
-      "label": "Body size",
-      "options": [
-        {
-          "value": "default",
-          "label": "Default / Type OS"
-        },
-        {
-          "value": "12",
-          "label": "12px"
-        },
-        {
-          "value": "13",
-          "label": "13px"
-        },
-        {
-          "value": "14",
-          "label": "14px"
-        },
-        {
-          "value": "15",
-          "label": "15px"
-        },
-        {
-          "value": "16",
-          "label": "16px"
-        },
-        {
-          "value": "17",
-          "label": "17px"
-        },
-        {
-          "value": "18",
-          "label": "18px"
-        },
-        {
-          "value": "20",
-          "label": "20px"
-        },
-        {
-          "value": "22",
-          "label": "22px"
-        },
-        {
-          "value": "24",
-          "label": "24px"
-        },
-        {
-          "value": "26",
-          "label": "26px"
-        },
-        {
-          "value": "28",
-          "label": "28px"
-        },
-        {
-          "value": "30",
-          "label": "30px"
-        },
-        {
-          "value": "32",
-          "label": "32px"
-        },
-        {
-          "value": "36",
-          "label": "36px"
-        },
-        {
-          "value": "38",
-          "label": "38px"
-        },
-        {
-          "value": "40",
-          "label": "40px"
-        },
-        {
-          "value": "42",
-          "label": "42px"
-        },
-        {
-          "value": "44",
-          "label": "44px"
-        },
-        {
-          "value": "48",
-          "label": "48px"
-        },
-        {
-          "value": "56",
-          "label": "56px"
-        }
-      ],
-      "default": "default",
-      "info": "Locked by global type system (2026-09-27): body is 17px / 1.70 on every fifty-fifty. This setting no longer changes output."
-    },
-    {
-      "type": "select",
-      "id": "body_weight",
-      "label": "Body weight",
-      "options": [
-        {
-          "value": "default",
-          "label": "Default"
-        },
-        {
-          "value": "400",
-          "label": "400"
-        },
-        {
-          "value": "500",
-          "label": "500"
-        },
-        {
-          "value": "600",
-          "label": "600"
-        },
-        {
-          "value": "700",
-          "label": "700"
-        }
-      ],
-      "default": "default"
+      "default": "Built to hold when it matters most\u2014so you can push deeper, stay longer, and move with confidence."
     },
     {
       "type": "text",
       "id": "cta_text",
-      "label": "CTA label",
-      "default": "Shop Now",
-      "info": "Leave blank to hide the button. Quote and Stats use the same button chrome as Standard (style / colors below)."
-    },
-    {
-      "type": "select",
-      "id": "cta_size",
-      "label": "CTA font size",
-      "options": [
-        {
-          "value": "default",
-          "label": "Default / Type OS"
-        },
-        {
-          "value": "11",
-          "label": "11px"
-        },
-        {
-          "value": "12",
-          "label": "12px"
-        },
-        {
-          "value": "13",
-          "label": "13px"
-        },
-        {
-          "value": "14",
-          "label": "14px"
-        },
-        {
-          "value": "15",
-          "label": "15px"
-        },
-        {
-          "value": "16",
-          "label": "16px"
-        },
-        {
-          "value": "18",
-          "label": "18px"
-        },
-        {
-          "value": "20",
-          "label": "20px"
-        }
-      ],
-      "default": "default",
-      "info": "Default uses Type OS CTA (15px / 500). Override only if needed."
-    },
-    {
-      "type": "select",
-      "id": "cta_style",
-      "label": "CTA style",
-      "options": [
-        {
-          "value": "solid",
-          "label": "Solid fill"
-        },
-        {
-          "value": "outline",
-          "label": "Outline only"
-        }
-      ],
-      "default": "solid"
-    },
-    {
-      "type": "color",
-      "id": "cta_bg_color",
-      "label": "CTA background color",
-      "default": "#c45c3f",
-      "info": "WORKING default rust. Used for solid fill. Ignored visually when style is Outline only (border still applies)."
-    },
-    {
-      "type": "color",
-      "id": "cta_border_color",
-      "label": "CTA outline / border color",
-      "default": "#c45c3f"
-    },
-    {
-      "type": "color",
-      "id": "cta_text_color",
-      "label": "CTA label color",
-      "default": "#ffffff",
-      "info": "Solid fill: usually white. Outline or light fill: charcoal/black. Dark fill + light label, or light fill + dark label."
+      "label": "CTA label (default: Shop now)",
+      "default": "Shop now",
+      "info": "Leave blank to hide the button."
     },
     {
       "type": "select",
       "id": "cta_link_target",
-      "label": "CTA link",
+      "label": "CTA link (default: Custom URL\u2026)",
+      "default": "custom",
       "options": [
         {
           "value": "custom",
-          "label": "Custom URL…"
+          "label": "Custom URL\u2026"
         },
         {
           "value": "#buy",
-          "label": "#buy — Buy box"
+          "label": "#buy \u2014 Buy box"
         },
         {
           "value": "#variants",
-          "label": "#variants — Shop styles"
+          "label": "#variants \u2014 Shop styles"
         },
         {
           "value": "#knock-socks",
-          "label": "#knock-socks — Statement"
+          "label": "#knock-socks \u2014 Statement"
         },
         {
           "value": "#reviews",
@@ -1908,29 +1580,27 @@
         },
         {
           "value": "#coperni",
-          "label": "#coperni — Collab"
+          "label": "#coperni \u2014 Collab"
         },
         {
           "value": "#problem",
           "label": "#problem"
         }
-      ],
-      "default": "custom",
-      "info": "Homepage section anchors jump on the same page. Choose Custom URL… for a full URL, collection/product/page, or any other #hash. Blank custom → all-products collection."
+      ]
     },
     {
       "type": "text",
       "id": "cta_url",
       "label": "Custom CTA URL",
-      "info": "Used when CTA link = Custom URL…. Full URL, relative path, or custom #hash. Shopify’s URL picker often drops hash-only links — this text field keeps them."
+      "info": "When CTA link = Custom URL\u2026"
     },
     {
       "type": "header",
-      "content": "4 — Trust strip"
+      "content": "4 \u2014 Trust strip"
     },
     {
       "type": "paragraph",
-      "content": "Off by default. Quote boxes still show stars unless you turn quote stars off."
+      "content": "Off by default. Quote boxes still show stars unless quote stars are off."
     },
     {
       "type": "checkbox",
@@ -1941,178 +1611,127 @@
     {
       "type": "text",
       "id": "trust_text",
-      "label": "Trust line",
-      "info": "e.g. Trusted by 1,000+ Instructors. Blank = stars only. Never invent review counts."
-    },
-    {
-      "type": "header",
-      "content": "5 — Quote / stats"
-    },
-    {
-      "type": "paragraph",
-      "content": "Only if Content style is Quote or Stats."
+      "label": "Trust line"
     },
     {
       "type": "checkbox",
       "id": "show_quote_stars",
-      "label": "Quote stars (legacy)",
-      "default": true,
-      "info": "Kimberly uses this. New boxes: use Trust strip above."
-    },
-    {
-      "type": "checkbox",
-      "id": "quote_italic",
-      "label": "Italic quote",
+      "label": "Quote stars (default on)",
       "default": true
     },
     {
       "type": "text",
       "id": "quote_author",
-      "label": "Author name",
-      "info": "Falls back to Body if blank."
-    },
-    {
-      "type": "select",
-      "id": "quote_author_case",
-      "label": "Author style",
-      "options": [
-        {
-          "value": "uppercase",
-          "label": "Uppercase"
-        },
-        {
-          "value": "sentence",
-          "label": "Sentence case"
-        }
-      ],
-      "default": "uppercase"
+      "label": "Quote author name"
     },
     {
       "type": "text",
       "id": "quote_meta",
-      "label": "Short description / role",
-      "info": "e.g. Barre Instructor · New York, NY"
-    },
-    {
-      "type": "color",
-      "id": "stat_bar_color",
-      "label": "Rust bar color",
-      "default": "#c45c3f",
-      "info": "Left accent on each metric."
-    },
-    {
-      "type": "text",
-      "id": "stat_1_value",
-      "label": "Fallback — Stat 1 value",
-      "info": "e.g. 360° — ignored when Stat blocks exist"
-    },
-    {
-      "type": "text",
-      "id": "stat_1_label",
-      "label": "Fallback — Stat 1 label"
-    },
-    {
-      "type": "text",
-      "id": "stat_2_value",
-      "label": "Fallback — Stat 2 value"
-    },
-    {
-      "type": "text",
-      "id": "stat_2_label",
-      "label": "Fallback — Stat 2 label"
-    },
-    {
-      "type": "text",
-      "id": "stat_3_value",
-      "label": "Fallback — Stat 3 value"
-    },
-    {
-      "type": "text",
-      "id": "stat_3_label",
-      "label": "Fallback — Stat 3 label"
-    },
-    {
-      "type": "checkbox",
-      "id": "stat_3_emphasis",
-      "label": "Fallback Stat 3 as longer line (smaller type)",
-      "default": true
+      "label": "Quote description / role"
     },
     {
       "type": "header",
-      "content": "6 — Layout extras"
+      "content": "5 \u2014 Layout"
     },
     {
       "type": "checkbox",
       "id": "reverse",
-      "label": "Reverse layout (text left, media right)",
+      "label": "Image on right \u2014 desktop (default: off)",
       "default": false,
-      "info": "Desktop only (769px+)."
+      "info": "769px and up only."
     },
     {
       "type": "select",
       "id": "mobile_stack_order",
-      "label": "Mobile stack order",
+      "label": "Phone stack (default: image on top)",
       "default": "media_first",
       "options": [
         {
           "value": "media_first",
-          "label": "Image above copy"
+          "label": "Image above copy (default)"
         },
         {
           "value": "copy_first",
           "label": "Copy above image"
         }
-      ],
-      "info": "Below 768px only."
+      ]
     },
     {
       "type": "range",
       "id": "column_gap",
-      "label": "Gap between media & text",
+      "label": "Gap between image & text \u2014 desktop (default 0)",
       "min": 0,
       "max": 64,
       "step": 4,
       "unit": "px",
-      "default": 0,
-      "info": "Middle gutter. Raise with panel radius + text panel background to see rounded corners. WORKING default is flush (0)."
+      "default": 0
     },
     {
       "type": "range",
-      "id": "side_padding",
-      "label": "Text panel — left & right pad",
-      "min": 16,
-      "max": 96,
-      "step": 4,
-      "unit": "px",
-      "default": 64,
-      "info": "Inner horizontal padding in the text column. Same on both sides. WORKING default 64px."
-    },
-    {
-      "type": "range",
-      "id": "vertical_padding",
-      "label": "Text pad — desktop",
+      "id": "text_pad_top",
+      "label": "Text pad top \u2014 desktop (default 80)",
       "min": 32,
       "max": 120,
       "step": 4,
       "unit": "px",
-      "default": 88,
-      "info": "Desktop text column pad. Phone uses Text pad top/bottom — LOCKED 96/96."
+      "default": 80,
+      "info": "Older sections: falls back to legacy single desktop pad until re-saved."
     },
     {
       "type": "range",
-      "id": "media_radius",
-      "label": "Corner radius",
-      "min": 0,
-      "max": 24,
-      "step": 2,
+      "id": "text_pad_bottom",
+      "label": "Text pad bottom \u2014 desktop (default 80)",
+      "min": 32,
+      "max": 120,
+      "step": 4,
       "unit": "px",
-      "default": 0,
-      "info": "One slider — photo side and text side."
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right \u2014 desktop (default 64)",
+      "min": 16,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "text_pad_top_mobile",
+      "label": "Text pad top \u2014 phone (default 96)",
+      "min": 16,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "text_pad_bottom_mobile",
+      "label": "Text pad bottom \u2014 phone (default 96)",
+      "min": 16,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right \u2014 phone (default 20)",
+      "min": 12,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "default": 20
     },
     {
       "type": "select",
-      "id": "bg_preset",
-      "label": "Text panel background",
+      "id": "bg_style",
+      "label": "Text panel background (default: Cream)",
+      "default": "cream",
       "options": [
         {
           "value": "white",
@@ -2120,47 +1739,33 @@
         },
         {
           "value": "cream",
-          "label": "Cream — sock-era (#faf8f6)"
+          "label": "Cream (#faf8f6) (default)"
         },
         {
-          "value": "custom",
-          "label": "Custom (picker below)"
+          "value": "darker_cream",
+          "label": "Darker cream (#efe9dd)"
         }
       ],
-      "default": "custom",
-      "info": "Pick Custom, then use the color picker. If unset on older sections, bg_color still applies."
-    },
-    {
-      "type": "color",
-      "id": "bg_color",
-      "label": "Custom text panel color",
-      "default": "#ffffff",
-      "info": "Pick Custom above, then set this. White=#ffffff. Cream=#faf8f6 only (never #f5f2ec)."
+      "info": "Legacy bg_color / bg_preset still apply when this is unset on older instances."
     },
     {
       "type": "text",
       "id": "anchor_id",
-      "label": "Anchor ID (optional)",
-      "info": "This section’s own ID for same-page jumps (e.g. never-loses-grip → #never-loses-grip). Not the same as CTA link."
+      "label": "Anchor ID (optional)"
     },
     {
       "type": "text",
       "id": "aria_label",
-      "label": "Accessibility name (aria-label)",
-      "info": "Accessibility name for screen readers. Not shown on the page. Leave blank unless you need a special name — blank uses the Heading."
+      "label": "Accessibility name (aria-label)"
     },
     {
       "type": "header",
-      "content": "7 — Section gap"
-    },
-    {
-      "type": "paragraph",
-      "content": "Phone: photo is always flush at the top. The phone slider only adds space after the section."
+      "content": "6 \u2014 Section gap"
     },
     {
       "type": "range",
       "id": "section_gap",
-      "label": "Space above & below section — desktop",
+      "label": "Space above & below \u2014 desktop (default 32)",
       "min": 0,
       "max": 96,
       "step": 4,
@@ -2170,18 +1775,18 @@
     {
       "type": "range",
       "id": "section_gap_mobile",
-      "label": "Space after section — phone",
+      "label": "Space after section \u2014 phone (default 0)",
       "min": 0,
       "max": 96,
       "step": 4,
       "unit": "px",
       "default": 0,
-      "info": "Home / collections only. Product pages stay 0. Never pads above the photo."
+      "info": "Product templates force 0."
     },
     {
       "type": "checkbox",
       "id": "hide_on_mobile",
-      "label": "Hide on mobile",
+      "label": "Hide on phone",
       "default": false
     },
     {
@@ -2191,36 +1796,12 @@
       "default": false
     }
   ],
-  "blocks": [
-    {
-      "type": "stat",
-      "name": "Stat",
-      "settings": [
-        {
-          "type": "text",
-          "id": "value",
-          "label": "Value",
-          "default": "360°"
-        },
-        {
-          "type": "text",
-          "id": "label",
-          "label": "Label",
-          "default": "grip surface"
-        },
-        {
-          "type": "checkbox",
-          "id": "emphasis",
-          "label": "Longer line (smaller type)",
-          "default": false
-        }
-      ]
-    }
-  ],
   "presets": [
     {
       "name": "50/50 Split"
     }
   ]
 }
+
 {% endschema %}
+
