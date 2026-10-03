@@ -7,13 +7,23 @@
   assign media_pct = section.settings.media_column_pct | default: 50
   assign text_pct = 100 | minus: media_pct
 
-  assign min_height = section.settings.min_height
-  if min_height == blank
-    assign min_height = section.settings.media_max_px | default: 760
+  assign pas_mh_default = 760
+  assign pas_mh = section.settings.min_height
+  if pas_mh != blank and pas_mh != pas_mh_default
+    assign min_height = pas_mh
+  elsif section.settings.media_max_px != blank
+    assign min_height = section.settings.media_max_px
+  else
+    assign min_height = pas_mh | default: pas_mh_default
   endif
-  assign mobile_media_height = section.settings.mobile_media_height
-  if mobile_media_height == blank or mobile_media_height == 0
-    assign mobile_media_height = section.settings.media_max_px_mobile | default: 480
+  assign pas_mmh_default = 480
+  assign pas_mmh = section.settings.mobile_media_height
+  if pas_mmh != blank and pas_mmh != 0 and pas_mmh != pas_mmh_default
+    assign mobile_media_height = pas_mmh
+  elsif section.settings.media_max_px_mobile != blank
+    assign mobile_media_height = section.settings.media_max_px_mobile
+  else
+    assign mobile_media_height = pas_mmh | default: pas_mmh_default
   endif
 
   assign panel_cream = false
@@ -165,13 +175,23 @@
 {%- endcomment -%}
 {% style %}
   {%- liquid
+    assign te_mh_default = 760
     assign te_min_h = section.settings.min_height
-    if te_min_h == blank
-      assign te_min_h = section.settings.media_max_px | default: 760
+    if te_min_h != blank and te_min_h != te_mh_default
+      assign te_min_h = te_min_h
+    elsif section.settings.media_max_px != blank
+      assign te_min_h = section.settings.media_max_px
+    else
+      assign te_min_h = te_min_h | default: te_mh_default
     endif
+    assign te_mmh_default = 480
     assign te_mmh = section.settings.mobile_media_height
-    if te_mmh == blank or te_mmh == 0
-      assign te_mmh = section.settings.media_max_px_mobile | default: 480
+    if te_mmh != blank and te_mmh != 0 and te_mmh != te_mmh_default
+      assign te_mmh = te_mmh
+    elsif section.settings.media_max_px_mobile != blank
+      assign te_mmh = section.settings.media_max_px_mobile
+    else
+      assign te_mmh = te_mmh | default: te_mmh_default
     endif
     assign te_mcp = section.settings.media_column_pct | default: 50
   -%}
@@ -217,15 +237,15 @@
 
 {% schema %}
 {
-  "name": "About \u2014 Split",
+  "name": "About — Split",
   "settings": [
     {
       "type": "header",
-      "content": "1 \u2014 Photo / video"
+      "content": "1 — Photo / video"
     },
     {
       "type": "paragraph",
-      "content": "Pick ONE. Priority: Shopify image \u2192 Image URL."
+      "content": "Pick ONE. Priority: Shopify image → Image URL."
     },
     {
       "type": "image_picker",
@@ -245,22 +265,23 @@
     },
     {
       "type": "header",
-      "content": "2 \u2014 Focus + height"
+      "content": "2 — Focus + height"
     },
     {
       "type": "range",
       "id": "min_height",
-      "label": "Height \u2014 desktop (default 760)",
+      "label": "Height — desktop (default 760)",
       "min": 360,
       "max": 820,
       "step": 20,
       "unit": "px",
-      "info": "Contain-fit photo max height on desktop."
+      "info": "Contain-fit photo max height on desktop.",
+      "default": 760
     },
     {
       "type": "range",
       "id": "media_column_pct",
-      "label": "Image width \u2014 desktop (default 50%)",
+      "label": "Image width — desktop (default 50%)",
       "min": 40,
       "max": 60,
       "step": 1,
@@ -270,16 +291,17 @@
     {
       "type": "range",
       "id": "mobile_media_height",
-      "label": "Image height \u2014 phone (default 0 = theme 500px)",
+      "label": "Image height — phone (default 0 = theme 500px)",
       "min": 0,
       "max": 900,
       "step": 10,
       "unit": "px",
-      "info": "0 uses legacy saved phone height when present (see hidden keys)."
+      "info": "0 uses legacy saved phone height when present (see hidden keys).",
+      "default": 480
     },
     {
       "type": "header",
-      "content": "3 \u2014 Heading / body / CTA"
+      "content": "3 — Heading / body / CTA"
     },
     {
       "type": "text",
@@ -309,7 +331,7 @@
     },
     {
       "type": "header",
-      "content": "4 \u2014 Trust strip"
+      "content": "4 — Trust strip"
     },
     {
       "type": "paragraph",
@@ -317,12 +339,12 @@
     },
     {
       "type": "header",
-      "content": "5 \u2014 Layout"
+      "content": "5 — Layout"
     },
     {
       "type": "checkbox",
       "id": "reverse",
-      "label": "Image on right \u2014 desktop (default: off)",
+      "label": "Image on right — desktop (default: off)",
       "default": false,
       "info": "769px and up only."
     },
@@ -350,7 +372,8 @@
       "max": 120,
       "step": 1,
       "unit": "px",
-      "info": "Leave unset in JSON keeps legacy clamp padding until you set this in TE."
+      "info": "Leave unset in JSON keeps legacy clamp padding until you set this in TE.",
+      "default": 56
     },
     {
       "type": "range",
@@ -359,7 +382,8 @@
       "min": 8,
       "max": 96,
       "step": 1,
-      "unit": "px"
+      "unit": "px",
+      "default": 48
     },
     {
       "type": "range",
@@ -368,7 +392,8 @@
       "min": 8,
       "max": 120,
       "step": 1,
-      "unit": "px"
+      "unit": "px",
+      "default": 36
     },
     {
       "type": "range",
@@ -377,7 +402,8 @@
       "min": 8,
       "max": 48,
       "step": 1,
-      "unit": "px"
+      "unit": "px",
+      "default": 20
     },
     {
       "type": "select",
@@ -403,12 +429,12 @@
     },
     {
       "type": "header",
-      "content": "6 \u2014 Section gap"
+      "content": "6 — Section gap"
     },
     {
       "type": "range",
       "id": "section_gap",
-      "label": "Space above & below \u2014 desktop (default 0)",
+      "label": "Space above & below — desktop (default 0)",
       "min": 0,
       "max": 96,
       "step": 4,
@@ -418,7 +444,7 @@
     {
       "type": "range",
       "id": "section_gap_mobile",
-      "label": "Space after section \u2014 phone (default 0)",
+      "label": "Space after section — phone (default 0)",
       "min": 0,
       "max": 96,
       "step": 4,
@@ -427,7 +453,7 @@
     },
     {
       "type": "header",
-      "content": "Legacy (hidden \u2014 do not edit)"
+      "content": "Legacy (hidden — do not edit)"
     },
     {
       "type": "paragraph",
@@ -570,7 +596,7 @@
   ],
   "presets": [
     {
-      "name": "About \u2014 Split"
+      "name": "About — Split"
     }
   ]
 }
