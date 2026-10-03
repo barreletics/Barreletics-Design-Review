@@ -156,7 +156,7 @@
     {%- if section.settings.show_mentions and section.settings.mentions_items != blank -%}
       {%- liquid
         assign mention_items = section.settings.mentions_items | split: ','
-        assign mentions_d = section.settings.mentions_style_desktop | default: 'caps'
+        assign mentions_d = section.settings.mentions_style_desktop | default: 'sentence'
         assign mentions_m = section.settings.mentions_style_mobile | default: 'sentence'
         assign mentions_size = section.settings.mentions_name_size | default: '16'
         assign mentions_count = 0
@@ -479,7 +479,7 @@
       text-wrap: balance;
     }
   }
-  /* Also featured in line. Desktop caps = A3, mobile sentence = M2 (press line 2026-09-27). Breakpoint 900px. */
+  /* Also featured in line. Default sentence case desktop + mobile (Andrew 2026-10-03); caps lead-in optional. Breakpoint 900px. */
   #shopify-section-{{ section.id }} .press-row__mentions { margin: 20px 0 0; padding: 0; font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif; text-align: left; }
   #shopify-section-{{ section.id }} .press-row__mentions-item { white-space: nowrap; font-size: var(--mentions-name-size, 16px); }
   #shopify-section-{{ section.id }} .press-row__mentions-sep { padding: 0 .2em; }
@@ -653,15 +653,15 @@
       "type": "select",
       "id": "mentions_style_desktop",
       "label": "Desktop text style",
-      "default": "caps",
+      "default": "sentence",
       "options": [
-        {
-          "value": "caps",
-          "label": "Caps lead-in, bold names"
-        },
         {
           "value": "sentence",
           "label": "Sentence case"
+        },
+        {
+          "value": "caps",
+          "label": "Caps lead-in, bold names"
         }
       ]
     },
