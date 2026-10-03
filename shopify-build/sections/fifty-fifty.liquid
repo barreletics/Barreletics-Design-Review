@@ -118,15 +118,14 @@
   assign image_scale = section.settings.image_scale | default: 100
   assign contain_width = section.settings.contain_width | default: 72
   assign media_radius = section.settings.media_radius | default: 0
-  assign column_gap = section.settings.column_gap | default: 0
   assign side_padding = section.settings.side_padding | default: 64
   assign text_pad_top_d = section.settings.text_pad_top
   assign text_pad_bottom_d = section.settings.text_pad_bottom
   if text_pad_top_d == blank
-    assign text_pad_top_d = section.settings.vertical_padding | default: 88
+    assign text_pad_top_d = section.settings.vertical_padding | default: 96
   endif
   if text_pad_bottom_d == blank
-    assign text_pad_bottom_d = section.settings.vertical_padding | default: 88
+    assign text_pad_bottom_d = section.settings.vertical_padding | default: 96
   endif
   assign text_pad_x_m = section.settings.text_pad_x_mobile | default: 20
   assign section_gap = 32
@@ -156,10 +155,17 @@
   assign title_size = section.settings.title_size | default: 'default'
   assign title_weight = section.settings.title_weight | default: '400'
   assign body_weight = section.settings.body_weight | default: 'default'
-  assign cta_style = section.settings.cta_style | default: 'solid'
-  assign cta_bg = section.settings.cta_bg_color | default: '#c45c3f'
-  assign cta_text_color = section.settings.cta_text_color | default: '#ffffff'
-  assign cta_border = section.settings.cta_border_color | default: cta_bg
+  assign cta_style = section.settings.cta_style | default: 'rust_solid'
+  case cta_style
+    when 'rust_outline', 'outline'
+      assign cta_btn_class = 'btn--brand-outline'
+    when 'black_solid', 'primary'
+      assign cta_btn_class = 'btn--primary'
+    when 'black_outline', 'secondary'
+      assign cta_btn_class = 'btn--secondary'
+    else
+      assign cta_btn_class = 'btn--brand'
+  endcase
 
   assign region_label = section.settings.aria_label | strip
   if region_label == blank
@@ -215,7 +221,6 @@
     --ff-text-radius: {{ media_radius }}px;
     --ff-panel-bg: {{ panel_bg }};
     --ff-media-pad-bg: {{ media_pad_bg }};
-    --ff-column-gap: {{ column_gap }}px;
     --ff-side-padding: {{ side_padding }}px;
     --ff-text-pad-top-d: {{ text_pad_top_d }}px;
     --ff-text-pad-bottom-d: {{ text_pad_bottom_d }}px;
@@ -224,9 +229,6 @@
     --ff-text-pad-top-m: {{ text_pad_m }}px;
     --ff-text-pad-bottom-m: {{ text_pad_bottom_m }}px;
     --ff-text-pad-x-m: {{ text_pad_x_m }}px;
-    --ff-cta-bg: {{ cta_bg }};
-    --ff-cta-border: {{ cta_border }};
-    --ff-cta-text: {{ cta_text_color }};
     --ff-quote-star: {{ quote_star_color }};
     --ff-quote-style: {% if quote_italic %}italic{% else %}normal{% endif %};
     --ff-stat-bar: {{ stat_bar_color }};
@@ -324,7 +326,21 @@
   <div class="split-text align-editorial{% if content_style == 'quote' %} split-text--quote{% endif %}{% if content_style == 'stats' %} split-text--stats{% endif %}{% if content_style == 'statement' %} split-text--statement{% endif %}" style="background: {{ panel_bg }};">
     {% if content_style == 'quote' %}
       {% if section.settings.eyebrow != blank %}
-        <h2 class="split-text__title {{ heading_class }}" style="margin:0 0 20px;">{{ section.settings.eyebrow }}</h2>
+        {% assign quote_heading_class = 'split-text__title ' | append: heading_class %}
+        {% case heading_level %}
+          {% when 'h1' %}
+            <h1 class="{{ quote_heading_class }}" style="margin:0 0 20px;">{{ section.settings.eyebrow }}</h1>
+          {% when 'h3' %}
+            <h3 class="{{ quote_heading_class }}" style="margin:0 0 20px;">{{ section.settings.eyebrow }}</h3>
+          {% when 'h4' %}
+            <h4 class="{{ quote_heading_class }}" style="margin:0 0 20px;">{{ section.settings.eyebrow }}</h4>
+          {% when 'h5' %}
+            <h5 class="{{ quote_heading_class }}" style="margin:0 0 20px;">{{ section.settings.eyebrow }}</h5>
+          {% when 'h6' %}
+            <h6 class="{{ quote_heading_class }}" style="margin:0 0 20px;">{{ section.settings.eyebrow }}</h6>
+          {% else %}
+            <h2 class="{{ quote_heading_class }}" style="margin:0 0 20px;">{{ section.settings.eyebrow }}</h2>
+        {% endcase %}
       {% endif %}
       {{ split_trust }}
       {% if section.settings.title != blank %}
@@ -341,7 +357,7 @@
       {% if section.settings.cta_text != blank %}
         <a
           href="{{ cta_href | default: '#reviews' }}"
-          class="btn split-cta split-cta--after-stack{% if cta_style == 'outline' %} split-cta--outline{% else %} btn--primary{% endif %}"
+          class="btn {{ cta_btn_class }} split-cta split-cta--after-stack"
         >{{ section.settings.cta_text }}</a>
       {% endif %}
     {% elsif content_style == 'stats' %}
@@ -386,7 +402,7 @@
       {% if section.settings.cta_text != blank %}
         <a
           href="{{ cta_href | default: routes.all_products_collection_url }}"
-          class="btn split-cta split-cta--after-stack{% if cta_style == 'outline' %} split-cta--outline{% else %} btn--primary{% endif %}"
+          class="btn {{ cta_btn_class }} split-cta split-cta--after-stack"
         >{{ section.settings.cta_text }}</a>
       {% endif %}
     {% else %}
@@ -430,7 +446,7 @@
       {% if section.settings.cta_text != blank %}
         <a
           href="{{ cta_href | default: routes.all_products_collection_url }}"
-          class="btn split-cta{% if cta_style == 'outline' %} split-cta--outline{% else %} btn--primary{% endif %}"
+          class="btn {{ cta_btn_class }} split-cta"
         >{{ section.settings.cta_text }}</a>
       {% endif %}
     {% endif %}
@@ -467,7 +483,7 @@
   #shopify-section-{{ section.id }} .split-section {
     display: grid;
     grid-template-columns: var(--ff-media-fr, 1fr) var(--ff-text-fr, 1fr);
-    gap: var(--ff-column-gap, 0);
+    gap: 0;
     align-items: stretch;
     min-height: var(--ff-min-height, 560px);
     padding-block: 0;
@@ -634,7 +650,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    padding: var(--ff-text-pad-top-d, 88px) var(--ff-side-padding, 64px) var(--ff-text-pad-bottom-d, 88px);
+    padding: var(--ff-text-pad-top-d, 96px) var(--ff-side-padding, 64px) var(--ff-text-pad-bottom-d, 96px);
     background: var(--ff-panel-bg, {{ panel_bg }});
     overflow: hidden;
     border-radius: var(--ff-text-radius, 0);
@@ -709,32 +725,6 @@
   }
   #shopify-section-{{ section.id }} .split-cta {
     width: fit-content;
-    font-size: var(--ff-cta-size, var(--type-cta-size));
-    font-weight: var(--type-cta-weight);
-    letter-spacing: var(--type-cta-tracking, 0.12em);
-    line-height: var(--type-cta-leading, 1);
-    text-transform: uppercase;
-    text-decoration: none;
-    border-radius: 4px;
-    min-height: var(--type-cta-min-height);
-    padding: var(--type-cta-pad-y) var(--type-cta-pad-x);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--ff-cta-bg, #c45c3f);
-    border: 1px solid var(--ff-cta-border, var(--ff-cta-bg, #c45c3f));
-    color: var(--ff-cta-text, #fff);
-    transition: opacity 0.15s ease;
-  }
-  #shopify-section-{{ section.id }} .split-cta--outline {
-    background: transparent;
-    color: var(--ff-cta-text, var(--ff-cta-border, #c45c3f));
-  }
-  #shopify-section-{{ section.id }} .split-cta:hover {
-    opacity: 0.92;
-  }
-  #shopify-section-{{ section.id }} .split-cta--outline:hover {
-    opacity: 0.85;
   }
   @media (max-width: 768px) {
     #shopify-section-{{ section.id }} {
@@ -1104,17 +1094,16 @@
     --ff-contain-width: {{ section.settings.contain_width | default: 72 }}% !important;
     --ff-media-radius: {{ section.settings.media_radius | default: 0 }}px !important;
     --ff-text-radius: {{ section.settings.media_radius | default: 0 }}px !important;
-    --ff-column-gap: {{ section.settings.column_gap }}px !important;
     --ff-side-padding: {{ section.settings.side_padding }}px !important;
     {%- if section.settings.text_pad_top != blank -%}
     --ff-text-pad-top-d: {{ section.settings.text_pad_top }}px !important;
     {%- else -%}
-    --ff-text-pad-top-d: {{ section.settings.vertical_padding | default: 88 }}px !important;
+    --ff-text-pad-top-d: {{ section.settings.vertical_padding | default: 96 }}px !important;
     {%- endif -%}
     {%- if section.settings.text_pad_bottom != blank -%}
     --ff-text-pad-bottom-d: {{ section.settings.text_pad_bottom }}px !important;
     {%- else -%}
-    --ff-text-pad-bottom-d: {{ section.settings.vertical_padding | default: 88 }}px !important;
+    --ff-text-pad-bottom-d: {{ section.settings.vertical_padding | default: 96 }}px !important;
     {%- endif -%}
     --ff-section-gap: {{ section.settings.section_gap | default: 32 }}px !important;
     {%- if template.name == 'product' %}
@@ -1139,9 +1128,6 @@
     --ff-panel-bg: {{ section.settings.bg_color | default: '#ffffff' }} !important;
     {%- endif -%}
     --ff-media-pad-bg: {{ section.settings.media_bg | default: '#ffffff' }} !important;
-    --ff-cta-bg: {{ section.settings.cta_bg_color | default: '#c45c3f' }} !important;
-    --ff-cta-border: {{ section.settings.cta_border_color | default: section.settings.cta_bg_color | default: '#c45c3f' }} !important;
-    --ff-cta-text: {{ section.settings.cta_text_color | default: '#ffffff' }} !important;
     --ff-quote-star: #d4af37 !important;
     --ff-quote-style: {% if section.settings.quote_italic == false %}normal{% else %}italic{% endif %} !important;
     --ff-stat-bar: #c45c3f !important;
@@ -1496,7 +1482,8 @@
     {
       "type": "text",
       "id": "eyebrow",
-      "label": "Eyebrow"
+      "label": "Eyebrow / quote heading",
+      "info": "Standard & stats: small label above the heading. Quote style: heading above the stars and quote (uses Heading level)."
     },
     {
       "type": "textarea",
@@ -1605,6 +1592,30 @@
       "info": "When CTA link = Custom URL\u2026"
     },
     {
+      "type": "select",
+      "id": "cta_style",
+      "label": "Button style",
+      "default": "rust_solid",
+      "options": [
+        {
+          "value": "rust_solid",
+          "label": "Rust solid"
+        },
+        {
+          "value": "rust_outline",
+          "label": "Rust outline"
+        },
+        {
+          "value": "black_solid",
+          "label": "Black solid"
+        },
+        {
+          "value": "black_outline",
+          "label": "Black outline"
+        }
+      ]
+    },
+    {
       "type": "header",
       "content": "4 \u2014 Trust strip"
     },
@@ -1668,34 +1679,24 @@
     },
     {
       "type": "range",
-      "id": "column_gap",
-      "label": "Gap between image & text \u2014 desktop (default 0)",
-      "min": 0,
-      "max": 64,
-      "step": 4,
-      "unit": "px",
-      "default": 0
-    },
-    {
-      "type": "range",
       "id": "text_pad_top",
-      "label": "Text pad top \u2014 desktop (default 80)",
+      "label": "Text pad top \u2014 desktop (default 96)",
       "min": 32,
       "max": 120,
       "step": 4,
       "unit": "px",
-      "default": 80,
+      "default": 96,
       "info": "Older sections: falls back to legacy single desktop pad until re-saved."
     },
     {
       "type": "range",
       "id": "text_pad_bottom",
-      "label": "Text pad bottom \u2014 desktop (default 80)",
+      "label": "Text pad bottom \u2014 desktop (default 96)",
       "min": 32,
       "max": 120,
       "step": 4,
       "unit": "px",
-      "default": 80
+      "default": 96
     },
     {
       "type": "range",

@@ -2,6 +2,13 @@
 
 Plain-English list of controls you probably rarely need. **Usage** = instances in git `templates/*.json` where the value differs from schema default (or key missing when default matters).
 
+## fifty-fifty — Andrew TE fixes (2026-10-03, PR #32 branch)
+
+- **Button style** (`cta_style`): schema select — rust solid (default), rust outline, black solid, black outline; uses global `.btn--*` classes (+ new `.btn--brand-outline` in `barreletics-base.css`). Removed dead per-section CTA colour overrides.
+- **Desktop text pad** (`text_pad_top` / `text_pad_bottom`): schema defaults **96/96** (matches phone); blank desktop pads fall back to legacy `vertical_padding` or **96**.
+- **Gap between image & text** (`column_gap`): control removed; grid gap is always **0**.
+- **Eyebrow / quote heading**: label + info for Quote style; quote-mode eyebrow respects **Heading level** (not hardcoded H2).
+
 ## split-hero (1 placed instances)
 
 - **Custom desktop focal — horizontal % (only if focal = Custom)** (`image_pos_x`) — changed from default on **0/1** instances; key absent **0/1**; schema default: `50`.
