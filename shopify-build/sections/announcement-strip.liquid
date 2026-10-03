@@ -7,8 +7,45 @@
 {% if section.settings.enabled %}
   {% assign slides = section.blocks %}
   {% if slides.size > 0 %}
-    {%- assign _fs = section.settings.font_size | default: 13 -%}
-    {%- assign _fs_m = section.settings.font_size_mobile | default: 12 -%}
+    {%- liquid
+      assign y_d = 5
+      assign side_d = 56
+      assign y_m = 8
+      assign x_m = 16
+
+      assign _fs = section.settings.font_size | default: 13
+      assign _fs_m = section.settings.font_size_mobile | default: 12
+
+      assign _pad = section.settings.pad_y | default: y_d
+      if section.settings.text_pad_y != blank and section.settings.text_pad_y != y_d
+        assign _pad = section.settings.text_pad_y
+      endif
+      assign _pad_m = section.settings.pad_y_mobile | default: y_m
+      if section.settings.text_pad_y_mobile != blank and section.settings.text_pad_y_mobile != y_m
+        assign _pad_m = section.settings.text_pad_y_mobile
+      endif
+      assign _pad_x = section.settings.pad_x | default: side_d
+      if section.settings.side_padding != blank and section.settings.side_padding != side_d
+        assign _pad_x = section.settings.side_padding
+      endif
+
+      assign emit_y_d = false
+      if section.settings.text_pad_y != blank and section.settings.text_pad_y != y_d
+        assign emit_y_d = true
+      endif
+      assign emit_side_d = false
+      if section.settings.side_padding != blank and section.settings.side_padding != side_d
+        assign emit_side_d = true
+      endif
+      assign emit_y_m = false
+      if section.settings.text_pad_y_mobile != blank and section.settings.text_pad_y_mobile != y_m
+        assign emit_y_m = true
+      endif
+      assign emit_x_m = false
+      if section.settings.text_pad_x_mobile != blank and section.settings.text_pad_x_mobile != x_m
+        assign emit_x_m = true
+      endif
+    -%}
     {%- assign _track = section.settings.letter_spacing | default: 3 -%}
     {%- assign _promo_w = section.settings.promo_weight | default: '600' -%}
     {%- assign _dist = section.settings.announce_distribute | default: 'center' -%}
@@ -17,12 +54,12 @@
       data-announce-distribute="{{ _dist }}"
       role="region"
       aria-label="Promotional messages"
-      style="{% render 'unified-text-pads-vars', y_d: 5, side_d: 56, y_m: 8, x_m: 16, legacy_y_d: section.settings.pad_y, legacy_side_d: section.settings.pad_x, legacy_y_m: section.settings.pad_y_mobile %}
+      style="
         --announce-font-size: {{ _fs }}px;
-        --announce-pad-y: var(--utp-y-d, 5px);
+        --announce-pad-y: {{ _pad }}px;
         --announce-font-size-mobile: {{ _fs_m }}px;
-        --announce-pad-y-mobile: var(--utp-y-m, 8px);
-        --announce-pad-x: var(--utp-side-d, 56px);
+        --announce-pad-y-mobile: {{ _pad_m }}px;
+        --announce-pad-x: {{ _pad_x }}px;
         --announce-item-gap: {{ section.settings.item_gap | default: 12 }}px;
         --announce-bg: {{ section.settings.bg_color | default: '#faf8f6' }};
         --announce-bg-mobile: {{ section.settings.bg_color_mobile | default: '#ffffff' }};
@@ -59,7 +96,36 @@
   {% endif %}
 {% endif %}
 
-{% render 'unified-text-pads-te-style', selector: '.announcement-strip', y_d: 5, side_d: 56, y_m: 8, x_m: 16, legacy_y_d: section.settings.pad_y, legacy_side_d: section.settings.pad_x, legacy_y_m: section.settings.pad_y_mobile %}
+{%- if emit_y_d or emit_side_d or emit_y_m or emit_x_m -%}
+{% style %}
+  {%- if emit_y_d or emit_side_d -%}
+  #shopify-section-{{ section.id }} .announcement-strip {
+    {%- if emit_y_d -%}
+    padding-top: {{ section.settings.text_pad_y }}px;
+    padding-bottom: {{ section.settings.text_pad_y }}px;
+    {%- endif -%}
+    {%- if emit_side_d -%}
+    padding-left: {{ section.settings.side_padding }}px;
+    padding-right: {{ section.settings.side_padding }}px;
+    {%- endif -%}
+  }
+  {%- endif -%}
+  {%- if emit_y_m or emit_x_m -%}
+  @media (max-width: 900px) {
+    #shopify-section-{{ section.id }} .announcement-strip {
+      {%- if emit_y_m -%}
+      padding-top: {{ section.settings.text_pad_y_mobile }}px;
+      padding-bottom: {{ section.settings.text_pad_y_mobile }}px;
+      {%- endif -%}
+      {%- if emit_x_m -%}
+      padding-left: {{ section.settings.text_pad_x_mobile }}px;
+      padding-right: {{ section.settings.text_pad_x_mobile }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+{% endstyle %}
+{%- endif -%}
 
 {% schema %}
 {
@@ -232,7 +298,7 @@
       "id": "text_pad_y",
       "label": "Text pad top & bottom — desktop (default 5)",
       "min": 0,
-      "max": 120,
+      "max": 100,
       "step": 1,
       "unit": "px",
       "default": 5
@@ -241,9 +307,9 @@
       "type": "range",
       "id": "side_padding",
       "label": "Text pad left & right — desktop (default 56)",
-      "min": 8,
+      "min": 0,
       "max": 96,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 56
     },
@@ -253,7 +319,7 @@
       "label": "Text pad top & bottom — phone (default 8)",
       "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 8
     },
@@ -261,9 +327,9 @@
       "type": "range",
       "id": "text_pad_x_mobile",
       "label": "Text pad left & right — phone (default 16)",
-      "min": 8,
+      "min": 0,
       "max": 48,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 16
     }
