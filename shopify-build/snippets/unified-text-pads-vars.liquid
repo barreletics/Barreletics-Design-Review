@@ -9,38 +9,38 @@
 {%- liquid
   assign u_y_d = section.settings.text_pad_y
   if u_y_d != blank and u_y_d != y_d
-    assign _y_d = u_y_d
+    assign utp_y_d = u_y_d
   elsif legacy_y_d != blank
-    assign _y_d = legacy_y_d
+    assign utp_y_d = legacy_y_d
   else
-    assign _y_d = u_y_d | default: y_d
+    assign utp_y_d = u_y_d | default: y_d
   endif
 
   assign u_side_d = section.settings.side_padding
   if u_side_d != blank and u_side_d != side_d
-    assign _side_d = u_side_d
+    assign utp_side_d = u_side_d
   elsif legacy_side_d != blank
-    assign _side_d = legacy_side_d
+    assign utp_side_d = legacy_side_d
   else
-    assign _side_d = u_side_d | default: side_d
+    assign utp_side_d = u_side_d | default: side_d
   endif
 
   assign u_y_m = section.settings.text_pad_y_mobile
   if u_y_m != blank and u_y_m != y_m
-    assign _y_m = u_y_m
+    assign utp_y_m = u_y_m
   elsif legacy_y_m != blank
-    assign _y_m = legacy_y_m
+    assign utp_y_m = legacy_y_m
   else
-    assign _y_m = u_y_m | default: y_m
+    assign utp_y_m = u_y_m | default: y_m
   endif
 
   assign u_x_m = section.settings.text_pad_x_mobile
   if u_x_m != blank and u_x_m != x_m
-    assign _x_m = u_x_m
+    assign utp_x_m = u_x_m
   elsif legacy_x_m != blank
-    assign _x_m = legacy_x_m
+    assign utp_x_m = legacy_x_m
   else
-    assign _x_m = u_x_m | default: x_m
+    assign utp_x_m = u_x_m | default: x_m
   endif
 -%}
---utp-y-d: {{ _y_d }}px; --utp-side-d: {{ _side_d }}px; --utp-y-m: {{ _y_m }}px; --utp-x-m: {{ _x_m }}px;
+--utp-y-d: {{ utp_y_d }}px; --utp-side-d: {{ utp_side_d }}px; --utp-y-m: {{ utp_y_m }}px; --utp-x-m: {{ utp_x_m }}px;
