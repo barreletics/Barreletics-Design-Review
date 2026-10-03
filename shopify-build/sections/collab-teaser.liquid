@@ -6,7 +6,7 @@
 <section
   id="{{ section.settings.anchor_id | default: 'collab-teaser' | handleize }}"
   class="collab-teaser section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %}"
-  style="{% render 'section-inset-vars' %}{% render 'unified-text-pads-vars', y_d: 40, side_d: 20, y_m: 40, x_m: 16 %} --ct-accent: {{ section.settings.accent_color | default: '#C4859B' }}; --ct-bg: {{ section.settings.bg_color | default: '#FBF7F2' }}; --ct-badge-bg: {{ section.settings.badge_bg_color | default: section.settings.accent_color | default: '#C4859B' }};"
+  style="{% render 'section-inset-vars' %} --ct-accent: {{ section.settings.accent_color | default: '#C4859B' }}; --ct-bg: {{ section.settings.bg_color | default: '#FBF7F2' }}; --ct-badge-bg: {{ section.settings.badge_bg_color | default: section.settings.accent_color | default: '#C4859B' }};"
   aria-label="{{ section.settings.aria_label | default: section.settings.headline | strip_html | truncate: 60 | escape }}"
 >
   <div class="collab-teaser__inner">
@@ -48,7 +48,7 @@
     color: #1c1916;
     width: 100%;
     box-sizing: border-box;
-    padding: var(--utp-y-d, 40px) var(--utp-side-d, 20px) 64px;
+    padding: 40px 20px 64px;
     text-align: center;
   }
   #shopify-section-{{ section.id }} .collab-teaser__inner {
@@ -152,7 +152,7 @@
   }
   @media (max-width: 768px) {
     #shopify-section-{{ section.id }} .collab-teaser {
-      padding: var(--utp-y-m, 40px) var(--utp-x-m, 16px);
+      padding: 40px 16px 48px;
     }
     #shopify-section-{{ section.id }} .collab-teaser__eyebrow {
       margin-bottom: 32px;
@@ -160,7 +160,60 @@
   }
 </style>
 
-{% render 'unified-text-pads-te-style', selector: '.collab-teaser', y_d: 40, side_d: 20, y_m: 40, x_m: 16 %}
+{%- liquid
+  assign y_d = 40
+  assign side_d = 20
+  assign y_m = 40
+  assign x_m = 16
+  assign emit_y_d = false
+  if section.settings.text_pad_y != blank and section.settings.text_pad_y != y_d
+    assign emit_y_d = true
+  endif
+  assign emit_side_d = false
+  if section.settings.side_padding != blank and section.settings.side_padding != side_d
+    assign emit_side_d = true
+  endif
+  assign emit_y_m = false
+  if section.settings.text_pad_y_mobile != blank and section.settings.text_pad_y_mobile != y_m
+    assign emit_y_m = true
+  endif
+  assign emit_x_m = false
+  if section.settings.text_pad_x_mobile != blank and section.settings.text_pad_x_mobile != x_m
+    assign emit_x_m = true
+  endif
+-%}
+{%- if emit_y_d or emit_side_d or emit_y_m or emit_x_m -%}
+{% style %}
+  {%- if emit_y_d or emit_side_d -%}
+  #shopify-section-{{ section.id }} .collab-teaser {
+    {%- if emit_y_d -%}
+    padding-top: {{ section.settings.text_pad_y }}px;
+    padding-bottom: {{ section.settings.text_pad_y }}px;
+    {%- endif -%}
+    {%- if emit_side_d -%}
+    padding-left: {{ section.settings.side_padding }}px;
+    padding-right: {{ section.settings.side_padding }}px;
+    {%- endif -%}
+  }
+  {%- endif -%}
+  {%- if emit_y_m or emit_x_m -%}
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .collab-teaser {
+      {%- if emit_y_m -%}
+      padding-top: {{ section.settings.text_pad_y_mobile }}px;
+      {%- endif -%}
+      {%- if emit_x_m -%}
+      padding-left: {{ section.settings.text_pad_x_mobile }}px;
+      padding-right: {{ section.settings.text_pad_x_mobile }}px;
+      {%- endif -%}
+      {%- if emit_y_m -%}
+      padding-bottom: {{ section.settings.text_pad_y_mobile }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+{% endstyle %}
+{%- endif -%}
 
 {% schema %}
 {
@@ -291,9 +344,9 @@
       "type": "range",
       "id": "text_pad_y",
       "label": "Text pad top & bottom — desktop (default 40)",
-      "min": 8,
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 40
     },
@@ -301,9 +354,9 @@
       "type": "range",
       "id": "side_padding",
       "label": "Text pad left & right — desktop (default 20)",
-      "min": 8,
+      "min": 0,
       "max": 96,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 20
     },
@@ -311,9 +364,9 @@
       "type": "range",
       "id": "text_pad_y_mobile",
       "label": "Text pad top & bottom — phone (default 40)",
-      "min": 8,
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 40
     },
@@ -321,9 +374,9 @@
       "type": "range",
       "id": "text_pad_x_mobile",
       "label": "Text pad left & right — phone (default 16)",
-      "min": 8,
+      "min": 0,
       "max": 48,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 16
     }
