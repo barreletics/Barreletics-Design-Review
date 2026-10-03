@@ -7,7 +7,7 @@
   id="shopify-section-{{ section.id }}"
   {{ section.shopify_attributes }}
   aria-label="{{ section.settings.aria_label | default: 'Our story' | escape }}"
-  style="{% render 'type-override-vars', title_size: section.settings.title_size, title_weight: section.settings.title_weight, body_size: section.settings.body_size, body_weight: section.settings.body_weight, sub_size: section.settings.pull_quote_size, sub_weight: section.settings.pull_quote_weight %}"
+  style="{% render 'unified-text-pads-vars', y_d: 32, side_d: 20, y_m: 32, x_m: 20 %}{% render 'type-override-vars', title_size: section.settings.title_size, title_weight: section.settings.title_weight, body_size: section.settings.body_size, body_weight: section.settings.body_weight, sub_size: section.settings.pull_quote_size, sub_weight: section.settings.pull_quote_weight %}"
 >
   <div class="page-about-intro__inner">
     <h1 class="page-about-intro__title">{{ section.settings.title }}</h1>
@@ -61,7 +61,7 @@
     color: var(--text-primary, #1c1916);
   }
   @media (max-width: 768px) {
-    #shopify-section-{{ section.id }} .page-about-intro { padding: 32px 20px 28px; }
+    #shopify-section-{{ section.id }} .page-about-intro { padding: var(--utp-y-m, 32px) var(--utp-x-m, 20px); }
     #shopify-section-{{ section.id }} .page-about-intro__title {
       font-size: var(--te-title-size, clamp(40px, 10vw, 52px));
       margin-bottom: 16px;
@@ -72,6 +72,8 @@
     }
   }
 </style>
+
+{% render 'unified-text-pads-te-style', selector: '.page-about-intro', y_d: 32, side_d: 20, y_m: 32, x_m: 20 %}
 
 {% schema %}
 {
@@ -190,6 +192,12 @@
       ]
     }
   ],
+
+    { "type": "header", "content": "Layout — text padding" },
+    { "type": "range", "id": "text_pad_y", "label": "Text pad top & bottom — desktop (default 96)", "min": 32, "max": 120, "step": 4, "unit": "px", "default": 96 },
+    { "type": "range", "id": "side_padding", "label": "Text pad left & right — desktop (default 64)", "min": 16, "max": 96, "step": 4, "unit": "px", "default": 64 },
+    { "type": "range", "id": "text_pad_y_mobile", "label": "Text pad top & bottom — phone (default 80)", "min": 16, "max": 120, "step": 4, "unit": "px", "default": 80 },
+    { "type": "range", "id": "text_pad_x_mobile", "label": "Text pad left & right — phone (default 20)", "min": 12, "max": 48, "step": 4, "unit": "px", "default": 20 },
   "presets": [{ "name": "About — Intro" }]
 }
 {% endschema %}
