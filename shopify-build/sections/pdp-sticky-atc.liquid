@@ -3,13 +3,29 @@
   Wraps the sticky-atc snippet for use as a section in product templates.
 {% endcomment %}
 
+<style>
+  #shopify-section-{{ section.id }} {
+    {% render 'unified-text-pads-vars', y_d: 12, side_d: 40, y_m: 10, x_m: 20 %}
+  }
+  #shopify-section-{{ section.id }} .sticky-atc {
+    padding-left: var(--utp-side-d, 40px);
+    padding-right: var(--utp-side-d, 40px);
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .sticky-atc {
+      padding-left: var(--utp-x-m, 20px);
+      padding-right: var(--utp-x-m, 20px);
+    }
+  }
+</style>
+
 {% render 'sticky-atc',
   hero_image_mode: section.settings.hero_image_mode,
   hero_color: section.settings.hero_color,
   hero_media_index: section.settings.hero_media_index
 %}
 
-{% render 'unified-text-pads-te-style', selector: '.section-frame', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}
+{% render 'unified-text-pads-te-style', selector: '.sticky-atc', y_d: 12, side_d: 40, y_m: 10, x_m: 20 %}
 
 {% schema %}
 {
