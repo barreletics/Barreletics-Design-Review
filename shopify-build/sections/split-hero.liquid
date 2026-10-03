@@ -195,7 +195,6 @@
   id="split-hero-{{ section.id }}"
   role="region"
   aria-label="{{ region_label | escape }}"
-  data-video-controls="{% if section.settings.video_controls %}true{% else %}false{% endif %}"
   style="{% render 'section-inset-vars' %}"
 >
   <div class="split-hero__media" data-media-type="{{ media_type }}">
@@ -208,7 +207,7 @@
             autoplay: true,
             loop: true,
             muted: true,
-            controls: section.settings.video_controls,
+            controls: false,
             playsinline: true,
             class: 'split-hero__video'
         }}
@@ -221,7 +220,7 @@
           muted
           loop
           playsinline
-          {% if section.settings.video_controls %}controls{% endif %}
+          webkit-playsinline
         ></video>
       {%- elsif image != blank -%}
         {%- assign sh_alt_v = image_alt -%}
@@ -492,33 +491,11 @@
   }
 {% endstyle %}
 
-<script>
-  (function () {
-    function syncSplitHeroVideoControls(root) {
-      if (!root || !root.id || root.id.indexOf('split-hero-') !== 0) return;
-      var show = root.getAttribute('data-video-controls') === 'true';
-      root.querySelectorAll('video.split-hero__video, .split-hero__media video').forEach(function (v) {
-        if (show) v.setAttribute('controls', '');
-        else v.removeAttribute('controls');
-      });
-    }
-    function onSectionLoad(evt) {
-      var target = evt.target;
-      if (!target) return;
-      target.querySelectorAll('.split-hero[id^="split-hero-"]').forEach(syncSplitHeroVideoControls);
-      if (target.classList && target.classList.contains('split-hero')) syncSplitHeroVideoControls(target);
-    }
-    document.addEventListener('shopify:section:load', onSectionLoad);
-    document.addEventListener('shopify:section:select', onSectionLoad);
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('.split-hero[id^="split-hero-"]').forEach(syncSplitHeroVideoControls);
-      });
-    } else {
-      document.querySelectorAll('.split-hero[id^="split-hero-"]').forEach(syncSplitHeroVideoControls);
-    }
-  })();
-</script>
+{% render 'bg-video-autoplay-script',
+  section_id: section.id,
+  root_class: 'split-hero',
+  video_selector: 'video.split-hero__video, .split-hero__media video'
+%}
 
 {% schema %}
 {
@@ -797,13 +774,6 @@
       "label": "Image alt text",
       "default": "Barreletics Performance Skins — grip that holds in every studio workout"
     },
-    {
-      "type": "checkbox",
-      "id": "video_controls",
-      "label": "Show video controls",
-      "default": false
-    },
-
     { "type": "header", "content": "Desktop hero image" },
     {
       "type": "paragraph",
@@ -1073,7 +1043,7 @@
       "type": "text",
       "id": "trust_url",
       "label": "Custom trust URL",
-      "info": "Used when Trust link = Custom URL… / none."
+      "info": "Used when Trust link = Custom URL…. Wraps trust text in a link. Leave blank for plain text (no link)."
     },
 
     { "type": "header", "content": "Section — Split hero — accessibility" },
@@ -1090,7 +1060,7 @@
     { "type": "header", "content": "Shared — Section frame (outer margin)" },
     {
       "type": "paragraph",
-      "content": "Desktop inset sliders apply in the desktop preview. Phone inset sliders apply only when “Separate phone inset” is ON and you are in the mobile preview."
+      "content": "Desktop margin sliders apply in the desktop preview. Phone sliders apply only when “Use different frame margins on phone” is on and you are in the mobile preview."
     },
     {
       "type": "range",
@@ -1126,9 +1096,9 @@
     {
       "type": "checkbox",
       "id": "inset_custom_mobile",
-      "label": "Separate phone inset (mobile preview only)",
+      "label": "Use different frame margins on phone",
       "default": false,
-      "info": "OFF (default): phone uses the desktop inset values above. ON: use the phone sliders below (visible in mobile preview)."
+      "info": "Off = phone uses the desktop margins above. On = use the phone sliders below."
     },
     {
       "type": "range",
@@ -1162,6 +1132,13 @@
       "unit": "px",
       "default": 0,
       "visible_if": "{{ section.settings.inset_custom_mobile }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_controls",
+      "label": "Legacy: Show video controls",
+      "default": false,
+      "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"
     },
     {
       "type": "checkbox",

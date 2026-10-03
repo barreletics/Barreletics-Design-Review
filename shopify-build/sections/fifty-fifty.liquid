@@ -234,6 +234,7 @@
     {% if title_weight != 'default' %}--ff-title-weight: {{ title_weight }};{% endif %}
     {% if body_weight != 'default' %}--ff-body-weight: {{ body_weight }};{% endif %}
   "
+  role="region"
   aria-label="{{ region_label | escape }}"
 >
   <div class="split-media" style="background: {{ media_pad_bg }};">
@@ -1167,6 +1168,12 @@
   {%- endif %}
 {% endstyle %}
 
+{% render 'bg-video-autoplay-script',
+  section_id: section.id,
+  root_class: 'split-section',
+  video_selector: 'video.split-media__video, .split-media__clip video'
+%}
+
 {% schema %}
 {
   "name": "50/50 Split",
@@ -1759,7 +1766,8 @@
     {
       "type": "text",
       "id": "aria_label",
-      "label": "Accessibility name (aria-label)"
+      "label": "Accessibility name (aria-label)",
+      "info": "Leave blank to use the heading, otherwise \"50/50 section\"."
     },
     {
       "type": "header",
