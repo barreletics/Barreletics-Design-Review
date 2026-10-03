@@ -22,7 +22,7 @@
 <section
   id="press-row-{{ section.id }}"
   class="press-row press-row--m-{{ mobile_layout }}{% if section.settings.hide_on_mobile %} press-row--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} press-row--hide-desktop{% endif %}"
-  style="--pr-bg: {{ bg }}; --pr-desk-h: {{ section.settings.desktop_height | default: 620 }}px;"
+  style="{% render 'unified-text-pads-vars', y_d: 64, side_d: 40, y_m: 48, x_m: 16 %}--pr-bg: {{ bg }}; --pr-desk-h: {{ section.settings.desktop_height | default: 620 }}px;"
   aria-label="{{ heading | strip_html | escape }}"
 >
   <div class="press-row__inner">
@@ -193,7 +193,7 @@
     font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
     background: var(--pr-bg, #faf8f6);
     color: #1c1916;
-    padding: 64px 40px;
+    padding: var(--utp-y-d, 64px) var(--utp-side-d, 40px);
     /* Fallback so section always has intrinsic size even during TE preview layout */
     min-height: 400px;
   }
@@ -395,7 +395,7 @@
   }
   @media (max-width: 768px) {
     #shopify-section-{{ section.id }} .press-row {
-      padding: 48px 16px;
+      padding: var(--utp-y-m, 48px) var(--utp-x-m, 16px);
     }
     #shopify-section-{{ section.id }} .press-row__eyebrow {
       margin: 0 0 20px;
@@ -507,6 +507,8 @@
   root_class: 'press-row',
   video_selector: 'video.press-row__hero-video, .press-row__hero video'
 %}
+
+{% render 'unified-text-pads-te-style', selector: '.press-row', y_d: 64, side_d: 40, y_m: 48, x_m: 16 %}
 
 {% schema %}
 {
@@ -663,6 +665,12 @@
       ]
     }
   ],
+
+    { "type": "header", "content": "Layout — text padding" },
+    { "type": "range", "id": "text_pad_y", "label": "Text pad top & bottom — desktop (default 96)", "min": 32, "max": 120, "step": 4, "unit": "px", "default": 96 },
+    { "type": "range", "id": "side_padding", "label": "Text pad left & right — desktop (default 64)", "min": 16, "max": 96, "step": 4, "unit": "px", "default": 64 },
+    { "type": "range", "id": "text_pad_y_mobile", "label": "Text pad top & bottom — phone (default 80)", "min": 16, "max": 120, "step": 4, "unit": "px", "default": 80 },
+    { "type": "range", "id": "text_pad_x_mobile", "label": "Text pad left & right — phone (default 20)", "min": 12, "max": 48, "step": 4, "unit": "px", "default": 20 },
   "presets": [
     {
       "name": "Press row",
