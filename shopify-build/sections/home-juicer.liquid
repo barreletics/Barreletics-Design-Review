@@ -36,7 +36,7 @@
   data-per="{{ posts_per }}"
   data-pages="{{ max_pages }}"
   data-see-more="{% if enable_see_more %}true{% else %}false{% endif %}"
- style="{% render 'section-inset-vars' %}">
+ style="{% render 'section-inset-vars' %}{% render 'unified-text-pads-vars', y_d: 12, side_d: 28, y_m: 80, x_m: 20 %}">
   <div class="home-juicer__inner">
     {% if section.settings.eyebrow != blank %}
       <p class="home-juicer__eyebrow type-label">{{ section.settings.eyebrow }}</p>
@@ -290,7 +290,7 @@
   #shopify-section-{{ section.id }} .home-juicer__see-more {
     display: inline-block;
     margin: 0 0 var(--gap-b, 20px);
-    padding: 12px 28px;
+    padding: var(--utp-y-d, 12px) var(--utp-side-d, 28px);
     border: 1px solid var(--text-primary, #1c1916);
     background: transparent;
     color: var(--text-primary, #1c1916);
@@ -356,6 +356,8 @@
   /* Global heading system 2026-09-27: collection-only 28/26 size branch removed —
      juicer heading is the same h2-standard (32 / 24 / 600) on every template. */
 </style>
+
+{% render 'unified-text-pads-te-style', selector: '.home-juicer__see-more', y_d: 12, side_d: 28, y_m: 80, x_m: 20 %}
 
 {% schema %}
 {
@@ -450,6 +452,12 @@
       "label": "Background",
       "default": "#ffffff"
     },
+
+    { "type": "header", "content": "Layout — text padding" },
+    { "type": "range", "id": "text_pad_y", "label": "Text pad top & bottom — desktop (default 96)", "min": 32, "max": 120, "step": 4, "unit": "px", "default": 96 },
+    { "type": "range", "id": "side_padding", "label": "Text pad left & right — desktop (default 64)", "min": 16, "max": 96, "step": 4, "unit": "px", "default": 64 },
+    { "type": "range", "id": "text_pad_y_mobile", "label": "Text pad top & bottom — phone (default 80)", "min": 16, "max": 120, "step": 4, "unit": "px", "default": 80 },
+    { "type": "range", "id": "text_pad_x_mobile", "label": "Text pad left & right — phone (default 20)", "min": 12, "max": 48, "step": 4, "unit": "px", "default": 20 },
     { "type": "header", "content": "Shared — Section frame" },
     {
       "type": "paragraph",
