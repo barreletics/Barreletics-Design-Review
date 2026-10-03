@@ -20,7 +20,7 @@
       if section.settings.text_pad_y != blank and section.settings.text_pad_y != y_d
         assign strip_pad_y = section.settings.text_pad_y
       endif
-      assign strip_pad_y_m = section.settings.pad_y_mobile | default: y_m
+      assign strip_pad_y_m = section.settings.pad_y_mobile | default: 8
       if section.settings.text_pad_y_mobile != blank and section.settings.text_pad_y_mobile != y_m
         assign strip_pad_y_m = section.settings.text_pad_y_mobile
       endif
@@ -318,12 +318,13 @@
     {
       "type": "range",
       "id": "text_pad_y_mobile",
-      "label": "Text pad top & bottom — phone (default 10)",
+      "label": "Text pad top & bottom — phone ≤900px (default 10)",
       "min": 0,
       "max": 120,
       "step": 2,
       "unit": "px",
-      "default": 10
+      "default": 10,
+      "info": "Theme override applies at 900px and below."
     },
     {
       "type": "range",
