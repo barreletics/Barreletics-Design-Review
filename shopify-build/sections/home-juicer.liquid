@@ -61,6 +61,10 @@
       ></ul>
     </div>
 
+    {%- assign _jc_show_cta = false -%}
+    {%- if section.settings.cta_text != blank and section.settings.profile_url != blank -%}{%- assign _jc_show_cta = true -%}{%- endif -%}
+    {% if enable_see_more or _jc_show_cta %}
+    <div class="home-juicer__actions">
     {% if enable_see_more %}
       <button
         type="button"
@@ -70,13 +74,15 @@
       >See more</button>
     {% endif %}
 
-    {% if section.settings.cta_text != blank and section.settings.profile_url != blank %}
+    {% if _jc_show_cta %}
       <a
         class="home-juicer__cta"
         href="{{ section.settings.profile_url }}"
         target="_blank"
         rel="noopener noreferrer"
       >{{ section.settings.cta_text }}</a>
+    {% endif %}
+    </div>
     {% endif %}
   </div>
 </section>
@@ -324,6 +330,22 @@
   }
   #shopify-section-{{ section.id }} .home-juicer__cta:hover {
     color: var(--accent-primary, #c45c3f);
+  }
+  /* See more + Follow on Instagram: 16px apart side by side (desktop), stacked + centered (mobile) */
+  #shopify-section-{{ section.id }} .home-juicer__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+  #shopify-section-{{ section.id }} .home-juicer__actions .home-juicer__see-more {
+    margin: 0;
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .home-juicer__actions {
+      flex-direction: column;
+    }
   }
   @media (max-width: 768px) {
     #shopify-section-{{ section.id }} .home-juicer {
