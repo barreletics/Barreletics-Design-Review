@@ -47,7 +47,7 @@
   assign form_token = section.settings.form_token | default: 'BL-PARTNER-AMBASSADOR'
 -%}
 
-<section class="section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }} style="{% render 'unified-text-pads-vars', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}">
+<section class="page-ambassador__root section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }} style="{% render 'unified-text-pads-vars', y_d: 32, side_d: 40, y_m: 48, x_m: 16 %}">
   <div class="section__inner section__inner--narrow">
     <h1 class="page-ambassador__title type-hero">{{ section.settings.title }}</h1>
     <div class="page-ambassador__body type-lede">
@@ -285,7 +285,25 @@
   }
 </style>
 
-{% render 'unified-text-pads-te-style', selector: '.section-frame', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}
+
+<style>
+  #shopify-section-{{ section.id }} .page-ambassador__root {
+    padding-top: var(--utp-y-d, var(--section-padding-y));
+    padding-bottom: var(--utp-y-d, var(--section-padding-y));
+    padding-left: var(--utp-side-d, var(--section-padding-x));
+    padding-right: var(--utp-side-d, var(--section-padding-x));
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .page-ambassador__root {
+      padding-top: var(--utp-y-m, var(--section-padding-y));
+      padding-bottom: var(--utp-y-m, var(--section-padding-y));
+      padding-left: var(--utp-x-m, var(--section-padding-x));
+      padding-right: var(--utp-x-m, var(--section-padding-x));
+    }
+  }
+</style>
+
+{% render 'unified-text-pads-te-style', selector: '.page-ambassador__root', y_d: 32, side_d: 40, y_m: 48, x_m: 16 %}
 
 {% schema %}
 {
@@ -301,8 +319,8 @@
       "type": "richtext",
       "id": "body",
       "label": "Body text",
-      "default": "<p>For instructors and practitioners who teach barre, reformer Pilates, Lagree, Megaformer, mat Pilates, or yoga. We reply within 5–7 business days.</p>",
-      "info": "Who it is for, and the response time. Nothing else. No process-speak about terms being confirmed later — it describes a procedure without telling the reader anything. Commission, discount, and payout figures are NOT owner-approved — do not publish any of them here without an owner letter."
+      "default": "<p>For instructors and practitioners who teach barre, reformer Pilates, Lagree, Megaformer, mat Pilates, or yoga. We reply within 5\u20137 business days.</p>",
+      "info": "Who it is for, and the response time. Nothing else. No process-speak about terms being confirmed later \u2014 it describes a procedure without telling the reader anything. Commission, discount, and payout figures are NOT owner-approved \u2014 do not publish any of them here without an owner letter."
     },
     {
       "type": "textarea",
@@ -320,34 +338,34 @@
       "type": "textarea",
       "id": "success_message",
       "label": "Success message",
-      "default": "Application received. We reply within 5–7 business days."
+      "default": "Application received. We reply within 5\u20137 business days."
     },
     {
       "type": "text",
       "id": "form_token",
       "label": "Routing token",
       "default": "BL-PARTNER-AMBASSADOR",
-      "info": "Hidden value included in the submission email. The mail rule matches this string to route applications to the partner applications inbox. Do not change without updating the rule — see planning/partner-programs.md."
+      "info": "Hidden value included in the submission email. The mail rule matches this string to route applications to the partner applications inbox. Do not change without updating the rule \u2014 see planning/partner-programs.md."
     },
     {
       "type": "header",
-      "content": "Layout — text padding"
+      "content": "Layout \u2014 text padding"
     },
     {
       "type": "range",
       "id": "text_pad_y",
-      "label": "Text pad top & bottom — desktop (default 96)",
-      "min": 8,
+      "label": "Text pad top & bottom \u2014 desktop (default 32)",
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
-      "default": 96
+      "default": 32
     },
     {
       "type": "range",
       "id": "side_padding",
-      "label": "Text pad left & right — desktop (default 40)",
-      "min": 8,
+      "label": "Text pad left & right \u2014 desktop (default 40)",
+      "min": 0,
       "max": 96,
       "step": 1,
       "unit": "px",
@@ -356,22 +374,22 @@
     {
       "type": "range",
       "id": "text_pad_y_mobile",
-      "label": "Text pad top & bottom — phone (default 80)",
-      "min": 8,
+      "label": "Text pad top & bottom \u2014 phone (default 48)",
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
-      "default": 80
+      "default": 48
     },
     {
       "type": "range",
       "id": "text_pad_x_mobile",
-      "label": "Text pad left & right — phone (default 20)",
-      "min": 8,
+      "label": "Text pad left & right \u2014 phone (default 16)",
+      "min": 0,
       "max": 48,
       "step": 1,
       "unit": "px",
-      "default": 20
+      "default": 16
     }
   ],
   "presets": [
