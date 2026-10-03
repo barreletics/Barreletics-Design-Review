@@ -5,7 +5,7 @@ Plain-English list of controls you probably rarely need. **Usage** = instances i
 ## fifty-fifty — Andrew TE fixes (2026-10-03, PR #32 branch)
 
 - **Button style** (`cta_style`): schema select — rust solid (default), rust outline, black solid, black outline; uses global `.btn--*` classes (+ new `.btn--brand-outline` in `barreletics-base.css`). Removed dead per-section CTA colour overrides.
-- **Text pad (unified)** (`text_pad_y` desktop, `text_pad_y_mobile` phone): one slider sets **top and bottom** the same. Legacy ids `text_pad_top`, `text_pad_bottom`, `text_pad_top_mobile`, `text_pad_bottom_mobile`, `vertical_padding` stay hidden for stored values. Phone schema default **80** (~13% under the ~92px even visual air Andrew tuned with old asymmetric 44/92).
+- **Text pad (unified)** (`text_pad_y` desktop default **96**, `text_pad_y_mobile` phone default **80**): only these drive top/bottom padding. Legacy ids `text_pad_top`, `text_pad_bottom`, `text_pad_top_mobile`, `text_pad_bottom_mobile`, `vertical_padding` stay hidden in schema (JSON values preserved on save) but are **ignored for rendering** — unset unified pad uses schema default.
 - **Phone pad balance fix**: `.split-text` no longer `justify-content: center` on the raw children (biased ~48px extra air above copy on phone). Copy lives in `.split-text__stack` with first/last margins zero; desktop centers the stack with `margin-block: auto` inside the stretched column.
 - **Gap between image & text** (`column_gap`): control removed; grid gap is always **0**.
 - **Eyebrow / quote heading**: label + info for Quote style; quote-mode eyebrow respects **Heading level** (not hardcoded H2).

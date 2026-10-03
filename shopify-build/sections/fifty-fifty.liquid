@@ -119,38 +119,10 @@
   assign contain_width = section.settings.contain_width | default: 72
   assign media_radius = section.settings.media_radius | default: 0
   assign side_padding = section.settings.side_padding | default: 64
-  assign text_pad_y_d = section.settings.text_pad_y
-  if text_pad_y_d == blank
-    if section.settings.text_pad_top != blank and section.settings.text_pad_bottom != blank
-      assign text_pad_y_d = section.settings.text_pad_top
-      if section.settings.text_pad_bottom > text_pad_y_d
-        assign text_pad_y_d = section.settings.text_pad_bottom
-      endif
-    elsif section.settings.text_pad_top != blank
-      assign text_pad_y_d = section.settings.text_pad_top
-    elsif section.settings.text_pad_bottom != blank
-      assign text_pad_y_d = section.settings.text_pad_bottom
-    else
-      assign text_pad_y_d = section.settings.vertical_padding | default: 96
-    endif
-  endif
+  assign text_pad_y_d = section.settings.text_pad_y | default: 96
   assign text_pad_top_d = text_pad_y_d
   assign text_pad_bottom_d = text_pad_y_d
-  assign text_pad_y_m = section.settings.text_pad_y_mobile
-  if text_pad_y_m == blank
-    if section.settings.text_pad_top_mobile != blank and section.settings.text_pad_bottom_mobile != blank
-      assign text_pad_y_m = section.settings.text_pad_top_mobile
-      if section.settings.text_pad_bottom_mobile > text_pad_y_m
-        assign text_pad_y_m = section.settings.text_pad_bottom_mobile
-      endif
-    elsif section.settings.text_pad_top_mobile != blank
-      assign text_pad_y_m = section.settings.text_pad_top_mobile
-    elsif section.settings.text_pad_bottom_mobile != blank
-      assign text_pad_y_m = section.settings.text_pad_bottom_mobile
-    else
-      assign text_pad_y_m = 80
-    endif
-  endif
+  assign text_pad_y_m = section.settings.text_pad_y_mobile | default: 80
   assign text_pad_m = text_pad_y_m
   assign text_pad_bottom_m = text_pad_y_m
   assign text_pad_x_m = section.settings.text_pad_x_mobile | default: 20
@@ -1137,48 +1109,16 @@
     --ff-media-radius: {{ section.settings.media_radius | default: 0 }}px !important;
     --ff-text-radius: {{ section.settings.media_radius | default: 0 }}px !important;
     --ff-side-padding: {{ section.settings.side_padding }}px !important;
-    {%- if section.settings.text_pad_y != blank -%}
-    --ff-text-pad-top-d: {{ section.settings.text_pad_y }}px !important;
-    --ff-text-pad-bottom-d: {{ section.settings.text_pad_y }}px !important;
-    {%- elsif section.settings.text_pad_top != blank and section.settings.text_pad_bottom != blank -%}
-      {%- assign te_pad_d = section.settings.text_pad_top -%}
-      {%- if section.settings.text_pad_bottom > te_pad_d -%}{%- assign te_pad_d = section.settings.text_pad_bottom -%}{%- endif -%}
-    --ff-text-pad-top-d: {{ te_pad_d }}px !important;
-    --ff-text-pad-bottom-d: {{ te_pad_d }}px !important;
-    {%- elsif section.settings.text_pad_top != blank -%}
-    --ff-text-pad-top-d: {{ section.settings.text_pad_top }}px !important;
-    --ff-text-pad-bottom-d: {{ section.settings.text_pad_top }}px !important;
-    {%- elsif section.settings.text_pad_bottom != blank -%}
-    --ff-text-pad-top-d: {{ section.settings.text_pad_bottom }}px !important;
-    --ff-text-pad-bottom-d: {{ section.settings.text_pad_bottom }}px !important;
-    {%- else -%}
-    --ff-text-pad-top-d: {{ section.settings.vertical_padding | default: 96 }}px !important;
-    --ff-text-pad-bottom-d: {{ section.settings.vertical_padding | default: 96 }}px !important;
-    {%- endif -%}
+    --ff-text-pad-top-d: {{ section.settings.text_pad_y | default: 96 }}px !important;
+    --ff-text-pad-bottom-d: {{ section.settings.text_pad_y | default: 96 }}px !important;
     --ff-section-gap: {{ section.settings.section_gap | default: 32 }}px !important;
     {%- if template.name == 'product' %}
     --ff-section-gap-m: 0px !important;
     {%- else %}
     --ff-section-gap-m: {{ section.settings.section_gap_mobile | default: 0 }}px !important;
     {%- endif %}
-    {%- if section.settings.text_pad_y_mobile != blank -%}
-    --ff-text-pad-top-m: {{ section.settings.text_pad_y_mobile }}px !important;
-    --ff-text-pad-bottom-m: {{ section.settings.text_pad_y_mobile }}px !important;
-    {%- elsif section.settings.text_pad_top_mobile != blank and section.settings.text_pad_bottom_mobile != blank -%}
-      {%- assign te_pad_m = section.settings.text_pad_top_mobile -%}
-      {%- if section.settings.text_pad_bottom_mobile > te_pad_m -%}{%- assign te_pad_m = section.settings.text_pad_bottom_mobile -%}{%- endif -%}
-    --ff-text-pad-top-m: {{ te_pad_m }}px !important;
-    --ff-text-pad-bottom-m: {{ te_pad_m }}px !important;
-    {%- elsif section.settings.text_pad_top_mobile != blank -%}
-    --ff-text-pad-top-m: {{ section.settings.text_pad_top_mobile }}px !important;
-    --ff-text-pad-bottom-m: {{ section.settings.text_pad_top_mobile }}px !important;
-    {%- elsif section.settings.text_pad_bottom_mobile != blank -%}
-    --ff-text-pad-top-m: {{ section.settings.text_pad_bottom_mobile }}px !important;
-    --ff-text-pad-bottom-m: {{ section.settings.text_pad_bottom_mobile }}px !important;
-    {%- else -%}
-    --ff-text-pad-top-m: 80px !important;
-    --ff-text-pad-bottom-m: 80px !important;
-    {%- endif -%}
+    --ff-text-pad-top-m: {{ section.settings.text_pad_y_mobile | default: 80 }}px !important;
+    --ff-text-pad-bottom-m: {{ section.settings.text_pad_y_mobile | default: 80 }}px !important;
     --ff-text-pad-x-m: {{ section.settings.text_pad_x_mobile | default: 20 }}px !important;
     {%- if section.settings.bg_style == 'white' -%}
     --ff-panel-bg: #ffffff !important;
@@ -1213,8 +1153,8 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding-top: {{ section.settings.text_pad_y_mobile | default: section.settings.text_pad_top_mobile | default: 80 }}px;
-      padding-bottom: {{ section.settings.text_pad_y_mobile | default: section.settings.text_pad_top_mobile | default: 80 }}px;
+      padding-top: {{ section.settings.text_pad_y_mobile | default: 80 }}px;
+      padding-bottom: {{ section.settings.text_pad_y_mobile | default: 80 }}px;
     }
   }
   {%- endif %}
@@ -1752,7 +1692,7 @@
       "step": 4,
       "unit": "px",
       "default": 96,
-      "info": "Same value for top and bottom. Legacy separate top/bottom sliders still apply when this is unset."
+      "info": "Same value for top and bottom. One standard for all 50/50s; legacy top/bottom keys in JSON are not used for output."
     },
     {
       "type": "range",
@@ -1773,7 +1713,7 @@
       "step": 4,
       "unit": "px",
       "default": 80,
-      "info": "Same value for top and bottom. Legacy separate phone top/bottom still apply when this is unset."
+      "info": "Same value for top and bottom. Legacy phone top/bottom keys in JSON are not used for output."
     },
     {
       "type": "range",
