@@ -2,6 +2,16 @@
 
 Plain-English list of controls you probably rarely need. **Usage** = instances in git `templates/*.json` where the value differs from schema default (or key missing when default matters).
 
+## problem-section — 50/50 parity (stacked PR on #32)
+
+- **Photo / video**: Same priority as fifty-fifty (Shopify video → Video URL → Shopify image → Image URL); legacy `video_asset` / `image_asset` hidden but still render when higher sources empty.
+- **Focus + height**: Focal desktop/phone, `min_height` (default **860**), `media_column_pct` (legacy `desktop_split` maps when unset), phone height/width, frame shape desktop+phone, fit cover/fit (+ legacy cover_inset/contain from JSON).
+- **Heading / body / CTA**: Global heading lock + **Button** (`cta_style`: Rust / Black / Rust outline / Black outline → `.btn--*`); pain points stay **Pain point** blocks; **Space above bullet list** (`copy_stack_gap`).
+- **Trust strip**: Optional `show_trust_strip` + `trust_text` (stars above copy).
+- **Layout**: Reverse, phone stack, unified **Text pad top & bottom** (`text_pad_y` **96** / `text_pad_y_mobile` **80**); side pads default **40** / **16** (not 50/50’s 64/20); `bg_style` + legacy `bg_preset`/`bg_color`.
+- **Section gap**: `section_gap` default **0** (cover-flush Home band); `section_gap_mobile`, hide on phone/desktop.
+- **Legacy hidden**: Old CTA colour pickers, separate text pad keys, `heading_size_override` — preserved on save, not used for output (except legacy bg paths).
+
 ## fifty-fifty — Andrew TE fixes (2026-10-03, PR #32 branch)
 
 - **Button style** (`cta_style`): schema select — rust solid (default), rust outline, black solid, black outline; uses global `.btn--*` classes (+ new `.btn--brand-outline` in `barreletics-base.css`). Removed dead per-section CTA colour overrides.
