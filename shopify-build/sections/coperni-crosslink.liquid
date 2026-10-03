@@ -33,7 +33,7 @@
 <section
   id="{{ section.settings.anchor_id | default: 'coperni' | handleize }}"
   class="coperni-crosslink section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %}"
-  style="{% render 'section-inset-vars' %}"
+  style="{% render 'section-inset-vars' %}{% render 'unified-text-pads-vars', y_d: 24, side_d: 40, y_m: 80, x_m: 20 %}"
   aria-label="{{ section.settings.aria_label | default: 'Barreletics × Coperni' | escape }}"
 >
   <div class="csb" style="--csb-height: {{ banner_height }}px; --csb-shoe-size: {{ shoe_size }}%; --csb-shoe-y: {{ shoe_y }}%;">
@@ -124,7 +124,7 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    padding: 24px 40px 32px 48px;
+    padding: var(--utp-y-d, 24px) var(--utp-side-d, 40px) 32px 48px;
   }
   #shopify-section-{{ section.id }} .csb-eye {
     font-family: var(--font-body), Roboto, sans-serif;
@@ -215,7 +215,7 @@
       max-width: 100%;
       min-height: 58vh;
       inset: auto;
-      padding: 56px 28px 52px;
+      padding: var(--utp-y-d, 24px) var(--utp-side-d, 40px) 52px;
       justify-content: flex-end;
       box-sizing: border-box;
     }
@@ -267,6 +267,8 @@
     }
   }
 </style>
+
+{% render 'unified-text-pads-te-style', selector: '.csb-content', y_d: 24, side_d: 40, y_m: 80, x_m: 20 %}
 
 {% schema %}
 {
@@ -320,6 +322,12 @@
     { "type": "range", "id": "inset_bottom", "label": "Inset bottom", "min": 0, "max": 96, "step": 4, "unit": "px", "default": 0 },
     { "type": "range", "id": "inset_x", "label": "Inset left & right", "min": 0, "max": 96, "step": 4, "unit": "px", "default": 0 }
   ],
+
+    { "type": "header", "content": "Layout — text padding" },
+    { "type": "range", "id": "text_pad_y", "label": "Text pad top & bottom — desktop (default 96)", "min": 32, "max": 120, "step": 4, "unit": "px", "default": 96 },
+    { "type": "range", "id": "side_padding", "label": "Text pad left & right — desktop (default 64)", "min": 16, "max": 96, "step": 4, "unit": "px", "default": 64 },
+    { "type": "range", "id": "text_pad_y_mobile", "label": "Text pad top & bottom — phone (default 80)", "min": 16, "max": 120, "step": 4, "unit": "px", "default": 80 },
+    { "type": "range", "id": "text_pad_x_mobile", "label": "Text pad left & right — phone (default 20)", "min": 12, "max": 48, "step": 4, "unit": "px", "default": 20 },
   "presets": [{ "name": "Coperni crosslink" }]
 }
 {% endschema %}
