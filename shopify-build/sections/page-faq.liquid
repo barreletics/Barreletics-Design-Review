@@ -23,10 +23,24 @@
 -%}
 
 {%- assign faq_bg = section.settings.bg_class | default: 'white' -%}
+{%- liquid
+  assign pfq_y_d_def = 96
+  assign pfq_side_d_def = 40
+  assign pfq_y_m_def = 64
+  assign pfq_x_m_def = 20
+  assign pfq_fixed_q_d = false
+  if section.settings.text_pad_y != pfq_y_d_def or section.settings.side_padding != pfq_side_d_def
+    assign pfq_fixed_q_d = true
+  endif
+  assign pfq_fixed_q_m = false
+  if section.settings.text_pad_y_mobile != pfq_y_m_def or section.settings.text_pad_x_mobile != pfq_x_m_def
+    assign pfq_fixed_q_m = true
+  endif
+-%}
 <section
   class="page-faq page-faq--{{ faq_bg }}"
   id="shopify-section-{{ section.id }}"
-  style="{% render 'unified-text-pads-vars', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}{% render 'type-override-vars', title_size: section.settings.title_size, title_weight: section.settings.title_weight, body_size: section.settings.body_size, body_weight: section.settings.body_weight, sub_size: section.settings.question_size %}"
+  style="{% render 'unified-text-pads-vars', y_d: 96, side_d: 40, y_m: 64, x_m: 20 %}{% render 'type-override-vars', title_size: section.settings.title_size, title_weight: section.settings.title_weight, body_size: section.settings.body_size, body_weight: section.settings.body_weight, sub_size: section.settings.question_size %}"
   {{ section.shopify_attributes }}
 >
   <div class="page-faq__head">
@@ -79,7 +93,7 @@
     </div>
   {% endif %}
 
-  <div class="page-faq__questions" id="faq-{{ section.id }}">
+  <div class="page-faq__questions{% if pfq_fixed_q_d %} page-faq__questions--fixed-pad-d{% endif %}{% if pfq_fixed_q_m %} page-faq__questions--fixed-pad-m{% endif %}" id="faq-{{ section.id }}">
     <p class="faq-count" data-faq-count role="status" aria-live="polite"></p>
 
     <div class="faq-empty" data-faq-empty role="status">
@@ -279,6 +293,12 @@
     margin: 0 auto;
     padding: 72px 40px 96px;
   }
+  .page-faq__questions--fixed-pad-d {
+    padding-top: var(--utp-y-d, 96px);
+    padding-bottom: var(--utp-y-d, 96px);
+    padding-left: var(--utp-side-d, 40px);
+    padding-right: var(--utp-side-d, 40px);
+  }
 
   .faq-count {
     font-size: 12px;
@@ -390,6 +410,12 @@
     .faq-search__icon { left: 0; }
     .faq-topics { gap: 0 20px; margin-top: 22px; }
     .page-faq__questions { padding: 40px 20px 64px; }
+    .page-faq__questions--fixed-pad-m {
+      padding-top: var(--utp-y-m, 64px);
+      padding-bottom: var(--utp-y-m, 64px);
+      padding-left: var(--utp-x-m, 20px);
+      padding-right: var(--utp-x-m, 20px);
+    }
     .faq-row__q { font-size: var(--te-sub-size, 16px); padding: 19px 0; }
     .faq-group { margin-bottom: 44px; }
     .faq-rail__inner { padding: 0 14px; gap: 0; justify-content: space-between; }
@@ -508,7 +534,7 @@
   })();
 </script>
 
-{% render 'unified-text-pads-te-style', selector: '.page-faq__questions', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}
+{% render 'unified-text-pads-te-style', selector: '.page-faq__questions', y_d: 96, side_d: 40, y_m: 64, x_m: 20 %}
 
 {% schema %}
 {
@@ -523,7 +549,7 @@
     {
       "type": "textarea",
       "id": "subtitle",
-      "label": "Lede (optional — v7 quiet ships without one)"
+      "label": "Lede (optional \u2014 v7 quiet ships without one)"
     },
     {
       "type": "select",
@@ -544,8 +570,8 @@
     },
     {
       "type": "header",
-      "content": "Type — size & weight",
-      "info": "Family is brand Type OS. Default keeps the approved FAQ type. Title caps at 56px — support pages never use the homepage hero size."
+      "content": "Type \u2014 size & weight",
+      "info": "Family is brand Type OS. Default keeps the approved FAQ type. Title caps at 56px \u2014 support pages never use the homepage hero size."
     },
     {
       "type": "select",
@@ -733,7 +759,7 @@
       "type": "text",
       "id": "search_placeholder",
       "label": "Search placeholder",
-      "default": "Search sizing, shipping, grip, returns…"
+      "default": "Search sizing, shipping, grip, returns\u2026"
     },
     {
       "type": "checkbox",
@@ -755,7 +781,7 @@
       "id": "show_related",
       "label": "Show help links at the bottom",
       "default": true,
-      "info": "Help center · Returns · Start a return · Size guide · Contact."
+      "info": "Help center \u00b7 Returns \u00b7 Start a return \u00b7 Size guide \u00b7 Contact."
     },
     {
       "type": "text",
@@ -765,23 +791,23 @@
     },
     {
       "type": "header",
-      "content": "Layout — text padding"
+      "content": "Layout \u2014 text padding"
     },
     {
       "type": "range",
       "id": "text_pad_y",
-      "label": "Text pad top & bottom — desktop (default 96)",
-      "min": 8,
+      "label": "Text pad top & bottom — desktop (default 96 — questions 72 top / 96 bottom)",
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 96
     },
     {
       "type": "range",
       "id": "side_padding",
-      "label": "Text pad left & right — desktop (default 40)",
-      "min": 8,
+      "label": "Text pad left & right \u2014 desktop (default 40)",
+      "min": 0,
       "max": 96,
       "step": 1,
       "unit": "px",
@@ -790,18 +816,18 @@
     {
       "type": "range",
       "id": "text_pad_y_mobile",
-      "label": "Text pad top & bottom — phone (default 80)",
-      "min": 8,
+      "label": "Text pad top & bottom — phone (default 64 — questions 40 top / 64 bottom)",
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
-      "default": 80
+      "default": 64
     },
     {
       "type": "range",
       "id": "text_pad_x_mobile",
-      "label": "Text pad left & right — phone (default 20)",
-      "min": 8,
+      "label": "Text pad left & right \u2014 phone (default 20)",
+      "min": 0,
       "max": 48,
       "step": 1,
       "unit": "px",
