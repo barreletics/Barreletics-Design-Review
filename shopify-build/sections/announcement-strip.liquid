@@ -59,7 +59,7 @@
   {% endif %}
 {% endif %}
 
-{% render 'unified-text-pads-te-style', selector: '.announcement-strip', y_d: 5, side_d: 56, y_m: 8, x_m: 20 %}
+{% render 'unified-text-pads-te-style', selector: '.announcement-strip', y_d: 5, side_d: 56, y_m: 8, x_m: 16, legacy_y_d: section.settings.pad_y, legacy_side_d: section.settings.pad_x, legacy_y_m: section.settings.pad_y_mobile %}
 
 {% schema %}
 {
@@ -71,7 +71,7 @@
       "id": "enabled",
       "label": "Show announcement / trust bar",
       "default": true,
-      "info": "Desktop one-liner (incl. SAVE2). Mobile hides SAVE2 — sale banner stays."
+      "info": "Desktop one-liner (incl. SAVE2). Mobile hides SAVE2 \u2014 sale banner stays."
     },
     {
       "type": "header",
@@ -96,8 +96,9 @@
       "max": 14,
       "step": 1,
       "unit": "px",
-      "default": 5
-    , "visible_if": "{{ section.settings.title == '__legacy_hidden__' }}" },
+      "default": 5,
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
+    },
     {
       "type": "range",
       "id": "pad_x",
@@ -107,8 +108,9 @@
       "step": 4,
       "unit": "px",
       "default": 56,
-      "info": "Match Header → Side padding so bars align."
-    , "visible_if": "{{ section.settings.title == '__legacy_hidden__' }}" },
+      "info": "Match Header \u2192 Side padding so bars align.",
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
+    },
     {
       "type": "range",
       "id": "item_gap",
@@ -118,15 +120,21 @@
       "step": 2,
       "unit": "px",
       "default": 12,
-      "info": "Spreads SAVE2 · USA · Shipping · Returns inside the same rail as nav — not wider."
+      "info": "Spreads SAVE2 \u00b7 USA \u00b7 Shipping \u00b7 Returns inside the same rail as nav \u2014 not wider."
     },
     {
       "type": "select",
       "id": "announce_distribute",
       "label": "Message layout",
       "options": [
-        { "value": "center", "label": "Center — compact line (Lulu/Alo)" },
-        { "value": "spread", "label": "Spread — edge to edge" }
+        {
+          "value": "center",
+          "label": "Center \u2014 compact line (Lulu/Alo)"
+        },
+        {
+          "value": "spread",
+          "label": "Spread \u2014 edge to edge"
+        }
       ],
       "default": "center",
       "info": "Center keeps SAVE2 from looking wider than the nav group."
@@ -139,16 +147,25 @@
       "max": 8,
       "step": 1,
       "default": 3,
-      "info": "0.00–0.08em (3 ≈ 0.03em)."
+      "info": "0.00\u20130.08em (3 \u2248 0.03em)."
     },
     {
       "type": "select",
       "id": "promo_weight",
       "label": "SAVE2 / first-item weight",
       "options": [
-        { "value": "500", "label": "500 Medium" },
-        { "value": "600", "label": "600 Semibold" },
-        { "value": "700", "label": "700 Bold" }
+        {
+          "value": "500",
+          "label": "500 Medium"
+        },
+        {
+          "value": "600",
+          "label": "600 Semibold"
+        },
+        {
+          "value": "700",
+          "label": "700 Bold"
+        }
       ],
       "default": "700"
     },
@@ -161,7 +178,7 @@
       "step": 20,
       "unit": "px",
       "default": 1320,
-      "info": "MUST match Header → Rail max width. Same rail = SAVE2 can’t out-span nav."
+      "info": "MUST match Header \u2192 Rail max width. Same rail = SAVE2 can\u2019t out-span nav."
     },
     {
       "type": "header",
@@ -199,7 +216,53 @@
       "label": "Rotation speed (unused)",
       "default": 4,
       "info": "Schema compatibility only. Strip is static."
-    }
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Accessibility label",
+      "default": "Announcement"
+    },
+    {
+      "type": "header",
+      "content": "Layout \u2014 text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 5)",
+      "min": 0,
+      "max": 120,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 56)",
+      "min": 8,
+      "max": 96,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 8)",
+      "min": 0,
+      "max": 120,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 16)",
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "unit": "px"
+    },
   ],
   "blocks": [
     {
@@ -220,25 +283,35 @@
       ]
     }
   ],
-
-    { "type": "header", "content": "Layout — text padding" },
-    { "type": "range", "id": "text_pad_y", "label": "Text pad top & bottom — desktop (default 96)", "min": 32, "max": 120, "step": 4, "unit": "px", "default": 96 },
-    { "type": "range", "id": "side_padding", "label": "Text pad left & right — desktop (default 64)", "min": 16, "max": 96, "step": 4, "unit": "px", "default": 64 },
-    { "type": "range", "id": "text_pad_y_mobile", "label": "Text pad top & bottom — phone (default 80)", "min": 16, "max": 120, "step": 4, "unit": "px", "default": 80 },
-    { "type": "range", "id": "text_pad_x_mobile", "label": "Text pad left & right — phone (default 20)", "min": 12, "max": 48, "step": 4, "unit": "px", "default": 20 },
-    { "type": "header", "content": "Legacy (hidden — do not edit)" },
-    { "type": "paragraph", "content": "Preserves stored values on Theme Editor save." },
-    { "type": "range", "id": "pad_y", "label": "Legacy: pad_y", "visible_if": "{{ section.settings.title == '__legacy_hidden__' }}" },
-    { "type": "range", "id": "pad_x", "label": "Legacy: pad_x", "visible_if": "{{ section.settings.title == '__legacy_hidden__' }}" },
-    { "type": "range", "id": "pad_y_mobile", "label": "Legacy: pad_y_mobile", "visible_if": "{{ section.settings.title == '__legacy_hidden__' }}" },
   "presets": [
     {
       "name": "Announcement strip",
       "blocks": [
-        { "type": "message", "settings": { "text": "Buy 2 save 10% · Use SAVE2" } },
-        { "type": "message", "settings": { "text": "Made in USA" } },
-        { "type": "message", "settings": { "text": "Free Shipping Over $150" } },
-        { "type": "message", "settings": { "text": "30 Day Returns", "link_url": "/pages/returns" } }
+        {
+          "type": "message",
+          "settings": {
+            "text": "Buy 2 save 10% \u00b7 Use SAVE2"
+          }
+        },
+        {
+          "type": "message",
+          "settings": {
+            "text": "Made in USA"
+          }
+        },
+        {
+          "type": "message",
+          "settings": {
+            "text": "Free Shipping Over $150"
+          }
+        },
+        {
+          "type": "message",
+          "settings": {
+            "text": "30 Day Returns",
+            "link_url": "/pages/returns"
+          }
+        }
       ]
     }
   ]
