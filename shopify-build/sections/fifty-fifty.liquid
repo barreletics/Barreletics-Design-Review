@@ -119,14 +119,40 @@
   assign contain_width = section.settings.contain_width | default: 72
   assign media_radius = section.settings.media_radius | default: 0
   assign side_padding = section.settings.side_padding | default: 64
-  assign text_pad_top_d = section.settings.text_pad_top
-  assign text_pad_bottom_d = section.settings.text_pad_bottom
-  if text_pad_top_d == blank
-    assign text_pad_top_d = section.settings.vertical_padding | default: 96
+  assign text_pad_y_d = section.settings.text_pad_y
+  if text_pad_y_d == blank
+    if section.settings.text_pad_top != blank and section.settings.text_pad_bottom != blank
+      assign text_pad_y_d = section.settings.text_pad_top
+      if section.settings.text_pad_bottom > text_pad_y_d
+        assign text_pad_y_d = section.settings.text_pad_bottom
+      endif
+    elsif section.settings.text_pad_top != blank
+      assign text_pad_y_d = section.settings.text_pad_top
+    elsif section.settings.text_pad_bottom != blank
+      assign text_pad_y_d = section.settings.text_pad_bottom
+    else
+      assign text_pad_y_d = section.settings.vertical_padding | default: 96
+    endif
   endif
-  if text_pad_bottom_d == blank
-    assign text_pad_bottom_d = section.settings.vertical_padding | default: 96
+  assign text_pad_top_d = text_pad_y_d
+  assign text_pad_bottom_d = text_pad_y_d
+  assign text_pad_y_m = section.settings.text_pad_y_mobile
+  if text_pad_y_m == blank
+    if section.settings.text_pad_top_mobile != blank and section.settings.text_pad_bottom_mobile != blank
+      assign text_pad_y_m = section.settings.text_pad_top_mobile
+      if section.settings.text_pad_bottom_mobile > text_pad_y_m
+        assign text_pad_y_m = section.settings.text_pad_bottom_mobile
+      endif
+    elsif section.settings.text_pad_top_mobile != blank
+      assign text_pad_y_m = section.settings.text_pad_top_mobile
+    elsif section.settings.text_pad_bottom_mobile != blank
+      assign text_pad_y_m = section.settings.text_pad_bottom_mobile
+    else
+      assign text_pad_y_m = 80
+    endif
   endif
+  assign text_pad_m = text_pad_y_m
+  assign text_pad_bottom_m = text_pad_y_m
   assign text_pad_x_m = section.settings.text_pad_x_mobile | default: 20
   assign section_gap = 32
   if section.settings.section_gap == 0 or section.settings.section_gap != blank
@@ -139,17 +165,6 @@
   if template.name == 'product'
     assign section_gap_m = 0
   endif
-  # GLOBAL PDP text-pad LOCKED 2026-09-10 (Coperni QA → sitewide):
-  # 96 / 96 phone. TE overrides only for intentional exceptions.
-  assign text_pad_m = 96
-  if section.settings.text_pad_top_mobile != blank
-    assign text_pad_m = section.settings.text_pad_top_mobile
-  endif
-  assign text_pad_bottom_m = text_pad_m
-  if section.settings.text_pad_bottom_mobile != blank
-    assign text_pad_bottom_m = section.settings.text_pad_bottom_mobile
-  endif
-
   assign image_scale_ratio = image_scale | times: 1.0 | divided_by: 100.0
 
   assign title_size = section.settings.title_size | default: 'default'
@@ -324,6 +339,7 @@
     {% endif %}
   {% endcapture %}
   <div class="split-text align-editorial{% if content_style == 'quote' %} split-text--quote{% endif %}{% if content_style == 'stats' %} split-text--stats{% endif %}{% if content_style == 'statement' %} split-text--statement{% endif %}" style="background: {{ panel_bg }};">
+    <div class="split-text__stack">
     {% if content_style == 'quote' %}
       {% if section.settings.eyebrow != blank %}
         {% assign quote_heading_class = 'split-text__title ' | append: heading_class %}
@@ -342,7 +358,7 @@
             <h2 class="{{ quote_heading_class }}" style="margin:0 0 20px;">{{ section.settings.eyebrow }}</h2>
         {% endcase %}
       {% endif %}
-      {{ split_trust }}
+      {%- if show_trust_stars -%}{{ split_trust }}{%- endif -%}
       {% if section.settings.title != blank %}
         <p class="split-quote__text">“{{ section.settings.title | strip | remove: '"' | remove: '“' | remove: '”' }}”</p>
       {% endif %}
@@ -364,7 +380,7 @@
       {% if section.settings.eyebrow != blank %}
         <p class="split-text__eyebrow type-label">{{ section.settings.eyebrow }}</p>
       {% endif %}
-      {{ split_trust }}
+      {%- if show_trust_stars -%}{{ split_trust }}{%- endif -%}
       <div class="split-stats">
         {% assign has_stat_blocks = false %}
         {% for block in section.blocks %}
@@ -410,7 +426,7 @@
       {% if section.settings.eyebrow != blank %}
         <p class="split-text__eyebrow type-label{% unless content_style == 'statement' %} eyebrow--accent{% endunless %}">{{ section.settings.eyebrow }}</p>
       {% endif %}
-      {{ split_trust }}
+      {%- if show_trust_stars -%}{{ split_trust }}{%- endif -%}
       {% if section.settings.title != blank %}
         {% liquid
           # Global heading system 2026-09-27: "statement" no longer swaps the heading class.
@@ -450,6 +466,7 @@
         >{{ section.settings.cta_text }}</a>
       {% endif %}
     {% endif %}
+    </div>
   </div>
 </section>
 
@@ -648,8 +665,9 @@
   #shopify-section-{{ section.id }} .split-text {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: flex-start;
+    box-sizing: border-box;
     padding: var(--ff-text-pad-top-d, 96px) var(--ff-side-padding, 64px) var(--ff-text-pad-bottom-d, 96px);
     background: var(--ff-panel-bg, {{ panel_bg }});
     overflow: hidden;
@@ -657,6 +675,28 @@
     clip-path: inset(0 round var(--ff-text-radius, 0px));
     -webkit-clip-path: inset(0 round var(--ff-text-radius, 0px));
     text-align: var(--align-editorial, left);
+  }
+  /* Desktop: fill grid row height; center the copy stack as one block (symmetric air). */
+  @media (min-width: 769px) {
+    #shopify-section-{{ section.id }} .split-text {
+      min-height: 100%;
+    }
+    #shopify-section-{{ section.id }} .split-text__stack {
+      margin-block: auto;
+    }
+  }
+  #shopify-section-{{ section.id }} .split-text__stack {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    margin-block: 0;
+  }
+  #shopify-section-{{ section.id }} .split-text__stack > :first-child {
+    margin-top: 0 !important;
+  }
+  #shopify-section-{{ section.id }} .split-text__stack > :last-child {
+    margin-bottom: 0 !important;
   }
   #shopify-section-{{ section.id }} .split-text__title {
     font-family: var(--font-family, 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif);
@@ -808,15 +848,17 @@
       padding: var(--ff-text-pad-top-m, 32px) var(--ff-text-pad-x-m, var(--section-padding-x-mobile, 20px)) var(--ff-text-pad-bottom-m, 32px);
     }
     {%- if mobile_text_height > 0 %}
-    /* Fixed phone text column: vertically center copy (desktop uses center already;
-       do not keep flex-start + asymmetric padT/padB which parks text at the top). */
+    /* Fixed phone text column: center the stack inside equal top/bottom pad. */
     #shopify-section-{{ section.id }} .split-text {
       min-height: {{ mobile_text_height }}px;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
       padding-top: {{ text_pad_m }}px;
       padding-bottom: {{ text_pad_m }}px;
+    }
+    #shopify-section-{{ section.id }} .split-text__stack {
+      margin-block: auto;
     }
     {%- endif %}
   }
@@ -1095,14 +1137,22 @@
     --ff-media-radius: {{ section.settings.media_radius | default: 0 }}px !important;
     --ff-text-radius: {{ section.settings.media_radius | default: 0 }}px !important;
     --ff-side-padding: {{ section.settings.side_padding }}px !important;
-    {%- if section.settings.text_pad_top != blank -%}
+    {%- if section.settings.text_pad_y != blank -%}
+    --ff-text-pad-top-d: {{ section.settings.text_pad_y }}px !important;
+    --ff-text-pad-bottom-d: {{ section.settings.text_pad_y }}px !important;
+    {%- elsif section.settings.text_pad_top != blank and section.settings.text_pad_bottom != blank -%}
+      {%- assign te_pad_d = section.settings.text_pad_top -%}
+      {%- if section.settings.text_pad_bottom > te_pad_d -%}{%- assign te_pad_d = section.settings.text_pad_bottom -%}{%- endif -%}
+    --ff-text-pad-top-d: {{ te_pad_d }}px !important;
+    --ff-text-pad-bottom-d: {{ te_pad_d }}px !important;
+    {%- elsif section.settings.text_pad_top != blank -%}
     --ff-text-pad-top-d: {{ section.settings.text_pad_top }}px !important;
-    {%- else -%}
-    --ff-text-pad-top-d: {{ section.settings.vertical_padding | default: 96 }}px !important;
-    {%- endif -%}
-    {%- if section.settings.text_pad_bottom != blank -%}
+    --ff-text-pad-bottom-d: {{ section.settings.text_pad_top }}px !important;
+    {%- elsif section.settings.text_pad_bottom != blank -%}
+    --ff-text-pad-top-d: {{ section.settings.text_pad_bottom }}px !important;
     --ff-text-pad-bottom-d: {{ section.settings.text_pad_bottom }}px !important;
     {%- else -%}
+    --ff-text-pad-top-d: {{ section.settings.vertical_padding | default: 96 }}px !important;
     --ff-text-pad-bottom-d: {{ section.settings.vertical_padding | default: 96 }}px !important;
     {%- endif -%}
     --ff-section-gap: {{ section.settings.section_gap | default: 32 }}px !important;
@@ -1111,8 +1161,24 @@
     {%- else %}
     --ff-section-gap-m: {{ section.settings.section_gap_mobile | default: 0 }}px !important;
     {%- endif %}
-    --ff-text-pad-top-m: {{ section.settings.text_pad_top_mobile | default: 96 }}px !important;
-    --ff-text-pad-bottom-m: {{ section.settings.text_pad_bottom_mobile | default: section.settings.text_pad_top_mobile | default: 96 }}px !important;
+    {%- if section.settings.text_pad_y_mobile != blank -%}
+    --ff-text-pad-top-m: {{ section.settings.text_pad_y_mobile }}px !important;
+    --ff-text-pad-bottom-m: {{ section.settings.text_pad_y_mobile }}px !important;
+    {%- elsif section.settings.text_pad_top_mobile != blank and section.settings.text_pad_bottom_mobile != blank -%}
+      {%- assign te_pad_m = section.settings.text_pad_top_mobile -%}
+      {%- if section.settings.text_pad_bottom_mobile > te_pad_m -%}{%- assign te_pad_m = section.settings.text_pad_bottom_mobile -%}{%- endif -%}
+    --ff-text-pad-top-m: {{ te_pad_m }}px !important;
+    --ff-text-pad-bottom-m: {{ te_pad_m }}px !important;
+    {%- elsif section.settings.text_pad_top_mobile != blank -%}
+    --ff-text-pad-top-m: {{ section.settings.text_pad_top_mobile }}px !important;
+    --ff-text-pad-bottom-m: {{ section.settings.text_pad_top_mobile }}px !important;
+    {%- elsif section.settings.text_pad_bottom_mobile != blank -%}
+    --ff-text-pad-top-m: {{ section.settings.text_pad_bottom_mobile }}px !important;
+    --ff-text-pad-bottom-m: {{ section.settings.text_pad_bottom_mobile }}px !important;
+    {%- else -%}
+    --ff-text-pad-top-m: 80px !important;
+    --ff-text-pad-bottom-m: 80px !important;
+    {%- endif -%}
     --ff-text-pad-x-m: {{ section.settings.text_pad_x_mobile | default: 20 }}px !important;
     {%- if section.settings.bg_style == 'white' -%}
     --ff-panel-bg: #ffffff !important;
@@ -1147,8 +1213,8 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding-top: {{ section.settings.text_pad_top_mobile | default: 96 }}px;
-      padding-bottom: {{ section.settings.text_pad_top_mobile | default: 96 }}px;
+      padding-top: {{ section.settings.text_pad_y_mobile | default: section.settings.text_pad_top_mobile | default: 80 }}px;
+      padding-bottom: {{ section.settings.text_pad_y_mobile | default: section.settings.text_pad_top_mobile | default: 80 }}px;
     }
   }
   {%- endif %}
@@ -1679,24 +1745,14 @@
     },
     {
       "type": "range",
-      "id": "text_pad_top",
-      "label": "Text pad top \u2014 desktop (default 96)",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom \u2014 desktop (default 96)",
       "min": 32,
       "max": 120,
       "step": 4,
       "unit": "px",
       "default": 96,
-      "info": "Older sections: falls back to legacy single desktop pad until re-saved."
-    },
-    {
-      "type": "range",
-      "id": "text_pad_bottom",
-      "label": "Text pad bottom \u2014 desktop (default 96)",
-      "min": 32,
-      "max": 120,
-      "step": 4,
-      "unit": "px",
-      "default": 96
+      "info": "Same value for top and bottom. Legacy separate top/bottom sliders still apply when this is unset."
     },
     {
       "type": "range",
@@ -1710,23 +1766,14 @@
     },
     {
       "type": "range",
-      "id": "text_pad_top_mobile",
-      "label": "Text pad top \u2014 phone (default 96)",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom \u2014 phone (default 80)",
       "min": 16,
       "max": 120,
       "step": 4,
       "unit": "px",
-      "default": 96
-    },
-    {
-      "type": "range",
-      "id": "text_pad_bottom_mobile",
-      "label": "Text pad bottom \u2014 phone (default 96)",
-      "min": 16,
-      "max": 120,
-      "step": 4,
-      "unit": "px",
-      "default": 96
+      "default": 80,
+      "info": "Same value for top and bottom. Legacy separate phone top/bottom still apply when this is unset."
     },
     {
       "type": "range",
@@ -2004,14 +2051,58 @@
     },
     {
       "type": "range",
+      "id": "text_pad_top",
+      "label": "Legacy: Text pad top \u2014 desktop",
+      "min": 32,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 96,
+      "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_bottom",
+      "label": "Legacy: Text pad bottom \u2014 desktop",
+      "min": 32,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 96,
+      "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_top_mobile",
+      "label": "Legacy: Text pad top \u2014 phone",
+      "min": 16,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 96,
+      "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_bottom_mobile",
+      "label": "Legacy: Text pad bottom \u2014 phone",
+      "min": 16,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 96,
+      "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "range",
       "id": "vertical_padding",
-      "label": "Legacy: Text pad \u2014 desktop",
+      "label": "Legacy: Text pad \u2014 desktop (single slider)",
       "min": 32,
       "max": 120,
       "step": 4,
       "unit": "px",
       "default": 88,
-      "info": "Desktop text column pad. Phone uses Text pad top/bottom \u2014 LOCKED 96/96.",
+      "info": "Used when unified desktop pad and legacy top/bottom are unset.",
       "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"
     }
   ],
