@@ -84,7 +84,7 @@
 
 <section
   class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} fullbleed-statement{% unless show_text %} fullbleed-statement--media-only{% endunless %}{% if phone_photo %} fullbleed-statement--phone-photo{% endif %}{% if media_fit == 'contain' %} fullbleed-statement--contain{% endif %}{% if image_fit_mobile == 'contain' %} fullbleed-statement--fit-m-contain{% endif %}{% if fb_match_ratio != blank %} fullbleed-statement--m-match{% endif %}"
-  style="{% render 'section-inset-vars' %}{% render 'unified-text-pads-vars', y_d: 80, side_d: 40, y_m: 80, x_m: 20 %} 
+  style="{% render 'section-inset-vars' %} 
     --fb-media-radius: {{ media_radius }}px;
     --fb-height-desktop: {{ height_desktop }}vh;
     --fb-height-mobile: {{ fb_height_mobile_css }};
@@ -315,7 +315,7 @@
     position: relative;
     z-index: 2;
     text-align: center;
-    padding: var(--utp-y-d, 80px) var(--utp-side-d, 40px);
+    padding: 80px 40px;
     max-width: 720px;
   }
   #shopify-section-{{ section.id }} .fullbleed-statement__eyebrow {
@@ -389,7 +389,7 @@
     #shopify-section-{{ section.id }} .fullbleed-statement__video {
       object-fit: var(--fb-video-fit-mobile, var(--fb-fit-mobile, cover));
     }
-    #shopify-section-{{ section.id }} .fullbleed-statement__content { padding: var(--utp-y-m, 80px) var(--utp-x-m, 20px); }
+    #shopify-section-{{ section.id }} .fullbleed-statement__content { padding: 56px 16px; }
     /* Contain stays inside the Mobile height box. Do not zero height — slider must work. */
     #shopify-section-{{ section.id }} .fullbleed-statement--fit-m-contain .fullbleed-statement__bg img,
     #shopify-section-{{ section.id }} .fullbleed-statement--fit-m-contain .fullbleed-statement__video {
@@ -476,7 +476,58 @@
   video_selector: 'video.fullbleed-statement__video, .fullbleed-statement__bg video'
 %}
 
-{% render 'unified-text-pads-te-style', selector: '.fullbleed-statement__content', y_d: 80, side_d: 40, y_m: 80, x_m: 20 %}
+{%- liquid
+  assign y_d = 80
+  assign side_d = 40
+  assign y_m = 56
+  assign x_m = 16
+  assign emit_y_d = false
+  if section.settings.text_pad_y != blank and section.settings.text_pad_y != y_d
+    assign emit_y_d = true
+  endif
+  assign emit_side_d = false
+  if section.settings.side_padding != blank and section.settings.side_padding != side_d
+    assign emit_side_d = true
+  endif
+  assign emit_y_m = false
+  if section.settings.text_pad_y_mobile != blank and section.settings.text_pad_y_mobile != y_m
+    assign emit_y_m = true
+  endif
+  assign emit_x_m = false
+  if section.settings.text_pad_x_mobile != blank and section.settings.text_pad_x_mobile != x_m
+    assign emit_x_m = true
+  endif
+-%}
+{%- if emit_y_d or emit_side_d or emit_y_m or emit_x_m -%}
+{% style %}
+  {%- if emit_y_d or emit_side_d -%}
+  #shopify-section-{{ section.id }} .fullbleed-statement__content {
+    {%- if emit_y_d -%}
+    padding-top: {{ section.settings.text_pad_y }}px;
+    padding-bottom: {{ section.settings.text_pad_y }}px;
+    {%- endif -%}
+    {%- if emit_side_d -%}
+    padding-left: {{ section.settings.side_padding }}px;
+    padding-right: {{ section.settings.side_padding }}px;
+    {%- endif -%}
+  }
+  {%- endif -%}
+  {%- if emit_y_m or emit_x_m -%}
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .fullbleed-statement__content {
+      {%- if emit_y_m -%}
+      padding-top: {{ section.settings.text_pad_y_mobile }}px;
+      padding-bottom: {{ section.settings.text_pad_y_mobile }}px;
+      {%- endif -%}
+      {%- if emit_x_m -%}
+      padding-left: {{ section.settings.text_pad_x_mobile }}px;
+      padding-right: {{ section.settings.text_pad_x_mobile }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+{% endstyle %}
+{%- endif -%}
 
 {% schema %}
 {
@@ -1101,9 +1152,9 @@
       "type": "range",
       "id": "text_pad_y",
       "label": "Text pad top & bottom — desktop (default 80)",
-      "min": 8,
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 80
     },
@@ -1111,31 +1162,31 @@
       "type": "range",
       "id": "side_padding",
       "label": "Text pad left & right — desktop (default 40)",
-      "min": 8,
+      "min": 0,
       "max": 96,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 40
     },
     {
       "type": "range",
       "id": "text_pad_y_mobile",
-      "label": "Text pad top & bottom — phone (default 80)",
-      "min": 8,
+      "label": "Text pad top & bottom — phone (default 56)",
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
-      "default": 80
+      "default": 56
     },
     {
       "type": "range",
       "id": "text_pad_x_mobile",
-      "label": "Text pad left & right — phone (default 20)",
-      "min": 8,
+      "label": "Text pad left & right — phone (default 16)",
+      "min": 0,
       "max": 48,
-      "step": 1,
+      "step": 2,
       "unit": "px",
-      "default": 20
+      "default": 16
     },
     {
       "type": "header",
