@@ -17,7 +17,7 @@
   class="pdp-features"
   {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | handleize }}"{% endif %}
   aria-label="{{ section.settings.aria_label | default: 'Product features' | escape }}"
-  style="{% if body_size != 'default' %}--pf-body-size: {{ body_size }}px;{% endif %}--pf-pad-top: {{ pad_top }}px;--pf-pad-bottom: {{ pad_bottom }}px;--pf-pad-top-m: {{ pad_top_mobile }}px;--pf-pad-bottom-m: {{ pad_bottom_mobile }}px;{% if section.settings.bg_color != blank %} background: {{ section.settings.bg_color }};{% endif %}"
+  style="{% render 'unified-text-pads-vars', y_d: 32, side_d: 40, y_m: 24, x_m: 20, legacy_y_d: section.settings.pad_top, legacy_y_m: section.settings.pad_top_mobile %}{% if body_size != 'default' %}--pf-body-size: {{ body_size }}px;{% endif %}--pf-pad-top: {{ pad_top }}px;--pf-pad-bottom: {{ pad_bottom }}px;--pf-pad-top-m: {{ pad_top_mobile }}px;--pf-pad-bottom-m: {{ pad_bottom_mobile }}px;{% if section.settings.bg_color != blank %} background: {{ section.settings.bg_color }};{% endif %}"
 >
   <div class="pdp-features__inner">
     <header class="pdp-features__header">
@@ -228,6 +228,8 @@
   }
 </style>
 
+{% render 'unified-text-pads-te-style', selector: '.pdp-features', y_d: 32, side_d: 40, y_m: 24, x_m: 20 %}
+
 {% schema %}
 {
   "name": "PDP Features",
@@ -311,7 +313,7 @@
       "unit": "px",
       "label": "Padding top — desktop",
       "default": 32
-    },
+    , "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}" },
     {
       "type": "range",
       "id": "pad_bottom",
@@ -331,7 +333,7 @@
       "unit": "px",
       "label": "Padding top — phone",
       "default": 24
-    },
+    , "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}" },
     {
       "type": "range",
       "id": "pad_bottom_mobile",
@@ -381,6 +383,16 @@
       ]
     }
   ],
+
+    { "type": "header", "content": "Layout — text padding" },
+    { "type": "range", "id": "text_pad_y", "label": "Text pad top & bottom — desktop (default 96)", "min": 32, "max": 120, "step": 4, "unit": "px", "default": 96 },
+    { "type": "range", "id": "side_padding", "label": "Text pad left & right — desktop (default 64)", "min": 16, "max": 96, "step": 4, "unit": "px", "default": 64 },
+    { "type": "range", "id": "text_pad_y_mobile", "label": "Text pad top & bottom — phone (default 80)", "min": 16, "max": 120, "step": 4, "unit": "px", "default": 80 },
+    { "type": "range", "id": "text_pad_x_mobile", "label": "Text pad left & right — phone (default 20)", "min": 12, "max": 48, "step": 4, "unit": "px", "default": 20 },
+    { "type": "header", "content": "Legacy (hidden — do not edit)" },
+    { "type": "paragraph", "content": "Preserves stored values on Theme Editor save." },
+    { "type": "range", "id": "pad_top", "label": "Legacy: pad_top", "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}" },
+    { "type": "range", "id": "pad_top_mobile", "label": "Legacy: pad_top_mobile", "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}" },
   "presets": [{
     "name": "PDP Features",
     "blocks": [
