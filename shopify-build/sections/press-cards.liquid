@@ -20,7 +20,7 @@
   id="press-cards-{{ section.id }}"
   class="press-cards section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %}"
   style="
-    {% render 'section-inset-vars' %}
+    {% render 'section-inset-vars' %}{% render 'unified-text-pads-vars', y_d: 48, side_d: 40, y_m: 32, x_m: 20, legacy_y_d: section.settings.padding_y, legacy_side_d: section.settings.padding_x %}
     --pc-bg: {{ bg }};
     --pc-cols: {{ cols }};
     --pc-gap: {{ gap }}px;
@@ -363,7 +363,7 @@
   }
   @media (max-width: 749px) {
     #shopify-section-{{ section.id }} .press-cards {
-      padding: 32px 20px;
+      padding: var(--utp-y-d, 48px) var(--utp-side-d, 40px);
     }
     #shopify-section-{{ section.id }} .press-cards__grid {
       grid-template-columns: repeat(var(--pc-cols-mobile, 1), minmax(0, 1fr));
@@ -400,6 +400,8 @@
   root_class: 'press-cards',
   video_selector: 'video.press-cards__video:not(.press-cards__video--deferred)'
 %}
+
+{% render 'unified-text-pads-te-style', selector: '.press-cards', y_d: 48, side_d: 40, y_m: 32, x_m: 20 %}
 
 {% schema %}
 {
@@ -468,7 +470,7 @@
       "step": 4,
       "unit": "px",
       "default": 48
-    },
+    , "visible_if": "{{ section.settings.title == '__legacy_hidden__' }}" },
     {
       "type": "range",
       "id": "padding_x",
@@ -478,7 +480,7 @@
       "step": 4,
       "unit": "px",
       "default": 40
-    },
+    , "visible_if": "{{ section.settings.title == '__legacy_hidden__' }}" },
     {
       "type": "select",
       "id": "media_ratio",
@@ -567,6 +569,16 @@
       ]
     }
   ],
+
+    { "type": "header", "content": "Layout — text padding" },
+    { "type": "range", "id": "text_pad_y", "label": "Text pad top & bottom — desktop (default 96)", "min": 32, "max": 120, "step": 4, "unit": "px", "default": 96 },
+    { "type": "range", "id": "side_padding", "label": "Text pad left & right — desktop (default 64)", "min": 16, "max": 96, "step": 4, "unit": "px", "default": 64 },
+    { "type": "range", "id": "text_pad_y_mobile", "label": "Text pad top & bottom — phone (default 80)", "min": 16, "max": 120, "step": 4, "unit": "px", "default": 80 },
+    { "type": "range", "id": "text_pad_x_mobile", "label": "Text pad left & right — phone (default 20)", "min": 12, "max": 48, "step": 4, "unit": "px", "default": 20 },
+    { "type": "header", "content": "Legacy (hidden — do not edit)" },
+    { "type": "paragraph", "content": "Preserves stored values on Theme Editor save." },
+    { "type": "range", "id": "padding_y", "label": "Legacy: padding_y", "visible_if": "{{ section.settings.title == '__legacy_hidden__' }}" },
+    { "type": "range", "id": "padding_x", "label": "Legacy: padding_x", "visible_if": "{{ section.settings.title == '__legacy_hidden__' }}" },
   "presets": [
     {
       "name": "Press cards",
