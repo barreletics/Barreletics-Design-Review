@@ -342,7 +342,7 @@
 {%- liquid
   assign y_d = 28
   assign side_d = 32
-  assign y_m = 28
+  assign y_m = 20
   assign x_m = 20
   assign emit_y_d = false
   if section.settings.text_pad_y != blank and section.settings.text_pad_y != y_d
@@ -364,15 +364,17 @@
 {%- if emit_y_d or emit_side_d or emit_y_m or emit_x_m -%}
 {% style %}
   {%- if emit_y_d or emit_side_d -%}
-  #shopify-section-{{ section.id }} .coperni-story__note {
-    {%- if emit_y_d -%}
-    padding-top: {{ section.settings.text_pad_y }}px;
-    padding-bottom: {{ section.settings.text_pad_y }}px;
-    {%- endif -%}
-    {%- if emit_side_d -%}
-    padding-left: {{ section.settings.side_padding }}px;
-    padding-right: {{ section.settings.side_padding }}px;
-    {%- endif -%}
+  @media (min-width: 769px) {
+    #shopify-section-{{ section.id }} .coperni-story__note {
+      {%- if emit_y_d -%}
+      padding-top: {{ section.settings.text_pad_y }}px;
+      padding-bottom: {{ section.settings.text_pad_y }}px;
+      {%- endif -%}
+      {%- if emit_side_d -%}
+      padding-left: {{ section.settings.side_padding }}px;
+      padding-right: {{ section.settings.side_padding }}px;
+      {%- endif -%}
+    }
   }
   {%- endif -%}
   {%- if emit_y_m or emit_x_m -%}
@@ -594,12 +596,12 @@
     {
       "type": "range",
       "id": "text_pad_y_mobile",
-      "label": "Text pad top & bottom — phone (default 28)",
+      "label": "Text pad top & bottom — phone (default 20)",
       "min": 0,
       "max": 120,
       "step": 2,
       "unit": "px",
-      "default": 28
+      "default": 20
     },
     {
       "type": "range",

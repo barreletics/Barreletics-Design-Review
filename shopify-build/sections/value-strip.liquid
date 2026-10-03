@@ -126,15 +126,17 @@
 {%- if emit_y_d or emit_side_d or emit_y_m or emit_x_m -%}
 {% style %}
   {%- if emit_y_d or emit_side_d -%}
-  #shopify-section-{{ section.id }} .value-strip-section {
-    {%- if emit_y_d -%}
-    padding-top: {{ section.settings.text_pad_y }}px;
-    padding-bottom: {{ section.settings.text_pad_y }}px;
-    {%- endif -%}
-    {%- if emit_side_d -%}
-    padding-left: {{ section.settings.side_padding }}px;
-    padding-right: {{ section.settings.side_padding }}px;
-    {%- endif -%}
+  @media (min-width: 769px) {
+    #shopify-section-{{ section.id }} .value-strip-section {
+      {%- if emit_y_d -%}
+      padding-top: {{ section.settings.text_pad_y }}px;
+      padding-bottom: {{ section.settings.text_pad_y }}px;
+      {%- endif -%}
+      {%- if emit_side_d -%}
+      padding-left: {{ section.settings.side_padding }}px;
+      padding-right: {{ section.settings.side_padding }}px;
+      {%- endif -%}
+    }
   }
   {%- endif -%}
   {%- if emit_y_m or emit_x_m -%}
