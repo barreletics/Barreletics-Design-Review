@@ -35,6 +35,14 @@
   endif
   assign image_unframed = section.settings.image_unframed
   assign image_pos = section.settings.image_crop | default: 'center center'
+  assign pad_top = section.settings.pad_top | default: 0
+  assign pad_bottom = section.settings.pad_bottom | default: 0
+  assign utp_y_def = 0
+  assign utp_style = ''
+  assign u_y = section.settings.text_pad_y | default: utp_y_def
+  if u_y != utp_y_def
+    assign utp_style = utp_style | append: '--utp-y-d:' | append: u_y | append: 'px;'
+  endif
   assign sm_bg = '#faf8f6'
   if template.suffix == 'in-studio-template' or template.suffix == 'open-sole'
     assign sm_bg = '#ffffff'
@@ -44,7 +52,7 @@
 <section
   class="sock-math sock-math--{{ layout }}{% if image_unframed %} sock-math--unframed{% endif %}"
   aria-label="{{ section.settings.aria_label | default: 'One pair' | escape }}"
-  style="{% if body_size != 'default' %}--sm-body-size: {{ body_size }}px;{% endif %}{% render 'unified-text-pads-vars', y_d: 96, side_d: 40, y_m: 80, x_m: 20, legacy_y_d: section.settings.pad_top %}--sm-pos: {{ image_pos }};--sm-frame: {{ image_frame }}px;--sm-frame-m: {{ sm_frame_m_css }};--sm-bg: {{ sm_bg }};"
+  style="{% if body_size != 'default' %}--sm-body-size: {{ body_size }}px;{% endif %}{{ utp_style }}--sm-pos: {{ image_pos }};--sm-frame: {{ image_frame }}px;--sm-frame-m: {{ sm_frame_m_css }};--sm-pad-top: {{ pad_top }}px;--sm-pad-bottom: {{ pad_bottom }}px;--sm-bg: {{ sm_bg }};"
 >
   {% if layout == 'editorial' %}
     <div class="sock-math__split">
@@ -172,11 +180,11 @@
   {%- endif %}
   .sock-math--compact {
     background: var(--sm-bg, #faf8f6);
-    padding: 0 0 var(--section-padding-y);
+    padding: 0 0 var(--utp-y-d, var(--section-padding-y));
   }
   .sock-math--editorial {
     background: var(--sm-bg, #faf8f6);
-    padding: var(--utp-y-d, 0) 0 var(--utp-y-d, 0);
+    padding: var(--utp-y-d, var(--sm-pad-top, 0)) 0 var(--utp-y-d, var(--sm-pad-bottom, 0));
   }
   .sock-math--editorial .sock-math__split {
     max-width: 1200px;
@@ -542,7 +550,19 @@
   {% endif %}
 </style>
 
-{% render 'unified-text-pads-te-style', selector: '.sock-math', y_d: 96, side_d: 40, y_m: 80, x_m: 20, legacy_y_d: section.settings.pad_top %}
+{% style %}
+  {%- liquid
+    assign te_y = 0
+    assign u_y = section.settings.text_pad_y | default: te_y
+  -%}
+  {%- if u_y != te_y -%}
+  #shopify-section-{{ section.id }} .sock-math--editorial,
+  #shopify-section-{{ section.id }} .sock-math--compact {
+    padding-top: {{ u_y }}px;
+    padding-bottom: {{ u_y }}px;
+  }
+  {%- endif -%}
+{% endstyle %}
 
 {% schema %}
 {
@@ -720,43 +740,54 @@
     },
     {
       "type": "range",
-      "id": "text_pad_y",
-      "label": "Text pad top & bottom — desktop (default 96)",
-      "min": 8,
-      "max": 120,
-      "step": 1,
+      "id": "pad_bottom",
+      "label": "Legacy: Padding bottom",
+      "min": 0,
+      "max": 96,
+      "step": 4,
       "unit": "px",
-      "default": 96
+      "default": 0,
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 0)",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 0
     },
     {
       "type": "range",
       "id": "side_padding",
-      "label": "Text pad left & right — desktop (default 40)",
-      "min": 8,
+      "label": "Text pad left & right — desktop (default 0 — copy uses 40px)",
+      "min": 0,
       "max": 96,
-      "step": 1,
+      "step": 2,
       "unit": "px",
-      "default": 40
+      "default": 0
     },
     {
       "type": "range",
       "id": "text_pad_y_mobile",
-      "label": "Text pad top & bottom — phone (default 80)",
-      "min": 8,
+      "label": "Text pad top & bottom — phone (default 0)",
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
-      "default": 80
+      "default": 0
     },
     {
       "type": "range",
       "id": "text_pad_x_mobile",
-      "label": "Text pad left & right — phone (default 20)",
-      "min": 8,
+      "label": "Text pad left & right — phone (default 0 — compact uses 16px)",
+      "min": 0,
       "max": 48,
-      "step": 1,
+      "step": 2,
       "unit": "px",
-      "default": 20
+      "default": 0
     },
     { "type": "text", "id": "theirs_label", "label": "Their column label", "default": "Grip Socks" },
     { "type": "text", "id": "their_price", "label": "Their price", "default": "$112–144" },

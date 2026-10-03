@@ -45,7 +45,31 @@
   if img_zoom < 100
     assign img_zoom = 100
   endif
-  assign media_h = section.settings.media_height | default: 480
+  assign media_h = section.settings.media_height
+  if media_h == blank
+    assign media_h = 480
+  endif
+  assign text_spacing_mobile = section.settings.text_spacing_mobile | default: 36
+  assign utp_y_m_def = 36
+  assign utp_x_m_def = 20
+  assign utp_style = ''
+  assign u_y_m = section.settings.text_pad_y_mobile | default: utp_y_m_def
+  if u_y_m != utp_y_m_def
+    assign utp_style = utp_style | append: '--utp-y-m:' | append: u_y_m | append: 'px;'
+  endif
+  assign u_x_m = section.settings.text_pad_x_mobile | default: utp_x_m_def
+  if u_x_m != utp_x_m_def
+    assign utp_style = utp_style | append: '--utp-x-m:' | append: u_x_m | append: 'px;'
+  endif
+  assign utp_y_d_def = 56
+  assign u_y = section.settings.text_pad_y | default: utp_y_d_def
+  if u_y != utp_y_d_def
+    assign utp_style = utp_style | append: '--utp-y-d:' | append: u_y | append: 'px;'
+  endif
+  assign u_side = section.settings.side_padding | default: 40
+  if u_side != 40
+    assign utp_style = utp_style | append: '--utp-side-d:' | append: u_side | append: 'px;'
+  endif
   assign layout_class = 'coll-hero'
   if has_media
     assign layout_class = 'coll-hero coll-hero--split'
@@ -57,7 +81,7 @@
   {{ section.shopify_attributes }}
   data-media-fill="{{ media_fill }}"
   aria-label="{{ section.settings.aria_label | default: 'Collection hero' | escape }}"
-  style="{% render 'unified-text-pads-vars', y_d: 56, side_d: 40, y_m: 36, x_m: 20, legacy_y_m: section.settings.text_spacing_mobile %}--ch-text: {{ text_pct }}fr; --ch-media: {{ media_pct }}fr; --ch-zoom: {{ img_zoom | times: 0.01 }}; --ch-media-h: {{ media_h }}px;"
+  style="{{ utp_style }}--ch-text: {{ text_pct }}fr; --ch-media: {{ media_pct }}fr; --ch-zoom: {{ img_zoom | times: 0.01 }}; --ch-media-h: {{ media_h }}px;"
 >
   <div class="coll-hero__copy">
     {% if show_trust and section.settings.trust_text != blank %}
@@ -229,7 +253,7 @@
   }
   #shopify-section-{{ section.id }} .coll-hero,
   #shopify-section-{{ section.id }}.coll-hero {
-    padding: var(--space-13, 72px) var(--section-padding-x, 40px) var(--space-9, 40px);
+    padding: var(--utp-y-d, var(--space-13, 72px)) var(--utp-side-d, var(--section-padding-x, 40px)) var(--space-9, 40px);
     max-width: var(--max-width, 1200px);
     margin: 0 auto;
   }
@@ -240,7 +264,7 @@
     grid-template-columns: var(--ch-text, 52fr) var(--ch-media, 48fr);
     gap: 40px;
     align-items: center;
-    padding: 56px 40px 40px;
+    padding: var(--utp-y-d, 56px) var(--utp-side-d, 40px) 40px;
   }
   /* Bleed hero → next section: no extra margin — following section's section_gap owns the gutter (one system). */
   #shopify-section-{{ section.id }}:has([data-media-fill="bleed"]) {
@@ -461,7 +485,7 @@
 
   @media (max-width: 768px) {
     #shopify-section-{{ section.id }} .coll-hero {
-      padding: var(--utp-y-m, 36px) var(--utp-x-m, 20px);
+      padding: var(--utp-y-m, {{ text_spacing_mobile }}px) var(--utp-x-m, 20px);
     }
     #shopify-section-{{ section.id }} .coll-hero--split {
       grid-template-columns: 1fr;
@@ -471,7 +495,7 @@
       gap: 0;
     }
     #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="bleed"] .coll-hero__copy {
-      padding: var(--utp-y-m, 36px) var(--utp-x-m, 20px);
+      padding: var(--utp-y-m, {{ text_spacing_mobile }}px) var(--utp-x-m, 20px);
       overflow: visible;
     }
     {%- if qa_frame -%}
@@ -622,8 +646,46 @@
   video_selector: 'video.coll-hero__video, .coll-hero__media video'
 %}
 
-{% render 'unified-text-pads-te-style', selector: '.coll-hero--split', y_d: 56, side_d: 40, y_m: 36, x_m: 20, legacy_y_m: section.settings.text_spacing_mobile %}
-{% render 'unified-text-pads-te-style', selector: '.coll-hero:not(.coll-hero--split)', y_d: 56, side_d: 40, y_m: 36, x_m: 20, legacy_y_m: section.settings.text_spacing_mobile %}
+{% style %}
+  {%- liquid
+    assign te_y_d = 56
+    assign te_side_d = 40
+    assign te_y_m = 36
+    assign te_x_m = 20
+    assign u_y = section.settings.text_pad_y | default: te_y_d
+    assign u_side = section.settings.side_padding | default: te_side_d
+    assign u_y_m = section.settings.text_pad_y_mobile | default: te_y_m
+    assign u_x_m = section.settings.text_pad_x_mobile | default: te_x_m
+  -%}
+  {%- if u_y != te_y_d or u_side != te_side_d -%}
+  #shopify-section-{{ section.id }} .coll-hero,
+  #shopify-section-{{ section.id }} .coll-hero--split {
+    {%- if u_y != te_y_d -%}
+    padding-top: {{ u_y }}px;
+    padding-bottom: {{ u_y }}px;
+    {%- endif -%}
+    {%- if u_side != te_side_d -%}
+    padding-left: {{ u_side }}px;
+    padding-right: {{ u_side }}px;
+    {%- endif -%}
+  }
+  {%- endif -%}
+  {%- if u_y_m != te_y_m or u_x_m != te_x_m -%}
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .coll-hero,
+    #shopify-section-{{ section.id }} .coll-hero--split[data-media-fill="bleed"] .coll-hero__copy {
+      {%- if u_y_m != te_y_m -%}
+      padding-top: {{ u_y_m }}px;
+      padding-bottom: {{ u_y_m }}px;
+      {%- endif -%}
+      {%- if u_x_m != te_x_m -%}
+      padding-left: {{ u_x_m }}px;
+      padding-right: {{ u_x_m }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+{% endstyle %}
 
 {% schema %}
 {
@@ -737,10 +799,10 @@
     {
       "type": "range",
       "id": "text_pad_y",
-      "label": "Text pad top & bottom — desktop (default 56)",
-      "min": 8,
+      "label": "Text pad top & bottom — desktop (default 56 split / 72 text-only top)",
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 56
     },
@@ -748,9 +810,9 @@
       "type": "range",
       "id": "side_padding",
       "label": "Text pad left & right — desktop (default 40)",
-      "min": 8,
+      "min": 0,
       "max": 96,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 40
     },
@@ -758,9 +820,9 @@
       "type": "range",
       "id": "text_pad_y_mobile",
       "label": "Text pad top & bottom — phone (default 36)",
-      "min": 8,
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 36
     },
@@ -768,9 +830,9 @@
       "type": "range",
       "id": "text_pad_x_mobile",
       "label": "Text pad left & right — phone (default 20)",
-      "min": 8,
+      "min": 0,
       "max": 48,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 20
     },
