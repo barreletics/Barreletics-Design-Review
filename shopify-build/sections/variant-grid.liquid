@@ -1159,17 +1159,25 @@
     assign u_side = section.settings.side_padding | default: te_side_d
     assign u_y_m = section.settings.text_pad_y_mobile | default: te_y_m
     assign u_x_m = section.settings.text_pad_x_mobile | default: te_x_m
+    assign page_open_pad = false
+    if template.name == 'collection' or section.settings.page_open_pad or section.index == 1 or section.index0 == 0 or template.suffix == 'best-grippy-socks'
+      assign page_open_pad = true
+    endif
   -%}
   {%- if u_y != te_y_d or u_side != te_side_d -%}
-  #shopify-section-{{ section.id }} .variants-section {
-    {%- if u_y != te_y_d -%}
-    padding-top: {{ u_y }}px;
-    padding-bottom: {{ u_y }}px;
-    {%- endif -%}
-    {%- if u_side != te_side_d -%}
-    padding-left: {{ u_side }}px;
-    padding-right: {{ u_side }}px;
-    {%- endif -%}
+  @media (min-width: 769px) {
+    #shopify-section-{{ section.id }} .variants-section {
+      {%- if u_y != te_y_d and page_open_pad == false -%}
+      padding-top: {{ u_y }}px;
+      {%- endif -%}
+      {%- if u_y != te_y_d -%}
+      padding-bottom: {{ u_y }}px;
+      {%- endif -%}
+      {%- if u_side != te_side_d -%}
+      padding-left: {{ u_side }}px;
+      padding-right: {{ u_side }}px;
+      {%- endif -%}
+    }
   }
   {%- endif -%}
   {%- if u_y_m != te_y_m or u_x_m != te_x_m -%}

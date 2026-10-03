@@ -38,10 +38,25 @@
   assign pad_top = section.settings.pad_top | default: 0
   assign pad_bottom = section.settings.pad_bottom | default: 0
   assign utp_y_def = 0
+  assign utp_side_def = 0
+  assign utp_y_m_def = 0
+  assign utp_x_m_def = 0
   assign utp_style = ''
   assign u_y = section.settings.text_pad_y | default: utp_y_def
   if u_y != utp_y_def
     assign utp_style = utp_style | append: '--utp-y-d:' | append: u_y | append: 'px;'
+  endif
+  assign u_side = section.settings.side_padding | default: utp_side_def
+  if u_side != utp_side_def
+    assign utp_style = utp_style | append: '--utp-side-d:' | append: u_side | append: 'px;'
+  endif
+  assign u_y_m = section.settings.text_pad_y_mobile | default: utp_y_m_def
+  if u_y_m != utp_y_m_def
+    assign utp_style = utp_style | append: '--utp-y-m:' | append: u_y_m | append: 'px;'
+  endif
+  assign u_x_m = section.settings.text_pad_x_mobile | default: utp_x_m_def
+  if u_x_m != utp_x_m_def
+    assign utp_style = utp_style | append: '--utp-x-m:' | append: u_x_m | append: 'px;'
   endif
   assign sm_bg = '#faf8f6'
   if template.suffix == 'in-studio-template' or template.suffix == 'open-sole'
@@ -180,7 +195,7 @@
   {%- endif %}
   .sock-math--compact {
     background: var(--sm-bg, #faf8f6);
-    padding: 0 0 var(--utp-y-d, var(--section-padding-y));
+    padding: var(--utp-y-d, 0) 0 var(--utp-y-d, var(--section-padding-y));
   }
   .sock-math--editorial {
     background: var(--sm-bg, #faf8f6);
@@ -195,7 +210,7 @@
     align-items: stretch;
   }
   .sock-math--editorial .sock-math__copy {
-    padding: 48px 40px;
+    padding: 48px var(--utp-side-d, 40px);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -363,7 +378,7 @@
   }
   .sock-math__header {
     text-align: center;
-    padding: var(--section-padding-y) 40px 32px;
+    padding: var(--section-padding-y) var(--utp-side-d, 40px) 32px;
   }
   .sock-math__headline {
     color: #1c1916;
@@ -391,7 +406,7 @@
   }
   .sock-math__sub {
     text-align: center;
-    padding: 0 40px;
+    padding: 0 var(--utp-side-d, 40px);
     font-size: var(--sm-body-size, 16px);
     font-weight: 400;
     color: #4a4a4a;
@@ -401,7 +416,7 @@
   .sock-math__inner {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 48px 40px 0;
+    padding: 48px var(--utp-side-d, 40px) 0;
   }
   .sock-math__quote {
     max-width: 600px;
@@ -493,13 +508,18 @@
   .sock-math__cta-wrap {
     text-align: center;
     margin-top: 40px;
-    padding: 0 40px;
+    padding: 0 var(--utp-side-d, 40px);
   }
   @media (max-width: 768px) {
-    .sock-math--compact { padding: 0 0 var(--section-padding-y-mobile); }
-    .sock-math__header { padding: var(--section-padding-y-mobile) 16px 24px; }
-    .sock-math__sub { padding: 0 16px; }
-    .sock-math__inner { padding: 32px 16px 0; }
+    .sock-math--compact {
+      padding: var(--utp-y-m, 0) 0 var(--utp-y-m, var(--section-padding-y-mobile));
+    }
+    .sock-math__header {
+      padding: var(--utp-y-m, var(--section-padding-y-mobile)) var(--utp-x-m, 16px) 24px;
+    }
+    .sock-math__sub { padding: 0 var(--utp-x-m, 16px); }
+    .sock-math__inner { padding: 32px var(--utp-x-m, 16px) 0; }
+    .sock-math__cta-wrap { padding: 0 var(--utp-x-m, 16px); }
     .sock-math__grid { grid-template-columns: 1fr; }
     .sock-math__col--theirs { border-right: none; border-bottom: 1px solid #d6cfc0; }
     .sock-math__col { padding: 28px 24px; }
@@ -508,7 +528,7 @@
       background: var(--sm-bg, #faf8f6);
     }
     .sock-math--editorial .sock-math__split { grid-template-columns: 1fr; }
-    .sock-math--editorial .sock-math__copy { padding: 48px 20px 48px; }
+    .sock-math--editorial .sock-math__copy { padding: 48px var(--utp-x-m, 20px) 48px; }
     .sock-math--editorial .sock-math__end { margin: 16px 0 0; }
     .sock-math--editorial .sock-math__visual,
     .sock-math--editorial .sock-math__visual img {
@@ -553,13 +573,69 @@
 {% style %}
   {%- liquid
     assign te_y = 0
+    assign te_side = 0
+    assign te_y_m = 0
+    assign te_x_m = 0
     assign u_y = section.settings.text_pad_y | default: te_y
+    assign u_side = section.settings.side_padding | default: te_side
+    assign u_y_m = section.settings.text_pad_y_mobile | default: te_y_m
+    assign u_x_m = section.settings.text_pad_x_mobile | default: te_x_m
   -%}
-  {%- if u_y != te_y -%}
-  #shopify-section-{{ section.id }} .sock-math--editorial,
-  #shopify-section-{{ section.id }} .sock-math--compact {
-    padding-top: {{ u_y }}px;
-    padding-bottom: {{ u_y }}px;
+  {%- if u_y != te_y or u_side != te_side -%}
+  @media (min-width: 769px) {
+    {%- if u_y != te_y -%}
+    #shopify-section-{{ section.id }} .sock-math--compact {
+      padding-top: {{ u_y }}px;
+      padding-bottom: {{ u_y }}px;
+    }
+    #shopify-section-{{ section.id }} .sock-math--editorial {
+      padding-top: {{ u_y }}px;
+      padding-bottom: {{ u_y }}px;
+    }
+    {%- endif -%}
+    {%- if u_side != te_side -%}
+    #shopify-section-{{ section.id }} .sock-math__header,
+    #shopify-section-{{ section.id }} .sock-math__sub,
+    #shopify-section-{{ section.id }} .sock-math__inner,
+    #shopify-section-{{ section.id }} .sock-math__cta-wrap {
+      padding-left: {{ u_side }}px;
+      padding-right: {{ u_side }}px;
+    }
+    #shopify-section-{{ section.id }} .sock-math--editorial .sock-math__copy {
+      padding-left: {{ u_side }}px;
+      padding-right: {{ u_side }}px;
+    }
+    {%- endif -%}
+  }
+  {%- endif -%}
+  {%- if u_y_m != te_y_m or u_x_m != te_x_m -%}
+  @media (max-width: 768px) {
+    {%- if u_y_m != te_y_m -%}
+    #shopify-section-{{ section.id }} .sock-math--compact {
+      padding-top: {{ u_y_m }}px;
+      padding-bottom: {{ u_y_m }}px;
+    }
+    #shopify-section-{{ section.id }} .sock-math--editorial {
+      padding-top: {{ u_y_m }}px;
+      padding-bottom: {{ u_y_m }}px;
+    }
+    #shopify-section-{{ section.id }} .sock-math__header {
+      padding-top: {{ u_y_m }}px;
+    }
+    {%- endif -%}
+    {%- if u_x_m != te_x_m -%}
+    #shopify-section-{{ section.id }} .sock-math__header,
+    #shopify-section-{{ section.id }} .sock-math__sub,
+    #shopify-section-{{ section.id }} .sock-math__inner,
+    #shopify-section-{{ section.id }} .sock-math__cta-wrap {
+      padding-left: {{ u_x_m }}px;
+      padding-right: {{ u_x_m }}px;
+    }
+    #shopify-section-{{ section.id }} .sock-math--editorial .sock-math__copy {
+      padding-left: {{ u_x_m }}px;
+      padding-right: {{ u_x_m }}px;
+    }
+    {%- endif -%}
   }
   {%- endif -%}
 {% endstyle %}
@@ -788,6 +864,18 @@
       "step": 2,
       "unit": "px",
       "default": 0
+    },
+    { "type": "header", "content": "Section — Sock math — compact" },
+    {
+      "type": "textarea",
+      "id": "quote",
+      "label": "Quote (optional)",
+      "info": "Leave blank — compact One pair. Done. has no review quote (v19 clean). Reviews live in the reviews section."
+    },
+    {
+      "type": "text",
+      "id": "quote_cite",
+      "label": "Quote cite (optional)"
     },
     { "type": "text", "id": "theirs_label", "label": "Their column label", "default": "Grip Socks" },
     { "type": "text", "id": "their_price", "label": "Their price", "default": "$112–144" },

@@ -324,15 +324,17 @@
     assign u_x_m = section.settings.text_pad_x_mobile | default: te_x_m
   -%}
   {%- if u_y != te_y_d or u_side != te_side_d -%}
-  #shopify-section-{{ section.id }} .main-cart {
-    {%- if u_y != te_y_d -%}
-    padding-top: {{ u_y }}px;
-    padding-bottom: {{ u_y }}px;
-    {%- endif -%}
-    {%- if u_side != te_side_d -%}
-    padding-left: {{ u_side }}px;
-    padding-right: {{ u_side }}px;
-    {%- endif -%}
+  @media (min-width: 769px) {
+    #shopify-section-{{ section.id }} .main-cart {
+      {%- if u_y != te_y_d -%}
+      padding-top: {{ u_y }}px;
+      padding-bottom: {{ u_y }}px;
+      {%- endif -%}
+      {%- if u_side != te_side_d -%}
+      padding-left: {{ u_side }}px;
+      padding-right: {{ u_side }}px;
+      {%- endif -%}
+    }
   }
   {%- endif -%}
   {%- if u_y_m != te_y_m or u_x_m != te_x_m -%}
