@@ -15,7 +15,7 @@
   endif
 %}
 
-<section class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} discipline-film{% if section.settings.headline == blank %} discipline-film--tags-only{% endif %}{% if section.settings.hide_tags_mobile %} discipline-film--hide-tags-m{% endif %}" aria-label="{{ section.settings.aria_label | default: 'Built for every studio discipline' | escape }}" style="--df-bg: {{ section.settings.bg_color | default: '#faf8f6' }}; --df-pad-y: {{ pad_y }}px; --df-pad-y-m: {{ pad_y_m }}px; --df-space-below-m: {{ space_below_m }}px; {% render 'section-inset-vars' %}">
+<section class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} discipline-film{% if section.settings.headline == blank %} discipline-film--tags-only{% endif %}{% if section.settings.hide_tags_mobile %} discipline-film--hide-tags-m{% endif %}" aria-label="{{ section.settings.aria_label | default: 'Built for every studio discipline' | escape }}" style="--df-bg: {{ section.settings.bg_color | default: '#faf8f6' }}; --df-pad-y: {{ pad_y }}px; --df-pad-y-m: {{ pad_y_m }}px; --df-space-below-m: {{ space_below_m }}px; {% render 'section-inset-vars' %}{% render 'unified-text-pads-vars', y_d: 64, side_d: 40, y_m: 48, x_m: 16, legacy_y_d: section.settings.pad_y, legacy_y_m: section.settings.pad_y_mobile %}">
   <div class="discipline-film__inner">
     {% if section.settings.headline != blank %}
       <p class="discipline-film__line h2-display">{{ section.settings.headline | newline_to_br }}</p>
@@ -149,6 +149,8 @@
   }
 </style>
 
+{% render 'unified-text-pads-te-style', selector: '.discipline-film__inner', y_d: 64, side_d: 40, y_m: 48, x_m: 16 %}
+
 {% schema %}
 {
   "name": "Disciplines",
@@ -224,7 +226,7 @@
       "step": 4,
       "unit": "px",
       "default": 64
-    },
+    , "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}" },
     {
       "type": "range",
       "id": "pad_y_mobile",
@@ -235,7 +237,7 @@
       "unit": "px",
       "default": 64,
       "info": "Closed model = 32. Soft cream #faf8f6 (sitewide.lock) — same as sock-era. NEVER #f5f2ec darker cream. NEVER invent white unless Andrew says."
-    },
+    , "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}" },
     {
       "type": "checkbox",
       "id": "hide_tags_mobile",
@@ -270,6 +272,16 @@
       "label": "Aria label",
       "default": "Built for every studio discipline"
     },
+
+    { "type": "header", "content": "Layout — text padding" },
+    { "type": "range", "id": "text_pad_y", "label": "Text pad top & bottom — desktop (default 96)", "min": 32, "max": 120, "step": 4, "unit": "px", "default": 96 },
+    { "type": "range", "id": "side_padding", "label": "Text pad left & right — desktop (default 64)", "min": 16, "max": 96, "step": 4, "unit": "px", "default": 64 },
+    { "type": "range", "id": "text_pad_y_mobile", "label": "Text pad top & bottom — phone (default 80)", "min": 16, "max": 120, "step": 4, "unit": "px", "default": 80 },
+    { "type": "range", "id": "text_pad_x_mobile", "label": "Text pad left & right — phone (default 20)", "min": 12, "max": 48, "step": 4, "unit": "px", "default": 20 },
+    { "type": "header", "content": "Legacy (hidden — do not edit)" },
+    { "type": "paragraph", "content": "Preserves stored values on Theme Editor save." },
+    { "type": "range", "id": "pad_y", "label": "Legacy: pad_y", "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}" },
+    { "type": "range", "id": "pad_y_mobile", "label": "Legacy: pad_y_mobile", "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}" },
     {
       "type": "header",
       "content": "Shared — Section frame"
