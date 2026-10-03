@@ -12,8 +12,6 @@
 {%- assign nav_link_size = section.settings.nav_link_size | default: 'default' -%}
 {%- assign nav_gap = section.settings.nav_gap | default: 30 -%}
 {%- assign action_link_size = section.settings.action_link_size | default: '14' -%}
-{%- assign header_pad_y = section.settings.header_pad_y | default: 12 -%}
-{%- assign header_pad_x = section.settings.header_pad_x | default: 40 -%}
 {%- assign header_max_width = section.settings.header_max_width | default: 1320 -%}
 {%- assign action_gap = section.settings.action_gap | default: 18 -%}
 {%- assign nav_weight = section.settings.nav_weight | default: '500' -%}
@@ -42,7 +40,7 @@
   data-site-header
   data-nav-distribute="{{ nav_distribute }}"
   role="banner"
-  style="
+  style="{% render 'unified-text-pads-vars', y_d: 12, side_d: 40, y_m: 12, x_m: 16, legacy_y_d: section.settings.header_pad_y, legacy_side_d: section.settings.header_pad_x %}
     --header-logo-height: {{ logo_height }}px;
     --header-logo-height-mobile: {{ logo_height_mobile }}px;
     --header-nav-gap: {{ nav_gap }}px;
@@ -248,6 +246,8 @@
   </div>
 </header>
 
+{% render 'unified-text-pads-te-style', selector: '.site-header', y_d: 12, side_d: 40, y_m: 12, x_m: 16 %}
+
 {% schema %}
 {
   "name": "Header",
@@ -442,7 +442,7 @@
       "step": 1,
       "unit": "px",
       "default": 12
-    },
+    , "visible_if": "{{ section.settings.title == '__legacy_hidden__' }}" },
     {
       "type": "range",
       "id": "header_pad_x",
@@ -453,7 +453,7 @@
       "unit": "px",
       "default": 56,
       "info": "Pulls logo + utilities in from the viewport edge."
-    },
+    , "visible_if": "{{ section.settings.title == '__legacy_hidden__' }}" },
     {
       "type": "header",
       "content": "Section — Header"
