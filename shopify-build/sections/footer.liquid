@@ -30,7 +30,7 @@
 <footer
   class="site-footer site-footer--a-plus"
   role="contentinfo"
-  style="{% if trust_title_size != 'default' %}--ft-trust-title-size: {{ trust_title_size }}px;{% endif %}{% if trust_body_size != 'default' %}--ft-trust-body-size: {{ trust_body_size }}px;{% endif %}{% if join_title_size != 'default' %}--ft-join-title-size: {{ join_title_size }}px;{% endif %}{% if join_body_size != 'default' %}--ft-join-body-size: {{ join_body_size }}px;{% endif %}"
+  style="{% render 'unified-text-pads-vars', y_d: 48, side_d: 40, y_m: 40, x_m: 20 %}{% if trust_title_size != 'default' %}--ft-trust-title-size: {{ trust_title_size }}px;{% endif %}{% if trust_body_size != 'default' %}--ft-trust-body-size: {{ trust_body_size }}px;{% endif %}{% if join_title_size != 'default' %}--ft-join-title-size: {{ join_title_size }}px;{% endif %}{% if join_body_size != 'default' %}--ft-join-body-size: {{ join_body_size }}px;{% endif %}"
   {{ section.shopify_attributes }}
 >
 
@@ -309,7 +309,23 @@
   </div>
 </footer>
 
-{% render 'unified-text-pads-te-style', selector: '.section-frame', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}
+<style>
+  #shopify-section-{{ section.id }} .footer-studio-trust {
+    padding: var(--utp-y-d, 48px) var(--utp-side-d, 40px);
+  }
+  #shopify-section-{{ section.id }} .site-footer__body {
+    padding: var(--utp-y-d, 64px) var(--utp-side-d, 40px) 40px;
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .footer-studio-trust,
+    #shopify-section-{{ section.id }} .site-footer__body {
+      padding-left: var(--utp-x-m, 20px);
+      padding-right: var(--utp-x-m, 20px);
+    }
+  }
+</style>
+
+{% render 'unified-text-pads-te-style', selector: '.footer-studio-trust', y_d: 48, side_d: 40, y_m: 40, x_m: 20 %}
 
 {% schema %}
 {
