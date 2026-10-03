@@ -34,7 +34,7 @@
   id="shopify-section-{{ section.id }}"
   {{ section.shopify_attributes }}
   aria-label="{{ section.settings.aria_label | default: 'Barreletics in motion' | escape }}"
- style="{% render 'unified-text-pads-vars', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}">
+ style="{% render 'unified-text-pads-vars', y_d: 0, side_d: 0, y_m: 0, x_m: 0 %}">
   {% if section.settings.image != blank %}
     {% render 'media-img',
        image: section.settings.image,
@@ -68,12 +68,14 @@
     min-height: 320px;
     overflow: hidden;
     background: #1c1916;
+    padding: var(--utp-y-d, 0px) var(--utp-side-d, 0px);
   }
   #shopify-section-{{ section.id }} .page-about-hero__img {
     object-position: {{ pah_focal_css }};
   }
   @media (max-width: 768px) {
     #shopify-section-{{ section.id }} .page-about-hero {
+      padding: var(--utp-y-m, 0px) var(--utp-x-m, 0px);
       {%- case pah_ar_m -%}
         {%- when 'square' -%}
         height: auto; aspect-ratio: 1 / 1;
@@ -94,11 +96,11 @@
   }
 </style>
 
-{% render 'unified-text-pads-te-style', selector: '.section-frame', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}
+{% render 'unified-text-pads-te-style', selector: '.page-about-hero', y_d: 0, side_d: 0, y_m: 0, x_m: 0 %}
 
 {% schema %}
 {
-  "name": "About — Hero",
+  "name": "About \u2014 Hero",
   "settings": [
     {
       "type": "image_picker",
@@ -138,7 +140,7 @@
       "id": "media_position",
       "label": "Focal",
       "default": "center",
-      "info": "For Cover — Top keeps heads in frame.",
+      "info": "For Cover \u2014 Top keeps heads in frame.",
       "options": [
         {
           "value": "center",
@@ -177,7 +179,7 @@
       "options": [
         {
           "value": "natural",
-          "label": "Natural — Photo height"
+          "label": "Natural \u2014 Photo height"
         },
         {
           "value": "square",
@@ -219,52 +221,52 @@
     },
     {
       "type": "header",
-      "content": "Layout — text padding"
+      "content": "Layout \u2014 text padding"
     },
     {
       "type": "range",
       "id": "text_pad_y",
-      "label": "Text pad top & bottom — desktop (default 96)",
-      "min": 8,
+      "label": "Text pad top & bottom — desktop (default 0)",
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
-      "default": 96
+      "default": 0
     },
     {
       "type": "range",
       "id": "side_padding",
-      "label": "Text pad left & right — desktop (default 40)",
-      "min": 8,
+      "label": "Text pad left & right — desktop (default 0)",
+      "min": 0,
       "max": 96,
       "step": 1,
       "unit": "px",
-      "default": 40
+      "default": 0
     },
     {
       "type": "range",
       "id": "text_pad_y_mobile",
-      "label": "Text pad top & bottom — phone (default 80)",
-      "min": 8,
+      "label": "Text pad top & bottom — phone (default 0)",
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
-      "default": 80
+      "default": 0
     },
     {
       "type": "range",
       "id": "text_pad_x_mobile",
-      "label": "Text pad left & right — phone (default 20)",
-      "min": 8,
+      "label": "Text pad left & right — phone (default 0)",
+      "min": 0,
       "max": 48,
       "step": 1,
       "unit": "px",
-      "default": 20
+      "default": 0
     }
   ],
   "presets": [
     {
-      "name": "About — Hero"
+      "name": "About \u2014 Hero"
     }
   ]
 }
