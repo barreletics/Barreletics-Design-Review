@@ -544,13 +544,16 @@
   {% endif %}
 </style>
 
-{% render 'unified-text-pads-te-style', selector: '.section-frame', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}
+{% render 'unified-text-pads-te-style', selector: '.section-frame', y_d: 96, side_d: 40, y_m: 80, x_m: 20 , legacy_y_d: section.settings.pad_top %}
 
 {% schema %}
 {
   "name": "Sock Math",
   "settings": [
-    { "type": "header", "content": "Shared — Content" },
+    {
+      "type": "header",
+      "content": "Shared \u2014 Content"
+    },
     {
       "type": "text",
       "id": "headline",
@@ -587,14 +590,38 @@
       "id": "title_size",
       "label": "Title size",
       "options": [
-        { "value": "default", "label": "Legacy fallback" },
-        { "value": "32", "label": "32px" },
-        { "value": "36", "label": "36px" },
-        { "value": "40", "label": "40px" },
-        { "value": "44", "label": "44px" },
-        { "value": "48", "label": "48px" },
-        { "value": "52", "label": "52px" },
-        { "value": "56", "label": "56px" }
+        {
+          "value": "default",
+          "label": "Legacy fallback"
+        },
+        {
+          "value": "32",
+          "label": "32px"
+        },
+        {
+          "value": "36",
+          "label": "36px"
+        },
+        {
+          "value": "40",
+          "label": "40px"
+        },
+        {
+          "value": "44",
+          "label": "44px"
+        },
+        {
+          "value": "48",
+          "label": "48px"
+        },
+        {
+          "value": "52",
+          "label": "52px"
+        },
+        {
+          "value": "56",
+          "label": "56px"
+        }
       ],
       "default": "default",
       "info": "Locked by global type system (2026-09-27). This setting no longer changes the heading."
@@ -604,11 +631,26 @@
       "id": "title_weight",
       "label": "Title weight",
       "options": [
-        { "value": "default", "label": "Default" },
-        { "value": "400", "label": "400" },
-        { "value": "500", "label": "500" },
-        { "value": "600", "label": "600" },
-        { "value": "700", "label": "700" }
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "400",
+          "label": "400"
+        },
+        {
+          "value": "500",
+          "label": "500"
+        },
+        {
+          "value": "600",
+          "label": "600"
+        },
+        {
+          "value": "700",
+          "label": "700"
+        }
       ],
       "default": "400",
       "info": "Locked by global type system (2026-09-27). This setting no longer changes the heading."
@@ -624,38 +666,93 @@
       "id": "body_size",
       "label": "Body size",
       "options": [
-        { "value": "default", "label": "Default / Type OS" },
-        { "value": "14", "label": "14px" },
-        { "value": "15", "label": "15px" },
-        { "value": "16", "label": "16px" },
-        { "value": "17", "label": "17px" },
-        { "value": "18", "label": "18px" }
+        {
+          "value": "default",
+          "label": "Default / Type OS"
+        },
+        {
+          "value": "14",
+          "label": "14px"
+        },
+        {
+          "value": "15",
+          "label": "15px"
+        },
+        {
+          "value": "16",
+          "label": "16px"
+        },
+        {
+          "value": "17",
+          "label": "17px"
+        },
+        {
+          "value": "18",
+          "label": "18px"
+        }
       ],
       "default": "default"
     },
-    { "type": "text", "id": "cta_text", "label": "CTA label", "info": "Leave blank to hide (v18 compact has no CTA)." },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA label",
+      "info": "Leave blank to hide (v18 compact has no CTA)."
+    },
     {
       "type": "select",
       "id": "cta_link_target",
       "label": "CTA link",
       "options": [
-        { "value": "custom", "label": "Custom URL…" },
-        { "value": "#variants", "label": "#variants — Shop styles" },
-        { "value": "#reviews", "label": "#reviews" },
-        { "value": "#guarantee", "label": "#guarantee" }
+        {
+          "value": "custom",
+          "label": "Custom URL\u2026"
+        },
+        {
+          "value": "#variants",
+          "label": "#variants \u2014 Shop styles"
+        },
+        {
+          "value": "#reviews",
+          "label": "#reviews"
+        },
+        {
+          "value": "#guarantee",
+          "label": "#guarantee"
+        }
       ],
       "default": "#variants"
     },
-    { "type": "text", "id": "cta_url", "label": "Custom CTA URL" },
-    { "type": "checkbox", "id": "show_trust_strip", "label": "Show star trust line", "default": false, "info": "Open Sole One pair only. Off everywhere else." },
-    { "type": "text", "id": "trust_text", "label": "Trust line" },
+    {
+      "type": "text",
+      "id": "cta_url",
+      "label": "Custom CTA URL"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trust_strip",
+      "label": "Show star trust line",
+      "default": false,
+      "info": "Open Sole One pair only. Off everywhere else."
+    },
+    {
+      "type": "text",
+      "id": "trust_text",
+      "label": "Trust line"
+    },
     {
       "type": "select",
       "id": "layout",
       "label": "Layout",
       "options": [
-        { "value": "compact", "label": "Compact — 2-col compare" },
-        { "value": "editorial", "label": "Editorial — mock L" }
+        {
+          "value": "compact",
+          "label": "Compact \u2014 2-col compare"
+        },
+        {
+          "value": "editorial",
+          "label": "Editorial \u2014 mock L"
+        }
       ],
       "default": "compact"
     },
@@ -665,19 +762,44 @@
       "label": "Show prices (compact)",
       "default": true
     },
-    { "type": "header", "content": "Editorial photo" },
-    { "type": "image_picker", "id": "image", "label": "Photo" },
-    { "type": "text", "id": "image_url", "label": "Photo URL fallback", "info": "Only if Photo is empty." },
-    { "type": "text", "id": "image_alt", "label": "Photo alt" },
+    {
+      "type": "header",
+      "content": "Editorial photo"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Photo"
+    },
+    {
+      "type": "text",
+      "id": "image_url",
+      "label": "Photo URL fallback",
+      "info": "Only if Photo is empty."
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Photo alt"
+    },
     {
       "type": "select",
       "id": "image_crop",
       "label": "Show",
       "info": "This box is a short crop. Top / center / bottom is the useful move.",
       "options": [
-        { "value": "center top", "label": "Top of photo" },
-        { "value": "center center", "label": "Center" },
-        { "value": "center bottom", "label": "Bottom of photo" }
+        {
+          "value": "center top",
+          "label": "Top of photo"
+        },
+        {
+          "value": "center center",
+          "label": "Center"
+        },
+        {
+          "value": "center bottom",
+          "label": "Bottom of photo"
+        }
       ],
       "default": "center center"
     },
@@ -688,7 +810,7 @@
       "max": 720,
       "step": 20,
       "unit": "px",
-      "label": "Photo height — desktop",
+      "label": "Photo height \u2014 desktop",
       "default": 480
     },
     {
@@ -698,7 +820,7 @@
       "max": 700,
       "step": 20,
       "unit": "px",
-      "label": "Photo height — phone",
+      "label": "Photo height \u2014 phone",
       "info": "0 = use Theme settings > Split images > Phone split-image height.",
       "default": 360
     },
@@ -718,8 +840,9 @@
       "step": 4,
       "unit": "px",
       "default": 0,
-      "info": "Open PDP match is 80 (same as 50/50s). Closed stays 0."
-    , "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}" },
+      "info": "Open PDP match is 80 (same as 50/50s). Closed stays 0.",
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
+    },
     {
       "type": "range",
       "id": "pad_bottom",
@@ -731,44 +854,146 @@
       "default": 0,
       "info": "Open PDP match is 80 (same as 50/50s). Closed stays 0."
     },
-    { "type": "header", "content": "Section — Sock math — compact" },
+    {
+      "type": "header",
+      "content": "Section \u2014 Sock math \u2014 compact"
+    },
     {
       "type": "textarea",
       "id": "quote",
       "label": "Quote (optional)",
-      "info": "Leave blank — compact One pair. Done. has no review quote (v19 clean). Reviews live in the reviews section."
+      "info": "Leave blank \u2014 compact One pair. Done. has no review quote (v19 clean). Reviews live in the reviews section."
     },
     {
       "type": "text",
       "id": "quote_cite",
       "label": "Quote cite (optional)"
     },
-    { "type": "text", "id": "theirs_label", "label": "Their column label", "default": "Grip Socks" },
-    { "type": "text", "id": "their_price", "label": "Their price", "default": "$112–144" },
-    { "type": "text", "id": "theirs_1", "label": "Their point 1", "default": "Replace every 6–8 weeks" },
-    { "type": "text", "id": "theirs_2", "label": "Their point 2", "default": "Grip degrades with washing" },
-    { "type": "text", "id": "theirs_3", "label": "Their point 3", "default": "6–8 pairs per year minimum" },
-    { "type": "text", "id": "ours_label", "label": "Our column label", "default": "Barreletics" },
-    { "type": "text", "id": "our_price", "label": "Our price", "default": "$74" },
-    { "type": "text", "id": "ours_1", "label": "Our point 1", "default": "1,000 classes. Year four." },
-    { "type": "text", "id": "ours_2", "label": "Our point 2", "default": "Grip never degrades" },
-    { "type": "text", "id": "ours_3", "label": "Our point 3", "default": "One pair, every class" },
+    {
+      "type": "text",
+      "id": "theirs_label",
+      "label": "Their column label",
+      "default": "Grip Socks"
+    },
+    {
+      "type": "text",
+      "id": "their_price",
+      "label": "Their price",
+      "default": "$112\u2013144"
+    },
+    {
+      "type": "text",
+      "id": "theirs_1",
+      "label": "Their point 1",
+      "default": "Replace every 6\u20138 weeks"
+    },
+    {
+      "type": "text",
+      "id": "theirs_2",
+      "label": "Their point 2",
+      "default": "Grip degrades with washing"
+    },
+    {
+      "type": "text",
+      "id": "theirs_3",
+      "label": "Their point 3",
+      "default": "6\u20138 pairs per year minimum"
+    },
+    {
+      "type": "text",
+      "id": "ours_label",
+      "label": "Our column label",
+      "default": "Barreletics"
+    },
+    {
+      "type": "text",
+      "id": "our_price",
+      "label": "Our price",
+      "default": "$74"
+    },
+    {
+      "type": "text",
+      "id": "ours_1",
+      "label": "Our point 1",
+      "default": "1,000 classes. Year four."
+    },
+    {
+      "type": "text",
+      "id": "ours_2",
+      "label": "Our point 2",
+      "default": "Grip never degrades"
+    },
+    {
+      "type": "text",
+      "id": "ours_3",
+      "label": "Our point 3",
+      "default": "One pair, every class"
+    },
     {
       "type": "text",
       "id": "aria_label",
       "label": "Section aria-label",
       "default": "Cost comparison"
+    },
+    {
+      "type": "header",
+      "content": "Layout \u2014 text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 96)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 40)",
+      "min": 8,
+      "max": 96,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 80)",
+      "min": 8,
+      "max": 120,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 20)",
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Legacy (hidden \u2014 do not edit)"
+    },
+    {
+      "type": "paragraph",
+      "content": "Preserves stored values on Theme Editor save."
+    },
+    {
+      "type": "range",
+      "id": "pad_top",
+      "label": "Legacy: pad_top",
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
     }
   ],
-
-    { "type": "header", "content": "Layout — text padding" },
-    { "type": "range", "id": "text_pad_y", "label": "Text pad top & bottom — desktop (default 96)", "min": 32, "max": 120, "step": 4, "unit": "px", "default": 96 },
-    { "type": "range", "id": "side_padding", "label": "Text pad left & right — desktop (default 64)", "min": 16, "max": 96, "step": 4, "unit": "px", "default": 64 },
-    { "type": "range", "id": "text_pad_y_mobile", "label": "Text pad top & bottom — phone (default 80)", "min": 16, "max": 120, "step": 4, "unit": "px", "default": 80 },
-    { "type": "range", "id": "text_pad_x_mobile", "label": "Text pad left & right — phone (default 20)", "min": 12, "max": 48, "step": 4, "unit": "px", "default": 20 },
-    { "type": "header", "content": "Legacy (hidden — do not edit)" },
-    { "type": "paragraph", "content": "Preserves stored values on Theme Editor save." },
-    { "type": "range", "id": "pad_top", "label": "Legacy: pad_top", "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}" },
-  "presets": [{ "name": "Sock Math" }]
+  "presets": [
+    {
+      "name": "Sock Math"
+    }
+  ]
 }
 {% endschema %}
