@@ -50,9 +50,20 @@
 
     <div class="product-card__content">
       <h3 class="product-card__name">{{ product.title }}</h3>
+      {%- liquid
+        # Apparel check mirrors pdp-buy-box (tag "Apparel", yoga pants, T-shirts, V-neck tops)
+        assign _pc_tags = product.tags | join: ',' | downcase
+        assign _pc_type = product.type | downcase
+        assign _pc_handle = product.handle | downcase
+        assign _pc_suffix = product.template_suffix | downcase
+        assign _pc_apparel = false
+        if _pc_tags contains 'apparel' or _pc_suffix == 'yoga-pants' or _pc_suffix == 'v-neck-tops' or _pc_type contains 'yoga pant' or _pc_type contains 't-shirt' or _pc_type contains 'v-neck' or _pc_handle contains 'yoga-pant' or _pc_handle contains 'yoga-t-shirt'
+          assign _pc_apparel = true
+        endif
+      -%}
       {% if product.metafields.custom.subtitle != blank %}
         <p class="product-card__meta">{{ product.metafields.custom.subtitle }}</p>
-      {% else %}
+      {% elsif _pc_apparel == false %}
         <p class="product-card__meta">One pair replaces 6–8 grip socks</p>
       {% endif %}
       <p class="product-card__price">{{ product.price | money }}</p>
@@ -67,7 +78,7 @@
       <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" />
       <input type="hidden" name="quantity" value="1" />
       <button type="submit" class="product-card__add" aria-label="Add {{ product.title }} to cart">
-        Quick Add — $74
+        Quick Add — {{ product.selected_or_first_available_variant.price | money }}
       </button>
     </form>
   {% endif %}

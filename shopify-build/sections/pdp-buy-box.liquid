@@ -220,8 +220,45 @@
  if hero_image == blank
  assign hero_image = product.featured_image
  endif
+ assign utp_y_d_def = 40
+ assign utp_side_d_def = 40
+ assign utp_y_m_def = 32
+ assign utp_x_m_def = 16
+ assign pdp_pt = 40
+ assign pdp_pb = 48
+ assign pdp_pl = 'var(--section-padding-x)'
+ assign pdp_pr = 'var(--space-14)'
+ assign u_y = section.settings.text_pad_y | default: utp_y_d_def
+ if u_y != utp_y_d_def
+ assign pdp_pt = u_y
+ assign pdp_pb = u_y
+ endif
+ assign u_side = section.settings.side_padding | default: utp_side_d_def
+ if u_side != utp_side_d_def
+ assign pdp_pl = u_side | append: 'px'
+ assign pdp_pr = u_side | append: 'px'
+ endif
+ assign pdp_pt_m = 'var(--space-8)'
+ assign pdp_pb_m = '0'
+ assign pdp_px_m = 'var(--section-padding-x-mobile)'
+ assign u_y_m = section.settings.text_pad_y_mobile | default: utp_y_m_def
+ if u_y_m != utp_y_m_def
+ assign pdp_pt_m = u_y_m | append: 'px'
+ assign pdp_pb_m = u_y_m | append: 'px'
+ endif
+ assign u_x_m = section.settings.text_pad_x_mobile | default: utp_x_m_def
+ if u_x_m != utp_x_m_def
+ assign pdp_px_m = u_x_m | append: 'px'
+ endif
+ assign pdp_pad_style = '--pdp-pt: ' | append: pdp_pt | append: 'px;--pdp-pb: ' | append: pdp_pb | append: 'px;--pdp-pl: ' | append: pdp_pl | append: ';--pdp-pr: ' | append: pdp_pr | append: ';--pdp-pt-m: ' | append: pdp_pt_m | append: ';--pdp-pb-m: ' | append: pdp_pb_m | append: ';--pdp-px-m: ' | append: pdp_px_m | append: ';'
+ if u_y != utp_y_d_def
+ assign pdp_pad_style = pdp_pad_style | append: '--pdp-pt-1024:' | append: u_y | append: 'px;--pdp-pb-1024:' | append: u_y | append: 'px;'
+ endif
+ if u_side != utp_side_d_def
+ assign pdp_pad_style = pdp_pad_style | append: '--pdp-px-1024:' | append: u_side | append: 'px;'
+ endif
 %}
-<section id="buy" class="pdp-hero" aria-label="Product details" data-buy-box style="{% render 'unified-text-pads-vars', y_d: 40, side_d: 40, y_m: 32, x_m: 16 %}">
+<section id="buy" class="pdp-hero" aria-label="Product details" data-buy-box style="{{ pdp_pad_style }}">
  <div class="pdp-gallery">
  <div class="pdp-gallery__hero">
  {% if hero_image %}
@@ -682,7 +719,7 @@
  max-width: var(--max-width-hero);
  margin: 0 auto;
  /* v20c under v20d chrome — tighter top pad so ATC clears fold */
- padding: var(--utp-y-d, 40px) var(--utp-side-d, 40px) 48px;
+ padding: var(--pdp-pt) var(--pdp-pr) var(--pdp-pb) var(--pdp-pl);
  align-items: flex-start;
  }
 
@@ -1198,7 +1235,7 @@
  @media (max-width: 1024px) {
  .pdp-hero {
  gap: var(--space-9);
- padding: var(--utp-y-d, 40px) var(--utp-side-d, 40px);
+ padding: var(--pdp-pt-1024, var(--space-10)) var(--pdp-px-1024, var(--space-8)) var(--pdp-pb-1024, var(--space-10)) var(--pdp-px-1024, var(--space-8));
  }
  }
 
@@ -1206,7 +1243,7 @@
  .pdp-hero {
  grid-template-columns: minmax(0, 1fr);
  gap: var(--space-8);
- padding: var(--utp-y-m, 32px) var(--utp-x-m, 16px) 0;
+ padding: var(--pdp-pt-m) var(--pdp-px-m) var(--pdp-pb-m);
  min-width: 0;
  }
 
@@ -1312,7 +1349,46 @@
 </script>
 {{ 'cart.js' | asset_url | script_tag }}
 
-{% render 'unified-text-pads-te-style', selector: '.pdp-hero', y_d: 40, side_d: 40, y_m: 32, x_m: 16 %}
+{% style %}
+  {%- liquid
+    assign te_y_d = 40
+    assign te_side_d = 40
+    assign te_y_m = 32
+    assign te_x_m = 16
+    assign u_y = section.settings.text_pad_y | default: te_y_d
+    assign u_side = section.settings.side_padding | default: te_side_d
+    assign u_y_m = section.settings.text_pad_y_mobile | default: te_y_m
+    assign u_x_m = section.settings.text_pad_x_mobile | default: te_x_m
+  -%}
+  {%- if u_y != te_y_d or u_side != te_side_d -%}
+  @media (min-width: 1025px) {
+    #shopify-section-{{ section.id }} .pdp-hero {
+      {%- if u_y != te_y_d -%}
+      padding-top: {{ u_y }}px;
+      padding-bottom: {{ u_y }}px;
+      {%- endif -%}
+      {%- if u_side != te_side_d -%}
+      padding-left: {{ u_side }}px;
+      padding-right: {{ u_side }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+  {%- if u_y_m != te_y_m or u_x_m != te_x_m -%}
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .pdp-hero {
+      {%- if u_y_m != te_y_m -%}
+      padding-top: {{ u_y_m }}px;
+      padding-bottom: {{ u_y_m }}px;
+      {%- endif -%}
+      {%- if u_x_m != te_x_m -%}
+      padding-left: {{ u_x_m }}px;
+      padding-right: {{ u_x_m }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+{% endstyle %}
 
 {% schema %}
 {
@@ -1586,10 +1662,10 @@
     {
       "type": "range",
       "id": "text_pad_y",
-      "label": "Text pad top & bottom — desktop (default 40)",
-      "min": 8,
+      "label": "Text pad top & bottom — desktop (default 40 top / 48 bottom)",
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 40
     },
@@ -1597,9 +1673,9 @@
       "type": "range",
       "id": "side_padding",
       "label": "Text pad left & right — desktop (default 40)",
-      "min": 8,
+      "min": 0,
       "max": 96,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 40
     },
@@ -1607,9 +1683,9 @@
       "type": "range",
       "id": "text_pad_y_mobile",
       "label": "Text pad top & bottom — phone (default 32)",
-      "min": 8,
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 32
     },
@@ -1617,9 +1693,9 @@
       "type": "range",
       "id": "text_pad_x_mobile",
       "label": "Text pad left & right — phone (default 16)",
-      "min": 8,
+      "min": 0,
       "max": 48,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 16
     }
