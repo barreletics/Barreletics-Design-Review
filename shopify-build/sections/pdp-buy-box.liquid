@@ -42,6 +42,7 @@
  # Shoe vs apparel (2026-09-30): shoe-size subtext / soon-S / shoe size chart only on shoes.
  # Apparel (tag "Apparel", T-shirts, yoga pants) shows its own size values only — never shoe ranges.
  assign is_shoe = false
+ assign is_apparel = false
  if _cat_outdoor or _cat_open or _cat_oneoff
  assign is_shoe = true
  elsif _type_d contains 'shoe' or _type_d contains 'footwear' or _type_d contains 'sample' or _tags_d contains 'grippy shoe'
@@ -50,6 +51,7 @@
  assign is_shoe = true
  endif
  if _tags_d contains 'apparel' or _suffix_d == 'yoga-pants' or _suffix_d == 'v-neck-tops' or _type_d contains 'yoga pant' or _type_d contains 't-shirt' or _type_d contains 'v-neck' or _handle_d contains 'yoga-pant' or _handle_d contains 'yoga-t-shirt'
+ assign is_apparel = true
  assign is_shoe = false
  endif
  assign show_soon_s = false
@@ -674,7 +676,10 @@
  <p><a class="pdp-accordion__policy-link" href="/pages/help#warranty">View full warranty policy →</a></p>
  </div>
  </details>
+ {%- comment -%} Sock/shoe claims line — hidden on apparel only (is_apparel = existing apparel check above, 2026-10-04). {%- endcomment -%}
+ {% unless is_apparel %}
  <p class="pdp-buy__origin">Made in the USA · No latex · No silicone</p>
+ {% endunless %}
  </div>
  </div>
 </section>
