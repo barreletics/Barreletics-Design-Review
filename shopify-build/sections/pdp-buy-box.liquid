@@ -14,8 +14,8 @@
  assign payment_line = section.settings.payment_line | default: 'or 4 × $18.50'
  assign lede_line_1 = section.settings.lede_line_1 | default: 'Secure in every hold.'
  assign lede_line_2 = section.settings.lede_line_2 | default: 'No sliding. No resets.'
- assign short_desc = section.settings.short_description | default: 'The premium grip system that replaces traditional grip socks—built for reformer, barre, Pilates and Megaformer.'
- assign shipping_body = section.settings.shipping_accordion | default: 'Complimentary shipping on orders over $150. Orders ship within 1–2 business days. Standard delivery 3–5 business days; express 1–2 business days available at checkout.'
+ assign short_desc = section.settings.short_description | default: 'The premium grip system that replaces traditional grip socks, built for reformer, barre, Pilates and Megaformer.'
+ assign shipping_body = section.settings.shipping_accordion | default: 'Complimentary shipping on orders over $150. Orders ship within 1 to 2 business days. Standard delivery 3 to 5 business days; express 1 to 2 business days available at checkout.'
  assign returns_body = section.settings.returns_accordion | default: ''
  assign current_variant = product.selected_or_first_available_variant
  assign _title_d = product.title | downcase
@@ -42,6 +42,7 @@
  # Shoe vs apparel (2026-09-30): shoe-size subtext / soon-S / shoe size chart only on shoes.
  # Apparel (tag "Apparel", T-shirts, yoga pants) shows its own size values only — never shoe ranges.
  assign is_shoe = false
+ assign is_apparel = false
  if _cat_outdoor or _cat_open or _cat_oneoff
  assign is_shoe = true
  elsif _type_d contains 'shoe' or _type_d contains 'footwear' or _type_d contains 'sample' or _tags_d contains 'grippy shoe'
@@ -50,6 +51,7 @@
  assign is_shoe = true
  endif
  if _tags_d contains 'apparel' or _suffix_d == 'yoga-pants' or _suffix_d == 'v-neck-tops' or _type_d contains 'yoga pant' or _type_d contains 't-shirt' or _type_d contains 'v-neck' or _handle_d contains 'yoga-pant' or _handle_d contains 'yoga-t-shirt'
+ assign is_apparel = true
  assign is_shoe = false
  endif
  assign show_soon_s = false
@@ -220,8 +222,45 @@
  if hero_image == blank
  assign hero_image = product.featured_image
  endif
+ assign utp_y_d_def = 40
+ assign utp_side_d_def = 40
+ assign utp_y_m_def = 32
+ assign utp_x_m_def = 16
+ assign pdp_pt = 40
+ assign pdp_pb = 48
+ assign pdp_pl = 'var(--section-padding-x)'
+ assign pdp_pr = 'var(--space-14)'
+ assign u_y = section.settings.text_pad_y | default: utp_y_d_def
+ if u_y != utp_y_d_def
+ assign pdp_pt = u_y
+ assign pdp_pb = u_y
+ endif
+ assign u_side = section.settings.side_padding | default: utp_side_d_def
+ if u_side != utp_side_d_def
+ assign pdp_pl = u_side | append: 'px'
+ assign pdp_pr = u_side | append: 'px'
+ endif
+ assign pdp_pt_m = 'var(--space-8)'
+ assign pdp_pb_m = '0'
+ assign pdp_px_m = 'var(--section-padding-x-mobile)'
+ assign u_y_m = section.settings.text_pad_y_mobile | default: utp_y_m_def
+ if u_y_m != utp_y_m_def
+ assign pdp_pt_m = u_y_m | append: 'px'
+ assign pdp_pb_m = u_y_m | append: 'px'
+ endif
+ assign u_x_m = section.settings.text_pad_x_mobile | default: utp_x_m_def
+ if u_x_m != utp_x_m_def
+ assign pdp_px_m = u_x_m | append: 'px'
+ endif
+ assign pdp_pad_style = '--pdp-pt: ' | append: pdp_pt | append: 'px;--pdp-pb: ' | append: pdp_pb | append: 'px;--pdp-pl: ' | append: pdp_pl | append: ';--pdp-pr: ' | append: pdp_pr | append: ';--pdp-pt-m: ' | append: pdp_pt_m | append: ';--pdp-pb-m: ' | append: pdp_pb_m | append: ';--pdp-px-m: ' | append: pdp_px_m | append: ';'
+ if u_y != utp_y_d_def
+ assign pdp_pad_style = pdp_pad_style | append: '--pdp-pt-1024:' | append: u_y | append: 'px;--pdp-pb-1024:' | append: u_y | append: 'px;'
+ endif
+ if u_side != utp_side_d_def
+ assign pdp_pad_style = pdp_pad_style | append: '--pdp-px-1024:' | append: u_side | append: 'px;'
+ endif
 %}
-<section id="buy" class="pdp-hero" aria-label="Product details" data-buy-box style="{% render 'unified-text-pads-vars', y_d: 40, side_d: 40, y_m: 32, x_m: 16 %}">
+<section id="buy" class="pdp-hero" aria-label="Product details" data-buy-box style="{{ pdp_pad_style }}">
  <div class="pdp-gallery">
  <div class="pdp-gallery__hero">
  {% if hero_image %}
@@ -467,8 +506,8 @@
  class="pdp-buy__size-btn is-soon"
  disabled
  aria-disabled="true"
- title="Small — coming soon"
- aria-label="Small — coming soon"
+ title="Small, coming soon"
+ aria-label="Small, coming soon"
  >S<span class="pdp-buy__size-range">Coming soon</span></button>
  {% endif %}
  {% for value in option.values %}
@@ -488,10 +527,10 @@
  {% endif %}
  {% elsif value_up == 'M' or value_up contains 'M (' or value_up contains 'M(' or value_up contains 'MEDIUM' or value_up contains 'W 5' %}
  {% assign size_letter = 'M' %}
- {% assign size_range = 'Women 5.5–7.5' %}
+ {% assign size_range = 'Women 5.5 to 7.5' %}
  {% elsif value_up == 'L' or value_up contains 'L (' or value_up contains 'L(' or value_up contains 'LARGE' or value_up contains 'W 8' or value_up contains 'W 7.5' %}
  {% assign size_letter = 'L' %}
- {% assign size_range = 'Women 7.5–11 · Men to 10.5' %}
+ {% assign size_range = 'Women 7.5 to 11 · Men to 10.5' %}
  {% else %}
  {% assign size_letter = value %}
  {% endif %}
@@ -553,7 +592,7 @@
  {% comment %} v19 trust split: under ATC is empty — value strip + accordion own guarantees {% endcomment %}
  {% if section.settings.show_trust_row %}
  <div class="pdp-buy__trust">
- <span><strong>✓</strong> Ships 1–2 days</span>
+ <span><strong>✓</strong> Ships 1 to 2 days</span>
  <span><strong>✓</strong> 30-day returns</span>
  <span><strong>✓</strong> 90-day warranty</span>
  <span><strong>✓</strong> Latex- & silicone-free</span>
@@ -610,7 +649,7 @@
  <details class="pdp-accordion" data-pdp-accordion>
  <summary class="pdp-accordion__trigger" aria-expanded="false">Care & how to wear <span>+</span></summary>
  <div class="pdp-accordion__body">
- <p><strong>How to put on:</strong> pull from the top of the foot — not the straps — to help extend their lifespan.</p>
+ <p><strong>How to put on:</strong> pull from the top of the foot, not the straps, to help extend their lifespan.</p>
  <p><strong>Cleaning:</strong> Hand wash with warm soapy water. That's it.</p>
  </div>
  </details>
@@ -630,14 +669,17 @@
  <summary class="pdp-accordion__trigger" aria-expanded="false">Shipping, returns &amp; 90-day warranty <span>+</span></summary>
  <div class="pdp-accordion__body">
  <p><strong>Shipping.</strong> {{ shipping_body | escape }}</p>
- <p><strong>Returns &amp; exchanges.</strong> 30 days. Try on indoors for fit only — like any shoe.</p>
+ <p><strong>Returns &amp; exchanges.</strong> 30 days. Try on indoors for fit only, like any shoe.</p>
  <p>Must be clean and like new.</p>
  <p><a class="pdp-accordion__policy-link" href="/pages/help#returns">View full returns policy →</a></p>
  <p><strong>90-day warranty.</strong> Backed against manufacturing defects for 90 days. Normal wear, accidents, and damage from use or improper care aren&rsquo;t covered.</p>
  <p><a class="pdp-accordion__policy-link" href="/pages/help#warranty">View full warranty policy →</a></p>
  </div>
  </details>
+ {%- comment -%} Sock/shoe claims line — hidden on apparel only (is_apparel = existing apparel check above, 2026-10-04). {%- endcomment -%}
+ {% unless is_apparel %}
  <p class="pdp-buy__origin">Made in the USA · No latex · No silicone</p>
+ {% endunless %}
  </div>
  </div>
 </section>
@@ -682,7 +724,7 @@
  max-width: var(--max-width-hero);
  margin: 0 auto;
  /* v20c under v20d chrome — tighter top pad so ATC clears fold */
- padding: var(--utp-y-d, 40px) var(--utp-side-d, 40px) 48px;
+ padding: var(--pdp-pt) var(--pdp-pr) var(--pdp-pb) var(--pdp-pl);
  align-items: flex-start;
  }
 
@@ -1198,7 +1240,7 @@
  @media (max-width: 1024px) {
  .pdp-hero {
  gap: var(--space-9);
- padding: var(--utp-y-d, 40px) var(--utp-side-d, 40px);
+ padding: var(--pdp-pt-1024, var(--space-10)) var(--pdp-px-1024, var(--space-8)) var(--pdp-pb-1024, var(--space-10)) var(--pdp-px-1024, var(--space-8));
  }
  }
 
@@ -1206,7 +1248,7 @@
  .pdp-hero {
  grid-template-columns: minmax(0, 1fr);
  gap: var(--space-8);
- padding: var(--utp-y-m, 32px) var(--utp-x-m, 16px) 0;
+ padding: var(--pdp-pt-m) var(--pdp-px-m) var(--pdp-pb-m);
  min-width: 0;
  }
 
@@ -1312,7 +1354,46 @@
 </script>
 {{ 'cart.js' | asset_url | script_tag }}
 
-{% render 'unified-text-pads-te-style', selector: '.pdp-hero', y_d: 40, side_d: 40, y_m: 32, x_m: 16 %}
+{% style %}
+  {%- liquid
+    assign te_y_d = 40
+    assign te_side_d = 40
+    assign te_y_m = 32
+    assign te_x_m = 16
+    assign u_y = section.settings.text_pad_y | default: te_y_d
+    assign u_side = section.settings.side_padding | default: te_side_d
+    assign u_y_m = section.settings.text_pad_y_mobile | default: te_y_m
+    assign u_x_m = section.settings.text_pad_x_mobile | default: te_x_m
+  -%}
+  {%- if u_y != te_y_d or u_side != te_side_d -%}
+  @media (min-width: 1025px) {
+    #shopify-section-{{ section.id }} .pdp-hero {
+      {%- if u_y != te_y_d -%}
+      padding-top: {{ u_y }}px;
+      padding-bottom: {{ u_y }}px;
+      {%- endif -%}
+      {%- if u_side != te_side_d -%}
+      padding-left: {{ u_side }}px;
+      padding-right: {{ u_side }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+  {%- if u_y_m != te_y_m or u_x_m != te_x_m -%}
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .pdp-hero {
+      {%- if u_y_m != te_y_m -%}
+      padding-top: {{ u_y_m }}px;
+      padding-bottom: {{ u_y_m }}px;
+      {%- endif -%}
+      {%- if u_x_m != te_x_m -%}
+      padding-left: {{ u_x_m }}px;
+      padding-right: {{ u_x_m }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+{% endstyle %}
 
 {% schema %}
 {
@@ -1342,7 +1423,7 @@
       "type": "textarea",
       "id": "short_description",
       "label": "Short description (above price)",
-      "default": "The premium grip system that replaces traditional grip socks—built for reformer, barre, Pilates and Megaformer.",
+      "default": "The premium grip system that replaces traditional grip socks, built for reformer, barre, Pilates and Megaformer.",
       "info": "Buy-column body under the lede ONLY. NEVER replace this with Admin product.description. Accordion copy = separate field below."
     },
     {
@@ -1573,7 +1654,7 @@
       "type": "textarea",
       "id": "shipping_accordion",
       "label": "Shipping accordion body",
-      "default": "Complimentary shipping on orders over $150. Orders ship within 1–2 business days. Standard delivery 3–5 business days; express 1–2 business days available at checkout."
+      "default": "Complimentary shipping on orders over $150. Orders ship within 1 to 2 business days. Standard delivery 3 to 5 business days; express 1 to 2 business days available at checkout."
     },
     {
       "type": "paragraph",
@@ -1586,10 +1667,10 @@
     {
       "type": "range",
       "id": "text_pad_y",
-      "label": "Text pad top & bottom — desktop (default 40)",
-      "min": 8,
+      "label": "Text pad top & bottom — desktop (default 40 top / 48 bottom)",
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 40
     },
@@ -1597,9 +1678,9 @@
       "type": "range",
       "id": "side_padding",
       "label": "Text pad left & right — desktop (default 40)",
-      "min": 8,
+      "min": 0,
       "max": 96,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 40
     },
@@ -1607,9 +1688,9 @@
       "type": "range",
       "id": "text_pad_y_mobile",
       "label": "Text pad top & bottom — phone (default 32)",
-      "min": 8,
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 32
     },
@@ -1617,9 +1698,9 @@
       "type": "range",
       "id": "text_pad_x_mobile",
       "label": "Text pad left & right — phone (default 16)",
-      "min": 8,
+      "min": 0,
       "max": 48,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 16
     }

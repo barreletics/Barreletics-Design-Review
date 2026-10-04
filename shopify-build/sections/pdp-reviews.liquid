@@ -155,7 +155,29 @@
   aria-label="Customer reviews"
   data-jm-scope="{{ scope }}"
   data-jm-pictures-first="{% if section.settings.pictures_first %}true{% else %}false{% endif %}"
-  style="{% render 'section-inset-vars' %}{% render 'unified-text-pads-vars', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}{% if section.settings.bg_color != blank %} background: {{ section.settings.bg_color }};{% endif %}"
+  style="{% render 'section-inset-vars' %}{% liquid
+    assign utp_y_d_def = 32
+    assign utp_side_d_def = 40
+    assign utp_y_m_def = 24
+    assign utp_x_m_def = 16
+    assign utp_style = ''
+    assign u_y = section.settings.text_pad_y | default: utp_y_d_def
+    if u_y != utp_y_d_def
+      assign utp_style = utp_style | append: '--utp-y-d:' | append: u_y | append: 'px;'
+    endif
+    assign u_side = section.settings.side_padding | default: utp_side_d_def
+    if u_side != utp_side_d_def
+      assign utp_style = utp_style | append: '--utp-side-d:' | append: u_side | append: 'px;'
+    endif
+    assign u_y_m = section.settings.text_pad_y_mobile | default: utp_y_m_def
+    if u_y_m != utp_y_m_def
+      assign utp_style = utp_style | append: '--utp-y-m:' | append: u_y_m | append: 'px;'
+    endif
+    assign u_x_m = section.settings.text_pad_x_mobile | default: utp_x_m_def
+    if u_x_m != utp_x_m_def
+      assign utp_style = utp_style | append: '--utp-x-m:' | append: u_x_m | append: 'px;'
+    endif
+  %}{{ utp_style }}{% if section.settings.bg_color != blank %} background: {{ section.settings.bg_color }};{% endif %}"
 >
   <div class="pdp-reviews__inner">
     {% if section.settings.title != blank or section.settings.body != blank or has_aggregate %}
@@ -487,7 +509,7 @@
 
 <style>
   .pdp-reviews {
-    padding: var(--section-padding-y) var(--section-padding-x);
+    padding: var(--utp-y-d, var(--section-padding-y)) var(--utp-side-d, var(--section-padding-x));
     background: var(--bg-primary);
   }
 
@@ -1004,7 +1026,7 @@
 
   @media (max-width: 768px) {
     #shopify-section-{{ section.id }} .pdp-reviews {
-      padding: var(--section-padding-y-mobile, 48px) 16px;
+      padding: var(--utp-y-m, var(--section-padding-y-mobile, 48px)) var(--utp-x-m, 16px);
       overflow-x: hidden;
       text-align: center;
     }
@@ -1212,7 +1234,46 @@
   })();
 </script>
 
-{% render 'unified-text-pads-te-style', selector: '.section-frame', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}
+{% style %}
+  {%- liquid
+    assign te_y_d = 32
+    assign te_side_d = 40
+    assign te_y_m = 24
+    assign te_x_m = 16
+    assign u_y = section.settings.text_pad_y | default: te_y_d
+    assign u_side = section.settings.side_padding | default: te_side_d
+    assign u_y_m = section.settings.text_pad_y_mobile | default: te_y_m
+    assign u_x_m = section.settings.text_pad_x_mobile | default: te_x_m
+  -%}
+  {%- if u_y != te_y_d or u_side != te_side_d -%}
+  @media (min-width: 769px) {
+    #shopify-section-{{ section.id }} .pdp-reviews {
+      {%- if u_y != te_y_d -%}
+      padding-top: {{ u_y }}px;
+      padding-bottom: {{ u_y }}px;
+      {%- endif -%}
+      {%- if u_side != te_side_d -%}
+      padding-left: {{ u_side }}px;
+      padding-right: {{ u_side }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+  {%- if u_y_m != te_y_m or u_x_m != te_x_m -%}
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .pdp-reviews {
+      {%- if u_y_m != te_y_m -%}
+      padding-top: {{ u_y_m }}px;
+      padding-bottom: {{ u_y_m }}px;
+      {%- endif -%}
+      {%- if u_x_m != te_x_m -%}
+      padding-left: {{ u_x_m }}px;
+      padding-right: {{ u_x_m }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+{% endstyle %}
 
 {% schema %}
 {
@@ -1523,42 +1584,42 @@
     {
       "type": "range",
       "id": "text_pad_y",
-      "label": "Text pad top & bottom — desktop (default 96)",
-      "min": 8,
+      "label": "Text pad top & bottom — desktop (default 32 — theme section gap)",
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
-      "default": 96
+      "default": 32
     },
     {
       "type": "range",
       "id": "side_padding",
       "label": "Text pad left & right — desktop (default 40)",
-      "min": 8,
+      "min": 0,
       "max": 96,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 40
     },
     {
       "type": "range",
       "id": "text_pad_y_mobile",
-      "label": "Text pad top & bottom — phone (default 80)",
-      "min": 8,
+      "label": "Text pad top & bottom — phone (default 24 — theme section gap)",
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
-      "default": 80
+      "default": 24
     },
     {
       "type": "range",
       "id": "text_pad_x_mobile",
-      "label": "Text pad left & right — phone (default 20)",
-      "min": 8,
+      "label": "Text pad left & right — phone (default 16)",
+      "min": 0,
       "max": 48,
-      "step": 1,
+      "step": 2,
       "unit": "px",
-      "default": 20
+      "default": 16
     }
   ],
   "blocks": [

@@ -7,17 +7,38 @@
 
 {% liquid
   assign body_size = section.settings.body_size | default: 'default'
+  assign utp_y_d_def = 32
+  assign utp_side_d_def = 40
+  assign utp_y_m_def = 48
+  assign utp_x_m_def = 20
   assign pad_top = section.settings.pad_top | default: 32
   assign pad_bottom = section.settings.pad_bottom | default: 32
   assign pad_top_mobile = 48
   assign pad_bottom_mobile = 48
+  assign utp_style = ''
+  assign u_y = section.settings.text_pad_y | default: utp_y_d_def
+  if u_y != utp_y_d_def
+    assign utp_style = utp_style | append: '--utp-y-d:' | append: u_y | append: 'px;'
+  endif
+  assign u_side = section.settings.side_padding | default: utp_side_d_def
+  if u_side != utp_side_d_def
+    assign utp_style = utp_style | append: '--utp-side-d:' | append: u_side | append: 'px;'
+  endif
+  assign u_y_m = section.settings.text_pad_y_mobile | default: utp_y_m_def
+  if u_y_m != utp_y_m_def
+    assign utp_style = utp_style | append: '--utp-y-m:' | append: u_y_m | append: 'px;'
+  endif
+  assign u_x_m = section.settings.text_pad_x_mobile | default: utp_x_m_def
+  if u_x_m != utp_x_m_def
+    assign utp_style = utp_style | append: '--utp-x-m:' | append: u_x_m | append: 'px;'
+  endif
 %}
 
 <section
   class="pdp-features"
   {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | handleize }}"{% endif %}
   aria-label="{{ section.settings.aria_label | default: 'Product features' | escape }}"
-  style="{% render 'unified-text-pads-vars', y_d: 32, side_d: 40, y_m: 24, x_m: 20, legacy_y_d: section.settings.pad_top, legacy_y_m: section.settings.pad_top_mobile %}{% if body_size != 'default' %}--pf-body-size: {{ body_size }}px;{% endif %}--pf-pad-top: {{ pad_top }}px;--pf-pad-bottom: {{ pad_bottom }}px;--pf-pad-top-m: {{ pad_top_mobile }}px;--pf-pad-bottom-m: {{ pad_bottom_mobile }}px;{% if section.settings.bg_color != blank %} background: {{ section.settings.bg_color }};{% endif %}"
+  style="{{ utp_style }}{% if body_size != 'default' %}--pf-body-size: {{ body_size }}px;{% endif %}--pf-pad-top: {{ pad_top }}px;--pf-pad-bottom: {{ pad_bottom }}px;--pf-pad-top-m: {{ pad_top_mobile }}px;--pf-pad-bottom-m: {{ pad_bottom_mobile }}px;{% if section.settings.bg_color != blank %} background: {{ section.settings.bg_color }};{% endif %}"
 >
   <div class="pdp-features__inner">
     <header class="pdp-features__header">
@@ -228,7 +249,54 @@
   }
 </style>
 
-{% render 'unified-text-pads-te-style', selector: '.pdp-features', y_d: 32, side_d: 40, y_m: 24, x_m: 20 , legacy_y_d: section.settings.pad_top , legacy_y_m: section.settings.pad_top_mobile %}
+{% style %}
+  {%- liquid
+    assign te_y_d = 32
+    assign te_side_d = 40
+    assign te_y_m = 48
+    assign te_x_m = 20
+    assign u_y = section.settings.text_pad_y | default: te_y_d
+    assign u_side = section.settings.side_padding | default: te_side_d
+    assign u_y_m = section.settings.text_pad_y_mobile | default: te_y_m
+    assign u_x_m = section.settings.text_pad_x_mobile | default: te_x_m
+    assign te_desktop = false
+    if u_y != te_y_d or u_side != te_side_d
+      assign te_desktop = true
+    endif
+    assign te_mobile = false
+    if u_y_m != te_y_m or u_x_m != te_x_m
+      assign te_mobile = true
+    endif
+  -%}
+  {%- if te_desktop -%}
+  @media (min-width: 769px) {
+    #shopify-section-{{ section.id }} .pdp-features {
+      {%- if u_y != te_y_d -%}
+      padding-top: {{ u_y }}px;
+      padding-bottom: {{ u_y }}px;
+      {%- endif -%}
+      {%- if u_side != te_side_d -%}
+      padding-left: {{ u_side }}px;
+      padding-right: {{ u_side }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+  {%- if te_mobile -%}
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .pdp-features {
+      {%- if u_y_m != te_y_m -%}
+      padding-top: {{ u_y_m }}px;
+      padding-bottom: {{ u_y_m }}px;
+      {%- endif -%}
+      {%- if u_x_m != te_x_m -%}
+      padding-left: {{ u_x_m }}px;
+      padding-right: {{ u_x_m }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+{% endstyle %}
 
 {% schema %}
 {
@@ -396,8 +464,9 @@
       "max": 96,
       "step": 4,
       "unit": "px",
-      "label": "Padding bottom — desktop",
-      "default": 32
+      "label": "Legacy: Padding bottom — desktop",
+      "default": 32,
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
     },
     {
       "type": "range",
@@ -406,7 +475,7 @@
       "max": 96,
       "step": 4,
       "unit": "px",
-      "label": "Padding top — phone",
+      "label": "Legacy: Padding top — phone",
       "default": 24,
       "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
     },
@@ -417,8 +486,9 @@
       "max": 96,
       "step": 4,
       "unit": "px",
-      "label": "Padding bottom — phone",
-      "default": 24
+      "label": "Legacy: Padding bottom — phone",
+      "default": 24,
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
     },
     {
       "type": "header",
@@ -458,9 +528,9 @@
       "type": "range",
       "id": "text_pad_y",
       "label": "Text pad top & bottom — desktop (default 32)",
-      "min": 8,
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 32
     },
@@ -468,29 +538,29 @@
       "type": "range",
       "id": "side_padding",
       "label": "Text pad left & right — desktop (default 40)",
-      "min": 8,
+      "min": 0,
       "max": 96,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 40
     },
     {
       "type": "range",
       "id": "text_pad_y_mobile",
-      "label": "Text pad top & bottom — phone (default 24)",
-      "min": 8,
+      "label": "Text pad top & bottom — phone (default 48)",
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
-      "default": 24
+      "default": 48
     },
     {
       "type": "range",
       "id": "text_pad_x_mobile",
       "label": "Text pad left & right — phone (default 20)",
-      "min": 8,
+      "min": 0,
       "max": 48,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 20
     },
