@@ -31,7 +31,6 @@
 
 <section
   class="page-about-hero"
-  id="shopify-section-{{ section.id }}"
   {{ section.shopify_attributes }}
   aria-label="{{ section.settings.aria_label | default: 'Barreletics in motion' | escape }}"
  style="{% render 'unified-text-pads-vars', y_d: 0, side_d: 0, y_m: 0, x_m: 0 %}">
@@ -61,7 +60,7 @@
   {% endif %}
 </section>
 
-<style>
+{% style %}
   #shopify-section-{{ section.id }} .page-about-hero {
     position: relative;
     height: {{ pah_media_h }}px;
@@ -94,8 +93,9 @@
       object-position: {{ pah_focal_css_m }};
     }
   }
-</style>
+{% endstyle %}
 
+{%- comment -%} TE pads: Shopify's wrapper div owns id=shopify-section-<id>; '.page-about-hero' is this section's root inside it, so the snippet's '#shopify-section-<id> .page-about-hero' matches it. {%- endcomment -%}
 {% render 'unified-text-pads-te-style', selector: '.page-about-hero', y_d: 0, side_d: 0, y_m: 0, x_m: 0 %}
 
 {% schema %}

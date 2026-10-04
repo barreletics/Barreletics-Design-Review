@@ -26,7 +26,6 @@
 -%}
 <section
   class="page-about-close{% if pac_fixed_d_y %} page-about-close--fixed-pad-d-y{% endif %}{% if pac_fixed_d_x %} page-about-close--fixed-pad-d-x{% endif %}{% if pac_fixed_m_y %} page-about-close--fixed-pad-m-y{% endif %}{% if pac_fixed_m_x %} page-about-close--fixed-pad-m-x{% endif %}"
-  id="shopify-section-{{ section.id }}"
   {{ section.shopify_attributes }}
   aria-label="{{ section.settings.aria_label | escape }}"
   style="{% render 'unified-text-pads-vars', y_d: 120, side_d: 20, y_m: 56, x_m: 20 %}{% render 'type-override-vars', title_size: section.settings.title_size, title_weight: section.settings.title_weight, body_size: section.settings.body_size, body_weight: section.settings.body_weight, sub_size: section.settings.cta_size %}"
@@ -44,7 +43,7 @@
   {% endif %}
 </section>
 
-<style>
+{% style %}
   #shopify-section-{{ section.id }} .page-about-close {
     background: #faf8f6;
     color: #1c1916;
@@ -105,8 +104,9 @@
       font-size: var(--te-title-size, clamp(28px, 8vw, 40px));
     }
   }
-</style>
+{% endstyle %}
 
+{%- comment -%} TE pads: Shopify's wrapper div owns id=shopify-section-<id>; '.page-about-close' is this section's root inside it, so the snippet's '#shopify-section-<id> .page-about-close' matches it. {%- endcomment -%}
 {% render 'unified-text-pads-te-style', selector: '.page-about-close', y_d: 120, side_d: 20, y_m: 56, x_m: 20 %}
 
 {% schema %}

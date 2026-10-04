@@ -26,7 +26,6 @@
 -%}
 <section
   class="page-about-intro{% if pai_fixed_d_y %} page-about-intro--fixed-pad-d-y{% endif %}{% if pai_fixed_d_x %} page-about-intro--fixed-pad-d-x{% endif %}{% if pai_fixed_m_y %} page-about-intro--fixed-pad-m-y{% endif %}{% if pai_fixed_m_x %} page-about-intro--fixed-pad-m-x{% endif %}"
-  id="shopify-section-{{ section.id }}"
   {{ section.shopify_attributes }}
   aria-label="{{ section.settings.aria_label | default: 'Our story' | escape }}"
   style="{% render 'unified-text-pads-vars', y_d: 32, side_d: 20, y_m: 32, x_m: 20 %}{% render 'type-override-vars', title_size: section.settings.title_size, title_weight: section.settings.title_weight, body_size: section.settings.body_size, body_weight: section.settings.body_weight, sub_size: section.settings.pull_quote_size, sub_weight: section.settings.pull_quote_weight %}"
@@ -45,7 +44,7 @@
   </div>
 </section>
 
-<style>
+{% style %}
   #shopify-section-{{ section.id }} .page-about-intro {
     padding: clamp(40px, 8vh, 72px) clamp(20px, 8vw, 8vw) clamp(36px, 6vh, 64px);
     border-bottom: 1px solid var(--line-soft, #e8e2d8);
@@ -110,8 +109,9 @@
       margin-top: 24px;
     }
   }
-</style>
+{% endstyle %}
 
+{%- comment -%} TE pads: Shopify's wrapper div owns id=shopify-section-<id>; '.page-about-intro' is this section's root inside it, so the snippet's '#shopify-section-<id> .page-about-intro' matches it. {%- endcomment -%}
 {% render 'unified-text-pads-te-style', selector: '.page-about-intro', y_d: 32, side_d: 20, y_m: 32, x_m: 20, y_m_bottom_px: 28 %}
 
 {% schema %}

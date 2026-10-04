@@ -26,7 +26,6 @@
 -%}
 <section
   class="page-about-values{% if pav_fixed_d_y %} page-about-values--fixed-pad-d-y{% endif %}{% if pav_fixed_d_x %} page-about-values--fixed-pad-d-x{% endif %}{% if pav_fixed_m_y %} page-about-values--fixed-pad-m-y{% endif %}{% if pav_fixed_m_x %} page-about-values--fixed-pad-m-x{% endif %}"
-  id="shopify-section-{{ section.id }}"
   {{ section.shopify_attributes }}
   aria-label="{{ section.settings.aria_label | escape }}"
   style="{% render 'unified-text-pads-vars', y_d: 40, side_d: 20, y_m: 40, x_m: 20 %}{% render 'type-override-vars', title_size: section.settings.title_size, title_weight: section.settings.title_weight, body_size: section.settings.body_size, body_weight: section.settings.body_weight, sub_size: section.settings.card_title_size, sub_weight: section.settings.card_title_weight %}"
@@ -50,7 +49,7 @@
   </div>
 </section>
 
-<style>
+{% style %}
   #shopify-section-{{ section.id }} .page-about-values {
     padding: clamp(56px, 10vh, 96px) clamp(20px, 8vw, 8vw);
     border-top: 1px solid var(--line-soft, #e8e2d8);
@@ -121,8 +120,9 @@
     }
     #shopify-section-{{ section.id }} .page-about-values__grid { grid-template-columns: 1fr; }
   }
-</style>
+{% endstyle %}
 
+{%- comment -%} TE pads: Shopify's wrapper div owns id=shopify-section-<id>; '.page-about-values' is this section's root inside it, so the snippet's '#shopify-section-<id> .page-about-values' matches it. {%- endcomment -%}
 {% render 'unified-text-pads-te-style', selector: '.page-about-values', y_d: 40, side_d: 20, y_m: 40, x_m: 20 %}
 
 {% schema %}
