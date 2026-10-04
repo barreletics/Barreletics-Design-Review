@@ -102,14 +102,16 @@
 <style>
   .sticky-atc {
     position: fixed;
-    bottom: 0;
+    /* --sticky-atc-offset lifts the bar above bottom-docked overlays
+       (Shopify cookie-consent banner, theme preview bar) so taps reach it. */
+    bottom: var(--sticky-atc-offset, 0px);
     left: 0;
     right: 0;
     z-index: var(--z-sticky);
     background: var(--bg-primary);
     border-top: 1px solid var(--border-default);
     box-shadow: 0 -2px 12px rgba(28, 25, 22, 0.08);
-    transform: translateY(100%);
+    transform: translateY(calc(100% + var(--sticky-atc-offset, 0px)));
     transition: transform var(--transition-base);
     padding: 12px var(--section-padding-x);
   }
@@ -221,6 +223,48 @@
     }, { threshold: 0 });
 
     observer.observe(buyBox);
+
+    // Bottom-docked overlays (Shopify customer-privacy banner on phone spans the
+    // full width; the theme preview bar is a 68px strip) sit above z-sticky and
+    // swallow taps on the bar. Lift the bar above whichever is showing.
+    var OVERLAY_IDS = ['shopify-pc__banner', 'PBarNextFrameWrapper'];
+    var lastOffset = -1;
+    var offsetQueued = false;
+    function updateOffset() {
+      offsetQueued = false;
+      var vh = window.innerHeight;
+      var off = 0;
+      OVERLAY_IDS.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        var cs = window.getComputedStyle(el);
+        if (cs.display === 'none' || cs.visibility === 'hidden' || parseFloat(cs.opacity) === 0) return;
+        var r = el.getBoundingClientRect();
+        if (r.width < 1 || r.height < 1) return;
+        if (r.bottom < vh - 2 || r.top >= vh) return;
+        off = Math.max(off, Math.ceil(vh - Math.max(r.top, 0)));
+      });
+      if (off !== lastOffset) {
+        lastOffset = off;
+        stickyBar.style.setProperty('--sticky-atc-offset', off + 'px');
+      }
+    }
+    function queueOffset() {
+      if (offsetQueued) return;
+      offsetQueued = true;
+      window.requestAnimationFrame(updateOffset);
+    }
+    updateOffset();
+    window.addEventListener('resize', queueOffset);
+    window.addEventListener('load', queueOffset);
+    document.addEventListener('visitorConsentCollected', queueOffset);
+    if (window.MutationObserver) {
+      new MutationObserver(function(muts) {
+        for (var i = 0; i < muts.length; i++) {
+          if (muts[i].target !== stickyBar) { queueOffset(); return; }
+        }
+      }).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'class', 'hidden', 'aria-hidden'] });
+    }
 
     document.addEventListener('variant:changed', function(e) {
       var variant = e.detail.variant;
