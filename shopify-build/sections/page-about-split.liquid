@@ -33,15 +33,25 @@
     assign panel_cream = true
   endif
 
-  assign text_pad_y_d = section.settings.text_pad_y
-  assign text_pad_y_m = section.settings.text_pad_y_mobile
-  assign side_padding = section.settings.side_padding
-  if side_padding == blank
-    assign side_padding = 48
+  assign pas_y_d_def = 56
+  assign pas_side_d_def = 48
+  assign pas_y_m_def = 8
+  assign pas_x_m_def = 20
+  assign pas_fixed_pad_d_y = false
+  if section.settings.text_pad_y != pas_y_d_def
+    assign pas_fixed_pad_d_y = true
   endif
-  assign text_pad_x_m = section.settings.text_pad_x_mobile
-  if text_pad_x_m == blank
-    assign text_pad_x_m = 20
+  assign pas_fixed_pad_d_x = false
+  if section.settings.side_padding != pas_side_d_def
+    assign pas_fixed_pad_d_x = true
+  endif
+  assign pas_fixed_pad_m_y = false
+  if section.settings.text_pad_y_mobile != pas_y_m_def
+    assign pas_fixed_pad_m_y = true
+  endif
+  assign pas_fixed_pad_m_x = false
+  if section.settings.text_pad_x_mobile != pas_x_m_def
+    assign pas_fixed_pad_m_x = true
   endif
   assign section_gap = section.settings.section_gap
   if section_gap == blank
@@ -51,11 +61,11 @@
 -%}
 
 <section
-  class="page-about-split{% if reverse %} page-about-split--reverse{% endif %}{% if panel_cream %} page-about-split--cream{% endif %}{% if text_pad_y_d != blank %} page-about-split--fixed-pad-d{% endif %}{% if text_pad_y_m != blank %} page-about-split--fixed-pad-m{% endif %}{% render 'split-mobile-stack-class', mobile_stack_order: section.settings.mobile_stack_order %}"
+  class="page-about-split{% if reverse %} page-about-split--reverse{% endif %}{% if panel_cream %} page-about-split--cream{% endif %}{% if pas_fixed_pad_d_y %} page-about-split--fixed-pad-d-y{% endif %}{% if pas_fixed_pad_d_x %} page-about-split--fixed-pad-d-x{% endif %}{% if pas_fixed_pad_m_y %} page-about-split--fixed-pad-m-y{% endif %}{% if pas_fixed_pad_m_x %} page-about-split--fixed-pad-m-x{% endif %}{% render 'split-mobile-stack-class', mobile_stack_order: section.settings.mobile_stack_order %}"
   id="shopify-section-{{ section.id }}"
   {{ section.shopify_attributes }}
   aria-label="{{ section.settings.aria_label | escape }}"
-  style="--pas-media-fr: {{ media_pct }}fr; --pas-text-fr: {{ text_pct }}fr; --pas-min-height: {{ min_height }}px; --pas-mobile-media-height: {{ mobile_media_height }}px; --pas-section-gap: {{ section_gap }}px; --pas-section-gap-m: {{ section_gap_m }}px;{% if text_pad_y_d != blank %} --pas-text-pad-y-d: {{ text_pad_y_d }}px;{% endif %}{% if text_pad_y_m != blank %} --pas-text-pad-y-m: {{ text_pad_y_m }}px;{% endif %} --pas-side-padding: {{ side_padding }}px; --pas-text-pad-x-m: {{ text_pad_x_m }}px;{% render 'type-override-vars', title_weight: section.settings.title_weight, body_size: section.settings.body_size, body_weight: section.settings.body_weight %}"
+  style="--pas-media-fr: {{ media_pct }}fr; --pas-text-fr: {{ text_pct }}fr; --pas-min-height: {{ min_height }}px; --pas-mobile-media-height: {{ mobile_media_height }}px; --pas-section-gap: {{ section_gap }}px; --pas-section-gap-m: {{ section_gap_m }}px;{% render 'unified-text-pads-vars', y_d: 56, side_d: 48, y_m: 8, x_m: 20 %}{% render 'type-override-vars', title_weight: section.settings.title_weight, body_size: section.settings.body_size, body_weight: section.settings.body_weight %}"
 >
   <div class="page-about-split__media">
     {% if section.settings.image != blank %}
@@ -122,8 +132,15 @@
     padding: clamp(28px, 4vw, 56px) clamp(20px, 4vw, 48px);
     max-width: 36em;
   }
-  #shopify-section-{{ section.id }} .page-about-split--fixed-pad-d .page-about-split__copy {
-    padding: var(--pas-text-pad-y-d, 56px) var(--pas-side-padding, 48px);
+  @media (min-width: 769px) {
+    #shopify-section-{{ section.id }} .page-about-split--fixed-pad-d-y .page-about-split__copy {
+      padding-top: var(--utp-y-d);
+      padding-bottom: var(--utp-y-d);
+    }
+    #shopify-section-{{ section.id }} .page-about-split--fixed-pad-d-x .page-about-split__copy {
+      padding-left: var(--utp-side-d);
+      padding-right: var(--utp-side-d);
+    }
   }
   #shopify-section-{{ section.id }} .page-about-split__title {
     font-size: clamp(var(--heading-phone, 36px), calc(var(--te-title-size-n, var(--heading-standard-desktop-n, 56)) * 4.8vw / 56), var(--te-title-size, var(--heading-standard-desktop, 56px)));
@@ -163,16 +180,20 @@
       object-fit: cover;
       object-position: center center;
     }
-    #shopify-section-{{ section.id }} .page-about-split__copy { padding: 8px var(--pas-text-pad-x-m, 20px) 32px; }
-    #shopify-section-{{ section.id }} .page-about-split--fixed-pad-m .page-about-split__copy {
-      padding: var(--pas-text-pad-y-m, 32px) var(--pas-text-pad-x-m, 20px);
+    #shopify-section-{{ section.id }} .page-about-split__copy { padding: 8px 20px 32px; }
+    #shopify-section-{{ section.id }} .page-about-split--fixed-pad-m-y .page-about-split__copy {
+      padding-top: var(--utp-y-m);
+    }
+    #shopify-section-{{ section.id }} .page-about-split--fixed-pad-m-x .page-about-split__copy {
+      padding-left: var(--utp-x-m);
+      padding-right: var(--utp-x-m);
     }
   }
 </style>
 
-{%- comment -%}
-  TE live preview: read section.settings.* directly (not top-of-file assigns).
-{%- endcomment -%}
+{% render 'unified-text-pads-te-style', selector: '.page-about-split__copy', y_d: 56, side_d: 48, y_m: 8, x_m: 20, y_m_bottom_px: 32 %}
+
+{%- comment -%} TE live preview: read section.settings.* directly (not top-of-file assigns). {%- endcomment -%}
 {% style %}
   {%- liquid
     assign te_mh_default = 760
@@ -195,7 +216,6 @@
     endif
     assign te_mcp = section.settings.media_column_pct | default: 50
   -%}
-  #shopify-section-{{ section.id }},
   #shopify-section-{{ section.id }} .page-about-split {
     --pas-min-height: {{ te_min_h }}px;
     --pas-mobile-media-height: {{ te_mmh }}px;
@@ -203,49 +223,31 @@
     --pas-text-fr: {{ 100 | minus: te_mcp }}fr;
     --pas-section-gap: {{ section.settings.section_gap | default: 0 }}px;
     --pas-section-gap-m: {{ section.settings.section_gap_mobile | default: 0 }}px;
-    --pas-side-padding: {{ section.settings.side_padding | default: 48 }}px;
-    --pas-text-pad-x-m: {{ section.settings.text_pad_x_mobile | default: 20 }}px;
   }
-  {%- if section.settings.text_pad_y != blank %}
-  #shopify-section-{{ section.id }} .page-about-split__copy {
-    padding-top: {{ section.settings.text_pad_y }}px !important;
-    padding-bottom: {{ section.settings.text_pad_y }}px !important;
-    padding-left: {{ section.settings.side_padding | default: 48 }}px !important;
-    padding-right: {{ section.settings.side_padding | default: 48 }}px !important;
-  }
-  {%- endif %}
   @media (max-width: 768px) {
     #shopify-section-{{ section.id }} .page-about-split__img {
-      height: {{ te_mmh }}px !important;
-      max-height: none !important;
+      height: {{ te_mmh }}px;
+      max-height: none;
     }
-    {%- if section.settings.text_pad_y_mobile != blank %}
-    #shopify-section-{{ section.id }} .page-about-split__copy {
-      padding-top: {{ section.settings.text_pad_y_mobile }}px !important;
-      padding-bottom: {{ section.settings.text_pad_y_mobile }}px !important;
-      padding-left: {{ section.settings.text_pad_x_mobile | default: 20 }}px !important;
-      padding-right: {{ section.settings.text_pad_x_mobile | default: 20 }}px !important;
-    }
-    {%- endif %}
   }
   @media (min-width: 769px) {
     #shopify-section-{{ section.id }} .page-about-split__img {
-      max-height: {{ te_min_h }}px !important;
+      max-height: {{ te_min_h }}px;
     }
   }
 {% endstyle %}
 
 {% schema %}
 {
-  "name": "About — Split",
+  "name": "About \u2014 Split",
   "settings": [
     {
       "type": "header",
-      "content": "1 — Photo / video"
+      "content": "1 \u2014 Photo / video"
     },
     {
       "type": "paragraph",
-      "content": "Pick ONE. Priority: Shopify image → Image URL."
+      "content": "Pick ONE. Priority: Shopify image \u2192 Image URL."
     },
     {
       "type": "image_picker",
@@ -265,12 +267,12 @@
     },
     {
       "type": "header",
-      "content": "2 — Focus + height"
+      "content": "2 \u2014 Focus + height"
     },
     {
       "type": "range",
       "id": "min_height",
-      "label": "Height — desktop (default 760)",
+      "label": "Height \u2014 desktop (default 760)",
       "min": 360,
       "max": 820,
       "step": 20,
@@ -281,7 +283,7 @@
     {
       "type": "range",
       "id": "media_column_pct",
-      "label": "Image width — desktop (default 50%)",
+      "label": "Image width \u2014 desktop (default 50%)",
       "min": 40,
       "max": 60,
       "step": 1,
@@ -291,17 +293,17 @@
     {
       "type": "range",
       "id": "mobile_media_height",
-      "label": "Image height — phone (default 0 = theme 500px)",
+      "label": "Image height — phone (default 480)",
       "min": 0,
       "max": 900,
       "step": 10,
       "unit": "px",
-      "info": "0 uses legacy saved phone height when present (see hidden keys).",
+      "info": "0 falls back to legacy media_max_px_mobile when saved.",
       "default": 480
     },
     {
       "type": "header",
-      "content": "3 — Heading / body / CTA"
+      "content": "3 \u2014 Heading / body / CTA"
     },
     {
       "type": "text",
@@ -331,7 +333,7 @@
     },
     {
       "type": "header",
-      "content": "4 — Trust strip"
+      "content": "4 \u2014 Trust strip"
     },
     {
       "type": "paragraph",
@@ -339,12 +341,12 @@
     },
     {
       "type": "header",
-      "content": "5 — Layout"
+      "content": "5 \u2014 Layout"
     },
     {
       "type": "checkbox",
       "id": "reverse",
-      "label": "Image on right — desktop (default: off)",
+      "label": "Image on right \u2014 desktop (default: off)",
       "default": false,
       "info": "769px and up only."
     },
@@ -367,10 +369,10 @@
     {
       "type": "range",
       "id": "text_pad_y",
-      "label": "Text pad top & bottom — desktop (default 56)",
-      "min": 8,
+      "label": "Text pad Y desktop (default fluid ~28\u201356)",
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "info": "Leave unset in JSON keeps legacy clamp padding until you set this in TE.",
       "default": 56
@@ -378,8 +380,8 @@
     {
       "type": "range",
       "id": "side_padding",
-      "label": "Text pad left & right — desktop (default 48)",
-      "min": 8,
+      "label": "Text pad left & right \u2014 desktop (default 48)",
+      "min": 0,
       "max": 96,
       "step": 1,
       "unit": "px",
@@ -388,18 +390,18 @@
     {
       "type": "range",
       "id": "text_pad_y_mobile",
-      "label": "Text pad top & bottom — phone (default 36)",
-      "min": 8,
+      "label": "Text pad Y phone (default 8 top / 32 bottom)",
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
-      "default": 36
+      "default": 8
     },
     {
       "type": "range",
       "id": "text_pad_x_mobile",
-      "label": "Text pad left & right — phone (default 20)",
-      "min": 8,
+      "label": "Text pad left & right \u2014 phone (default 20)",
+      "min": 0,
       "max": 48,
       "step": 1,
       "unit": "px",
@@ -429,12 +431,12 @@
     },
     {
       "type": "header",
-      "content": "6 — Section gap"
+      "content": "6 \u2014 Section gap"
     },
     {
       "type": "range",
       "id": "section_gap",
-      "label": "Space above & below — desktop (default 0)",
+      "label": "Space above & below \u2014 desktop (default 0)",
       "min": 0,
       "max": 96,
       "step": 4,
@@ -444,7 +446,7 @@
     {
       "type": "range",
       "id": "section_gap_mobile",
-      "label": "Space after section — phone (default 0)",
+      "label": "Space after section \u2014 phone (default 0)",
       "min": 0,
       "max": 96,
       "step": 4,
@@ -453,7 +455,7 @@
     },
     {
       "type": "header",
-      "content": "Legacy (hidden — do not edit)"
+      "content": "Legacy (hidden \u2014 do not edit)"
     },
     {
       "type": "paragraph",
@@ -596,7 +598,7 @@
   ],
   "presets": [
     {
-      "name": "About — Split"
+      "name": "About \u2014 Split"
     }
   ]
 }

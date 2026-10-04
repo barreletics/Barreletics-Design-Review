@@ -2,8 +2,30 @@
   About page — Joseph Pilates archival gallery + essay (v25 Locked · cream mat)
 {% endcomment %}
 
+{%- liquid
+  assign paj_y_d_def = 56
+  assign paj_side_d_def = 48
+  assign paj_y_m_def = 28
+  assign paj_x_m_def = 20
+  assign paj_fixed_d_y = false
+  if section.settings.text_pad_y != paj_y_d_def
+    assign paj_fixed_d_y = true
+  endif
+  assign paj_fixed_d_x = false
+  if section.settings.side_padding != paj_side_d_def
+    assign paj_fixed_d_x = true
+  endif
+  assign paj_fixed_m_y = false
+  if section.settings.text_pad_y_mobile != paj_y_m_def
+    assign paj_fixed_m_y = true
+  endif
+  assign paj_fixed_m_x = false
+  if section.settings.text_pad_x_mobile != paj_x_m_def
+    assign paj_fixed_m_x = true
+  endif
+-%}
 <article
-  class="page-about-joseph{% if section.settings.text_pad_y != blank %} page-about-joseph--fixed-pad-d{% endif %}{% if section.settings.text_pad_y_mobile != blank %} page-about-joseph--fixed-pad-m{% endif %}{% render 'split-mobile-stack-class', mobile_stack_order: section.settings.mobile_stack_order %}"
+  class="page-about-joseph{% if paj_fixed_d_y %} page-about-joseph--fixed-pad-d-y{% endif %}{% if paj_fixed_d_x %} page-about-joseph--fixed-pad-d-x{% endif %}{% if paj_fixed_m_y %} page-about-joseph--fixed-pad-m-y{% endif %}{% if paj_fixed_m_x %} page-about-joseph--fixed-pad-m-x{% endif %}{% render 'split-mobile-stack-class', mobile_stack_order: section.settings.mobile_stack_order %}"
   id="shopify-section-{{ section.id }}"
   {{ section.shopify_attributes }}
   style="{% render 'unified-text-pads-vars', y_d: 56, side_d: 48, y_m: 28, x_m: 20 %}{% render 'type-override-vars', title_weight: section.settings.title_weight, body_size: section.settings.body_size, body_weight: section.settings.body_weight %}"
@@ -105,11 +127,15 @@
   #shopify-section-{{ section.id }} .page-about-joseph__copy {
     padding: clamp(40px, 7vh, 72px) clamp(20px, 8vw, 8vw);
   }
-  #shopify-section-{{ section.id }} .page-about-joseph--fixed-pad-d .page-about-joseph__copy {
-    padding-top: var(--utp-y-d, 56px);
-    padding-bottom: var(--utp-y-d, 56px);
-    padding-left: var(--utp-side-d, 48px);
-    padding-right: var(--utp-side-d, 48px);
+  @media (min-width: 769px) {
+    #shopify-section-{{ section.id }} .page-about-joseph--fixed-pad-d-y .page-about-joseph__copy {
+      padding-top: var(--utp-y-d);
+      padding-bottom: var(--utp-y-d);
+    }
+    #shopify-section-{{ section.id }} .page-about-joseph--fixed-pad-d-x .page-about-joseph__copy {
+      padding-left: var(--utp-side-d);
+      padding-right: var(--utp-side-d);
+    }
   }
   #shopify-section-{{ section.id }} .page-about-joseph__inner { max-width: 32em; }
   #shopify-section-{{ section.id }} .page-about-joseph__title {
@@ -145,35 +171,29 @@
     #shopify-section-{{ section.id }} .page-about-joseph__copy {
       padding: 28px 20px 36px;
     }
-    #shopify-section-{{ section.id }} .page-about-joseph--fixed-pad-m .page-about-joseph__copy {
-      padding: var(--utp-y-m, 28px) var(--utp-x-m, 20px) 36px;
+    #shopify-section-{{ section.id }} .page-about-joseph--fixed-pad-m-y .page-about-joseph__copy {
+      padding-top: var(--utp-y-m);
+    }
+    #shopify-section-{{ section.id }} .page-about-joseph--fixed-pad-m-x .page-about-joseph__copy {
+      padding-left: var(--utp-x-m);
+      padding-right: var(--utp-x-m);
     }
   }
 </style>
 
-{%- comment -%} TE live preview: section.settings.* only.{%- endcomment -%}
-{% style %}
-  {%- if section.settings.heading_size_override != blank %}
-  #shopify-section-{{ section.id }} { {% render 'type-override-vars', title_size: section.settings.heading_size_override %} --te-title-size-n: {{ section.settings.heading_size_override }} !important; }
-  {%- endif %}
-  #shopify-section-{{ section.id }} {
-    padding-block: {{ section.settings.section_gap | default: 0 }}px {{ section.settings.section_gap_mobile | default: 0 }}px !important;
-  }
-{% endstyle %}
-
-{% render 'unified-text-pads-te-style', selector: '.page-about-joseph__copy', y_d: 56, side_d: 48, y_m: 28, x_m: 20 %}
+{% render 'unified-text-pads-te-style', selector: '.page-about-joseph__copy', y_d: 56, side_d: 48, y_m: 28, x_m: 20, y_m_bottom_px: 36 %}
 
 {% schema %}
 {
-  "name": "About — Joseph",
+  "name": "About \u2014 Joseph",
   "settings": [
     {
       "type": "header",
-      "content": "1 — Photo / video"
+      "content": "1 \u2014 Photo / video"
     },
     {
       "type": "paragraph",
-      "content": "Two archival images (gallery column). Shopify picker → URL fallback for each."
+      "content": "Two archival images (gallery column). Shopify picker \u2192 URL fallback for each."
     },
     {
       "type": "text",
@@ -217,7 +237,7 @@
     },
     {
       "type": "header",
-      "content": "2 — Focus + height"
+      "content": "2 \u2014 Focus + height"
     },
     {
       "type": "paragraph",
@@ -225,7 +245,7 @@
     },
     {
       "type": "header",
-      "content": "3 — Heading / body / CTA"
+      "content": "3 \u2014 Heading / body / CTA"
     },
     {
       "type": "text",
@@ -256,7 +276,7 @@
     },
     {
       "type": "header",
-      "content": "4 — Trust strip"
+      "content": "4 \u2014 Trust strip"
     },
     {
       "type": "paragraph",
@@ -264,7 +284,7 @@
     },
     {
       "type": "header",
-      "content": "5 — Layout"
+      "content": "5 \u2014 Layout"
     },
     {
       "type": "select",
@@ -285,10 +305,10 @@
     {
       "type": "range",
       "id": "text_pad_y",
-      "label": "Text pad top & bottom — desktop (default 56)",
-      "min": 8,
+      "label": "Text pad Y desktop (default fluid ~40\u201372)",
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "info": "Unset in JSON keeps legacy clamp padding on the essay column.",
       "default": 56
@@ -296,8 +316,8 @@
     {
       "type": "range",
       "id": "side_padding",
-      "label": "Text pad left & right — desktop (default 48)",
-      "min": 8,
+      "label": "Text pad X desktop (48 off; live padding ~8vw)",
+      "min": 0,
       "max": 96,
       "step": 1,
       "unit": "px",
@@ -307,10 +327,10 @@
     {
       "type": "range",
       "id": "text_pad_y_mobile",
-      "label": "Text pad top & bottom — phone (default 28)",
-      "min": 8,
+      "label": "Text pad Y phone (default 28 top / 36 bottom)",
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "info": "Unset in JSON keeps legacy 28/36px gallery copy padding.",
       "default": 28
@@ -318,8 +338,8 @@
     {
       "type": "range",
       "id": "text_pad_x_mobile",
-      "label": "Text pad left & right — phone (default 20)",
-      "min": 8,
+      "label": "Text pad left & right \u2014 phone (default 20)",
+      "min": 0,
       "max": 48,
       "step": 1,
       "unit": "px",
@@ -327,12 +347,12 @@
     },
     {
       "type": "header",
-      "content": "6 — Section gap"
+      "content": "6 \u2014 Section gap"
     },
     {
       "type": "range",
       "id": "section_gap",
-      "label": "Space above & below — desktop (default 0)",
+      "label": "Space above & below \u2014 desktop (default 0)",
       "min": 0,
       "max": 96,
       "step": 4,
@@ -342,7 +362,7 @@
     {
       "type": "range",
       "id": "section_gap_mobile",
-      "label": "Space after section — phone (default 0)",
+      "label": "Space after section \u2014 phone (default 0)",
       "min": 0,
       "max": 96,
       "step": 4,
@@ -351,7 +371,7 @@
     },
     {
       "type": "header",
-      "content": "Legacy (hidden — do not edit)"
+      "content": "Legacy (hidden \u2014 do not edit)"
     },
     {
       "type": "paragraph",
@@ -461,7 +481,7 @@
   ],
   "presets": [
     {
-      "name": "About — Joseph"
+      "name": "About \u2014 Joseph"
     }
   ]
 }

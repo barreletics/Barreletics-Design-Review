@@ -19,7 +19,30 @@
 {%- assign url_b = section.settings.product_b_url -%}
 {%- if url_b == blank and product_b != blank -%}{%- assign url_b = product_b.url -%}{%- endif -%}
 
-<section class="section page-compare" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }} style="{% render 'unified-text-pads-vars', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}">
+{%- liquid
+  assign pco_y_d_def = 72
+  assign pco_side_d_def = 40
+  assign pco_y_m_def = 48
+  assign pco_x_m_def = 16
+  assign pco_fixed_d_y = false
+  if section.settings.text_pad_y != pco_y_d_def
+    assign pco_fixed_d_y = true
+  endif
+  assign pco_fixed_d_x = false
+  if section.settings.side_padding != pco_side_d_def
+    assign pco_fixed_d_x = true
+  endif
+  assign pco_fixed_m_y = false
+  if section.settings.text_pad_y_mobile != pco_y_m_def
+    assign pco_fixed_m_y = true
+  endif
+  assign pco_fixed_m_x = false
+  if section.settings.text_pad_x_mobile != pco_x_m_def
+    assign pco_fixed_m_x = true
+  endif
+-%}
+
+<section class="section page-compare{% if pco_fixed_d_y %} page-compare--fixed-pad-d-y{% endif %}{% if pco_fixed_d_x %} page-compare--fixed-pad-d-x{% endif %}{% if pco_fixed_m_y %} page-compare--fixed-pad-m-y{% endif %}{% if pco_fixed_m_x %} page-compare--fixed-pad-m-x{% endif %}" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }} style="{% render 'unified-text-pads-vars', y_d: 72, side_d: 40, y_m: 48, x_m: 16 %}">
   <div class="section__inner section__inner--narrow page-compare__intro">
     {% if section.settings.eyebrow != blank %}
       <p class="eyebrow eyebrow--accent">{{ section.settings.eyebrow }}</p>
@@ -145,6 +168,15 @@
     padding-top: 72px;
     padding-bottom: 8px;
   }
+  @media (min-width: 769px) {
+    .page-compare--fixed-pad-d-y.section {
+      padding-top: var(--utp-y-d);
+    }
+    .page-compare--fixed-pad-d-x.section {
+      padding-left: var(--utp-side-d);
+      padding-right: var(--utp-side-d);
+    }
+  }
   .page-compare__intro { text-align: center; }
   .page-compare__intro .eyebrow {
     margin: 0 0 16px;
@@ -165,6 +197,13 @@
     .page-compare.section {
       padding-top: 48px;
       padding-bottom: 4px;
+    }
+    .page-compare--fixed-pad-m-y.section {
+      padding-top: var(--utp-y-m);
+    }
+    .page-compare--fixed-pad-m-x.section {
+      padding-left: var(--utp-x-m);
+      padding-right: var(--utp-x-m);
     }
     .page-compare__products.section,
     .page-compare__table-section.section,
@@ -310,7 +349,10 @@
   }
 </style>
 
-{% render 'unified-text-pads-te-style', selector: '.section-frame', y_d: 96, side_d: 40, y_m: 80, x_m: 20 %}
+
+
+
+{% render 'unified-text-pads-te-style', selector: '.page-compare', y_d: 72, side_d: 40, y_m: 48, x_m: 16, y_d_bottom_px: 8, y_m_bottom_px: 4 %}
 
 {% schema %}
 {
@@ -334,11 +376,11 @@
       "type": "textarea",
       "id": "subtitle",
       "label": "Subtitle",
-      "default": "Both perform identically — same grip, same stability. The difference is feel and coverage only."
+      "default": "Both perform identically \u2014 same grip, same stability. The difference is feel and coverage only."
     },
     {
       "type": "header",
-      "content": "Product A — Open Sole"
+      "content": "Product A \u2014 Open Sole"
     },
     {
       "type": "product",
@@ -375,7 +417,7 @@
     },
     {
       "type": "header",
-      "content": "Product B — Closed Sole"
+      "content": "Product B \u2014 Closed Sole"
     },
     {
       "type": "product",
@@ -418,7 +460,7 @@
       "type": "textarea",
       "id": "shared_note",
       "label": "Shared features note",
-      "default": "Both deliver the same molded 360° full-contact grip, the same stability, and natural toe splay. Choice is preference and feel only.",
+      "default": "Both deliver the same molded 360\u00b0 full-contact grip, the same stability, and natural toe splay. Choice is preference and feel only.",
       "info": "Leave blank to hide."
     },
     {
@@ -440,23 +482,23 @@
     },
     {
       "type": "header",
-      "content": "Layout — text padding"
+      "content": "Layout \u2014 text padding"
     },
     {
       "type": "range",
       "id": "text_pad_y",
-      "label": "Text pad top & bottom — desktop (default 96)",
-      "min": 8,
+      "label": "Text pad Y desktop (default 72 top / 8 bottom)",
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
-      "default": 96
+      "default": 72
     },
     {
       "type": "range",
       "id": "side_padding",
-      "label": "Text pad left & right — desktop (default 40)",
-      "min": 8,
+      "label": "Text pad left & right \u2014 desktop (default 40)",
+      "min": 0,
       "max": 96,
       "step": 1,
       "unit": "px",
@@ -465,22 +507,22 @@
     {
       "type": "range",
       "id": "text_pad_y_mobile",
-      "label": "Text pad top & bottom — phone (default 80)",
-      "min": 8,
+      "label": "Text pad Y phone (default 48 top / 4 bottom)",
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
-      "default": 80
+      "default": 48
     },
     {
       "type": "range",
       "id": "text_pad_x_mobile",
-      "label": "Text pad left & right — phone (default 20)",
-      "min": 8,
+      "label": "Text pad left & right \u2014 phone (default 16)",
+      "min": 0,
       "max": 48,
       "step": 1,
       "unit": "px",
-      "default": 20
+      "default": 16
     }
   ],
   "blocks": [

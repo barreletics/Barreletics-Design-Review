@@ -2,12 +2,33 @@
   About page — dark close CTA (v25 Locked)
 {% endcomment %}
 
+{%- liquid
+  assign pac_y_d_def = 120
+  assign pac_side_d_def = 20
+  assign pac_y_m_def = 56
+  assign pac_x_m_def = 20
+  assign pac_fixed_d_y = false
+  if section.settings.text_pad_y != pac_y_d_def
+    assign pac_fixed_d_y = true
+  endif
+  assign pac_fixed_d_x = false
+  if section.settings.side_padding != pac_side_d_def
+    assign pac_fixed_d_x = true
+  endif
+  assign pac_fixed_m_y = false
+  if section.settings.text_pad_y_mobile != pac_y_m_def
+    assign pac_fixed_m_y = true
+  endif
+  assign pac_fixed_m_x = false
+  if section.settings.text_pad_x_mobile != pac_x_m_def
+    assign pac_fixed_m_x = true
+  endif
+-%}
 <section
-  class="page-about-close"
-  id="shopify-section-{{ section.id }}"
+  class="page-about-close{% if pac_fixed_d_y %} page-about-close--fixed-pad-d-y{% endif %}{% if pac_fixed_d_x %} page-about-close--fixed-pad-d-x{% endif %}{% if pac_fixed_m_y %} page-about-close--fixed-pad-m-y{% endif %}{% if pac_fixed_m_x %} page-about-close--fixed-pad-m-x{% endif %}"
   {{ section.shopify_attributes }}
   aria-label="{{ section.settings.aria_label | escape }}"
-  style="{% render 'unified-text-pads-vars', y_d: 14, side_d: 28, y_m: 56, x_m: 20 %}{% render 'type-override-vars', title_size: section.settings.title_size, title_weight: section.settings.title_weight, body_size: section.settings.body_size, body_weight: section.settings.body_weight, sub_size: section.settings.cta_size %}"
+  style="{% render 'unified-text-pads-vars', y_d: 120, side_d: 20, y_m: 56, x_m: 20 %}{% render 'type-override-vars', title_size: section.settings.title_size, title_weight: section.settings.title_weight, body_size: section.settings.body_size, body_weight: section.settings.body_weight, sub_size: section.settings.cta_size %}"
 >
   {% if section.settings.heading != blank %}
     <h2 class="page-about-close__title">{{ section.settings.heading }}</h2>
@@ -22,12 +43,22 @@
   {% endif %}
 </section>
 
-<style>
+{% style %}
   #shopify-section-{{ section.id }} .page-about-close {
     background: #faf8f6;
     color: #1c1916;
     padding: clamp(80px, 18vh, 160px) clamp(20px, 8vw, 8vw);
     text-align: center;
+  }
+  @media (min-width: 769px) {
+    #shopify-section-{{ section.id }} .page-about-close--fixed-pad-d-y {
+      padding-top: var(--utp-y-d);
+      padding-bottom: var(--utp-y-d);
+    }
+    #shopify-section-{{ section.id }} .page-about-close--fixed-pad-d-x {
+      padding-left: var(--utp-side-d);
+      padding-right: var(--utp-side-d);
+    }
   }
   #shopify-section-{{ section.id }} .page-about-close__title {
     font-size: var(--te-title-size, clamp(44px, 7vw, 88px));
@@ -48,7 +79,7 @@
     display: inline-block;
     background: #1c1916;
     color: #fff;
-    padding: var(--utp-y-d, 14px) var(--utp-side-d, 28px);
+    padding: 14px 28px;
     font-size: var(--te-sub-size, 14px);
     font-weight: 500;
     text-decoration: none;
@@ -61,17 +92,26 @@
   }
   @media (max-width: 768px) {
     #shopify-section-{{ section.id }} .page-about-close { padding: 56px 20px; }
+    #shopify-section-{{ section.id }} .page-about-close--fixed-pad-m-y {
+      padding-top: var(--utp-y-m);
+      padding-bottom: var(--utp-y-m);
+    }
+    #shopify-section-{{ section.id }} .page-about-close--fixed-pad-m-x {
+      padding-left: var(--utp-x-m);
+      padding-right: var(--utp-x-m);
+    }
     #shopify-section-{{ section.id }} .page-about-close__title {
       font-size: var(--te-title-size, clamp(28px, 8vw, 40px));
     }
   }
-</style>
+{% endstyle %}
 
-{% render 'unified-text-pads-te-style', selector: '.page-about-close', y_d: 14, side_d: 28, y_m: 56, x_m: 20 %}
+{%- comment -%} TE pads: Shopify's wrapper div owns id=shopify-section-<id>; '.page-about-close' is this section's root inside it, so the snippet's '#shopify-section-<id> .page-about-close' matches it. {%- endcomment -%}
+{% render 'unified-text-pads-te-style', selector: '.page-about-close', y_d: 120, side_d: 20, y_m: 56, x_m: 20 %}
 
 {% schema %}
 {
-  "name": "About — Close",
+  "name": "About \u2014 Close",
   "settings": [
     {
       "type": "text",
@@ -104,7 +144,7 @@
     },
     {
       "type": "header",
-      "content": "Type — size & weight",
+      "content": "Type \u2014 size & weight",
       "info": "Family is brand Type OS. Default keeps the signed v25 sizing."
     },
     {
@@ -309,43 +349,43 @@
     },
     {
       "type": "header",
-      "content": "Layout — text padding"
+      "content": "Layout \u2014 text padding"
     },
     {
       "type": "range",
       "id": "text_pad_y",
-      "label": "Text pad top & bottom — desktop (default 14)",
-      "min": 8,
-      "max": 120,
-      "step": 1,
+      "label": "Text pad Y — desktop (default clamp 80–160)",
+      "min": 0,
+      "max": 160,
+      "step": 2,
       "unit": "px",
-      "default": 14
+      "default": 120
     },
     {
       "type": "range",
       "id": "side_padding",
-      "label": "Text pad left & right — desktop (default 28)",
-      "min": 8,
+      "label": "Text pad X desktop (20 off; live padding ~8vw)",
+      "min": 0,
       "max": 96,
       "step": 1,
       "unit": "px",
-      "default": 28
+      "default": 20
     },
     {
       "type": "range",
       "id": "text_pad_y_mobile",
-      "label": "Text pad top & bottom — phone (default 56)",
-      "min": 8,
+      "label": "Text pad top & bottom \u2014 phone (default 56)",
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 56
     },
     {
       "type": "range",
       "id": "text_pad_x_mobile",
-      "label": "Text pad left & right — phone (default 20)",
-      "min": 8,
+      "label": "Text pad left & right \u2014 phone (default 20)",
+      "min": 0,
       "max": 48,
       "step": 1,
       "unit": "px",
@@ -354,7 +394,7 @@
   ],
   "presets": [
     {
-      "name": "About — Close"
+      "name": "About \u2014 Close"
     }
   ]
 }

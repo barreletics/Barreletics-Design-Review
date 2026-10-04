@@ -2,9 +2,30 @@
   About page — What we stand for (v25 Locked · 2-col grid)
 {% endcomment %}
 
+{%- liquid
+  assign pav_y_d_def = 40
+  assign pav_side_d_def = 20
+  assign pav_y_m_def = 40
+  assign pav_x_m_def = 20
+  assign pav_fixed_d_y = false
+  if section.settings.text_pad_y != pav_y_d_def
+    assign pav_fixed_d_y = true
+  endif
+  assign pav_fixed_d_x = false
+  if section.settings.side_padding != pav_side_d_def
+    assign pav_fixed_d_x = true
+  endif
+  assign pav_fixed_m_y = false
+  if section.settings.text_pad_y_mobile != pav_y_m_def
+    assign pav_fixed_m_y = true
+  endif
+  assign pav_fixed_m_x = false
+  if section.settings.text_pad_x_mobile != pav_x_m_def
+    assign pav_fixed_m_x = true
+  endif
+-%}
 <section
-  class="page-about-values"
-  id="shopify-section-{{ section.id }}"
+  class="page-about-values{% if pav_fixed_d_y %} page-about-values--fixed-pad-d-y{% endif %}{% if pav_fixed_d_x %} page-about-values--fixed-pad-d-x{% endif %}{% if pav_fixed_m_y %} page-about-values--fixed-pad-m-y{% endif %}{% if pav_fixed_m_x %} page-about-values--fixed-pad-m-x{% endif %}"
   {{ section.shopify_attributes }}
   aria-label="{{ section.settings.aria_label | escape }}"
   style="{% render 'unified-text-pads-vars', y_d: 40, side_d: 20, y_m: 40, x_m: 20 %}{% render 'type-override-vars', title_size: section.settings.title_size, title_weight: section.settings.title_weight, body_size: section.settings.body_size, body_weight: section.settings.body_weight, sub_size: section.settings.card_title_size, sub_weight: section.settings.card_title_weight %}"
@@ -28,12 +49,22 @@
   </div>
 </section>
 
-<style>
+{% style %}
   #shopify-section-{{ section.id }} .page-about-values {
     padding: clamp(56px, 10vh, 96px) clamp(20px, 8vw, 8vw);
     border-top: 1px solid var(--line-soft, #e8e2d8);
     border-bottom: 1px solid var(--line-soft, #e8e2d8);
     background: #fff;
+  }
+  @media (min-width: 769px) {
+    #shopify-section-{{ section.id }} .page-about-values--fixed-pad-d-y {
+      padding-top: var(--utp-y-d);
+      padding-bottom: var(--utp-y-d);
+    }
+    #shopify-section-{{ section.id }} .page-about-values--fixed-pad-d-x {
+      padding-left: var(--utp-side-d);
+      padding-right: var(--utp-side-d);
+    }
   }
   #shopify-section-{{ section.id }} .page-about-values__inner {
     max-width: 1200px;
@@ -78,16 +109,25 @@
     margin: 0;
   }
   @media (max-width: 768px) {
-    #shopify-section-{{ section.id }} .page-about-values { padding: var(--utp-y-m, 40px) var(--utp-x-m, 20px); }
+    #shopify-section-{{ section.id }} .page-about-values { padding: 40px 20px; }
+    #shopify-section-{{ section.id }} .page-about-values--fixed-pad-m-y {
+      padding-top: var(--utp-y-m);
+      padding-bottom: var(--utp-y-m);
+    }
+    #shopify-section-{{ section.id }} .page-about-values--fixed-pad-m-x {
+      padding-left: var(--utp-x-m);
+      padding-right: var(--utp-x-m);
+    }
     #shopify-section-{{ section.id }} .page-about-values__grid { grid-template-columns: 1fr; }
   }
-</style>
+{% endstyle %}
 
+{%- comment -%} TE pads: Shopify's wrapper div owns id=shopify-section-<id>; '.page-about-values' is this section's root inside it, so the snippet's '#shopify-section-<id> .page-about-values' matches it. {%- endcomment -%}
 {% render 'unified-text-pads-te-style', selector: '.page-about-values', y_d: 40, side_d: 20, y_m: 40, x_m: 20 %}
 
 {% schema %}
 {
-  "name": "About — Values",
+  "name": "About \u2014 Values",
   "settings": [
     {
       "type": "text",
@@ -103,7 +143,7 @@
     },
     {
       "type": "header",
-      "content": "Type — size & weight",
+      "content": "Type \u2014 size & weight",
       "info": "Family is brand Type OS. Default keeps the signed v25 sizing."
     },
     {
@@ -316,23 +356,23 @@
     },
     {
       "type": "header",
-      "content": "Layout — text padding"
+      "content": "Layout \u2014 text padding"
     },
     {
       "type": "range",
       "id": "text_pad_y",
-      "label": "Text pad top & bottom — desktop (default 40)",
-      "min": 8,
+      "label": "Text pad Y desktop (default fluid ~56\u201396)",
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 40
     },
     {
       "type": "range",
       "id": "side_padding",
-      "label": "Text pad left & right — desktop (default 20)",
-      "min": 8,
+      "label": "Text pad X desktop (20 off; live padding ~8vw)",
+      "min": 0,
       "max": 96,
       "step": 1,
       "unit": "px",
@@ -341,18 +381,18 @@
     {
       "type": "range",
       "id": "text_pad_y_mobile",
-      "label": "Text pad top & bottom — phone (default 40)",
-      "min": 8,
+      "label": "Text pad top & bottom \u2014 phone (default 40)",
+      "min": 0,
       "max": 120,
-      "step": 1,
+      "step": 2,
       "unit": "px",
       "default": 40
     },
     {
       "type": "range",
       "id": "text_pad_x_mobile",
-      "label": "Text pad left & right — phone (default 20)",
-      "min": 8,
+      "label": "Text pad left & right \u2014 phone (default 20)",
+      "min": 0,
       "max": 48,
       "step": 1,
       "unit": "px",
@@ -379,7 +419,7 @@
   ],
   "presets": [
     {
-      "name": "About — Values",
+      "name": "About \u2014 Values",
       "blocks": [
         {
           "type": "value",
@@ -392,14 +432,14 @@
           "type": "value",
           "settings": {
             "title": "Category creation",
-            "description": "We're not competing in the grip sock market — we're replacing it. Performance Skins are a new category of studio footwear built from first principles."
+            "description": "We're not competing in the grip sock market \u2014 we're replacing it. Performance Skins are a new category of studio footwear built from first principles."
           }
         },
         {
           "type": "value",
           "settings": {
             "title": "Durability as design",
-            "description": "Products should outlast the hype cycle. Many customers report 3–4 years of daily use. One purchase replaces years of disposable socks."
+            "description": "Products should outlast the hype cycle. Many customers report 3\u20134 years of daily use. One purchase replaces years of disposable socks."
           }
         },
         {
@@ -413,7 +453,7 @@
           "type": "value",
           "settings": {
             "title": "Studio-first",
-            "description": "Designed for the demands of real studio environments — reformer carriages, Megaformer platforms, barre floors. Every detail serves the practice."
+            "description": "Designed for the demands of real studio environments \u2014 reformer carriages, Megaformer platforms, barre floors. Every detail serves the practice."
           }
         }
       ]
