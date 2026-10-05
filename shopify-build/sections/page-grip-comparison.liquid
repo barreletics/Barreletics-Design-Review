@@ -5,12 +5,12 @@
   Used on: page.grip-comparison.json
 {% endcomment %}
 
-<section class="section section--dark" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
+<section class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} section section--dark" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }} style="{% render 'section-inset-vars' %}">
   <div class="section__inner section__inner--narrow">
     {% if section.settings.eyebrow != blank %}
       <p class="eyebrow eyebrow--accent">{{ section.settings.eyebrow }}</p>
     {% endif %}
-    <h1 class="page-grip__hero-title">{{ section.settings.title }}</h1>
+    <h1 class="page-grip__hero-title type-hero">{{ section.settings.title }}</h1>
     {% if section.settings.hero_subtitle != blank %}
       <p class="page-grip__hero-subtitle">{{ section.settings.hero_subtitle }}</p>
     {% endif %}
@@ -22,7 +22,7 @@
 
 <section class="section">
   <div class="section__inner">
-    <h2 class="page-grip__section-title">{{ section.settings.table_heading }}</h2>
+    <h2 class="page-grip__section-title h2-standard">{{ section.settings.table_heading }}</h2>
     <div class="page-grip__table-wrap">
       <table class="page-grip__table" role="table" aria-label="Barreletics vs Grip Socks comparison">
         <thead>
@@ -79,7 +79,7 @@
         <h3 class="page-grip__math-label">Barreletics</h3>
         <p class="page-grip__math-calc">One pair, one time</p>
         <p class="page-grip__math-total page-grip__math-total--good">{{ section.settings.barreletics_price }}</p>
-        <p class="page-grip__math-note">Lasts 18+ months (many report 3-4 years)</p>
+        <p class="page-grip__math-note">One customer passed 1,000 classes. Another is on year four.</p>
       </div>
     </div>
     <div class="page-grip__math-savings">
@@ -118,7 +118,7 @@
 
 <section class="section section--dark">
   <div class="section__inner section__inner--narrow" style="text-align: center;">
-    <h2 class="page-grip__cta-title">{{ section.settings.bottom_cta_heading }}</h2>
+    <h2 class="page-grip__cta-title h2-display">{{ section.settings.bottom_cta_heading }}</h2>
     <p class="page-grip__cta-subtitle">{{ section.settings.bottom_cta_body }}</p>
     {% if section.settings.bottom_cta_text != blank %}
       {% render 'button', label: section.settings.bottom_cta_text, url: section.settings.bottom_cta_url, style: 'primary', size: 'lg' %}
@@ -184,13 +184,14 @@
 
 <style>
   .page-grip__hero-title {
-    font-size: var(--text-6xl);
-    font-weight: var(--weight-bold);
+    font-size: var(--type-hero-size);
+    font-weight: var(--type-hero-weight);
+    line-height: var(--type-hero-leading);
+    letter-spacing: var(--type-hero-tracking);
+    text-transform: none;
     color: var(--color-white);
     text-align: center;
     margin: 0 0 var(--space-4);
-    letter-spacing: var(--tracking-tight);
-    line-height: var(--leading-tight);
   }
 
   .page-grip__hero-subtitle {
@@ -205,12 +206,14 @@
   }
 
   .page-grip__section-title {
-    font-size: var(--text-2xl);
-    font-weight: var(--weight-bold);
+    font-size: var(--type-section-size);
+    font-weight: var(--type-section-weight);
+    line-height: var(--type-section-leading);
+    letter-spacing: var(--type-section-tracking);
+    text-transform: none;
     color: var(--text-primary);
     text-align: center;
     margin: 0 0 var(--space-8);
-    letter-spacing: var(--tracking-tight);
   }
 
   .page-grip__table-wrap {
@@ -318,7 +321,7 @@
 
   .page-grip__math-label {
     font-size: var(--text-sm);
-    font-weight: var(--weight-bold);
+    font-weight: var(--type-label-weight);
     text-transform: uppercase;
     letter-spacing: var(--tracking-wide);
     color: var(--text-muted);
@@ -401,11 +404,13 @@
   }
 
   .page-grip__cta-title {
-    font-size: var(--text-3xl);
-    font-weight: var(--weight-bold);
+    font-size: var(--type-h2-display-size);
+    font-weight: var(--type-h2-display-weight);
+    line-height: var(--type-h2-display-leading);
+    letter-spacing: var(--type-h2-display-tracking);
+    text-transform: none;
     color: var(--color-white);
     margin: 0 0 var(--space-3);
-    letter-spacing: var(--tracking-tight);
   }
 
   .page-grip__cta-subtitle {
@@ -472,8 +477,7 @@
     {
       "type": "text",
       "id": "eyebrow",
-      "label": "Eyebrow",
-      "default": "The Category Is Over"
+      "label": "Eyebrow"
     },
     {
       "type": "text",
@@ -580,6 +584,97 @@
       "type": "url",
       "id": "bottom_cta_url",
       "label": "Bottom CTA link"
+    },
+
+    {
+      "type": "header",
+      "content": "Shared — Section frame"
+    },
+    {
+      "type": "paragraph",
+      "content": "OUTER inset from the page edges (margin). Top and bottom are independent; left & right = one control. Custom mobile OFF = mobile uses the same inset as desktop. Defaults 0 = full bleed."
+    },
+    {
+      "type": "checkbox",
+      "id": "inset_custom_mobile",
+      "label": "Custom mobile inset",
+      "default": false,
+      "info": "OFF (default): ignore the mobile inset sliders — mobile uses desktop Inset top / bottom / left & right. ON: use the mobile inset sliders instead."
+    },
+    {
+      "type": "range",
+      "id": "inset_top",
+      "label": "Inset top",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom",
+      "label": "Inset bottom",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x",
+      "label": "Inset left & right",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Same value on both sides."
+    },
+    {
+      "type": "range",
+      "id": "inset_top_mobile",
+      "label": "Inset top — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom_mobile",
+      "label": "Inset bottom — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x_mobile",
+      "label": "Inset left & right — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_desktop",
+      "label": "Hide on desktop",
+      "default": false
     }
   ],
   "blocks": [
