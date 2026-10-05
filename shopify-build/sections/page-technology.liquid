@@ -4,12 +4,12 @@
   of grip socks. Used on: page.technology.json
 {% endcomment %}
 
-<section class="section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
+<section class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }} style="{% render 'section-inset-vars' %}">
   <div class="section__inner section__inner--narrow">
     {% if section.settings.eyebrow != blank %}
       <p class="eyebrow eyebrow--accent">{{ section.settings.eyebrow }}</p>
     {% endif %}
-    <h1 class="page-tech__title">{{ section.settings.title }}</h1>
+    <h1 class="page-tech__title type-hero">{{ section.settings.title }}</h1>
     {% if section.settings.subtitle != blank %}
       <p class="page-tech__subtitle">{{ section.settings.subtitle }}</p>
     {% endif %}
@@ -34,7 +34,7 @@
 {% if section.settings.how_it_works != blank %}
 <section class="section">
   <div class="section__inner section__inner--narrow">
-    <h2 class="page-tech__section-title">{{ section.settings.how_heading }}</h2>
+    <h2 class="page-tech__section-title h2-standard">{{ section.settings.how_heading }}</h2>
     <div class="page-tech__body">
       {{ section.settings.how_it_works }}
     </div>
@@ -94,12 +94,14 @@
 
 <style>
   .page-tech__title {
-    font-size: var(--text-5xl);
-    font-weight: var(--weight-bold);
+    font-size: var(--type-hero-size);
+    font-weight: var(--type-hero-weight);
+    line-height: var(--type-hero-leading);
+    letter-spacing: var(--type-hero-tracking);
+    text-transform: none;
     color: var(--text-primary);
     text-align: center;
     margin: 0 0 var(--space-3);
-    letter-spacing: var(--tracking-tight);
   }
 
   .page-tech__subtitle {
@@ -142,11 +144,13 @@
   }
 
   .page-tech__section-title {
-    font-size: var(--text-2xl);
-    font-weight: var(--weight-bold);
+    font-size: var(--type-section-size);
+    font-weight: var(--type-section-weight);
+    line-height: var(--type-section-leading);
+    letter-spacing: var(--type-section-tracking);
+    text-transform: none;
     color: var(--text-primary);
     margin: 0 0 var(--space-6);
-    letter-spacing: var(--tracking-tight);
   }
 
   .page-tech__section-title--light {
@@ -327,6 +331,97 @@
       "type": "url",
       "id": "cta_url",
       "label": "CTA link"
+    },
+
+    {
+      "type": "header",
+      "content": "Shared — Section frame"
+    },
+    {
+      "type": "paragraph",
+      "content": "OUTER inset from the page edges (margin). Top and bottom are independent; left & right = one control. Custom mobile OFF = mobile uses the same inset as desktop. Defaults 0 = full bleed."
+    },
+    {
+      "type": "checkbox",
+      "id": "inset_custom_mobile",
+      "label": "Custom mobile inset",
+      "default": false,
+      "info": "OFF (default): ignore the mobile inset sliders — mobile uses desktop Inset top / bottom / left & right. ON: use the mobile inset sliders instead."
+    },
+    {
+      "type": "range",
+      "id": "inset_top",
+      "label": "Inset top",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom",
+      "label": "Inset bottom",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x",
+      "label": "Inset left & right",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Same value on both sides."
+    },
+    {
+      "type": "range",
+      "id": "inset_top_mobile",
+      "label": "Inset top — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom_mobile",
+      "label": "Inset bottom — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x_mobile",
+      "label": "Inset left & right — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_desktop",
+      "label": "Hide on desktop",
+      "default": false
     }
   ],
   "blocks": [
