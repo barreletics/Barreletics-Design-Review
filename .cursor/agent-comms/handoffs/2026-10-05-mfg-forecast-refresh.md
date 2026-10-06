@@ -1,0 +1,14 @@
+# Mfg Forecast refresh handoff (2026-10-05)
+- Role: demand forecasts, production runs and PDS/manufacturing POs only. 3PL & Inventory (ee353fac) owns ALL Shopify inventory writes (pds-receiving, efs-ship-up skills); send it receipt counts and ship-up ideas, never adjust stock. Daily bookkeeping is Finance · Xero.
+- Style: short numbers, no fluff; always say why an item is excluded or at zero; flag stockouts across all sizes/colors; confirm before any spend or send; draft emails only.
+- Key facts are in shared user memory (PO-2001 final 511 invoiced/$2,602.02; sales base 295 pairs/mo; production plan; cost math).
+- PO-2001: closed. 404 received Oct 5 at Barreletics + 120 to eFS Sep 28. Detail: /workspace/pds-receiving/PO-2001-receipt-check.md.
+- PO-2003: 1,000 Closed Sole, November slot, latest run Nov 10; Subterranean replaces Dark Grey.
+- OPEN 1: Batch cadence + TPE reorder points for Distribution (94d7b30c / 321f4966): runs <=6 weeks apart, 500-700 pair batches, 2,000 lb TPE just bought, demand 540-725/mo. Build from current on-hand + PO-2001.
+- OPEN 2: Optional Black return analysis (size swaps M<->L) needs read_returns scope or ReturnZap CSV; Aug Medium Black batch had 3 early failures.
+- OPEN 3: PO-2001 Xero update with actuals (Finance · Xero) if not done.
+- Files: /workspace/monthly_sales_returns_oct2026.csv, /workspace/cs_inv_oct5.json, /workspace/pos/ (PO PDFs, build_pos.py), /workspace/bops/Barreletics-Manufacturing/ (MFG docs, Costs/), /workspace/bops/distribution/cogs.md.
+- Shopify app Grok Inventory: client creds in env SHOPIFY_CLIENT_ID/SECRET; has write_inventory since Oct 5 (use only via 3PL & Inventory).
+- Group chat: Inventory · eFS ship-up (f1cbb92a), with 3PL & Inventory.
+- Routines: none.
+- Sidebar section: Manufacturiing.
