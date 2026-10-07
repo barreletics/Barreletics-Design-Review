@@ -83,7 +83,7 @@
     assign ff_mobile_media_h_css = 'var(--split-media-h-mobile, 500px)'
   endif
   assign mobile_text_height = section.settings.mobile_text_height | default: 0
-  if template.name == 'product' and template.suffix != 'in-studio-template'
+  if template.name == 'product' and template.suffix != 'in-studio-template' and template.suffix != blank
     assign mobile_text_height = 0
   endif
   assign mobile_media_width = section.settings.mobile_media_width | default: 100
@@ -1074,7 +1074,7 @@
     {%- else %}
     --ff-mobile-media-height: var(--split-media-h-mobile, 500px) !important;
     {%- endif %}
-    {%- if template.name == 'product' and template.suffix != 'in-studio-template' %}
+    {%- if template.name == 'product' and template.suffix != 'in-studio-template' and template.suffix != blank %}
     --ff-mobile-text-height: 0px !important;
     {%- else %}
     --ff-mobile-text-height: {{ section.settings.mobile_text_height | default: 0 }}px !important;
@@ -1151,7 +1151,7 @@
     background: var(--ff-media-pad-bg) !important;
   }
   {%- if section.settings.mobile_text_height > 0 %}
-  {%- if template.name != 'product' or template.suffix == 'in-studio-template' %}
+  {%- if template.name != 'product' or template.suffix == 'in-studio-template' or template.suffix == blank %}
   @media (max-width: 768px) {
     #shopify-section-{{ section.id }} .split-text {
       min-height: {{ section.settings.mobile_text_height }}px;
