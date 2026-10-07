@@ -21,7 +21,7 @@
 | Barefoot feel. Zero slip. | `fifty-fifty-lifestyle` | `mobile_media_height` **550 → 0** (media 500). `mobile_text_height` **513**. Pads 96/96, P5A4949 cover, focal 50/72 stay. |
 | Tired of slipping in your yoga socks? | `fifty-fifty-tired-socks` | media already 500. `mobile_text_height` **513**. |
 | Redefine movement. | `fifty-fifty-numbers` | media already 500. `mobile_text_height` **513**. |
-| Let us knock your socks off | `knock-socks` | no height setting — `statement-band` phone `min-height: 1013px` scoped to `in-studio-template`. |
+| Let us knock your socks off | `knock-socks` | no height setting — `statement-band` phone `min-height: 1013px` on Knock only (`open_knock_join`). Think outside the sock stays auto. |
 
 `mobile_text_height` is honored on `in-studio-template` only (other product templates still zero it). Desktop unchanged. Typography / 96 pads / images stay.
 
