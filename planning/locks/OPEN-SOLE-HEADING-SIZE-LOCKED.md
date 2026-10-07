@@ -25,7 +25,7 @@ Product **h1** stays 18 / 600. Eyebrows, cards, buy box, footer stay out.
 - FAQ / reviews / juicer / Shop all used h2-standard 32 / 24
 - `fullbleed-statement` **Hold every pose.** had `heading_size_override: 0` (TE empty number) → 36px on desktop
 - **Redefine movement** is a 56px fifty-fifty title; **Redefine movement** on Think is a type-label eyebrow (not a heading)
-- **Barefoot feel. Zero slip.** (`fifty-fifty-lifestyle`) is `.split-text__title.h2-display`. The shared `.h2-display` phone token is `clamp(26px, 7vw, 32px)` (~27px) — that was the miss vs neighbors at 36. Unify now selects `.h2-display` / `.h2-standard` explicitly. Do not change image / `mobile_media_height` 550 / pads 96/96 / focal.
+- **Barefoot feel. Zero slip.** (`fifty-fifty-lifestyle`) is `.split-text__title.h2-display`. The shared `.h2-display` phone token is `clamp(26px, 7vw, 32px)` (~27px) — that was the miss vs neighbors at 36. Unify now selects `.h2-display` / `.h2-standard` explicitly. Do not change image / pads 96/96 / focal to “fix” type. Phone media height is a later pass (2026-10-07): `mobile_media_height` **0** = Sock era / global 500 (was 550).
 
 ## Lock
 
@@ -43,5 +43,5 @@ Home / Closed Sole / `/collections/all` must not move.
 - Do not “fix” this by changing Home / Closed / collections heading CSS
 - Do not push `theme.liquid` from the stale local tree over draft
 - Do not clear `heading_size_override` back to 0 on Hold every pose
-- Do not change copy, images, media heights, mobile text pads 96/96, buy box, or the product h1
-- Do not change Chair Pose / Barefoot feel `mobile_media_height` 550, focal, or image to “fix” heading size
+- Do not change copy, images, mobile text pads 96/96, buy box, or the product h1 to “fix” heading size
+- Barefoot phone media height is **0** (Sock era / global 500) as of the 2026-10-07 height pass — do not put 550 or 360 back to “fix” type

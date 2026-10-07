@@ -83,7 +83,7 @@
     assign ff_mobile_media_h_css = 'var(--split-media-h-mobile, 500px)'
   endif
   assign mobile_text_height = section.settings.mobile_text_height | default: 0
-  if template.name == 'product'
+  if template.name == 'product' and template.suffix != 'in-studio-template'
     assign mobile_text_height = 0
   endif
   assign mobile_media_width = section.settings.mobile_media_width | default: 100
@@ -1074,7 +1074,7 @@
     {%- else %}
     --ff-mobile-media-height: var(--split-media-h-mobile, 500px) !important;
     {%- endif %}
-    {%- if template.name == 'product' %}
+    {%- if template.name == 'product' and template.suffix != 'in-studio-template' %}
     --ff-mobile-text-height: 0px !important;
     {%- else %}
     --ff-mobile-text-height: {{ section.settings.mobile_text_height | default: 0 }}px !important;
@@ -1150,7 +1150,8 @@
   #shopify-section-{{ section.id }} .split-media {
     background: var(--ff-media-pad-bg) !important;
   }
-  {%- if template.name != 'product' and section.settings.mobile_text_height > 0 %}
+  {%- if section.settings.mobile_text_height > 0 %}
+  {%- if template.name != 'product' or template.suffix == 'in-studio-template' %}
   @media (max-width: 768px) {
     #shopify-section-{{ section.id }} .split-text {
       min-height: {{ section.settings.mobile_text_height }}px;
@@ -1161,6 +1162,7 @@
       padding-bottom: {{ section.settings.text_pad_y_mobile | default: 80 }}px;
     }
   }
+  {%- endif %}
   {%- endif %}
 {% endstyle %}
 
@@ -1473,6 +1475,17 @@
       "step": 10,
       "unit": "px",
       "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mobile_text_height",
+      "label": "Text height \u2014 phone (default 0 = auto)",
+      "min": 0,
+      "max": 700,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "info": "Open Sole only. 0 = content height. Use to match a neighbor section (Sock era text = 513)."
     },
     {
       "type": "range",
