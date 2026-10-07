@@ -16,7 +16,7 @@
 
 ## Image+text sections = 1013 (Andrew 2026-10-07 evening)
 
-Every Open Sole 50/50 (and One pair) at 390 = **1013** (media **500** / text **513**).
+Every Open Sole image+text 50/50 at 390 = **1013** (media **500** / text **513**). One pair is taller because the dollar row is back.
 
 | Heading | Section | How |
 |---|---|---|
@@ -25,7 +25,7 @@ Every Open Sole 50/50 (and One pair) at 390 = **1013** (media **500** / text **5
 | Tired of slipping in your yoga socks? | `fifty-fifty-tired-socks` | `mobile_text_height` **513**. |
 | Redefine movement. | `fifty-fifty-numbers` | `mobile_text_height` **513**. |
 | Never loses shape. | `fifty-fifty-commit` | `mobile_text_height` **513**. |
-| One pair. Done. | `pdp-sock-math` | phone: sock-cycle dollar row **visible** (Andrew 2026-10-07). Extra pad off so it stays tight. Taller than 1013 is OK. Desktop unchanged. |
+| One pair. Done. | `pdp-sock-math` | **1226** at 390 (media 500 + copy 476 + cycle 251). Dollar row visible. Extra pad off. Desktop **1207** unchanged. |
 
 **Knock is NOT a 50/50.** `Let us knock your socks off` stays original phone height (**388**). Do not put `min-height: 1013px` on statement-band.
 

@@ -14,11 +14,11 @@ Image+text 50/50 at 390 = **1013** (media **500** / text **513**). Do **not** st
 | The grip sock era is over. | 1013 |
 | Studio workouts will never be the same. | 1013 |
 | Redefine movement. | 1013 |
-| One pair. Done. | 1013 |
+| One pair. Done. | **1030** (media 500 + copy 280 + cycle 251). Dollar row visible. |
 | Kimberly quote (`fifty-fifty-lifestyle`) | **1091** — quote + 80/80 pads = 591 text. Did not clip. |
 
 ## Flag
 
-One pair phone **shows** the sock-cycle dollar row again (Andrew 2026-10-07). Extra pad off so it stays tight. Taller than 1013 is OK. Desktop unchanged.
+One pair phone **shows** the sock-cycle dollar row again (Andrew 2026-10-07). Extra pad off so it stays tight. Phone **1030**. Desktop **709** unchanged.
 
 Think outside the sock / reviews / buy box / fullbleeds / FAQ untouched.
