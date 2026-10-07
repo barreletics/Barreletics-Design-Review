@@ -13,6 +13,8 @@
 | 1440 | **56px** | 59.36px (1.06) | 400 | -0.032em (-1.792px) |
 | 390 | **36px** | 38.16px (1.06) | 400 | -0.032em (-1.152px) |
 
+**Phone master (2026-10-07, Andrew):** Theme settings → **Typography** → **Section heading size (phones)** (`section_heading_size_phones`, default **36**). CSS var `--section-heading-size-m`. Per-section Heading size override still wins when set; blank/0 falls back to this. Desktop CSS / desktop settings not changed. Visual reference on a 390 phone: The Pilates sock era is over · Never loses shape · One pair. Done.
+
 Product **h1** stays 18 / 600. Eyebrows, cards, buy box, footer stay out.
 
 ## What was wrong

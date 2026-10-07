@@ -44,9 +44,9 @@
 %}
 
 <section
-  class="sock-math sock-math--{{ layout }}{% if image_unframed %} sock-math--unframed{% endif %}"
+  class="sock-math sock-math--{{ layout }}{% if image_unframed %} sock-math--unframed{% endif %} section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %}"
   aria-label="{{ section.settings.aria_label | default: 'One pair' | escape }}"
-  style="{% if body_size != 'default' %}--sm-body-size: {{ body_size }}px;{% endif %}--sm-pos: {{ image_pos }};--sm-frame: {{ image_frame }}px;--sm-frame-m: {{ sm_frame_m_css }};--sm-pad-top: {{ pad_top }}px;--sm-pad-bottom: {{ pad_bottom }}px;--sm-bg: {{ sm_bg }};"
+  style="{% render 'section-inset-vars' %}{% if body_size != 'default' %}--sm-body-size: {{ body_size }}px;{% endif %}--sm-pos: {{ image_pos }};--sm-frame: {{ image_frame }}px;--sm-frame-m: {{ sm_frame_m_css }};--sm-pad-top: {{ pad_top }}px;--sm-pad-bottom: {{ pad_bottom }}px;--sm-bg: {{ sm_bg }};"
 >
   {% if layout == 'editorial' %}
     <div class="sock-math__split">
@@ -171,6 +171,10 @@
 <style>
   {%- if section.settings.heading_size_override != blank %}
   #shopify-section-{{ section.id }} { {% render 'type-override-vars', title_size: section.settings.heading_size_override %} --te-title-size-n: {{ section.settings.heading_size_override }}; }
+  {%- endif %}
+  {%- assign _hso_n = section.settings.heading_size_override | plus: 0 -%}
+  {%- if section.settings.heading_size_override != blank and _hso_n > 0 %}
+  #shopify-section-{{ section.id }} { --section-heading-size-m: {{ _hso_n }}px; }
   {%- endif %}
   .sock-math--compact {
     background: var(--sm-bg, #faf8f6);
@@ -378,9 +382,11 @@
   #shopify-section-{{ section.id }} .sock-math h2.sock-math__headline b {
     font-weight: inherit;
   }
-  @media (max-width: 749px) {
+  @media (max-width: 768px) {
     #shopify-section-{{ section.id }} .sock-math h2.sock-math__headline {
-      font-size: var(--heading-phone, 36px);
+      font-size: var(--section-heading-size-m, 36px);
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
     }
   }
   .sock-math__sub {
@@ -502,7 +508,13 @@
       background: var(--sm-bg, #faf8f6);
     }
     .sock-math--editorial .sock-math__split { grid-template-columns: 1fr; }
-    .sock-math--editorial .sock-math__copy { padding: 48px 20px 48px; }
+    .sock-math--editorial .sock-math__copy {
+      padding: var(--text-pad-mobile, 48px) 20px var(--text-pad-mobile, 48px);
+      min-height: var(--text-min-h-mobile, auto);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
     .sock-math--editorial .sock-math__end { margin: 16px 0 0; }
     .sock-math--editorial .sock-math__visual,
     .sock-math--editorial .sock-math__visual img {
@@ -539,10 +551,141 @@
   }
   {% if template.name == 'product' %}
   @media (max-width: 768px) {
-    .sock-math--editorial { padding: 48px 0; }
+    /* Top: 48px unless --text-pad-mobile is set (then 0, the copy pad carries the space; calc clamps to 0). */
+    .sock-math--editorial { padding: calc(48px - var(--text-pad-mobile, 0px) * 100) 0 var(--text-pad-mobile, 48px); }
   }
   {% endif %}
 </style>
+
+{%- comment -%}
+  TE live preview (2026-10-06): dual-write of the inline --sm-* vars, read from section.settings.* directly
+  (fifty-fifty / acd8a93 / 108fff6 pattern). Inline vars come from top-of-file assigns and only refresh after Save.
+{%- endcomment -%}
+{% style %}
+  #shopify-section-{{ section.id }} .sock-math {
+    --sm-pos: {{ section.settings.image_crop | default: 'center center' }} !important;
+    --sm-frame: {{ section.settings.image_frame | default: 480 }}px !important;
+    {%- assign te_fm = section.settings.image_frame_mobile | default: 360 -%}
+    {%- if te_fm != 0 %}
+    --sm-frame-m: {{ te_fm }}px !important;
+    {%- else %}
+    --sm-frame-m: var(--split-media-h-mobile, 500px) !important;
+    {%- endif %}
+    --sm-pad-top: {{ section.settings.pad_top | default: 0 }}px !important;
+    --sm-pad-bottom: {{ section.settings.pad_bottom | default: 0 }}px !important;
+    {%- if section.settings.body_size != blank and section.settings.body_size != 'default' %}
+    --sm-body-size: {{ section.settings.body_size }}px !important;
+    {%- endif %}
+  }
+  {%- if section.settings.pad_custom_mobile %}
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .sock-math--editorial {
+      padding-top: {{ section.settings.pad_top_mobile }}px !important;
+      padding-bottom: {{ section.settings.pad_bottom_mobile }}px !important;
+    }
+  }
+  {%- endif %}
+{% endstyle %}
+
+{%- comment -%} 10-03 unified text pads (restored 2026-10-06 from c6eca80, Batch B). {%- endcomment -%}
+{% style %}
+  {%- liquid
+    assign te_y = 0
+    assign te_side = 0
+    assign te_y_m = 0
+    assign te_x_m = 0
+    assign u_y = section.settings.text_pad_y | default: te_y
+    assign u_side = section.settings.side_padding | default: te_side
+    assign u_y_m = section.settings.text_pad_y_mobile | default: te_y_m
+    assign u_x_m = section.settings.text_pad_x_mobile | default: te_x_m
+  -%}
+  {%- if u_y != te_y or u_side != te_side -%}
+  @media (min-width: 769px) {
+    {%- if u_y != te_y -%}
+    #shopify-section-{{ section.id }} .sock-math--compact {
+      padding-top: {{ u_y }}px;
+    }
+    #shopify-section-{{ section.id }} .sock-math--editorial {
+      padding-top: {{ u_y }}px;
+      padding-bottom: {{ u_y }}px;
+    }
+    {%- endif -%}
+    {%- if u_side != te_side -%}
+    #shopify-section-{{ section.id }} .sock-math__header,
+    #shopify-section-{{ section.id }} .sock-math__sub,
+    #shopify-section-{{ section.id }} .sock-math__inner,
+    #shopify-section-{{ section.id }} .sock-math__cta-wrap {
+      padding-left: {{ u_side }}px;
+      padding-right: {{ u_side }}px;
+    }
+    #shopify-section-{{ section.id }} .sock-math--editorial .sock-math__copy {
+      padding-left: {{ u_side }}px;
+      padding-right: {{ u_side }}px;
+    }
+    {%- endif -%}
+  }
+  {%- endif -%}
+  {%- if u_y_m != te_y_m or u_x_m != te_x_m -%}
+  @media (max-width: 768px) {
+    {%- if u_y_m != te_y_m -%}
+    #shopify-section-{{ section.id }} .sock-math--compact {
+      padding-top: {{ u_y_m }}px;
+    }
+    #shopify-section-{{ section.id }} .sock-math--editorial {
+      padding-top: {{ u_y_m }}px;
+      padding-bottom: {{ u_y_m }}px;
+    }
+    #shopify-section-{{ section.id }} .sock-math__header {
+      padding-top: {{ u_y_m }}px;
+    }
+    {%- endif -%}
+    {%- if u_x_m != te_x_m -%}
+    #shopify-section-{{ section.id }} .sock-math__header,
+    #shopify-section-{{ section.id }} .sock-math__sub,
+    #shopify-section-{{ section.id }} .sock-math__inner,
+    #shopify-section-{{ section.id }} .sock-math__cta-wrap {
+      padding-left: {{ u_x_m }}px;
+      padding-right: {{ u_x_m }}px;
+    }
+    #shopify-section-{{ section.id }} .sock-math--editorial .sock-math__copy {
+      padding-left: {{ u_x_m }}px;
+      padding-right: {{ u_x_m }}px;
+    }
+    {%- endif -%}
+  }
+  {%- endif -%}
+{% endstyle %}
+
+{%- comment -%}
+  TE live preview (2026-10-06): Shared — Section frame insets. The section-inset-vars snippet writes these inline
+  (Save-only). Same dual-write as split-hero (acd8a93): section.settings.* directly, !important on the vars.
+{%- endcomment -%}
+{% style %}
+  {%- liquid
+    assign te_in_t = section.settings.inset_top | default: 0
+    assign te_in_b = section.settings.inset_bottom | default: 0
+    assign te_in_x = section.settings.inset_x | default: 0
+    if section.settings.inset_custom_mobile
+      assign te_in_tm = section.settings.inset_top_mobile | default: 0
+      assign te_in_bm = section.settings.inset_bottom_mobile | default: 0
+      assign te_in_xm = section.settings.inset_x_mobile | default: 0
+    else
+      assign te_in_tm = te_in_t
+      assign te_in_bm = te_in_b
+      assign te_in_xm = te_in_x
+    endif
+  -%}
+  #shopify-section-{{ section.id }} .section-frame {
+    --section-inset-top: {{ te_in_t }}px !important;
+    --section-inset-right: {{ te_in_x }}px !important;
+    --section-inset-bottom: {{ te_in_b }}px !important;
+    --section-inset-left: {{ te_in_x }}px !important;
+    --section-inset-top-m: {{ te_in_tm }}px !important;
+    --section-inset-right-m: {{ te_in_xm }}px !important;
+    --section-inset-bottom-m: {{ te_in_bm }}px !important;
+    --section-inset-left-m: {{ te_in_xm }}px !important;
+  }
+{% endstyle %}
 
 {% schema %}
 {
@@ -710,24 +853,57 @@
     {
       "type": "range",
       "id": "pad_top",
-      "label": "Padding top",
+      "label": "Padding top — desktop",
       "min": 0,
       "max": 96,
       "step": 4,
       "unit": "px",
       "default": 0,
-      "info": "Open PDP match is 80 (same as 50/50s). Closed stays 0."
+      "info": "Open PDP 80, Closed 0. Phone: use Custom phone padding below."
     },
     {
       "type": "range",
       "id": "pad_bottom",
-      "label": "Padding bottom",
+      "label": "Padding bottom — desktop",
       "min": 0,
       "max": 96,
       "step": 4,
       "unit": "px",
       "default": 0,
-      "info": "Open PDP match is 80 (same as 50/50s). Closed stays 0."
+      "info": "Open PDP 80, Closed 0. Phone: use Custom phone padding below."
+    },
+    {"type": "range", "id": "text_pad_y", "label": "Text pad top & bottom — desktop (default 0)", "min": 0, "max": 120, "step": 2, "unit": "px", "default": 0},
+    {"type": "range", "id": "side_padding", "label": "Text pad left & right — desktop (default 0 — copy uses 40px)", "min": 0, "max": 96, "step": 2, "unit": "px", "default": 0},
+    {"type": "range", "id": "text_pad_y_mobile", "label": "Text pad top & bottom — phone (default 0)", "min": 0, "max": 120, "step": 2, "unit": "px", "default": 0},
+    {"type": "range", "id": "text_pad_x_mobile", "label": "Text pad left & right — phone (default 0 — compact uses 16px)", "min": 0, "max": 48, "step": 2, "unit": "px", "default": 0},
+    {
+      "type": "checkbox",
+      "id": "pad_custom_mobile",
+      "label": "Custom phone padding",
+      "default": false,
+      "info": "Off = phone keeps today's look (product pages 48 top / 48 bottom). On = phone uses the two sliders below."
+    },
+    {
+      "type": "range",
+      "id": "pad_top_mobile",
+      "label": "Padding top — phone",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 48,
+      "visible_if": "{{ section.settings.pad_custom_mobile }}"
+    },
+    {
+      "type": "range",
+      "id": "pad_bottom_mobile",
+      "label": "Padding bottom — phone",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 48,
+      "visible_if": "{{ section.settings.pad_custom_mobile }}"
     },
     { "type": "header", "content": "Section — Sock math — compact" },
     {
@@ -756,6 +932,96 @@
       "id": "aria_label",
       "label": "Section aria-label",
       "default": "Cost comparison"
+    },
+    {
+      "type": "header",
+      "content": "Shared \u2014 Section frame"
+    },
+    {
+      "type": "paragraph",
+      "content": "OUTER inset from the page edges (margin). Top and bottom are independent; left & right = one control. Custom mobile OFF = mobile uses the same inset as desktop. Defaults 0 = full bleed."
+    },
+    {
+      "type": "checkbox",
+      "id": "inset_custom_mobile",
+      "label": "Custom mobile inset",
+      "default": false,
+      "info": "OFF (default): ignore the mobile inset sliders \u2014 mobile uses desktop Inset top / bottom / left & right. ON: use the mobile inset sliders instead."
+    },
+    {
+      "type": "range",
+      "id": "inset_top",
+      "label": "Inset top",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom",
+      "label": "Inset bottom",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x",
+      "label": "Inset left & right",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Same value on both sides."
+    },
+    {
+      "type": "range",
+      "id": "inset_top_mobile",
+      "label": "Inset top \u2014 mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom_mobile",
+      "label": "Inset bottom \u2014 mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x_mobile",
+      "label": "Inset left & right \u2014 mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_desktop",
+      "label": "Hide on desktop",
+      "default": false
     }
   ],
   "presets": [{ "name": "Sock Math" }]

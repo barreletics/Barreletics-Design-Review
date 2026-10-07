@@ -32,7 +32,7 @@
 <section
   {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | handleize }}"{% endif %}
   class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} statement-band align-band"
-  style="{% render 'section-inset-vars' %} 
+  style="{% render 'section-inset-vars' %}{% render 'unified-text-pads-vars', y_d: 96, side_d: 40, y_m: 56, x_m: 20 %} 
     --sb-band-bg: {{ band_bg }};
     --sb-cta-bg: {{ cta_bg }};
     --sb-cta-border: {{ cta_border }};
@@ -61,8 +61,12 @@
   {%- if section.settings.heading_size_override != blank %}
   #shopify-section-{{ section.id }} { {% render 'type-override-vars', title_size: section.settings.heading_size_override %} --te-title-size-n: {{ section.settings.heading_size_override }}; }
   {%- endif %}
+  {%- assign _hso_n = section.settings.heading_size_override | plus: 0 -%}
+  {%- if section.settings.heading_size_override != blank and _hso_n > 0 %}
+  #shopify-section-{{ section.id }} { --section-heading-size-m: {{ _hso_n }}px; }
+  {%- endif %}
   #shopify-section-{{ section.id }} .statement-band {
-    padding: 96px 40px;
+    padding: var(--utp-y-d, 96px) var(--utp-side-d, 40px);
     background: var(--sb-band-bg, #faf8f6);
     text-align: center;
     border-top: 1px solid #e8e2d8;
@@ -109,9 +113,11 @@
   #shopify-section-{{ section.id }} .statement-band__line.h2-display b {
     font-weight: inherit;
   }
-  @media (max-width: 749px) {
+  @media (max-width: 768px) {
     #shopify-section-{{ section.id }} .statement-band__line.h2-display {
-      font-size: var(--heading-phone, 36px);
+      font-size: var(--section-heading-size-m, 36px);
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
     }
   }
   #shopify-section-{{ section.id }} .statement-band__sub {
@@ -148,16 +154,90 @@
     opacity: 0.92;
   }
   @media (max-width: 768px) {
-    #shopify-section-{{ section.id }} .statement-band { padding: 56px 20px; }
+    #shopify-section-{{ section.id }} .statement-band {
+      padding: var(--text-pad-mobile, var(--utp-y-m, 56px)) var(--utp-x-m, 20px);
+      min-height: var(--text-min-h-mobile, auto);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
   }
 </style>
+
+{% render 'unified-text-pads-te-style', selector: '.statement-band', y_d: 96, side_d: 40, y_m: 56, x_m: 20 %}
+
+{%- comment -%}
+  TE live preview (2026-10-06): dual-write of the inline vars (unified text pads snippet + band/CTA colours),
+  read from section.settings.* directly (fifty-fifty / acd8a93 / 108fff6 pattern). Values equal the CSS fallbacks
+  at schema defaults, so no visual change at saved values. Keep render-free.
+{%- endcomment -%}
+{% style %}
+  #shopify-section-{{ section.id }} .statement-band {
+    --utp-y-d: {{ section.settings.text_pad_y | default: 96 }}px !important;
+    --utp-side-d: {{ section.settings.side_padding | default: 40 }}px !important;
+    --utp-y-m: {{ section.settings.text_pad_y_mobile | default: 56 }}px !important;
+    --utp-x-m: {{ section.settings.text_pad_x_mobile | default: 20 }}px !important;
+    --sb-band-bg: {{ section.settings.bg_color | default: '#faf8f6' }} !important;
+    --sb-cta-bg: {{ section.settings.cta_bg_color | default: '#1c1916' }} !important;
+    --sb-cta-border: {{ section.settings.cta_border_color | default: section.settings.cta_bg_color | default: '#1c1916' }} !important;
+  }
+{% endstyle %}
+
+{%- comment -%}
+  TE live preview (2026-10-06): Shared — Section frame insets. The section-inset-vars snippet writes these inline
+  (Save-only). Same dual-write as split-hero (acd8a93): section.settings.* directly, !important on the vars.
+{%- endcomment -%}
+{% style %}
+  {%- liquid
+    assign te_in_t = section.settings.inset_top | default: 0
+    assign te_in_b = section.settings.inset_bottom | default: 0
+    assign te_in_x = section.settings.inset_x | default: 0
+    if section.settings.inset_custom_mobile
+      assign te_in_tm = section.settings.inset_top_mobile | default: 0
+      assign te_in_bm = section.settings.inset_bottom_mobile | default: 0
+      assign te_in_xm = section.settings.inset_x_mobile | default: 0
+    else
+      assign te_in_tm = te_in_t
+      assign te_in_bm = te_in_b
+      assign te_in_xm = te_in_x
+    endif
+  -%}
+  #shopify-section-{{ section.id }} .section-frame {
+    --section-inset-top: {{ te_in_t }}px !important;
+    --section-inset-right: {{ te_in_x }}px !important;
+    --section-inset-bottom: {{ te_in_b }}px !important;
+    --section-inset-left: {{ te_in_x }}px !important;
+    --section-inset-top-m: {{ te_in_tm }}px !important;
+    --section-inset-right-m: {{ te_in_xm }}px !important;
+    --section-inset-bottom-m: {{ te_in_bm }}px !important;
+    --section-inset-left-m: {{ te_in_xm }}px !important;
+  }
+{% endstyle %}
+
+{%- comment -%}
+  TE live preview (2026-10-06, round 3): remaining Save-only controls. Reads section.settings.* directly
+  (verified 10-03 pattern: acd8a93 / 108fff6). Values match what the inline style / static <style> render.
+{%- endcomment -%}
+{% style %}
+  #shopify-section-{{ section.id }} .statement-band {
+    --sb-cta-text: {{ section.settings.cta_text_color | default: '#ffffff' }} !important;
+  }
+{% endstyle %}
 
 {% schema %}
 {
   "name": "Statement band",
   "settings": [
-    { "type": "header", "content": "Shared — Content" },
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "info": "Leave blank unless distinct from the statement." },
+    {
+      "type": "header",
+      "content": "Shared — Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "info": "Leave blank unless distinct from the statement."
+    },
     {
       "type": "text",
       "id": "title",
@@ -176,8 +256,14 @@
       "id": "title_role",
       "label": "Title Type OS role",
       "options": [
-        { "value": "statement", "label": "Statement (default)" },
-        { "value": "display", "label": "H2 Display — large brand" }
+        {
+          "value": "statement",
+          "label": "Statement (default)"
+        },
+        {
+          "value": "display",
+          "label": "H2 Display — large brand"
+        }
       ],
       "default": "statement",
       "info": "Locked by global type system (2026-09-27). This setting no longer changes the heading."
@@ -187,27 +273,86 @@
       "id": "title_size",
       "label": "Title size",
       "options": [
-        { "value": "default", "label": "Default / Type OS" },
-        { "value": "12", "label": "12px" },
-        { "value": "13", "label": "13px" },
-        { "value": "14", "label": "14px" },
-        { "value": "15", "label": "15px" },
-        { "value": "16", "label": "16px" },
-        { "value": "17", "label": "17px" },
-        { "value": "18", "label": "18px" },
-        { "value": "20", "label": "20px" },
-        { "value": "22", "label": "22px" },
-        { "value": "24", "label": "24px" },
-        { "value": "26", "label": "26px" },
-        { "value": "28", "label": "28px" },
-        { "value": "30", "label": "30px" },
-        { "value": "32", "label": "32px" },
-        { "value": "36", "label": "36px" },
-        { "value": "40", "label": "40px" },
-        { "value": "44", "label": "44px" },
-        { "value": "48", "label": "48px" },
-        { "value": "56", "label": "56px" }
-
+        {
+          "value": "default",
+          "label": "Default / Type OS"
+        },
+        {
+          "value": "12",
+          "label": "12px"
+        },
+        {
+          "value": "13",
+          "label": "13px"
+        },
+        {
+          "value": "14",
+          "label": "14px"
+        },
+        {
+          "value": "15",
+          "label": "15px"
+        },
+        {
+          "value": "16",
+          "label": "16px"
+        },
+        {
+          "value": "17",
+          "label": "17px"
+        },
+        {
+          "value": "18",
+          "label": "18px"
+        },
+        {
+          "value": "20",
+          "label": "20px"
+        },
+        {
+          "value": "22",
+          "label": "22px"
+        },
+        {
+          "value": "24",
+          "label": "24px"
+        },
+        {
+          "value": "26",
+          "label": "26px"
+        },
+        {
+          "value": "28",
+          "label": "28px"
+        },
+        {
+          "value": "30",
+          "label": "30px"
+        },
+        {
+          "value": "32",
+          "label": "32px"
+        },
+        {
+          "value": "36",
+          "label": "36px"
+        },
+        {
+          "value": "40",
+          "label": "40px"
+        },
+        {
+          "value": "44",
+          "label": "44px"
+        },
+        {
+          "value": "48",
+          "label": "48px"
+        },
+        {
+          "value": "56",
+          "label": "56px"
+        }
       ],
       "default": "default",
       "info": "Locked by global type system (2026-09-27). This setting no longer changes the heading."
@@ -217,13 +362,34 @@
       "id": "title_weight",
       "label": "Title weight",
       "options": [
-        { "value": "default", "label": "Default" },
-        { "value": "200", "label": "200 (Extra Light)" },
-        { "value": "300", "label": "300 (Light)" },
-        { "value": "400", "label": "400" },
-        { "value": "500", "label": "500" },
-        { "value": "600", "label": "600" },
-        { "value": "700", "label": "700" }
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "200",
+          "label": "200 (Extra Light)"
+        },
+        {
+          "value": "300",
+          "label": "300 (Light)"
+        },
+        {
+          "value": "400",
+          "label": "400"
+        },
+        {
+          "value": "500",
+          "label": "500"
+        },
+        {
+          "value": "600",
+          "label": "600"
+        },
+        {
+          "value": "700",
+          "label": "700"
+        }
       ],
       "default": "default",
       "info": "Locked by global type system (2026-09-27). This setting no longer changes the heading."
@@ -240,27 +406,86 @@
       "id": "body_size",
       "label": "Body size",
       "options": [
-        { "value": "default", "label": "Default / Type OS" },
-        { "value": "12", "label": "12px" },
-        { "value": "13", "label": "13px" },
-        { "value": "14", "label": "14px" },
-        { "value": "15", "label": "15px" },
-        { "value": "16", "label": "16px" },
-        { "value": "17", "label": "17px" },
-        { "value": "18", "label": "18px" },
-        { "value": "20", "label": "20px" },
-        { "value": "22", "label": "22px" },
-        { "value": "24", "label": "24px" },
-        { "value": "26", "label": "26px" },
-        { "value": "28", "label": "28px" },
-        { "value": "30", "label": "30px" },
-        { "value": "32", "label": "32px" },
-        { "value": "36", "label": "36px" },
-        { "value": "40", "label": "40px" },
-        { "value": "44", "label": "44px" },
-        { "value": "48", "label": "48px" },
-        { "value": "56", "label": "56px" }
-
+        {
+          "value": "default",
+          "label": "Default / Type OS"
+        },
+        {
+          "value": "12",
+          "label": "12px"
+        },
+        {
+          "value": "13",
+          "label": "13px"
+        },
+        {
+          "value": "14",
+          "label": "14px"
+        },
+        {
+          "value": "15",
+          "label": "15px"
+        },
+        {
+          "value": "16",
+          "label": "16px"
+        },
+        {
+          "value": "17",
+          "label": "17px"
+        },
+        {
+          "value": "18",
+          "label": "18px"
+        },
+        {
+          "value": "20",
+          "label": "20px"
+        },
+        {
+          "value": "22",
+          "label": "22px"
+        },
+        {
+          "value": "24",
+          "label": "24px"
+        },
+        {
+          "value": "26",
+          "label": "26px"
+        },
+        {
+          "value": "28",
+          "label": "28px"
+        },
+        {
+          "value": "30",
+          "label": "30px"
+        },
+        {
+          "value": "32",
+          "label": "32px"
+        },
+        {
+          "value": "36",
+          "label": "36px"
+        },
+        {
+          "value": "40",
+          "label": "40px"
+        },
+        {
+          "value": "44",
+          "label": "44px"
+        },
+        {
+          "value": "48",
+          "label": "48px"
+        },
+        {
+          "value": "56",
+          "label": "56px"
+        }
       ],
       "default": "default"
     },
@@ -274,15 +499,25 @@
       "label": "Background",
       "default": "#faf8f6"
     },
-    { "type": "text", "id": "cta_text", "label": "CTA label", "default": "Shop Now" },
-    
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA label",
+      "default": "Shop Now"
+    },
     {
       "type": "select",
       "id": "cta_style",
       "label": "CTA style",
       "options": [
-        { "value": "solid", "label": "Solid fill" },
-        { "value": "outline", "label": "Outline only" }
+        {
+          "value": "solid",
+          "label": "Solid fill"
+        },
+        {
+          "value": "outline",
+          "label": "Outline only"
+        }
       ],
       "default": "solid"
     },
@@ -311,15 +546,42 @@
       "id": "cta_link_target",
       "label": "CTA link",
       "options": [
-        { "value": "custom", "label": "Custom URL…" },
-        { "value": "#variants", "label": "#variants — Shop styles" },
-        { "value": "#knock-socks", "label": "#knock-socks — Statement" },
-        { "value": "#reviews", "label": "#reviews" },
-        { "value": "#guarantee", "label": "#guarantee" },
-        { "value": "#never-loses-grip", "label": "#never-loses-grip" },
-        { "value": "#one-pair", "label": "#one-pair" },
-        { "value": "#coperni", "label": "#coperni — Collab" },
-        { "value": "#problem", "label": "#problem" }
+        {
+          "value": "custom",
+          "label": "Custom URL…"
+        },
+        {
+          "value": "#variants",
+          "label": "#variants — Shop styles"
+        },
+        {
+          "value": "#knock-socks",
+          "label": "#knock-socks — Statement"
+        },
+        {
+          "value": "#reviews",
+          "label": "#reviews"
+        },
+        {
+          "value": "#guarantee",
+          "label": "#guarantee"
+        },
+        {
+          "value": "#never-loses-grip",
+          "label": "#never-loses-grip"
+        },
+        {
+          "value": "#one-pair",
+          "label": "#one-pair"
+        },
+        {
+          "value": "#coperni",
+          "label": "#coperni — Collab"
+        },
+        {
+          "value": "#problem",
+          "label": "#problem"
+        }
       ],
       "default": "custom",
       "info": "Homepage section anchors jump on the same page. Choose Custom URL… for a full URL or any other #hash. Blank custom → all-products collection."
@@ -330,7 +592,10 @@
       "label": "Custom CTA URL",
       "info": "Used when CTA link = Custom URL…."
     },
-    { "type": "header", "content": "Section — Statement band" },
+    {
+      "type": "header",
+      "content": "Section — Statement band"
+    },
     {
       "type": "text",
       "id": "anchor_id",
@@ -344,7 +609,54 @@
       "label": "Section aria-label",
       "info": "Accessibility name for screen readers — not visible on the page. Leave blank to use the Heading."
     },
-    { "type": "header", "content": "Shared — Section frame" },
+    {
+      "type": "header",
+      "content": "Layout — text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 96)",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 40)",
+      "min": 8,
+      "max": 96,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 56)",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 20)",
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Shared — Section frame"
+    },
     {
       "type": "paragraph",
       "content": "OUTER inset from the page edges (margin). Top and bottom are independent; left & right = one control. Custom mobile OFF = mobile uses the same inset as desktop. Defaults 0 = full bleed."
@@ -432,7 +744,10 @@
       "default": false
     }
   ],
-
-  "presets": [{ "name": "Statement band" }]
+  "presets": [
+    {
+      "name": "Statement band"
+    }
+  ]
 }
 {% endschema %}

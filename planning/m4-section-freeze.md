@@ -1,6 +1,6 @@
 # M4 Section Freeze Registry — APPROVED / SETTLED
 
-> **Section headings 56/36 LOCKED 2026-10-07 (Andrew):** Open Sole + yoga-pants PDP + `/pages/help` section headings = **56 desktop / 36 phone / 400 / 1.06 / -0.032em**. Scoped by `template.suffix` in `layout/theme.liquid` (`#open-sole-heading-unify` / `#yoga-pants-heading-unify` / `#help-heading-unify`). Product h1 / buy box / cards / Home / Closed / collections must not move. Barefoot feel stays `.h2-display` at 56/36 — do not touch Chair Pose image / 550 / 96 pads. Locks: `planning/locks/OPEN-SOLE-HEADING-SIZE-LOCKED.md` · `planning/locks/YOGA-PANTS-HEADING-SIZE-LOCKED.md` · `planning/locks/HELP-HEADING-SIZE-LOCKED.md`.
+> **Phone section heading MASTER 2026-10-07 (Andrew):** Theme settings → Typography → **Section heading size (phones)** default **36** (`--section-heading-size-m`). Reference on 390: Sock era + Never loses + One pair. Done. Per-section override kept (blank/0 = global). **Do not change desktop heading CSS or add a desktop setting.** Tired / Knock fall back to the global phone size. Product h1 / cards / labels stay out. Lock: `planning/locks/OPEN-SOLE-HEADING-SIZE-LOCKED.md`.
 
 > **ALL images LOCKED 2026-09-09:** Frame stays. One recipe — `fit`+100 if he said fit-inside / don’t crop; else `cover`+100. Image-led 50/50 = cover fills the panel (100% × 100%). Never flip cover↔fit↔zoom. Never neighbor. Rules: `image-in-the-frame.mdc` + `use-image-in-the-frame-lock.mdc`. Skills: `barreletics-image-in-the-frame` + `barreletics-use-image-in-the-frame-lock`.
 
