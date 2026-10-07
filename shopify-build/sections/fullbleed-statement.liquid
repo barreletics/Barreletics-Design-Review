@@ -230,6 +230,10 @@
   {%- if section.settings.heading_size_override != blank %}
   #shopify-section-{{ section.id }} { {% render 'type-override-vars', title_size: section.settings.heading_size_override %} --te-title-size-n: {{ section.settings.heading_size_override }}; }
   {%- endif %}
+  {%- assign _hso_n = section.settings.heading_size_override | plus: 0 -%}
+  {%- if section.settings.heading_size_override != blank and _hso_n > 0 %}
+  #shopify-section-{{ section.id }} { --section-heading-size-m: {{ _hso_n }}px; }
+  {%- endif %}
   #shopify-section-{{ section.id }} .fullbleed-statement {
     position: relative;
     width: 100%;
@@ -339,9 +343,9 @@
   #shopify-section-{{ section.id }} .fullbleed-statement__line.h2-display b {
     font-weight: inherit;
   }
-  @media (max-width: 749px) {
+  @media (max-width: 768px) {
     #shopify-section-{{ section.id }} .fullbleed-statement__line.h2-display {
-      font-size: var(--heading-phone, 36px);
+      font-size: var(--section-heading-size-m, 36px);
     }
   }
   #shopify-section-{{ section.id }} .fullbleed-statement__sub {
