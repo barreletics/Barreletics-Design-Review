@@ -1,5 +1,7 @@
 # M4 Section Freeze Registry — APPROVED / SETTLED
 
+> **Open Sole section headings LOCKED 2026-10-07 (Andrew):** Every Open PDP section heading = Home/Closed Display **56 desktop / 36 phone / 400 / 1.06 / -0.032em**. Scoped `template.suffix == 'in-studio-template'`. Product h1 / buy box / pads / images unchanged. Home / Closed / collections must not move. Lock: `planning/locks/OPEN-SOLE-HEADING-SIZE-LOCKED.md`.
+
 > **ALL images LOCKED 2026-09-09:** Frame stays. One recipe — `fit`+100 if he said fit-inside / don’t crop; else `cover`+100. Image-led 50/50 = cover fills the panel (100% × 100%). Never flip cover↔fit↔zoom. Never neighbor. Rules: `image-in-the-frame.mdc` + `use-image-in-the-frame-lock.mdc`. Skills: `barreletics-image-in-the-frame` + `barreletics-use-image-in-the-frame-lock`.
 
 > **Open Sole rhythm + Chair Pose SIGNED 2026-09-09 (Andrew: its fixed. lock it in):** cream = Closed `#FAF8F6` only. Chair Pose `fifty-fifty-lifestyle` = `fit` · **100** · whole photo in the frame. **Never cover.** Never remap to Never loses. Do **not** force other 50/50s to match Chair Pose size.

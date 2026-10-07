@@ -11,6 +11,7 @@
 - Soft cream `#faf8f6`; FAQ cream; guarantee band sitewide locks apply
 - **Chair Pose nested lock (HARD):** see [OPEN-SOLE-CHAIR-POSE-LOCKED.md](./OPEN-SOLE-CHAIR-POSE-LOCKED.md)  
   P5A4949 · COVER · 100 · mmh **360** · pads 96 — never FIT / P5A4943
+- **Section heading size (HARD 2026-10-07):** see [OPEN-SOLE-HEADING-SIZE-LOCKED.md](./OPEN-SOLE-HEADING-SIZE-LOCKED.md) — every Open section heading = 56 / 36 / 400 / 1.06 / -0.032em. Not the product h1.
 
 ## Never
 - Re-QC Open Sole from scratch
