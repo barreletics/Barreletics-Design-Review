@@ -41,3 +41,13 @@ The open **10%**: the app location's settings can't be viewed, and the timing co
 - Fix Coperni international, or Draft it.
 - New Test Profile's international zone has no rates.
 - App Shopify scopes missing: `write_products`, `write_orders`, `read_markets`, `read_shipping`.
+
+## eFS app settings (Andrew screenshot, 11:54 AM ET)
+
+- This is the eFS integration portal "Connect ShopifyV2" config for barreletics.myshopify.com. WMS target FCPLive; Location Id 114571313443.
+- Order sync runs every 30 min (XX:15/XX:45); inventory sync is hourly.
+- Automatic Fulfillment Requests = No, so the app does not auto-request, pull or hold orders. Automatic Fulfillment Order Age is 30 min (not in effect because auto is off), and the risk qualifier is Fulfill All.
+- Shipment Email = Yes; this matters only at go-live, when Shopify would email customers on eFS shipments.
+- Product Published Status = any. Use Split Location Shipping = No. Append Note Attribute = No.
+- Nothing was saved or changed.
+- Updated verdict: 95%+ that the app is not hurting sales. The remaining doubt is only that international sessions began dropping on Sep 28, the same day as the reinstall, which a fading international ad test explains better. A definitive test would be to uninstall the app for a few days and watch sales.
