@@ -155,6 +155,7 @@
             {% endif %}
           {% endfor %}
         </div>
+        <button type="button" class="faq__see-all" data-faq-see-all hidden>See all questions</button>
       </div>
     </div>
   </div>
@@ -450,11 +451,41 @@
   }
 </style>
 
+<style>
+  [data-faq-accordion]:not(.faq--expanded) .faq__item--overflow { display: none; }
+  [data-faq-accordion] .faq__see-all {
+    display: block;
+    margin: 28px auto 0;
+    padding: 12px 22px;
+    background: transparent;
+    border: 1px solid #1c1916;
+    color: #1c1916;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  [data-faq-accordion] .faq__see-all[hidden] { display: none; }
+</style>
 <script>
   (function() {
+    function isGeoQuestion(text) {
+      var s = (text || '').toLowerCase();
+      return /near me|studios? in |studios? across |studios? around |in new york|in los angeles|in toronto|in london|in melbourne|in canada|new york city|\bnyc\b|los angeles|london|melbourne|toronto|\bcanada\b|chicago|miami|brooklyn|manhattan|california|australia|united kingdom|\buk\b|uae|dubai|worldwide|across the us|across the u\.s/.test(s);
+    }
     document.querySelectorAll('[data-faq-accordion]').forEach(function(accordion) {
       var items = accordion.querySelectorAll('[data-faq-item]');
+      var shown = 0;
+      var overflow = 0;
       items.forEach(function(item) {
+        var qEl = item.querySelector('.faq__question, summary') || item;
+        if (isGeoQuestion(qEl.textContent) || shown >= 4) {
+          item.classList.add('faq__item--overflow');
+          overflow++;
+        } else {
+          shown++;
+        }
         item.addEventListener('toggle', function() {
           if (item.open) {
             items.forEach(function(other) {
@@ -466,6 +497,14 @@
           }
         });
       });
+      var btn = accordion.querySelector('[data-faq-see-all]');
+      if (btn && overflow) {
+        btn.hidden = false;
+        btn.addEventListener('click', function() {
+          accordion.classList.add('faq--expanded');
+          btn.hidden = true;
+        });
+      }
     });
   })();
 </script>
