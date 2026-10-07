@@ -55,7 +55,13 @@
   <style id="section-gap-os">
     :root {
       --section-padding-y: {{ settings.section_gap | default: 32 }}px;
-      --section-padding-y-mobile: {{ settings.section_gap_mobile | default: 24 }}px;
+      /* Shared phone spacing scale: Theme settings > Layout > Spacing (phones) (2026-10-05 spacing pass).
+         Sections read these with the same fallbacks; change a slider and every section using it follows. */
+      --space-section-mobile: {{ settings.section_gap_mobile | default: 40 }}px;
+      --space-sm: {{ settings.space_inner_mobile | default: 24 }}px;
+      --space-intro-mobile: {{ settings.space_intro_mobile | default: 56 }}px;
+      --space-stack-mobile: calc(var(--space-intro-mobile) / 2);
+      --section-padding-y-mobile: var(--space-section-mobile);
       /* Section headings: Theme settings > Section headings (2026-09-28). Sections read these with the same fallbacks. */
       --heading-standard-desktop: {{ settings.heading_standard_desktop | default: 56 }}px;
       --heading-band-desktop: {{ settings.heading_band_desktop | default: 52 }}px;
@@ -74,9 +80,29 @@
       --heading-standard-leading: 1.06;
       --heading-standard-tracking: -0.032em;
     }
+    {%- if template.suffix == 'in-studio-template' -%}
+    /* Text block padding (phones): Theme settings > Layout > Spacing (phones) (2026-10-07). Scoped to the Open Sole
+       in-studio template; sections fall back to their own phone pads wherever this variable is not set. */
+    :root { --text-pad-mobile: {{ settings.text_pad_mobile | default: 96 }}px; --text-min-h-mobile: {{ settings.text_min_h_mobile | default: 360 }}px; }
+    /* Open Sole section headings: lock band + giant tiers to the site standard (56 / 36 / 400 / 1.06 / -0.032em).
+       Home / Closed Sole / collections keep the global tokens above. */
+    :root {
+      --heading-band-desktop: var(--heading-standard-desktop);
+      --heading-band-desktop-n: var(--heading-standard-desktop-n);
+      --heading-giant-desktop: var(--heading-standard-desktop);
+      --heading-giant-desktop-n: var(--heading-standard-desktop-n);
+      --heading-giant-phone: var(--heading-phone);
+      --heading-giant-phone-n: {{ settings.heading_phone | default: 36 }};
+      --type-h2-display-leading: var(--heading-standard-leading, 1.06);
+      --type-h2-display-tracking: var(--heading-standard-tracking, -0.032em);
+    }
+    {%- endif -%}
     {%- if template.name == 'product' -%}
     @media (max-width: 768px) {
-      :root { --section-padding-y-mobile: 32px; }
+      /* Product pages follow the shared section gap (was a 32px one-off). */
+      :root { --section-padding-y-mobile: var(--space-section-mobile); }
+      /* Room under the footer so the fixed 65px sticky add-to-cart bar never covers the last footer line. */
+      body { padding-bottom: 65px; }
     }
     {%- endif -%}
     {%- if settings.star_color_global != blank -%}
@@ -90,11 +116,16 @@
   </style>
   {%- if template.suffix == 'in-studio-template' -%}
   <style id="open-sole-heading-unify">
-    /* Open Sole only (LOCKED 2026-10-07): every #main-content section heading = 56/36/400/1.06/-0.032em.
-       Draft 187144929571. Do not push this file over draft unless Andrew names that ID. */
+    /* Open Sole only: every #main-content section heading = 56/36 / 400 / 1.06 / -0.032em.
+       Barefoot feel (fifty-fifty-lifestyle) is .split-text__title.h2-display — the
+       .h2-display phone token is clamp(26px, 7vw, 32px) and was the miss.
+       Product h1, buy box, eyebrows, cards, and footer are not selected. */
     body.template-product-in-studio-template #main-content .split-text__title,
+    body.template-product-in-studio-template #main-content .split-text__title.h2-display,
+    body.template-product-in-studio-template #main-content .split-text__title.h2-standard,
     body.template-product-in-studio-template #main-content .statement-band__line,
     body.template-product-in-studio-template #main-content .fullbleed-statement__line,
+    body.template-product-in-studio-template #main-content .fullbleed-statement__line.h2-display,
     body.template-product-in-studio-template #main-content .problem-title,
     body.template-product-in-studio-template #main-content .sock-math__headline,
     body.template-product-in-studio-template #main-content .guarantee-head__title,
@@ -108,10 +139,13 @@
       line-height: var(--heading-standard-leading, 1.06) !important;
       letter-spacing: var(--heading-standard-tracking, -0.032em) !important;
     }
-    @media (max-width: 749px) {
+    @media (max-width: 768px) {
       body.template-product-in-studio-template #main-content .split-text__title,
+      body.template-product-in-studio-template #main-content .split-text__title.h2-display,
+      body.template-product-in-studio-template #main-content .split-text__title.h2-standard,
       body.template-product-in-studio-template #main-content .statement-band__line,
       body.template-product-in-studio-template #main-content .fullbleed-statement__line,
+      body.template-product-in-studio-template #main-content .fullbleed-statement__line.h2-display,
       body.template-product-in-studio-template #main-content .problem-title,
       body.template-product-in-studio-template #main-content .sock-math__headline,
       body.template-product-in-studio-template #main-content .guarantee-head__title,
@@ -120,6 +154,64 @@
       body.template-product-in-studio-template #main-content .pdp-reviews__title,
       body.template-product-in-studio-template #main-content .home-juicer__title,
       body.template-product-in-studio-template #main-content .variants-head__title {
+        font-size: var(--heading-phone, 36px) !important;
+      }
+    }
+  </style>
+  {%- endif -%}
+  {%- if template.suffix == 'yoga-pants' -%}
+  <style id="yoga-pants-heading-unify">
+    /* Yoga pants PDP only. Same 56/36 standard. Buy box / product h1 / cards stay out. */
+    body.template-product-yoga-pants #main-content .split-text__title,
+    body.template-product-yoga-pants #main-content .split-text__title.h2-display,
+    body.template-product-yoga-pants #main-content .fullbleed-statement__line,
+    body.template-product-yoga-pants #main-content .fullbleed-statement__line.h2-display,
+    body.template-product-yoga-pants #main-content .pdp-features__title,
+    body.template-product-yoga-pants #main-content .faq__heading,
+    body.template-product-yoga-pants #main-content .pdp-reviews__title,
+    body.template-product-yoga-pants #main-content .variants-head__title,
+    body.template-product-yoga-pants #main-content .twin-frame__title,
+    body.template-product-yoga-pants #main-content .page-about-facts__title {
+      font-size: clamp(var(--heading-phone, 36px), 4.8vw, var(--heading-standard-desktop, 56px)) !important;
+      font-weight: 400 !important;
+      line-height: var(--heading-standard-leading, 1.06) !important;
+      letter-spacing: var(--heading-standard-tracking, -0.032em) !important;
+    }
+    @media (max-width: 768px) {
+      body.template-product-yoga-pants #main-content .split-text__title,
+      body.template-product-yoga-pants #main-content .split-text__title.h2-display,
+      body.template-product-yoga-pants #main-content .fullbleed-statement__line,
+      body.template-product-yoga-pants #main-content .fullbleed-statement__line.h2-display,
+      body.template-product-yoga-pants #main-content .pdp-features__title,
+      body.template-product-yoga-pants #main-content .faq__heading,
+      body.template-product-yoga-pants #main-content .pdp-reviews__title,
+      body.template-product-yoga-pants #main-content .variants-head__title,
+      body.template-product-yoga-pants #main-content .twin-frame__title,
+      body.template-product-yoga-pants #main-content .page-about-facts__title {
+        font-size: var(--heading-phone, 36px) !important;
+      }
+    }
+  </style>
+  {%- endif -%}
+  {%- if template.suffix == 'help' -%}
+  <style id="help-heading-unify">
+    /* /pages/help only. Page + card section headings = 56/36. */
+    body.template-page-help #main-content .page-returns-head__title,
+    body.template-page-help #main-content h2.h2-standard,
+    body.template-page-help #main-content .page-returns-card h2,
+    body.template-page-help #main-content .page-returns-faq h2,
+    body.template-page-help #main-content .page-returns-cta__inner h2 {
+      font-size: clamp(var(--heading-phone, 36px), 4.8vw, var(--heading-standard-desktop, 56px)) !important;
+      font-weight: 400 !important;
+      line-height: var(--heading-standard-leading, 1.06) !important;
+      letter-spacing: var(--heading-standard-tracking, -0.032em) !important;
+    }
+    @media (max-width: 768px) {
+      body.template-page-help #main-content .page-returns-head__title,
+      body.template-page-help #main-content h2.h2-standard,
+      body.template-page-help #main-content .page-returns-card h2,
+      body.template-page-help #main-content .page-returns-faq h2,
+      body.template-page-help #main-content .page-returns-cta__inner h2 {
         font-size: var(--heading-phone, 36px) !important;
       }
     }
