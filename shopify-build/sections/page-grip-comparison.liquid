@@ -5,7 +5,7 @@
   Used on: page.grip-comparison.json
 {% endcomment %}
 
-<section class="section section--dark" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }}>
+<section class="page-grip__root section section--dark" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }} style="{% render 'unified-text-pads-vars', y_d: 32, side_d: 40, y_m: 32, x_m: 16 %}">
   <div class="section__inner section__inner--narrow">
     {% if section.settings.eyebrow != blank %}
       <p class="eyebrow eyebrow--accent">{{ section.settings.eyebrow }}</p>
@@ -72,14 +72,14 @@
         <h3 class="page-grip__math-label">Grip Socks (Annual)</h3>
         <p class="page-grip__math-calc">{{ section.settings.sock_cost_per_pair }} × {{ section.settings.sock_pairs_per_year }} pairs/year</p>
         <p class="page-grip__math-total page-grip__math-total--bad">{{ section.settings.sock_annual_cost }}/year</p>
-        <p class="page-grip__math-note">Replacing every 6-8 weeks</p>
+        <p class="page-grip__math-note">Replacing every 6–8 weeks</p>
       </div>
       <div class="page-grip__math-vs">vs</div>
       <div class="page-grip__math-col page-grip__math-col--barreletics">
         <h3 class="page-grip__math-label">Barreletics</h3>
         <p class="page-grip__math-calc">One pair, one time</p>
         <p class="page-grip__math-total page-grip__math-total--good">{{ section.settings.barreletics_price }}</p>
-        <p class="page-grip__math-note">One customer passed 1,000 classes. Another is on year four.</p>
+        <p class="page-grip__math-note">Another customer is on year four.</p>
       </div>
     </div>
     <div class="page-grip__math-savings">
@@ -470,6 +470,11 @@
   })();
 </script>
 
+
+
+
+{% render 'unified-text-pads-te-style', selector: '.page-grip__root', y_d: 32, side_d: 40, y_m: 32, x_m: 16 %}
+
 {% schema %}
 {
   "name": "Grip Comparison Page",
@@ -495,7 +500,7 @@
       "type": "text",
       "id": "hero_cta_text",
       "label": "Hero CTA text",
-      "default": "Shop Performance Skins — $74"
+      "default": "Shop Performance Skins \u2014 $74"
     },
     {
       "type": "url",
@@ -518,13 +523,13 @@
       "type": "textarea",
       "id": "failure_1_text",
       "label": "Failure 1 text",
-      "default": "Silicone dots are a surface application. With friction and heat from studio use, they peel, flake, and lose adhesion. Most grip socks lose meaningful grip within 6-8 weeks of regular use."
+      "default": "Silicone dots are a surface application. With friction and heat from studio use, they peel, flake, and lose adhesion. Most grip socks lose meaningful grip within 6–8 weeks of regular use."
     },
     {
       "type": "textarea",
       "id": "failure_2_text",
       "label": "Failure 2 text",
-      "default": "Fabric absorbs perspiration during class. Moisture sits between your foot and the floor, reducing grip at the exact moment you need it most — during intense holds and transitions."
+      "default": "Fabric absorbs perspiration during class. Moisture sits between your foot and the floor, reducing grip at the exact moment you need it most \u2014 during intense holds and transitions."
     },
     {
       "type": "text",
@@ -536,19 +541,19 @@
       "type": "text",
       "id": "sock_cost_per_pair",
       "label": "Sock cost per pair",
-      "default": "$14-18"
+      "default": "$14–18"
     },
     {
       "type": "text",
       "id": "sock_pairs_per_year",
       "label": "Sock pairs per year",
-      "default": "6-8"
+      "default": "6–8"
     },
     {
       "type": "text",
       "id": "sock_annual_cost",
       "label": "Sock annual cost",
-      "default": "$112-144"
+      "default": "$112–144"
     },
     {
       "type": "text",
@@ -560,7 +565,7 @@
       "type": "textarea",
       "id": "savings_text",
       "label": "Savings summary",
-      "default": "Save $38-70 in year one alone. Every year after that? Pure savings."
+      "default": "Save $38–70 in year one alone. Every year after that? Pure savings."
     },
     {
       "type": "text",
@@ -572,18 +577,62 @@
       "type": "textarea",
       "id": "bottom_cta_body",
       "label": "Bottom CTA body",
-      "default": "One pair. 360° grip. No more replacing socks every couple of months."
+      "default": "One pair. 360\u00b0 grip. No more replacing socks every couple of months."
     },
     {
       "type": "text",
       "id": "bottom_cta_text",
       "label": "Bottom CTA text",
-      "default": "Shop Now — $74"
+      "default": "Shop Now \u2014 $74"
     },
     {
       "type": "url",
       "id": "bottom_cta_url",
       "label": "Bottom CTA link"
+    },
+    {
+      "type": "header",
+      "content": "Layout \u2014 text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom \u2014 desktop (default 32)",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right \u2014 desktop (default 40)",
+      "min": 0,
+      "max": 96,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 32)",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right \u2014 phone (default 16)",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 16
     }
   ],
   "blocks": [
