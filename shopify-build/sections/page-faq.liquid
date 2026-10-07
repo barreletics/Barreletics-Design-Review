@@ -23,10 +23,32 @@
 -%}
 
 {%- assign faq_bg = section.settings.bg_class | default: 'white' -%}
+{%- liquid
+  assign pfq_y_d_def = 96
+  assign pfq_side_d_def = 40
+  assign pfq_y_m_def = 64
+  assign pfq_x_m_def = 20
+  assign pfq_fixed_q_d_y = false
+  if section.settings.text_pad_y != pfq_y_d_def
+    assign pfq_fixed_q_d_y = true
+  endif
+  assign pfq_fixed_q_d_x = false
+  if section.settings.side_padding != pfq_side_d_def
+    assign pfq_fixed_q_d_x = true
+  endif
+  assign pfq_fixed_q_m_y = false
+  if section.settings.text_pad_y_mobile != pfq_y_m_def
+    assign pfq_fixed_q_m_y = true
+  endif
+  assign pfq_fixed_q_m_x = false
+  if section.settings.text_pad_x_mobile != pfq_x_m_def
+    assign pfq_fixed_q_m_x = true
+  endif
+-%}
 <section
   class="page-faq page-faq--{{ faq_bg }}"
   id="shopify-section-{{ section.id }}"
-  style="{% render 'type-override-vars', title_size: section.settings.title_size, title_weight: section.settings.title_weight, body_size: section.settings.body_size, body_weight: section.settings.body_weight, sub_size: section.settings.question_size %}"
+  style="{% render 'unified-text-pads-vars', y_d: 96, side_d: 40, y_m: 64, x_m: 20 %}{% render 'type-override-vars', title_size: section.settings.title_size, title_weight: section.settings.title_weight, body_size: section.settings.body_size, body_weight: section.settings.body_weight, sub_size: section.settings.question_size %}"
   {{ section.shopify_attributes }}
 >
   <div class="page-faq__head">
@@ -79,7 +101,7 @@
     </div>
   {% endif %}
 
-  <div class="page-faq__questions" id="faq-{{ section.id }}">
+  <div class="page-faq__questions{% if pfq_fixed_q_d_y %} page-faq__questions--fixed-pad-d-y{% endif %}{% if pfq_fixed_q_d_x %} page-faq__questions--fixed-pad-d-x{% endif %}{% if pfq_fixed_q_m_y %} page-faq__questions--fixed-pad-m-y{% endif %}{% if pfq_fixed_q_m_x %} page-faq__questions--fixed-pad-m-x{% endif %}" id="faq-{{ section.id }}">
     <p class="faq-count" data-faq-count role="status" aria-live="polite"></p>
 
     <div class="faq-empty" data-faq-empty role="status">
@@ -101,6 +123,7 @@
         {% endfor %}
       </div>
     {% endfor %}
+    <button type="button" class="faq__see-all" data-faq-see-all hidden>See all questions</button>
   </div>
 
   {% if section.settings.show_related %}
@@ -279,6 +302,16 @@
     margin: 0 auto;
     padding: 72px 40px 96px;
   }
+  @media (min-width: 769px) {
+    .page-faq__questions--fixed-pad-d-y {
+      padding-top: var(--utp-y-d);
+      padding-bottom: var(--utp-y-d);
+    }
+    .page-faq__questions--fixed-pad-d-x {
+      padding-left: var(--utp-side-d);
+      padding-right: var(--utp-side-d);
+    }
+  }
 
   .faq-count {
     font-size: 12px;
@@ -382,15 +415,39 @@
     text-decoration: none;
   }
   .faq-empty__btn:hover { background: #c45c3f; text-decoration: none; }
+  .page-faq__questions:not(.faq--expanded):not(.is-searching) .faq-row.faq__item--overflow,
+  .page-faq__questions:not(.faq--expanded):not(.is-searching) .faq-group--overflow { display: none; }
+  .page-faq__questions .faq__see-all {
+    display: block;
+    margin: 8px auto 0;
+    padding: 12px 22px;
+    background: transparent;
+    border: 1px solid #1c1916;
+    color: #1c1916;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .page-faq__questions .faq__see-all[hidden] { display: none; }
 
   @media (max-width: 768px) {
-    .page-faq__head { padding: 56px 20px 0; }
+    .page-faq__head { padding: var(--space-intro-mobile, 56px) 20px 0; }
     .page-faq__title { font-size: var(--te-title-size, clamp(28px, 8vw, 36px)); margin-bottom: 28px; }
     .faq-search__input { font-size: 16px; padding: 13px 30px; }
     .faq-search__icon { left: 0; }
     .faq-topics { gap: 0 20px; margin-top: 22px; }
     .page-faq__questions { padding: 40px 20px 64px; }
-    .faq-row__q { font-size: var(--te-sub-size, 16px); padding: 19px 0; }
+    .page-faq__questions--fixed-pad-m-y {
+      padding-top: var(--utp-y-m);
+      padding-bottom: var(--utp-y-m);
+    }
+    .page-faq__questions--fixed-pad-m-x {
+      padding-left: var(--utp-x-m);
+      padding-right: var(--utp-x-m);
+    }
+    .faq-row__q { font-size: var(--te-sub-size, 16px); padding: var(--space-sm, 24px) 0; }
     .faq-group { margin-bottom: 44px; }
     .faq-rail__inner { padding: 0 14px; gap: 0; justify-content: space-between; }
     .faq-rail a { padding: 13px 6px; letter-spacing: 0.08em; }
@@ -416,11 +473,40 @@
     var railLinks = rail ? [].slice.call(rail.querySelectorAll('a')) : [];
     var groups = [].slice.call(root.querySelectorAll('[data-faq-group]'));
     var rows = [].slice.call(root.querySelectorAll('[data-faq-item]'));
+    var questions = root.querySelector('.page-faq__questions');
+    var seeAll = root.querySelector('[data-faq-see-all]');
     var search = root.querySelector('.faq-search__input');
     var clear = root.querySelector('[data-faq-clear]');
     var count = root.querySelector('[data-faq-count]');
     var empty = root.querySelector('[data-faq-empty]');
     var term = root.querySelector('[data-faq-term]');
+
+    function isGeoQuestion(text) {
+      var s = (text || '').toLowerCase();
+      return /near me|studios? in |in new york|in los angeles|in toronto|in london|in melbourne|in canada|new york city|\bnyc\b|los angeles|london|melbourne|toronto|\bcanada\b|chicago|miami|brooklyn|manhattan|california|worldwide/.test(s);
+    }
+    var shown = 0;
+    var overflow = 0;
+    rows.forEach(function (row) {
+      var q = (row.querySelector('summary, .faq-row__q') || row).textContent;
+      if (isGeoQuestion(q) || shown >= 4) {
+        row.classList.add('faq__item--overflow');
+        overflow++;
+      } else {
+        shown++;
+      }
+    });
+    groups.forEach(function (group) {
+      var vis = group.querySelectorAll('[data-faq-item]:not(.faq__item--overflow)').length;
+      if (vis === 0) group.classList.add('faq-group--overflow');
+    });
+    if (seeAll && overflow && questions) {
+      seeAll.hidden = false;
+      seeAll.addEventListener('click', function () {
+        questions.classList.add('faq--expanded');
+        seeAll.hidden = true;
+      });
+    }
 
     /* One row open at a time within a topic group */
     rows.forEach(function (row) {
@@ -472,14 +558,20 @@
       clear.hidden = q.length === 0;
 
       if (!q) {
+        if (questions) questions.classList.remove('is-searching');
         rows.forEach(function (row) { row.classList.remove('is-hidden'); });
         groups.forEach(function (group) { group.classList.remove('is-hidden'); });
+        if (questions && !questions.classList.contains('faq--expanded') && seeAll && overflow) {
+          seeAll.hidden = false;
+        }
         count.classList.remove('is-shown');
         count.textContent = '';
         empty.classList.remove('is-shown');
         return;
       }
 
+      if (questions) questions.classList.add('is-searching');
+      if (seeAll) seeAll.hidden = true;
       var hits = 0;
       rows.forEach(function (row) {
         var text = row.textContent.toLowerCase();
@@ -508,6 +600,8 @@
   })();
 </script>
 
+{% render 'unified-text-pads-te-style', selector: '.page-faq__questions', y_d: 96, side_d: 40, y_m: 64, x_m: 20 %}
+
 {% schema %}
 {
   "name": "FAQ Page",
@@ -521,7 +615,7 @@
     {
       "type": "textarea",
       "id": "subtitle",
-      "label": "Lede (optional — v7 quiet ships without one)"
+      "label": "Lede (optional \u2014 v7 quiet ships without one)"
     },
     {
       "type": "select",
@@ -529,29 +623,72 @@
       "label": "Background",
       "info": "Cream = soft #faf8f6. White = #fff.",
       "options": [
-        { "value": "cream", "label": "Cream (#faf8f6)" },
-        { "value": "white", "label": "White" }
+        {
+          "value": "cream",
+          "label": "Cream (#faf8f6)"
+        },
+        {
+          "value": "white",
+          "label": "White"
+        }
       ],
       "default": "cream"
     },
-    { "type": "header", "content": "Type — size & weight", "info": "Family is brand Type OS. Default keeps the approved FAQ type. Title caps at 56px — support pages never use the homepage hero size." },
+    {
+      "type": "header",
+      "content": "Type \u2014 size & weight",
+      "info": "Family is brand Type OS. Default keeps the approved FAQ type. Title caps at 56px \u2014 support pages never use the homepage hero size."
+    },
     {
       "type": "select",
       "id": "title_size",
       "label": "Page title size",
       "default": "default",
       "options": [
-        { "value": "default", "label": "Default / Type OS" },
-        { "value": "24", "label": "24px" },
-        { "value": "26", "label": "26px" },
-        { "value": "28", "label": "28px" },
-        { "value": "30", "label": "30px" },
-        { "value": "32", "label": "32px" },
-        { "value": "36", "label": "36px" },
-        { "value": "40", "label": "40px" },
-        { "value": "44", "label": "44px" },
-        { "value": "48", "label": "48px" },
-        { "value": "56", "label": "56px" }
+        {
+          "value": "default",
+          "label": "Default / Type OS"
+        },
+        {
+          "value": "24",
+          "label": "24px"
+        },
+        {
+          "value": "26",
+          "label": "26px"
+        },
+        {
+          "value": "28",
+          "label": "28px"
+        },
+        {
+          "value": "30",
+          "label": "30px"
+        },
+        {
+          "value": "32",
+          "label": "32px"
+        },
+        {
+          "value": "36",
+          "label": "36px"
+        },
+        {
+          "value": "40",
+          "label": "40px"
+        },
+        {
+          "value": "44",
+          "label": "44px"
+        },
+        {
+          "value": "48",
+          "label": "48px"
+        },
+        {
+          "value": "56",
+          "label": "56px"
+        }
       ]
     },
     {
@@ -560,11 +697,26 @@
       "label": "Page title weight",
       "default": "default",
       "options": [
-        { "value": "default", "label": "Default" },
-        { "value": "400", "label": "400" },
-        { "value": "500", "label": "500" },
-        { "value": "600", "label": "600" },
-        { "value": "700", "label": "700" }
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "400",
+          "label": "400"
+        },
+        {
+          "value": "500",
+          "label": "500"
+        },
+        {
+          "value": "600",
+          "label": "600"
+        },
+        {
+          "value": "700",
+          "label": "700"
+        }
       ]
     },
     {
@@ -573,13 +725,34 @@
       "label": "Lede size",
       "default": "default",
       "options": [
-        { "value": "default", "label": "Default / Type OS" },
-        { "value": "14", "label": "14px" },
-        { "value": "15", "label": "15px" },
-        { "value": "16", "label": "16px" },
-        { "value": "17", "label": "17px" },
-        { "value": "18", "label": "18px" },
-        { "value": "20", "label": "20px" }
+        {
+          "value": "default",
+          "label": "Default / Type OS"
+        },
+        {
+          "value": "14",
+          "label": "14px"
+        },
+        {
+          "value": "15",
+          "label": "15px"
+        },
+        {
+          "value": "16",
+          "label": "16px"
+        },
+        {
+          "value": "17",
+          "label": "17px"
+        },
+        {
+          "value": "18",
+          "label": "18px"
+        },
+        {
+          "value": "20",
+          "label": "20px"
+        }
       ]
     },
     {
@@ -588,10 +761,22 @@
       "label": "Lede weight",
       "default": "default",
       "options": [
-        { "value": "default", "label": "Default" },
-        { "value": "400", "label": "400" },
-        { "value": "500", "label": "500" },
-        { "value": "600", "label": "600" }
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "400",
+          "label": "400"
+        },
+        {
+          "value": "500",
+          "label": "500"
+        },
+        {
+          "value": "600",
+          "label": "600"
+        }
       ]
     },
     {
@@ -600,13 +785,34 @@
       "label": "Question row size",
       "default": "default",
       "options": [
-        { "value": "default", "label": "Default / Type OS" },
-        { "value": "14", "label": "14px" },
-        { "value": "15", "label": "15px" },
-        { "value": "16", "label": "16px" },
-        { "value": "17", "label": "17px" },
-        { "value": "18", "label": "18px" },
-        { "value": "20", "label": "20px" }
+        {
+          "value": "default",
+          "label": "Default / Type OS"
+        },
+        {
+          "value": "14",
+          "label": "14px"
+        },
+        {
+          "value": "15",
+          "label": "15px"
+        },
+        {
+          "value": "16",
+          "label": "16px"
+        },
+        {
+          "value": "17",
+          "label": "17px"
+        },
+        {
+          "value": "18",
+          "label": "18px"
+        },
+        {
+          "value": "20",
+          "label": "20px"
+        }
       ]
     },
     {
@@ -619,7 +825,7 @@
       "type": "text",
       "id": "search_placeholder",
       "label": "Search placeholder",
-      "default": "Search sizing, shipping, grip, returns…"
+      "default": "Search sizing, shipping, grip, returns\u2026"
     },
     {
       "type": "checkbox",
@@ -632,19 +838,66 @@
       "id": "contact_url",
       "label": "Contact link (empty search state)"
     },
-    { "type": "header", "content": "More help links" },
+    {
+      "type": "header",
+      "content": "More help links"
+    },
     {
       "type": "checkbox",
       "id": "show_related",
       "label": "Show help links at the bottom",
       "default": true,
-      "info": "Help center · Returns · Start a return · Size guide · Contact."
+      "info": "Help center \u00b7 Returns \u00b7 Start a return \u00b7 Size guide \u00b7 Contact."
     },
     {
       "type": "text",
       "id": "related_title",
       "label": "Links heading",
       "default": "More help"
+    },
+    {
+      "type": "header",
+      "content": "Layout \u2014 text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad Y desktop (96 default; questions 72 top/96 bottom)",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right \u2014 desktop (default 40)",
+      "min": 0,
+      "max": 96,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad Y phone (64 default; questions 40 top/64 bottom)",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right \u2014 phone (default 20)",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 20
     }
   ],
   "blocks": [
