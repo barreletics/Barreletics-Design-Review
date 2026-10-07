@@ -472,7 +472,8 @@
   (function() {
     function isGeoQuestion(text) {
       var s = (text || '').toLowerCase();
-      return /near me|studios? in |studios? across |studios? around |in new york|in los angeles|in toronto|in london|in melbourne|in canada|new york city|\bnyc\b|los angeles|london|melbourne|toronto|\bcanada\b|chicago|miami|brooklyn|manhattan|california|australia|united kingdom|\buk\b|uae|dubai|worldwide|across the us|across the u\.s/.test(s);
+      if (/how do international|duties and taxes|do you ship internationally\?|where are performance skins made/.test(s)) return false;
+      return /near me|studios? in |studios? across |studios? around |studios? near |where are .* worn|worn (in|across|around)|in new york|in los angeles|in toronto|in london|in melbourne|in canada|new york city|\bnyc\b|los angeles|london|melbourne|toronto|\bcanada\b|chicago|miami|boston|austin|seattle|denver|dallas|houston|brooklyn|manhattan|california|texas|florida|ontario|australia|united kingdom|\buk\b|uae|dubai|worldwide|united states|across the us|across the u\.s/.test(s);
     }
     document.querySelectorAll('[data-faq-accordion]').forEach(function(accordion) {
       var items = accordion.querySelectorAll('[data-faq-item]');
