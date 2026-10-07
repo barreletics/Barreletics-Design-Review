@@ -19,6 +19,6 @@ Image+text 50/50 at 390 = **1013** (media **500** / text **513**). Do **not** st
 
 ## Flag
 
-Closed One pair phone hides the sock-cycle compare row (same as Open) so the split can be 500+513. Cycle still on desktop.
+One pair phone **shows** the sock-cycle dollar row again (Andrew 2026-10-07). Extra pad off so it stays tight. Taller than 1013 is OK. Desktop unchanged.
 
 Think outside the sock / reviews / buy box / fullbleeds / FAQ untouched.

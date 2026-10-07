@@ -25,7 +25,7 @@ Every Open Sole 50/50 (and One pair) at 390 = **1013** (media **500** / text **5
 | Tired of slipping in your yoga socks? | `fifty-fifty-tired-socks` | `mobile_text_height` **513**. |
 | Redefine movement. | `fifty-fifty-numbers` | `mobile_text_height` **513**. |
 | Never loses shape. | `fifty-fifty-commit` | `mobile_text_height` **513**. |
-| One pair. Done. | `pdp-sock-math` | phone: copy min 513, no extra pad, cycle hidden so the split is 500+513. Desktop unchanged. |
+| One pair. Done. | `pdp-sock-math` | phone: sock-cycle dollar row **visible** (Andrew 2026-10-07). Extra pad off so it stays tight. Taller than 1013 is OK. Desktop unchanged. |
 
 **Knock is NOT a 50/50.** `Let us knock your socks off` stays original phone height (**388**). Do not put `min-height: 1013px` on statement-band.
 
