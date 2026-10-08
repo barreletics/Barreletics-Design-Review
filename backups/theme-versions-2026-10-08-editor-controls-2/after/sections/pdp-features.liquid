@@ -1,0 +1,691 @@
+{% comment %}
+  PDP Features — Definitive-v19 authority · italic Grip · 2×2 desk / stacked mobile
+  GLOBAL HEADING SYSTEM (2026-09-27): this section OWNS the giant heading.
+  clamp(56px, 6vw, 88px) / 400 / 0.96 / -0.04em / text-wrap: balance; phone (<=749) clamp(46px, 12.5vw, 56px).
+  title_size / title_weight are live (2026-10-08 r2): see the TE Title size comment in the style block.
+{% endcomment %}
+
+{% liquid
+  assign body_size = section.settings.body_size | default: 'default'
+  assign utp_y_d_def = 32
+  assign utp_side_d_def = 40
+  assign utp_y_m_def = 48
+  assign utp_x_m_def = 20
+  assign pad_top = section.settings.pad_top | default: 32
+  assign pad_bottom = section.settings.pad_bottom | default: 32
+  assign pad_top_mobile = 48
+  assign pad_bottom_mobile = 48
+  assign utp_style = ''
+  assign u_y = section.settings.text_pad_y | default: utp_y_d_def
+  if u_y != utp_y_d_def
+    assign utp_style = utp_style | append: '--utp-y-d:' | append: u_y | append: 'px;'
+  endif
+  assign u_side = section.settings.side_padding | default: utp_side_d_def
+  if u_side != utp_side_d_def
+    assign utp_style = utp_style | append: '--utp-side-d:' | append: u_side | append: 'px;'
+  endif
+  assign u_y_m = section.settings.text_pad_y_mobile | default: utp_y_m_def
+  if u_y_m != utp_y_m_def
+    assign utp_style = utp_style | append: '--utp-y-m:' | append: u_y_m | append: 'px;'
+  endif
+  assign u_x_m = section.settings.text_pad_x_mobile | default: utp_x_m_def
+  if u_x_m != utp_x_m_def
+    assign utp_style = utp_style | append: '--utp-x-m:' | append: u_x_m | append: 'px;'
+  endif
+%}
+
+<section
+  class="pdp-features"
+  {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | handleize }}"{% endif %}
+  aria-label="{{ section.settings.aria_label | default: 'Product features' | escape }}"
+  style="{{ utp_style }}{% if body_size != 'default' %}--pf-body-size: {{ body_size }}px;{% endif %}--pf-pad-top: {{ pad_top }}px;--pf-pad-bottom: {{ pad_bottom }}px;--pf-pad-top-m: {{ pad_top_mobile }}px;--pf-pad-bottom-m: {{ pad_bottom_mobile }}px;{% if section.settings.bg_color != blank %} background: {{ section.settings.bg_color }};{% endif %}"
+>
+  <div class="pdp-features__inner">
+    <header class="pdp-features__header">
+      {% if section.settings.eyebrow != blank %}
+        <p class="pdp-features__eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+      <h2 class="pdp-features__title">{{ section.settings.title }}</h2>
+    </header>
+
+    <div class="pdp-features__grid">
+      {% for block in section.blocks %}
+        {% if block.type == 'feature' %}
+          <div class="pdp-feature" {{ block.shopify_attributes }}>
+            <p class="pdp-feature__title">{{ block.settings.title }}</p>
+            <p class="pdp-feature__desc">{{ block.settings.description }}</p>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    {% if section.settings.footnote != blank %}
+      <p class="pdp-features__footnote">{{ section.settings.footnote | escape | newline_to_br }}</p>
+    {% endif %}
+
+    {% if section.settings.show_disciplines %}
+      <div class="pdp-disciplines">
+        <p class="pdp-disciplines__label">Built for every discipline</p>
+        <div class="pdp-disciplines__strip">
+          {% assign disciplines = 'Barre,Reformer,Megaformer,Lagree,Pilates,Yoga' | split: ',' %}
+          {% for d in disciplines %}
+            {% unless forloop.first %}
+              <span class="pdp-disciplines__dot" aria-hidden="true">·</span>
+            {% endunless %}
+            <span class="pdp-disciplines__name">{{ d }}</span>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% style %}
+  {%- assign _hso_g = section.settings.heading_size_override | plus: 0 -%}
+  {%- if section.settings.heading_size_override != blank and _hso_g > 0 %}
+  #shopify-section-{{ section.id }} { {% render 'type-override-vars', title_size: section.settings.heading_size_override %} --te-title-size-n: {{ section.settings.heading_size_override }}; }
+  {%- endif %}
+  {%- comment -%}
+    TE Title size (2026-10-08 r2, live): 'default'/blank emits nothing; heading_size_override > 0 wins.
+    Desktop (>=750): value = max px, fluid like today: clamp(min(56, v), v*6vw/88, v).
+    Phone (<=749): min(v, max(phone heading 36, giant phone clamp(46, 12.5vw, 56) * v/88)).
+    Doubled id beats the global template !important lock (e.g. body.template-product-v-neck-tops).
+  {%- endcomment -%}
+  {%- if section.settings.title_size != blank and section.settings.title_size != 'default' and _hso_g <= 0 %}
+  {%- assign _pf_r = section.settings.title_size | times: 1.0 | divided_by: 88 -%}
+  @media (min-width: 750px) {
+    #shopify-section-{{ section.id }}#shopify-section-{{ section.id }} .pdp-features__title {
+      font-size: clamp(min(var(--heading-giant-phone, 56px), {{ section.settings.title_size }}px), calc({{ section.settings.title_size }} * 6vw / 88), {{ section.settings.title_size }}px) !important;
+    }
+  }
+  @media (max-width: 749px) {
+    #shopify-section-{{ section.id }}#shopify-section-{{ section.id }} .pdp-features__title {
+      font-size: min({{ section.settings.title_size }}px, max(var(--section-heading-size-m, 36px), calc(clamp(calc(var(--heading-giant-phone-n, 56) * 46px / 56), calc(var(--heading-giant-phone-n, 56) * 12.5vw / 56), var(--heading-giant-phone, 56px)) * {{ _pf_r }}))) !important;
+    }
+  }
+  {%- endif %}
+  {%- if section.settings.title_weight != blank and section.settings.title_weight != 'default' %}
+  #shopify-section-{{ section.id }}#shopify-section-{{ section.id }} .pdp-features__title { font-weight: {{ section.settings.title_weight }} !important; }
+  {%- endif %}
+  .pdp-features {
+    padding: var(--utp-y-d, var(--pf-pad-top, var(--section-padding-y))) var(--utp-side-d, var(--section-padding-x)) var(--utp-y-d, var(--pf-pad-bottom, var(--section-padding-y)));
+    background: var(--bg-primary);
+    border-top: 1px solid var(--border-default);
+    border-bottom: 1px solid var(--border-default);
+  }
+
+  .pdp-features__inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+  }
+
+  .pdp-features__header {
+    margin-bottom: 24px;
+  }
+
+  .pdp-features__eyebrow {
+    font-size: var(--type-label-size);
+    text-transform: uppercase;
+    letter-spacing: var(--type-label-tracking);
+    color: var(--type-label-color);
+    font-weight: var(--type-label-weight);
+    margin: 0 0 var(--gap-a);
+  }
+
+  /* GLOBAL HEADING SYSTEM (locked 2026-09-27): giant tier, owned by pdp-features only.
+     No TE size/weight vars; no phone cap (old min(var, 34px) removed). */
+  #shopify-section-{{ section.id }} .pdp-features__title {
+    margin: 0;
+    max-width: 22ch;
+    font-size: clamp(var(--heading-giant-phone, 56px), calc(var(--te-title-size-n, var(--heading-giant-desktop-n, 88)) * 6vw / 88), var(--te-title-size, var(--heading-giant-desktop, 88px)));
+    font-weight: 400;
+    line-height: 0.96;
+    letter-spacing: -0.04em;
+    color: #1c1916;
+    text-wrap: balance;
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .pdp-features__title {
+      max-width: 16ch;
+    }
+  }
+  @media (max-width: 749px) {
+    #shopify-section-{{ section.id }} .pdp-features__title {
+      font-size: clamp(calc(var(--heading-giant-phone-n, 56) * 46px / 56), calc(var(--heading-giant-phone-n, 56) * 12.5vw / 56), var(--heading-giant-phone, 56px));
+    }
+  }
+
+  #shopify-section-{{ section.id }} .pdp-features__title strong,
+  #shopify-section-{{ section.id }} .pdp-features__title b,
+  #shopify-section-{{ section.id }} .pdp-features__title .em {
+    font-weight: inherit;
+    font-style: normal;
+    font-size: inherit;
+    color: inherit;
+  }
+
+  .pdp-features__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px 48px;
+  }
+
+  .pdp-feature {
+    border-top: 1px solid #d6cfc0;
+    padding-top: 20px;
+  }
+
+  .pdp-feature__title {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 0;
+    color: #1c1916;
+    margin: 0 0 8px;
+    line-height: 1.2;
+  }
+
+  .pdp-feature__desc {
+    font-size: var(--pf-body-size, 16px);
+    font-weight: 400;
+    color: #6b6459;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .pdp-features__footnote {
+    margin: 28px 0 0;
+    max-width: 62ch;
+    font-size: 12px;
+    line-height: 1.5;
+    color: #8a8a8a;
+  }
+
+  .pdp-disciplines {
+    margin-top: var(--space-10);
+    text-align: center;
+  }
+
+  .pdp-disciplines__label {
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-widest);
+    color: var(--text-muted);
+    font-weight: var(--type-label-weight);
+    margin: 0 0 var(--space-8);
+  }
+
+  .pdp-disciplines__strip {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 12px 8px;
+  }
+
+  .pdp-disciplines__name {
+    font-size: clamp(12px, 1.3vw, 14px);
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #4a4a4a;
+  }
+
+  .pdp-disciplines__dot {
+    font-style: normal;
+    font-weight: 400;
+    color: #c45c3f;
+    margin: 0 6px;
+  }
+
+  @media (max-width: 768px) {
+    .pdp-features {
+      padding: var(--utp-y-m, var(--pf-pad-top-m, var(--section-padding-y-mobile))) var(--utp-x-m, var(--section-padding-x-mobile)) var(--utp-y-m, var(--pf-pad-bottom-m, var(--section-padding-y-mobile)));
+    }
+
+    /* Mobile: stack features — 2-col wraps titles too hard (Andrew trial 2026-09-10) */
+    .pdp-features__grid {
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    .pdp-feature {
+      padding-top: 14px;
+      border-top: 1px solid rgba(28, 25, 22, 0.1);
+    }
+
+    .pdp-feature:first-child {
+      border-top: none;
+      padding-top: 0;
+    }
+
+    .pdp-feature__title {
+      font-size: 17px;
+    }
+
+    .pdp-feature__desc {
+      font-size: 14px;
+    }
+
+    .pdp-disciplines__strip {
+      gap: 10px 4px;
+    }
+  }
+{% endstyle %}
+
+{% style %}
+  {%- liquid
+    assign te_y_d = 32
+    assign te_side_d = 40
+    assign te_y_m = 48
+    assign te_x_m = 20
+    assign u_y = section.settings.text_pad_y | default: te_y_d
+    assign u_side = section.settings.side_padding | default: te_side_d
+    assign u_y_m = section.settings.text_pad_y_mobile | default: te_y_m
+    assign u_x_m = section.settings.text_pad_x_mobile | default: te_x_m
+    assign te_desktop = false
+    if u_y != te_y_d or u_side != te_side_d
+      assign te_desktop = true
+    endif
+    assign te_mobile = false
+    if u_y_m != te_y_m or u_x_m != te_x_m
+      assign te_mobile = true
+    endif
+  -%}
+  {%- if te_desktop -%}
+  @media (min-width: 769px) {
+    #shopify-section-{{ section.id }} .pdp-features {
+      {%- if u_y != te_y_d -%}
+      padding-top: {{ u_y }}px;
+      padding-bottom: {{ u_y }}px;
+      {%- endif -%}
+      {%- if u_side != te_side_d -%}
+      padding-left: {{ u_side }}px;
+      padding-right: {{ u_side }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+  {%- if te_mobile -%}
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .pdp-features {
+      {%- if u_y_m != te_y_m -%}
+      padding-top: {{ u_y_m }}px;
+      padding-bottom: {{ u_y_m }}px;
+      {%- endif -%}
+      {%- if u_x_m != te_x_m -%}
+      padding-left: {{ u_x_m }}px;
+      padding-right: {{ u_x_m }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+{% endstyle %}
+
+{%- comment -%}
+  TE live preview (2026-10-06, round 3): remaining Save-only controls. Reads section.settings.* directly
+  (verified 10-03 pattern: acd8a93 / 108fff6). Values match what the inline style / static <style> render.
+{%- endcomment -%}
+{% style %}
+  {%- if section.settings.bg_color != blank %}
+  :where(#shopify-section-{{ section.id }}) .pdp-features {
+    background: {{ section.settings.bg_color }} !important;
+  }
+  {%- endif %}
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "PDP Features",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Shared — Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Why Barreletics"
+    },
+    {
+      "type": "html",
+      "id": "title",
+      "label": "Heading (supports HTML)",
+      "default": "Built around<br>one obsession: <strong>Grip.</strong>",
+      "info": "Family is brand Type OS. Heading size and weight are locked by the global type system."
+    },
+    {
+      "type": "number",
+      "id": "heading_size_override",
+      "label": "Heading size override (px, desktop)",
+      "info": "Leave blank to follow Theme settings > Section headings > Giant heading. A number sets this section's desktop heading size only. Phones keep the giant phone size."
+    },
+    {
+      "type": "select",
+      "id": "title_size",
+      "label": "Title size",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default / Type OS"
+        },
+        {
+          "value": "24",
+          "label": "24px"
+        },
+        {
+          "value": "28",
+          "label": "28px"
+        },
+        {
+          "value": "32",
+          "label": "32px"
+        },
+        {
+          "value": "36",
+          "label": "36px"
+        },
+        {
+          "value": "40",
+          "label": "40px"
+        },
+        {
+          "value": "44",
+          "label": "44px"
+        },
+        {
+          "value": "48",
+          "label": "48px"
+        },
+        {
+          "value": "56",
+          "label": "56px"
+        },
+        {
+          "value": "64",
+          "label": "64px"
+        },
+        {
+          "value": "72",
+          "label": "72px"
+        },
+        {
+          "value": "80",
+          "label": "80px"
+        },
+        {
+          "value": "88",
+          "label": "88px"
+        },
+        {
+          "value": "96",
+          "label": "96px"
+        }
+      ],
+      "default": "default",
+      "info": "Desktop heading size in px (fluid like today, full size at 1467px+ wide). Phone = min(value, max(36, giant phone size x value/88)). 88 = today's giant look; 56 = today's apparel look. Default = no change. Heading size override (above 0) wins."
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "400",
+          "label": "400"
+        },
+        {
+          "value": "500",
+          "label": "500"
+        },
+        {
+          "value": "600",
+          "label": "600"
+        },
+        {
+          "value": "700",
+          "label": "700"
+        }
+      ],
+      "default": "400",
+      "info": "Default = 400. A weight here sets this section's heading weight."
+    },
+    {
+      "type": "select",
+      "id": "body_size",
+      "label": "Body size",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default / Type OS"
+        },
+        {
+          "value": "14",
+          "label": "14px"
+        },
+        {
+          "value": "15",
+          "label": "15px"
+        },
+        {
+          "value": "16",
+          "label": "16px"
+        },
+        {
+          "value": "17",
+          "label": "17px"
+        },
+        {
+          "value": "18",
+          "label": "18px"
+        },
+        {
+          "value": "20",
+          "label": "20px"
+        }
+      ],
+      "default": "default",
+      "info": "Applies to feature descriptions."
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "pad_top",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top — desktop",
+      "default": 32,
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "range",
+      "id": "pad_bottom",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "label": "Legacy: Padding bottom — desktop",
+      "default": 32,
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "range",
+      "id": "pad_top_mobile",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "label": "Legacy: Padding top — phone",
+      "default": 24,
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "range",
+      "id": "pad_bottom_mobile",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "label": "Legacy: Padding bottom — phone",
+      "default": 24,
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "header",
+      "content": "Section — PDP features"
+    },
+    {
+      "type": "textarea",
+      "id": "footnote",
+      "label": "Footnote under features",
+      "info": "Optional. Use with a * in a feature line (e.g. Outdoor surface note). Leave blank to hide."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_disciplines",
+      "label": "Show discipline tags",
+      "default": false,
+      "info": "Barre · Reformer · Megaformer · Lagree · Pilates · Yoga. Leave OFF on PDP."
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Section aria-label",
+      "default": "Product features",
+      "info": "Accessibility name for screen readers — not visible on the page."
+    },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor ID",
+      "info": "Optional jump target (e.g. no-socks). Leave blank on PDP."
+    },
+    {
+      "type": "header",
+      "content": "Layout — text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 32)",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 40)",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 48)",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 20)",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Legacy (hidden — do not edit)"
+    },
+    {
+      "type": "paragraph",
+      "content": "Preserves stored values on Theme Editor save."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Shared — Content"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "360° Grip"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Body",
+          "default": "Every direction. Every movement."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "PDP Features",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "title": "360° Grip",
+            "description": "Every direction. Every movement."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Secure in Every Hold",
+            "description": "No slipping. No resets."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Stay in the Flow",
+            "description": "No adjusting. No distractions."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Built to Last",
+            "description": "Class 1 to class 1,000."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
