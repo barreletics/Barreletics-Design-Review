@@ -5,5 +5,7 @@
 - theme.liquid.current-open-fixed-896714df: CURRENT. Open Sole headings now match Closed Sole (giant-tier override removed; Shop All / Real people / @barreletics / Questions / Built around one obsession back to theme defaults)
 - pdp-buy-box.current-4x5-db80f90f.liquid: CURRENT sections/pdp-buy-box.liquid. 4:5 hero frame; square shoe photos contain on #fefefe, apparel cover
 - theme.liquid.current-help-fixed-02ceb9a2: CURRENT (10:30 PM ET). Removed #help-heading-unify so /pages/help headings match /pages/returns (H1 44/31, H2 32/24 semibold).
+- page-faq.pre-showall-a651aff8.liquid: sections/page-faq.liquid before tonight's FAQ change
+- page-faq.showall-2caa2c4d.liquid: CURRENT sections/page-faq.liquid on draft 187144929571 — all FAQ-page questions visible; only geo questions overflow
 
 Restore any file: copy to the theme path, then `shopify theme push --store barreletics --theme 187144929571 --only <path> --nodelete` and md5 pull-verify.
