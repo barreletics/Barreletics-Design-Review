@@ -1,0 +1,107 @@
+{% comment %}
+  One tab panel: expand product variants into variant-card.
+  Params: product, sole_label, tab_key, max_variants, is_default, messaging_style, page_product_id
+  Swirl-pattern variants are skipped (never shown in grids). Only exception: an IN-STOCK swirl
+  variant on that product's own PDP (page_product_id == product.id). Sold-out swirl is always hidden.
+  One-Offs (tab_key == oneoffs): single grid — available first, then sold-out (no separate band).
+  Variant metafield custom.hide_from_storefront = true: card never shown (same as live theme, 2026-10-06).
+{% endcomment %}
+{%- if product != blank -%}
+  {%- liquid
+    assign vgp_hide_swirl = true
+    assign vgp_pid = product.id | append: ''
+    if page_product_id != blank and page_product_id == vgp_pid
+      assign vgp_hide_swirl = false
+    endif
+    # Theme settings > Product page colors > "Hide on Closed Sole / Open Sole / Outdoor" (2026-10-06):
+    # those colours get no cards for the three core products. Sold-out cards otherwise unchanged.
+    assign vgp_force = ''
+    case product.handle
+      when 'best-reformer-pilates-legree-workout-shoes'
+        assign vgp_force = settings.hide_colors_closed
+      when 'studio-performance-skin-footwear'
+        assign vgp_force = settings.hide_colors_open
+      when 'aquatic-performance-skins'
+        assign vgp_force = settings.hide_colors_outdoor
+    endcase
+    assign vgp_force = vgp_force | append: '' | downcase | remove: ' ' | replace: ',', '|' | prepend: '|' | append: '|'
+    assign vgp_ci = 0
+    assign vgp_has_ci = false
+    if vgp_force != '||'
+      for vgp_o in product.options_with_values
+        assign vgp_od = vgp_o.name | downcase
+        if vgp_od contains 'color' or vgp_od contains 'colour'
+          assign vgp_ci = forloop.index0
+          assign vgp_has_ci = true
+          break
+        endif
+      endfor
+    endif
+  -%}
+  <div
+    class="var-grid{% if tab_key == 'oneoffs' %} var-grid--oneoffs{% endif %}{% unless is_default %} is-grid-hidden{% endunless %}"
+    id="grid-{{ tab_key }}"
+    data-grid-tab="{{ tab_key }}"
+  >
+    {%- if tab_key == 'oneoffs' -%}
+      {%- comment -%} Pass 1: in stock {%- endcomment -%}
+      {%- for variant in product.variants limit: max_variants -%}
+        {%- assign o1d = variant.option1 | downcase -%}
+        {%- assign o2d = variant.option2 | downcase -%}
+        {%- assign vtd = variant.title | downcase -%}
+        {%- if vtd contains 'swirl' -%}{%- if vgp_hide_swirl or variant.available == false -%}{%- continue -%}{%- endif -%}{%- endif -%}
+        {%- assign vhd = variant.metafields.custom.hide_from_storefront.value | append: '' | downcase -%}
+        {%- if vhd == 'true' -%}{%- continue -%}{%- endif -%}
+        {%- if vgp_has_ci -%}{%- assign vck = variant.options[vgp_ci] | downcase | remove: ' ' | prepend: '|' | append: '|' -%}{%- if vgp_force contains vck -%}{%- continue -%}{%- endif -%}{%- endif -%}
+        {%- if o1d contains 'kid' or o2d contains 'kid' -%}{%- continue -%}{%- endif -%}
+        {%- unless variant.available -%}{%- continue -%}{%- endunless -%}
+        {% render 'variant-card',
+          product: product,
+          variant: variant,
+          sole_label: sole_label,
+          tab_key: tab_key,
+          messaging_style: messaging_style
+        %}
+      {%- endfor -%}
+      {%- comment -%} Pass 2: sold out (after available — same grid, no “Earlier” heading) {%- endcomment -%}
+      {%- for variant in product.variants limit: max_variants -%}
+        {%- assign o1d = variant.option1 | downcase -%}
+        {%- assign o2d = variant.option2 | downcase -%}
+        {%- assign vtd = variant.title | downcase -%}
+        {%- if vtd contains 'swirl' -%}{%- if vgp_hide_swirl or variant.available == false -%}{%- continue -%}{%- endif -%}{%- endif -%}
+        {%- assign vhd = variant.metafields.custom.hide_from_storefront.value | append: '' | downcase -%}
+        {%- if vhd == 'true' -%}{%- continue -%}{%- endif -%}
+        {%- if vgp_has_ci -%}{%- assign vck = variant.options[vgp_ci] | downcase | remove: ' ' | prepend: '|' | append: '|' -%}{%- if vgp_force contains vck -%}{%- continue -%}{%- endif -%}{%- endif -%}
+        {%- if o1d contains 'kid' or o2d contains 'kid' -%}{%- continue -%}{%- endif -%}
+        {%- if variant.available -%}{%- continue -%}{%- endif -%}
+        {% render 'variant-card',
+          product: product,
+          variant: variant,
+          sole_label: sole_label,
+          tab_key: tab_key,
+          messaging_style: messaging_style
+        %}
+      {%- endfor -%}
+    {%- else -%}
+      {%- for variant in product.variants limit: max_variants -%}
+        {%- assign o1d = variant.option1 | downcase -%}
+        {%- assign o2d = variant.option2 | downcase -%}
+        {%- assign vtd = variant.title | downcase -%}
+        {%- if vtd contains 'swirl' -%}{%- if vgp_hide_swirl or variant.available == false -%}{%- continue -%}{%- endif -%}{%- endif -%}
+        {%- assign vhd = variant.metafields.custom.hide_from_storefront.value | append: '' | downcase -%}
+        {%- if vhd == 'true' -%}{%- continue -%}{%- endif -%}
+        {%- if vgp_has_ci -%}{%- assign vck = variant.options[vgp_ci] | downcase | remove: ' ' | prepend: '|' | append: '|' -%}{%- if vgp_force contains vck -%}{%- continue -%}{%- endif -%}{%- endif -%}
+        {%- if o1d contains 'kid' or o2d contains 'kid' -%}
+          {%- continue -%}
+        {%- endif -%}
+        {% render 'variant-card',
+          product: product,
+          variant: variant,
+          sole_label: sole_label,
+          tab_key: tab_key,
+          messaging_style: messaging_style
+        %}
+      {%- endfor -%}
+    {%- endif -%}
+  </div>
+{%- endif -%}

@@ -1,0 +1,715 @@
+{% comment %}
+  Article Content Section
+  Full article layout with rich content, author, date, share buttons,
+  and BlogPosting structured data. Includes related articles.
+  Used on: article.json
+{% endcomment %}
+
+{%- liquid
+  assign utp_y_d_def = 32
+  assign utp_side_d_def = 40
+  assign utp_y_m_def = 32
+  assign utp_x_m_def = 16
+  assign utp_style = ''
+  assign u_y = section.settings.text_pad_y | default: utp_y_d_def
+  if u_y != utp_y_d_def
+    assign utp_style = utp_style | append: '--utp-y-d:' | append: u_y | append: 'px;'
+  endif
+  assign u_side = section.settings.side_padding | default: utp_side_d_def
+  if u_side != utp_side_d_def
+    assign utp_style = utp_style | append: '--utp-side-d:' | append: u_side | append: 'px;'
+  endif
+  assign u_y_m = section.settings.text_pad_y_mobile | default: utp_y_m_def
+  if u_y_m != utp_y_m_def
+    assign utp_style = utp_style | append: '--utp-y-m:' | append: u_y_m | append: 'px;'
+  endif
+  assign u_x_m = section.settings.text_pad_x_mobile | default: utp_x_m_def
+  if u_x_m != utp_x_m_def
+    assign utp_style = utp_style | append: '--utp-x-m:' | append: u_x_m | append: 'px;'
+  endif
+-%}
+
+<article class="section" id="shopify-section-{{ section.id }}" {{ section.shopify_attributes }} style="{{ utp_style }}">
+  <div class="section__inner section__inner--narrow">
+    <header class="article__header">
+      {%- liquid
+        assign article_label = article.tags.first
+        assign label_order = 'Press Release,Collaboration,Announcement,Movement,Press' | split: ','
+        for wanted in label_order
+          if article.tags contains wanted
+            assign article_label = wanted
+            break
+          endif
+        endfor
+      -%}
+      {% if article.tags.size > 0 %}
+        <span class="article__category">{{ article_label }}</span>
+      {% endif %}
+      <h1 class="article__title type-hero">{{ article.title }}</h1>
+      <div class="article__meta">
+        <span class="article__author">By {{ article.author }}</span>
+        <time class="article__date" datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+          {{ article.published_at | date: '%B %d, %Y' }}
+        </time>
+      </div>
+    </header>
+
+    {% if article.image %}
+      <div class="article__hero-image">
+        <img
+          src="{{ article.image | image_url: width: 1200 }}"
+          srcset="{{ article.image | image_url: width: 600 }} 600w,
+                  {{ article.image | image_url: width: 900 }} 900w,
+                  {{ article.image | image_url: width: 1200 }} 1200w"
+          sizes="(max-width: 768px) 100vw, 760px"
+          alt="{{ article.image.alt | escape }}"
+          loading="eager"
+          class="article__image"
+        >
+      </div>
+    {% endif %}
+
+    <div class="article__body rte">
+      {{ article.content }}
+    </div>
+
+    <footer class="article__footer">
+      {%- assign share_url = shop.url | append: article.url -%}
+      {%- assign share_url_enc = share_url | url_encode -%}
+      {%- assign share_title_enc = article.title | url_encode | replace: '+', '%20' -%}
+      <div class="article__share">
+        <span class="article__share-label">Share:</span>
+        <a
+          href="https://twitter.com/intent/tweet?text={{ share_title_enc }}&url={{ share_url_enc }}"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="article__share-link"
+          aria-label="Share on X (Twitter)"
+        >X</a>
+        <a
+          href="https://www.facebook.com/sharer/sharer.php?u={{ share_url_enc }}"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="article__share-link"
+          aria-label="Share on Facebook"
+        >Facebook</a>
+        <a
+          href="https://www.pinterest.com/pin/create/button/?url={{ share_url_enc }}{% if article.image %}&media={{ article.image | image_url: width: 1200 | prepend: 'https:' | url_encode }}{% endif %}&description={{ share_title_enc }}"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="article__share-link"
+          aria-label="Share on Pinterest"
+        >Pinterest</a>
+        <a
+          href="mailto:?subject={{ share_title_enc }}&body={{ share_url_enc }}"
+          class="article__share-link"
+          aria-label="Share via email"
+        >Email</a>
+        <button
+          type="button"
+          class="article__share-link"
+          aria-label="Share on Instagram (copies the link)"
+          data-share-instagram
+          data-url="{{ share_url | escape }}"
+          data-title="{{ article.title | escape }}"
+        >Instagram</button>
+        <p class="article__share-meta">
+          {%- if settings.social_instagram != blank -%}
+            <span class="article__follow">Follow us on Instagram <a href="{{ settings.social_instagram }}" target="_blank" rel="noopener noreferrer">@barreletics</a></span>
+          {%- endif -%}
+          <span class="article__share-status" role="status" aria-live="polite" data-share-status></span>
+        </p>
+      </div>
+      <script>
+        (function () {
+          var btn = document.querySelector('[data-share-instagram]');
+          if (!btn) return;
+          var status = document.querySelector('[data-share-status]');
+          var url = btn.getAttribute('data-url');
+          var title = btn.getAttribute('data-title');
+          var timer;
+          function copied() {
+            if (!status) return;
+            status.textContent = 'Link copied';
+            clearTimeout(timer);
+            timer = setTimeout(function () { status.textContent = ''; }, 2500);
+          }
+          function fallbackCopy() {
+            var t = document.createElement('textarea');
+            t.value = url;
+            t.setAttribute('readonly', '');
+            t.style.position = 'fixed';
+            t.style.opacity = '0';
+            document.body.appendChild(t);
+            t.select();
+            try { if (document.execCommand('copy')) copied(); } catch (e) {}
+            document.body.removeChild(t);
+          }
+          btn.addEventListener('click', function () {
+            if (navigator.share && window.matchMedia('(pointer: coarse)').matches) {
+              navigator.share({ title: title, url: url }).catch(function () {});
+              return;
+            }
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(url).then(copied, fallbackCopy);
+            } else {
+              fallbackCopy();
+            }
+          });
+        })();
+      </script>
+
+      {% if article.tags.size > 0 %}
+        <div class="article__tags">
+          {% for tag in article.tags %}
+            <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="article__tag">{{ tag }}</a>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </footer>
+  </div>
+</article>
+
+{% if section.settings.show_related and blog.articles.size > 1 %}
+<section class="section section--cream" style="{{ utp_style }}">
+  <div class="section__inner">
+    <h2 class="article__related-title h2-standard">{{ section.settings.related_heading }}</h2>
+    <div class="article__related-grid">
+      {% assign count = 0 %}
+      {% for related in blog.articles %}
+        {% if related.id != article.id and count < 3 %}
+          <a href="{{ related.url }}" class="article__related-card" aria-label="Read {{ related.title }}">
+            <div class="article__related-image-wrap">
+              {% if related.image %}
+                {% render 'media-img',
+                  image: related.image,
+                  alt: related.image.alt,
+                  fit: 'cover',
+                  class: 'article__related-image',
+                  sizes: '(max-width: 768px) 100vw, 33vw',
+                  widths: '360, 480, 720',
+                  width_default: 480,
+                  loading: 'lazy'
+                %}
+              {% else %}
+                <div class="article__related-placeholder"></div>
+              {% endif %}
+            </div>
+            <h3 class="article__related-name">{{ related.title }}</h3>
+            <time class="article__related-date" datetime="{{ related.published_at | date: '%Y-%m-%d' }}">
+              {{ related.published_at | date: '%B %d, %Y' }}
+            </time>
+          </a>
+          {% assign count = count | plus: 1 %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": {{ article.title | json }},
+  "author": {
+    "@type": "Person",
+    "name": {{ article.author | json }}
+  },
+  "datePublished": "{{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' }}",
+  "dateModified": "{{ article.updated_at | date: '%Y-%m-%dT%H:%M:%S%z' }}",
+  {% if article.image %}
+  "image": "{{ article.image | image_url: width: 1200 }}",
+  {% endif %}
+  "publisher": {
+    "@type": "Organization",
+    "name": "Barreletics",
+    "url": "https://barreletics.com"
+  },
+  "description": {{ article.excerpt | strip_html | truncate: 160 | json }},
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ shop.url }}{{ article.url }}"
+  }
+}
+</script>
+
+<style>
+  #shopify-section-{{ section.id }}.section,
+  #shopify-section-{{ section.id }} .section.section--cream {
+    padding: var(--utp-y-d, var(--section-padding-y)) var(--utp-side-d, var(--section-padding-x));
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }}.section,
+    #shopify-section-{{ section.id }} .section.section--cream {
+      padding: var(--utp-y-m, var(--section-padding-y)) var(--utp-x-m, var(--section-padding-x));
+    }
+  }
+
+  .article__header {
+    text-align: center;
+    margin-bottom: var(--space-8);
+  }
+
+  .article__category {
+    display: inline-block;
+    font-size: var(--type-label-size);
+    font-weight: var(--type-label-weight);
+    text-transform: uppercase;
+    letter-spacing: var(--type-label-tracking);
+    color: var(--accent-primary);
+    margin-bottom: var(--gap-a);
+  }
+
+  /* Size/weight/tracking come from .type-hero — cadence only here */
+  .article__title {
+    color: var(--text-primary);
+    margin: 0 0 var(--gap-b);
+  }
+
+  .article__meta {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-4);
+    font-size: var(--type-trust-size);
+    font-weight: var(--type-trust-weight);
+    color: var(--text-muted);
+  }
+
+  .article__author {
+    font-weight: var(--type-caption-weight);
+  }
+
+  .article__hero-image {
+    margin-bottom: var(--space-8);
+    border-radius: var(--radius-gallery);
+    overflow: hidden;
+  }
+
+  .article__image {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .article__body {
+    font-size: var(--type-body-size);
+    font-weight: var(--type-body-weight);
+    color: var(--text-body);
+    line-height: var(--type-body-leading);
+  }
+
+  .article__body h2 {
+    font-size: var(--type-section-size);
+    font-weight: var(--type-section-weight);
+    line-height: var(--type-section-leading);
+    letter-spacing: var(--type-section-tracking);
+    color: var(--text-primary);
+    margin: var(--space-8) 0 var(--gap-b);
+  }
+
+  .article__body h3 {
+    font-size: var(--type-h3-size);
+    font-weight: var(--type-h3-weight);
+    line-height: var(--type-h3-leading);
+    letter-spacing: var(--type-h3-tracking);
+    color: var(--text-primary);
+    margin: var(--space-6) 0 var(--gap-a);
+  }
+
+  .article__body p {
+    margin-bottom: var(--space-4);
+  }
+
+  /* Rich-text editor output: the global reset strips list markers, so restore them here */
+  .article__body ul,
+  .article__body ol {
+    list-style: revert;
+    padding-left: var(--space-6);
+    margin-bottom: var(--space-4);
+  }
+
+  .article__body li {
+    margin-bottom: var(--space-2);
+  }
+
+  .article__body strong {
+    font-weight: var(--fw-emphasis);
+  }
+
+  .article__body a {
+    color: var(--accent-primary);
+    text-decoration: underline;
+  }
+
+  .article__body blockquote {
+    font-size: var(--type-lede-size);
+    line-height: var(--type-lede-leading);
+    color: var(--text-primary);
+    border-left: 2px solid var(--border-default);
+    padding-left: var(--space-5);
+    margin: var(--space-6) 0;
+  }
+
+  /* Body media: centered, never letterboxed. Pairs: <div class="article-pair"><figure>…</figure><figure>…</figure></div> */
+  .article__body img,
+  .article__body video {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    margin: var(--space-6) auto;
+    border-radius: var(--radius-gallery);
+  }
+  .article__body video { object-fit: cover; }
+  /* Embeds (YouTube/Vimeo iframes, embed, object) never wider than the text column; video embeds keep 16:9 when shrunk */
+  .article__body iframe,
+  .article__body embed,
+  .article__body object { max-width: 100%; }
+  .article__body iframe[src*="youtube"],
+  .article__body iframe[src*="youtu.be"],
+  .article__body iframe[src*="vimeo"] { height: auto; aspect-ratio: 16 / 9; }
+  .article__body figure { margin: var(--space-6) auto; }
+  .article__body figure img,
+  .article__body figure video { margin: 0 auto; }
+  .article__body figcaption {
+    margin-top: 8px;
+    font-size: 11px;
+    line-height: 1.5;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #77706a;
+    text-align: center;
+  }
+  .article__body .article-pair {
+    --pair-ratio: 4 / 5;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    max-width: 100%;
+    margin: var(--space-6) auto;
+  }
+  .article__body .article-pair--tall { --pair-ratio: 2 / 3; }
+  .article__body .article-pair--square { --pair-ratio: 1 / 1; }
+  .article__body .article-pair figure { margin: 0; min-width: 0; }
+  .article__body .article-pair img,
+  .article__body .article-pair video {
+    width: 100%;
+    aspect-ratio: var(--pair-ratio);
+    object-fit: cover;
+    margin: 0;
+  }
+
+  .article__footer {
+    margin-top: var(--space-8);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--border-default);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+  }
+
+  .article__share {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  button.article__share-link {
+    background: none;
+    font-family: inherit;
+    line-height: inherit;
+    cursor: pointer;
+  }
+
+  .article__share-meta {
+    flex-basis: 100%;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    font-size: var(--type-trust-size);
+    color: var(--text-muted);
+  }
+
+  .article__share-meta:empty { display: none; }
+
+  .article__follow a {
+    color: var(--text-primary);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .article__share-status { color: var(--text-primary); font-weight: var(--type-caption-weight); }
+
+  .article__share-label {
+    font-size: var(--type-trust-size);
+    font-weight: var(--type-caption-weight);
+    color: var(--text-muted);
+  }
+
+  .article__share-link {
+    font-size: var(--type-trust-size);
+    font-weight: var(--type-caption-weight);
+    color: var(--text-primary);
+    text-decoration: none;
+    padding: 6px 12px;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-button);
+    transition: background var(--transition-fast), color var(--transition-fast);
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .article__share-link:hover {
+    background: var(--text-primary);
+    color: var(--color-white);
+    border-color: var(--text-primary);
+  }
+
+  .article__tags {
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+
+  .article__tag {
+    font-size: var(--type-label-size);
+    font-weight: var(--type-label-weight);
+    text-transform: uppercase;
+    letter-spacing: var(--type-label-tracking);
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 4px 10px;
+    background: var(--bg-alternate);
+    border-radius: var(--radius-badge);
+    transition: background var(--transition-fast);
+  }
+
+  .article__tag:hover {
+    background: var(--border-default);
+  }
+
+  /* Size/weight/tracking come from .h2-standard */
+  .article__related-title {
+    color: var(--text-primary);
+    text-align: center;
+    margin: 0 0 var(--space-8);
+  }
+
+  .article__related-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--grid-gap);
+  }
+
+  .article__related-card {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .article__related-image-wrap {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    border-radius: var(--radius-card-sm);
+    overflow: hidden;
+    margin-bottom: var(--space-3);
+    background: var(--bg-alternate);
+  }
+
+  .article__related-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .article__related-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--bg-alternate), var(--border-default));
+  }
+
+  /* Card titles take the H3 role */
+  .article__related-name {
+    font-size: var(--type-h3-size);
+    font-weight: var(--type-h3-weight);
+    line-height: var(--type-h3-leading);
+    letter-spacing: var(--type-h3-tracking);
+    color: var(--text-primary);
+    margin: 0 0 var(--space-1);
+  }
+
+  .article__related-date {
+    font-size: var(--type-trust-size);
+    font-weight: var(--type-trust-weight);
+    color: var(--text-muted);
+  }
+
+  /* Journal style D (opt-in; old posts untouched): <h2 class="article-dek">, <p class="article-lead"> */
+  .article__body .article-dek {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 400;
+    font-size: 34px;
+    line-height: 1.2;
+    letter-spacing: 0;
+    color: #1c1916;
+    margin: var(--space-8) 0 16px;
+    text-wrap: pretty;
+  }
+  .article__body .article-dek:first-child { margin-top: 0; }
+  .article__body .article-lead {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 1.35;
+    color: #1c1916;
+    margin: 0 0 20px;
+    text-wrap: pretty;
+  }
+  .article__body .article-lead strong,
+  .article__body .article-lead b { font-weight: inherit; }
+
+  @media (max-width: 768px) {
+    .article__body h2 {
+      font-size: var(--type-section-size-mobile);
+    }
+
+    .article__body .article-dek { font-size: 28px; }
+    .article__body .article-lead { font-size: 21px; }
+    .article__body .article-pair:not(.article-pair--square) { grid-template-columns: 1fr; }
+
+    .article__related-grid {
+      grid-template-columns: 1fr;
+      gap: var(--grid-gap-sm);
+    }
+
+    .article__footer {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    /* Share row on phones: label on its own line, then 3 + 2 equal buttons filling the width */
+    .article__share { width: 100%; }
+    .article__share-label { flex-basis: 100%; }
+    .article__share-link { flex: 1 1 28%; justify-content: center; }
+  }
+</style>
+
+{% style %}
+  {%- liquid
+    assign te_y_d = 32
+    assign te_side_d = 40
+    assign te_y_m = 32
+    assign te_x_m = 16
+    assign u_y = section.settings.text_pad_y | default: te_y_d
+    assign u_side = section.settings.side_padding | default: te_side_d
+    assign u_y_m = section.settings.text_pad_y_mobile | default: te_y_m
+    assign u_x_m = section.settings.text_pad_x_mobile | default: te_x_m
+  -%}
+  {%- if u_y != te_y_d or u_side != te_side_d -%}
+  @media (min-width: 769px) {
+    #shopify-section-{{ section.id }}.section,
+    #shopify-section-{{ section.id }} .section.section--cream {
+      {%- if u_y != te_y_d -%}
+      padding-top: {{ u_y }}px;
+      padding-bottom: {{ u_y }}px;
+      {%- endif -%}
+      {%- if u_side != te_side_d -%}
+      padding-left: {{ u_side }}px;
+      padding-right: {{ u_side }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+  {%- if u_y_m != te_y_m or u_x_m != te_x_m -%}
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }}.section,
+    #shopify-section-{{ section.id }} .section.section--cream {
+      {%- if u_y_m != te_y_m -%}
+      padding-top: {{ u_y_m }}px;
+      padding-bottom: {{ u_y_m }}px;
+      {%- endif -%}
+      {%- if u_x_m != te_x_m -%}
+      padding-left: {{ u_x_m }}px;
+      padding-right: {{ u_x_m }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Article Content",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_related",
+      "label": "Show related articles",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "related_heading",
+      "label": "Related articles heading",
+      "default": "Keep Reading"
+    },
+    {
+      "type": "header",
+      "content": "Layout — text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 32 — theme section gap)",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 40)",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 32)",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 16)",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "Article Content"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,653 @@
+{% comment %}
+  Guarantee — white trust grid (Home WORKING 14).
+  LOCKED 2026-09-11 — column type + PDP copy: see .cursor/rules/guarantee-band-LOCKED.mdc
+  Columns follow block count (max 4) so 3-up PDP compositions stay centered.
+  GLOBAL HEADING SYSTEM (2026-09-27): head title locked 52 / 36 phone / 400 (was 27.3 on
+  phone via the base .h2-display mobile token); title_role ignored.
+  Column type + PDP copy untouched.
+{% endcomment %}
+
+{% assign guarantee_cols = section.blocks.size %}
+{% if guarantee_cols > 4 %}
+  {% assign guarantee_cols = 4 %}
+{% endif %}
+{% if guarantee_cols < 1 %}
+  {% assign guarantee_cols = 1 %}
+{% endif %}
+{%- liquid
+  assign cta_style = section.settings.cta_style | default: 'solid'
+  assign cta_bg = section.settings.cta_bg_color | default: '#1c1916'
+  assign cta_border = section.settings.cta_border_color | default: cta_bg
+  if cta_style == 'outline'
+    assign cta_text_color = section.settings.cta_text_color | default: '#1c1916'
+  else
+    assign cta_text_color = section.settings.cta_text_color | default: '#ffffff'
+  endif
+-%}
+
+<section
+  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} guarantee-section"
+  id="{{ section.settings.anchor_id | default: 'guarantee' | handleize }}"
+  aria-label="{{ section.settings.aria_label | default: 'Guarantee' | escape }}"
+  style="{% render 'section-inset-vars' %} --guarantee-cols: {{ guarantee_cols }}; --gu-cta-bg: {{ cta_bg }}; --gu-cta-border: {{ cta_border }}; --gu-cta-text: {{ cta_text_color }};"
+>
+  <div class="guarantee-head">
+    {% if section.settings.eyebrow != blank %}
+      <p class="guarantee-head__eyebrow type-label">{{ section.settings.eyebrow }}</p>
+    {% endif %}
+    <h2 class="guarantee-head__title h2-display">{{ section.settings.title }}</h2>
+    {% if section.settings.body != blank %}
+      <p class="guarantee-head__sub">{{ section.settings.body }}</p>
+    {% endif %}
+  </div>
+  {% if section.blocks.size > 0 %}
+    <div class="guarantee-inner">
+      {% for block in section.blocks %}
+        <div class="guarantee-item" {{ block.shopify_attributes }}>
+          <h4 class="guarantee-item__title">{{ block.settings.title | default: block.settings.text }}</h4>
+          {% if block.settings.detail != blank %}
+            <p class="guarantee-item__detail">{{ block.settings.detail }}</p>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+  {% if section.settings.cta_text != blank %}
+    <div class="guarantee-cta-wrap">
+      <a class="guarantee-cta{% if cta_style == 'outline' %} guarantee-cta--outline{% endif %}" href="{{ section.settings.cta_url | default: '#variants' }}">
+        {{ section.settings.cta_text }}
+      </a>
+    </div>
+  {% endif %}
+</section>
+
+<style>
+  {%- if section.settings.heading_size_override != blank %}
+  #shopify-section-{{ section.id }} { {% render 'type-override-vars', title_size: section.settings.heading_size_override %} --te-title-size-n: {{ section.settings.heading_size_override }}; }
+  {%- endif %}
+  {%- assign _hso_n = section.settings.heading_size_override | plus: 0 -%}
+  {%- if section.settings.heading_size_override != blank and _hso_n > 0 %}
+  #shopify-section-{{ section.id }} { --section-heading-size-m: {{ _hso_n }}px; }
+  {%- endif %}
+  #shopify-section-{{ section.id }} .guarantee-section {
+    padding: var(--section-padding-y, 64px) var(--section-padding-x, 40px);
+    background: #fff;
+    border-top: 1px solid #d6cfc0;
+    border-bottom: 1px solid #d6cfc0;
+    text-align: center;
+  }
+  #shopify-section-{{ section.id }} .guarantee-head {
+    max-width: 1100px;
+    margin: 0 auto 40px;
+    text-align: center;
+  }
+  #shopify-section-{{ section.id }} .guarantee-head__eyebrow {
+    margin: 0 0 12px;
+    color: #9a9182;
+    text-align: center;
+  }
+  #shopify-section-{{ section.id }} .guarantee-head__title {
+    color: var(--text-primary);
+    margin: 0 0 var(--gap-b);
+    text-align: center;
+  }
+  /* GLOBAL HEADING SYSTEM (locked 2026-09-27): one display head for this section type.
+     52 desktop (fluid to 36 on tablet) / 36 phone / 400. Theme Editor title size, weight
+     and role settings are intentionally ignored so every page renders the same. */
+  #shopify-section-{{ section.id }} .guarantee-head__title.h2-display {
+    font-size: clamp(var(--heading-phone, 36px), calc(var(--te-title-size-n, var(--heading-band-desktop-n, 52)) * 4.6vw / 52), var(--te-title-size, var(--heading-band-desktop, 52px)));
+    font-weight: 400;
+    line-height: var(--type-h2-display-leading, 1.1);
+    letter-spacing: var(--type-h2-display-tracking, -0.028em);
+    text-wrap: pretty; /* avoid one-word last lines (2026-09-27, Andrew) */
+  }
+  #shopify-section-{{ section.id }} .guarantee-head__title.h2-display strong,
+  #shopify-section-{{ section.id }} .guarantee-head__title.h2-display b {
+    font-weight: inherit;
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .guarantee-head__title.h2-display {
+      font-size: var(--section-heading-size-m, 36px);
+    }
+  }
+  #shopify-section-{{ section.id }} .guarantee-head__sub {
+    font-size: var(--type-body-size);
+    font-weight: var(--type-body-weight);
+    color: var(--text-body);
+    line-height: var(--type-body-leading);
+    margin: 0 auto;
+    text-align: center;
+  }
+  #shopify-section-{{ section.id }} .guarantee-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(var(--guarantee-cols, 4), minmax(0, 1fr));
+    gap: 0;
+    justify-content: center;
+    text-align: center;
+  }
+  #shopify-section-{{ section.id }} .guarantee-item {
+    padding: 20px 24px;
+    border-right: 1px solid #d6cfc0;
+    text-align: center;
+  }
+  #shopify-section-{{ section.id }} .guarantee-item:last-child { border-right: none; }
+  #shopify-section-{{ section.id }} .guarantee-item h4 {
+    font-size: var(--type-guarantee-column-size, var(--type-h3-size));
+    font-weight: var(--type-guarantee-column-weight, 500);
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+    color: #1c1916;
+    margin: 0 0 10px;
+    text-align: center;
+  }
+  #shopify-section-{{ section.id }} .guarantee-item p {
+    font-size: 13px;
+    color: #6b645a;
+    line-height: 1.4;
+    margin: 0 auto;
+    text-align: center;
+  }
+  #shopify-section-{{ section.id }} .guarantee-cta-wrap {
+    text-align: center;
+    margin-top: 32px;
+  }
+  #shopify-section-{{ section.id }} .guarantee-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--type-cta-min-height);
+    padding: var(--type-cta-pad-y) var(--type-cta-pad-x);
+    background: var(--gu-cta-bg, #1c1916);
+    color: var(--gu-cta-text, #fff);
+    font-size: var(--type-cta-size);
+    font-weight: var(--type-cta-weight);
+    letter-spacing: var(--type-cta-tracking);
+    line-height: var(--type-cta-leading, 1);
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 4px;
+    border: 1px solid var(--gu-cta-border, var(--gu-cta-bg, #1c1916));
+    transition: opacity 0.15s ease;
+  }
+  #shopify-section-{{ section.id }} .guarantee-cta--outline {
+    background: transparent;
+    color: var(--gu-cta-text, var(--gu-cta-border, #1c1916));
+  }
+  #shopify-section-{{ section.id }} .guarantee-cta:hover { opacity: 0.92; }
+  @media (max-width: 900px) {
+    #shopify-section-{{ section.id }} .guarantee-inner {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    #shopify-section-{{ section.id }} .guarantee-item:nth-child(2n) { border-right: none; }
+    #shopify-section-{{ section.id }} .guarantee-item:nth-child(n+3) {
+      border-top: 1px solid #d6cfc0;
+    }
+  }
+  @media (max-width: 560px) {
+    #shopify-section-{{ section.id }} .guarantee-section {
+      padding: {% if template.name == 'product' %}48px{% else %}var(--section-padding-y-mobile, 48px){% endif %} var(--section-padding-x-mobile, 16px);
+    }
+    #shopify-section-{{ section.id }} .guarantee-inner { grid-template-columns: 1fr; }
+    #shopify-section-{{ section.id }} .guarantee-item {
+      border-right: none;
+      border-bottom: 1px solid #d6cfc0;
+      border-top: none;
+    }
+    #shopify-section-{{ section.id }} .guarantee-item:last-child { border-bottom: none; }
+  }
+
+  #shopify-section-{{ section.id }} .guarantee-item__link {
+    display: inline-block;
+    margin-top: 6px;
+    color: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  #shopify-section-{{ section.id }} .guarantee-item__link:hover {
+    color: var(--text-primary, #1c1916);
+  }
+
+</style>
+
+{%- liquid
+  assign y_d = 32
+  assign side_d = 40
+  assign y_m = 24
+  assign x_m = 20
+  assign emit_y_d = false
+  if section.settings.text_pad_y != blank and section.settings.text_pad_y != y_d
+    assign emit_y_d = true
+  endif
+  assign emit_side_d = false
+  if section.settings.side_padding != blank and section.settings.side_padding != side_d
+    assign emit_side_d = true
+  endif
+  assign emit_y_m = false
+  if section.settings.text_pad_y_mobile != blank and section.settings.text_pad_y_mobile != y_m
+    assign emit_y_m = true
+  endif
+  assign emit_x_m = false
+  if section.settings.text_pad_x_mobile != blank and section.settings.text_pad_x_mobile != x_m
+    assign emit_x_m = true
+  endif
+-%}
+{% style %}
+  {%- comment -%} Live TE (2026-10-06 r4): flags read section.settings directly inside the style block so the first slider move previews live; same output as before. {%- endcomment -%}
+  {%- liquid
+    assign emit_y_d = false
+    if section.settings.text_pad_y != blank and section.settings.text_pad_y != 32
+      assign emit_y_d = true
+    endif
+    assign emit_side_d = false
+    if section.settings.side_padding != blank and section.settings.side_padding != 40
+      assign emit_side_d = true
+    endif
+    assign emit_y_m = false
+    if section.settings.text_pad_y_mobile != blank and section.settings.text_pad_y_mobile != 24
+      assign emit_y_m = true
+    endif
+    assign emit_x_m = false
+    if section.settings.text_pad_x_mobile != blank and section.settings.text_pad_x_mobile != 20
+      assign emit_x_m = true
+    endif
+  -%}
+  {%- if emit_y_d or emit_side_d -%}
+  @media (min-width: 561px) {
+    #shopify-section-{{ section.id }} .guarantee-section {
+      {%- if emit_y_d -%}
+      padding-top: {{ section.settings.text_pad_y }}px;
+      padding-bottom: {{ section.settings.text_pad_y }}px;
+      {%- endif -%}
+      {%- if emit_side_d -%}
+      padding-left: {{ section.settings.side_padding }}px;
+      padding-right: {{ section.settings.side_padding }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+  {%- if emit_y_m or emit_x_m -%}
+  @media (max-width: 560px) {
+    #shopify-section-{{ section.id }} .guarantee-section {
+      {%- if emit_y_m -%}
+      padding-top: {{ section.settings.text_pad_y_mobile }}px;
+      padding-bottom: {{ section.settings.text_pad_y_mobile }}px;
+      {%- endif -%}
+      {%- if emit_x_m -%}
+      padding-left: {{ section.settings.text_pad_x_mobile }}px;
+      padding-right: {{ section.settings.text_pad_x_mobile }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+{% endstyle %}
+
+{%- comment -%}
+  TE live preview (2026-10-06): Shared — Section frame insets. The section-inset-vars snippet writes these inline
+  (Save-only). Same dual-write as split-hero (acd8a93): section.settings.* directly, !important on the vars.
+{%- endcomment -%}
+{% style %}
+  {%- liquid
+    assign te_in_t = section.settings.inset_top | default: 0
+    assign te_in_b = section.settings.inset_bottom | default: 0
+    assign te_in_x = section.settings.inset_x | default: 0
+    if section.settings.inset_custom_mobile
+      assign te_in_tm = section.settings.inset_top_mobile | default: 0
+      assign te_in_bm = section.settings.inset_bottom_mobile | default: 0
+      assign te_in_xm = section.settings.inset_x_mobile | default: 0
+    else
+      assign te_in_tm = te_in_t
+      assign te_in_bm = te_in_b
+      assign te_in_xm = te_in_x
+    endif
+  -%}
+  #shopify-section-{{ section.id }} .section-frame {
+    --section-inset-top: {{ te_in_t }}px !important;
+    --section-inset-right: {{ te_in_x }}px !important;
+    --section-inset-bottom: {{ te_in_b }}px !important;
+    --section-inset-left: {{ te_in_x }}px !important;
+    --section-inset-top-m: {{ te_in_tm }}px !important;
+    --section-inset-right-m: {{ te_in_xm }}px !important;
+    --section-inset-bottom-m: {{ te_in_bm }}px !important;
+    --section-inset-left-m: {{ te_in_xm }}px !important;
+  }
+{% endstyle %}
+
+{%- comment -%}
+  TE live preview (2026-10-06, round 3): remaining Save-only controls. Reads section.settings.* directly
+  (verified 10-03 pattern: acd8a93 / 108fff6). Values match what the inline style / static <style> render.
+{%- endcomment -%}
+{% style %}
+  {%- liquid
+    assign te_gu_bg = section.settings.cta_bg_color | default: '#1c1916'
+    assign te_gu_border = section.settings.cta_border_color | default: te_gu_bg
+    if section.settings.cta_style == 'outline'
+      assign te_gu_text = section.settings.cta_text_color | default: '#1c1916'
+    else
+      assign te_gu_text = section.settings.cta_text_color | default: '#ffffff'
+    endif
+  -%}
+  #shopify-section-{{ section.id }} .section-frame {
+    --gu-cta-bg: {{ te_gu_bg }} !important;
+    --gu-cta-border: {{ te_gu_border }} !important;
+    --gu-cta-text: {{ te_gu_text }} !important;
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Guarantee Band",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Shared — Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Zero risk. All grip."
+    },
+    {
+      "type": "number",
+      "id": "heading_size_override",
+      "label": "Heading size override (px, desktop)",
+      "info": "Leave blank to follow Theme settings > Section headings. A number sets this section's desktop heading size only. Phones keep the global phone size."
+    },
+    {
+      "type": "select",
+      "id": "title_role",
+      "label": "Title Type OS role",
+      "options": [
+        {
+          "value": "statement",
+          "label": "Statement (default)"
+        },
+        {
+          "value": "display",
+          "label": "H2 Display — large brand"
+        }
+      ],
+      "default": "statement",
+      "info": "Locked by global type system (2026-09-27). This setting no longer changes the heading."
+    },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Body",
+      "default": "Returns, warranty, and shipping that match the gear."
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA label",
+      "info": "Leave blank to hide CTA (Home mock has none)."
+    },
+    {
+      "type": "select",
+      "id": "cta_style",
+      "label": "CTA style",
+      "options": [
+        {
+          "value": "solid",
+          "label": "Solid fill"
+        },
+        {
+          "value": "outline",
+          "label": "Outline only"
+        }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "color",
+      "id": "cta_bg_color",
+      "label": "CTA background color",
+      "default": "#1c1916",
+      "info": "Used for solid fill. Outline style uses transparent fill + border color."
+    },
+    {
+      "type": "color",
+      "id": "cta_border_color",
+      "label": "CTA outline / border color",
+      "default": "#1c1916"
+    },
+    {
+      "type": "color",
+      "id": "cta_text_color",
+      "label": "CTA label color",
+      "default": "#ffffff",
+      "info": "Solid fill: usually white. Outline or light fill: charcoal/black."
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "CTA link"
+    },
+    {
+      "type": "header",
+      "content": "Section — Guarantee"
+    },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor ID",
+      "default": "guarantee",
+      "info": "Same-page jump target (CTAs can use #guarantee)."
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Section aria-label",
+      "default": "Guarantee",
+      "info": "Accessibility name for screen readers — not visible on the page. Leave blank to use “Guarantee”."
+    },
+    {
+      "type": "paragraph",
+      "content": "Guarantee points are blocks below."
+    },
+    {
+      "type": "header",
+      "content": "Layout — text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 32)",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 40)",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 24)",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 20)",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Shared — Section frame"
+    },
+    {
+      "type": "paragraph",
+      "content": "OUTER inset from the page edges (margin). Top and bottom are independent; left & right = one control. Custom mobile OFF = mobile uses the same inset as desktop. Defaults 0 = full bleed."
+    },
+    {
+      "type": "checkbox",
+      "id": "inset_custom_mobile",
+      "label": "Custom mobile inset",
+      "default": false,
+      "info": "OFF (default): ignore the mobile inset sliders — mobile uses desktop Inset top / bottom / left & right. ON: use the mobile inset sliders instead."
+    },
+    {
+      "type": "range",
+      "id": "inset_top",
+      "label": "Inset top",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom",
+      "label": "Inset bottom",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x",
+      "label": "Inset left & right",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Same value on both sides."
+    },
+    {
+      "type": "range",
+      "id": "inset_top_mobile",
+      "label": "Inset top — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom_mobile",
+      "label": "Inset bottom — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x_mobile",
+      "label": "Inset left & right — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_desktop",
+      "label": "Hide on desktop",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "point",
+      "name": "Point",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Free Shipping"
+        },
+        {
+          "type": "text",
+          "id": "detail",
+          "label": "Detail",
+          "default": "On orders over $150"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Legacy text (fallback title)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Guarantee Band",
+      "blocks": [
+        {
+          "type": "point",
+          "settings": {
+            "title": "Free Shipping",
+            "detail": "On orders over $150"
+          }
+        },
+        {
+          "type": "point",
+          "settings": {
+            "title": "30-Day Returns",
+            "detail": "New, sellable condition"
+          }
+        },
+        {
+          "type": "point",
+          "settings": {
+            "title": "90-Day Warranty",
+            "detail": "Manufacturing defects"
+          }
+        },
+        {
+          "type": "point",
+          "settings": {
+            "title": "Made in USA",
+            "detail": "No latex, no silicone"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,12 @@
+{% comment %}
+  Mobile stack utility class for split sections (image/copy order below 768px).
+  @param mobile_stack_order {string} media_first | copy_first — defaults media_first
+{% endcomment %}
+{%- liquid
+  assign stack = mobile_stack_order | default: 'media_first'
+  if stack == 'copy_first'
+    echo ' mobile-stack--copy-first'
+  else
+    echo ' mobile-stack--media-first'
+  endif
+-%}

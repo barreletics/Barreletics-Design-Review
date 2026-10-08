@@ -1,0 +1,785 @@
+{% comment %}
+  Press row — unified Home band: Coperni hero video + 4 cards.
+  Desktop grid 1.08fr / 0.46fr / 0.46fr · Roboto only · cream #faf8f6.
+{% endcomment %}
+
+{% liquid
+  assign heading = section.settings.heading | default: 'Press'
+  assign heading_style = section.settings.heading_style | default: 'eyebrow'
+  assign mobile_layout = section.settings.mobile_layout | default: 'stack'
+  assign bg = section.settings.bg_color | default: '#faf8f6'
+  assign hero_label = section.settings.hero_label | default: 'Barreletics × Coperni'
+  assign hero_line = section.settings.hero_line | default: 'Limited edition · Paris 2026'
+  assign video_url = section.settings.video_url
+  assign poster_src = blank
+  if section.settings.poster != blank
+    assign poster_src = section.settings.poster | image_url: width: 2000
+  elsif section.settings.poster_url != blank
+    assign poster_src = section.settings.poster_url
+  endif
+%}
+
+<section
+  id="press-row-{{ section.id }}"
+  class="press-row press-row--m-{{ mobile_layout }} section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %}"
+  style="{% render 'section-inset-vars' %} --pr-bg: {{ bg }}; --pr-desk-h: {{ section.settings.desktop_height | default: 620 }}px;"
+  aria-label="{{ heading | strip_html | escape }}"
+>
+  <div class="press-row__inner">
+    {% if heading != blank %}
+      {% if heading_style == 'standard' %}
+        <h2 class="press-row__head h2-standard">{{ heading }}</h2>
+      {% else %}
+        <p class="press-row__eyebrow type-label">{{ heading }}</p>
+      {% endif %}
+    {% endif %}
+
+    <div class="press-row__grid">
+      <div class="press-row__hero">
+        {% comment %} Shopify Files video wins. video_url is fallback only — never override the picker. {% endcomment %}
+        {% if section.settings.video != blank %}
+          <video
+            class="press-row__hero-video"
+            autoplay
+            muted
+            loop
+            playsinline
+            webkit-playsinline
+            preload="metadata"
+            {% if poster_src != blank %}poster="{{ poster_src | escape }}"{% endif %}
+          >
+            {% for source in section.settings.video.sources %}
+              <source src="{{ source.url }}" type="{{ source.mime_type }}">
+            {% endfor %}
+          </video>
+        {% elsif video_url != blank %}
+          <video
+            class="press-row__hero-video"
+            autoplay
+            muted
+            loop
+            playsinline
+            webkit-playsinline
+            preload="metadata"
+            {% if poster_src != blank %}poster="{{ poster_src | escape }}"{% endif %}
+          >
+            <source src="{{ video_url | escape }}" type="video/mp4">
+          </video>
+        {% elsif poster_src != blank %}
+          {% render 'media-img',
+             url: poster_src,
+             alt: '',
+             class: 'press-row__hero-fallback',
+             loading: 'lazy',
+             position: 'css',
+             width_attr: 1200,
+             height_attr: 1600 %}
+        {% endif %}
+        <div class="press-row__hero-copy">
+          {% if hero_label != blank %}
+            <p class="type-label">{{ hero_label }}</p>
+          {% endif %}
+          {% if hero_line != blank %}
+            <p class="type-statement">{{ hero_line }}</p>
+          {% endif %}
+        </div>
+      </div>
+
+      {% for block in section.blocks %}
+        {% liquid
+          assign card_title = block.settings.title
+          assign card_caption = block.settings.caption
+          assign card_link = block.settings.link
+          assign fit = block.settings.media_fit | default: 'cover'
+          assign pos = block.settings.media_position | default: 'center'
+          assign is_placeholder = block.settings.placeholder_gradient
+          assign alt_text = card_title | default: 'Press' | strip_html
+          assign img_src = blank
+          if block.settings.image != blank
+            assign img_src = block.settings.image | image_url: width: 900
+          elsif block.settings.image_url != blank
+            assign img_src = block.settings.image_url
+          endif
+          assign card_class = 'press-row__card'
+          if fit == 'contain'
+            assign card_class = card_class | append: ' press-row__card--contain'
+          endif
+          if is_placeholder
+            assign card_class = card_class | append: ' press-row__card--venice'
+          endif
+          if pos == 'top'
+            assign card_class = card_class | append: ' press-row__card--pos-top'
+          elsif pos == 'bottom'
+            assign card_class = card_class | append: ' press-row__card--pos-bottom'
+          endif
+          if block.settings.hide_on_desktop
+            assign card_class = card_class | append: ' press-row__card--hide-desktop'
+          endif
+          if block.settings.hide_on_mobile
+            assign card_class = card_class | append: ' press-row__card--hide-mobile'
+          endif
+        %}
+        {% if card_link != blank %}
+          <a class="{{ card_class }}" href="{{ card_link }}" {{ block.shopify_attributes }}>
+        {% else %}
+          <div class="{{ card_class }}" {{ block.shopify_attributes }}>
+        {% endif %}
+          <div class="press-row__card-media"{% if is_placeholder and img_src == blank %} aria-hidden="true"{% endif %}>
+            {% if img_src != blank %}
+              {% render 'media-img',
+                 url: img_src,
+                 alt: alt_text,
+                 loading: 'lazy',
+                 position: 'css',
+                 width_attr: 900,
+                 height_attr: 1100 %}
+            {% endif %}
+          </div>
+          <div class="press-row__card-foot">
+            {% if card_title != blank %}
+              <p class="press-row__card-title">{{ card_title }}</p>
+            {% endif %}
+            <p class="press-row__card-cap">
+              <span>{{ card_caption }}</span>
+              {% if card_link != blank %}<span class="press-row__card-arrow" aria-hidden="true">→</span>{% endif %}
+            </p>
+          </div>
+        {% if card_link != blank %}
+          </a>
+        {% else %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    {%- comment -%} Also featured in line (press line 2026-09-27). Theme editor: Show text line / Hide on mobile / styles / name size / text. {%- endcomment -%}
+    {%- if section.settings.show_mentions and section.settings.mentions_items != blank -%}
+      {%- liquid
+        assign mention_items = section.settings.mentions_items | split: ','
+        assign mentions_d = section.settings.mentions_style_desktop | default: 'caps'
+        assign mentions_m = section.settings.mentions_style_mobile | default: 'sentence'
+        assign mentions_size = section.settings.mentions_name_size | default: '16'
+        assign mentions_count = 0
+      -%}
+      <p class="press-row__mentions press-row__mentions--d-{{ mentions_d }} press-row__mentions--m-{{ mentions_m }}{% if section.settings.mentions_hide_mobile %} press-row__mentions--hide-mobile{% endif %}" style="--mentions-name-size: {{ mentions_size }}px;">
+        {%- if section.settings.mentions_lead != blank -%}
+          <span class="press-row__mentions-lead">{{ section.settings.mentions_lead | escape }}</span>{{ ' ' }}
+        {%- endif -%}
+        {%- for item in mention_items -%}
+          {%- assign mention_name = item | strip -%}
+          {%- if mention_name != blank -%}
+            {%- if mentions_count > 0 -%}{{ ' ' }}<span class="press-row__mentions-sep" aria-hidden="true">·</span>{{ ' ' }}{%- endif -%}
+            <span class="press-row__mentions-item">{{ mention_name | escape }}</span>
+            {%- assign mentions_count = mentions_count | plus: 1 -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% style %}
+  #press-row-{{ section.id }} {
+    --pr-bg: {{ bg }};
+    --pr-desk-h: {{ section.settings.desktop_height | default: 620 }}px;
+  }
+  #shopify-section-{{ section.id }} {
+    background: var(--pr-bg, #faf8f6);
+    /* TE mobile preview defensive: opt out of any inherited content-visibility skipping */
+    content-visibility: visible;
+    contain: none;
+  }
+  #shopify-section-{{ section.id }} .press-row {
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--pr-bg, #faf8f6);
+    color: #1c1916;
+    padding: 64px 40px;
+    /* Fallback so section always has intrinsic size even during TE preview layout */
+    min-height: 400px;
+  }
+  #shopify-section-{{ section.id }} .press-row__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  #shopify-section-{{ section.id }} .press-row__eyebrow {
+    margin: 0 0 24px;
+    padding: 0;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+    /* Unified with press-cards heading: bold + tight tracking + dark. */
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #1c1916;
+  }
+  /* .press-row__head — used when heading_style = 'standard'. Global .h2-standard sets size/weight; this scope adds the underline + spacing. */
+  #shopify-section-{{ section.id }} .press-row__head {
+    margin: 0 0 32px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #d6cfc0;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: clamp(26px, 2.9vw, 32px);
+    font-weight: 600;
+    line-height: 1.22;
+    letter-spacing: -0.012em;
+    color: #1c1916;
+    text-transform: none;
+  }
+  #shopify-section-{{ section.id }} .press-row__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.46fr) minmax(0, 0.46fr);
+    grid-template-rows: 1fr 1fr;
+    gap: 24px;
+    height: var(--pr-desk-h, 620px);
+  }
+  /* Per-card + section-level visibility toggles. Cards use display:none; grid keeps its shape (empty cells possible with 3 visible). */
+  @media (min-width: 901px) {
+    #shopify-section-{{ section.id }} .press-row__card--hide-desktop { display: none !important; }
+    #shopify-section-{{ section.id }} .press-row--hide-desktop { display: none !important; }
+  }
+  @media (max-width: 900px) {
+    #shopify-section-{{ section.id }} .press-row__card--hide-mobile { display: none !important; }
+    #shopify-section-{{ section.id }} .press-row--hide-mobile { display: none !important; }
+  }
+  #shopify-section-{{ section.id }} .press-row__hero {
+    grid-row: 1 / 3;
+    grid-column: 1;
+    position: relative;
+    overflow: hidden;
+    background: #faf8f6;
+  }
+  /* Oversize the media box past the cell so baked letterbox bars are clipped by overflow:hidden */
+  #shopify-section-{{ section.id }} .press-row__hero video,
+  #shopify-section-{{ section.id }} .press-row__hero .press-row__hero-video,
+  #shopify-section-{{ section.id }} .press-row__hero-fallback {
+    position: absolute !important;
+    top: -12% !important;
+    left: -12% !important;
+    width: 124% !important;
+    height: 124% !important;
+    max-width: none !important;
+    max-height: none !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    outline: none !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    display: block !important;
+    background: #faf8f6 !important;
+    transform: none !important;
+  }
+
+
+  #shopify-section-{{ section.id }} .press-row__hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(180deg, transparent 55%, rgba(28, 25, 22, 0.82) 100%);
+  }
+  #shopify-section-{{ section.id }} .press-row__hero-copy {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    padding: 24px 28px 28px;
+    color: #faf8f6;
+  }
+  #shopify-section-{{ section.id }} .press-row__hero-copy .type-label {
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(250, 248, 246, 0.88);
+    margin: 0 0 8px;
+  }
+  #shopify-section-{{ section.id }} .press-row__hero-copy .type-statement {
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: clamp(28px, 3vw, 36px);
+    font-weight: 500;
+    line-height: 1.12;
+    letter-spacing: -0.022em;
+    color: #faf8f6;
+    margin: 0;
+    max-width: 15ch;
+    text-transform: none;
+  }
+  #shopify-section-{{ section.id }} .press-row__card {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    min-height: 0;
+    background: #fff;
+    border: 1px solid #e8e4dc;
+    text-decoration: none;
+    color: inherit;
+  }
+  #shopify-section-{{ section.id }} .press-row__card-media {
+    position: relative;
+    overflow: hidden;
+    background: #f5f2ec;
+    min-height: 0;
+  }
+  #shopify-section-{{ section.id }} .press-row__card-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  #shopify-section-{{ section.id }} .press-row__card--contain .press-row__card-media img {
+    object-fit: contain;
+    object-position: center top;
+    padding: 8px;
+    background: #faf8f6;
+  }
+
+  #shopify-section-{{ section.id }} .press-row__card--pos-top .press-row__card-media img {
+    object-position: center top !important;
+  }
+  #shopify-section-{{ section.id }} .press-row__card--pos-bottom .press-row__card-media img {
+    object-position: center bottom !important;
+  }
+  #shopify-section-{{ section.id }} .press-row__card--venice .press-row__card-media {
+    background: linear-gradient(160deg, #2a2420 0%, #3d3530 45%, #1c1916 100%);
+  }
+  #shopify-section-{{ section.id }} .press-row__card-foot {
+    padding: 12px 14px 14px;
+    border-top: 1px solid #f0ebe4;
+    min-height: 72px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  #shopify-section-{{ section.id }} .press-row__card-title {
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin: 0 0 2px;
+    color: #1c1916;
+  }
+  #shopify-section-{{ section.id }} .press-row__card-cap {
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: #6b645a;
+    line-height: 1.4;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  #shopify-section-{{ section.id }} .press-row__card-arrow {
+    font-size: 13px;
+    opacity: 0.7;
+  }
+  @media (max-width: 900px) {
+    #shopify-section-{{ section.id }} .press-row__grid {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto;
+      height: auto;
+    }
+    #shopify-section-{{ section.id }} .press-row__hero {
+      grid-column: 1 / -1;
+      grid-row: auto;
+      height: min(400px, 70vw);
+    }
+    #shopify-section-{{ section.id }} .press-row__card {
+      min-height: 260px;
+    }
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .press-row {
+      padding: 48px 16px;
+    }
+    #shopify-section-{{ section.id }} .press-row__eyebrow {
+      margin: 0 0 20px;
+    }
+    #shopify-section-{{ section.id }} .press-row__head {
+      font-size: clamp(24px, 5vw, 28px);
+    }
+    #shopify-section-{{ section.id }} .press-row__hero-copy .type-statement {
+      font-size: clamp(28px, 7vw, 36px);
+    }
+  }
+  @media (max-width: 520px) {
+    #shopify-section-{{ section.id }} .press-row__grid {
+      grid-template-columns: 1fr;
+    }
+    #shopify-section-{{ section.id }} .press-row__hero {
+      height: 320px;
+    }
+    /* Phone layout setting (mobile_layout). stack = default above. grid = two by two, 4:5 crops. list = square thumbnail with title and caption. Phones only. */
+    #shopify-section-{{ section.id }} .press-row--m-grid .press-row__grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 24px;
+    }
+    #shopify-section-{{ section.id }} .press-row--m-grid .press-row__hero {
+      grid-column: 1 / -1;
+    }
+    #shopify-section-{{ section.id }} .press-row--m-grid .press-row__card {
+      min-height: 0;
+      grid-template-rows: auto 1fr;
+    }
+    #shopify-section-{{ section.id }} .press-row--m-grid .press-row__card-media {
+      aspect-ratio: 4 / 5;
+    }
+    #shopify-section-{{ section.id }} .press-row--m-grid .press-row__card-foot {
+      min-height: 0;
+      padding: 10px 12px 12px;
+      justify-content: flex-start;
+    }
+    #shopify-section-{{ section.id }} .press-row--m-grid .press-row__card-title {
+      font-size: 15px;
+      text-wrap: balance;
+    }
+    #shopify-section-{{ section.id }} .press-row--m-grid .press-row__card-cap {
+      font-size: 12.5px;
+    }
+    #shopify-section-{{ section.id }} .press-row--m-grid .press-row__card-cap span {
+      text-wrap: balance;
+    }
+    #shopify-section-{{ section.id }} .press-row--m-grid .press-row__card-arrow {
+      display: none;
+    }
+    #shopify-section-{{ section.id }} .press-row--m-list .press-row__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0;
+    }
+    #shopify-section-{{ section.id }} .press-row--m-list .press-row__hero {
+      margin-bottom: 8px;
+    }
+    #shopify-section-{{ section.id }} .press-row--m-list .press-row__card {
+      grid-template-columns: 104px minmax(0, 1fr);
+      grid-template-rows: auto;
+      align-items: center;
+      gap: 16px;
+      min-height: 0;
+      padding: 14px 0;
+      background: transparent;
+      border: 0;
+      border-bottom: 1px solid #d6cfc0;
+    }
+    #shopify-section-{{ section.id }} .press-row--m-list .press-row__card-media {
+      width: 104px;
+      height: 104px;
+    }
+    #shopify-section-{{ section.id }} .press-row--m-list .press-row__card-foot {
+      min-height: 0;
+      padding: 0;
+      border-top: 0;
+    }
+    #shopify-section-{{ section.id }} .press-row--m-list .press-row__card-title {
+      font-size: 17px;
+      text-wrap: balance;
+    }
+  }
+  /* Also featured in line. Desktop caps = A3, mobile sentence = M2 (press line 2026-09-27). Breakpoint 900px. */
+  #shopify-section-{{ section.id }} .press-row__mentions { margin: 20px 0 0; padding: 0; font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif; text-align: left; }
+  #shopify-section-{{ section.id }} .press-row__mentions-item { white-space: nowrap; font-size: var(--mentions-name-size, 16px); }
+  #shopify-section-{{ section.id }} .press-row__mentions-sep { padding: 0 .2em; }
+  @media (min-width: 901px) {
+    #shopify-section-{{ section.id }} .press-row__mentions--d-caps { font-size: 16px; font-weight: 600; line-height: 1.3; letter-spacing: normal; color: #1c1916; text-transform: none; }
+    #shopify-section-{{ section.id }} .press-row__mentions--d-caps .press-row__mentions-lead { font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #3a3a3a; margin-right: .5em; }
+    #shopify-section-{{ section.id }} .press-row__mentions--d-caps .press-row__mentions-sep { padding: 0 .35em; font-weight: 400; color: #6b645a; }
+    #shopify-section-{{ section.id }} .press-row__mentions--d-sentence { font-size: 16px; font-weight: 400; line-height: 1.5; letter-spacing: normal; color: var(--text-body, #4a4a4a); text-transform: none; }
+    #shopify-section-{{ section.id }} .press-row__mentions--d-sentence .press-row__mentions-lead { font-weight: 400; color: var(--text-body, #4a4a4a); }
+    #shopify-section-{{ section.id }} .press-row__mentions--d-sentence .press-row__mentions-item { font-weight: 500; color: #1c1916; }
+  }
+  @media (max-width: 900px) {
+    #shopify-section-{{ section.id }} .press-row__mentions--m-sentence { font-size: 16px; font-weight: 400; line-height: 1.5; letter-spacing: normal; color: var(--text-body, #4a4a4a); text-transform: none; }
+    #shopify-section-{{ section.id }} .press-row__mentions--m-sentence .press-row__mentions-lead { font-weight: 400; color: var(--text-body, #4a4a4a); }
+    #shopify-section-{{ section.id }} .press-row__mentions--m-sentence .press-row__mentions-item { font-weight: 500; color: #1c1916; }
+    #shopify-section-{{ section.id }} .press-row__mentions--m-caps { font-size: 16px; font-weight: 600; line-height: 1.3; letter-spacing: normal; color: #1c1916; text-transform: none; }
+    #shopify-section-{{ section.id }} .press-row__mentions--m-caps .press-row__mentions-lead { font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #3a3a3a; margin-right: .5em; }
+    #shopify-section-{{ section.id }} .press-row__mentions--m-caps .press-row__mentions-sep { padding: 0 .35em; font-weight: 400; color: #6b645a; }
+    #shopify-section-{{ section.id }} .press-row__mentions--hide-mobile { display: none !important; }
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Press row",
+  "tag": "section",
+  "class": "section-press-row",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Press"
+    },
+    {
+      "type": "select",
+      "id": "heading_style",
+      "label": "Heading style",
+      "info": "Eyebrow = small caps label. Standard = grid section header (matches other sections).",
+      "options": [
+        { "value": "eyebrow", "label": "Eyebrow (small caps)" },
+        { "value": "standard", "label": "Standard heading" }
+      ],
+      "default": "eyebrow"
+    },
+    {
+      "type": "range",
+      "id": "desktop_height",
+      "label": "Size · desktop height",
+      "min": 480,
+      "max": 720,
+      "step": 20,
+      "unit": "px",
+      "default": 620,
+      "info": "Taller = more of Runway / cards visible. Mobile stacks and ignores this."
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#faf8f6"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Hero video (Shopify Files)",
+      "info": "Prefer this — use the Coperni file from the old Press card."
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "Hero video URL (mp4)",
+      "info": "Fallback only. Leave blank when Hero video (Shopify Files) is set."
+    },
+    {
+      "type": "image_picker",
+      "id": "poster",
+      "label": "Hero poster (Shopify)"
+    },
+    {
+      "type": "text",
+      "id": "poster_url",
+      "label": "Hero poster URL fallback",
+      "default": "https://barreletics.com/cdn/shop/files/yellow_tone_mix.png?width=2000"
+    },
+    {
+      "type": "text",
+      "id": "hero_label",
+      "label": "Hero overlay label",
+      "default": "Barreletics × Coperni"
+    },
+    {
+      "type": "text",
+      "id": "hero_line",
+      "label": "Hero overlay line",
+      "default": "Limited edition · Paris 2026"
+    },
+    { "type": "header", "content": "Phone" },
+    { "type": "select", "id": "mobile_layout", "label": "Phone layout", "default": "stack", "info": "Phones only. Desktop and tablet are unchanged.", "options": [ { "value": "stack", "label": "Stack (one per row)" }, { "value": "grid", "label": "Two-by-two" }, { "value": "list", "label": "List with thumbnails" } ] },
+    {
+      "type": "header",
+      "content": "Shared \u2014 Section frame"
+    },
+    {
+      "type": "paragraph",
+      "content": "OUTER inset from the page edges (margin). Top and bottom are independent; left & right = one control. Custom mobile OFF = mobile uses the same inset as desktop. Defaults 0 = full bleed."
+    },
+    {
+      "type": "checkbox",
+      "id": "inset_custom_mobile",
+      "label": "Custom mobile inset",
+      "default": false,
+      "info": "OFF (default): ignore the mobile inset sliders \u2014 mobile uses desktop Inset top / bottom / left & right. ON: use the mobile inset sliders instead."
+    },
+    {
+      "type": "range",
+      "id": "inset_top",
+      "label": "Inset top",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom",
+      "label": "Inset bottom",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x",
+      "label": "Inset left & right",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Same value on both sides."
+    },
+    {
+      "type": "range",
+      "id": "inset_top_mobile",
+      "label": "Inset top \u2014 mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom_mobile",
+      "label": "Inset bottom \u2014 mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x_mobile",
+      "label": "Inset left & right \u2014 mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    { "type": "checkbox", "id": "hide_on_mobile", "label": "Hide on mobile", "default": false },
+    { "type": "checkbox", "id": "hide_on_desktop", "label": "Hide on desktop", "default": false },
+    { "type": "header", "content": "Also featured in line" },
+    { "type": "checkbox", "id": "show_mentions", "label": "Show text line", "default": true },
+    { "type": "checkbox", "id": "mentions_hide_mobile", "label": "Hide on mobile", "default": false, "info": "Hides the line at 900px and below." },
+    { "type": "select", "id": "mentions_style_desktop", "label": "Desktop text style", "default": "caps", "options": [ { "value": "caps", "label": "Caps lead-in, bold names" }, { "value": "sentence", "label": "Sentence case" } ] },
+    { "type": "select", "id": "mentions_style_mobile", "label": "Mobile text style", "default": "sentence", "options": [ { "value": "sentence", "label": "Sentence case" }, { "value": "caps", "label": "Caps lead-in, bold names" } ] },
+    { "type": "select", "id": "mentions_name_size", "label": "Name size", "default": "16", "options": [ { "value": "16", "label": "16px" }, { "value": "18", "label": "18px" } ] },
+    { "type": "text", "id": "mentions_lead", "label": "Lead-in text", "default": "Also featured in" },
+    { "type": "text", "id": "mentions_items", "label": "Names (comma separated)", "default": "Free People, Anthropologie (Fall 2026)", "info": "Shown with a middle dot between names." }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image (Shopify)"
+        },
+        {
+          "type": "text",
+          "id": "image_url",
+          "label": "Image URL fallback",
+          "info": "Used when Image (Shopify) is empty — for existing CDN URLs."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Press"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Caption"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "select",
+          "id": "media_fit",
+          "label": "Image fit",
+          "options": [
+            { "value": "cover", "label": "Cover (fill card)" },
+            { "value": "contain", "label": "Contain (fit inside)" }
+          ],
+          "default": "cover"
+        },
+        {
+          "type": "select",
+          "id": "media_position",
+          "label": "Image position",
+          "info": "For Cover — Top keeps heads in frame.",
+          "options": [
+            { "value": "center", "label": "Center" },
+            { "value": "top", "label": "Top" },
+            { "value": "bottom", "label": "Bottom" }
+          ],
+          "default": "center"
+        },
+        {
+          "type": "checkbox",
+          "id": "placeholder_gradient",
+          "label": "Placeholder gradient (no image)",
+          "default": false
+        },
+        { "type": "header", "content": "Visibility" },
+        { "type": "checkbox", "id": "hide_on_desktop", "label": "Hide on desktop", "default": false },
+        { "type": "checkbox", "id": "hide_on_mobile", "label": "Hide on mobile", "default": false, "info": "Hidden card leaves an empty grid cell — hide from the end of the list for cleanest layout." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Press row",
+      "blocks": [
+        {
+          "type": "card",
+          "settings": {
+            "image_url": "https://barreletics.com/cdn/shop/files/Screenshot_2026-03-20_at_6.53.30_PM.png?width=900",
+            "title": "Runway",
+            "caption": "Paris Fashion Week",
+            "link": "https://barreletics.com/products/barreletics-x-coperni-closed-sole",
+            "media_fit": "cover"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "image_url": "https://barreletics.com/cdn/shop/files/Copreni_Final_More_grey.png?v=1774119812&width=900",
+            "title": "Collaboration",
+            "caption": "Spring–Summer 2026",
+            "link": "https://barreletics.com/products/barreletics-x-coperni-closed-sole",
+            "media_fit": "cover"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "image_url": "https://cdn.shopify.com/s/files/1/0045/0612/4391/files/Interni_Blog_Magazine_Page.png",
+            "title": "INTERNI",
+            "caption": "Sano come un piede",
+            "link": "https://barreletics.com/blogs/news/barreletics-in-interni",
+            "media_fit": "contain"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "title": "ITSLIQUID · Venice",
+            "caption": "Biennale arte 2026",
+            "link": "https://barreletics.com/blogs/news",
+            "media_fit": "cover",
+            "placeholder_gradient": true
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

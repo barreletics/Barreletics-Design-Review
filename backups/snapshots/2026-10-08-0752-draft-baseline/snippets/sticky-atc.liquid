@@ -1,0 +1,322 @@
+{% comment %}
+  Sticky Add-to-Cart Bar (D-023)
+  Hidden when native ATC is visible. Appears when purchase module scrolls out of view.
+  Include in PDP template via section wrapper.
+
+  Optional render params (from pdp-sticky-atc section settings):
+    hero_image_mode, hero_color, hero_media_index — same TE contract as buy-box.
+{% endcomment %}
+{% liquid
+  assign sticky_hero = product.featured_image
+  assign sticky_mode = settings.pdp_hero_image_mode | default: 'admin_order'
+  assign sticky_color = settings.pdp_hero_color | strip
+  assign sticky_idx = settings.pdp_hero_media_index | default: 1 | plus: 0
+  if hero_image_mode != blank and hero_image_mode != 'admin_order'
+    assign sticky_mode = hero_image_mode
+  endif
+  if hero_color != blank
+    assign sticky_color = hero_color | strip
+    if sticky_mode == 'admin_order'
+      assign sticky_mode = 'variant_color'
+    endif
+  endif
+  if hero_image_mode == 'media_index'
+    assign sticky_mode = 'media_index'
+    assign sticky_idx = hero_media_index | default: sticky_idx | plus: 0
+  endif
+  if sticky_mode == 'variant_color' and sticky_color != blank
+    assign want = sticky_color | downcase
+    for v in product.variants
+      assign matched = false
+      for opt in v.options
+        assign od = opt | strip | downcase
+        if od == want or od contains want
+          assign matched = true
+        endif
+      endfor
+      if matched
+        if v.featured_media != blank
+          assign sticky_hero = v.featured_media.preview_image | default: v.featured_media
+        elsif v.image != blank
+          assign sticky_hero = v.image
+        endif
+        break
+      endif
+    endfor
+  elsif sticky_mode == 'media_index'
+    assign zero = sticky_idx | minus: 1
+    if zero < 0
+      assign zero = 0
+    endif
+    if product.images[zero] != blank
+      assign sticky_hero = product.images[zero]
+    endif
+  endif
+  if sticky_hero == blank
+    assign sticky_hero = product.featured_image
+  endif
+%}
+
+<div
+  id="sticky-atc"
+  class="sticky-atc"
+  aria-hidden="true"
+  role="complementary"
+  aria-label="Quick add to cart"
+>
+  <div class="sticky-atc__inner">
+    <div class="sticky-atc__product">
+      {% if sticky_hero %}
+        <img
+          class="sticky-atc__thumb"
+          src="{{ sticky_hero | image_url: width: 80 }}"
+          alt="{{ product.title | escape }}"
+          width="40"
+          height="40"
+          loading="lazy"
+        >
+      {% endif %}
+      <div class="sticky-atc__info">
+        <span class="sticky-atc__title">{{ product.title }}</span>
+        <span class="sticky-atc__price">{{ product.selected_or_first_available_variant.price | money }}</span>
+      </div>
+    </div>
+
+    <div class="sticky-atc__actions">
+      <span class="sticky-atc__size" id="sticky-atc-size">
+        Size: {{ product.selected_or_first_available_variant.title }}
+      </span>
+      <button
+        type="button"
+        class="sticky-atc__btn btn btn--primary"
+        id="sticky-atc-btn"
+        data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+        aria-label="Add {{ product.title }} to cart"
+      >
+        Add to Cart
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .sticky-atc {
+    position: fixed;
+    /* --sticky-atc-offset lifts the bar above bottom-docked overlays
+       (Shopify cookie-consent banner, theme preview bar) so taps reach it. */
+    bottom: var(--sticky-atc-offset, 0px);
+    left: 0;
+    right: 0;
+    z-index: var(--z-sticky);
+    background: var(--bg-primary);
+    border-top: 1px solid var(--border-default);
+    box-shadow: 0 -2px 12px rgba(28, 25, 22, 0.08);
+    transform: translateY(calc(100% + var(--sticky-atc-offset, 0px)));
+    transition: transform var(--transition-base);
+    padding: 12px var(--section-padding-x);
+  }
+
+  .sticky-atc.is-visible {
+    transform: translateY(0);
+  }
+
+  .sticky-atc[aria-hidden="true"] {
+    pointer-events: none;
+  }
+
+  .sticky-atc__inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+
+  .sticky-atc__product {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .sticky-atc__thumb {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-badge);
+    object-fit: cover;
+  }
+
+  .sticky-atc__title {
+    font-size: var(--text-base);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+  }
+
+  .sticky-atc__price {
+    font-size: var(--text-base);
+    font-weight: var(--weight-bold);
+    color: var(--text-primary);
+    margin-left: var(--space-2);
+  }
+
+  .sticky-atc__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .sticky-atc__size {
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wider);
+    color: var(--text-muted);
+  }
+
+  .sticky-atc__btn {
+    padding: 12px 24px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 768px) {
+    .sticky-atc {
+      padding: 10px var(--section-padding-x-mobile);
+    }
+
+    .sticky-atc__info {
+      display: none;
+    }
+
+    .sticky-atc__size {
+      font-size: 11px;
+    }
+
+    .sticky-atc__btn {
+      flex: 1;
+      text-align: center;
+    }
+  }
+</style>
+
+<script>
+  (function() {
+    var stickyBar = document.getElementById('sticky-atc');
+    var buyBox = document.querySelector('[data-buy-box]');
+    if (!stickyBar || !buyBox) return;
+
+    var stickyBtn = document.getElementById('sticky-atc-btn');
+    var stickySize = document.getElementById('sticky-atc-size');
+    var stickyPrice = stickyBar.querySelector('.sticky-atc__price');
+    var stickyThumb = stickyBar.querySelector('.sticky-atc__thumb');
+
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          stickyBar.classList.remove('is-visible');
+          stickyBar.setAttribute('aria-hidden', 'true');
+        } else {
+          stickyBar.classList.add('is-visible');
+          stickyBar.setAttribute('aria-hidden', 'false');
+        }
+      });
+    }, { threshold: 0 });
+
+    observer.observe(buyBox);
+
+    // Bottom-docked overlays (Shopify customer-privacy banner on phone spans the
+    // full width; the theme preview bar is a 68px strip) sit above z-sticky and
+    // swallow taps on the bar. Lift the bar above whichever is showing.
+    var OVERLAY_IDS = ['shopify-pc__banner', 'PBarNextFrameWrapper'];
+    var lastOffset = -1;
+    var offsetQueued = false;
+    function updateOffset() {
+      offsetQueued = false;
+      var vh = window.innerHeight;
+      var off = 0;
+      OVERLAY_IDS.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        var cs = window.getComputedStyle(el);
+        if (cs.display === 'none' || cs.visibility === 'hidden' || parseFloat(cs.opacity) === 0) return;
+        var r = el.getBoundingClientRect();
+        if (r.width < 1 || r.height < 1) return;
+        if (r.bottom < vh - 2 || r.top >= vh) return;
+        off = Math.max(off, Math.ceil(vh - Math.max(r.top, 0)));
+      });
+      if (off !== lastOffset) {
+        lastOffset = off;
+        stickyBar.style.setProperty('--sticky-atc-offset', off + 'px');
+      }
+    }
+    function queueOffset() {
+      if (offsetQueued) return;
+      offsetQueued = true;
+      window.requestAnimationFrame(updateOffset);
+    }
+    updateOffset();
+    window.addEventListener('resize', queueOffset);
+    window.addEventListener('load', queueOffset);
+    document.addEventListener('visitorConsentCollected', queueOffset);
+    if (window.MutationObserver) {
+      new MutationObserver(function(muts) {
+        for (var i = 0; i < muts.length; i++) {
+          if (muts[i].target !== stickyBar) { queueOffset(); return; }
+        }
+      }).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'class', 'hidden', 'aria-hidden'] });
+    }
+
+    document.addEventListener('variant:changed', function(e) {
+      var variant = e.detail.variant;
+      if (!variant) return;
+
+      if (stickyBtn) {
+        stickyBtn.setAttribute('data-variant-id', variant.id);
+        if (variant.available) {
+          stickyBtn.disabled = false;
+          stickyBtn.textContent = 'Add to Cart';
+          stickyBtn.classList.remove('btn--disabled');
+        } else {
+          stickyBtn.disabled = true;
+          stickyBtn.textContent = 'Sold Out';
+          stickyBtn.classList.add('btn--disabled');
+        }
+      }
+
+      if (stickyPrice) {
+        stickyPrice.textContent = formatMoney(variant.price);
+      }
+
+      if (stickySize) {
+        stickySize.textContent = 'Size: ' + variant.title;
+      }
+
+      if (stickyThumb && variant.featured_image) {
+        stickyThumb.src = variant.featured_image.src.replace(/(\.[a-z]+)(\?|$)/, '_80x$1$2');
+      }
+    });
+
+    if (stickyBtn) {
+      stickyBtn.addEventListener('click', function() {
+        var vid = parseInt(stickyBtn.getAttribute('data-variant-id'), 10);
+        if (!vid || stickyBtn.disabled) return;
+        if (window.BarreleticsCart) {
+          stickyBtn.disabled = true;
+          stickyBtn.textContent = 'Adding\u2026';
+          window.BarreleticsCart.add(vid, 1).finally(function() {
+            stickyBtn.disabled = false;
+            stickyBtn.textContent = 'Add to Cart';
+            document.addEventListener('variant:changed', function handler() {
+              stickyBtn.textContent = 'Add to Cart';
+              document.removeEventListener('variant:changed', handler);
+            });
+          });
+        }
+      });
+    }
+
+    function formatMoney(cents) {
+      return '$' + (cents / 100).toFixed(2).replace(/\.00$/, '');
+    }
+  })();
+</script>

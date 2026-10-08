@@ -1,0 +1,44 @@
+{% comment %}
+  Shared Theme Editor type overrides → CSS custom properties.
+  Authority: planning/m4-te-controls.md (Type OS owns family; size/weight only).
+  A value of 'default' (or blank) emits nothing so the section's Type OS baseline wins.
+
+  @param title_size   {string} px value or 'default'
+  @param title_weight {string} 400|500|600|700 or 'default'
+  @param body_size    {string} px value or 'default'
+  @param body_weight  {string} 400|500|600|700 or 'default'
+  @param sub_size     {string} secondary heading px value or 'default'
+  @param sub_weight   {string} secondary heading weight or 'default'
+{% endcomment %}
+{%- liquid
+  if title_size != blank and title_size != 'default'
+    echo '--te-title-size:'
+    echo title_size
+    echo 'px;'
+  endif
+  if title_weight != blank and title_weight != 'default'
+    echo '--te-title-weight:'
+    echo title_weight
+    echo ';'
+  endif
+  if body_size != blank and body_size != 'default'
+    echo '--te-body-size:'
+    echo body_size
+    echo 'px;'
+  endif
+  if body_weight != blank and body_weight != 'default'
+    echo '--te-body-weight:'
+    echo body_weight
+    echo ';'
+  endif
+  if sub_size != blank and sub_size != 'default'
+    echo '--te-sub-size:'
+    echo sub_size
+    echo 'px;'
+  endif
+  if sub_weight != blank and sub_weight != 'default'
+    echo '--te-sub-weight:'
+    echo sub_weight
+    echo ';'
+  endif
+-%}

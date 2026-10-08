@@ -1,0 +1,605 @@
+{% comment %}
+  About page — 50/50 split (Theme Editor aligned with fifty-fifty control set)
+{% endcomment %}
+
+{%- liquid
+  assign reverse = section.settings.reverse
+  assign media_pct = section.settings.media_column_pct | default: 50
+  assign text_pct = 100 | minus: media_pct
+
+  assign pas_mh_default = 760
+  assign pas_mh = section.settings.min_height
+  if pas_mh != blank and pas_mh != pas_mh_default
+    assign min_height = pas_mh
+  elsif section.settings.media_max_px != blank
+    assign min_height = section.settings.media_max_px
+  else
+    assign min_height = pas_mh | default: pas_mh_default
+  endif
+  assign pas_mmh_default = 480
+  assign pas_mmh = section.settings.mobile_media_height
+  if pas_mmh != blank and pas_mmh != 0 and pas_mmh != pas_mmh_default
+    assign mobile_media_height = pas_mmh
+  elsif section.settings.media_max_px_mobile != blank
+    assign mobile_media_height = section.settings.media_max_px_mobile
+  else
+    assign mobile_media_height = pas_mmh | default: pas_mmh_default
+  endif
+
+  assign panel_cream = false
+  if section.settings.bg_style == 'cream'
+    assign panel_cream = true
+  elsif section.settings.cream_bg
+    assign panel_cream = true
+  endif
+
+  assign pas_y_d_def = 56
+  assign pas_side_d_def = 48
+  assign pas_y_m_def = 8
+  assign pas_x_m_def = 20
+  assign pas_fixed_pad_d_y = false
+  if section.settings.text_pad_y != pas_y_d_def
+    assign pas_fixed_pad_d_y = true
+  endif
+  assign pas_fixed_pad_d_x = false
+  if section.settings.side_padding != pas_side_d_def
+    assign pas_fixed_pad_d_x = true
+  endif
+  assign pas_fixed_pad_m_y = false
+  if section.settings.text_pad_y_mobile != pas_y_m_def
+    assign pas_fixed_pad_m_y = true
+  endif
+  assign pas_fixed_pad_m_x = false
+  if section.settings.text_pad_x_mobile != pas_x_m_def
+    assign pas_fixed_pad_m_x = true
+  endif
+  assign section_gap = section.settings.section_gap
+  if section_gap == blank
+    assign section_gap = 0
+  endif
+  assign section_gap_m = section.settings.section_gap_mobile | default: 0
+-%}
+
+<section
+  class="page-about-split{% if reverse %} page-about-split--reverse{% endif %}{% if panel_cream %} page-about-split--cream{% endif %}{% if pas_fixed_pad_d_y %} page-about-split--fixed-pad-d-y{% endif %}{% if pas_fixed_pad_d_x %} page-about-split--fixed-pad-d-x{% endif %}{% if pas_fixed_pad_m_y %} page-about-split--fixed-pad-m-y{% endif %}{% if pas_fixed_pad_m_x %} page-about-split--fixed-pad-m-x{% endif %}{% render 'split-mobile-stack-class', mobile_stack_order: section.settings.mobile_stack_order %}"
+  id="shopify-section-{{ section.id }}"
+  {{ section.shopify_attributes }}
+  aria-label="{{ section.settings.aria_label | escape }}"
+  style="--pas-media-fr: {{ media_pct }}fr; --pas-text-fr: {{ text_pct }}fr; --pas-min-height: {{ min_height }}px; --pas-mobile-media-height: {{ mobile_media_height }}px; --pas-section-gap: {{ section_gap }}px; --pas-section-gap-m: {{ section_gap_m }}px;{% render 'unified-text-pads-vars', y_d: 56, side_d: 48, y_m: 8, x_m: 20 %}{% render 'type-override-vars', title_weight: section.settings.title_weight, body_size: section.settings.body_size, body_weight: section.settings.body_weight %}"
+>
+  <div class="page-about-split__media">
+    {% if section.settings.image != blank %}
+      {{
+        section.settings.image
+        | image_url: width: 1600
+        | image_tag:
+          widths: '600, 900, 1200, 1600',
+          sizes: '(max-width: 768px) 100vw, 50vw',
+          alt: section.settings.image_alt,
+          loading: 'lazy',
+          class: 'page-about-split__img'
+      }}
+    {% elsif section.settings.image_url != blank %}
+      <img
+        class="page-about-split__img"
+        src="{{ section.settings.image_url | escape }}"
+        alt="{{ section.settings.image_alt | escape }}"
+        loading="lazy"
+      >
+    {% endif %}
+  </div>
+  <div class="page-about-split__copy">
+    {% if section.settings.title != blank %}
+      {% assign hl = section.settings.heading_level | default: 'h2' %}
+      {% if hl != 'h2' and hl != 'h3' %}{% assign hl = 'h2' %}{% endif %}
+      <{{ hl }} class="page-about-split__title">{{ section.settings.title }}</{{ hl }}>
+    {% endif %}
+    {% if section.settings.body != blank %}
+      <div class="page-about-split__body rte">{{ section.settings.body }}</div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  {%- if section.settings.heading_size_override != blank %}
+  #shopify-section-{{ section.id }} { {% render 'type-override-vars', title_size: section.settings.heading_size_override %} --te-title-size-n: {{ section.settings.heading_size_override }}; }
+  {%- endif %}
+  #shopify-section-{{ section.id }} {
+    padding-block: var(--pas-section-gap, 0px);
+  }
+  #shopify-section-{{ section.id }} .page-about-split {
+    display: grid;
+    grid-template-columns: var(--pas-media-fr, 1fr) var(--pas-text-fr, 1fr);
+    align-items: center;
+    background: #fff;
+  }
+  #shopify-section-{{ section.id }} .page-about-split--cream { background: var(--color-warm-cream, #faf8f6); }
+  #shopify-section-{{ section.id }} .page-about-split--reverse { direction: rtl; }
+  #shopify-section-{{ section.id }} .page-about-split--reverse > * { direction: ltr; }
+  #shopify-section-{{ section.id }} .page-about-split__media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(20px, 3vw, 36px) clamp(12px, 2vw, 24px);
+  }
+  #shopify-section-{{ section.id }} .page-about-split__img {
+    width: auto;
+    max-width: 100%;
+    max-height: var(--pas-min-height, 760px);
+    object-fit: contain;
+  }
+  #shopify-section-{{ section.id }} .page-about-split__copy {
+    padding: clamp(28px, 4vw, 56px) clamp(20px, 4vw, 48px);
+    max-width: 36em;
+  }
+  @media (min-width: 769px) {
+    #shopify-section-{{ section.id }} .page-about-split--fixed-pad-d-y .page-about-split__copy {
+      padding-top: var(--utp-y-d);
+      padding-bottom: var(--utp-y-d);
+    }
+    #shopify-section-{{ section.id }} .page-about-split--fixed-pad-d-x .page-about-split__copy {
+      padding-left: var(--utp-side-d);
+      padding-right: var(--utp-side-d);
+    }
+  }
+  #shopify-section-{{ section.id }} .page-about-split__title {
+    font-size: clamp(var(--heading-phone, 36px), calc(var(--te-title-size-n, var(--heading-standard-desktop-n, 56)) * 4.8vw / 56), var(--te-title-size, var(--heading-standard-desktop, 56px)));
+    font-weight: var(--te-title-weight, 400);
+    letter-spacing: -0.032em;
+    line-height: 1.06;
+    margin: 0 0 24px;
+    color: var(--text-primary, #1c1916);
+  }
+  @media (max-width: 749px) {
+    #shopify-section-{{ section.id }} .page-about-split__title {
+      font-size: var(--heading-phone, 36px);
+    }
+  }
+  #shopify-section-{{ section.id }} .page-about-split__body {
+    font-size: var(--te-body-size, 17px);
+    font-weight: var(--te-body-weight, 400);
+    line-height: 1.7;
+    color: var(--text-body, #4a4a4a);
+  }
+  #shopify-section-{{ section.id }} .page-about-split__body p + p { margin-top: 1em; }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} {
+      padding-bottom: var(--pas-section-gap-m, 0px);
+    }
+    #shopify-section-{{ section.id }} .page-about-split {
+      grid-template-columns: 1fr;
+      display: flex;
+      flex-direction: column;
+    }
+    #shopify-section-{{ section.id }} .page-about-split--reverse { direction: ltr; }
+    #shopify-section-{{ section.id }} .page-about-split__media { padding: 16px 16px 0; }
+    #shopify-section-{{ section.id }} .page-about-split__img {
+      width: 100%;
+      height: var(--pas-mobile-media-height, 480px);
+      max-height: none;
+      object-fit: cover;
+      object-position: center center;
+    }
+    #shopify-section-{{ section.id }} .page-about-split__copy { padding: 8px 20px 32px; }
+    #shopify-section-{{ section.id }} .page-about-split--fixed-pad-m-y .page-about-split__copy {
+      padding-top: var(--utp-y-m);
+    }
+    #shopify-section-{{ section.id }} .page-about-split--fixed-pad-m-x .page-about-split__copy {
+      padding-left: var(--utp-x-m);
+      padding-right: var(--utp-x-m);
+    }
+  }
+</style>
+
+{% render 'unified-text-pads-te-style', selector: '.page-about-split__copy', y_d: 56, side_d: 48, y_m: 8, x_m: 20, y_m_bottom_px: 32 %}
+
+{%- comment -%} TE live preview: read section.settings.* directly (not top-of-file assigns). {%- endcomment -%}
+{% style %}
+  {%- liquid
+    assign te_mh_default = 760
+    assign te_min_h = section.settings.min_height
+    if te_min_h != blank and te_min_h != te_mh_default
+      assign te_min_h = te_min_h
+    elsif section.settings.media_max_px != blank
+      assign te_min_h = section.settings.media_max_px
+    else
+      assign te_min_h = te_min_h | default: te_mh_default
+    endif
+    assign te_mmh_default = 480
+    assign te_mmh = section.settings.mobile_media_height
+    if te_mmh != blank and te_mmh != 0 and te_mmh != te_mmh_default
+      assign te_mmh = te_mmh
+    elsif section.settings.media_max_px_mobile != blank
+      assign te_mmh = section.settings.media_max_px_mobile
+    else
+      assign te_mmh = te_mmh | default: te_mmh_default
+    endif
+    assign te_mcp = section.settings.media_column_pct | default: 50
+  -%}
+  #shopify-section-{{ section.id }} .page-about-split {
+    --pas-min-height: {{ te_min_h }}px;
+    --pas-mobile-media-height: {{ te_mmh }}px;
+    --pas-media-fr: {{ te_mcp }}fr;
+    --pas-text-fr: {{ 100 | minus: te_mcp }}fr;
+    --pas-section-gap: {{ section.settings.section_gap | default: 0 }}px;
+    --pas-section-gap-m: {{ section.settings.section_gap_mobile | default: 0 }}px;
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .page-about-split__img {
+      height: {{ te_mmh }}px;
+      max-height: none;
+    }
+  }
+  @media (min-width: 769px) {
+    #shopify-section-{{ section.id }} .page-about-split__img {
+      max-height: {{ te_min_h }}px;
+    }
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "About \u2014 Split",
+  "settings": [
+    {
+      "type": "header",
+      "content": "1 \u2014 Photo / video"
+    },
+    {
+      "type": "paragraph",
+      "content": "Pick ONE. Priority: Shopify image \u2192 Image URL."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image / poster (Shopify)"
+    },
+    {
+      "type": "text",
+      "id": "image_url",
+      "label": "Image URL",
+      "info": "Used when Shopify image is empty."
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image alt text"
+    },
+    {
+      "type": "header",
+      "content": "2 \u2014 Focus + height"
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "label": "Height \u2014 desktop (default 760)",
+      "min": 360,
+      "max": 820,
+      "step": 20,
+      "unit": "px",
+      "info": "Contain-fit photo max height on desktop.",
+      "default": 760
+    },
+    {
+      "type": "range",
+      "id": "media_column_pct",
+      "label": "Image width \u2014 desktop (default 50%)",
+      "min": 40,
+      "max": 60,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "mobile_media_height",
+      "label": "Image height — phone (default 480)",
+      "min": 0,
+      "max": 900,
+      "step": 10,
+      "unit": "px",
+      "info": "0 falls back to legacy media_max_px_mobile when saved.",
+      "default": 480
+    },
+    {
+      "type": "header",
+      "content": "3 \u2014 Heading / body / CTA"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "heading_level",
+      "label": "Heading level (default H2)",
+      "default": "h2",
+      "options": [
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        }
+      ]
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body"
+    },
+    {
+      "type": "header",
+      "content": "4 \u2014 Trust strip"
+    },
+    {
+      "type": "paragraph",
+      "content": "Not used on About splits."
+    },
+    {
+      "type": "header",
+      "content": "5 \u2014 Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "reverse",
+      "label": "Image on right \u2014 desktop (default: off)",
+      "default": false,
+      "info": "769px and up only."
+    },
+    {
+      "type": "select",
+      "id": "mobile_stack_order",
+      "label": "Phone stack (default: image on top)",
+      "default": "media_first",
+      "options": [
+        {
+          "value": "media_first",
+          "label": "Image above copy (default)"
+        },
+        {
+          "value": "copy_first",
+          "label": "Copy above image"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad Y desktop (default fluid ~28\u201356)",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "info": "Leave unset in JSON keeps legacy clamp padding until you set this in TE.",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right \u2014 desktop (default 48)",
+      "min": 0,
+      "max": 96,
+      "step": 1,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad Y phone (default 8 top / 32 bottom)",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right \u2014 phone (default 20)",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "select",
+      "id": "bg_style",
+      "label": "Text panel background (default: White)",
+      "default": "white",
+      "options": [
+        {
+          "value": "white",
+          "label": "White (#ffffff)"
+        },
+        {
+          "value": "cream",
+          "label": "Cream (#faf8f6)"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Accessibility name (aria-label)",
+      "default": "Story section"
+    },
+    {
+      "type": "header",
+      "content": "6 \u2014 Section gap"
+    },
+    {
+      "type": "range",
+      "id": "section_gap",
+      "label": "Space above & below \u2014 desktop (default 0)",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "section_gap_mobile",
+      "label": "Space after section \u2014 phone (default 0)",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Legacy (hidden \u2014 do not edit)"
+    },
+    {
+      "type": "paragraph",
+      "content": "Preserves stored values on Theme Editor save."
+    },
+    {
+      "type": "range",
+      "id": "media_max_px",
+      "label": "Legacy: Photo height desktop",
+      "min": 360,
+      "max": 820,
+      "step": 20,
+      "unit": "px",
+      "default": 760,
+      "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "range",
+      "id": "media_max_px_mobile",
+      "label": "Legacy: Photo height mobile",
+      "min": 280,
+      "max": 900,
+      "step": 10,
+      "unit": "px",
+      "default": 480,
+      "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "cream_bg",
+      "label": "Legacy: Cream background",
+      "default": false,
+      "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "number",
+      "id": "heading_size_override",
+      "label": "Legacy: Heading size override",
+      "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Legacy: Heading weight",
+      "default": "default",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "400",
+          "label": "400"
+        },
+        {
+          "value": "500",
+          "label": "500"
+        },
+        {
+          "value": "600",
+          "label": "600"
+        },
+        {
+          "value": "700",
+          "label": "700"
+        }
+      ],
+      "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "select",
+      "id": "body_size",
+      "label": "Legacy: Body size",
+      "default": "default",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "14",
+          "label": "14px"
+        },
+        {
+          "value": "15",
+          "label": "15px"
+        },
+        {
+          "value": "16",
+          "label": "16px"
+        },
+        {
+          "value": "17",
+          "label": "17px"
+        },
+        {
+          "value": "18",
+          "label": "18px"
+        },
+        {
+          "value": "20",
+          "label": "20px"
+        },
+        {
+          "value": "22",
+          "label": "22px"
+        },
+        {
+          "value": "24",
+          "label": "24px"
+        }
+      ],
+      "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "select",
+      "id": "body_weight",
+      "label": "Legacy: Body weight",
+      "default": "default",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "400",
+          "label": "400"
+        },
+        {
+          "value": "500",
+          "label": "500"
+        },
+        {
+          "value": "600",
+          "label": "600"
+        }
+      ],
+      "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "About \u2014 Split"
+    }
+  ]
+}
+{% endschema %}

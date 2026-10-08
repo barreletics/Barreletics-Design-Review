@@ -1,0 +1,69 @@
+{%- comment -%}
+  Muted background video: force muted + play() for Safari/Firefox autoplay policy.
+  @param section_id {string} Shopify section.id
+  @param root_class {string} Root element class (e.g. split-hero, split-section)
+  @param video_selector {string} CSS selector for videos within root
+{%- endcomment -%}
+<script>
+  (function () {
+    var rootId = 'shopify-section-{{ section_id }}';
+    var rootClass = {{ root_class | json }};
+    var videoSel = {{ video_selector | json }};
+
+    function isAmbientAutoplay(v) {
+      if (!v || v.tagName !== 'VIDEO') return false;
+      if (v.hasAttribute('controls')) return false;
+      if (v.classList && v.classList.contains('press-cards__video--deferred')) return false;
+      if (v.dataset && v.dataset.src && !v.getAttribute('src')) return false;
+      return v.autoplay || v.hasAttribute('autoplay');
+    }
+
+    function primeVideo(v) {
+      if (!isAmbientAutoplay(v)) return;
+      v.muted = true;
+      v.defaultMuted = true;
+      v.setAttribute('muted', '');
+      v.setAttribute('playsinline', '');
+      v.setAttribute('webkit-playsinline', '');
+      v.loop = true;
+      v.removeAttribute('controls');
+      var p = v.play();
+      if (p && typeof p.catch === 'function') {
+        p.catch(function () {});
+      }
+    }
+
+    function primeRoot(root) {
+      if (!root) return;
+      root.querySelectorAll(videoSel).forEach(primeVideo);
+    }
+
+    function sectionRoot() {
+      return document.getElementById(rootId);
+    }
+
+    function onSectionEvent(evt) {
+      var t = evt.target;
+      if (!t) return;
+      if (t.id === rootId) {
+        primeRoot(t);
+        return;
+      }
+      var nested = t.querySelector && t.querySelector('#' + rootId);
+      if (nested) primeRoot(nested);
+      if (t.classList && t.classList.contains(rootClass)) primeRoot(t);
+    }
+
+    document.addEventListener('shopify:section:load', onSectionEvent);
+    document.addEventListener('shopify:section:select', onSectionEvent);
+
+    function boot() {
+      primeRoot(sectionRoot());
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', boot);
+    } else {
+      boot();
+    }
+  })();
+</script>
