@@ -398,7 +398,7 @@
 %}
 <section id="buy" class="pdp-hero{% unless section.settings.mobile_title_above_gallery == false %} pdp-hero--m-title-top{% endunless %}" aria-label="Product details" data-buy-box style="{{ pdp_pad_style }}">
  <div class="pdp-gallery">
- <div class="pdp-gallery__hero{% if is_shoe and hero_image.aspect_ratio >= 0.95 %} pdp-gallery__hero--fit{% endif %}"{% if is_shoe %} data-hero-fit-eligible{% endif %}>
+ <div class="pdp-gallery__hero">
  {% if hero_image %}
  {% render 'media-img',
  image: hero_image,
@@ -972,16 +972,10 @@
 
  .pdp-gallery__hero {
  position: relative;
- aspect-ratio: 4 / 5;
+ aspect-ratio: 1;
  background: var(--bg-card);
  overflow: hidden;
  border-radius: var(--radius-gallery);
- }
- .pdp-gallery__hero--fit {
- background: #fefefe;
- }
- .pdp-gallery__hero--fit img {
- object-fit: contain;
  }
 
  .pdp-gallery__thumbs {
@@ -1627,15 +1621,6 @@
   }
   var main = document.getElementById('pdp-main-img');
   if (!main) return;
-  function applyHeroFit(img) {
-    var hero = img && img.closest('.pdp-gallery__hero');
-    if (!hero) return;
-    var w = img.naturalWidth, h = img.naturalHeight;
-    if (!w || !h) return;
-    hero.classList.toggle('pdp-gallery__hero--fit', hero.hasAttribute('data-hero-fit-eligible') && (w / h) >= 0.95);
-  }
-  main.addEventListener('load', function() { applyHeroFit(main); });
-  applyHeroFit(main);
   document.querySelectorAll('.pdp-gallery__thumb').forEach(function(btn) {
     if (btn.dataset.galleryBound) return;
     btn.dataset.galleryBound = 'true';
