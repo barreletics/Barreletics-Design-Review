@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="{{ request.locale.iso_code }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <title>
+    {%- case template.name -%}
+      {%- when 'index' -%}
+        {{ page_title }}{% unless page_title contains shop.name %} | {{ shop.name }}{% endunless %}
+      {%- when 'product' -%}
+        {{ product.title }} | {{ shop.name }}
+      {%- when 'collection' -%}
+        {{ collection.title }} | {{ shop.name }}
+      {%- when 'article' -%}
+        {{ article.title }} | {{ shop.name }}
+      {%- when 'blog' -%}
+        {{ blog.title }} | {{ shop.name }}
+      {%- when 'page' -%}
+        {{ page.title }} | {{ shop.name }}
+      {%- else -%}
+        {{ page_title }} | {{ shop.name }}
+    {%- endcase -%}
+  </title>
+
+  {%- if page_description -%}
+    <meta name="description" content="{{ page_description | escape }}">
+  {%- endif -%}
+
+  <link rel="canonical" href="{{ canonical_url }}">
+
+  <meta property="og:site_name" content="{{ shop.name }}">
+  <meta property="og:url" content="{{ canonical_url }}">
+  <meta property="og:title" content="{{ page_title | escape }}">
+  {%- if page_description -%}
+    <meta property="og:description" content="{{ page_description | escape }}">
+  {%- endif -%}
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+
+  {%- comment -%}
+    Analytics / chat / pixels: prefer App embeds + content_for_header.
+    Do not render theme snippets that are missing or would double-fire (Tidio, Meta, etc.).
+  {%- endcomment -%}
+
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  {{ 'design-tokens.css' | asset_url | stylesheet_tag }}
+  {{ 'barreletics-base.css' | asset_url | stylesheet_tag }}
+  {{ 'chrome.css' | asset_url | stylesheet_tag }}
+  <style id="section-gap-os">
+    :root {
+      --section-padding-y: {{ settings.section_gap | default: 32 }}px;
+      /* Shared phone spacing scale: Theme settings > Layout > Spacing (phones) (2026-10-05 spacing pass).
+         Sections read these with the same fallbacks; change a slider and every section using it follows. */
+      --space-section-mobile: {{ settings.section_gap_mobile | default: 40 }}px;
+      --space-sm: {{ settings.space_inner_mobile | default: 24 }}px;
+      --space-intro-mobile: {{ settings.space_intro_mobile | default: 56 }}px;
+      --space-stack-mobile: calc(var(--space-intro-mobile) / 2);
+      --section-padding-y-mobile: var(--space-section-mobile);
+      /* Section headings: Theme settings > Section headings (2026-09-28). Sections read these with the same fallbacks. */
+      --heading-standard-desktop: {{ settings.heading_standard_desktop | default: 56 }}px;
+      --heading-band-desktop: {{ settings.heading_band_desktop | default: 52 }}px;
+      --heading-phone: {{ settings.heading_phone | default: 36 }}px;
+      --heading-giant-desktop: {{ settings.heading_giant_desktop | default: 88 }}px;
+      --heading-giant-phone: {{ settings.heading_giant_phone | default: 56 }}px;
+      /* Split images: Theme settings > Split images (2026-09-29). 50/50 phone media height; per-section override 0 = use this. */
+      --split-media-h-mobile: {{ settings.split_media_height_mobile | default: 500 }}px;
+      /* Full-width videos: Theme settings > Split images > Phone full-width video height (2026-09-29). Fullbleed Mobile height 0 = use this (photos use --split-media-h-mobile). */
+      --fullbleed-video-h-mobile: {{ settings.fullbleed_video_height_mobile | default: 500 }}px;
+      /* Unitless copies: the fluid (vw) part of each clamp scales with the setting, so a change shows at every width (2026-09-28 fix). */
+      --heading-standard-desktop-n: {{ settings.heading_standard_desktop | default: 56 }};
+      --heading-band-desktop-n: {{ settings.heading_band_desktop | default: 52 }};
+      --heading-giant-desktop-n: {{ settings.heading_giant_desktop | default: 88 }};
+      --heading-giant-phone-n: {{ settings.heading_giant_phone | default: 56 }};
+      --heading-standard-leading: 1.06;
+      --heading-standard-tracking: -0.032em;
+      /* Phone section headings — Theme settings > Typography > Section heading size (phones).
+         Default 36 = Never loses / Sock era / One pair on a 390 phone. Desktop tokens above are untouched. */
+      --section-heading-size-m: {{ settings.section_heading_size_phones | default: settings.heading_phone | default: 36 }}px;
+    }
+    {%- if template.suffix == 'in-studio-template' -%}
+    /* Text block padding (phones): Theme settings > Layout > Spacing (phones) (2026-10-07). Scoped to the Open Sole
+       in-studio template; sections fall back to their own phone pads wherever this variable is not set. */
+    :root { --text-pad-mobile: {{ settings.text_pad_mobile | default: 96 }}px; --text-min-h-mobile: {{ settings.text_min_h_mobile | default: 360 }}px; }
+    /* Open Sole section headings: lock band + giant tiers to the site standard (56 / 36 / 400 / 1.06 / -0.032em).
+       Home / Closed Sole / collections keep the global tokens above. */
+    :root {
+      --heading-band-desktop: var(--heading-standard-desktop);
+      --heading-band-desktop-n: var(--heading-standard-desktop-n);
+      --heading-giant-desktop: var(--heading-standard-desktop);
+      --heading-giant-desktop-n: var(--heading-standard-desktop-n);
+      --heading-giant-phone: var(--heading-phone);
+      --heading-giant-phone-n: {{ settings.heading_phone | default: 36 }};
+      --type-h2-display-leading: var(--heading-standard-leading, 1.06);
+      --type-h2-display-tracking: var(--heading-standard-tracking, -0.032em);
+    }
+    {%- endif -%}
+    {%- if template.name == 'product' -%}
+    @media (max-width: 768px) {
+      /* Product pages follow the shared section gap (was a 32px one-off). */
+      :root { --section-padding-y-mobile: var(--space-section-mobile); }
+      /* Room under the footer so the fixed 65px sticky add-to-cart bar never covers the last footer line. */
+      body { padding-bottom: 65px; }
+    }
+    {%- endif -%}
+    {%- if settings.star_color_global != blank -%}
+    :root {
+      --accent-stars: {{ settings.star_color_global }};
+      --accent-stars-marketing: {{ settings.star_color_global }};
+      --color-gold: {{ settings.star_color_global }};
+      --star-size: {{ settings.star_size_global | default: 14 }}px;
+    }
+    {%- endif -%}
+  </style>
+  {%- if template.suffix == 'in-studio-template' -%}
+  <style id="open-sole-heading-unify">
+    /* Open Sole only: every #main-content section heading = 56/36 / 400 / 1.06 / -0.032em.
+       Barefoot feel (fifty-fifty-lifestyle) is .split-text__title.h2-display — the
+       .h2-display phone token is clamp(26px, 7vw, 32px) and was the miss.
+       Product h1, buy box, eyebrows, cards, and footer are not selected. */
+    body.template-product-in-studio-template #main-content .split-text__title,
+    body.template-product-in-studio-template #main-content .split-text__title.h2-display,
+    body.template-product-in-studio-template #main-content .split-text__title.h2-standard,
+    body.template-product-in-studio-template #main-content .statement-band__line,
+    body.template-product-in-studio-template #main-content .fullbleed-statement__line,
+    body.template-product-in-studio-template #main-content .fullbleed-statement__line.h2-display,
+    body.template-product-in-studio-template #main-content .problem-title,
+    body.template-product-in-studio-template #main-content .sock-math__headline,
+    body.template-product-in-studio-template #main-content .guarantee-head__title,
+    body.template-product-in-studio-template #main-content .pdp-features__title,
+    body.template-product-in-studio-template #main-content .faq__heading,
+    body.template-product-in-studio-template #main-content .pdp-reviews__title,
+    body.template-product-in-studio-template #main-content .home-juicer__title,
+    body.template-product-in-studio-template #main-content .variants-head__title {
+      font-size: clamp(var(--heading-phone, 36px), 4.8vw, var(--heading-standard-desktop, 56px)) !important;
+      font-weight: 400 !important;
+      line-height: var(--heading-standard-leading, 1.06) !important;
+      letter-spacing: var(--heading-standard-tracking, -0.032em) !important;
+    }
+    @media (max-width: 768px) {
+      body.template-product-in-studio-template #main-content .split-text__title,
+      body.template-product-in-studio-template #main-content .split-text__title.h2-display,
+      body.template-product-in-studio-template #main-content .split-text__title.h2-standard,
+      body.template-product-in-studio-template #main-content .statement-band__line,
+      body.template-product-in-studio-template #main-content .fullbleed-statement__line,
+      body.template-product-in-studio-template #main-content .fullbleed-statement__line.h2-display,
+      body.template-product-in-studio-template #main-content .problem-title,
+      body.template-product-in-studio-template #main-content .sock-math__headline,
+      body.template-product-in-studio-template #main-content .guarantee-head__title,
+      body.template-product-in-studio-template #main-content .pdp-features__title,
+      body.template-product-in-studio-template #main-content .faq__heading,
+      body.template-product-in-studio-template #main-content .pdp-reviews__title,
+      body.template-product-in-studio-template #main-content .home-juicer__title,
+      body.template-product-in-studio-template #main-content .variants-head__title {
+        font-size: var(--section-heading-size-m, 36px) !important;
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+      }
+    }
+  </style>
+  {%- endif -%}
+  {%- if template.suffix == 'yoga-pants' -%}
+  <style id="yoga-pants-heading-unify">
+    /* Yoga pants: Fabric + Made in the USA only. Other headings follow Type OS. */
+    body.template-product-yoga-pants #main-content .pdp-features__title,
+    body.template-product-yoga-pants #main-content .page-about-facts__title {
+      font-size: clamp(var(--heading-phone, 36px), 4.8vw, var(--heading-standard-desktop, 56px)) !important;
+      font-weight: 400 !important;
+      line-height: var(--heading-standard-leading, 1.06) !important;
+      letter-spacing: var(--heading-standard-tracking, -0.032em) !important;
+    }
+    @media (max-width: 768px) {
+      body.template-product-yoga-pants #main-content .pdp-features__title,
+      body.template-product-yoga-pants #main-content .page-about-facts__title {
+        font-size: var(--section-heading-size-m, 36px) !important;
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+      }
+    }
+  </style>
+  {%- endif -%}
+  {%- if template.suffix == 'v-neck-tops' -%}
+  <style id="v-neck-tops-heading-unify">
+    /* Tee: Fabric + Made in the USA only. Other headings follow Type OS. */
+    body.template-product-v-neck-tops #main-content .pdp-features__title,
+    body.template-product-v-neck-tops #main-content .page-about-facts__title {
+      font-size: clamp(var(--heading-phone, 36px), 4.8vw, var(--heading-standard-desktop, 56px)) !important;
+      font-weight: 400 !important;
+      line-height: var(--heading-standard-leading, 1.06) !important;
+      letter-spacing: var(--heading-standard-tracking, -0.032em) !important;
+    }
+    @media (max-width: 768px) {
+      body.template-product-v-neck-tops #main-content .pdp-features__title,
+      body.template-product-v-neck-tops #main-content .page-about-facts__title {
+        font-size: var(--section-heading-size-m, 36px) !important;
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+      }
+    }
+  </style>
+  {%- endif -%}
+  {%- if template.suffix == 'help' -%}
+  <style id="help-heading-unify">
+    /* /pages/help only. Page + card section headings = 56/36. */
+    body.template-page-help #main-content .page-returns-head__title,
+    body.template-page-help #main-content h2.h2-standard,
+    body.template-page-help #main-content .page-returns-card h2,
+    body.template-page-help #main-content .page-returns-faq h2,
+    body.template-page-help #main-content .page-returns-cta__inner h2 {
+      font-size: clamp(var(--heading-phone, 36px), 4.8vw, var(--heading-standard-desktop, 56px)) !important;
+      font-weight: 400 !important;
+      line-height: var(--heading-standard-leading, 1.06) !important;
+      letter-spacing: var(--heading-standard-tracking, -0.032em) !important;
+    }
+    @media (max-width: 768px) {
+      body.template-page-help #main-content .page-returns-head__title,
+      body.template-page-help #main-content h2.h2-standard,
+      body.template-page-help #main-content .page-returns-card h2,
+      body.template-page-help #main-content .page-returns-faq h2,
+      body.template-page-help #main-content .page-returns-cta__inner h2 {
+        font-size: var(--section-heading-size-m, 36px) !important;
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+      }
+    }
+  </style>
+  {%- endif -%}
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": {{ shop.name | json }},
+      "url": {{ shop.url | json }}
+    }
+  </script>
+
+  {%- if template.name == 'index' -%}
+    {%- capture website_search_target -%}{{ shop.url }}/search?q={%- raw -%}{search_term_string}{%- endraw -%}{%- endcapture -%}
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": {{ shop.name | json }},
+        "url": {{ shop.url | json }},
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {{ website_search_target | json }},
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
+  {%- endif -%}
+
+  {% render 'judgeme_core' %}
+  {{ content_for_header }}
+</head>
+<body class="template-{{ template.name }}{% if template.suffix %} template-{{ template.name }}-{{ template.suffix }}{% endif %}">
+
+  <a href="#main-content" class="skip-link">Skip to content</a>
+
+  {% sections 'header-group' %}
+
+  {%- comment -%} Theme popups (newsletter / age) — file exists on draft; no Impulse chrome restore {%- endcomment -%}
+  {% sections 'popup-group' %}
+
+  <main id="main-content" role="main" tabindex="-1">
+    {{ content_for_layout }}
+  </main>
+
+  {% sections 'footer-group' %}
+
+  {% render 'cart-drawer' %}
+
+  <script src="{{ 'cart.js' | asset_url }}" defer></script>
+  <script src="{{ 'chrome.js' | asset_url }}" defer></script>
+
+  <style>
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 16px;
+      z-index: 9999;
+      padding: 12px 24px;
+      background: var(--color-charcoal);
+      color: var(--color-white);
+      font-size: 14px;
+      font-weight: 700;
+      border-radius: var(--radius-button);
+      text-decoration: none;
+      transition: top 0.2s;
+    }
+    .skip-link:focus { top: 16px; }
+
+    /* Hide Judge.me review COUNTS sitewide — stars stay */
+    .jdgm-prev-badge__text,
+    .jdgm-rev-widg__summary-text,
+    .jdgm-all-reviews__summary-text,
+    .jdgm-all-reviews__count,
+    .jdgm-histogram,
+    .jdgm-rev-widg__histogram,
+    .jdgm-all-reviews__histogram,
+    .jdgm-star-histogram,
+    .jdgm-histogram__row {
+      display: none !important;
+    }
+
+    /* Native Write a Review only on /pages/reviews (suffix uses underscores) */
+    body:not(.template-page-reviews):not(.template-page-judgeme_all_reviews) .jdgm-write-rev-link,
+    body:not(.template-page-reviews):not(.template-page-judgeme_all_reviews) .jdgm-form-wrapper,
+    body:not(.template-page-reviews):not(.template-page-judgeme_all_reviews) .jdgm-write-rev-form {
+      display: none !important;
+    }
+    .template-page-reviews .jdgm-write-rev-link,
+    .template-page-judgeme_all_reviews .jdgm-write-rev-link,
+    .pdp-reviews--full .pdp-reviews__write .jdgm-write-rev-link {
+      display: inline-block !important;
+    }
+    .visually-hidden {
+      position: absolute !important;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0,0,0,0);
+      white-space: nowrap; border: 0;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+
+</body>
+</html>
