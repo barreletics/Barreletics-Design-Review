@@ -1,0 +1,2019 @@
+{% comment %}
+ APPROVED / FROZEN — PDP Buy Box · Definitive-v19 (LOCKED 2026-07-31)
+ Purchase stack A · empty under ATC · kit Option A · accordion Shipping + 30/90.
+ Prior fingerprint v16 @ 691f03b — NEVER overwrite locked mocks (pdp-hub-lock.mdc).
+{% endcomment %}
+
+{% liquid
+ assign thumb_count = section.settings.thumb_count | default: 7
+ # /pages/size-chart 404s on this store. /pages/performance-skins-size-chart ("Shoe Size
+ # Chart") is the real standalone page; /pages/sizing is only tab content.
+ assign size_chart_url = section.settings.size_chart_url | default: '/pages/performance-skins-size-chart'
+ assign reviews_anchor = section.settings.reviews_anchor | default: '#reviews'
+ assign rating_text = section.settings.rating_text | default: 'Trusted by 1,000+ Instructors'
+ assign payment_line = section.settings.payment_line | default: 'or 4 × $18.50'
+ assign lede_line_1 = section.settings.lede_line_1 | default: 'Secure in every hold.'
+ assign lede_line_2 = section.settings.lede_line_2 | default: 'No sliding. No resets.'
+ assign short_desc = section.settings.short_description | default: 'The premium grip system that replaces traditional grip socks, built for reformer, barre, Pilates and Megaformer.'
+ assign shipping_body = section.settings.shipping_accordion | default: 'Complimentary shipping on orders over $150. Orders ship within 1 to 2 business days. Standard delivery 3 to 5 business days; express 1 to 2 business days available at checkout.'
+ assign returns_body = section.settings.returns_accordion | default: ''
+ assign current_variant = product.selected_or_first_available_variant
+ assign _title_d = product.title | downcase
+ assign _handle_d = product.handle | downcase
+ assign _type_d = product.type | downcase
+ assign _suffix_d = template.suffix | downcase
+ assign _tags_d = product.tags | join: ',' | downcase
+ # Yoga pants: honor a blank lede_line_2 (single approved sub). Liquid | default
+ # would otherwise fill "No sliding. No resets."
+ if _suffix_d == 'yoga-pants'
+  assign lede_line_2 = section.settings.lede_line_2
+ endif
+ # Category from template suffix + product identity (water shoe / aquatic = Outdoor)
+ assign _cat_outdoor = false
+ assign _cat_open = false
+ assign _cat_oneoff = false
+ if _suffix_d == 'outdoor' or _handle_d contains 'aquatic' or _handle_d contains 'outdoor' or _title_d contains 'outdoor' or _title_d contains 'aquatic' or _title_d contains 'water shoe' or _type_d contains 'outdoor' or _tags_d contains 'outdoor'
+ assign _cat_outdoor = true
+ elsif _suffix_d == 'one-off-closed' or _suffix_d == 'one-off-open' or _suffix_d == 'one-off' or _suffix_d == 'coperni' or _title_d contains 'one-off' or _title_d contains 'one off' or _handle_d contains 'one-off' or _type_d contains 'one-off' or _title_d contains 'coperni' or _handle_d contains 'coperni'
+ # One-off before open-sole — handles like one-off-colors-open-sole contain "open-sole"
+ assign _cat_oneoff = true
+ if _suffix_d == 'one-off-open' or _handle_d contains 'open-sole' or _title_d contains 'open sole'
+ assign _cat_open = true
+ endif
+ elsif _suffix_d == 'open-sole' or _title_d contains 'open sole' or _handle_d contains 'open-sole' or _handle_d contains 'open_sole' or _handle_d contains 'studio-performance'
+ assign _cat_open = true
+ endif
+
+ # Shoe vs apparel (2026-09-30): shoe-size subtext / soon-S / shoe size chart only on shoes.
+ # Apparel (tag "Apparel", T-shirts, yoga pants) shows its own size values only — never shoe ranges.
+ assign is_shoe = false
+ assign is_apparel = false
+ if _cat_outdoor or _cat_open or _cat_oneoff
+ assign is_shoe = true
+ elsif _type_d contains 'shoe' or _type_d contains 'footwear' or _type_d contains 'sample' or _tags_d contains 'grippy shoe'
+ assign is_shoe = true
+ elsif _title_d contains 'sole' or _handle_d contains 'sole' or _handle_d contains 'reformer' or _handle_d contains 'legree' or _title_d contains 'coperni' or _handle_d contains 'coperni'
+ assign is_shoe = true
+ endif
+ if _tags_d contains 'apparel' or _suffix_d == 'yoga-pants' or _suffix_d == 'v-neck-tops' or _type_d contains 'yoga pant' or _type_d contains 't-shirt' or _type_d contains 'v-neck' or _handle_d contains 'yoga-pant' or _handle_d contains 'yoga-t-shirt'
+ assign is_apparel = true
+ assign is_shoe = false
+ endif
+ assign show_soon_s = false
+ if is_shoe and section.settings.show_soon_size != false
+ assign show_soon_s = true
+ endif
+ # Hidden colours (2026-10-06). A colour swatch is skipped when:
+ #  (a) ANY variant of that colour has variant metafield custom.hide_from_storefront = true
+ #      (manual override, same rule as the live theme), or
+ #  (b) Theme settings > Product page colors > Hide sold-out colors is on, the product is not in
+ #      "Never auto-hide on", and NO variant of that colour is available (variant.available:
+ #      Continue selling / untracked stay visible).
+ #      Kids variants never count. If (b) would hide every colour, only (a) applies.
+ # A colour with some sizes left stays; its sold-out sizes grey out (variant-selector.js).
+ # One-offs keep their own sold-out rule in the swatch loop below (unchanged).
+ assign bb_color_pos = 0
+ for option in product.options_with_values
+ assign _od = option.name | downcase
+ if _od == 'colour' or _od contains 'color'
+ assign bb_color_pos = option.position
+ break
+ endif
+ if _cat_oneoff and _od != 'size' and option.position == 1
+ assign bb_color_pos = 1
+ break
+ endif
+ endfor
+ assign bb_hidden = '|'
+ assign bb_fallback = false
+ # Theme settings > Product page colors > "Hide on Closed Sole / Open Sole / Outdoor" (always hidden)
+ # and "Always show (even sold out)" (stays, sold-out styling, after in-stock colours) — 2026-10-06.
+ # Comma-separated colour names, case-insensitive, all spaces ignored. Only these three products
+ # read the lists; every other product is unaffected. Metafield hide still wins.
+ assign bb_soldshow = '|'
+ # bb_soldlast = every shown sold-out colour (Always show + toggle off / skip list) → sorted last
+ assign bb_soldlast = '|'
+ assign _force = ''
+ assign _always = ''
+ case product.handle
+ when 'best-reformer-pilates-legree-workout-shoes'
+ assign _force = settings.hide_colors_closed
+ assign _always = settings.always_show_colors
+ when 'studio-performance-skin-footwear'
+ assign _force = settings.hide_colors_open
+ assign _always = settings.always_show_colors
+ when 'aquatic-performance-skins'
+ assign _force = settings.hide_colors_outdoor
+ assign _always = settings.always_show_colors
+ endcase
+ assign _force = _force | append: '' | downcase | remove: ' ' | replace: ',', '|' | prepend: '|' | append: '|'
+ assign _always = _always | append: '' | downcase | remove: ' ' | replace: ',', '|' | prepend: '|' | append: '|'
+ if bb_color_pos > 0
+ assign _ci = bb_color_pos | minus: 1
+ assign _auto = ''
+ assign _shown = 0
+ for _cv in product.options_with_values[_ci].values
+ assign _cvs = _cv | append: ''
+ assign _cvn = _cvs | downcase | remove: ' ' | prepend: '|' | append: '|'
+ assign _flag = false
+ assign _avail = false
+ for v in product.variants
+ assign _vo = v.options[_ci] | append: ''
+ if _vo == _cvs
+ assign _h = v.metafields.custom.hide_from_storefront.value | append: '' | downcase
+ if _h == 'true'
+ assign _flag = true
+ endif
+ assign _kid = false
+ if is_shoe
+ assign _vt = v.title | upcase
+ if _vt contains 'KIDS' or _vt contains 'YOUTH'
+ assign _kid = true
+ endif
+ endif
+ if v.available and _kid == false
+ assign _avail = true
+ endif
+ endif
+ endfor
+ if _flag
+ assign bb_hidden = bb_hidden | append: _cvs | append: '|'
+ elsif _force contains _cvn
+ assign bb_hidden = bb_hidden | append: _cvs | append: '|'
+ elsif _avail == false
+ if _always contains _cvn
+ assign bb_soldshow = bb_soldshow | append: _cvs | append: '|'
+ else
+ assign _auto = _auto | append: _cvs | append: '|'
+ endif
+ else
+ assign _shown = _shown | plus: 1
+ endif
+ endfor
+ # Theme settings > Product page colors > "Never auto-hide on" (handles, comma-separated;
+ # default aquatic-performance-skins = Outdoor keeps all colours, 2026-10-06). Metafield still applies.
+ assign _skip = settings.hide_sold_out_colors_skip | downcase | remove: ' ' | split: ','
+ assign _auto_ok = true
+ if _skip contains product.handle
+ assign _auto_ok = false
+ endif
+ assign bb_soldlast = bb_soldshow
+ if settings.hide_sold_out_colors != false and _auto_ok and _shown > 0
+ assign bb_hidden = bb_hidden | append: _auto
+ else
+ assign bb_soldlast = bb_soldlast | append: _auto
+ endif
+ # Selected / ?variant= / default variant on a hidden colour: start on the first available
+ # variant of a shown colour instead (else the first variant of a shown colour).
+ if bb_hidden != '|'
+ assign _key = current_variant.options[_ci] | append: ''
+ assign _key = '|' | append: _key | append: '|'
+ if bb_hidden contains _key
+ for v in product.variants
+ assign _key = v.options[_ci] | append: ''
+ assign _key = '|' | append: _key | append: '|'
+ unless bb_hidden contains _key
+ if v.available
+ assign current_variant = v
+ assign bb_fallback = true
+ break
+ endif
+ endunless
+ endfor
+ if bb_fallback == false
+ for v in product.variants
+ assign _key = v.options[_ci] | append: ''
+ assign _key = '|' | append: _key | append: '|'
+ unless bb_hidden contains _key
+ assign current_variant = v
+ assign bb_fallback = true
+ break
+ endunless
+ endfor
+ endif
+ endif
+ endif
+ endif
+
+ assign sole_badge = section.settings.sole_badge
+ # Outdoor / water shoe must never show Closed Sole (wrong Default template or metafield)
+ # One-Off PDPs: same rust Open Sole / Closed Sole badge as core (sole in badge, drop voice in lede).
+ if _cat_outdoor
+ assign sole_badge = 'Outdoor'
+ elsif _cat_oneoff
+ if _cat_open
+ assign sole_badge = 'Open Sole'
+ else
+ assign sole_badge = 'Closed Sole'
+ endif
+ elsif _cat_open
+ if sole_badge == blank or sole_badge == 'Closed Sole'
+ assign sole_badge = 'Open Sole'
+ endif
+ elsif sole_badge == blank and current_variant.metafields.custom.sole_type != blank
+ assign sole_badge = current_variant.metafields.custom.sole_type
+ endif
+ if sole_badge == blank and product.metafields.custom.sole_type != blank
+ assign sole_badge = product.metafields.custom.sole_type
+ endif
+ if sole_badge == blank
+ if _cat_oneoff
+ if _cat_open
+ assign sole_badge = 'Open Sole'
+ else
+ assign sole_badge = 'Closed Sole'
+ endif
+ elsif _cat_open
+ assign sole_badge = 'Open Sole'
+ elsif _title_d contains 'closed sole' or _handle_d contains 'closed-sole' or _handle_d contains 'closed_sole' or _handle_d contains 'reformer' or _handle_d contains 'legree'
+ assign sole_badge = 'Closed Sole'
+ endif
+ endif
+ # Re-assert Outdoor after metafields (Admin sole_type sometimes says Closed Sole)
+ if _cat_outdoor
+ assign sole_badge = 'Outdoor'
+ endif
+ # Apparel / non-shoe (T-shirt, yoga pant): no sole badge, whatever the template setting says (2026-09-30)
+ unless is_shoe
+ assign sole_badge = blank
+ endunless
+
+ assign badge_color = section.settings.sole_badge_color | default: 'rust'
+ # Defaults when blank. Explicit TE black/charcoal/rust/blue ALWAYS honored (2026-08-11).
+ # Core Closed/Open blank → rust. Outdoor blank → charcoal. One-Off blank → Closed black / Open rust.
+ if section.settings.sole_badge_color == blank
+ if _cat_outdoor
+ assign badge_color = 'charcoal'
+ elsif _cat_oneoff
+ assign badge_color = 'rust'
+ else
+ assign badge_color = 'rust'
+ endif
+ endif
+ case badge_color
+ when 'blue'
+ # Live barreletics.com version-tag accent (LE badges) — #458CD9
+ assign badge_bg = '#458CD9'
+ when 'black', 'charcoal'
+ assign badge_bg = '#1c1916'
+ else
+ assign badge_bg = '#c45c3f'
+ endcase
+
+ # H1 = product name without sole suffix. Badge carries Open / Closed / Outdoor.
+ assign display_title = product.title
+ if display_title contains ' — Open Sole'
+ assign display_title = display_title | remove: ' — Open Sole'
+ endif
+ if display_title contains ' – Open Sole'
+ assign display_title = display_title | remove: ' – Open Sole'
+ endif
+ if display_title contains ' - Open Sole'
+ assign display_title = display_title | remove: ' - Open Sole'
+ endif
+ if display_title contains ' — Closed Sole'
+ assign display_title = display_title | remove: ' — Closed Sole'
+ endif
+ if display_title contains ' – Closed Sole'
+ assign display_title = display_title | remove: ' – Closed Sole'
+ endif
+ if display_title contains ' - Closed Sole'
+ assign display_title = display_title | remove: ' - Closed Sole'
+ endif
+ # One-off Admin titles use parentheses: One Off Colors (Open Sole)
+ if display_title contains ' (Open Sole)'
+ assign display_title = display_title | remove: ' (Open Sole)'
+ endif
+ if display_title contains '(Open Sole)'
+ assign display_title = display_title | remove: '(Open Sole)'
+ endif
+ if display_title contains ' (Closed Sole)'
+ assign display_title = display_title | remove: ' (Closed Sole)'
+ endif
+ if display_title contains '(Closed Sole)'
+ assign display_title = display_title | remove: '(Closed Sole)'
+ endif
+ assign display_title = display_title | strip
+
+ # If water shoe is stuck on Default (Closed) template, replace studio buy-box copy
+ # with approved Outdoor positioning (product.outdoor.json / 09-PK). Full Outdoor spine
+ # still requires Admin Theme template = product.outdoor.
+ if _cat_outdoor
+ if lede_line_1 == 'Secure in every hold.' or lede_line_1 contains 'Secure in every'
+ assign lede_line_1 = 'Perfect for'
+ assign lede_line_2 = 'outdoor adventures.'
+ endif
+ if short_desc contains 'grip socks' or short_desc contains 'reformer, barre' or short_desc contains 'Megaformer'
+ assign short_desc = 'Heel and foot fully covered for outdoor use, with grip, stability, and protection from hot pavement. Always be careful on slippery wet tile and stone. Ideal for outdoor days, travel, and resortwear.'
+ endif
+ endif
+
+ # Hero image priority — Theme settings (global) + optional section override.
+ # Does not require reordering Admin media / variants.
+ assign hero_image = product.featured_image
+ assign hero_mode = settings.pdp_hero_image_mode | default: 'admin_order'
+ assign hero_color = settings.pdp_hero_color | strip
+ assign hero_idx = settings.pdp_hero_media_index | default: 1 | plus: 0
+ if section.settings.hero_image_mode != blank and section.settings.hero_image_mode != 'admin_order'
+ assign hero_mode = section.settings.hero_image_mode
+ endif
+ if section.settings.hero_color != blank
+ assign hero_color = section.settings.hero_color | strip
+ if hero_mode == 'admin_order'
+ assign hero_mode = 'variant_color'
+ endif
+ endif
+ if section.settings.hero_image_mode == 'media_index'
+ assign hero_mode = 'media_index'
+ assign hero_idx = section.settings.hero_media_index | default: hero_idx | plus: 0
+ endif
+ if hero_mode == 'variant_color' and hero_color != blank
+ assign want = hero_color | downcase
+ for v in product.variants
+ assign matched = false
+ for opt in v.options
+ assign od = opt | strip | downcase
+ if od == want or od contains want
+ assign matched = true
+ endif
+ endfor
+ if matched
+ if v.featured_media != blank
+ assign hero_image = v.featured_media.preview_image | default: v.featured_media
+ elsif v.image != blank
+ assign hero_image = v.image
+ endif
+ break
+ endif
+ endfor
+ elsif hero_mode == 'media_index'
+ assign zero = hero_idx | minus: 1
+ if zero < 0
+ assign zero = 0
+ endif
+ if product.images[zero] != blank
+ assign hero_image = product.images[zero]
+ endif
+ endif
+ if hero_image == blank
+ assign hero_image = product.featured_image
+ endif
+ assign utp_y_d_def = 40
+ assign utp_side_d_def = 40
+ assign utp_y_m_def = 32
+ assign utp_x_m_def = 16
+ assign pdp_pt = 40
+ assign pdp_pb = 48
+ assign pdp_pl = 'var(--section-padding-x)'
+ assign pdp_pr = 'var(--space-14)'
+ assign u_y = section.settings.text_pad_y | default: utp_y_d_def
+ if u_y != utp_y_d_def
+ assign pdp_pt = u_y
+ assign pdp_pb = u_y
+ endif
+ assign u_side = section.settings.side_padding | default: utp_side_d_def
+ if u_side != utp_side_d_def
+ assign pdp_pl = u_side | append: 'px'
+ assign pdp_pr = u_side | append: 'px'
+ endif
+ assign pdp_pt_m = 'var(--space-8)'
+ assign pdp_pb_m = '0'
+ assign pdp_px_m = 'var(--section-padding-x-mobile)'
+ assign u_y_m = section.settings.text_pad_y_mobile | default: utp_y_m_def
+ if u_y_m != utp_y_m_def
+ assign pdp_pt_m = u_y_m | append: 'px'
+ assign pdp_pb_m = u_y_m | append: 'px'
+ endif
+ assign u_x_m = section.settings.text_pad_x_mobile | default: utp_x_m_def
+ if u_x_m != utp_x_m_def
+ assign pdp_px_m = u_x_m | append: 'px'
+ endif
+ assign pdp_pad_style = '--pdp-pt: ' | append: pdp_pt | append: 'px;--pdp-pb: ' | append: pdp_pb | append: 'px;--pdp-pl: ' | append: pdp_pl | append: ';--pdp-pr: ' | append: pdp_pr | append: ';--pdp-pt-m: ' | append: pdp_pt_m | append: ';--pdp-pb-m: ' | append: pdp_pb_m | append: ';--pdp-px-m: ' | append: pdp_px_m | append: ';'
+ if u_y != utp_y_d_def
+ assign pdp_pad_style = pdp_pad_style | append: '--pdp-pt-1024:' | append: u_y | append: 'px;--pdp-pb-1024:' | append: u_y | append: 'px;'
+ endif
+ if u_side != utp_side_d_def
+ assign pdp_pad_style = pdp_pad_style | append: '--pdp-px-1024:' | append: u_side | append: 'px;'
+ endif
+%}
+<section id="buy" class="pdp-hero{% unless section.settings.mobile_title_above_gallery == false %} pdp-hero--m-title-top{% endunless %}" aria-label="Product details" data-buy-box style="{{ pdp_pad_style }}">
+ <div class="pdp-gallery">
+ <div class="pdp-gallery__hero{% if is_shoe and hero_image.aspect_ratio >= 0.95 %} pdp-gallery__hero--fit{% endif %}"{% if is_shoe %} data-hero-fit-eligible{% endif %}>
+ {% if hero_image %}
+ {% render 'media-img',
+ image: hero_image,
+ alt: hero_image.alt | default: product.title,
+ img_id: 'pdp-main-img',
+ widths: '400, 600, 800, 1200',
+ width_default: 800,
+ sizes: '(max-width: 768px) 100vw, 50vw',
+ loading: 'eager',
+ fetchpriority: 'high'
+ %}
+ {% endif %}
+ </div>
+ {% if product.images.size > 1 %}
+ <div class="pdp-gallery__thumbs">
+ {% assign thumbs_shown = 0 %}
+ {% if hero_image %}
+ <button
+ type="button"
+ class="pdp-gallery__thumb is-active"
+ data-thumb-src="{{ hero_image | image_url: width: 800 }}"
+ aria-label="View hero image"
+ >
+ {% render 'media-img',
+ image: hero_image,
+ alt: hero_image.alt | default: product.title,
+ widths: '160, 320',
+ width_default: 160,
+ sizes: '72px',
+ loading: 'lazy'
+ %}
+ </button>
+ {% assign thumbs_shown = 1 %}
+ {% endif %}
+ {% for image in product.images %}
+ {% if thumbs_shown >= thumb_count %}{% break %}{% endif %}
+ {% if hero_image and image.id == hero_image.id %}{% continue %}{% endif %}
+ <button
+ type="button"
+ class="pdp-gallery__thumb{% if thumbs_shown == 0 %} is-active{% endif %}"
+ data-thumb-src="{{ image | image_url: width: 800 }}"
+ aria-label="View image {{ forloop.index }}"
+ >
+ {% render 'media-img',
+ image: image,
+ alt: 'View ' | append: forloop.index,
+ widths: '160, 320',
+ width_default: 160,
+ sizes: '72px',
+ loading: 'lazy'
+ %}
+ </button>
+ {% assign thumbs_shown = thumbs_shown | plus: 1 %}
+ {% endfor %}
+ </div>
+ {% endif %}
+ </div>
+
+ <div class="pdp-buy">
+ {% if section.settings.show_rating_row != false %}
+ <div class="pdp-buy__rating">
+ <span class="pdp-buy__stars" aria-hidden="true">★★★★★</span>
+ <span class="pdp-buy__rating-text">{{ rating_text | escape }}</span>
+ <a href="{{ reviews_anchor | escape }}" class="pdp-buy__reviews-link">Reviews →</a>
+ </div>
+ {% endif %}
+
+ <div class="pdp-buy__header">
+ <h1 class="pdp-buy__seo-title">{{ display_title | escape }}</h1>
+ {% if section.settings.show_sole_badge and sole_badge != blank %}
+ <span class="pdp-buy__badge" style="--pdp-badge-bg: {{ badge_bg }};">{{ sole_badge | escape }}</span>
+ {% endif %}
+ </div>
+
+ <p class="pdp-buy__name">
+ <span style="font-weight:400;">{{ lede_line_1 | escape }}</span>{% if lede_line_2 != blank %}<br>
+ <span style="font-weight:400;">{{ lede_line_2 | escape }}</span>{% endif %}
+ </p>
+ {% comment %} Short description stays in TE + Description accordion only. Not above price. {% endcomment %}
+
+ <div class="pdp-buy__price-block">
+ <span class="pdp-buy__price-now">{{ current_variant.price | money }}</span>
+ </div>
+
+ {% if product.has_only_default_variant == false %}
+ {% comment %} Hub v17 order: Color, then Size (ignore Admin option order). {% endcomment %}
+ {% for option in product.options_with_values %}
+ {% assign opt_down = option.name | downcase %}
+ {% liquid
+ assign is_color_opt = false
+ if opt_down == 'color' or opt_down == 'colour' or opt_down contains 'color'
+ assign is_color_opt = true
+ endif
+ # One-off Admin quirk: option 1 sometimes named after first colorway (e.g. "Grey Swirl") not "Color"
+ if _cat_oneoff and opt_down != 'size' and option.position == 1
+ assign is_color_opt = true
+ endif
+ %}
+ {% if is_color_opt %}
+ {% liquid
+  assign sel_val = option.selected_value
+  if bb_fallback
+  assign _oi = option.position | minus: 1
+  assign sel_val = current_variant.options[_oi]
+  endif
+ %}
+ <div class="pdp-buy__option" data-option-position="{{ option.position }}" data-option-kind="color">
+ <div class="pdp-buy__option-header">
+ <span class="pdp-buy__option-label" id="selected-color">{{ sel_val }}</span>
+ </div>
+ <div class="pdp-buy__swatches{% if _cat_oneoff %} pdp-buy__swatches--photos{% endif %}">
+ {% liquid
+ # Pass 1 = in-stock colours in Admin order; pass 2 = shown sold-out colours (2026-10-06), so
+ # sold-out ones are dropped first. Phones (<=768px): max 8 dots on ONE row (.is-over-cap hidden,
+ # dots shrink to fit); the selected colour is never hidden. is-sold-out styling = Always show only.
+ assign _passes = 1
+ if bb_soldlast != '|'
+ assign _passes = 2
+ endif
+ assign _sw_n = 0
+ assign _rank = 0
+ assign _sel_rank = 0
+ unless _cat_oneoff
+ for _p in (1.._passes)
+ for value in option.values
+ assign _key = '|' | append: value | append: '|'
+ if bb_hidden contains _key
+ continue
+ endif
+ if bb_soldlast contains _key
+ if _p == 1
+ continue
+ endif
+ elsif _p == 2
+ continue
+ endif
+ assign _rank = _rank | plus: 1
+ if value == sel_val
+ assign _sel_rank = _rank
+ endif
+ endfor
+ endfor
+ endunless
+ %}
+ {% for _p in (1.._passes) %}
+ {% for value in option.values %}
+ {% liquid
+ assign value_has_available = false
+ assign value_photo = blank
+ for v in product.variants
+ assign v_matches = false
+ if option.position == 1 and v.option1 == value
+ assign v_matches = true
+ elsif option.position == 2 and v.option2 == value
+ assign v_matches = true
+ elsif option.position == 3 and v.option3 == value
+ assign v_matches = true
+ endif
+ if v_matches
+ if value_photo == blank
+ if v.featured_media != blank
+ assign value_photo = v.featured_media.preview_image | image_url: width: 120
+ elsif v.image != blank
+ assign value_photo = v.image | image_url: width: 120
+ endif
+ endif
+ if v.available
+ assign value_has_available = true
+ endif
+ endif
+ endfor
+ %}
+ {% if _cat_oneoff and value_has_available == false %}
+ {% continue %}
+ {% endif %}
+ {% assign _key = '|' | append: value | append: '|' %}
+ {% if bb_hidden contains _key %}
+ {% continue %}
+ {% endif %}
+ {% liquid
+ assign _is_ss = false
+ if bb_soldshow contains _key
+ assign _is_ss = true
+ endif
+ assign _is_last = false
+ if bb_soldlast contains _key
+ assign _is_last = true
+ endif
+ %}
+ {% if _p == 1 and _is_last %}
+ {% continue %}
+ {% endif %}
+ {% if _p == 2 and _is_last == false %}
+ {% continue %}
+ {% endif %}
+ {% liquid
+ assign _sw_n = _sw_n | plus: 1
+ assign _over = false
+ unless _cat_oneoff
+ if _sw_n > 8 and value != sel_val
+ assign _over = true
+ endif
+ if _sw_n == 8 and _sel_rank > 8
+ assign _over = true
+ endif
+ endunless
+ %}
+ {% if _cat_oneoff and value_photo != blank %}
+ <button
+ type="button"
+ class="pdp-buy__swatch pdp-buy__swatch--photo{% if value == sel_val %} is-active{% endif %}"
+ aria-label="{{ value }}"
+ aria-selected="{% if value == sel_val %}true{% else %}false{% endif %}"
+ data-color="{{ value }}"
+ style="background-image: url({{ value_photo }});"
+ ></button>
+ {% else %}
+ {% comment %} Impulse: Files `{handle}.png` exact name, else CSS color from last word of option value. {% endcomment %}
+ {% liquid
+ assign swatch_file_extension = 'png'
+ assign swatch_file_name = value | handle | append: '.' | append: swatch_file_extension
+ assign swatch_bg_img = blank
+ if images[swatch_file_name] != blank
+ assign swatch_bg_img = swatch_file_name | file_img_url: '50x50' | prepend: 'https:' | split: '?' | first
+ endif
+ assign swatch_bg = value | split: ' ' | last | handle
+ if value.swatch != blank and value.swatch.color != blank and swatch_bg_img == blank
+ assign swatch_bg = value.swatch.color
+ endif
+ assign swatch_is_white = false
+ if swatch_bg == 'white' or swatch_bg == '#ffffff' or swatch_bg == '#fff'
+ assign swatch_is_white = true
+ endif
+ %}
+ <button
+ type="button"
+ class="pdp-buy__swatch{% if value == sel_val %} is-active{% endif %}{% if _is_ss %} is-sold-out{% endif %}{% if _over %} is-over-cap{% endif %}"
+ aria-label="{{ value }}"
+ aria-selected="{% if value == sel_val %}true{% else %}false{% endif %}"
+ data-color="{{ value }}"
+ style="background-color: {{ swatch_bg }};{% if swatch_bg_img != blank %} background-image: url({{ swatch_bg_img }}); background-size: cover; background-position: center; background-repeat: no-repeat;{% endif %} background-clip: padding-box; background-origin: padding-box;{% if swatch_is_white and swatch_bg_img == blank %} box-shadow: inset 0 0 0 1px #ccc;{% endif %}"
+ ></button>
+ {% endif %}
+ {% endfor %}
+ {% endfor %}
+ </div>
+ </div>
+ {% endif %}
+ {% endfor %}
+
+ {% for option in product.options_with_values %}
+ {% assign opt_down = option.name | downcase %}
+ {% liquid
+ assign skip_other_opt = false
+ if opt_down == 'color' or opt_down == 'colour' or opt_down contains 'color' or opt_down == 'size'
+ assign skip_other_opt = true
+ endif
+ if _cat_oneoff and opt_down != 'size' and option.position == 1
+ assign skip_other_opt = true
+ endif
+ # One-off Size is rendered in the Size loop (position 2) — never duplicate here
+ if _cat_oneoff and option.position == 2
+ assign skip_other_opt = true
+ endif
+ if opt_down contains 'size'
+ assign skip_other_opt = true
+ endif
+ %}
+ {% unless skip_other_opt %}
+ {% liquid
+  assign sel_val = option.selected_value
+  if bb_fallback
+  assign _oi = option.position | minus: 1
+  assign sel_val = current_variant.options[_oi]
+  endif
+ %}
+ {% comment %} Any other option (e.g. T-shirt Style: V-Neck / Tank Top) = labelled text buttons, wired by variant-selector.js. {% endcomment %}
+ <div class="pdp-buy__option" data-option-position="{{ option.position }}" data-option-kind="other">
+ <div class="pdp-buy__option-header">
+ <span class="pdp-buy__option-label">{{ option.name }}</span>
+ </div>
+ <div class="pdp-buy__sizes" role="group" aria-label="Select {{ option.name | escape }}">
+ {% for value in option.values %}
+ <button
+ type="button"
+ class="pdp-buy__size-btn pdp-buy__opt-btn{% if value == sel_val %} is-active{% endif %}"
+ data-option-value="{{ value | escape }}"
+ aria-pressed="{% if value == sel_val %}true{% else %}false{% endif %}"
+ >{{ value | escape }}</button>
+ {% endfor %}
+ </div>
+ </div>
+ {% endunless %}
+ {% endfor %}
+ {% for option in product.options_with_values %}
+ {% assign opt_down = option.name | downcase %}
+ {% liquid
+ assign is_size_opt = false
+ if opt_down == 'size' or opt_down contains 'size'
+ assign is_size_opt = true
+ endif
+ # One-off: option 2 is Size when Admin misnames options (Color forced on position 1)
+ if _cat_oneoff and option.position == 2
+ assign is_size_opt = true
+ endif
+ %}
+ {% comment %}
+ Size row = v20c fold: chart-only header (Size Chart →) + M/L. NO "Size" label.
+ Do NOT hide sold-out sizes on one-offs (that stripped L). Colors still hide OOS. Kids never surface.
+ {% endcomment %}
+ {% if is_size_opt %}
+ {% liquid
+  assign sel_val = option.selected_value
+  if bb_fallback
+  assign _oi = option.position | minus: 1
+  assign sel_val = current_variant.options[_oi]
+  endif
+ %}
+ <div class="pdp-buy__option" data-option-position="{{ option.position }}" data-option-kind="size">
+ {% if section.settings.show_size_chart_link != false and is_shoe %}
+ <div class="pdp-buy__option-header pdp-buy__option-header--chart-only">
+ <a href="{{ size_chart_url }}" class="pdp-buy__size-link">Size Chart →</a>
+ </div>
+ {% endif %}
+ <div class="pdp-buy__sizes{% if show_soon_s %} pdp-buy__sizes--soon{% endif %}{% unless is_shoe %} pdp-buy__sizes--apparel{% endunless %}" role="group" aria-label="Select size">
+ {% if show_soon_s %}
+ <button
+ type="button"
+ class="pdp-buy__size-btn is-soon"
+ disabled
+ aria-disabled="true"
+ title="Small, coming soon"
+ aria-label="Small, coming soon"
+ >S<span class="pdp-buy__size-range">Coming soon</span></button>
+ {% endif %}
+ {% for value in option.values %}
+ {% assign value_up = value | upcase | strip %}
+ {% assign size_letter = '' %}
+ {% assign size_range = '' %}
+ {% assign skip_size = false %}
+ {% if is_shoe %}
+ {% comment %} Kids variants exist on Outdoor Admin catalog but are undocumented — never surface. {% endcomment %}
+ {% if value_up == 'KIDS' or value_up contains 'KIDS' or value_up contains 'YOUTH' %}
+ {% assign skip_size = true %}
+ {% assign size_letter = 'Kids' %}
+ {% assign size_range = 'Kids 2 to 5 · Women 4 to 5' %}
+ {% elsif value_up == 'S' or value_up contains 'S (' or value_up contains 'S(' or value_up contains 'SMALL' %}
+ {% if show_soon_s %}
+ {% assign skip_size = true %}
+ {% else %}
+ {% assign size_letter = 'S' %}
+ {% endif %}
+ {% elsif value_up == 'M' or value_up contains 'M (' or value_up contains 'M(' or value_up contains 'MEDIUM' or value_up contains 'W 5' %}
+ {% assign size_letter = 'M' %}
+ {% assign size_range = 'Women 5.5 to 7.5' %}
+ {% elsif value_up == 'L' or value_up contains 'L (' or value_up contains 'L(' or value_up contains 'LARGE' or value_up contains 'W 8' or value_up contains 'W 7.5' %}
+ {% assign size_letter = 'L' %}
+ {% assign size_range = 'Women 7.5 to 11 · Men to 10.5' %}
+ {% else %}
+ {% assign size_letter = value %}
+ {% endif %}
+ {% else %}
+ {% comment %}
+ Apparel: letter from the Admin value itself; subtext only from the value's own
+ parenthetical, e.g. "Small (2-4)" → S / 2-4. "X-Large" is XL (never a second L).
+ {% endcomment %}
+ {% assign size_base = value | split: '(' | first | strip %}
+ {% assign base_up = size_base | upcase | replace: ' ', '-' %}
+ {% if value contains '(' %}
+ {% assign size_range = value | split: '(' | last | split: ')' | first | strip %}
+ {% endif %}
+ {% case base_up %}
+ {% when 'XX-SMALL', 'XXS' %}{% assign size_letter = 'XXS' %}
+ {% when 'X-SMALL', 'EXTRA-SMALL', 'XS' %}{% assign size_letter = 'XS' %}
+ {% when 'SMALL', 'S' %}{% assign size_letter = 'S' %}
+ {% when 'MEDIUM', 'M' %}{% assign size_letter = 'M' %}
+ {% when 'LARGE', 'L' %}{% assign size_letter = 'L' %}
+ {% when 'X-LARGE', 'EXTRA-LARGE', 'XL' %}{% assign size_letter = 'XL' %}
+ {% when 'XX-LARGE', '2X-LARGE', 'XXL', '2XL' %}{% assign size_letter = 'XXL' %}
+ {% when 'XXX-LARGE', '3X-LARGE', 'XXXL', '3XL' %}{% assign size_letter = '3XL' %}
+ {% else %}{% assign size_letter = size_base %}
+ {% endcase %}
+ {% if size_letter == blank %}{% assign size_letter = value %}{% endif %}
+ {% endif %}
+ {% unless skip_size %}
+ <button
+ type="button"
+ class="pdp-buy__size-btn{% if value == sel_val %} is-active{% endif %}"
+ data-size="{{ value | escape }}"
+ >{{ size_letter }}{% if size_range != blank %}<span class="pdp-buy__size-range">{{ size_range }}</span>{% endif %}</button>
+ {% endunless %}
+ {% endfor %}
+ </div>
+ {% if show_soon_s %}
+ <p class="pdp-buy__size-note">{{ section.settings.size_soon_note }}</p>
+ {% endif %}
+ </div>
+ {% endif %}
+ {% endfor %}
+
+ {% endif %}
+
+ {% form 'product', product, id: 'pdp-form' %}
+ <input type="hidden" name="id" value="{{ current_variant.id }}">
+ <button type="submit" class="pdp-buy__cta btn btn--primary">
+ Add to Cart
+ </button>
+ <div class="pdp-buy__shop-pay">
+ {{ form | payment_terms }}
+ </div>
+ {% endform %}
+
+ {% unless section.settings.show_oneoff_link == false %}
+ {% render 'one-off-quiet-link', current_product: product %}
+ {% endunless %}
+
+ {% comment %} v19 trust split: under ATC is empty — value strip + accordion own guarantees {% endcomment %}
+ {% if section.settings.show_trust_row %}
+ <div class="pdp-buy__trust">
+ <span><strong>✓</strong> Ships 1 to 2 days</span>
+ <span><strong>✓</strong> 30-day returns</span>
+ <span><strong>✓</strong> 90-day warranty</span>
+ <span><strong>✓</strong> Latex- & silicone-free</span>
+ <span><strong>✓</strong> Made in USA</span>
+ </div>
+ {% endif %}
+
+ {%- comment -%} Sock kit is OFF site-wide until Theme settings → Sock kit → Show optional sock kit is ticked (default off). {%- endcomment -%}
+ {% if settings.sock_kit_enabled == true and section.settings.show_kit_links != false and _cat_outdoor == false %}
+ {% liquid
+ assign kit_label = settings.sock_kit_label | default: 'Complete the kit'
+ assign kit_link_1_label = settings.sock_kit_link_label | default: 'Optional sock kit →'
+ assign kit_link_1_url = settings.sock_kit_link_url
+ assign kit_link_2_label = settings.sock_kit_link_2_label
+ assign kit_link_2_url = settings.sock_kit_link_2_url
+ assign kit_hint = settings.sock_kit_hint
+ %}
+ <div class="pdp-buy__kit-links">
+ <span class="pdp-buy__kit-label">{{ kit_label }}</span>
+ <div class="pdp-buy__kit-row">
+ {% if kit_link_1_label != blank %}
+ <a href="{{ kit_link_1_url | default: '#' }}">{{ kit_link_1_label }}</a>
+ {% endif %}
+ {% if kit_link_2_label != blank %}
+ <a href="{{ kit_link_2_url | default: '#' }}">{{ kit_link_2_label }}</a>
+ {% endif %}
+ </div>
+ {% if kit_hint != blank %}
+ <p class="pdp-buy__kit-hint">{{ kit_hint | escape | newline_to_br }}</p>
+ {% endif %}
+ </div>
+ {% endif %}
+
+ <div class="pdp-buy__accordions">
+ <details class="pdp-accordion" data-pdp-accordion>
+ <summary class="pdp-accordion__trigger" aria-expanded="false">Description <span>+</span></summary>
+ <div class="pdp-accordion__body">
+ {%- comment -%}
+ NEVER render Admin product.description here (OWNER 2026-08-11).
+ TE description_accordion_body → else short_description → else placeholder.
+ {%- endcomment -%}
+ {% if section.settings.description_accordion_body != blank %}
+ <p>{{ section.settings.description_accordion_body | escape | replace: '&lt;em&gt;', '<em>' | replace: '&lt;/em&gt;', '</em>' | newline_to_br }}</p>
+ {% elsif section.settings.short_description != blank %}
+ <p>{{ section.settings.short_description | escape | newline_to_br }}</p>
+ {% else %}
+ <p>Add Description accordion copy in Theme Editor → PDP Buy Box → Description accordion — body.</p>
+ {% endif %}
+ {% if section.settings.description_footnote != blank %}
+ <p class="pdp-buy__desc-footnote">{{ section.settings.description_footnote | escape | newline_to_br }}</p>
+ {% endif %}
+ </div>
+ </details>
+ {% unless is_apparel %}
+ <details class="pdp-accordion" data-pdp-accordion>
+ <summary class="pdp-accordion__trigger" aria-expanded="false">Care & how to wear <span>+</span></summary>
+ <div class="pdp-accordion__body">
+ <p><strong>How to put on:</strong> pull from the top of the foot, not the straps, to help extend their lifespan.</p>
+ <p><strong>Cleaning:</strong> Hand wash with warm soapy water. They dry in seconds. That's it.</p>
+ </div>
+ </details>
+ {% endunless %}
+ {% if section.settings.note_accordion_label != blank and section.settings.note_accordion_body != blank %}
+ <details class="pdp-accordion" data-pdp-accordion>
+ <summary class="pdp-accordion__trigger" aria-expanded="false">{{ section.settings.note_accordion_label | escape }} <span>+</span></summary>
+ <div class="pdp-accordion__body">
+ <p>{{ section.settings.note_accordion_body | escape | newline_to_br }}</p>
+ </div>
+ </details>
+ {% endif %}
+ {%- comment -%}
+ LOCKED 2026-09-12 — Shipping + returns + 90-day warranty in one accordion.
+ Short PDP copy → Help. Longer: planning/earmark-returns-warranty-long-copy.md
+ {%- endcomment -%}
+ <details class="pdp-accordion" data-pdp-accordion>
+ <summary class="pdp-accordion__trigger" aria-expanded="false">{% if is_apparel %}Shipping &amp; returns{% else %}Shipping, returns &amp; 90-day warranty{% endif %} <span>+</span></summary>
+ <div class="pdp-accordion__body">
+ <p><strong>Shipping.</strong> {{ shipping_body | escape }}</p>
+ {% if is_apparel %}
+ <p><strong>Returns &amp; exchanges.</strong> 30 days. Unworn, unwashed, with tags attached and original packaging.</p>
+ <p><a class="pdp-accordion__policy-link" href="/pages/help#returns">View full returns policy →</a></p>
+ {% else %}
+ <p><strong>Returns &amp; exchanges.</strong> 30 days. Try on indoors for fit only, like any shoe.</p>
+ <p>Must be clean and like new.</p>
+ <p><a class="pdp-accordion__policy-link" href="/pages/help#returns">View full returns policy →</a></p>
+ <p><strong>90-day warranty.</strong> Backed against manufacturing defects for 90 days. Normal wear, accidents, and damage from use or improper care aren&rsquo;t covered.</p>
+ <p><a class="pdp-accordion__policy-link" href="/pages/help#warranty">View full warranty policy →</a></p>
+ {% endif %}
+ </div>
+ </details>
+ {%- comment -%} Sock/shoe claims line — hidden on apparel only (is_apparel = existing apparel check above, 2026-10-04). {%- endcomment -%}
+ {% unless is_apparel %}
+ <p class="pdp-buy__origin">Made in the USA · No latex · No silicone</p>
+ {% endunless %}
+ </div>
+ </div>
+</section>
+
+{% assign jm_rating_schema = product.metafields.judgeme.average_rating %}
+{% assign jm_count_schema = product.metafields.judgeme.review_count | plus: 0 %}
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org/",
+ "@type": "Product",
+ "name": {{ product.title | json }},
+ "description": {{ product.description | strip_html | truncate: 200 | json }},
+ "brand": { "@type": "Brand", "name": "Barreletics" },
+ {%- assign schema_image = hero_image | default: product.featured_image -%}
+ {% if product.featured_image and schema_image != blank %}"image": {{ schema_image | image_url: width: 800 | json }},{% endif %}
+ "url": {{ shop.url | append: product.url | json }},
+ {% if current_variant.sku != blank %}"sku": {{ current_variant.sku | json }},{% endif %}
+ "offers": {
+ "@type": "Offer",
+ "price": {{ current_variant.price | money_without_currency | json }},
+ "priceCurrency": "USD",
+ "availability": "{% if current_variant.available %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}",
+ "url": {{ shop.url | append: product.url | json }},
+ "seller": {
+ "@type": "Organization",
+ "name": "Barreletics"
+ }
+ }{% if jm_rating_schema and jm_count_schema > 0 %},
+ "aggregateRating": {
+ "@type": "AggregateRating",
+ "ratingValue": {{ jm_rating_schema | json }},
+ "reviewCount": {{ jm_count_schema | json }}
+ }{% endif %}
+}
+</script>
+
+<style>
+ .pdp-hero {
+ display: grid;
+ grid-template-columns: 1fr 1fr;
+ gap: 48px;
+ max-width: var(--max-width-hero);
+ margin: 0 auto;
+ /* v20c under v20d chrome — tighter top pad so ATC clears fold */
+ padding: var(--pdp-pt) var(--pdp-pr) var(--pdp-pb) var(--pdp-pl);
+ align-items: flex-start;
+ }
+
+ .pdp-gallery {
+ display: flex;
+ flex-direction: column;
+ gap: 12px;
+ position: sticky;
+ top: 92px;
+ min-width: 0;
+ }
+
+ .pdp-gallery__hero {
+ position: relative;
+ aspect-ratio: 4 / 5;
+ background: var(--bg-card);
+ overflow: hidden;
+ border-radius: var(--radius-gallery);
+ }
+ .pdp-gallery__hero--fit {
+ background: #fefefe;
+ }
+ .pdp-gallery__hero--fit img {
+ object-fit: contain;
+ }
+
+ .pdp-gallery__thumbs {
+ display: flex;
+ gap: 6px;
+ min-width: 0;
+ max-width: 100%;
+ overflow-x: auto;
+ -webkit-overflow-scrolling: touch;
+ scrollbar-width: none;
+ }
+
+ .pdp-gallery__thumbs::-webkit-scrollbar {
+ display: none;
+ }
+
+ .pdp-gallery__thumb {
+ position: relative;
+ width: 72px;
+ height: 72px;
+ border: 1px solid var(--border-default);
+ background: var(--bg-card);
+ padding: 0;
+ cursor: pointer;
+ overflow: hidden;
+ flex-shrink: 0;
+ border-radius: var(--radius-button);
+ }
+
+ .pdp-gallery__thumb.is-active {
+ border: 2px solid var(--text-primary);
+ }
+
+ .pdp-gallery__thumb .media-img {
+ pointer-events: none;
+ }
+
+
+ .pdp-buy {
+ display: flex;
+ flex-direction: column;
+ /* v20c fold breathe — keep ATC above fold on desktop */
+ gap: 14px;
+ padding-bottom: 32px;
+ }
+
+ .pdp-buy__rating {
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ }
+
+ .pdp-buy__stars {
+ font-size: var(--star-size, 14px);
+ color: var(--accent-stars);
+ letter-spacing: 1px;
+ }
+
+ .pdp-buy__rating-text {
+ font-size: 13px;
+ color: var(--text-body);
+ }
+
+ .pdp-buy__reviews-link {
+ font-size: 12px;
+ color: var(--text-muted);
+ }
+
+ .pdp-buy__header {
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ gap: 12px;
+ /* v20c — no extra header margin; gap:14 on .pdp-buy owns spacing */
+ margin-bottom: 0;
+ }
+
+ /* v20c fold — SEO 18/600 · lede calm 30–40/400 (NOT Type OS hero 72) */
+ .pdp-buy__seo-title {
+ font-size: 18px;
+ font-weight: 600;
+ line-height: 1.25;
+ letter-spacing: 0;
+ text-transform: none;
+ color: #2d2926;
+ margin: 0;
+ }
+
+ .pdp-buy__badge {
+ display: inline-block;
+ background: var(--pdp-badge-bg, var(--accent-primary, #c45c3f));
+ color: #fff;
+ padding: 4px 10px;
+ font-size: 10px;
+ font-weight: 700;
+ text-transform: uppercase;
+ letter-spacing: 0.08em;
+ border-radius: 3px;
+ flex-shrink: 0;
+ }
+
+ .pdp-buy__name {
+ font-size: clamp(30px, 3.6vw, 40px);
+ font-weight: 400;
+ line-height: 1.06;
+ letter-spacing: 0;
+ text-transform: none;
+ color: #1c1916;
+ margin: 0;
+ }
+ @media (max-width: 768px) {
+ .pdp-buy__name { font-size: 32px; }
+ }
+
+ .pdp-buy__desc {
+ font-size: 14px;
+ font-weight: 400;
+ line-height: 1.5;
+ color: #5a5248;
+ max-width: 38ch;
+ margin: 0;
+ }
+
+ .pdp-buy__price-block {
+ padding: 0;
+ border: 0;
+ }
+
+ .pdp-buy__price-now {
+ font-size: 28px;
+ font-weight: 700;
+ letter-spacing: -0.02em;
+ line-height: 1;
+ color: var(--text-primary);
+ }
+
+ .pdp-buy__price-meta {
+ display: block;
+ margin-top: 4px;
+ margin-left: 0;
+ font-size: 12px;
+ color: var(--text-muted);
+ }
+
+ .pdp-buy__origin {
+ margin: 14px 0 0;
+ font-family: inherit;
+ font-size: 14px;
+ font-weight: 400;
+ line-height: 1.4;
+ letter-spacing: 0;
+ color: var(--text-muted, #8a8a8a);
+ }
+
+ .pdp-buy__option {
+ margin: 0;
+ padding: 0;
+ border-bottom: none;
+ }
+
+ .pdp-buy__option + .pdp-buy__option {
+ margin-top: 4px;
+ }
+
+ .pdp-buy__option-header {
+ display: flex;
+ justify-content: space-between;
+ align-items: baseline;
+ margin-bottom: 6px;
+ }
+
+ .pdp-buy__option-header--chart-only {
+ justify-content: flex-end;
+ }
+
+ .pdp-buy__option-label {
+ font-size: 12px;
+ font-weight: var(--type-label-weight);
+ text-transform: uppercase;
+ letter-spacing: var(--tracking-wider);
+ }
+
+ #selected-color {
+ text-transform: none;
+ letter-spacing: 0;
+ font-weight: 400;
+ }
+
+ .pdp-buy__size-link {
+ font-size: 12px;
+ color: var(--text-primary);
+ border-bottom: 1px solid var(--text-primary);
+ padding-bottom: 1px;
+ text-decoration: none;
+ }
+
+ .pdp-buy__swatches {
+ display: flex;
+ gap: 6px;
+ flex-wrap: wrap;
+ }
+
+ .pdp-buy__swatch {
+ width: 18px;
+ height: 18px;
+ border-radius: 50%;
+ border: 2px solid transparent;
+ cursor: pointer;
+ transition: all var(--transition-fast);
+ padding: 5px;
+ box-sizing: content-box;
+ /* Fill color/image through the padded circle; border ring sits outside */
+ background-clip: padding-box;
+ background-origin: padding-box;
+ }
+ .pdp-buy__swatches--photos { gap: 10px; }
+ .pdp-buy__swatch--photo {
+ width: 56px;
+ height: 56px;
+ padding: 0;
+ border-radius: 8px;
+ border: 2px solid #d6cfc0;
+ background-size: cover;
+ background-position: center;
+ background-repeat: no-repeat;
+ background-color: #faf8f6;
+ }
+ .pdp-buy__swatch--photo.is-active { border-color: var(--text-primary, #1c1916); }
+
+ .pdp-buy__swatch:hover {
+ border-color: #9a9182;
+ }
+
+ .pdp-buy__swatch.is-active {
+ border-color: var(--text-primary);
+ }
+ /* "Always show (even sold out)" colours: strike line + lower opacity (still not purchasable) */
+ .pdp-buy__swatch.is-sold-out {
+ position: relative;
+ opacity: 0.45;
+ }
+ .pdp-buy__swatch.is-sold-out::after {
+ content: '';
+ position: absolute;
+ top: 50%;
+ left: 0;
+ right: 0;
+ height: 2px;
+ background: #1c1916;
+ transform: translateY(-50%) rotate(-45deg);
+ pointer-events: none;
+ }
+
+ /* 2-col M/L. The 3-col rule below is dormant — the Small size was retired
+ 2026-08-08 and show_soon_size now defaults off. */
+ .pdp-buy__sizes {
+ display: grid;
+ grid-template-columns: repeat(2, 1fr);
+ gap: 12px;
+ }
+ .pdp-buy__sizes--soon {
+ grid-template-columns: repeat(3, minmax(0, 1fr));
+ gap: 10px;
+ }
+ /* Apparel (S/M/L/XL): one row, as many columns as sizes (min 64px). */
+ .pdp-buy__sizes--apparel {
+ grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
+ gap: 10px;
+ }
+
+ .pdp-buy__size-btn {
+ padding: 10px 8px;
+ border: 1px solid #e4ddd4;
+ background: #fff;
+ text-align: center;
+ cursor: pointer;
+ font-size: 14px;
+ font-weight: 500;
+ border-radius: 6px;
+ font-family: inherit;
+ color: #1c1916;
+ min-width: 0;
+ transition: border-color var(--transition-fast);
+ }
+
+ .pdp-buy__size-btn.is-active {
+ border: 1px solid #9a9182;
+ font-weight: 600;
+ }
+
+ .pdp-buy__size-range {
+ display: block;
+ font-size: 10px;
+ color: #8a8a8a;
+ font-weight: 400;
+ margin-top: 4px;
+ line-height: 1.3;
+ }
+
+ .pdp-buy__cta {
+ width: 100%;
+ min-height: var(--type-cta-min-height);
+ padding: var(--type-cta-pad-y) var(--type-cta-pad-x);
+ font-size: var(--type-cta-size);
+ font-weight: var(--type-cta-weight);
+ letter-spacing: var(--type-cta-tracking);
+ line-height: var(--type-cta-leading, 1);
+ }
+
+ .pdp-buy__shop-pay {
+ margin-top: 10px;
+ text-align: center;
+ font-size: 12px;
+ color: var(--text-muted, #8a8a8a);
+ }
+ .pdp-buy__shop-pay shopify-payment-terms {
+ display: block;
+ }
+
+ .pdp-buy__oneoff-link {
+ display: inline-block;
+ margin: 12px 0 4px;
+ font-size: 13px;
+ font-weight: 500;
+ color: #6b645a;
+ text-decoration: none;
+ border-bottom: none;
+ padding-bottom: 0;
+ }
+ .pdp-buy__oneoff-link:hover {
+ color: var(--charcoal, #1c1916);
+ text-decoration: underline;
+ text-underline-offset: 3px;
+ }
+
+ .pdp-buy__cta.btn--disabled {
+ opacity: 0.5;
+ cursor: not-allowed;
+ }
+
+ .pdp-buy__size-btn.is-soon,
+ .pdp-buy__size-btn:disabled {
+ color: #9a9182;
+ background: #faf8f6;
+ border-style: dashed;
+ cursor: not-allowed;
+ opacity: 1;
+ }
+
+ .pdp-buy__size-btn.is-soon .pdp-buy__size-range {
+ color: #c45c3f;
+ font-weight: 500;
+ letter-spacing: 0.02em;
+ }
+
+ .pdp-buy__size-note {
+ margin: 10px 0 0;
+ font-size: 11px;
+ color: #8a8a8a;
+ line-height: 1.45;
+ }
+
+ /* Kit Option A — quiet discovery; airy padding; does not compete with ATC */
+ .pdp-buy__kit-links {
+ padding: 24px 0 20px;
+ margin: 0;
+ border-top: 1px solid #d6cfc0;
+ }
+
+ .pdp-buy__kit-label {
+ display: block;
+ font-size: 11px;
+ font-weight: 700;
+ letter-spacing: 0.1em;
+ text-transform: uppercase;
+ color: #9a9182;
+ margin: 0 0 12px;
+ }
+
+ .pdp-buy__kit-row {
+ display: flex;
+ flex-wrap: wrap;
+ align-items: baseline;
+ gap: 8px 18px;
+ }
+
+ .pdp-buy__kit-row a {
+ font-size: 13px;
+ font-weight: 500;
+ color: #1c1916;
+ text-decoration: none;
+ border-bottom: 1px solid #d6cfc0;
+ padding-bottom: 1px;
+ }
+
+ .pdp-buy__kit-row a:hover {
+ border-bottom-color: #1c1916;
+ }
+
+ .pdp-buy__kit-hint {
+ margin: 12px 0 0;
+ font-size: 11px;
+ color: #8a8a8a;
+ line-height: 1.45;
+ }
+
+ .pdp-buy__size-btn.is-unavailable {
+ opacity: 0.35;
+ cursor: not-allowed;
+ text-decoration: line-through;
+ }
+
+ .pdp-buy__error {
+ color: #c45c3f;
+ font-size: var(--text-sm);
+ margin: var(--space-2) 0 0;
+ }
+
+ .pdp-buy__trust {
+ display: flex;
+ gap: var(--space-5);
+ flex-wrap: wrap;
+ font-size: 12px;
+ color: var(--text-muted);
+ padding: var(--space-3) 0;
+ border-top: 1px solid var(--border-default);
+ }
+
+ .pdp-buy__trust strong {
+ color: var(--text-primary);
+ }
+
+ .pdp-accordion {
+ border-bottom: 1px solid var(--border-default);
+ }
+
+ .pdp-accordion__trigger {
+ padding: 14px 0;
+ font-size: 14px;
+ font-weight: var(--weight-semibold);
+ cursor: pointer;
+ list-style: none;
+ display: flex;
+ justify-content: space-between;
+ font-family: inherit;
+ }
+
+ .pdp-accordion__trigger::-webkit-details-marker {
+ display: none;
+ }
+
+ .pdp-accordion__trigger span {
+ color: var(--text-muted);
+ font-size: 20px;
+ font-weight: var(--weight-light);
+ transition: transform var(--transition-fast);
+ }
+
+ .pdp-accordion[open] .pdp-accordion__trigger span {
+ display: none;
+ }
+
+ .pdp-accordion[open] .pdp-accordion__trigger::after {
+ content: "\2212";
+ color: var(--text-muted);
+ font-size: 20px;
+ font-weight: var(--weight-light);
+ }
+
+ .pdp-accordion__body {
+ padding: 0 0 16px;
+ font-size: 14px;
+ color: var(--text-body);
+ line-height: var(--leading-loose);
+ }
+
+ .pdp-accordion__body p {
+ margin: 0 0 10px;
+ }
+
+ .pdp-accordion__body p:last-child {
+ margin: 0;
+ }
+
+ /* Mobile: quieter accordion stack (Andrew trial 2026-09-10) */
+ @media (max-width: 768px) {
+ .pdp-accordion__trigger {
+ padding: 11px 0;
+ font-size: 13px;
+ }
+ .pdp-accordion__trigger span,
+ .pdp-accordion[open] .pdp-accordion__trigger::after {
+ font-size: 18px;
+ }
+ .pdp-accordion__body {
+ padding: 0 0 12px;
+ font-size: 13px;
+ }
+ }
+
+
+ .pdp-buy__desc-footnote {
+ margin-top: 1em;
+ padding-top: 1em;
+ border-top: 1px solid #e8e2d8;
+ font-size: 13px;
+ line-height: 1.55;
+ color: var(--text-body, #4a4a4a);
+ }
+
+ @media (max-width: 1024px) {
+ .pdp-hero {
+ gap: var(--space-9);
+ padding: var(--pdp-pt-1024, var(--space-10)) var(--pdp-px-1024, var(--space-8)) var(--pdp-pb-1024, var(--space-10)) var(--pdp-px-1024, var(--space-8));
+ }
+ }
+
+ @media (max-width: 768px) {
+ .pdp-hero {
+ grid-template-columns: minmax(0, 1fr);
+ gap: var(--space-8);
+ padding: var(--pdp-pt-m) var(--pdp-px-m) var(--pdp-pb-m);
+ min-width: 0;
+ }
+
+ .pdp-gallery,
+ .pdp-buy {
+ min-width: 0;
+ max-width: 100%;
+ }
+
+ .pdp-gallery {
+ position: static;
+ }
+
+ .pdp-gallery__thumbs {
+ display: grid;
+ grid-template-columns: repeat(7, minmax(0, 1fr));
+ gap: 4px;
+ overflow: visible;
+ width: 100%;
+ }
+
+ .pdp-gallery__thumb {
+ width: 100%;
+ height: auto;
+ aspect-ratio: 1;
+ flex-shrink: 1;
+ }
+
+ .pdp-buy__header {
+ flex-direction: column;
+ align-items: flex-start;
+ justify-content: flex-start;
+ gap: 8px;
+ margin-bottom: 16px;
+ }
+
+ .pdp-buy__name {
+ font-size: 32px;
+ }
+
+ .pdp-buy__swatches {
+ gap: 4px;
+ }
+
+ /* Phones: never wrap — up to 8 dots share the row (26px max, shrink on narrow screens) */
+ .pdp-buy__swatches:not(.pdp-buy__swatches--photos) {
+ flex-wrap: nowrap;
+ }
+ .pdp-buy__swatch:not(.pdp-buy__swatch--photo) {
+ width: min(26px, calc((100% - 28px) / 8));
+ height: auto;
+ aspect-ratio: 1 / 1;
+ flex: 0 0 auto;
+ padding: 0;
+ box-sizing: border-box;
+ }
+ /* Phones: one row, max 8 colours (in-stock first); selected never gets .is-over-cap */
+ .pdp-buy__swatch.is-over-cap {
+ display: none;
+ }
+ }
+
+ /* Phones only: trust/rating row + title (h1 + sole badge) above the gallery.
+    CSS-only (DOM order + desktop untouched). TE: "Phones: show title above photo". */
+ @media (max-width: 768px) {
+ .pdp-hero--m-title-top {
+ display: flex;
+ flex-direction: column;
+ align-items: stretch;
+ gap: 14px;
+ }
+ .pdp-hero--m-title-top > .pdp-buy {
+ display: contents;
+ }
+ .pdp-hero--m-title-top > .pdp-buy > .pdp-buy__rating,
+ .pdp-hero--m-title-top > .pdp-buy > .pdp-buy__header {
+ order: -1;
+ }
+ .pdp-hero--m-title-top > .pdp-gallery {
+ margin-bottom: calc(var(--space-8) - 14px);
+ }
+ .pdp-hero--m-title-top > .pdp-buy > :last-child {
+ margin-bottom: 32px;
+ }
+ }
+</style>
+
+<script>
+ (function() {
+ document.querySelectorAll('[data-pdp-accordion]').forEach(function(item) {
+ item.addEventListener('toggle', function() {
+ var summary = item.querySelector('.pdp-accordion__trigger');
+ if (summary) summary.setAttribute('aria-expanded', item.open ? 'true' : 'false');
+ });
+ });
+ })();
+</script>
+
+{%- comment -%} Product JSON for variant selector {%- endcomment -%}
+<script>
+ window.__pdpProduct = {{ product | json }};
+</script>
+
+{%- comment -%} Variant selector + AJAX cart (PDP only) {%- endcomment -%}
+{{ 'variant-selector.js' | asset_url | script_tag }}
+<script>
+ (function() {
+  function sizedUrl(src, width) {
+    if (!src) return '';
+    if (src.indexOf('_') > -1 && src.match(/_\d+x\./)) {
+      return src.replace(/_\d+x\./, '_' + width + 'x.');
+    }
+    return src.replace(/(\.[a-z]+)(\?|$)/, '_' + width + 'x$1$2');
+  }
+  function setMainFromThumbSrc(main, src800) {
+    if (!main || !src800) return;
+    main.src = sizedUrl(src800, 800);
+    main.srcset = [400, 600, 800, 1200].map(function(w) {
+      return sizedUrl(src800, w) + ' ' + w + 'w';
+    }).join(', ');
+  }
+  var main = document.getElementById('pdp-main-img');
+  if (!main) return;
+  function applyHeroFit(img) {
+    var hero = img && img.closest('.pdp-gallery__hero');
+    if (!hero) return;
+    var w = img.naturalWidth, h = img.naturalHeight;
+    if (!w || !h) return;
+    hero.classList.toggle('pdp-gallery__hero--fit', hero.hasAttribute('data-hero-fit-eligible') && (w / h) >= 0.95);
+  }
+  main.addEventListener('load', function() { applyHeroFit(main); });
+  applyHeroFit(main);
+  document.querySelectorAll('.pdp-gallery__thumb').forEach(function(btn) {
+    if (btn.dataset.galleryBound) return;
+    btn.dataset.galleryBound = 'true';
+    btn.addEventListener('click', function() {
+      var src = btn.getAttribute('data-thumb-src');
+      if (!src) return;
+      document.querySelectorAll('.pdp-gallery__thumb').forEach(function(b) {
+        b.classList.toggle('is-active', b === btn);
+      });
+      setMainFromThumbSrc(main, src);
+    });
+  });
+ })();
+</script>
+{{ 'cart.js' | asset_url | script_tag }}
+
+{% style %}
+  {%- liquid
+    assign te_y_d = 40
+    assign te_side_d = 40
+    assign te_y_m = 32
+    assign te_x_m = 16
+    assign u_y = section.settings.text_pad_y | default: te_y_d
+    assign u_side = section.settings.side_padding | default: te_side_d
+    assign u_y_m = section.settings.text_pad_y_mobile | default: te_y_m
+    assign u_x_m = section.settings.text_pad_x_mobile | default: te_x_m
+  -%}
+  {%- if u_y != te_y_d or u_side != te_side_d -%}
+  @media (min-width: 1025px) {
+    #shopify-section-{{ section.id }} .pdp-hero {
+      {%- if u_y != te_y_d -%}
+      padding-top: {{ u_y }}px;
+      padding-bottom: {{ u_y }}px;
+      {%- endif -%}
+      {%- if u_side != te_side_d -%}
+      padding-left: {{ u_side }}px;
+      padding-right: {{ u_side }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+  {%- if u_y_m != te_y_m or u_x_m != te_x_m -%}
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .pdp-hero {
+      {%- if u_y_m != te_y_m -%}
+      padding-top: {{ u_y_m }}px;
+      padding-bottom: {{ u_y_m }}px;
+      {%- endif -%}
+      {%- if u_x_m != te_x_m -%}
+      padding-left: {{ u_x_m }}px;
+      padding-right: {{ u_x_m }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "PDP Buy Box",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Shared — Content"
+    },
+    {
+      "type": "paragraph",
+      "content": "Product title comes from Admin (not TE). No title-size override — Type OS owns the PDP H1. Family is brand Type OS. TE edits lede lines and display chrome only."
+    },
+    {
+      "type": "text",
+      "id": "lede_line_1",
+      "label": "Lede line 1",
+      "default": "Secure in every hold."
+    },
+    {
+      "type": "text",
+      "id": "lede_line_2",
+      "label": "Lede line 2",
+      "default": "No sliding. No resets."
+    },
+    {
+      "type": "textarea",
+      "id": "short_description",
+      "label": "Short description (above price)",
+      "default": "The premium grip system that replaces traditional grip socks, built for reformer, barre, Pilates and Megaformer.",
+      "info": "Buy-column body under the lede ONLY. NEVER replace this with Admin product.description. Accordion copy = separate field below."
+    },
+    {
+      "type": "header",
+      "content": "Shared — Media"
+    },
+    {
+      "type": "paragraph",
+      "content": "Gallery images come from product media in Admin. Global default: Theme settings → PDP hero image. Section fields below optionally override for this template only — no Admin reorder needed."
+    },
+    {
+      "type": "select",
+      "id": "hero_image_mode",
+      "label": "Hero image priority (section override)",
+      "options": [
+        {
+          "value": "admin_order",
+          "label": "Use theme / Admin default"
+        },
+        {
+          "value": "variant_color",
+          "label": "Variant color / option value"
+        },
+        {
+          "value": "media_index",
+          "label": "Specific media position #"
+        }
+      ],
+      "default": "admin_order",
+      "info": "Default = Theme settings → PDP hero image. Change this FIRST before using Hero color or Hero media position."
+    },
+    {
+      "type": "text",
+      "id": "hero_color",
+      "label": "Hero color / option value (override)",
+      "info": "Only used when priority is Variant color (or when this field is filled and priority is still Admin default — then switches to variant color). e.g. Coral, Blue."
+    },
+    {
+      "type": "range",
+      "id": "hero_media_index",
+      "label": "Hero media position (override)",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "default": 1,
+      "info": "ONLY applies when Hero image priority = Specific media position #. Ignored on Admin default. 1 = first product image."
+    },
+    {
+      "type": "range",
+      "id": "thumb_count",
+      "label": "Thumbnail count",
+      "min": 3,
+      "max": 8,
+      "step": 1,
+      "default": 7,
+      "info": "Default 7 · 72px. Wide desktop fits all; narrower + mobile swipe-scroll. No arrows."
+    },
+    {
+      "type": "header",
+      "content": "Section — PDP buy box — display"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating_row",
+      "label": "Show trust / rating row",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_title_above_gallery",
+      "label": "Phones: show title above photo",
+      "info": "Phones only (768px and below): trust/rating row and product title + sole badge sit above the photos. Tagline, price, options and Add to Cart stay below. Desktop unchanged.",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "rating_text",
+      "label": "Rating / trust text",
+      "default": "Trusted by 1,000+ Instructors"
+    },
+    {
+      "type": "text",
+      "id": "reviews_anchor",
+      "label": "Reviews link",
+      "default": "#reviews",
+      "info": "Anchor or URL for the Reviews → link."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_line",
+      "label": "Show payment / installment line",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "payment_line",
+      "label": "Payment / installment line",
+      "default": "or 4 × $18.50",
+      "info": "Unused. Shop Pay under Add to Cart owns the split."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_size_chart_link",
+      "label": "Show size chart link",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "size_chart_url",
+      "label": "Size chart URL"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trust_row",
+      "label": "Show under-ATC trust checklist",
+      "default": false,
+      "info": "v19 LOCKED: leave OFF. Value strip + accordion own guarantees — do not repeat ✓ under ATC."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sole_badge",
+      "label": "Show sole badge next to title",
+      "default": true,
+      "info": "Version tag pill next to the title (v16 pattern). Color via Sole badge color below."
+    },
+    {
+      "type": "text",
+      "id": "sole_badge",
+      "label": "Sole badge override",
+      "info": "Optional. Outdoor always shows Outdoor. One-offs show Open Sole / Closed Sole (same as core). Else: TE → metafield → Open/Closed from identity."
+    },
+    {
+      "type": "select",
+      "id": "sole_badge_color",
+      "label": "Sole badge color",
+      "default": "rust",
+      "info": "Default rust for Closed/Open/Outdoor/one-offs. TE black / charcoal / rust / blue are all honored — never forced.",
+      "options": [
+        {
+          "value": "black",
+          "label": "Black / charcoal"
+        },
+        {
+          "value": "charcoal",
+          "label": "Charcoal"
+        },
+        {
+          "value": "rust",
+          "label": "Rust orange"
+        },
+        {
+          "value": "blue",
+          "label": "Blue (live strip)"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "show_soon_size",
+      "label": "Show Small as Coming soon",
+      "default": false,
+      "info": "Retired 2026-08-08 — Small is not offered. Leave OFF."
+    },
+    {
+      "type": "paragraph",
+      "content": "Sticky ATC is a separate section (pdp-sticky-atc) — not controlled here."
+    },
+    {
+      "type": "header",
+      "content": "Section — PDP buy box — One-off link"
+    },
+    {
+      "type": "paragraph",
+      "content": "Quiet link under ATC. Product + copy live in Theme settings → One-off colors. Shows only when that product has available inventory."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_oneoff_link",
+      "label": "Show one-off quiet link (when live in Theme settings)",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Section — PDP buy box — Complete the kit"
+    },
+    {
+      "type": "paragraph",
+      "content": "Copy is Theme settings → Sock kit. Shows only when Theme settings → Sock kit → Show optional sock kit is on; this checkbox can then hide it per template."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_kit_links",
+      "label": "Show Complete the kit",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "size_soon_note",
+      "label": "Coming soon size note",
+      "info": "Retired 2026-08-08 — Small is not offered. Leave empty."
+    },
+    {
+      "type": "header",
+      "content": "Section — PDP buy box — Accordion"
+    },
+    {
+      "type": "paragraph",
+      "content": "Description accordion: use TE body below to control storefront copy. If TE body is blank, Admin product description shows (fallback). Closing note appends after either. Extra accordion is a separate optional row (needs label AND body)."
+    },
+    {
+      "type": "textarea",
+      "id": "description_accordion_body",
+      "label": "Description accordion — body (TE)",
+      "info": "SIGNED copy for the Description accordion. NEVER uses Admin product description. If blank, falls back to Short description (above price) — not Admin."
+    },
+    {
+      "type": "textarea",
+      "id": "description_footnote",
+      "label": "Description accordion — closing note",
+      "info": "Optional. Appended AFTER the Description accordion body (TE or Admin). Leave blank to hide. Does nothing by itself if you expect a full rewrite — use Description accordion body."
+    },
+    {
+      "type": "text",
+      "id": "note_accordion_label",
+      "label": "Extra accordion label",
+      "info": "Optional separate row (e.g. Good to know). Hidden unless Extra accordion body is also filled."
+    },
+    {
+      "type": "textarea",
+      "id": "note_accordion_body",
+      "label": "Extra accordion body",
+      "info": "Required with Extra accordion label — both must be set or the row stays hidden."
+    },
+    {
+      "type": "textarea",
+      "id": "shipping_accordion",
+      "label": "Shipping accordion body",
+      "default": "Complimentary shipping on orders over $150. Orders ship within 1 to 2 business days. Standard delivery 3 to 5 business days; express 1 to 2 business days available at checkout."
+    },
+    {
+      "type": "paragraph",
+      "content": "Shipping, returns & 90-day warranty (one accordion) copy is LOCKED in Liquid (2026-09-12). Short PDP wording with links to /pages/help#returns and #warranty. Longer variants live in planning/earmark-returns-warranty-long-copy.md for FAQ/Help/policy surfaces."
+    },
+    {
+      "type": "header",
+      "content": "Layout — text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 40 top / 48 bottom)",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 40)",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 32)",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 16)",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "PDP Buy Box"
+    }
+  ]
+}
+{% endschema %}
