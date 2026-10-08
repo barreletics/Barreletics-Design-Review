@@ -1,0 +1,1098 @@
+{% comment %}
+  Full-bleed statement / stage — lifestyle image or video + optional copy.
+  Multi-use: PDP commit line, tall stage heroes, image-only media bands.
+  Separate from statement-band (cream solo slogan).
+  GLOBAL HEADING SYSTEM (2026-09-28): line matches the fifty-fifty heading size on every template:
+  clamp(36px, 4.8vw, 56px) desktop / 36 phone / 400 (replaces 52 / 36 and the product-only big size).
+  (Closed Sole "TRANSFORM YOUR PRACTICE" no longer falls back to the 36/28 statement role).
+  title_role / title_size / title_weight stay in the schema but are ignored.
+{% endcomment %}
+{% liquid
+  assign body_size = section.settings.body_size | default: 'default'
+  assign body_weight = section.settings.body_weight | default: 'default'
+  assign media_radius = section.settings.media_radius | default: 0
+  assign show_text = section.settings.show_text
+  if show_text == nil
+    assign show_text = true
+  endif
+  assign height_desktop = section.settings.height_desktop | default: '64'
+  assign height_mobile = section.settings.height_mobile | default: '52'
+  # Phone height 0 = theme setting (2026-09-29): video -> Phone full-width video height, photo -> Phone split-image height.
+  assign fb_height_mobile_css = height_mobile | append: 'vh'
+  if height_mobile == 0
+    if section.settings.video != blank or section.settings.video_url != blank
+      assign fb_height_mobile_css = 'var(--fullbleed-video-h-mobile, 500px)'
+    else
+      assign fb_height_mobile_css = 'var(--split-media-h-mobile, 500px)'
+    endif
+  endif
+  assign image_fit_mobile = section.settings.image_fit_mobile | default: section.settings.media_fit | default: 'cover'
+  if image_fit_mobile == blank
+    assign image_fit_mobile = 'cover'
+  endif
+  assign video_fit_mobile = image_fit_mobile
+  assign overlay_opacity = section.settings.overlay_opacity | default: 55
+  assign overlay_alpha = overlay_opacity | times: 0.01
+  assign show_overlay = section.settings.show_overlay
+  if show_overlay == nil
+    assign show_overlay = true
+  endif
+  if show_overlay == false
+    assign overlay_alpha = 0
+  endif
+  assign focal_x = section.settings.focal_x | default: 50
+  assign focal_y = section.settings.focal_y | default: 50
+  assign media_fit = section.settings.media_fit | default: 'cover'
+  assign phone_photo = false
+  if show_text == false and section.settings.video == blank and section.settings.video_url == blank
+    if section.settings.image != blank or section.settings.image_asset != blank or section.settings.image_url != blank
+      assign phone_photo = true
+    endif
+  endif
+  if section.settings.mobile_full_bleed
+    assign phone_photo = false
+  endif
+  # Phone "match image" (2026-09-29): phone photo box takes the photo's own shape (no band, no crop). Default off. Photos only.
+  assign fb_match_ratio = ''
+  assign fb_match_img = nil
+  if section.settings.phone_match_image and section.settings.video == blank and section.settings.video_url == blank
+    if section.settings.image_mobile != blank
+      assign fb_match_img = section.settings.image_mobile
+    elsif section.settings.image != blank
+      assign fb_match_img = section.settings.image
+    endif
+    if fb_match_img != blank and fb_match_img.width > 0 and fb_match_img.height > 0
+      assign fb_match_ratio = fb_match_img.width | append: ' / ' | append: fb_match_img.height
+    endif
+  endif
+
+  assign cta_target = section.settings.cta_link_target | default: 'custom'
+  if cta_target != blank and cta_target != 'custom'
+    assign cta_href = cta_target
+  else
+    assign cta_href = section.settings.cta_url
+  endif
+  assign cta_style = section.settings.cta_style | default: 'solid'
+  assign cta_bg = section.settings.cta_bg_color | default: '#ffffff'
+  assign cta_border = section.settings.cta_border_color | default: cta_bg
+  assign cta_text_color = section.settings.cta_text_color | default: '#1c1916'
+  assign region_label = section.settings.aria_label | strip
+  if region_label == blank
+    assign region_label = section.settings.title
+  endif
+%}
+
+<section
+  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} fullbleed-statement{% unless show_text %} fullbleed-statement--media-only{% endunless %}{% if phone_photo %} fullbleed-statement--phone-photo{% endif %}{% if media_fit == 'contain' %} fullbleed-statement--contain{% endif %}{% if image_fit_mobile == 'contain' %} fullbleed-statement--fit-m-contain{% endif %}{% if fb_match_ratio != blank %} fullbleed-statement--m-match{% endif %}"
+  style="{% render 'section-inset-vars' %} 
+    --fb-media-radius: {{ media_radius }}px;
+    --fb-height-desktop: {{ height_desktop }}vh;
+    --fb-height-mobile: {{ fb_height_mobile_css }};
+    {% if section.settings.media_bg_mobile != blank %}--fb-bg-mobile: {{ section.settings.media_bg_mobile }};{% endif %}
+    {% if fb_match_ratio != blank %}--fb-ratio-mobile: {{ fb_match_ratio }};{% endif %}
+    --fb-fit-mobile: {{ image_fit_mobile }};
+    --fb-video-fit-mobile: {{ video_fit_mobile }};
+    --fb-overlay: rgba(28, 25, 22, {{ overlay_alpha }});
+    --fb-focal: {{ focal_x }}% {{ focal_y }}%;
+    --fb-cta-bg: {{ cta_bg }};
+    --fb-cta-border: {{ cta_border }};
+    --fb-cta-text: {{ cta_text_color }};
+    {% if body_size != 'default' %}--fb-body-size: {{ body_size }}px;{% endif %}
+    {% if body_weight != 'default' %}--fb-body-weight: {{ body_weight }};{% endif %}
+  "
+  {% if region_label != blank %}aria-label="{{ region_label | escape }}"{% endif %}
+>
+  <div class="fullbleed-statement__bg">
+    {%- comment -%} Phone image (optional): replaces the still image at max-width 768px via <picture>; desktop keeps the main image. {%- endcomment -%}
+    {%- assign fb_pic = false -%}
+    {%- if section.settings.image_mobile != blank and section.settings.video == blank and section.settings.video_url == blank -%}{%- assign fb_pic = true -%}
+    <picture style="display:contents">
+      <source media="(max-width: 768px)" srcset="{{ section.settings.image_mobile | image_url: width: 780 }} 780w, {{ section.settings.image_mobile | image_url: width: 1170 }} 1170w" sizes="100vw" width="{{ section.settings.image_mobile.width }}" height="{{ section.settings.image_mobile.height }}">
+    {%- endif -%}
+    {% if section.settings.video != blank %}
+      {{
+        section.settings.video
+        | video_tag:
+          image_size: '2000x',
+          autoplay: true,
+          loop: true,
+          muted: true,
+          controls: false,
+          playsinline: true,
+          preload: 'metadata',
+          class: 'fullbleed-statement__video'
+      }}
+      {%- liquid
+        assign fb_poster_s = ''
+        if section.settings.image != blank
+          assign fb_poster_s = section.settings.image | image_url: width: 2000
+        elsif section.settings.poster_url != blank
+          assign fb_poster_s = section.settings.poster_url
+        endif
+      -%}
+      {% if fb_poster_s != blank %}
+        <img
+          class="fullbleed-statement__poster-cover"
+          src="{{ fb_poster_s | escape }}"
+          alt=""
+          aria-hidden="true"
+          width="2000"
+          height="1200"
+        >
+      {% endif %}
+    {% elsif section.settings.video_url != blank %}
+      {%- liquid
+        assign fb_poster = ''
+        if section.settings.image != blank
+          assign fb_poster = section.settings.image | image_url: width: 2000
+        elsif section.settings.poster_url != blank
+          assign fb_poster = section.settings.poster_url
+        endif
+      -%}
+      <video
+        class="fullbleed-statement__video"
+        autoplay
+        muted
+        loop
+        playsinline
+        webkit-playsinline
+        preload="auto"
+        disablepictureinpicture
+        {% if fb_poster != blank %}poster="{{ fb_poster | escape }}"{% endif %}
+      >
+        <source src="{{ section.settings.video_url | escape }}" type="video/mp4">
+      </video>
+      {% if fb_poster != blank %}
+        <img
+          class="fullbleed-statement__poster-cover"
+          src="{{ fb_poster | escape }}"
+          alt=""
+          aria-hidden="true"
+          decoding="async"
+          width="2000"
+          height="1200"
+        >
+      {% else %}
+        <div class="fullbleed-statement__poster-cover" aria-hidden="true"></div>
+      {% endif %}
+    {% elsif section.settings.image != blank %}
+      {%- assign fb_alt = section.settings.image_alt -%}
+      {% render 'media-img',
+         image: section.settings.image,
+         alt: fb_alt,
+         widths: '800, 1200, 1600, 2000, 2400',
+         width_default: 2000,
+         sizes: '100vw',
+         loading: 'lazy',
+         position: 'css' %}
+    {% elsif section.settings.image_asset != blank %}
+      {%- assign fb_alt_a = section.settings.image_alt -%}
+      {%- assign fb_src_a = section.settings.image_asset | asset_url -%}
+      {% render 'media-img',
+         url: fb_src_a,
+         alt: fb_alt_a,
+         loading: 'lazy',
+         position: 'css',
+         width_attr: 2000,
+         height_attr: 1200 %}
+    {% elsif section.settings.image_url != blank %}
+      {%- assign fb_alt_u = section.settings.image_alt -%}
+      {% render 'media-img',
+         url: section.settings.image_url,
+         alt: fb_alt_u,
+         loading: 'lazy',
+         position: 'css',
+         width_attr: 2000,
+         height_attr: 1200 %}
+    {% endif %}
+    {%- if fb_pic %}</picture>{% endif %}
+  </div>
+  {% if show_text %}
+    <div class="fullbleed-statement__content">
+      {% if section.settings.eyebrow != blank %}
+        <p class="fullbleed-statement__eyebrow type-label">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+      {% if section.settings.title != blank %}
+        <p class="fullbleed-statement__line h2-display">{{ section.settings.title }}</p>
+      {% endif %}
+      {% if section.settings.body != blank %}
+        <p class="fullbleed-statement__sub">{{ section.settings.body }}</p>
+      {% endif %}
+      {% if section.settings.cta_text != blank %}
+        <a class="fullbleed-statement__cta{% if cta_style == 'outline' %} fullbleed-statement__cta--outline{% endif %}" href="{{ cta_href | default: routes.all_products_collection_url }}">
+          {{ section.settings.cta_text }}
+        </a>
+      {% endif %}
+    </div>
+  {% endif %}
+</section>
+
+{% style %}
+  {%- assign _hso_g = section.settings.heading_size_override | plus: 0 -%}
+  {%- if section.settings.heading_size_override != blank and _hso_g > 0 %}
+  #shopify-section-{{ section.id }} { {% render 'type-override-vars', title_size: section.settings.heading_size_override %} --te-title-size-n: {{ section.settings.heading_size_override }}; }
+  {%- endif %}
+  {%- assign _hso_n = section.settings.heading_size_override | plus: 0 -%}
+  {%- if section.settings.heading_size_override != blank and _hso_n > 0 %}
+  #shopify-section-{{ section.id }} { --section-heading-size-m: {{ _hso_n }}px; }
+  {%- endif %}
+  #shopify-section-{{ section.id }} .fullbleed-statement {
+    position: relative;
+    width: 100%;
+    min-height: var(--fb-height-desktop, 64vh);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1c1916;
+    border-radius: var(--fb-media-radius, 0);
+  }
+  /* z-index:0 creates a stacking context so ::after scrim stays behind content (was painting over title) */
+  #shopify-section-{{ section.id }} .fullbleed-statement__bg { position: absolute; inset: 0; z-index: 0; }
+  #shopify-section-{{ section.id }} .fullbleed-statement__bg img,
+  #shopify-section-{{ section.id }} .fullbleed-statement__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--fb-focal, 50% 50%);
+    display: block;
+  }
+  /* Contain: whole photo (face + board). Default Cover unchanged — Closed / sand hero stay fill-crop. */
+  #shopify-section-{{ section.id }} .fullbleed-statement--contain .fullbleed-statement__bg img,
+  #shopify-section-{{ section.id }} .fullbleed-statement--contain .fullbleed-statement__video {
+    object-fit: contain;
+  }
+  #shopify-section-{{ section.id }} .fullbleed-statement--contain {
+    background: #3d7ea6;
+  }
+  #shopify-section-{{ section.id }} .fullbleed-statement__video {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    /* Invisible until playing — prevents Safari refresh flash of native play button */
+    opacity: 0;
+  }
+  #shopify-section-{{ section.id }} .fullbleed-statement__bg.is-playing .fullbleed-statement__video {
+    opacity: 1;
+  }
+  /* Still image sits above video until playback starts */
+  #shopify-section-{{ section.id }} .fullbleed-statement__poster-cover {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--fb-focal, 50% 50%);
+    pointer-events: none;
+    opacity: 1;
+    background: #1c1916;
+    transition: opacity 0.25s ease;
+  }
+  #shopify-section-{{ section.id }} .fullbleed-statement__bg.is-playing .fullbleed-statement__poster-cover {
+    opacity: 0;
+    visibility: hidden;
+  }
+  #shopify-section-{{ section.id }} .fullbleed-statement__video:not([controls])::-webkit-media-controls,
+  #shopify-section-{{ section.id }} .fullbleed-statement__video:not([controls])::-webkit-media-controls-start-playback-button,
+  #shopify-section-{{ section.id }} .fullbleed-statement__video:not([controls])::-webkit-media-controls-enclosure {
+    display: none !important;
+    -webkit-appearance: none !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+  #shopify-section-{{ section.id }} {
+    --fb-overlay: rgba(28, 25, 22, {{ overlay_alpha }});
+  }
+  #shopify-section-{{ section.id }} .fullbleed-statement__bg::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: var(--fb-overlay, rgba(28, 25, 22, 0.55));
+    pointer-events: none;
+  }
+  #shopify-section-{{ section.id }} .fullbleed-statement--media-only .fullbleed-statement__bg::after {
+    background: transparent;
+  }
+  #shopify-section-{{ section.id }} .fullbleed-statement__content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 80px 40px;
+    max-width: 720px;
+  }
+  #shopify-section-{{ section.id }} .fullbleed-statement__eyebrow {
+    color: rgba(255, 255, 255, 0.72);
+    margin: 0 0 var(--gap-a, 16px);
+  }
+  #shopify-section-{{ section.id }} .fullbleed-statement__line {
+    color: #fff;
+    margin: 0 0 var(--gap-c);
+  }
+  /* GLOBAL HEADING SYSTEM (locked 2026-09-27): one display head for this section type.
+     56 desktop (fluid to 36 on tablet) / 36 phone / 400, same as the fifty-fifty heading (2026-09-28). Theme Editor title size, weight
+     and role settings are intentionally ignored so every page renders the same. */
+  #shopify-section-{{ section.id }} .fullbleed-statement__line.h2-display {
+    font-size: clamp(var(--heading-phone, 36px), calc(var(--te-title-size-n, var(--heading-standard-desktop-n, 56)) * 4.8vw / 56), var(--te-title-size, var(--heading-standard-desktop, 56px)));
+    font-weight: 400;
+    line-height: var(--heading-standard-leading, 1.06);
+    letter-spacing: var(--heading-standard-tracking, -0.032em);
+    text-wrap: balance; /* avoid one-word last lines (2026-09-27, Andrew) */
+  }
+  #shopify-section-{{ section.id }} .fullbleed-statement__line.h2-display strong,
+  #shopify-section-{{ section.id }} .fullbleed-statement__line.h2-display b {
+    font-weight: inherit;
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .fullbleed-statement__line.h2-display {
+      font-size: var(--section-heading-size-m, 36px);
+    }
+  }
+  #shopify-section-{{ section.id }} .fullbleed-statement__sub {
+    font-size: var(--fb-body-size, 16px);
+    font-weight: var(--fb-body-weight, 400);
+    line-height: 1.55;
+    color: rgba(255, 255, 255, 0.88);
+    margin: -12px auto var(--gap-c, 32px);
+    max-width: 42ch;
+  }
+  #shopify-section-{{ section.id }} .fullbleed-statement__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--type-cta-min-height);
+    padding: var(--type-cta-pad-y) var(--type-cta-pad-x);
+    background: var(--fb-cta-bg, #fff);
+    color: var(--fb-cta-text, #1c1916);
+    font-size: var(--type-cta-size);
+    font-weight: var(--type-cta-weight);
+    letter-spacing: var(--type-cta-tracking);
+    line-height: var(--type-cta-leading, 1);
+    text-transform: uppercase;
+    border-radius: 4px;
+    text-decoration: none;
+    border: 1px solid var(--fb-cta-border, var(--fb-cta-bg, #fff));
+    transition: opacity 0.15s ease;
+  }
+  #shopify-section-{{ section.id }} .fullbleed-statement__cta--outline {
+    background: transparent;
+    color: var(--fb-cta-text, var(--fb-cta-border, #fff));
+  }
+  #shopify-section-{{ section.id }} .fullbleed-statement__cta:hover {
+    opacity: 0.92;
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .fullbleed-statement {
+      min-height: var(--fb-height-mobile, 52vh);
+      height: var(--fb-height-mobile, 52vh);
+    }
+    #shopify-section-{{ section.id }} .fullbleed-statement__bg img {
+      object-fit: var(--fb-fit-mobile, cover);
+    }
+    #shopify-section-{{ section.id }} .fullbleed-statement__video {
+      object-fit: var(--fb-video-fit-mobile, var(--fb-fit-mobile, cover));
+    }
+    #shopify-section-{{ section.id }} .fullbleed-statement__content { padding: 56px 16px; }
+    /* Contain stays inside the Mobile height box. Do not zero height — slider must work. */
+    #shopify-section-{{ section.id }} .fullbleed-statement--fit-m-contain .fullbleed-statement__bg img,
+    #shopify-section-{{ section.id }} .fullbleed-statement--fit-m-contain .fullbleed-statement__video {
+      object-fit: contain;
+    }
+    {%- if section.settings.media_bg_mobile != blank %}
+    #shopify-section-{{ section.id }} .fullbleed-statement--fit-m-contain { background: var(--fb-bg-mobile); }
+    {%- endif %}
+    /* Phone height: match image (2026-09-29, opt-in): box = photo's own aspect ratio, cover, so no band and no crop. */
+    #shopify-section-{{ section.id }} .fullbleed-statement--m-match {
+      height: auto;
+      min-height: 0;
+      aspect-ratio: var(--fb-ratio-mobile);
+    }
+    #shopify-section-{{ section.id }} .fullbleed-statement--m-match .fullbleed-statement__bg img {
+      object-fit: cover;
+    }
+    /* Phone photo: full collage, 32 cream breath — taller section, no hard crop. Videos keep vh. */
+    #shopify-section-{{ section.id }} .fullbleed-statement--phone-photo {
+      height: auto;
+      min-height: 0;
+      {% if template.name == 'product' %}
+      padding: 32px;
+      background: #faf8f6;
+      box-sizing: border-box;
+      {% endif %}
+    }
+    #shopify-section-{{ section.id }} .fullbleed-statement--phone-photo .fullbleed-statement__bg {
+      position: relative;
+      inset: auto;
+    }
+    #shopify-section-{{ section.id }} .fullbleed-statement--phone-photo .fullbleed-statement__bg img {
+      position: relative;
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+  }
+{% endstyle %}
+
+{%- comment -%}
+  TE live preview (2026-10-06): dual-write of the inline --fb-* vars above, read from section.settings.* directly
+  (same pattern as fifty-fifty / split-hero acd8a93 / problem-section 108fff6). Inline vars come from top-of-file
+  assigns and only refresh after Save. Keep render-free.
+{%- endcomment -%}
+{% style %}
+  {%- liquid
+    assign te_ov = section.settings.overlay_opacity | default: 55 | times: 0.01
+    if section.settings.show_overlay == false
+      assign te_ov = 0
+    endif
+    assign te_hm = section.settings.height_mobile | default: '52'
+    assign te_fit_m = section.settings.image_fit_mobile | default: section.settings.media_fit | default: 'cover'
+  -%}
+  #shopify-section-{{ section.id }} .fullbleed-statement {
+    --fb-media-radius: {{ section.settings.media_radius | default: 0 }}px !important;
+    --fb-height-desktop: {{ section.settings.height_desktop | default: '64' }}vh !important;
+    {%- if te_hm != 0 %}
+    --fb-height-mobile: {{ te_hm }}vh !important;
+    {%- endif %}
+    --fb-fit-mobile: {{ te_fit_m }} !important;
+    --fb-video-fit-mobile: {{ te_fit_m }} !important;
+    --fb-overlay: rgba(28, 25, 22, {{ te_ov }}) !important;
+    --fb-focal: {{ section.settings.focal_x | default: 50 }}% {{ section.settings.focal_y | default: 50 }}% !important;
+    --fb-cta-bg: {{ section.settings.cta_bg_color | default: '#ffffff' }} !important;
+    --fb-cta-border: {{ section.settings.cta_border_color | default: section.settings.cta_bg_color | default: '#ffffff' }} !important;
+    {%- if section.settings.media_bg_mobile != blank %}
+    --fb-bg-mobile: {{ section.settings.media_bg_mobile }} !important;
+    {%- endif %}
+  }
+{% endstyle %}
+
+
+<script>
+  (function () {
+    var root = document.getElementById('shopify-section-{{ section.id }}');
+    if (!root) return;
+    var bg = root.querySelector('.fullbleed-statement__bg');
+    var video = root.querySelector('.fullbleed-statement__video');
+    if (!bg || !video || video.hasAttribute('controls')) return;
+    function markPlaying() {
+      if (video.paused || video.readyState < 2) return;
+      bg.classList.add('is-playing');
+    }
+    function kick() {
+      video.muted = true;
+      video.defaultMuted = true;
+      video.setAttribute('muted', '');
+      video.playsInline = true;
+      var p = video.play();
+      if (p && p.then) p.then(function () { markPlaying(); }).catch(function () {});
+      else markPlaying();
+    }
+    video.addEventListener('playing', markPlaying);
+    video.addEventListener('timeupdate', function onTime() {
+      if (video.currentTime > 0.05) {
+        markPlaying();
+        video.removeEventListener('timeupdate', onTime);
+      }
+    });
+    video.addEventListener('loadeddata', kick);
+    video.addEventListener('canplay', kick);
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) kick(); });
+      }, { rootMargin: '80px 0px' });
+      io.observe(video);
+    }
+    kick();
+  })();
+</script>
+
+{% render 'bg-video-autoplay-script',
+  section_id: section.id,
+  root_class: 'fullbleed-statement',
+  video_selector: 'video.fullbleed-statement__video, .fullbleed-statement__bg video'
+%}
+
+{%- comment -%} 10-03 unified text pads (restored 2026-10-06 from 10afcfd, Batch B). {%- endcomment -%}
+{%- liquid
+  assign y_d = 80
+  assign side_d = 40
+  assign y_m = 56
+  assign x_m = 16
+  assign emit_y_d = false
+  if section.settings.text_pad_y != blank and section.settings.text_pad_y != y_d
+    assign emit_y_d = true
+  endif
+  assign emit_side_d = false
+  if section.settings.side_padding != blank and section.settings.side_padding != side_d
+    assign emit_side_d = true
+  endif
+  assign emit_y_m = false
+  if section.settings.text_pad_y_mobile != blank and section.settings.text_pad_y_mobile != y_m
+    assign emit_y_m = true
+  endif
+  assign emit_x_m = false
+  if section.settings.text_pad_x_mobile != blank and section.settings.text_pad_x_mobile != x_m
+    assign emit_x_m = true
+  endif
+-%}
+{% style %}
+  {%- comment -%} Live TE (2026-10-06 r4): flags read section.settings directly inside the style block so the first slider move previews live; same output as before. {%- endcomment -%}
+  {%- liquid
+    assign emit_y_d = false
+    if section.settings.text_pad_y != blank and section.settings.text_pad_y != 80
+      assign emit_y_d = true
+    endif
+    assign emit_side_d = false
+    if section.settings.side_padding != blank and section.settings.side_padding != 40
+      assign emit_side_d = true
+    endif
+    assign emit_y_m = false
+    if section.settings.text_pad_y_mobile != blank and section.settings.text_pad_y_mobile != 56
+      assign emit_y_m = true
+    endif
+    assign emit_x_m = false
+    if section.settings.text_pad_x_mobile != blank and section.settings.text_pad_x_mobile != 16
+      assign emit_x_m = true
+    endif
+  -%}
+  {%- if emit_y_d or emit_side_d -%}
+  @media (min-width: 769px) {
+    #shopify-section-{{ section.id }} .fullbleed-statement__content {
+      {%- if emit_y_d -%}
+      padding-top: {{ section.settings.text_pad_y }}px;
+      padding-bottom: {{ section.settings.text_pad_y }}px;
+      {%- endif -%}
+      {%- if emit_side_d -%}
+      padding-left: {{ section.settings.side_padding }}px;
+      padding-right: {{ section.settings.side_padding }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+  {%- if emit_y_m or emit_x_m -%}
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .fullbleed-statement__content {
+      {%- if emit_y_m -%}
+      padding-top: {{ section.settings.text_pad_y_mobile }}px;
+      padding-bottom: {{ section.settings.text_pad_y_mobile }}px;
+      {%- endif -%}
+      {%- if emit_x_m -%}
+      padding-left: {{ section.settings.text_pad_x_mobile }}px;
+      padding-right: {{ section.settings.text_pad_x_mobile }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+{% endstyle %}
+
+{%- comment -%}
+  TE live preview (2026-10-06): Shared — Section frame insets. The section-inset-vars snippet writes these inline
+  (Save-only). Same dual-write as split-hero (acd8a93): section.settings.* directly, !important on the vars.
+{%- endcomment -%}
+{% style %}
+  {%- liquid
+    assign te_in_t = section.settings.inset_top | default: 0
+    assign te_in_b = section.settings.inset_bottom | default: 0
+    assign te_in_x = section.settings.inset_x | default: 0
+    if section.settings.inset_custom_mobile
+      assign te_in_tm = section.settings.inset_top_mobile | default: 0
+      assign te_in_bm = section.settings.inset_bottom_mobile | default: 0
+      assign te_in_xm = section.settings.inset_x_mobile | default: 0
+    else
+      assign te_in_tm = te_in_t
+      assign te_in_bm = te_in_b
+      assign te_in_xm = te_in_x
+    endif
+  -%}
+  #shopify-section-{{ section.id }} .section-frame {
+    --section-inset-top: {{ te_in_t }}px !important;
+    --section-inset-right: {{ te_in_x }}px !important;
+    --section-inset-bottom: {{ te_in_b }}px !important;
+    --section-inset-left: {{ te_in_x }}px !important;
+    --section-inset-top-m: {{ te_in_tm }}px !important;
+    --section-inset-right-m: {{ te_in_xm }}px !important;
+    --section-inset-bottom-m: {{ te_in_bm }}px !important;
+    --section-inset-left-m: {{ te_in_xm }}px !important;
+  }
+{% endstyle %}
+
+{%- comment -%}
+  TE live preview (2026-10-06, round 3): remaining Save-only controls. Reads section.settings.* directly
+  (verified 10-03 pattern: acd8a93 / 108fff6). Values match what the inline style / static <style> render.
+{%- endcomment -%}
+{% style %}
+  #shopify-section-{{ section.id }} .fullbleed-statement {
+    --fb-cta-text: {{ section.settings.cta_text_color | default: '#1c1916' }} !important;
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Fullbleed statement",
+  "settings": [
+    { "type": "header", "content": "Shared — Content" },
+    {
+      "type": "checkbox",
+      "id": "show_text",
+      "label": "Show text overlay",
+      "default": true,
+      "info": "Off = image/video-only stage (no eyebrow, title, sub, or CTA)."
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "info": "Optional. Leave blank to hide."
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "You commit to the class. Commit to the gear.",
+      "info": "Family is brand Type OS. Heading size and weight are locked by the global type system."
+    },
+    {
+      "type": "number",
+      "id": "heading_size_override",
+      "label": "Heading size override (px, desktop)",
+      "info": "Leave blank to follow Theme settings > Section headings. A number sets this section's desktop heading size only. Phones keep the global phone size."
+    },
+    {
+      "type": "select",
+      "id": "title_role",
+      "label": "Heading style",
+      "default": "statement",
+      "options": [
+        { "value": "statement", "label": "Statement (video overlay — PDP TRANSFORM)" },
+        { "value": "display", "label": "Display 52px (matches Shop All / pose band)" }
+      ],
+      "info": "Locked by global type system (2026-09-27). This setting no longer changes the heading."
+    },
+    {
+      "type": "select",
+      "id": "title_size",
+      "label": "Title size",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "12", "label": "12px" },
+        { "value": "13", "label": "13px" },
+        { "value": "14", "label": "14px" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" },
+        { "value": "18", "label": "18px" },
+        { "value": "20", "label": "20px" },
+        { "value": "22", "label": "22px" },
+        { "value": "24", "label": "24px" },
+        { "value": "26", "label": "26px" },
+        { "value": "28", "label": "28px" },
+        { "value": "30", "label": "30px" },
+        { "value": "32", "label": "32px" },
+        { "value": "36", "label": "36px" },
+        { "value": "40", "label": "40px" },
+        { "value": "44", "label": "44px" },
+        { "value": "48", "label": "48px" },
+        { "value": "56", "label": "56px" }
+      ],
+      "default": "default",
+      "info": "Locked by global type system (2026-09-27). This setting no longer changes the heading."
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" },
+        { "value": "700", "label": "700" }
+      ],
+      "default": "default",
+      "info": "Locked by global type system (2026-09-27). This setting no longer changes the heading."
+    },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Sub / body",
+      "info": "Optional quiet line under the heading. Leave blank to hide."
+    },
+    {
+      "type": "select",
+      "id": "body_size",
+      "label": "Body size",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "12", "label": "12px" },
+        { "value": "13", "label": "13px" },
+        { "value": "14", "label": "14px" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" },
+        { "value": "18", "label": "18px" },
+        { "value": "20", "label": "20px" },
+        { "value": "22", "label": "22px" },
+        { "value": "24", "label": "24px" },
+        { "value": "26", "label": "26px" },
+        { "value": "28", "label": "28px" },
+        { "value": "30", "label": "30px" },
+        { "value": "32", "label": "32px" },
+        { "value": "36", "label": "36px" },
+        { "value": "40", "label": "40px" },
+        { "value": "44", "label": "44px" },
+        { "value": "48", "label": "48px" },
+        { "value": "56", "label": "56px" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "select",
+      "id": "body_weight",
+      "label": "Body weight",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" },
+        { "value": "700", "label": "700" }
+      ],
+      "default": "default"
+    },
+    { "type": "text", "id": "cta_text", "label": "CTA label", "default": "Shop Now" },
+    
+    {
+      "type": "select",
+      "id": "cta_style",
+      "label": "CTA style",
+      "options": [
+        { "value": "solid", "label": "Solid fill" },
+        { "value": "outline", "label": "Outline only" }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "color",
+      "id": "cta_bg_color",
+      "label": "CTA background color",
+      "default": "#ffffff",
+      "info": "Used for solid fill. Outline style uses transparent fill + border color."
+    },
+    {
+      "type": "color",
+      "id": "cta_border_color",
+      "label": "CTA outline / border color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "cta_text_color",
+      "label": "CTA label color",
+      "default": "#1c1916",
+      "info": "Solid fill: usually white. Outline or light fill: charcoal/black."
+    },
+    {
+      "type": "select",
+      "id": "cta_link_target",
+      "label": "CTA link",
+      "options": [
+        { "value": "custom", "label": "Custom URL…" },
+        { "value": "#variants", "label": "#variants — Shop styles" },
+        { "value": "#knock-socks", "label": "#knock-socks — Statement" },
+        { "value": "#reviews", "label": "#reviews" },
+        { "value": "#guarantee", "label": "#guarantee" },
+        { "value": "#never-loses-grip", "label": "#never-loses-grip" },
+        { "value": "#one-pair", "label": "#one-pair" },
+        { "value": "#coperni", "label": "#coperni — Collab" },
+        { "value": "#problem", "label": "#problem" }
+      ],
+      "default": "custom",
+      "info": "Homepage section anchors jump on the same page. Choose Custom URL… for a full URL or any other #hash. Blank custom → all-products collection."
+    },
+    {
+      "type": "text",
+      "id": "cta_url",
+      "label": "Custom CTA URL",
+      "info": "Used when CTA link = Custom URL…."
+    },
+
+    { "type": "header", "content": "Shared — Media" },
+    {
+      "type": "paragraph",
+      "content": "Pick ONE media path. Priority: Shopify video → Video URL → Shopify image → Image URL fallback. Leave unused fields blank."
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Shopify video",
+      "info": "Preferred when the file lives in Shopify Files. Use this OR Video URL — not both."
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "Video URL (mp4)",
+      "info": "External/CDN mp4 when not using Shopify Video. Ignored if Shopify video is set."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image / poster (Shopify)",
+      "info": "Still image, OR poster when using Video URL. Prefer Shopify Files."
+    },
+    {
+      "type": "text",
+      "id": "poster_url",
+      "label": "Poster URL fallback",
+      "info": "Poster for Video URL only when Image / poster (Shopify) is empty."
+    },
+    {
+      "type": "text",
+      "id": "image_asset",
+      "label": "Theme asset filename",
+      "info": "Optional. e.g. outdoor-paddle-caribbean.jpg — used when Shopify image picker is empty. Beats external URL for color-graded shots."
+    },
+    {
+      "type": "text",
+      "id": "image_url",
+      "label": "Image URL fallback",
+      "default": "https://barreletics.com/cdn/shop/files/IMG_2917.jpg?v=1741040637&width=2000",
+      "info": "Used only when Background image + Theme asset are empty and there is no video."
+    },
+    { "type": "text", "id": "image_alt", "label": "Image alt" },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Phone image (optional)",
+      "info": "Replaces the photo on phones (768px wide and below). Desktop keeps the main image. Use a portrait image framed for the phone height, e.g. 1170x1500. Ignored when a video is set."
+    },
+
+    { "type": "header", "content": "Shared — Layout" },
+    {
+      "type": "select",
+      "id": "height_desktop",
+      "label": "Desktop height",
+      "options": [
+        { "value": "64", "label": "64vh — default stage" },
+        { "value": "70", "label": "70vh" },
+        { "value": "80", "label": "80vh" },
+        { "value": "90", "label": "90vh" },
+        { "value": "100", "label": "100vh — full viewport" },
+        { "value": "120", "label": "120vh — tall" },
+        { "value": "140", "label": "140vh — supersize" },
+        { "value": "160", "label": "160vh — full-body cover" }
+      ],
+      "default": "64",
+      "info": "Existing PDP/Home instances keep 64vh unless you change this. Use 140–160vh when a portrait lifestyle must show full body/feet under Cover."
+    },
+    {
+      "type": "range",
+      "id": "height_mobile",
+      "label": "Phone height override (0 = use theme setting)",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "vh",
+      "default": 0,
+      "info": "Phone only. 0 = use Theme settings > Split images: videos use Phone full-width video height, photos use Phone split-image height. Any other value is a share of the screen height (vh). Works with Cover or Contain."
+    },
+    {
+      "type": "checkbox",
+      "id": "phone_match_image",
+      "label": "Phone height: match image",
+      "default": false,
+      "info": "Phone only. On = the photo box takes the photo's own shape (Phone image if set, otherwise Image), so there is no band and no crop. Overrides Phone height. Photos only; ignored for video."
+    },
+    {
+      "type": "select",
+      "id": "image_fit_mobile",
+      "label": "Fit — phone",
+      "default": "cover",
+      "options": [
+        { "value": "cover", "label": "Cover" },
+        { "value": "contain", "label": "Contain" }
+      ],
+      "info": "Cover fills the height box. Contain shows the whole photo inside it."
+    },
+    {
+      "type": "color",
+      "id": "media_bg_mobile",
+      "label": "Phone background (Contain)",
+      "info": "Fills the space around the photo when Fit — phone = Contain. Match the photo background."
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_full_bleed",
+      "label": "Mobile: edge-to-edge (no cream frame)",
+      "default": false,
+      "info": "ON = true full-bleed on phones. OFF keeps the 32px cream frame used for phone-style product photos."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_overlay",
+      "label": "Dark overlay",
+      "default": true,
+      "info": "Off = no dim on the video/photo."
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Darkness",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 55,
+      "info": "How heavy the dim is. 0 = off. Ignored if Dark overlay is unchecked."
+    },
+    {
+      "type": "select",
+      "id": "media_fit",
+      "label": "Image fit",
+      "options": [
+        { "value": "cover", "label": "Cover — fill (crop)" },
+        { "value": "contain", "label": "Contain — whole photo" }
+      ],
+      "default": "cover",
+      "info": "Cover is the sitewide default. Contain only when a tall photo must show face + product (e.g. Outdoor lake paddle)."
+    },
+    { "type": "header", "content": "Image crop — focal point" },
+    {
+      "type": "paragraph",
+      "content": "When the image is cropped (object-fit: cover), drag these to keep feet / product in frame. Same idea as fifty-fifty focal controls. Per-section — not a global theme setting."
+    },
+    {
+      "type": "range",
+      "id": "focal_x",
+      "label": "Focal X (left → right)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "info": "object-position X"
+    },
+    {
+      "type": "range",
+      "id": "focal_y",
+      "label": "Focal Y (top → bottom)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "info": "Raise toward 75–90% to keep feet visible on dock / paddle shots."
+    },
+    {
+      "type": "range",
+      "id": "media_radius",
+      "label": "Section corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 0,
+      "info": "One control — applies equally to all four corners."
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Section aria-label",
+      "info": "Accessibility name for screen readers — not visible on the page. Leave blank to use the Heading."
+    },
+    {"type": "header", "content": "Layout — text padding"},
+    {"type": "range", "id": "text_pad_y", "label": "Text pad top & bottom — desktop (default 80)", "min": 0, "max": 120, "step": 2, "unit": "px", "default": 80},
+    {"type": "range", "id": "side_padding", "label": "Text pad left & right — desktop (default 40)", "min": 0, "max": 96, "step": 2, "unit": "px", "default": 40},
+    {"type": "range", "id": "text_pad_y_mobile", "label": "Text pad top & bottom — phone (default 56)", "min": 0, "max": 120, "step": 2, "unit": "px", "default": 56},
+    {"type": "range", "id": "text_pad_x_mobile", "label": "Text pad left & right — phone (default 16)", "min": 0, "max": 48, "step": 2, "unit": "px", "default": 16},
+    { "type": "header", "content": "Shared — Section frame" },
+    {
+      "type": "paragraph",
+      "content": "OUTER inset from the page edges (margin). Desktop insets apply at 769px+. Phone layout stays full bleed (locked). Custom mobile OFF = mobile margin vars match desktop (usually 0)."
+    },
+    {
+      "type": "checkbox",
+      "id": "inset_custom_mobile",
+      "label": "Custom mobile inset",
+      "default": false,
+      "info": "Fullbleed phone stays edge-to-edge by design. Only enable if you intentionally want phone outer margin."
+    },
+    {
+      "type": "range",
+      "id": "inset_top",
+      "label": "Inset top — desktop",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom",
+      "label": "Inset bottom — desktop",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x",
+      "label": "Inset left & right — desktop",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Same value on both sides."
+    },
+    {
+      "type": "range",
+      "id": "inset_top_mobile",
+      "label": "Inset top — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom_mobile",
+      "label": "Inset bottom — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x_mobile",
+      "label": "Inset left & right — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_desktop",
+      "label": "Hide on desktop",
+      "default": false
+    }
+  ],
+
+  "presets": [{ "name": "Fullbleed statement" }]
+}
+{% endschema %}

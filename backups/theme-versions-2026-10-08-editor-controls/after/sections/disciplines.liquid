@@ -1,0 +1,640 @@
+{% comment %}
+  Disciplines — cream typographic band (Home WORKING).
+  GLOBAL HEADING SYSTEM (2026-09-27): line is locked 52 / 36 phone / 400.
+  heading_role stays in the schema but is ignored. title_size / title_weight / heading_size_override are live (2026-10-08).
+{% endcomment %}
+{% liquid
+  assign y_d = 64
+  assign y_m = 48
+  assign side_d = 40
+  assign x_m = 20
+
+  assign pad_y = section.settings.pad_y | default: y_d
+  if section.settings.text_pad_y != blank and section.settings.text_pad_y != y_d
+    assign pad_y = section.settings.text_pad_y
+  endif
+
+  assign pad_y_m = pad_y
+  if section.settings.pad_y_mobile == 0 or section.settings.pad_y_mobile != blank
+    assign pad_y_m = section.settings.pad_y_mobile
+  endif
+  if section.settings.text_pad_y_mobile != blank and section.settings.text_pad_y_mobile != y_m
+    assign pad_y_m = section.settings.text_pad_y_mobile
+  endif
+
+  assign space_below_m = 0
+  if section.settings.space_below_mobile == 0 or section.settings.space_below_mobile != blank
+    assign space_below_m = section.settings.space_below_mobile
+  endif
+
+  assign emit_y_d = false
+  if section.settings.text_pad_y != blank and section.settings.text_pad_y != y_d
+    assign emit_y_d = true
+  endif
+  assign emit_side_d = false
+  if section.settings.side_padding != blank and section.settings.side_padding != side_d
+    assign emit_side_d = true
+  endif
+  assign emit_y_m = false
+  if section.settings.text_pad_y_mobile != blank and section.settings.text_pad_y_mobile != y_m
+    assign emit_y_m = true
+  endif
+  assign emit_x_m = false
+  if section.settings.text_pad_x_mobile != blank and section.settings.text_pad_x_mobile != x_m
+    assign emit_x_m = true
+  endif
+%}
+
+<section class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} discipline-film{% if section.settings.headline == blank %} discipline-film--tags-only{% endif %}{% if section.settings.hide_tags_mobile %} discipline-film--hide-tags-m{% endif %}" aria-label="{{ section.settings.aria_label | default: 'Built for every studio discipline' | escape }}" style="--df-bg: {{ section.settings.bg_color | default: '#faf8f6' }}; --df-pad-y: {{ pad_y }}px; --df-pad-y-m: {{ pad_y_m }}px; --df-space-below-m: {{ space_below_m }}px; {% render 'section-inset-vars' %}">
+  <div class="discipline-film__inner">
+    {% if section.settings.headline != blank %}
+      <p class="discipline-film__line h2-display">{{ section.settings.headline | newline_to_br }}</p>
+    {% endif %}
+    {% if section.settings.subhead != blank %}
+      <p class="discipline-film__sub">{{ section.settings.subhead }}</p>
+    {% endif %}
+    {% if section.blocks.size > 0 %}
+      <div class="discipline-film__moves">
+        {% for block in section.blocks %}
+          <span class="discipline-film__tag" {{ block.shopify_attributes }}>
+            {% unless forloop.first %}
+              <em class="discipline-film__dot" aria-hidden="true">·</em>
+            {% endunless %}
+            {{ block.settings.discipline }}
+          </span>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% style %}
+  {%- assign _hso_g = section.settings.heading_size_override | plus: 0 -%}
+  {%- comment -%} TE title size / weight (2026-10-08): 'default' emits nothing; heading_size_override > 0 wins over title_size; phone = min(title size, phone heading size). {%- endcomment -%}
+  {%- if section.settings.title_size != blank and section.settings.title_size != 'default' and _hso_g <= 0 %}
+  #shopify-section-{{ section.id }} { --te-title-size: {{ section.settings.title_size }}px; --te-title-size-n: {{ section.settings.title_size }}; --te-title-size-m: min({{ section.settings.title_size }}px, var(--section-heading-size-m, 36px)); }
+  {%- endif %}
+  {%- if section.settings.title_weight != blank and section.settings.title_weight != 'default' %}
+  #shopify-section-{{ section.id }} { --te-title-weight: {{ section.settings.title_weight }}; }
+  {%- endif %}
+  {%- if section.settings.heading_size_override != blank and _hso_g > 0 %}
+  #shopify-section-{{ section.id }} { {% render 'type-override-vars', title_size: section.settings.heading_size_override %} --te-title-size-n: {{ section.settings.heading_size_override }}; }
+  {%- endif %}
+  {%- assign _hso_n = section.settings.heading_size_override | plus: 0 -%}
+  {%- if section.settings.heading_size_override != blank and _hso_n > 0 %}
+  #shopify-section-{{ section.id }} { --section-heading-size-m: {{ _hso_n }}px; }
+  {%- endif %}
+  .discipline-film {
+    position: relative;
+    overflow: hidden;
+    background: var(--df-bg, #faf8f6);
+    border-top: 1px solid #e8e2d8;
+    border-bottom: 1px solid #e8e2d8;
+  }
+  .discipline-film__inner {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: var(--df-pad-y, 64px) var(--section-padding-x, 40px);
+    text-align: center;
+  }
+  /* Same H2 Display as 50/50 “Never loses…” — desktop size token on all widths (not the smaller mobile shrink). */
+  .discipline-film__line.h2-display {
+    color: var(--text-primary);
+    max-width: none;
+    margin: 0 0 var(--gap-b);
+  }
+  /* GLOBAL HEADING SYSTEM (locked 2026-09-27): one display head for this section type.
+     52 desktop (fluid to 36 on tablet) / 36 phone / 400. Theme Editor title size, weight
+     and role settings are intentionally ignored so every page renders the same. */
+  #shopify-section-{{ section.id }} .discipline-film__line.h2-display {
+    font-size: clamp(min(var(--heading-phone, 36px), var(--te-title-size, var(--heading-phone, 36px))), calc(var(--te-title-size-n, var(--heading-band-desktop-n, 52)) * 4.6vw / 52), var(--te-title-size, var(--heading-band-desktop, 52px)));
+    font-weight: var(--te-title-weight, 400);
+    line-height: var(--type-h2-display-leading, 1.1);
+    letter-spacing: var(--type-h2-display-tracking, -0.028em);
+    text-wrap: pretty; /* avoid one-word last lines (2026-09-27, Andrew) */
+  }
+  #shopify-section-{{ section.id }} .discipline-film__line.h2-display strong,
+  #shopify-section-{{ section.id }} .discipline-film__line.h2-display b {
+    font-weight: inherit;
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .discipline-film__line.h2-display {
+      font-size: var(--te-title-size-m, var(--section-heading-size-m, 36px));
+    }
+  }
+  .discipline-film__line.type-statement {
+    color: var(--text-primary);
+    max-width: none;
+    margin: 0 0 var(--gap-b);
+    font-size: var(--df-title-size, var(--type-statement-size));
+    font-weight: var(--df-title-weight, var(--type-statement-weight));
+    line-height: var(--type-statement-leading);
+    letter-spacing: var(--type-statement-tracking);
+  }
+  .discipline-film__sub {
+    font-size: var(--type-body-size);
+    font-weight: var(--type-body-weight);
+    line-height: var(--type-body-leading);
+    color: var(--text-body);
+    margin: 0 0 var(--gap-c);
+  }
+  .discipline-film__moves {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 8px;
+    align-items: center;
+    justify-content: center;
+    border-top: 1px solid #d6cfc0;
+    padding-top: 24px;
+  }
+  .discipline-film__moves span,
+  .discipline-film__tag {
+    font-size: clamp(12px, 1.3vw, 14px);
+    font-weight: 500;
+    color: #4a4a4a;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .discipline-film__tag {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+  .discipline-film__dot,
+  .discipline-film__moves span em {
+    font-style: normal;
+    color: #c45c3f;
+    margin: 0 14px 0 0;
+    font-weight: 400;
+  }
+  .discipline-film--tags-only .discipline-film__inner {
+    padding: 28px var(--section-padding-x, 40px);
+  }
+  .discipline-film--tags-only .discipline-film__moves {
+    border-top: none;
+    padding-top: 0;
+  }
+  @media (max-width: 768px) {
+    .discipline-film__inner {
+      padding: var(--df-pad-y-m, var(--df-pad-y, 48px)) var(--section-padding-x-mobile, 16px) calc(var(--df-pad-y-m, var(--df-pad-y, 48px)) + var(--df-space-below-m, 0px));
+    }
+    .discipline-film__line.type-statement {
+      font-size: var(--df-title-size, var(--type-statement-size-mobile));
+    }
+    .discipline-film--hide-tags-m .discipline-film__moves {
+      display: none;
+    }
+    .discipline-film--hide-tags-m .discipline-film__line {
+      margin-bottom: 0;
+    }
+  }
+{% endstyle %}
+
+{% style %}
+  {%- comment -%} Live TE (2026-10-06 r4): flags read section.settings directly inside the style block so the first slider move previews live; same output as before. {%- endcomment -%}
+  {%- liquid
+    assign emit_y_d = false
+    if section.settings.text_pad_y != blank and section.settings.text_pad_y != 64
+      assign emit_y_d = true
+    endif
+    assign emit_side_d = false
+    if section.settings.side_padding != blank and section.settings.side_padding != 40
+      assign emit_side_d = true
+    endif
+    assign emit_y_m = false
+    if section.settings.text_pad_y_mobile != blank and section.settings.text_pad_y_mobile != 48
+      assign emit_y_m = true
+    endif
+    assign emit_x_m = false
+    if section.settings.text_pad_x_mobile != blank and section.settings.text_pad_x_mobile != 20
+      assign emit_x_m = true
+    endif
+  -%}
+  {%- if emit_y_d or emit_side_d -%}
+  @media (min-width: 769px) {
+    #shopify-section-{{ section.id }} .discipline-film__inner {
+      {%- if emit_y_d -%}
+      padding-top: {{ section.settings.text_pad_y }}px;
+      padding-bottom: {{ section.settings.text_pad_y }}px;
+      {%- endif -%}
+      {%- if emit_side_d -%}
+      padding-left: {{ section.settings.side_padding }}px;
+      padding-right: {{ section.settings.side_padding }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+  {%- if emit_y_m or emit_x_m -%}
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .discipline-film__inner {
+      {%- if emit_y_m -%}
+      padding-top: {{ section.settings.text_pad_y_mobile }}px;
+      {%- endif -%}
+      {%- if emit_x_m -%}
+      padding-left: {{ section.settings.text_pad_x_mobile }}px;
+      padding-right: {{ section.settings.text_pad_x_mobile }}px;
+      {%- endif -%}
+      {%- if emit_y_m -%}
+      padding-bottom: calc({{ section.settings.text_pad_y_mobile }}px + var(--df-space-below-m, 0px));
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+{% endstyle %}
+
+{%- comment -%}
+  TE live preview (2026-10-06): Shared — Section frame insets. The section-inset-vars snippet writes these inline
+  (Save-only). Same dual-write as split-hero (acd8a93): section.settings.* directly, !important on the vars.
+{%- endcomment -%}
+{% style %}
+  {%- liquid
+    assign te_in_t = section.settings.inset_top | default: 0
+    assign te_in_b = section.settings.inset_bottom | default: 0
+    assign te_in_x = section.settings.inset_x | default: 0
+    if section.settings.inset_custom_mobile
+      assign te_in_tm = section.settings.inset_top_mobile | default: 0
+      assign te_in_bm = section.settings.inset_bottom_mobile | default: 0
+      assign te_in_xm = section.settings.inset_x_mobile | default: 0
+    else
+      assign te_in_tm = te_in_t
+      assign te_in_bm = te_in_b
+      assign te_in_xm = te_in_x
+    endif
+  -%}
+  #shopify-section-{{ section.id }} .section-frame {
+    --section-inset-top: {{ te_in_t }}px !important;
+    --section-inset-right: {{ te_in_x }}px !important;
+    --section-inset-bottom: {{ te_in_b }}px !important;
+    --section-inset-left: {{ te_in_x }}px !important;
+    --section-inset-top-m: {{ te_in_tm }}px !important;
+    --section-inset-right-m: {{ te_in_xm }}px !important;
+    --section-inset-bottom-m: {{ te_in_bm }}px !important;
+    --section-inset-left-m: {{ te_in_xm }}px !important;
+  }
+{% endstyle %}
+
+{%- comment -%}
+  TE live preview (2026-10-06, round 3): remaining Save-only controls. Reads section.settings.* directly
+  (verified 10-03 pattern: acd8a93 / 108fff6). Values match what the inline style / static <style> render.
+{%- endcomment -%}
+{% style %}
+  #shopify-section-{{ section.id }} .discipline-film {
+    --df-bg: {{ section.settings.bg_color | default: '#faf8f6' }} !important;
+    --df-space-below-m: {{ section.settings.space_below_mobile | default: 0 }}px !important;
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Disciplines",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Shared — Content"
+    },
+    {
+      "type": "textarea",
+      "id": "headline",
+      "label": "Heading",
+      "default": "Upgrade your grip.\nUpgrade your workout.",
+      "info": "Use a line break for two lines. Type OS owns size/weight."
+    },
+    {
+      "type": "number",
+      "id": "heading_size_override",
+      "label": "Heading size override (px, desktop)",
+      "info": "Leave blank to follow Theme settings > Section headings. A number sets this section's desktop heading size only. Phones keep the global phone size."
+    },
+    {
+      "type": "select",
+      "id": "heading_role",
+      "label": "Heading Type OS role",
+      "options": [
+        {
+          "value": "display",
+          "label": "H2 Display"
+        },
+        {
+          "value": "statement",
+          "label": "Statement"
+        }
+      ],
+      "default": "display",
+      "info": "Locked by global type system (2026-09-27). This setting no longer changes the heading."
+    },
+    {
+      "type": "select",
+      "id": "title_size",
+      "label": "Title size",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default / Type OS"
+        },
+        {
+          "value": "32",
+          "label": "32px"
+        },
+        {
+          "value": "36",
+          "label": "36px"
+        },
+        {
+          "value": "40",
+          "label": "40px"
+        },
+        {
+          "value": "44",
+          "label": "44px"
+        },
+        {
+          "value": "48",
+          "label": "48px"
+        },
+        {
+          "value": "52",
+          "label": "52px"
+        }
+      ],
+      "default": "default",
+      "info": "Default = global heading size. A size here sets this section's heading on desktop; phones use the smaller of this and the phone heading size. Heading size override (if above 0) wins."
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default / Type OS"
+        },
+        {
+          "value": "400",
+          "label": "400"
+        },
+        {
+          "value": "500",
+          "label": "500"
+        }
+      ],
+      "default": "default",
+      "info": "Default = 400 (global heading system). A weight here sets this section's heading weight."
+    },
+    {
+      "type": "textarea",
+      "id": "subhead",
+      "label": "Supporting line",
+      "info": "Optional. Under the heading. Leave blank on Home."
+    },
+    {
+      "type": "range",
+      "id": "pad_y",
+      "label": "Section padding — desktop",
+      "min": 48,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 64,
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "range",
+      "id": "pad_y_mobile",
+      "label": "Section padding — phone",
+      "min": 16,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 64,
+      "info": "Closed model = 32. Soft cream #faf8f6 (sitewide.lock) — same as sock-era. NEVER #f5f2ec darker cream. NEVER invent white unless Andrew says.",
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_tags_mobile",
+      "label": "Hide discipline tags — phone",
+      "default": false,
+      "info": "Keeps Upgrade your grip. Hides Barre · Reformer · etc on phone only."
+    },
+    {
+      "type": "range",
+      "id": "space_below_mobile",
+      "label": "Extra space below — phone",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Cream air under the tags, before the next section. 0 = none. Stays cream — not a white strip."
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#faf8f6"
+    },
+    {
+      "type": "header",
+      "content": "Section — Disciplines"
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Aria label",
+      "default": "Built for every studio discipline"
+    },
+    {
+      "type": "header",
+      "content": "Layout — text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 64)",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 40)",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 48)",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 20)",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Shared — Section frame"
+    },
+    {
+      "type": "paragraph",
+      "content": "OUTER inset from the page edges (margin). Top and bottom are independent; left & right = one control. Custom mobile OFF = mobile uses the same inset as desktop. Defaults 0 = full bleed."
+    },
+    {
+      "type": "checkbox",
+      "id": "inset_custom_mobile",
+      "label": "Custom mobile inset",
+      "default": false,
+      "info": "OFF (default): ignore the mobile inset sliders — mobile uses desktop Inset top / bottom / left & right. ON: use the mobile inset sliders instead."
+    },
+    {
+      "type": "range",
+      "id": "inset_top",
+      "label": "Inset top",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom",
+      "label": "Inset bottom",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x",
+      "label": "Inset left & right",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Same value on both sides."
+    },
+    {
+      "type": "range",
+      "id": "inset_top_mobile",
+      "label": "Inset top — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom_mobile",
+      "label": "Inset bottom — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x_mobile",
+      "label": "Inset left & right — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_desktop",
+      "label": "Hide on desktop",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "discipline",
+      "name": "Discipline",
+      "settings": [
+        {
+          "type": "text",
+          "id": "discipline",
+          "label": "Discipline name",
+          "default": "Barre"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Disciplines",
+      "blocks": [
+        {
+          "type": "discipline",
+          "settings": {
+            "discipline": "Barre"
+          }
+        },
+        {
+          "type": "discipline",
+          "settings": {
+            "discipline": "Reformer"
+          }
+        },
+        {
+          "type": "discipline",
+          "settings": {
+            "discipline": "Megaformer"
+          }
+        },
+        {
+          "type": "discipline",
+          "settings": {
+            "discipline": "Lagree"
+          }
+        },
+        {
+          "type": "discipline",
+          "settings": {
+            "discipline": "Pilates"
+          }
+        },
+        {
+          "type": "discipline",
+          "settings": {
+            "discipline": "Yoga"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,1045 @@
+{% comment %}
+  Sock Math
+  compact — v18/v19 2-col compare (Coperni / default). Do not change.
+  editorial — mock L (docs/pdp-sock-math-directions.html v8). Closed only.
+  GLOBAL HEADING SYSTEM (2026-09-27): headline (incl. the em "Done." line) is locked
+  52 / 36 phone / 400 in both layouts. title_size / title_weight stay in the schema but
+  are ignored (the old schema default "56" also hit phones at 56px).
+{% endcomment %}
+
+{% liquid
+  assign body_size = section.settings.body_size | default: 'default'
+  assign layout = section.settings.layout | default: 'compact'
+  assign show_prices = section.settings.show_prices
+  if show_prices == nil
+    assign show_prices = true
+  endif
+  assign cta_target = section.settings.cta_link_target | default: 'custom'
+  if cta_target != blank and cta_target != 'custom'
+    assign cta_href = cta_target
+  else
+    assign cta_href = section.settings.cta_url | default: '#variants'
+  endif
+  assign editorial_img = ''
+  if section.settings.image != blank
+    assign editorial_img = section.settings.image | image_url: width: 1600
+  elsif section.settings.image_url != blank
+    assign editorial_img = section.settings.image_url
+  endif
+  assign image_frame = section.settings.image_frame | default: 480
+  assign image_frame_mobile = section.settings.image_frame_mobile | default: 360
+  # Phone photo height 0 = use Theme settings > Split images > Phone split-image height (--split-media-h-mobile, 2026-09-29)
+  assign sm_frame_m_css = image_frame_mobile | append: 'px'
+  if image_frame_mobile == 0
+    assign sm_frame_m_css = 'var(--split-media-h-mobile, 500px)'
+  endif
+  assign image_unframed = section.settings.image_unframed
+  assign image_pos = section.settings.image_crop | default: 'center center'
+  assign pad_top = section.settings.pad_top | default: 0
+  assign pad_bottom = section.settings.pad_bottom | default: 0
+  assign sm_bg = '#faf8f6'
+  if template.suffix == 'in-studio-template' or template.suffix == 'open-sole'
+    assign sm_bg = '#ffffff'
+  endif
+%}
+
+<section
+  class="sock-math sock-math--{{ layout }}{% if image_unframed %} sock-math--unframed{% endif %} section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %}"
+  aria-label="{{ section.settings.aria_label | default: 'One pair' | escape }}"
+  style="{% render 'section-inset-vars' %}{% if body_size != 'default' %}--sm-body-size: {{ body_size }}px;{% endif %}--sm-pos: {{ image_pos }};--sm-frame: {{ image_frame }}px;--sm-frame-m: {{ sm_frame_m_css }};--sm-pad-top: {{ pad_top }}px;--sm-pad-bottom: {{ pad_bottom }}px;--sm-bg: {{ sm_bg }};"
+>
+  {% if layout == 'editorial' %}
+    <div class="sock-math__split">
+      <div class="sock-math__copy">
+        {% if section.settings.show_trust_strip %}
+          <div class="sock-math__trust">
+            <span class="sock-math__trust-stars" aria-hidden="true">★★★★★</span>
+            {% if section.settings.trust_text != blank %}
+              <span class="sock-math__trust-text">{{ section.settings.trust_text | escape }}</span>
+            {% endif %}
+          </div>
+        {% endif %}
+        <h2 class="sock-math__headline h2-display">
+          {% if section.settings.done_line != blank %}
+            {{ section.settings.headline }}<em>{{ section.settings.done_line }}</em>
+          {% else %}
+            {{ section.settings.headline }}
+          {% endif %}
+        </h2>
+        {% if section.settings.subheadline != blank %}
+          <p class="sock-math__sub">{{ section.settings.subheadline | newline_to_br }}</p>
+        {% endif %}
+        {% if section.settings.punch != blank %}
+          <p class="sock-math__end">{{ section.settings.punch }}</p>
+        {% endif %}
+        {% if section.settings.cta_text != blank %}
+          <a href="{{ cta_href }}" class="btn btn--primary sock-math__cta">{{ section.settings.cta_text }}</a>
+        {% endif %}
+      </div>
+      <div class="sock-math__pane">
+        {% if editorial_img != blank %}
+          <div class="sock-math__visual">
+            <img
+              src="{{ editorial_img | escape }}"
+              alt="{{ section.settings.image_alt | default: section.settings.headline | escape }}"
+              width="1200"
+              height="1500"
+              loading="lazy"
+            >
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="sock-math__cycle">
+      <div class="sock-math__cycle-item">
+        <span>{{ section.settings.theirs_label | default: 'The cycle' }}</span>
+        {% if section.settings.their_price != blank %}
+          <p class="sock-math__cycle-price">{{ section.settings.their_price }} <small>/yr</small></p>
+        {% endif %}
+        {% if section.settings.theirs_1 != blank %}
+          <p>{{ section.settings.theirs_1 }}</p>
+        {% endif %}
+      </div>
+      <div class="sock-math__cycle-item sock-math__cycle-item--ours">
+        <span>{{ section.settings.ours_label | default: 'The pair' }}</span>
+        {% if section.settings.our_price != blank %}
+          <p class="sock-math__cycle-price">{{ section.settings.our_price }} <small>once</small></p>
+        {% endif %}
+        {% if section.settings.ours_1 != blank %}
+          <p class="sock-math__grip">{{ section.settings.ours_1 }}</p>
+        {% endif %}
+        {% if section.settings.ours_2 != blank %}
+          <p>{{ section.settings.ours_2 }}</p>
+        {% endif %}
+      </div>
+      {% if section.settings.cycle_foot != blank %}
+        <p class="sock-math__cycle-foot">{{ section.settings.cycle_foot }}</p>
+      {% endif %}
+    </div>
+  {% else %}
+  <div class="sock-math__header">
+    <h2 class="sock-math__headline">{{ section.settings.headline }}</h2>
+  </div>
+  {% if section.settings.subheadline != blank %}
+    <p class="sock-math__sub">{{ section.settings.subheadline }}</p>
+  {% endif %}
+
+  <div class="sock-math__inner">
+    {% if section.settings.quote != blank %}
+      <blockquote class="sock-math__quote">
+        <p>“{{ section.settings.quote | strip | remove: '"' | remove: '“' | remove: '”' }}”</p>
+        {% if section.settings.quote_cite != blank %}
+          <cite>— {{ section.settings.quote_cite }}</cite>
+        {% endif %}
+      </blockquote>
+    {% endif %}
+
+    <div class="sock-math__grid">
+      <div class="sock-math__col sock-math__col--theirs">
+        <p class="sock-math__col-brand">{{ section.settings.theirs_label | default: 'Grip Socks' }}</p>
+        {% if show_prices and section.settings.their_price != blank %}
+          <p class="sock-math__col-price">{{ section.settings.their_price }}<span>/yr</span></p>
+        {% endif %}
+        <ul class="sock-math__list">
+          <li><span class="sock-math__x" aria-hidden="true">✗</span>{{ section.settings.theirs_1 | default: 'Replace every 6–8 weeks' }}</li>
+          <li><span class="sock-math__x" aria-hidden="true">✗</span>{{ section.settings.theirs_2 | default: 'Grip degrades with washing' }}</li>
+          <li><span class="sock-math__x" aria-hidden="true">✗</span>{{ section.settings.theirs_3 | default: '6–8 pairs per year minimum' }}</li>
+        </ul>
+      </div>
+      <div class="sock-math__col sock-math__col--ours">
+        <p class="sock-math__col-brand sock-math__col-brand--accent">{{ section.settings.ours_label | default: 'Barreletics' }}</p>
+        {% if show_prices and section.settings.our_price != blank %}
+          <p class="sock-math__col-price sock-math__col-price--bold">{{ section.settings.our_price }}<span> once</span></p>
+        {% endif %}
+        <ul class="sock-math__list">
+          <li><span class="sock-math__check" aria-hidden="true">✓</span>{{ section.settings.ours_1 | default: '1,000 classes. Year four.' }}</li>
+          <li><span class="sock-math__check" aria-hidden="true">✓</span>{{ section.settings.ours_2 | default: 'Grip never degrades' }}</li>
+          <li><span class="sock-math__check" aria-hidden="true">✓</span>{{ section.settings.ours_3 | default: 'One pair, every class' }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  {% if layout != 'editorial' and section.settings.cta_text != blank %}
+    <div class="sock-math__cta-wrap">
+      <a href="{{ cta_href }}" class="btn btn--primary">{{ section.settings.cta_text }}</a>
+    </div>
+  {% endif %}
+</section>
+
+{% style %}
+  {%- assign _hso_g = section.settings.heading_size_override | plus: 0 -%}
+  {%- comment -%} TE title size / weight (2026-10-08): 'default' emits nothing; heading_size_override > 0 wins over title_size; phone = min(title size, phone heading size). {%- endcomment -%}
+  {%- if section.settings.title_size != blank and section.settings.title_size != 'default' and _hso_g <= 0 %}
+  #shopify-section-{{ section.id }} { --te-title-size: {{ section.settings.title_size }}px; --te-title-size-n: {{ section.settings.title_size }}; --te-title-size-m: min({{ section.settings.title_size }}px, var(--section-heading-size-m, 36px)); }
+  {%- endif %}
+  {%- if section.settings.title_weight != blank and section.settings.title_weight != 'default' %}
+  #shopify-section-{{ section.id }} { --te-title-weight: {{ section.settings.title_weight }}; }
+  {%- endif %}
+  {%- if section.settings.heading_size_override != blank and _hso_g > 0 %}
+  #shopify-section-{{ section.id }} { {% render 'type-override-vars', title_size: section.settings.heading_size_override %} --te-title-size-n: {{ section.settings.heading_size_override }}; }
+  {%- endif %}
+  {%- assign _hso_n = section.settings.heading_size_override | plus: 0 -%}
+  {%- if section.settings.heading_size_override != blank and _hso_n > 0 %}
+  #shopify-section-{{ section.id }} { --section-heading-size-m: {{ _hso_n }}px; }
+  {%- endif %}
+  .sock-math--compact {
+    background: var(--sm-bg, #faf8f6);
+    padding: 0 0 var(--section-padding-y);
+  }
+  .sock-math--editorial {
+    background: var(--sm-bg, #faf8f6);
+    padding: var(--sm-pad-top, 0) 0 var(--sm-pad-bottom, 0);
+  }
+  .sock-math--editorial .sock-math__split {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    background: var(--sm-bg, #faf8f6);
+    align-items: stretch;
+  }
+  .sock-math--editorial .sock-math__copy {
+    padding: 48px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+  }
+  .sock-math--editorial h2.sock-math__headline {
+    text-align: left;
+    margin: 0 0 8px;
+    color: #1c1916;
+  }
+  .sock-math--editorial h2.sock-math__headline em {
+    display: block;
+    font-style: normal;
+    font-weight: inherit;
+    color: #1c1916;
+    margin-top: 2px;
+  }
+  .sock-math--editorial .sock-math__sub {
+    text-align: left;
+    padding: 0;
+    max-width: 28em;
+    margin: 0;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.7;
+    color: #4a4a4a;
+  }
+  .sock-math--editorial .sock-math__end {
+    margin: 36px 0 0;
+    font-size: var(--sm-body-size, 16px);
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 1.5;
+    color: #1c1916;
+  }
+  .sock-math--editorial .sock-math__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 28px;
+    align-self: flex-start;
+  }
+  .sock-math--editorial .sock-math__trust {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 16px;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .sock-math--editorial .sock-math__trust-stars {
+    color: #d4af37;
+    font-size: 15px;
+    letter-spacing: 0.22em;
+    line-height: 1;
+  }
+  .sock-math--editorial .sock-math__trust-text {
+    font-size: 13px;
+    font-weight: 400;
+    color: #4a4a4a;
+    letter-spacing: 0;
+  }
+  .sock-math--editorial .sock-math__pane {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    min-width: 0;
+  }
+  .sock-math--editorial .sock-math__visual {
+    flex: 0 0 var(--sm-frame, 480px);
+    height: var(--sm-frame, 480px);
+    min-height: var(--sm-frame, 480px);
+    max-height: var(--sm-frame, 480px);
+    padding: 0;
+    overflow: hidden;
+    background: #ece7de;
+  }
+  .sock-math--editorial .sock-math__visual img {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    object-fit: cover;
+    object-position: var(--sm-pos, center center);
+    display: block;
+  }
+  .sock-math--editorial.sock-math--unframed .sock-math__visual {
+    flex: 1 1 auto;
+    height: auto;
+    min-height: 420px;
+    max-height: none;
+    background: transparent;
+  }
+  .sock-math--editorial .sock-math__cycle {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    padding: 28px 24px 24px;
+    background: #fff;
+    box-sizing: border-box;
+  }
+  .sock-math--editorial .sock-math__cycle-item {
+    margin: 0;
+    padding: 0 24px;
+    text-align: center;
+  }
+  .sock-math--editorial .sock-math__cycle-item + .sock-math__cycle-item {
+    border-left: 1px solid #d6cfc0;
+  }
+  .sock-math--editorial .sock-math__cycle-item span {
+    display: block;
+    margin-bottom: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #8a8a8a;
+  }
+  .sock-math--editorial .sock-math__cycle-item--ours span {
+    color: #c45c3f;
+  }
+  .sock-math--editorial .sock-math__cycle-item p.sock-math__cycle-price {
+    margin: 0 0 8px;
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: #1c1916;
+  }
+  .sock-math--editorial .sock-math__cycle-item--ours .sock-math__cycle-price {
+    color: #c45c3f;
+  }
+  .sock-math--editorial .sock-math__cycle-price small {
+    font-size: 14px;
+    font-weight: 400;
+    color: #8a8a8a;
+  }
+  .sock-math--editorial .sock-math__cycle-item p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.45;
+    color: #4a4a4a;
+  }
+  .sock-math--editorial .sock-math__cycle-item p.sock-math__grip {
+    margin: 6px 0 0;
+    font-size: 13px;
+    font-weight: 500;
+    color: #1c1916;
+  }
+  .sock-math--editorial .sock-math__cycle-foot {
+    grid-column: 1 / -1;
+    width: 100%;
+    margin: 20px 0 0;
+    padding: 18px 8px 0;
+    border-top: 1px solid #d6cfc0;
+    text-align: center;
+    justify-self: stretch;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.5;
+    color: #1c1916;
+  }
+  .sock-math__header {
+    text-align: center;
+    padding: var(--section-padding-y) 40px 32px;
+  }
+  .sock-math__headline {
+    color: #1c1916;
+    margin: 0;
+  }
+  /* GLOBAL HEADING SYSTEM (locked 2026-09-27): one display head for this section type.
+     56 desktop, standard tier (fluid to 36 on tablet) / 36 phone / 400. Theme Editor title size, weight
+     and role settings are intentionally ignored so every page renders the same. */
+  #shopify-section-{{ section.id }} .sock-math h2.sock-math__headline {
+    font-size: clamp(min(var(--heading-phone, 36px), var(--te-title-size, var(--heading-phone, 36px))), calc(var(--te-title-size-n, var(--heading-standard-desktop-n, 56)) * 4.8vw / 56), var(--te-title-size, var(--heading-standard-desktop, 56px)));
+    font-weight: var(--te-title-weight, 400);
+    line-height: var(--type-h2-display-leading, 1.1);
+    letter-spacing: var(--type-h2-display-tracking, -0.028em);
+    text-wrap: pretty; /* avoid one-word last lines (2026-09-27, Andrew) */
+  }
+  #shopify-section-{{ section.id }} .sock-math h2.sock-math__headline strong,
+  #shopify-section-{{ section.id }} .sock-math h2.sock-math__headline em,
+  #shopify-section-{{ section.id }} .sock-math h2.sock-math__headline b {
+    font-weight: inherit;
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .sock-math h2.sock-math__headline {
+      font-size: var(--te-title-size-m, var(--section-heading-size-m, 36px));
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+  }
+  .sock-math__sub {
+    text-align: center;
+    padding: 0 40px;
+    font-size: var(--sm-body-size, 16px);
+    font-weight: 400;
+    color: #4a4a4a;
+    margin: 0;
+    line-height: 1.5;
+  }
+  .sock-math__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 48px 40px 0;
+  }
+  .sock-math__quote {
+    max-width: 600px;
+    margin: 0 auto 40px;
+    text-align: center;
+    border: none;
+    padding: 0;
+  }
+  .sock-math__quote p {
+    font-size: 16px;
+    font-style: italic;
+    color: #4a4a4a;
+    line-height: 1.6;
+    margin: 0 0 8px;
+  }
+  .sock-math__quote cite {
+    font-size: 12px;
+    font-style: normal;
+    color: #8a8a8a;
+    font-weight: 600;
+  }
+  .sock-math__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid #d6cfc0;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .sock-math__col {
+    padding: 40px;
+  }
+  .sock-math__col--theirs {
+    border-right: 1px solid #d6cfc0;
+    background: transparent;
+  }
+  .sock-math__col--ours {
+    background: #fff;
+  }
+  .sock-math__col-brand {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #8a8a8a;
+    font-weight: 700;
+    margin: 0 0 16px;
+  }
+  .sock-math__col-brand--accent {
+    color: #c45c3f;
+  }
+  .sock-math__col-price {
+    font-size: 36px;
+    font-weight: 700;
+    color: #1c1916;
+    margin: 0 0 24px;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .sock-math__col-price span {
+    font-size: 14px;
+    font-weight: 400;
+    color: #8a8a8a;
+  }
+  .sock-math__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 14px;
+    color: #4a4a4a;
+    line-height: 2;
+  }
+  .sock-math__list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .sock-math__x {
+    color: #8a8a8a;
+    flex-shrink: 0;
+  }
+  .sock-math__check {
+    color: #1c1916;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .sock-math__col--theirs .sock-math__list {
+    color: #8a8a8a;
+  }
+  .sock-math__cta-wrap {
+    text-align: center;
+    margin-top: 40px;
+    padding: 0 40px;
+  }
+  @media (max-width: 768px) {
+    .sock-math--compact { padding: 0 0 var(--section-padding-y-mobile); }
+    .sock-math__header { padding: var(--section-padding-y-mobile) 16px 24px; }
+    .sock-math__sub { padding: 0 16px; }
+    .sock-math__inner { padding: 32px 16px 0; }
+    .sock-math__grid { grid-template-columns: 1fr; }
+    .sock-math__col--theirs { border-right: none; border-bottom: 1px solid #d6cfc0; }
+    .sock-math__col { padding: 28px 24px; }
+    .sock-math--editorial {
+      padding: var(--sm-pad-top, 0) 0 calc(var(--sm-pad-bottom, 0px) + 48px);
+      background: var(--sm-bg, #faf8f6);
+    }
+    .sock-math--editorial .sock-math__split { grid-template-columns: 1fr; }
+    .sock-math--editorial .sock-math__copy {
+      padding: var(--text-pad-mobile, 48px) 20px var(--text-pad-mobile, 48px);
+      min-height: var(--text-min-h-mobile, auto);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .sock-math--editorial .sock-math__end { margin: 16px 0 0; }
+    .sock-math--editorial .sock-math__visual,
+    .sock-math--editorial .sock-math__visual img {
+      height: var(--sm-frame-m, 360px);
+      min-height: var(--sm-frame-m, 360px);
+      max-height: var(--sm-frame-m, 360px);
+      flex-basis: var(--sm-frame-m, 360px);
+    }
+    .sock-math--editorial.sock-math--unframed .sock-math__visual,
+    .sock-math--editorial.sock-math--unframed .sock-math__visual img {
+      height: var(--sm-frame-m, 360px);
+      min-height: var(--sm-frame-m, 360px);
+      max-height: var(--sm-frame-m, 360px);
+      flex-basis: var(--sm-frame-m, 360px);
+    }
+    .sock-math--editorial .sock-math__cycle {
+      grid-template-columns: 1fr 1fr;
+      padding: 20px 12px 16px;
+    }
+    .sock-math--editorial .sock-math__cycle-item { padding: 0 10px; }
+    .sock-math--editorial .sock-math__cycle-item + .sock-math__cycle-item {
+      border-left: 1px solid #d6cfc0;
+      border-top: 0;
+      padding-top: 0;
+      margin-top: 0;
+    }
+    .sock-math--editorial .sock-math__cycle-item p.sock-math__cycle-price { font-size: 26px; }
+    .sock-math--editorial .sock-math__cycle-item > p:not(.sock-math__cycle-price) {
+      display: block;
+      font-size: 14px;
+      line-height: 1.45;
+      margin-top: 6px;
+    }
+  }
+  {% if template.name == 'product' %}
+  @media (max-width: 768px) {
+    /* Top: 48px unless --text-pad-mobile is set (then 0, the copy pad carries the space; calc clamps to 0). */
+    .sock-math--editorial { padding: calc(48px - var(--text-pad-mobile, 0px) * 100) 0 var(--text-pad-mobile, 48px); }
+  }
+  {% endif %}
+  {%- if template.suffix == 'in-studio-template' or template.name == 'product' and template.suffix == blank %}
+  @media (max-width: 768px) {
+    /* Open + Closed Sole phone: keep the sock-cycle dollar row. Extra section pad off so it stays tight. Desktop unchanged. */
+    #shopify-section-{{ section.id }} .sock-math--editorial {
+      padding: 0;
+    }
+  }
+  {%- endif %}
+{% endstyle %}
+
+{%- comment -%}
+  TE live preview (2026-10-06): dual-write of the inline --sm-* vars, read from section.settings.* directly
+  (fifty-fifty / acd8a93 / 108fff6 pattern). Inline vars come from top-of-file assigns and only refresh after Save.
+{%- endcomment -%}
+{% style %}
+  #shopify-section-{{ section.id }} .sock-math {
+    --sm-pos: {{ section.settings.image_crop | default: 'center center' }} !important;
+    --sm-frame: {{ section.settings.image_frame | default: 480 }}px !important;
+    {%- assign te_fm = section.settings.image_frame_mobile | default: 360 -%}
+    {%- if te_fm != 0 %}
+    --sm-frame-m: {{ te_fm }}px !important;
+    {%- else %}
+    --sm-frame-m: var(--split-media-h-mobile, 500px) !important;
+    {%- endif %}
+    --sm-pad-top: {{ section.settings.pad_top | default: 0 }}px !important;
+    --sm-pad-bottom: {{ section.settings.pad_bottom | default: 0 }}px !important;
+    {%- if section.settings.body_size != blank and section.settings.body_size != 'default' %}
+    --sm-body-size: {{ section.settings.body_size }}px !important;
+    {%- endif %}
+  }
+  {%- if section.settings.pad_custom_mobile %}
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .sock-math--editorial {
+      padding-top: {{ section.settings.pad_top_mobile }}px !important;
+      padding-bottom: {{ section.settings.pad_bottom_mobile }}px !important;
+    }
+  }
+  {%- endif %}
+{% endstyle %}
+
+{%- comment -%} 10-03 unified text pads (restored 2026-10-06 from c6eca80, Batch B). {%- endcomment -%}
+{% style %}
+  {%- liquid
+    assign te_y = 0
+    assign te_side = 0
+    assign te_y_m = 0
+    assign te_x_m = 0
+    assign u_y = section.settings.text_pad_y | default: te_y
+    assign u_side = section.settings.side_padding | default: te_side
+    assign u_y_m = section.settings.text_pad_y_mobile | default: te_y_m
+    assign u_x_m = section.settings.text_pad_x_mobile | default: te_x_m
+  -%}
+  {%- if u_y != te_y or u_side != te_side -%}
+  @media (min-width: 769px) {
+    {%- if u_y != te_y -%}
+    #shopify-section-{{ section.id }} .sock-math--compact {
+      padding-top: {{ u_y }}px;
+    }
+    #shopify-section-{{ section.id }} .sock-math--editorial {
+      padding-top: {{ u_y }}px;
+      padding-bottom: {{ u_y }}px;
+    }
+    {%- endif -%}
+    {%- if u_side != te_side -%}
+    #shopify-section-{{ section.id }} .sock-math__header,
+    #shopify-section-{{ section.id }} .sock-math__sub,
+    #shopify-section-{{ section.id }} .sock-math__inner,
+    #shopify-section-{{ section.id }} .sock-math__cta-wrap {
+      padding-left: {{ u_side }}px;
+      padding-right: {{ u_side }}px;
+    }
+    #shopify-section-{{ section.id }} .sock-math--editorial .sock-math__copy {
+      padding-left: {{ u_side }}px;
+      padding-right: {{ u_side }}px;
+    }
+    {%- endif -%}
+  }
+  {%- endif -%}
+  {%- if u_y_m != te_y_m or u_x_m != te_x_m -%}
+  @media (max-width: 768px) {
+    {%- if u_y_m != te_y_m -%}
+    #shopify-section-{{ section.id }} .sock-math--compact {
+      padding-top: {{ u_y_m }}px;
+    }
+    #shopify-section-{{ section.id }} .sock-math--editorial {
+      padding-top: {{ u_y_m }}px;
+      padding-bottom: {{ u_y_m }}px;
+    }
+    #shopify-section-{{ section.id }} .sock-math__header {
+      padding-top: {{ u_y_m }}px;
+    }
+    {%- endif -%}
+    {%- if u_x_m != te_x_m -%}
+    #shopify-section-{{ section.id }} .sock-math__header,
+    #shopify-section-{{ section.id }} .sock-math__sub,
+    #shopify-section-{{ section.id }} .sock-math__inner,
+    #shopify-section-{{ section.id }} .sock-math__cta-wrap {
+      padding-left: {{ u_x_m }}px;
+      padding-right: {{ u_x_m }}px;
+    }
+    #shopify-section-{{ section.id }} .sock-math--editorial .sock-math__copy {
+      padding-left: {{ u_x_m }}px;
+      padding-right: {{ u_x_m }}px;
+    }
+    {%- endif -%}
+  }
+  {%- endif -%}
+{% endstyle %}
+
+{%- comment -%}
+  TE live preview (2026-10-06): Shared — Section frame insets. The section-inset-vars snippet writes these inline
+  (Save-only). Same dual-write as split-hero (acd8a93): section.settings.* directly, !important on the vars.
+{%- endcomment -%}
+{% style %}
+  {%- liquid
+    assign te_in_t = section.settings.inset_top | default: 0
+    assign te_in_b = section.settings.inset_bottom | default: 0
+    assign te_in_x = section.settings.inset_x | default: 0
+    if section.settings.inset_custom_mobile
+      assign te_in_tm = section.settings.inset_top_mobile | default: 0
+      assign te_in_bm = section.settings.inset_bottom_mobile | default: 0
+      assign te_in_xm = section.settings.inset_x_mobile | default: 0
+    else
+      assign te_in_tm = te_in_t
+      assign te_in_bm = te_in_b
+      assign te_in_xm = te_in_x
+    endif
+  -%}
+  #shopify-section-{{ section.id }} .section-frame {
+    --section-inset-top: {{ te_in_t }}px !important;
+    --section-inset-right: {{ te_in_x }}px !important;
+    --section-inset-bottom: {{ te_in_b }}px !important;
+    --section-inset-left: {{ te_in_x }}px !important;
+    --section-inset-top-m: {{ te_in_tm }}px !important;
+    --section-inset-right-m: {{ te_in_xm }}px !important;
+    --section-inset-bottom-m: {{ te_in_bm }}px !important;
+    --section-inset-left-m: {{ te_in_xm }}px !important;
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Sock Math",
+  "settings": [
+    { "type": "header", "content": "Shared — Content" },
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "Heading",
+      "default": "One pair. Done.",
+      "info": "Editorial L: set to One pair. Use Done line below."
+    },
+    {
+      "type": "number",
+      "id": "heading_size_override",
+      "label": "Heading size override (px, desktop)",
+      "info": "Leave blank to follow Theme settings > Section headings. A number sets this section's desktop heading size only. Phones keep the global phone size."
+    },
+    {
+      "type": "text",
+      "id": "done_line",
+      "label": "Done line (editorial)",
+      "info": "Quiet second line. Mock L = Done."
+    },
+    {
+      "type": "text",
+      "id": "punch",
+      "label": "Punch (editorial)",
+      "info": "Mock L = This ends that."
+    },
+    {
+      "type": "text",
+      "id": "cycle_foot",
+      "label": "Cycle foot (editorial)",
+      "info": "Mock L = Yoga socks are useless."
+    },
+    {
+      "type": "select",
+      "id": "title_size",
+      "label": "Title size",
+      "options": [
+        { "value": "default", "label": "Legacy fallback" },
+        { "value": "32", "label": "32px" },
+        { "value": "36", "label": "36px" },
+        { "value": "40", "label": "40px" },
+        { "value": "44", "label": "44px" },
+        { "value": "48", "label": "48px" },
+        { "value": "52", "label": "52px" },
+        { "value": "56", "label": "56px" }
+      ],
+      "default": "default",
+      "info": "Default = global heading size. A size here sets this section's heading on desktop; phones use the smaller of this and the phone heading size. Heading size override (if above 0) wins."
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" },
+        { "value": "700", "label": "700" }
+      ],
+      "default": "400",
+      "info": "Default = 400 (global heading system). A weight here sets this section's heading weight."
+    },
+    {
+      "type": "text",
+      "id": "subheadline",
+      "label": "Body",
+      "default": "Smarter than grip socks. Your practice. Your pace. Months to years of the same grip."
+    },
+    {
+      "type": "select",
+      "id": "body_size",
+      "label": "Body size",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "14", "label": "14px" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" },
+        { "value": "18", "label": "18px" }
+      ],
+      "default": "default"
+    },
+    { "type": "text", "id": "cta_text", "label": "CTA label", "info": "Leave blank to hide (v18 compact has no CTA)." },
+    {
+      "type": "select",
+      "id": "cta_link_target",
+      "label": "CTA link",
+      "options": [
+        { "value": "custom", "label": "Custom URL…" },
+        { "value": "#variants", "label": "#variants — Shop styles" },
+        { "value": "#reviews", "label": "#reviews" },
+        { "value": "#guarantee", "label": "#guarantee" }
+      ],
+      "default": "#variants"
+    },
+    { "type": "text", "id": "cta_url", "label": "Custom CTA URL" },
+    { "type": "checkbox", "id": "show_trust_strip", "label": "Show star trust line", "default": false, "info": "Open Sole One pair only. Off everywhere else." },
+    { "type": "text", "id": "trust_text", "label": "Trust line" },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        { "value": "compact", "label": "Compact — 2-col compare" },
+        { "value": "editorial", "label": "Editorial — mock L" }
+      ],
+      "default": "compact"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_prices",
+      "label": "Show prices (compact)",
+      "default": true
+    },
+    { "type": "header", "content": "Editorial photo" },
+    { "type": "image_picker", "id": "image", "label": "Photo" },
+    { "type": "text", "id": "image_url", "label": "Photo URL fallback", "info": "Only if Photo is empty." },
+    { "type": "text", "id": "image_alt", "label": "Photo alt" },
+    {
+      "type": "select",
+      "id": "image_crop",
+      "label": "Show",
+      "info": "This box is a short crop. Top / center / bottom is the useful move.",
+      "options": [
+        { "value": "center top", "label": "Top of photo" },
+        { "value": "center center", "label": "Center" },
+        { "value": "center bottom", "label": "Bottom of photo" }
+      ],
+      "default": "center center"
+    },
+    {
+      "type": "range",
+      "id": "image_frame",
+      "min": 280,
+      "max": 720,
+      "step": 20,
+      "unit": "px",
+      "label": "Photo height — desktop",
+      "default": 480
+    },
+    {
+      "type": "range",
+      "id": "image_frame_mobile",
+      "min": 0,
+      "max": 700,
+      "step": 20,
+      "unit": "px",
+      "label": "Photo height — phone",
+      "info": "0 = use Theme settings > Split images > Phone split-image height.",
+      "default": 360
+    },
+    {
+      "type": "checkbox",
+      "id": "image_unframed",
+      "label": "No photo frame (fill column)",
+      "info": "Open PDP only. Leave off here.",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "pad_top",
+      "label": "Padding top — desktop",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Open PDP 80, Closed 0. Phone: use Custom phone padding below."
+    },
+    {
+      "type": "range",
+      "id": "pad_bottom",
+      "label": "Padding bottom — desktop",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Open PDP 80, Closed 0. Phone: use Custom phone padding below."
+    },
+    {"type": "range", "id": "text_pad_y", "label": "Text pad top & bottom — desktop (default 0)", "min": 0, "max": 120, "step": 2, "unit": "px", "default": 0},
+    {"type": "range", "id": "side_padding", "label": "Text pad left & right — desktop (default 0 — copy uses 40px)", "min": 0, "max": 96, "step": 2, "unit": "px", "default": 0},
+    {"type": "range", "id": "text_pad_y_mobile", "label": "Text pad top & bottom — phone (default 0)", "min": 0, "max": 120, "step": 2, "unit": "px", "default": 0},
+    {"type": "range", "id": "text_pad_x_mobile", "label": "Text pad left & right — phone (default 0 — compact uses 16px)", "min": 0, "max": 48, "step": 2, "unit": "px", "default": 0},
+    {
+      "type": "checkbox",
+      "id": "pad_custom_mobile",
+      "label": "Custom phone padding",
+      "default": false,
+      "info": "Off = phone keeps today's look (product pages 48 top / 48 bottom). On = phone uses the two sliders below."
+    },
+    {
+      "type": "range",
+      "id": "pad_top_mobile",
+      "label": "Padding top — phone",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 48,
+      "visible_if": "{{ section.settings.pad_custom_mobile }}"
+    },
+    {
+      "type": "range",
+      "id": "pad_bottom_mobile",
+      "label": "Padding bottom — phone",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 48,
+      "visible_if": "{{ section.settings.pad_custom_mobile }}"
+    },
+    { "type": "header", "content": "Section — Sock math — compact" },
+    {
+      "type": "textarea",
+      "id": "quote",
+      "label": "Quote (optional)",
+      "info": "Leave blank — compact One pair. Done. has no review quote (v19 clean). Reviews live in the reviews section."
+    },
+    {
+      "type": "text",
+      "id": "quote_cite",
+      "label": "Quote cite (optional)"
+    },
+    { "type": "text", "id": "theirs_label", "label": "Their column label", "default": "Grip Socks" },
+    { "type": "text", "id": "their_price", "label": "Their price", "default": "$112–144" },
+    { "type": "text", "id": "theirs_1", "label": "Their point 1", "default": "Replace every 6–8 weeks" },
+    { "type": "text", "id": "theirs_2", "label": "Their point 2", "default": "Grip degrades with washing" },
+    { "type": "text", "id": "theirs_3", "label": "Their point 3", "default": "6–8 pairs per year minimum" },
+    { "type": "text", "id": "ours_label", "label": "Our column label", "default": "Barreletics" },
+    { "type": "text", "id": "our_price", "label": "Our price", "default": "$74" },
+    { "type": "text", "id": "ours_1", "label": "Our point 1", "default": "1,000 classes. Year four." },
+    { "type": "text", "id": "ours_2", "label": "Our point 2", "default": "Grip never degrades" },
+    { "type": "text", "id": "ours_3", "label": "Our point 3", "default": "One pair, every class" },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Section aria-label",
+      "default": "Cost comparison"
+    },
+    {
+      "type": "header",
+      "content": "Shared \u2014 Section frame"
+    },
+    {
+      "type": "paragraph",
+      "content": "OUTER inset from the page edges (margin). Top and bottom are independent; left & right = one control. Custom mobile OFF = mobile uses the same inset as desktop. Defaults 0 = full bleed."
+    },
+    {
+      "type": "checkbox",
+      "id": "inset_custom_mobile",
+      "label": "Custom mobile inset",
+      "default": false,
+      "info": "OFF (default): ignore the mobile inset sliders \u2014 mobile uses desktop Inset top / bottom / left & right. ON: use the mobile inset sliders instead."
+    },
+    {
+      "type": "range",
+      "id": "inset_top",
+      "label": "Inset top",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom",
+      "label": "Inset bottom",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x",
+      "label": "Inset left & right",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Same value on both sides."
+    },
+    {
+      "type": "range",
+      "id": "inset_top_mobile",
+      "label": "Inset top \u2014 mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom_mobile",
+      "label": "Inset bottom \u2014 mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x_mobile",
+      "label": "Inset left & right \u2014 mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_desktop",
+      "label": "Hide on desktop",
+      "default": false
+    }
+  ],
+  "presets": [{ "name": "Sock Math" }]
+}
+{% endschema %}
