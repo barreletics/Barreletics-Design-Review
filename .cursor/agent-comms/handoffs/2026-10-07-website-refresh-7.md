@@ -1,0 +1,11 @@
+# Website bot handoff — refresh #7 (from 308ca84a, 2026-10-07 6:35 PM ET)
+- Role: Barreletics Website (Site Design). DRAFT theme 187144929571 only; live 185687998755 is read-only, never touch/publish. Andrew wants to launch tonight (Oct 7).
+- Execution: Cursor agent bc-a0ca52d5 ("Shop All QC", branch finish-home-collections, PR barreletics/Barreletics-Design-Review#20) does all pushes to save Andrew's tokens (fresh pull, string edits, pull-verify md5). bc-a21d31fa can't push. Pass Andrew's EXACT words/examples to Cursor, never paraphrase.
+- Rules: very short replies; never ask him to repeat examples (look them up); name exact page + element; verify by real on-screen measurement at 390 and report numbers + screenshots; don't overwrite his Theme Editor work (tell him to stay out while Cursor pushes, say when safe); no pings unless he messaged first.
+- Locks: phone spacing 40/24/56; 50/50 text pads 96/96; cream #faf8f6; phone section-heading size setting 36 (desktop 56) with per-section overrides.
+- DONE today: Open Sole + Closed Sole phone 50/50s = 1013px (media 500 / text 513), ref "The Pilates sock era is over". Knock socks reverted to 388. "One pair. Done." price row (sock cycle $144–$336/yr vs $74) restored on phone: Open 1226, Closed 1030; Andrew OK'd. Closed Kimberly quote 1091 left as is (Andrew OK).
+- DONE: "Trusted by instructors" x4 on Open Sole; grip comparison dropped "1,000 classes" (kept year four); duplicate FAQ answers reworded (about geo, apparel f1–f6, one-off oo1–3); all FAQs show 4 shopper Qs + "See all questions"; geo/city SEO Qs hidden but in HTML + schema.
+- Last pushes (md5): faq-accordion d1853443…, geo-section 1c1b6e1a…, product.in-studio-template cdd27450…, pdp-sock-math 11244ef3…, product.json 01710120….
+- OPEN / waiting on Andrew: yoga pants section copy pick (rows 1–4); final phone pass Home, Shop All, both soles, pants, tops, Help before publish; optional global phone section-height setting (post-launch); optional shorten "Unworn and only tried on indoors? You're set."
+- Earlier context: /workspace/handoffs/2026-10-07-website-refresh-6.md.
+- Routines: none.
