@@ -1,0 +1,392 @@
+{% comment %}
+  Desktop: one promo+trust line (SAVE2 block + messages).
+  Mobile: trust only — SAVE2 lives on sale-banner (locked two-bar).
+  Static. No scroll. No rotation.
+{% endcomment %}
+
+{% if section.settings.enabled %}
+  {% assign slides = section.blocks %}
+  {% if slides.size > 0 %}
+    {%- liquid
+      assign y_d = 9
+      assign side_d = 48
+      assign y_m = 10
+      assign x_m = 16
+
+      assign announce_fs = section.settings.font_size | default: 13
+      assign announce_fs_m = section.settings.font_size_mobile | default: 12
+
+      assign strip_pad_y = section.settings.pad_y | default: y_d
+      if section.settings.text_pad_y != blank and section.settings.text_pad_y != y_d
+        assign strip_pad_y = section.settings.text_pad_y
+      endif
+      assign strip_pad_y_m = section.settings.pad_y_mobile | default: 8
+      if section.settings.text_pad_y_mobile != blank and section.settings.text_pad_y_mobile != y_m
+        assign strip_pad_y_m = section.settings.text_pad_y_mobile
+      endif
+      assign strip_pad_x = section.settings.pad_x | default: side_d
+      if section.settings.side_padding != blank and section.settings.side_padding != side_d
+        assign strip_pad_x = section.settings.side_padding
+      endif
+
+      assign emit_y_d = false
+      if section.settings.text_pad_y != blank and section.settings.text_pad_y != y_d
+        assign emit_y_d = true
+      endif
+      assign emit_side_d = false
+      if section.settings.side_padding != blank and section.settings.side_padding != side_d
+        assign emit_side_d = true
+      endif
+      assign emit_y_m = false
+      if section.settings.text_pad_y_mobile != blank and section.settings.text_pad_y_mobile != y_m
+        assign emit_y_m = true
+      endif
+      assign emit_x_m = false
+      if section.settings.text_pad_x_mobile != blank and section.settings.text_pad_x_mobile != x_m
+        assign emit_x_m = true
+      endif
+    -%}
+    {%- assign _track = section.settings.letter_spacing | default: 3 -%}
+    {%- assign _promo_w = section.settings.promo_weight | default: '600' -%}
+    {%- assign _dist = section.settings.announce_distribute | default: 'center' -%}
+    <div
+      class="announcement-strip"
+      data-announce-distribute="{{ _dist }}"
+      role="region"
+      aria-label="Promotional messages"
+      style="
+        --announce-font-size: {{ announce_fs }}px;
+        --announce-pad-y: {{ strip_pad_y }}px;
+        --announce-font-size-mobile: {{ announce_fs_m }}px;
+        --announce-pad-y-mobile: {{ strip_pad_y_m }}px;
+        --announce-pad-x: {{ strip_pad_x }}px;
+        --announce-item-gap: {{ section.settings.item_gap | default: 12 }}px;
+        --announce-bg: {{ section.settings.bg_color | default: '#faf8f6' }};
+        --announce-bg-mobile: {{ section.settings.bg_color_mobile | default: '#ffffff' }};
+        --announce-color: {{ section.settings.text_color | default: '#5a544c' }};
+        --announce-promo-color: {{ section.settings.promo_color | default: '#2e2a26' }};
+        --announce-tracking: 0.0{{ _track }}em;
+        --announce-promo-weight: {{ _promo_w }};
+        --announce-max-width: {{ section.settings.max_width | default: 1320 }}px;
+      "
+      {{ section.shopify_attributes }}
+    >
+      <div class="announcement-strip__inner">
+        {% for block in slides %}
+          {% unless forloop.first %}
+            {% assign _prev_i = forloop.index0 | minus: 1 %}
+            {% assign _prev_t = slides[_prev_i].settings.text | downcase %}
+            <span class="announcement-strip__sep{% if _prev_t contains 'save2' %} announcement-strip__sep--after-promo{% endif %}" aria-hidden="true">|</span>
+          {% endunless %}
+          {% assign _txt = block.settings.text | downcase %}
+          {% assign _is_promo = false %}
+          {% if _txt contains 'save2' %}{% assign _is_promo = true %}{% endif %}
+          <span class="announcement-strip__item{% if _is_promo %} announcement-strip__item--promo{% endif %}" {{ block.shopify_attributes }}>
+            {% if block.settings.link_url != blank %}
+              <a href="{{ block.settings.link_url }}" class="announcement-strip__link">
+                {{ block.settings.text }}
+              </a>
+            {% else %}
+              {{ block.settings.text }}
+            {% endif %}
+          </span>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+{% endif %}
+
+{%- if emit_y_d or emit_side_d or emit_y_m or emit_x_m -%}
+{% style %}
+  {%- if emit_y_d or emit_side_d -%}
+  @media (min-width: 901px) {
+    #shopify-section-{{ section.id }} .announcement-strip {
+      {%- if emit_y_d -%}
+      padding-top: {{ section.settings.text_pad_y }}px;
+      padding-bottom: {{ section.settings.text_pad_y }}px;
+      {%- endif -%}
+      {%- if emit_side_d -%}
+      padding-left: {{ section.settings.side_padding }}px;
+      padding-right: {{ section.settings.side_padding }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+  {%- if emit_y_m or emit_x_m -%}
+  @media (max-width: 900px) {
+    #shopify-section-{{ section.id }} .announcement-strip {
+      {%- if emit_y_m -%}
+      padding-top: {{ section.settings.text_pad_y_mobile }}px;
+      padding-bottom: {{ section.settings.text_pad_y_mobile }}px;
+      {%- endif -%}
+      {%- if emit_x_m -%}
+      padding-left: {{ section.settings.text_pad_x_mobile }}px;
+      padding-right: {{ section.settings.text_pad_x_mobile }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+{% endstyle %}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Announcement strip",
+  "class": "announcement-strip-section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Show announcement / trust bar",
+      "default": true,
+      "info": "Desktop one-liner (incl. SAVE2). Mobile hides SAVE2 \u2014 sale banner stays."
+    },
+    {
+      "type": "header",
+      "content": "Desktop type & spacing"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Text size",
+      "min": 10,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 12,
+      "info": "Keep smaller than nav so the header row owns presence."
+    },
+    {
+      "type": "range",
+      "id": "pad_y",
+      "label": "Vertical padding",
+      "min": 2,
+      "max": 14,
+      "step": 1,
+      "unit": "px",
+      "default": 9,
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "range",
+      "id": "pad_x",
+      "label": "Side padding",
+      "min": 24,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 48,
+      "info": "Match Header \u2192 Side padding so bars align.",
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "range",
+      "id": "item_gap",
+      "label": "Gap between messages",
+      "min": 8,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "default": 12,
+      "info": "Spreads SAVE2 \u00b7 USA \u00b7 Shipping \u00b7 Returns inside the same rail as nav \u2014 not wider."
+    },
+    {
+      "type": "select",
+      "id": "announce_distribute",
+      "label": "Message layout",
+      "options": [
+        {
+          "value": "center",
+          "label": "Center \u2014 compact line (Lulu/Alo)"
+        },
+        {
+          "value": "spread",
+          "label": "Spread \u2014 edge to edge"
+        }
+      ],
+      "default": "center",
+      "info": "Center keeps SAVE2 from looking wider than the nav group."
+    },
+    {
+      "type": "range",
+      "id": "letter_spacing",
+      "label": "Letter spacing",
+      "min": 0,
+      "max": 8,
+      "step": 1,
+      "default": 3,
+      "info": "0.00\u20130.08em (3 \u2248 0.03em)."
+    },
+    {
+      "type": "select",
+      "id": "promo_weight",
+      "label": "SAVE2 / first-item weight",
+      "options": [
+        {
+          "value": "500",
+          "label": "500 Medium"
+        },
+        {
+          "value": "600",
+          "label": "600 Semibold"
+        },
+        {
+          "value": "700",
+          "label": "700 Bold"
+        }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Bar max width",
+      "min": 1100,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 1320,
+      "info": "MUST match Header \u2192 Rail max width. Same rail = SAVE2 can\u2019t out-span nav."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#faf8f6"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#5a544c"
+    },
+    {
+      "type": "color",
+      "id": "promo_color",
+      "label": "SAVE2 / first-item text",
+      "default": "#2e2a26"
+    },
+    {
+      "type": "header",
+      "content": "Legacy"
+    },
+    {
+      "type": "range",
+      "id": "rotation_speed",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "Rotation speed (unused)",
+      "default": 4,
+      "info": "Schema compatibility only. Strip is static."
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Accessibility label",
+      "default": "Announcement"
+    },
+    {
+      "type": "header",
+      "content": "Layout \u2014 text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 9)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 9
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 48)",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone ≤900px (default 10)",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 10,
+      "info": "Theme override applies at 900px and below."
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 16)",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    }
+  ],
+  "blocks": [
+    {
+      "type": "message",
+      "name": "Message",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Free Shipping Over $150"
+        },
+        {
+          "type": "url",
+          "id": "link_url",
+          "label": "Optional link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement strip",
+      "blocks": [
+        {
+          "type": "message",
+          "settings": {
+            "text": "Buy 2, Save 10% \u00b7 Code SAVE2"
+          }
+        },
+        {
+          "type": "message",
+          "settings": {
+            "text": "Made in USA"
+          }
+        },
+        {
+          "type": "message",
+          "settings": {
+            "text": "Free Shipping Over $150"
+          }
+        },
+        {
+          "type": "message",
+          "settings": {
+            "text": "30-Day Returns",
+            "link_url": "/pages/returns"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

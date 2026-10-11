@@ -1,0 +1,764 @@
+{% comment %}
+  Statement band — cream solo slogan (Home WORKING 6b).
+  Full-bleed lifestyle commit lives in fullbleed-statement.
+  GLOBAL HEADING SYSTEM (2026-09-27): line is locked 52 / 36 phone / 400.
+  title_role / title_size / title_weight stay in the schema but are ignored.
+{% endcomment %}
+{% liquid
+  assign body_size = section.settings.body_size | default: 'default'
+  assign cta_target = section.settings.cta_link_target | default: 'custom'
+  if cta_target != blank and cta_target != 'custom'
+    assign cta_href = cta_target
+  else
+    assign cta_href = section.settings.cta_url
+  endif
+  assign cta_style = section.settings.cta_style | default: 'solid'
+  assign cta_bg = section.settings.cta_bg_color | default: '#1c1916'
+  assign cta_border = section.settings.cta_border_color | default: cta_bg
+  assign cta_text_color = section.settings.cta_text_color | default: '#ffffff'
+  assign band_bg = section.settings.bg_color | default: '#faf8f6'
+  assign region_label = section.settings.aria_label | strip
+  if region_label == blank
+    assign region_label = section.settings.title
+  endif
+  assign open_knock_join = false
+  if template.suffix == 'in-studio-template' or template.suffix == 'open-sole'
+    if section.settings.title == 'Let us knock your socks off'
+      assign open_knock_join = true
+    endif
+  endif
+%}
+
+<section
+  {% if section.settings.anchor_id != blank %}id="{{ section.settings.anchor_id | handleize }}"{% endif %}
+  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} statement-band align-band"
+  style="{% render 'section-inset-vars' %}{% render 'unified-text-pads-vars', y_d: 96, side_d: 40, y_m: 56, x_m: 20 %} 
+    --sb-band-bg: {{ band_bg }};
+    --sb-cta-bg: {{ cta_bg }};
+    --sb-cta-border: {{ cta_border }};
+    --sb-cta-text: {{ cta_text_color }};
+    {% if body_size != 'default' %}--sb-body-size: {{ body_size }}px;{% endif %}
+  "
+  {% if region_label != blank %}aria-label="{{ region_label | escape }}"{% endif %}
+>
+  <div class="statement-band__inner">
+    {% if section.settings.eyebrow != blank %}
+      <p class="statement-band__eyebrow type-label">{{ section.settings.eyebrow }}</p>
+    {% endif %}
+    <p class="statement-band__line h2-display">{{ section.settings.title }}</p>
+    {% if section.settings.subhead != blank %}
+      <p class="statement-band__sub">{{ section.settings.subhead }}</p>
+    {% endif %}
+    {% if section.settings.cta_text != blank %}
+      <a class="statement-band__cta{% if cta_style == 'outline' %} statement-band__cta--outline{% endif %}" href="{{ cta_href | default: routes.all_products_collection_url }}">
+        {{ section.settings.cta_text }}
+      </a>
+    {% endif %}
+  </div>
+</section>
+
+{% style %}
+  {%- assign _hso_g = section.settings.heading_size_override | plus: 0 -%}
+  {%- comment -%} TE title size / weight (2026-10-08): 'default' emits nothing; heading_size_override > 0 wins over title_size; phone = min(title size, phone heading size). {%- endcomment -%}
+  {%- if section.settings.title_size != blank and section.settings.title_size != 'default' and _hso_g <= 0 %}
+  #shopify-section-{{ section.id }} { --te-title-size: {{ section.settings.title_size }}px; --te-title-size-n: {{ section.settings.title_size }}; --te-title-size-m: min({{ section.settings.title_size }}px, var(--section-heading-size-m, 36px)); }
+  {%- endif %}
+  {%- if section.settings.title_weight != blank and section.settings.title_weight != 'default' %}
+  #shopify-section-{{ section.id }} { --te-title-weight: {{ section.settings.title_weight }}; }
+  {%- endif %}
+  {%- if section.settings.heading_size_override != blank and _hso_g > 0 %}
+  #shopify-section-{{ section.id }} { {% render 'type-override-vars', title_size: section.settings.heading_size_override %} --te-title-size-n: {{ section.settings.heading_size_override }}; }
+  {%- endif %}
+  {%- assign _hso_n = section.settings.heading_size_override | plus: 0 -%}
+  {%- if section.settings.heading_size_override != blank and _hso_n > 0 %}
+  #shopify-section-{{ section.id }} { --section-heading-size-m: {{ _hso_n }}px; }
+  {%- endif %}
+  #shopify-section-{{ section.id }} .statement-band {
+    padding: var(--utp-y-d, 96px) var(--utp-side-d, 40px);
+    background: var(--sb-band-bg, #faf8f6);
+    text-align: center;
+    border-top: 1px solid #e8e2d8;
+    border-bottom: 1px solid #e8e2d8;
+    color: #1c1916;
+  }
+  {% if template.name == 'collection' %}
+  #shopify-section-{{ section.id }} .statement-band {
+    border-top: none;
+  }
+  {% endif %}
+  {% if open_knock_join %}
+  #shopify-section-{{ section.id }} {
+    background: {{ band_bg }};
+  }
+  #shopify-section-{{ section.id }} .statement-band {
+    border: none;
+  }
+  {% endif %}
+  #shopify-section-{{ section.id }} .statement-band__inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  #shopify-section-{{ section.id }} .statement-band__eyebrow {
+    margin: 0 0 var(--gap-a, 16px);
+    color: #6b645a;
+  }
+  #shopify-section-{{ section.id }} .statement-band__line {
+    margin: 0 auto var(--gap-a);
+    color: var(--text-primary);
+    max-width: none;
+  }
+  /* GLOBAL HEADING SYSTEM (locked 2026-09-27): one display head for this section type.
+     52 desktop (fluid to 36 on tablet) / 36 phone / 400. Theme Editor title size, weight
+     and role settings are intentionally ignored so every page renders the same. */
+  #shopify-section-{{ section.id }} .statement-band__line.h2-display {
+    font-size: clamp(min(var(--heading-phone, 36px), var(--te-title-size, var(--heading-phone, 36px))), calc(var(--te-title-size-n, var(--heading-band-desktop-n, 52)) * 4.6vw / 52), var(--te-title-size, var(--heading-band-desktop, 52px)));
+    font-weight: var(--te-title-weight, 400);
+    line-height: var(--type-h2-display-leading, 1.1);
+    letter-spacing: var(--type-h2-display-tracking, -0.028em);
+    text-wrap: pretty; /* avoid one-word last lines (2026-09-27, Andrew) */
+  }
+  #shopify-section-{{ section.id }} .statement-band__line.h2-display strong,
+  #shopify-section-{{ section.id }} .statement-band__line.h2-display b {
+    font-weight: inherit;
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .statement-band__line.h2-display {
+      font-size: var(--te-title-size-m, var(--section-heading-size-m, 36px));
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+  }
+  #shopify-section-{{ section.id }} .statement-band__sub {
+    font-size: var(--sb-body-size, var(--type-body-size));
+    font-weight: var(--type-body-weight);
+    color: var(--text-body);
+    line-height: var(--type-body-leading);
+    margin: 0 auto var(--gap-c);
+    max-width: 36ch;
+  }
+  #shopify-section-{{ section.id }} .statement-band__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--type-cta-min-height);
+    padding: var(--type-cta-pad-y) var(--type-cta-pad-x);
+    background: var(--sb-cta-bg, #1c1916);
+    color: var(--sb-cta-text, #fff);
+    font-size: var(--type-cta-size);
+    font-weight: var(--type-cta-weight);
+    letter-spacing: var(--type-cta-tracking);
+    line-height: var(--type-cta-leading, 1);
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 4px;
+    border: 1px solid var(--sb-cta-border, var(--sb-cta-bg, #1c1916));
+    transition: opacity 0.15s ease;
+  }
+  #shopify-section-{{ section.id }} .statement-band__cta--outline {
+    background: transparent;
+    color: var(--sb-cta-text, var(--sb-cta-border, #1c1916));
+  }
+  #shopify-section-{{ section.id }} .statement-band__cta:hover {
+    opacity: 0.92;
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .statement-band {
+      padding: var(--text-pad-mobile, var(--utp-y-m, 56px)) var(--utp-x-m, 20px);
+      min-height: var(--text-min-h-mobile, auto);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+  }
+{% endstyle %}
+
+{% render 'unified-text-pads-te-style', selector: '.statement-band', y_d: 96, side_d: 40, y_m: 56, x_m: 20 %}
+
+{%- comment -%}
+  TE live preview (2026-10-06): dual-write of the inline vars (unified text pads snippet + band/CTA colours),
+  read from section.settings.* directly (fifty-fifty / acd8a93 / 108fff6 pattern). Values equal the CSS fallbacks
+  at schema defaults, so no visual change at saved values. Keep render-free.
+{%- endcomment -%}
+{% style %}
+  #shopify-section-{{ section.id }} .statement-band {
+    --utp-y-d: {{ section.settings.text_pad_y | default: 96 }}px !important;
+    --utp-side-d: {{ section.settings.side_padding | default: 40 }}px !important;
+    --utp-y-m: {{ section.settings.text_pad_y_mobile | default: 56 }}px !important;
+    --utp-x-m: {{ section.settings.text_pad_x_mobile | default: 20 }}px !important;
+    --sb-band-bg: {{ section.settings.bg_color | default: '#faf8f6' }} !important;
+    --sb-cta-bg: {{ section.settings.cta_bg_color | default: '#1c1916' }} !important;
+    --sb-cta-border: {{ section.settings.cta_border_color | default: section.settings.cta_bg_color | default: '#1c1916' }} !important;
+    {%- if section.settings.body_size != blank and section.settings.body_size != 'default' %}
+    --sb-body-size: {{ section.settings.body_size }}px !important;
+    {%- endif %}
+  }
+{% endstyle %}
+
+{%- comment -%}
+  TE live preview (2026-10-06): Shared — Section frame insets. The section-inset-vars snippet writes these inline
+  (Save-only). Same dual-write as split-hero (acd8a93): section.settings.* directly, !important on the vars.
+{%- endcomment -%}
+{% style %}
+  {%- liquid
+    assign te_in_t = section.settings.inset_top | default: 0
+    assign te_in_b = section.settings.inset_bottom | default: 0
+    assign te_in_x = section.settings.inset_x | default: 0
+    if section.settings.inset_custom_mobile
+      assign te_in_tm = section.settings.inset_top_mobile | default: 0
+      assign te_in_bm = section.settings.inset_bottom_mobile | default: 0
+      assign te_in_xm = section.settings.inset_x_mobile | default: 0
+    else
+      assign te_in_tm = te_in_t
+      assign te_in_bm = te_in_b
+      assign te_in_xm = te_in_x
+    endif
+  -%}
+  #shopify-section-{{ section.id }} .section-frame {
+    --section-inset-top: {{ te_in_t }}px !important;
+    --section-inset-right: {{ te_in_x }}px !important;
+    --section-inset-bottom: {{ te_in_b }}px !important;
+    --section-inset-left: {{ te_in_x }}px !important;
+    --section-inset-top-m: {{ te_in_tm }}px !important;
+    --section-inset-right-m: {{ te_in_xm }}px !important;
+    --section-inset-bottom-m: {{ te_in_bm }}px !important;
+    --section-inset-left-m: {{ te_in_xm }}px !important;
+  }
+{% endstyle %}
+
+{%- comment -%}
+  TE live preview (2026-10-06, round 3): remaining Save-only controls. Reads section.settings.* directly
+  (verified 10-03 pattern: acd8a93 / 108fff6). Values match what the inline style / static <style> render.
+{%- endcomment -%}
+{% style %}
+  #shopify-section-{{ section.id }} .statement-band {
+    --sb-cta-text: {{ section.settings.cta_text_color | default: '#ffffff' }} !important;
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Statement band",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Shared — Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "info": "Leave blank unless distinct from the statement."
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Let us knock your socks off",
+      "info": "Family is brand Type OS. Heading size and weight are locked by the global type system."
+    },
+    {
+      "type": "number",
+      "id": "heading_size_override",
+      "label": "Heading size override (px, desktop)",
+      "info": "Leave blank to follow Theme settings > Section headings. A number sets this section's desktop heading size only. Phones keep the global phone size."
+    },
+    {
+      "type": "select",
+      "id": "title_role",
+      "label": "Title Type OS role",
+      "options": [
+        {
+          "value": "statement",
+          "label": "Statement (default)"
+        },
+        {
+          "value": "display",
+          "label": "H2 Display — large brand"
+        }
+      ],
+      "default": "statement",
+      "info": "Locked by global type system (2026-09-27). This setting no longer changes the heading."
+    },
+    {
+      "type": "select",
+      "id": "title_size",
+      "label": "Title size",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default / Type OS"
+        },
+        {
+          "value": "12",
+          "label": "12px"
+        },
+        {
+          "value": "13",
+          "label": "13px"
+        },
+        {
+          "value": "14",
+          "label": "14px"
+        },
+        {
+          "value": "15",
+          "label": "15px"
+        },
+        {
+          "value": "16",
+          "label": "16px"
+        },
+        {
+          "value": "17",
+          "label": "17px"
+        },
+        {
+          "value": "18",
+          "label": "18px"
+        },
+        {
+          "value": "20",
+          "label": "20px"
+        },
+        {
+          "value": "22",
+          "label": "22px"
+        },
+        {
+          "value": "24",
+          "label": "24px"
+        },
+        {
+          "value": "26",
+          "label": "26px"
+        },
+        {
+          "value": "28",
+          "label": "28px"
+        },
+        {
+          "value": "30",
+          "label": "30px"
+        },
+        {
+          "value": "32",
+          "label": "32px"
+        },
+        {
+          "value": "36",
+          "label": "36px"
+        },
+        {
+          "value": "40",
+          "label": "40px"
+        },
+        {
+          "value": "44",
+          "label": "44px"
+        },
+        {
+          "value": "48",
+          "label": "48px"
+        },
+        {
+          "value": "56",
+          "label": "56px"
+        }
+      ],
+      "default": "default",
+      "info": "Default = global heading size. A size here sets this section's heading on desktop; phones use the smaller of this and the phone heading size. Heading size override (if above 0) wins."
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "200",
+          "label": "200 (Extra Light)"
+        },
+        {
+          "value": "300",
+          "label": "300 (Light)"
+        },
+        {
+          "value": "400",
+          "label": "400"
+        },
+        {
+          "value": "500",
+          "label": "500"
+        },
+        {
+          "value": "600",
+          "label": "600"
+        },
+        {
+          "value": "700",
+          "label": "700"
+        }
+      ],
+      "default": "default",
+      "info": "Default = 400 (global heading system). A weight here sets this section's heading weight."
+    },
+    {
+      "type": "text",
+      "id": "subhead",
+      "label": "Body",
+      "default": "Safely push harder in every studio move.",
+      "info": "Family is brand Type OS — use Body size to adjust. No font family picker."
+    },
+    {
+      "type": "select",
+      "id": "body_size",
+      "label": "Body size",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default / Type OS"
+        },
+        {
+          "value": "12",
+          "label": "12px"
+        },
+        {
+          "value": "13",
+          "label": "13px"
+        },
+        {
+          "value": "14",
+          "label": "14px"
+        },
+        {
+          "value": "15",
+          "label": "15px"
+        },
+        {
+          "value": "16",
+          "label": "16px"
+        },
+        {
+          "value": "17",
+          "label": "17px"
+        },
+        {
+          "value": "18",
+          "label": "18px"
+        },
+        {
+          "value": "20",
+          "label": "20px"
+        },
+        {
+          "value": "22",
+          "label": "22px"
+        },
+        {
+          "value": "24",
+          "label": "24px"
+        },
+        {
+          "value": "26",
+          "label": "26px"
+        },
+        {
+          "value": "28",
+          "label": "28px"
+        },
+        {
+          "value": "30",
+          "label": "30px"
+        },
+        {
+          "value": "32",
+          "label": "32px"
+        },
+        {
+          "value": "36",
+          "label": "36px"
+        },
+        {
+          "value": "40",
+          "label": "40px"
+        },
+        {
+          "value": "44",
+          "label": "44px"
+        },
+        {
+          "value": "48",
+          "label": "48px"
+        },
+        {
+          "value": "56",
+          "label": "56px"
+        }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "header",
+      "content": "Section — Statement band"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#faf8f6"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA label",
+      "default": "Shop Now"
+    },
+    {
+      "type": "select",
+      "id": "cta_style",
+      "label": "CTA style",
+      "options": [
+        {
+          "value": "solid",
+          "label": "Solid fill"
+        },
+        {
+          "value": "outline",
+          "label": "Outline only"
+        }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "color",
+      "id": "cta_bg_color",
+      "label": "CTA background color",
+      "default": "#1c1916",
+      "info": "Used for solid fill. Outline style uses transparent fill + border color."
+    },
+    {
+      "type": "color",
+      "id": "cta_border_color",
+      "label": "CTA outline / border color",
+      "default": "#1c1916"
+    },
+    {
+      "type": "color",
+      "id": "cta_text_color",
+      "label": "CTA label color",
+      "default": "#ffffff",
+      "info": "Solid fill: usually white. Outline or light fill: charcoal/black."
+    },
+    {
+      "type": "select",
+      "id": "cta_link_target",
+      "label": "CTA link",
+      "options": [
+        {
+          "value": "custom",
+          "label": "Custom URL…"
+        },
+        {
+          "value": "#variants",
+          "label": "#variants — Shop styles"
+        },
+        {
+          "value": "#knock-socks",
+          "label": "#knock-socks — Statement"
+        },
+        {
+          "value": "#reviews",
+          "label": "#reviews"
+        },
+        {
+          "value": "#guarantee",
+          "label": "#guarantee"
+        },
+        {
+          "value": "#never-loses-grip",
+          "label": "#never-loses-grip"
+        },
+        {
+          "value": "#one-pair",
+          "label": "#one-pair"
+        },
+        {
+          "value": "#coperni",
+          "label": "#coperni — Collab"
+        },
+        {
+          "value": "#problem",
+          "label": "#problem"
+        }
+      ],
+      "default": "custom",
+      "info": "Homepage section anchors jump on the same page. Choose Custom URL… for a full URL or any other #hash. Blank custom → all-products collection."
+    },
+    {
+      "type": "text",
+      "id": "cta_url",
+      "label": "Custom CTA URL",
+      "info": "Used when CTA link = Custom URL…."
+    },
+    {
+      "type": "header",
+      "content": "Section — Statement band"
+    },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor ID",
+      "default": "knock-socks",
+      "info": "This section’s own ID for same-page jumps (e.g. #knock-socks from hero tag / CTAs)."
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Section aria-label",
+      "info": "Accessibility name for screen readers — not visible on the page. Leave blank to use the Heading."
+    },
+    {
+      "type": "header",
+      "content": "Layout — text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 96)",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 40)",
+      "min": 8,
+      "max": 96,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 56)",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 20)",
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Shared — Section frame"
+    },
+    {
+      "type": "paragraph",
+      "content": "OUTER inset from the page edges (margin). Top and bottom are independent; left & right = one control. Custom mobile OFF = mobile uses the same inset as desktop. Defaults 0 = full bleed."
+    },
+    {
+      "type": "checkbox",
+      "id": "inset_custom_mobile",
+      "label": "Custom mobile inset",
+      "default": false,
+      "info": "OFF (default): ignore the mobile inset sliders — mobile uses desktop Inset top / bottom / left & right. ON: use the mobile inset sliders instead."
+    },
+    {
+      "type": "range",
+      "id": "inset_top",
+      "label": "Inset top",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom",
+      "label": "Inset bottom",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x",
+      "label": "Inset left & right",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Same value on both sides."
+    },
+    {
+      "type": "range",
+      "id": "inset_top_mobile",
+      "label": "Inset top — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom_mobile",
+      "label": "Inset bottom — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x_mobile",
+      "label": "Inset left & right — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_desktop",
+      "label": "Hide on desktop",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "Statement band"
+    }
+  ]
+}
+{% endschema %}

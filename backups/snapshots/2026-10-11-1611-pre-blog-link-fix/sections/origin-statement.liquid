@@ -1,0 +1,282 @@
+{% comment %}
+  Origin / statement band — 50/50, reusable on any page.
+  Left: eyebrow + H2 + short body. Right: tan box with a small-caps line, or an image (image replaces the box text).
+  Cream band default #faf8f6 (sitewide.lock.json tokens.cream). Tan box default #e8e3dd.
+  H2 uses the same size formula as page-about-split titles (Our Story section H2s).
+  Added 2026-10-04 (Our Story, after "Fashion trained the eye"), approved by Andrew.
+{% endcomment %}
+
+{%- liquid
+  assign os_bg = section.settings.bg_color | default: '#faf8f6'
+  assign os_box_bg = section.settings.box_color | default: '#e8e3dd'
+  assign os_box_h = section.settings.box_height | default: 340
+  assign os_box_h_m = section.settings.box_height_mobile | default: 160
+  assign os_has_image = false
+  if section.settings.image != blank
+    assign os_has_image = true
+  endif
+-%}
+
+<section
+  class="origin-statement{% if section.settings.reverse %} origin-statement--reverse{% endif %}{% if os_has_image %} origin-statement--has-image{% endif %}"
+  {{ section.shopify_attributes }}
+  aria-label="{{ section.settings.aria_label | default: section.settings.heading | escape }}"
+>
+  <div class="origin-statement__copy">
+    {% if section.settings.eyebrow != blank %}
+      <p class="origin-statement__eyebrow eyebrow">{{ section.settings.eyebrow | escape }}</p>
+    {% endif %}
+    {% if section.settings.heading != blank %}
+      <h2 class="origin-statement__title">{{ section.settings.heading | escape }}</h2>
+    {% endif %}
+    {% if section.settings.body != blank %}
+      <div class="origin-statement__body type-body rte">{{ section.settings.body }}</div>
+    {% endif %}
+  </div>
+  <div class="origin-statement__box">
+    {% if os_has_image %}
+      {{
+        section.settings.image
+        | image_url: width: 1600
+        | image_tag:
+          widths: '600, 900, 1200, 1600',
+          sizes: '(max-width: 768px) 100vw, 50vw',
+          alt: section.settings.image_alt,
+          loading: 'lazy',
+          class: 'origin-statement__img'
+      }}
+    {% elsif section.settings.box_text != blank %}
+      <span class="origin-statement__box-text">{{ section.settings.box_text | escape }}</span>
+    {% endif %}
+  </div>
+</section>
+{%- if section.settings.strip_text != blank %}
+  <div class="origin-statement__strip">
+    <p class="origin-statement__strip-text">{{ section.settings.strip_text | escape }}</p>
+  </div>
+{%- endif %}
+
+{% style %}
+  #shopify-section-{{ section.id }} .origin-statement {
+    display: flex;
+    align-items: center;
+    gap: 60px;
+    padding: 72px 6vw;
+    background: {{ os_bg }};
+  }
+  #shopify-section-{{ section.id }} .origin-statement--reverse { flex-direction: row-reverse; }
+  #shopify-section-{{ section.id }} .origin-statement__copy { flex: 1 1 0; min-width: 0; }
+  #shopify-section-{{ section.id }} .origin-statement__eyebrow { margin: 0; }
+  #shopify-section-{{ section.id }} .origin-statement__title {
+    font-size: clamp(var(--heading-phone, 36px), calc(var(--heading-standard-desktop-n, 56) * 4.8vw / 56), var(--heading-standard-desktop, 56px));
+    font-weight: 400;
+    letter-spacing: -0.032em;
+    line-height: 1.06;
+    margin: 14px 0 18px;
+    color: var(--text-primary, #1c1916);
+  }
+  #shopify-section-{{ section.id }} .origin-statement__body {
+    max-width: 460px;
+    margin: 0;
+  }
+  #shopify-section-{{ section.id }} .origin-statement__body p { margin: 0; }
+  #shopify-section-{{ section.id }} .origin-statement__body p + p { margin-top: 1em; }
+  #shopify-section-{{ section.id }} .origin-statement__box {
+    flex: 1 1 0;
+    min-width: 0;
+    height: {{ os_box_h }}px;
+    background: {{ os_box_bg }};
+    border-radius: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+  #shopify-section-{{ section.id }} .origin-statement__box-text {
+    font-size: 15px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 600;
+    text-align: center;
+    padding: 0 24px;
+    color: {{ section.settings.box_text_color | default: '#1c1916' }};
+  }
+  #shopify-section-{{ section.id }} .origin-statement__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  #shopify-section-{{ section.id }} .origin-statement__strip {
+    background: {{ section.settings.strip_bg | default: '#111111' }};
+    padding: 64px 6vw;
+    text-align: center;
+  }
+  #shopify-section-{{ section.id }} .origin-statement__strip-text {
+    max-width: 900px;
+    margin: 0 auto;
+    font-family: inherit;
+    font-size: clamp(24px, 3vw, 36px);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    color: {{ section.settings.strip_color | default: '#ffffff' }};
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .origin-statement__strip { padding: 44px 20px; }
+    #shopify-section-{{ section.id }} .origin-statement,
+    #shopify-section-{{ section.id }} .origin-statement--reverse {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 28px;
+      padding: 48px 20px;
+    }
+    #shopify-section-{{ section.id }} .origin-statement__title {
+      font-size: var(--heading-phone, 36px);
+    }
+    #shopify-section-{{ section.id }} .origin-statement__box {
+      flex: none;
+      height: {{ os_box_h_m }}px;
+    }
+    #shopify-section-{{ section.id }} .origin-statement__box-text { font-size: 13px; }
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Origin \u2014 Statement 50/50",
+  "tag": "div",
+  "class": "origin-statement-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "1 \u2014 Text (left)"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "The origin"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading (H2)",
+      "default": "Questioning something everyone else accepted"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body",
+      "default": "<p>Grip socks were the only option, and everyone just lived with the slipping.</p>"
+    },
+    {
+      "type": "header",
+      "content": "2 \u2014 Box (right)"
+    },
+    {
+      "type": "text",
+      "id": "box_text",
+      "label": "Box text (small caps line)",
+      "default": "Grip isn\u2019t optional.",
+      "info": "Hidden when an image is set."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image (optional)",
+      "info": "If set, the image fills the box and replaces the box text."
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image alt text"
+    },
+    {
+      "type": "range",
+      "id": "box_height",
+      "label": "Box height \u2014 desktop (default 340)",
+      "min": 200,
+      "max": 700,
+      "step": 10,
+      "unit": "px",
+      "default": 340
+    },
+    {
+      "type": "range",
+      "id": "box_height_mobile",
+      "label": "Box height \u2014 phone (default 160)",
+      "min": 100,
+      "max": 600,
+      "step": 10,
+      "unit": "px",
+      "default": 160
+    },
+    {
+      "type": "header",
+      "content": "3 \u2014 Layout + colour"
+    },
+    {
+      "type": "checkbox",
+      "id": "reverse",
+      "label": "Box on left \u2014 desktop (default: off)",
+      "default": false,
+      "info": "Phone always stacks text first, then box."
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Band background (default cream #faf8f6)",
+      "default": "#faf8f6"
+    },
+    {
+      "type": "color",
+      "id": "box_color",
+      "label": "Box colour (default tan #e8e3dd)",
+      "default": "#e8e3dd"
+    },
+    {
+      "type": "color",
+      "id": "box_text_color",
+      "label": "Box text colour (default #1c1916)",
+      "default": "#1c1916"
+    },
+    {
+      "type": "header",
+      "content": "4 \u2014 Strip below (optional)"
+    },
+    {
+      "type": "text",
+      "id": "strip_text",
+      "label": "Strip text",
+      "info": "Full-width band under the 50/50. Leave empty to hide."
+    },
+    {
+      "type": "color",
+      "id": "strip_bg",
+      "label": "Strip background (default #111111)",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "strip_color",
+      "label": "Strip text colour (default #ffffff)",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Accessibility name (aria-label)",
+      "info": "Defaults to the heading."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Origin \u2014 Statement 50/50"
+    }
+  ]
+}
+{% endschema %}

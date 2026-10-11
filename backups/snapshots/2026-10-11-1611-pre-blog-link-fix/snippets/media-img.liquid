@@ -1,0 +1,119 @@
+{% comment %}
+  media-img — unified content-image render.
+
+  Emits <img class="{{ class }} media-img[--contain]"> that fills a parent frame.
+  Parent must be position:relative; overflow:hidden; with a defined height.
+  Class-driven fill lives in barreletics-base.css (.media-img).
+
+  Params:
+    image           Shopify image object (preferred; enables srcset + focal fallback)
+    url             fallback URL string (used when image is blank)
+    alt             alt text (required for meaningful images)
+    fit             'cover' (default) | 'contain'
+    position        '<X% Y%>' string, or 'css' to skip inline object-position,
+                    or blank to fall back to image.presentation.focal_point → '50% 50%'
+    class           extra class on the <img> (keeps section-specific selectors alive)
+    sizes           <img sizes> attr (defaults to '100vw')
+    widths          comma list, e.g. '600, 900, 1200, 1600, 2000, 2400'
+    width_default   integer used for src (defaults to 1600)
+    loading         'lazy' (default) | 'eager'
+    fetchpriority   'auto' (default) | 'high' | 'low'
+    is_poster       boolean — emits empty alt + aria-hidden (decorative)
+    role_hidden     boolean — emits aria-hidden without touching alt
+    width_attr      optional integer for width= (when url mode)
+    height_attr     optional integer for height= (when url mode)
+    img_id          optional id="" on the <img> (for JS hooks that must address
+                    a single element by id, e.g. pdp-main-img gallery/zoom).
+                    Additive — omit to preserve prior behavior.
+
+  Not for: <video>, background-image, SVG icons, logos, swatches.
+{% endcomment %}
+
+{%- liquid
+  assign mi_image = image
+  assign mi_url = url | default: ''
+  assign mi_alt = alt | default: ''
+  assign mi_fit = fit | default: 'cover'
+  assign mi_position = position | default: ''
+  assign mi_class = class | default: ''
+  assign mi_sizes = sizes | default: '100vw'
+  assign mi_widths = widths | default: '600, 900, 1200, 1600'
+  assign mi_width_default = width_default | default: 1600
+  assign mi_loading = loading | default: 'lazy'
+  assign mi_fetchpriority = fetchpriority | default: 'auto'
+  assign mi_is_poster = is_poster | default: false
+  assign mi_role_hidden = role_hidden | default: false
+  assign mi_width_attr = width_attr | default: ''
+  assign mi_height_attr = height_attr | default: ''
+  assign mi_img_id = img_id | default: ''
+
+  assign mi_final_class = 'media-img'
+  if mi_fit == 'contain'
+    assign mi_final_class = 'media-img media-img--contain'
+  endif
+  if mi_class != blank
+    assign mi_final_class = mi_class | append: ' ' | append: mi_final_class
+  endif
+
+  assign mi_style = ''
+  if mi_position == 'css'
+    assign mi_style = ''
+  elsif mi_position != blank
+    assign mi_style = 'object-position: ' | append: mi_position | append: ';'
+  elsif mi_image != blank and mi_image.presentation.focal_point != blank
+    assign mi_style = 'object-position: ' | append: mi_image.presentation.focal_point | append: ';'
+  endif
+
+  if mi_is_poster
+    assign mi_alt_final = ''
+  else
+    assign mi_alt_final = mi_alt
+  endif
+
+  assign mi_aria_hidden = false
+  if mi_is_poster or mi_role_hidden
+    assign mi_aria_hidden = true
+  endif
+-%}
+
+{%- if mi_image != blank -%}
+  {%- assign mi_src = mi_image | image_url: width: mi_width_default -%}
+  {%- capture mi_srcset -%}
+    {%- assign mi_widths_arr = mi_widths | split: ',' -%}
+    {%- for w in mi_widths_arr -%}
+      {%- assign mi_w = w | strip -%}
+      {%- if mi_w != blank -%}
+        {{ mi_image | image_url: width: mi_w }} {{ mi_w }}w{%- unless forloop.last %}, {% endunless -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+  <img
+    class="{{ mi_final_class }}"
+    {% if mi_img_id != blank %}id="{{ mi_img_id }}"{% endif %}
+    src="{{ mi_src }}"
+    srcset="{{ mi_srcset | strip }}"
+    sizes="{{ mi_sizes }}"
+    alt="{{ mi_alt_final | escape }}"
+    width="{{ mi_image.width }}"
+    height="{{ mi_image.height }}"
+    loading="{{ mi_loading }}"
+    fetchpriority="{{ mi_fetchpriority }}"
+    decoding="async"
+    {% if mi_style != blank %}style="{{ mi_style }}"{% endif %}
+    {% if mi_aria_hidden %}aria-hidden="true"{% endif %}
+  >
+{%- elsif mi_url != blank -%}
+  <img
+    class="{{ mi_final_class }}"
+    {% if mi_img_id != blank %}id="{{ mi_img_id }}"{% endif %}
+    src="{{ mi_url | escape }}"
+    alt="{{ mi_alt_final | escape }}"
+    {% if mi_width_attr != blank %}width="{{ mi_width_attr }}"{% endif %}
+    {% if mi_height_attr != blank %}height="{{ mi_height_attr }}"{% endif %}
+    loading="{{ mi_loading }}"
+    fetchpriority="{{ mi_fetchpriority }}"
+    decoding="async"
+    {% if mi_style != blank %}style="{{ mi_style }}"{% endif %}
+    {% if mi_aria_hidden %}aria-hidden="true"{% endif %}
+  >
+{%- endif -%}

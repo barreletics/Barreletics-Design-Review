@@ -1,0 +1,448 @@
+{% comment %}
+  GEO Content Section (D-022)
+  Editable accordion with FAQPage structured data.
+  Each page type gets contextually relevant geo content via section settings.
+{% endcomment %}
+
+{% assign geo_heading = section.settings.heading | default: 'Trusted in studios everywhere' %}
+
+{%- liquid
+  assign y_d = 32
+  assign side_d = 40
+  assign y_m = 24
+  assign x_m = 20
+  assign emit_y_d = false
+  if section.settings.text_pad_y != blank and section.settings.text_pad_y != y_d
+    assign emit_y_d = true
+  endif
+  assign emit_side_d = false
+  if section.settings.side_padding != blank and section.settings.side_padding != side_d
+    assign emit_side_d = true
+  endif
+  assign emit_y_m = false
+  if section.settings.text_pad_y_mobile != blank and section.settings.text_pad_y_mobile != y_m
+    assign emit_y_m = true
+  endif
+  assign emit_x_m = false
+  if section.settings.text_pad_x_mobile != blank and section.settings.text_pad_x_mobile != x_m
+    assign emit_x_m = true
+  endif
+-%}
+
+<div
+  class="geo-section"
+  style="{% render 'type-override-vars', title_size: section.settings.title_size, body_size: section.settings.body_size, sub_size: section.settings.question_size %}"
+>
+  <div class="geo-section__container">
+    <p class="geo-section__eyebrow">{{ geo_heading }}</p>
+
+    {% for block in section.blocks %}
+      {% if block.type == 'geo_item' %}
+        <details class="geo-section__item" data-faq-item {{ block.shopify_attributes }}>
+          <summary class="geo-section__trigger">
+            {{ block.settings.question }}
+          </summary>
+          <div class="geo-section__content">
+            {{ block.settings.answer }}
+          </div>
+        </details>
+      {% endif %}
+    {% endfor %}
+    <button type="button" class="faq__see-all" data-faq-see-all hidden>See all questions</button>
+  </div>
+</div>
+
+{% assign geo_blocks_count = 0 %}
+{% for block in section.blocks %}
+  {% if block.type == 'geo_item' %}
+    {% assign geo_blocks_count = geo_blocks_count | plus: 1 %}
+  {% endif %}
+{% endfor %}
+
+{% if geo_blocks_count > 0 %}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {% for block in section.blocks %}
+          {% if block.type == 'geo_item' %}
+            {
+              "@type": "Question",
+              "name": {{ block.settings.question | json }},
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": {{ block.settings.answer | strip_html | json }}
+              }
+            }{% unless forloop.last %},{% endunless %}
+          {% endif %}
+        {% endfor %}
+      ]
+    }
+  </script>
+{% endif %}
+
+<style>
+  .geo-section {
+    padding: 0 var(--section-padding-x) var(--section-padding-y);
+  }
+
+  .geo-section__container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .geo-section__eyebrow {
+    font-size: var(--te-title-size, var(--text-sm));
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-widest);
+    color: var(--text-muted);
+    font-weight: var(--type-label-weight);
+    margin: 0 0 var(--space-4);
+  }
+
+  .geo-section__item {
+    border-top: 1px solid #eee8de;
+  }
+
+  .geo-section__item:last-child {
+    border-bottom: 1px solid #eee8de;
+  }
+
+  .geo-section__trigger {
+    cursor: pointer;
+    font-size: var(--te-sub-size, 12px);
+    font-weight: var(--weight-medium);
+    color: #9a9182;
+    padding: 12px 0;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .geo-section__trigger::-webkit-details-marker {
+    display: none;
+  }
+
+  .geo-section__trigger::after {
+    content: "+";
+    font-size: 14px;
+    color: var(--border-default);
+    flex-shrink: 0;
+    margin-left: var(--space-4);
+  }
+
+  .geo-section__item[open] .geo-section__trigger::after {
+    content: "\2212";
+  }
+
+  .geo-section__content {
+    padding: 0 0 12px;
+    font-size: var(--te-body-size, 12px);
+    color: #9a9182;
+    line-height: var(--leading-loose);
+  }
+  .geo-section:not(.faq--expanded) .faq__item--overflow { display: none; }
+  .geo-section .faq__see-all {
+    display: block;
+    margin: 20px auto 0;
+    padding: 12px 22px;
+    background: transparent;
+    border: 1px solid #1c1916;
+    color: #1c1916;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .geo-section .faq__see-all[hidden] { display: none; }
+
+  @media (max-width: 768px) {
+    .geo-section {
+      padding: 0 var(--section-padding-x-mobile) var(--section-padding-y-mobile);
+    }
+  }
+</style>
+<script>
+  (function () {
+    function isGeoQuestion(text) {
+      var s = (text || '').toLowerCase();
+      if (/how do international|duties and taxes|do you ship internationally\?|where are performance skins made/.test(s)) return false;
+      return /near me|studios? in |studios? across |studios? around |studios? near |where are .* worn|worn (in|across|around)|in new york|in los angeles|in toronto|in london|in melbourne|in canada|new york city|\bnyc\b|los angeles|london|melbourne|toronto|\bcanada\b|chicago|miami|boston|austin|seattle|denver|dallas|houston|brooklyn|manhattan|california|texas|florida|ontario|australia|united kingdom|\buk\b|uae|dubai|worldwide|united states|across the us|across the u\.s/.test(s);
+    }
+    document.querySelectorAll('.geo-section').forEach(function (root) {
+      var items = root.querySelectorAll('[data-faq-item], .geo-section__item');
+      var shown = 0;
+      var overflow = 0;
+      items.forEach(function (item) {
+        var q = (item.querySelector('summary, .geo-section__trigger') || item).textContent;
+        if (isGeoQuestion(q) || shown >= 4) {
+          item.classList.add('faq__item--overflow');
+          overflow++;
+        } else {
+          shown++;
+        }
+      });
+      var btn = root.querySelector('[data-faq-see-all]');
+      if (btn && overflow) {
+        btn.hidden = false;
+        btn.addEventListener('click', function () {
+          root.classList.add('faq--expanded');
+          btn.hidden = true;
+        });
+      }
+    });
+  })();
+</script>
+
+{%- if emit_y_d or emit_side_d or emit_y_m or emit_x_m -%}
+{% style %}
+  {%- if emit_y_d or emit_side_d -%}
+  @media (min-width: 769px) {
+    #shopify-section-{{ section.id }} .geo-section {
+      {%- if emit_y_d -%}
+      padding-bottom: {{ section.settings.text_pad_y }}px;
+      {%- endif -%}
+      {%- if emit_side_d -%}
+      padding-left: {{ section.settings.side_padding }}px;
+      padding-right: {{ section.settings.side_padding }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+  {%- if emit_y_m or emit_x_m -%}
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .geo-section {
+      {%- if emit_y_m -%}
+      padding-bottom: {{ section.settings.text_pad_y_mobile }}px;
+      {%- endif -%}
+      {%- if emit_x_m -%}
+      padding-left: {{ section.settings.text_pad_x_mobile }}px;
+      padding-right: {{ section.settings.text_pad_x_mobile }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+{% endstyle %}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "GEO Content",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section heading",
+      "default": "Trusted in studios everywhere"
+    },
+    {
+      "type": "header",
+      "content": "Type — size",
+      "info": "Family is brand Type OS. Default keeps the compact SEO-block sizing used on collection and PDP."
+    },
+    {
+      "type": "select",
+      "id": "title_size",
+      "label": "Heading size",
+      "default": "default",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default / Type OS"
+        },
+        {
+          "value": "11",
+          "label": "11px"
+        },
+        {
+          "value": "12",
+          "label": "12px"
+        },
+        {
+          "value": "13",
+          "label": "13px"
+        },
+        {
+          "value": "14",
+          "label": "14px"
+        },
+        {
+          "value": "15",
+          "label": "15px"
+        },
+        {
+          "value": "16",
+          "label": "16px"
+        },
+        {
+          "value": "17",
+          "label": "17px"
+        },
+        {
+          "value": "18",
+          "label": "18px"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "question_size",
+      "label": "Question size",
+      "default": "default",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default / Type OS"
+        },
+        {
+          "value": "12",
+          "label": "12px"
+        },
+        {
+          "value": "13",
+          "label": "13px"
+        },
+        {
+          "value": "14",
+          "label": "14px"
+        },
+        {
+          "value": "15",
+          "label": "15px"
+        },
+        {
+          "value": "16",
+          "label": "16px"
+        },
+        {
+          "value": "17",
+          "label": "17px"
+        },
+        {
+          "value": "18",
+          "label": "18px"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "body_size",
+      "label": "Answer size",
+      "default": "default",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default / Type OS"
+        },
+        {
+          "value": "12",
+          "label": "12px"
+        },
+        {
+          "value": "13",
+          "label": "13px"
+        },
+        {
+          "value": "14",
+          "label": "14px"
+        },
+        {
+          "value": "15",
+          "label": "15px"
+        },
+        {
+          "value": "16",
+          "label": "16px"
+        },
+        {
+          "value": "17",
+          "label": "17px"
+        },
+        {
+          "value": "18",
+          "label": "18px"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Layout — text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad bottom — desktop (top 0; default 32)",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 40)",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad bottom — phone (top 0; default 24)",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 20)",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    }
+  ],
+  "blocks": [
+    {
+      "type": "geo_item",
+      "name": "GEO Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question / Region heading"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer / Content"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "GEO Content",
+      "blocks": [
+        {
+          "type": "geo_item",
+          "settings": {
+            "question": "Where are Barreletics worn?",
+            "answer": "<p>From reformer studios in Miami to barre classes in NYC, Barreletics are trusted by instructors and athletes across 30+ states and internationally.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

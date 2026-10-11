@@ -1,0 +1,497 @@
+{% comment %}
+  Trust / Value scan strip — v19 wording + optional Non-toxic
+  Desktop: full ·-separated line. Mobile: short line (hide show_on_mobile=false items).
+{% endcomment %}
+{%- liquid
+  assign y_d = 28
+  assign side_d = 40
+  assign y_m = 20
+  assign x_m = 20
+
+  assign pad_y = section.settings.padding_y | default: y_d
+  if section.settings.text_pad_y != blank and section.settings.text_pad_y != y_d
+    assign pad_y = section.settings.text_pad_y
+  endif
+
+  assign pad_y_m = section.settings.padding_y_mobile | default: pad_y
+  if section.settings.text_pad_y_mobile != blank and section.settings.text_pad_y_mobile != y_m
+    assign pad_y_m = section.settings.text_pad_y_mobile
+  endif
+
+  assign emit_side_d = false
+  if section.settings.side_padding != blank and section.settings.side_padding != side_d
+    assign emit_side_d = true
+  endif
+  assign emit_x_m = false
+  if section.settings.text_pad_x_mobile != blank and section.settings.text_pad_x_mobile != x_m
+    assign emit_x_m = true
+  endif
+  assign emit_y_d = false
+  if section.settings.text_pad_y != blank and section.settings.text_pad_y != y_d
+    assign emit_y_d = true
+  endif
+  assign emit_y_m = false
+  if section.settings.text_pad_y_mobile != blank and section.settings.text_pad_y_mobile != y_m
+    assign emit_y_m = true
+  endif
+-%}
+
+<section
+  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} value-strip-section"
+  aria-label="{{ section.settings.aria_label | default: 'Value propositions' | escape }}"
+  style="{% render 'section-inset-vars' %}--vs-pad-y: {{ pad_y }}px; --vs-pad-y-m: {{ pad_y_m }}px;{% if section.settings.bg_color != blank %} background: {{ section.settings.bg_color }};{% endif %}"
+>
+  <div class="value-strip trust-strip__inner">
+    <span class="value-strip__full">
+      {% assign full_i = 0 %}
+      {% for block in section.blocks %}
+        {% if block.settings.text != blank %}
+          {% if full_i > 0 %}<span class="value-strip__sep" aria-hidden="true"> · </span>{% endif %}
+          <span class="value-strip__text" {{ block.shopify_attributes }}>{{ block.settings.text }}</span>
+          {% assign full_i = full_i | plus: 1 %}
+        {% endif %}
+      {% endfor %}
+    </span>
+    <span class="value-strip__short">
+      {% assign short_i = 0 %}
+      {% for block in section.blocks %}
+        {% if block.settings.text != blank and block.settings.show_on_mobile != false %}
+          {% assign short_i = short_i | plus: 1 %}
+          <span class="value-strip__item">
+            <span class="value-strip__text">{{ block.settings.text }}</span>
+            <span class="value-strip__sep" aria-hidden="true"> · </span>
+          </span>
+          {% if short_i == 2 %}
+            <span class="value-strip__break" aria-hidden="true"></span>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    </span>
+  </div>
+</section>
+
+<style>
+  .value-strip-section {
+    background: #faf8f6;
+    border-top: none;
+    border-bottom: 1px solid #d6cfc0;
+    padding: var(--vs-pad-y, 28px) var(--section-padding-x, 40px);
+  }
+  .value-strip {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+    font-size: var(--type-value-strip-size, 12px);
+    font-weight: var(--type-value-strip-weight, 500);
+    text-transform: uppercase;
+    letter-spacing: var(--type-value-strip-tracking, 0.08em);
+    color: #6b645a;
+    line-height: 1;
+    white-space: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .value-strip::-webkit-scrollbar { display: none; }
+  .value-strip__sep { color: #9a9182; margin: 0 8px; }
+  .value-strip__short { display: none; }
+  @media (max-width: 768px) {
+    .value-strip-section {
+      padding: var(--vs-pad-y-m, 20px) var(--section-padding-x-mobile, 16px);
+    }
+    .value-strip { white-space: normal; line-height: 1.35; }
+    .value-strip__full { display: none; }
+    .value-strip__short {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 12px;
+      row-gap: 10px;
+      justify-items: center;
+      align-items: center;
+      width: 100%;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+    .value-strip__item {
+      display: block;
+      white-space: normal;
+      text-align: center;
+    }
+    .value-strip__item .value-strip__sep,
+    .value-strip__break {
+      display: none !important;
+    }
+  }
+</style>
+
+{% style %}
+  {%- comment -%} Live TE (2026-10-06 r4): flags read section.settings directly inside the style block so the first slider move previews live; same output as before. {%- endcomment -%}
+  {%- liquid
+    assign emit_y_d = false
+    if section.settings.text_pad_y != blank and section.settings.text_pad_y != 28
+      assign emit_y_d = true
+    endif
+    assign emit_side_d = false
+    if section.settings.side_padding != blank and section.settings.side_padding != 40
+      assign emit_side_d = true
+    endif
+    assign emit_y_m = false
+    if section.settings.text_pad_y_mobile != blank and section.settings.text_pad_y_mobile != 20
+      assign emit_y_m = true
+    endif
+    assign emit_x_m = false
+    if section.settings.text_pad_x_mobile != blank and section.settings.text_pad_x_mobile != 20
+      assign emit_x_m = true
+    endif
+  -%}
+  {%- if emit_y_d or emit_side_d -%}
+  @media (min-width: 769px) {
+    #shopify-section-{{ section.id }} .value-strip-section {
+      {%- if emit_y_d -%}
+      padding-top: {{ section.settings.text_pad_y }}px;
+      padding-bottom: {{ section.settings.text_pad_y }}px;
+      {%- endif -%}
+      {%- if emit_side_d -%}
+      padding-left: {{ section.settings.side_padding }}px;
+      padding-right: {{ section.settings.side_padding }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+  {%- if emit_y_m or emit_x_m -%}
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .value-strip-section {
+      {%- if emit_y_m -%}
+      padding-top: {{ section.settings.text_pad_y_mobile }}px;
+      padding-bottom: {{ section.settings.text_pad_y_mobile }}px;
+      {%- endif -%}
+      {%- if emit_x_m -%}
+      padding-left: {{ section.settings.text_pad_x_mobile }}px;
+      padding-right: {{ section.settings.text_pad_x_mobile }}px;
+      {%- endif -%}
+    }
+  }
+  {%- endif -%}
+{% endstyle %}
+
+{%- comment -%}
+  TE live preview (2026-10-06): Shared — Section frame insets. The section-inset-vars snippet writes these inline
+  (Save-only). Same dual-write as split-hero (acd8a93): section.settings.* directly, !important on the vars.
+{%- endcomment -%}
+{% style %}
+  {%- liquid
+    assign te_in_t = section.settings.inset_top | default: 0
+    assign te_in_b = section.settings.inset_bottom | default: 0
+    assign te_in_x = section.settings.inset_x | default: 0
+    if section.settings.inset_custom_mobile
+      assign te_in_tm = section.settings.inset_top_mobile | default: 0
+      assign te_in_bm = section.settings.inset_bottom_mobile | default: 0
+      assign te_in_xm = section.settings.inset_x_mobile | default: 0
+    else
+      assign te_in_tm = te_in_t
+      assign te_in_bm = te_in_b
+      assign te_in_xm = te_in_x
+    endif
+  -%}
+  #shopify-section-{{ section.id }} .section-frame {
+    --section-inset-top: {{ te_in_t }}px !important;
+    --section-inset-right: {{ te_in_x }}px !important;
+    --section-inset-bottom: {{ te_in_b }}px !important;
+    --section-inset-left: {{ te_in_x }}px !important;
+    --section-inset-top-m: {{ te_in_tm }}px !important;
+    --section-inset-right-m: {{ te_in_xm }}px !important;
+    --section-inset-bottom-m: {{ te_in_bm }}px !important;
+    --section-inset-left-m: {{ te_in_xm }}px !important;
+  }
+{% endstyle %}
+
+{%- comment -%}
+  TE live preview (2026-10-06, round 3): remaining Save-only controls. Reads section.settings.* directly
+  (verified 10-03 pattern: acd8a93 / 108fff6). Values match what the inline style / static <style> render.
+{%- endcomment -%}
+{% style %}
+  {%- if section.settings.bg_color != blank %}
+  :where(#shopify-section-{{ section.id }}) .value-strip-section {
+    background: {{ section.settings.bg_color }} !important;
+  }
+  {%- endif %}
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Value Strip",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Shared — Content"
+    },
+    {
+      "type": "paragraph",
+      "content": "v19 scan strip. Desktop shows all items with · separators. Mobile uses items with Show on mobile ON (drop lower-priority labels if crowded)."
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Section aria-label",
+      "default": "Value propositions"
+    },
+    {
+      "type": "header",
+      "content": "Section — Value strip"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#faf8f6"
+    },
+    {
+      "type": "header",
+      "content": "Layout — text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 28)",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "info": "Band height on desktop. Unset uses legacy padding_y (default 28).",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 40)",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "info": "Default render uses theme section gutter (40px).",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 20)",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "info": "Unset uses legacy padding_y_mobile or 20px.",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 20)",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "info": "Default render uses theme mobile gutter (20px).",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Legacy (hidden — do not edit)"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Legacy: Band height desktop",
+      "min": 12,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 28,
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_y_mobile",
+      "label": "Legacy: Band height mobile",
+      "min": 12,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 24,
+      "visible_if": "{{ section.settings.aria_label == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "header",
+      "content": "Shared — Section frame"
+    },
+    {
+      "type": "paragraph",
+      "content": "OUTER inset from the page edges (margin). Top and bottom are independent; left & right = one control. Custom mobile OFF = mobile uses the same inset as desktop. Defaults 0 = full bleed."
+    },
+    {
+      "type": "checkbox",
+      "id": "inset_custom_mobile",
+      "label": "Custom mobile inset",
+      "default": false,
+      "info": "OFF (default): ignore the mobile inset sliders — mobile uses desktop Inset top / bottom / left & right. ON: use the mobile inset sliders instead."
+    },
+    {
+      "type": "range",
+      "id": "inset_top",
+      "label": "Inset top",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom",
+      "label": "Inset bottom",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x",
+      "label": "Inset left & right",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Same value on both sides."
+    },
+    {
+      "type": "range",
+      "id": "inset_top_mobile",
+      "label": "Inset top — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom_mobile",
+      "label": "Inset bottom — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x_mobile",
+      "label": "Inset left & right — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_desktop",
+      "label": "Hide on desktop",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Value item",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Shared — Content"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Label",
+          "default": "Made in USA"
+        },
+        {
+          "type": "header",
+          "content": "Section — Item"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_on_mobile",
+          "label": "Show on mobile (short line)",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Value Strip",
+      "blocks": [
+        {
+          "type": "item",
+          "settings": {
+            "text": "Made in USA",
+            "show_on_mobile": true
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "text": "Complimentary shipping over $150",
+            "show_on_mobile": true
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "text": "30-day returns",
+            "show_on_mobile": true
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "text": "90-day warranty",
+            "show_on_mobile": false
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "text": "Non-toxic",
+            "show_on_mobile": true
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "text": "No latex",
+            "show_on_mobile": false
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "text": "No silicone",
+            "show_on_mobile": false
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,23 @@
+{% comment %}
+  Help Scout Beacon — Customer Support Widget
+  Placement: Before </body> via theme.liquid
+  Configuration: Theme Settings → Tracking & Integrations → Help Scout Beacon ID
+
+  Loads Help Scout Beacon widget for live chat / contact form.
+  Leave Beacon ID blank in Theme Settings to disable.
+  Beacon styling configured in Help Scout admin (see m4b-helpscout-alignment.md).
+{% endcomment %}
+
+{% if settings.helpscout_beacon_id != blank %}
+<!-- Help Scout Beacon -->
+<script type="text/javascript">
+!function(e,t,n){function a(){var e=t.getElementsByTagName("script")[0],n=t.createElement("script");n.type="text/javascript",n.async=!0,n.src="https://beacon-v2.helpscout.net",e.parentNode.insertBefore(n,e)}if(e.Beacon=n=function(t,n,a){e.Beacon.readyQueue.push({method:t,options:n,data:a})},n.readyQueue=[],"complete"===t.readyState)return a();e.attachEvent?e.attachEvent("onload",a):e.addEventListener("load",a,!1)}(window,document,window.Beacon||function(){});
+window.Beacon('init', {{ settings.helpscout_beacon_id | json }});
+{% if customer %}
+window.Beacon('identify', {
+  name: {{ customer.name | json }},
+  email: {{ customer.email | json }}
+});
+{% endif %}
+</script>
+{% endif %}

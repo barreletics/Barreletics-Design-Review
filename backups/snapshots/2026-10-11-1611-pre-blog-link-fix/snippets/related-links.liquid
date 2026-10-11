@@ -1,0 +1,113 @@
+{% comment %}
+  Related Links
+  Cross-page contextual navigation links.
+  Renders a centered row of text links with arrow icons.
+
+  Usage:
+    {% render 'related-links',
+      heading: 'Related Resources',
+      links: section.settings.related_links
+    %}
+
+  For manual link arrays in Liquid (no section settings), build the
+  links in the calling template using assign/capture before rendering.
+
+  Parameters:
+    - heading: optional section heading (string)
+    - links: array of blocks with .settings.link_title and .settings.link_url
+{% endcomment %}
+
+{% if links.size > 0 %}
+<nav class="related-links" aria-label="{{ heading | default: 'Related pages' | escape }}">
+  <div class="related-links__inner">
+    {% if heading != blank %}
+      <p class="related-links__heading">{{ heading }}</p>
+    {% endif %}
+    <ul class="related-links__list">
+      {% for link in links %}
+        <li class="related-links__item">
+          <a href="{{ link.settings.link_url }}" class="related-links__link">
+            {{ link.settings.link_title }}
+            <svg class="related-links__arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <path d="M1 7h11M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</nav>
+
+<style>
+  .related-links {
+    padding: var(--space-10) var(--section-padding-x);
+    border-top: 1px solid var(--border-default);
+  }
+
+  .related-links__inner {
+    max-width: var(--max-width-narrow);
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .related-links__heading {
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-widest);
+    color: var(--text-muted);
+    margin-bottom: var(--space-5);
+  }
+
+  .related-links__list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-6);
+  }
+
+  .related-links__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: 13px;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+    min-height: 44px;
+    padding: var(--space-2) 0;
+  }
+
+  .related-links__link:hover {
+    color: var(--text-primary);
+    text-decoration: underline;
+  }
+
+  .related-links__link:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 4px;
+    border-radius: var(--radius-badge);
+  }
+
+  .related-links__arrow {
+    flex-shrink: 0;
+    transition: transform var(--transition-fast);
+  }
+
+  .related-links__link:hover .related-links__arrow {
+    transform: translateX(2px);
+  }
+
+  @media (max-width: 768px) {
+    .related-links {
+      padding: var(--space-9) var(--section-padding-x-mobile);
+    }
+
+    .related-links__list {
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-3);
+    }
+  }
+</style>
+{% endif %}

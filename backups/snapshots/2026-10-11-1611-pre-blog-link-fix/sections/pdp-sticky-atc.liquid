@@ -1,0 +1,202 @@
+{% comment %}
+  PDP Sticky ATC Section Wrapper (D-023)
+  Wraps the sticky-atc snippet for use as a section in product templates.
+{% endcomment %}
+
+<style>
+  #shopify-section-{{ section.id }} {
+    {% render 'unified-text-pads-vars', y_d: 12, side_d: 40, y_m: 10, x_m: 20 %}
+  }
+  #shopify-section-{{ section.id }} .sticky-atc {
+    padding-left: var(--utp-side-d, 40px);
+    padding-right: var(--utp-side-d, 40px);
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .sticky-atc {
+      padding-left: var(--utp-x-m, 20px);
+      padding-right: var(--utp-x-m, 20px);
+    }
+  }
+</style>
+
+{% render 'sticky-atc',
+  hero_image_mode: section.settings.hero_image_mode,
+  hero_color: section.settings.hero_color,
+  hero_media_index: section.settings.hero_media_index
+%}
+
+{% render 'unified-text-pads-te-style', selector: '.sticky-atc', y_d: 12, side_d: 40, y_m: 10, x_m: 20 %}
+
+{%- comment -%}
+  Live TE (2026-10-06 r5): section-level block that always renders and reads section.settings directly,
+  so the first slider move previews without Save. Each rule is emitted only off its schema default
+  (12 / 40 / 10 / 20), so output at defaults is unchanged.
+{%- endcomment -%}
+{% style %}
+  {%- liquid
+    assign te_ty = section.settings.text_pad_y
+    assign te_sx = section.settings.side_padding
+    assign te_tym = section.settings.text_pad_y_mobile
+    assign te_sxm = section.settings.text_pad_x_mobile
+    assign te_e_ty = false
+    if te_ty != blank and te_ty != 12
+      assign te_e_ty = true
+    endif
+    assign te_e_sx = false
+    if te_sx != blank and te_sx != 40
+      assign te_e_sx = true
+    endif
+    assign te_e_tym = false
+    if te_tym != blank and te_tym != 10
+      assign te_e_tym = true
+    endif
+    assign te_e_sxm = false
+    if te_sxm != blank and te_sxm != 20
+      assign te_e_sxm = true
+    endif
+  -%}
+  {%- if te_e_ty or te_e_sx %}
+  @media (min-width: 769px) {
+    #shopify-section-{{ section.id }} .sticky-atc {
+      {%- if te_e_ty %}
+      padding-top: {{ te_ty }}px;
+      padding-bottom: {{ te_ty }}px;
+      {%- endif %}
+      {%- if te_e_sx %}
+      padding-left: {{ te_sx }}px;
+      padding-right: {{ te_sx }}px;
+      {%- endif %}
+    }
+  }
+  {%- endif %}
+  {%- if te_e_tym or te_e_sxm %}
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .sticky-atc {
+      {%- if te_e_tym %}
+      padding-top: {{ te_tym }}px;
+      padding-bottom: {{ te_tym }}px;
+      {%- endif %}
+      {%- if te_e_sxm %}
+      padding-left: {{ te_sxm }}px;
+      padding-right: {{ te_sxm }}px;
+      {%- endif %}
+    }
+  }
+  {%- endif %}
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Sticky Add to Cart",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Shared — Content"
+    },
+    {
+      "type": "paragraph",
+      "content": "Sticky ATC chrome is product-driven (Admin title / price / variant). Kept separate from PDP Buy Box per TE policy."
+    },
+    {
+      "type": "header",
+      "content": "Hero thumb priority"
+    },
+    {
+      "type": "paragraph",
+      "content": "Global default: Theme settings → PDP hero image. Fields below optionally override for this sticky instance only."
+    },
+    {
+      "type": "select",
+      "id": "hero_image_mode",
+      "label": "Hero image priority (section override)",
+      "options": [
+        {
+          "value": "admin_order",
+          "label": "Use theme / Admin default"
+        },
+        {
+          "value": "variant_color",
+          "label": "Variant color / option value"
+        },
+        {
+          "value": "media_index",
+          "label": "Specific media position #"
+        }
+      ],
+      "default": "admin_order"
+    },
+    {
+      "type": "text",
+      "id": "hero_color",
+      "label": "Hero color / option value (override)",
+      "info": "e.g. Coral, Bright Yellow, Blue."
+    },
+    {
+      "type": "range",
+      "id": "hero_media_index",
+      "label": "Hero media position (override)",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "default": 1
+    },
+    {
+      "type": "header",
+      "content": "Section — Sticky ATC"
+    },
+    {
+      "type": "paragraph",
+      "content": "No copy overrides here — buy-box owns purchase stack messaging."
+    },
+    {
+      "type": "header",
+      "content": "Layout — text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 12)",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 40)",
+      "min": 8,
+      "max": 96,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 10)",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 20)",
+      "min": 8,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sticky Add to Cart"
+    }
+  ]
+}
+{% endschema %}
