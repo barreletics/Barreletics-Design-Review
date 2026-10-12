@@ -1,0 +1,44 @@
+{% comment %}
+  404 template for the draft design. Renders inside layout/theme.liquid, so the
+  header group and footer group wrap it. Uses the shared type and button classes.
+  Replaces the old templates/404.json, which pointed at a main-404 section that never existed.
+{% endcomment %}
+
+<section class="section not-found" aria-labelledby="NotFoundTitle">
+  <div class="section__inner section__inner--narrow not-found__inner">
+    <p class="eyebrow eyebrow--accent not-found__eyebrow">404</p>
+    <h1 id="NotFoundTitle" class="type-hero not-found__title">Page not found</h1>
+    <p class="type-lede not-found__text">The page you are looking for has moved or no longer exists. Let us get you back on your feet.</p>
+    <div class="not-found__actions">
+      {% render 'button', label: 'Shop Performance Skins', url: '/collections/in-studio-grip', style: 'primary', size: 'lg' %}
+      {% render 'button', label: 'Back to Home', url: routes.root_url, style: 'secondary', size: 'lg' %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .not-found {
+    text-align: center;
+    padding-top: var(--space-16, 96px);
+    padding-bottom: var(--space-16, 96px);
+  }
+  .not-found__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .not-found__eyebrow { margin: 0 0 var(--space-4, 16px); }
+  .not-found__title { margin: 0 0 var(--space-4, 16px); color: var(--text-primary); }
+  .not-found__text { margin: 0 auto var(--space-8, 32px); max-width: 520px; }
+  .not-found__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+  @media (max-width: 768px) {
+    .not-found { padding-top: var(--space-12, 64px); padding-bottom: var(--space-12, 64px); }
+    .not-found__actions { flex-direction: column; align-items: stretch; width: 100%; max-width: 320px; }
+    .not-found__actions .btn { width: 100%; }
+  }
+</style>

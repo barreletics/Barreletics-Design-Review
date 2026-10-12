@@ -1,0 +1,1 @@
+Live theme 187144929571 snapshot before pushing the SAVE2 cart note (main-cart.liquid, cart-drawer.liquid, cart.js, new save2-handles.liquid), 2026-10-11 11:17 PM ET. Includes the US-only free-shipping fix pushed ~9:20 PM.

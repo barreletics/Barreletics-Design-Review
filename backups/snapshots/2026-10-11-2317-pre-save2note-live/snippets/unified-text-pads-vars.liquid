@@ -1,0 +1,60 @@
+{%- comment -%}
+  Storefront CSS variables for unified text pads (only when an axis is active).
+  y_d / side_d / y_m / x_m = schema defaults for this section (must match {% schema %} default).
+  Priority per axis:
+    1) unified slider when value != schema default
+    2) else legacy when passed and not blank
+    3) else omit (section CSS / tokens win)
+{%- endcomment -%}
+{%- liquid
+  assign u_y_d = section.settings.text_pad_y
+  assign emit_y_d = false
+  if u_y_d != blank and u_y_d != y_d
+    assign emit_y_d = true
+    assign utp_y_d = u_y_d
+  elsif legacy_y_d != blank
+    assign emit_y_d = true
+    assign utp_y_d = legacy_y_d
+  endif
+
+  assign u_side_d = section.settings.side_padding
+  assign emit_side_d = false
+  if u_side_d != blank and u_side_d != side_d
+    assign emit_side_d = true
+    assign utp_side_d = u_side_d
+  elsif legacy_side_d != blank
+    assign emit_side_d = true
+    assign utp_side_d = legacy_side_d
+  endif
+
+  assign u_y_m = section.settings.text_pad_y_mobile
+  assign emit_y_m = false
+  if u_y_m != blank and u_y_m != y_m
+    assign emit_y_m = true
+    assign utp_y_m = u_y_m
+  elsif legacy_y_m != blank
+    assign emit_y_m = true
+    assign utp_y_m = legacy_y_m
+  endif
+
+  assign u_x_m = section.settings.text_pad_x_mobile
+  assign emit_x_m = false
+  if u_x_m != blank and u_x_m != x_m
+    assign emit_x_m = true
+    assign utp_x_m = u_x_m
+  elsif legacy_x_m != blank
+    assign emit_x_m = true
+    assign utp_x_m = legacy_x_m
+  endif
+
+  assign utp_emit_any = false
+  if emit_y_d or emit_side_d or emit_y_m or emit_x_m
+    assign utp_emit_any = true
+  endif
+-%}
+{%- if utp_emit_any -%}
+{%- if emit_y_d -%}--utp-y-d: {{ utp_y_d }}px;{%- endif -%}
+{%- if emit_side_d -%}--utp-side-d: {{ utp_side_d }}px;{%- endif -%}
+{%- if emit_y_m -%}--utp-y-m: {{ utp_y_m }}px;{%- endif -%}
+{%- if emit_x_m -%}--utp-x-m: {{ utp_x_m }}px;{%- endif -%}
+{%- endif -%}

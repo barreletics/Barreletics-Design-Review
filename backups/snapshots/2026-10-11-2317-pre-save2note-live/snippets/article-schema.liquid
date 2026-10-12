@@ -1,0 +1,32 @@
+{% comment %}
+  Article Schema
+  Outputs BlogPosting structured data for article templates.
+  Rendered automatically by theme-m3.liquid on article pages.
+{% endcomment %}
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": {{ article.title | json }},
+  "datePublished": "{{ article.published_at | date: '%Y-%m-%dT%H:%M:%S' }}",
+  "dateModified": "{{ article.updated_at | date: '%Y-%m-%dT%H:%M:%S' }}",
+  "author": {
+    "@type": "Person",
+    "name": {{ article.author | json }}
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Barreletics",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{{ 'logo.png' | asset_url }}"
+    }
+  },
+  "description": {{ article.excerpt_or_content | strip_html | truncate: 160 | json }},
+  "mainEntityOfPage": "{{ shop.url }}{{ article.url }}"
+  {%- if article.image -%}
+  ,"image": "https:{{ article.image | image_url: width: 1200 }}"
+  {%- endif -%}
+}
+</script>

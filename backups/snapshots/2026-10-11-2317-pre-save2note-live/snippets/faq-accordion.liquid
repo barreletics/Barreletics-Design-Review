@@ -1,0 +1,208 @@
+{% comment %}
+  FAQ Accordion
+  Source: Doc 04 (Components 10, 26), approved prototypes
+
+  Collapsible Q&A pairs. One open at a time. 200ms height animation.
+  Max-width 760px centered. FAQ schema markup included.
+
+  Usage:
+    {% render 'faq-accordion', items: section.blocks, heading: section.settings.heading %}
+
+  Parameters:
+    - items: array of blocks with .settings.question and .settings.answer
+    - heading: optional section heading
+    - bg_class: 'cream' | 'white' (default: 'cream')
+    - include_schema: boolean (default: true) — outputs FAQPage JSON-LD
+{% endcomment %}
+
+{% assign bg_class = bg_class | default: 'cream' %}
+{% assign include_schema = include_schema | default: true %}
+{% assign show_studio = studio_core | default: false %}
+
+{% if items.size > 0 or show_studio %}
+<div class="faq{% if bg_class == 'cream' %} faq--cream{% else %} faq--white{% endif %}" data-faq-accordion>
+  <div class="faq__inner">
+    {% if heading != blank %}
+      <h2 class="faq__heading h2-standard">{{ heading }}</h2>
+    {% endif %}
+
+    <div class="faq__list">
+      {% for item in items %}
+        <details class="faq__item" data-faq-item {{ item.shopify_attributes }}>
+          <summary class="faq__trigger" role="button" aria-expanded="false">
+            <span class="faq__question">{{ item.settings.question }}</span>
+            <span class="faq__icon" aria-hidden="true"></span>
+          </summary>
+          <div class="faq__body">
+            {{ item.settings.answer }}
+          </div>
+        </details>
+      {% endfor %}
+      {% if show_studio %}
+        {% render 'faq-studio-core' %}
+      {% endif %}
+    </div>
+    <button type="button" class="faq__see-all" data-faq-see-all hidden>See all questions</button>
+  </div>
+</div>
+
+{% if include_schema %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {%- assign schema_first = true -%}
+    {%- for item in items -%}
+    {%- unless schema_first -%},{%- endunless -%}
+    {%- assign schema_first = false -%}
+    {
+      "@type": "Question",
+      "name": {{ item.settings.question | json }},
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": {{ item.settings.answer | strip_html | json }}
+      }
+    }
+    {%- endfor -%}
+    {%- if show_studio -%}
+      {%- for i in (1..15) -%}
+        {%- capture qkey -%}studio_faq_{{ i }}_q{%- endcapture -%}
+        {%- capture akey -%}studio_faq_{{ i }}_a{%- endcapture -%}
+        {%- assign q = settings[qkey] -%}
+        {%- assign a = settings[akey] -%}
+        {%- if q != blank -%}
+    {%- unless schema_first -%},{%- endunless -%}
+    {%- assign schema_first = false -%}
+    {
+      "@type": "Question",
+      "name": {{ q | json }},
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": {{ a | strip_html | json }}
+      }
+    }
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
+  ]
+}
+</script>
+{% endif %}
+{% endif %}
+
+<style>
+  .faq { padding: var(--section-padding-y) var(--section-padding-x); background: #fff; }
+  .faq--cream { background: #faf8f6; /* soft cream LOCKED */ }
+  .faq--white { background: #fff; }
+  .faq__inner { max-width: var(--max-width-narrow); margin: 0 auto; }
+  .faq__heading {
+    font-size: var(--type-section-size);
+    font-weight: var(--type-section-weight);
+    line-height: var(--type-section-leading);
+    letter-spacing: var(--type-section-tracking);
+    color: var(--text-primary);
+    text-align: center;
+    margin: var(--type-section-margin);
+    margin-bottom: 40px;
+  }
+  .faq__item {
+    border-top: 1px solid var(--border-default);
+  }
+  .faq__item:last-child { border-bottom: 1px solid var(--border-default); }
+  .faq__trigger {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 20px 0;
+    font-size: 16px;
+    font-weight: var(--weight-medium);
+    color: var(--text-primary);
+    list-style: none;
+    min-height: 44px;
+  }
+  .faq__trigger::-webkit-details-marker { display: none; }
+  .faq__trigger::marker { display: none; }
+  .faq__icon::after {
+    content: "+";
+    font-size: 20px;
+    font-weight: var(--weight-light);
+    color: var(--text-muted);
+    transition: transform var(--transition-fast);
+  }
+  .faq__item[open] .faq__icon::after { content: "\2212"; }
+  .faq__body {
+    padding: 0 0 20px;
+    font-size: var(--text-base);
+    color: var(--text-body);
+    line-height: var(--leading-loose);
+  }
+  .faq__body p { margin-bottom: 12px; }
+  .faq__body p:last-child { margin-bottom: 0; }
+  .faq:not(.faq--expanded) .faq__item--overflow { display: none; }
+  .faq__see-all {
+    display: block;
+    margin: 28px auto 0;
+    padding: 12px 22px;
+    background: transparent;
+    border: 1px solid #1c1916;
+    color: #1c1916;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .faq__see-all[hidden] { display: none; }
+  .faq__see-all:hover { background: #1c1916; color: #fff; }
+
+  @media (max-width: 768px) {
+    .faq__heading { font-size: var(--type-section-size-mobile); }
+    .faq__trigger { font-size: 15px; }
+  }
+</style>
+
+<script>
+  (function() {
+    function isGeoQuestion(text) {
+      var s = (text || '').toLowerCase();
+      if (/how do international|duties and taxes|do you ship internationally\?|where are performance skins made/.test(s)) return false;
+      return /near me|studios? in |studios? across |studios? around |studios? near |where are .* worn|worn (in|across|around)|in new york|in los angeles|in toronto|in london|in melbourne|in canada|new york city|\bnyc\b|los angeles|london|melbourne|toronto|\bcanada\b|chicago|miami|boston|austin|seattle|denver|dallas|houston|brooklyn|manhattan|california|texas|florida|ontario|australia|united kingdom|\buk\b|uae|dubai|worldwide|united states|across the us|across the u\.s/.test(s);
+    }
+    document.querySelectorAll('[data-faq-accordion]').forEach(function(accordion) {
+      var items = accordion.querySelectorAll('[data-faq-item]');
+      var shown = 0;
+      var overflow = 0;
+      items.forEach(function(item) {
+        var qEl = item.querySelector('.faq__question, summary') || item;
+        var geo = isGeoQuestion(qEl.textContent);
+        if (geo || shown >= 4) {
+          item.classList.add('faq__item--overflow');
+          overflow++;
+        } else {
+          shown++;
+        }
+        item.addEventListener('toggle', function() {
+          if (item.open) {
+            items.forEach(function(other) {
+              if (other !== item && other.open) other.open = false;
+            });
+            item.querySelector('.faq__trigger').setAttribute('aria-expanded', 'true');
+          } else {
+            item.querySelector('.faq__trigger').setAttribute('aria-expanded', 'false');
+          }
+        });
+      });
+      var btn = accordion.querySelector('[data-faq-see-all]');
+      if (btn && overflow) {
+        btn.hidden = false;
+        btn.addEventListener('click', function() {
+          accordion.classList.add('faq--expanded');
+          btn.hidden = true;
+        });
+      }
+    });
+  })();
+</script>

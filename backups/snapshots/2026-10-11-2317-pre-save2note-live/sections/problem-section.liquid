@@ -1,0 +1,1403 @@
+{% comment %}
+  Problem section — Home WORKING 12b. Cream beat with optional muted media + copy split.
+{% endcomment %}
+
+{%- liquid
+  assign cta_style = section.settings.cta_style | default: 'solid'
+  assign cta_bg = section.settings.cta_bg_color | default: '#c45c3f'
+  assign cta_border = section.settings.cta_border_color | default: cta_bg
+  assign cta_text_color = section.settings.cta_text_color | default: '#ffffff'
+  if cta_style == 'outline'
+    assign _cta_tc = cta_text_color | downcase
+    if _cta_tc == '#ffffff' or _cta_tc == '#fff' or _cta_tc == 'white' or cta_text_color == blank
+      assign cta_text_color = cta_border
+    endif
+  endif
+  assign mobile_media_height = section.settings.mobile_media_height | default: 520
+  assign copy_stack_gap = section.settings.copy_stack_gap | default: 16
+  assign reverse = section.settings.reverse
+  assign mobile_stack_order = section.settings.mobile_stack_order | default: 'media_first'
+  assign media_fit = section.settings.media_fit | default: 'cover'
+  assign image_fit_mobile = section.settings.image_fit_mobile | default: 'cover'
+  assign media_aspect = section.settings.media_aspect | default: 'stretch'
+  assign media_aspect_m = section.settings.media_aspect_mobile | default: 'stretch'
+  assign min_height = section.settings.min_height | default: 860
+  assign desktop_split = section.settings.desktop_split | default: '50_50'
+  if desktop_split == '62_38'
+    assign split_media = '1.63fr'
+    assign split_copy = '1fr'
+  elsif desktop_split == '38_62'
+    assign split_media = '1fr'
+    assign split_copy = '1.63fr'
+  else
+    assign split_media = '1fr'
+    assign split_copy = '1fr'
+  endif
+
+  # Text panel / section bg: preset white/cream or custom picker (bg_color).
+  # No preset → cream #faf8f6 (compat with current Home Never-slip look).
+  assign bg_preset = section.settings.bg_preset | default: ''
+  if bg_preset == 'white'
+    assign panel_bg = '#ffffff'
+  elsif bg_preset == 'cream'
+    assign panel_bg = '#faf8f6'
+  elsif bg_preset == 'custom'
+    assign panel_bg = section.settings.bg_color | default: '#faf8f6'
+  else
+    assign panel_bg = section.settings.bg_color | default: '#faf8f6'
+  endif
+
+  # Media pad / letterbox bg when Fit or Contain (desk or phone).
+  assign media_bg_preset = section.settings.media_bg_preset
+  if media_bg_preset == 'cream'
+    assign media_pad_bg = '#faf8f6'
+  elsif media_bg_preset == 'white'
+    assign media_pad_bg = '#ffffff'
+  elsif media_bg_preset == 'custom'
+    assign media_pad_bg = section.settings.media_bg | default: '#ffffff'
+  else
+    assign media_pad_bg = section.settings.media_bg | default: '#ffffff'
+  endif
+
+  assign has_media = false
+  if section.settings.video != blank
+    assign has_media = true
+  elsif section.settings.video_url != blank
+    assign has_media = true
+  elsif section.settings.image != blank
+    assign has_media = true
+  elsif section.settings.image_url != blank
+    assign has_media = true
+  elsif section.settings.video_asset != blank
+    assign has_media = true
+  endif
+
+  # Media priority: Shopify video → Video URL → Image → theme asset (last)
+  assign video_src = section.settings.video_url | strip
+  assign video_asset = section.settings.video_asset | default: '' | strip
+  assign video_source_type = 'video/mp4'
+  if video_src contains '.mov'
+    assign video_source_type = 'video/quicktime'
+  endif
+
+  assign poster_url = ''
+  if section.settings.image != blank
+    assign poster_url = section.settings.image | image_url: width: 1600
+  elsif section.settings.poster_url != blank
+    assign poster_url = section.settings.poster_url
+  endif
+
+  # 108fff6 content ids (restored 2026-10-06 r4). Blank / default = today's output.
+  assign pr_hl = section.settings.heading_level | default: 'h2'
+  if pr_hl != 'h1' and pr_hl != 'h2' and pr_hl != 'h3' and pr_hl != 'h4' and pr_hl != 'h5' and pr_hl != 'h6'
+    assign pr_hl = 'h2'
+  endif
+  assign pr_href = section.settings.cta_url | default: '#variants'
+  if section.settings.cta_link_target != blank and section.settings.cta_link_target != 'custom'
+    assign pr_href = section.settings.cta_link_target
+  endif
+  assign pr_alt = section.settings.image_alt | default: section.settings.title
+-%}
+<section
+  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} problem-section{% if has_media %} problem-section--with-media{% endif %}{% if reverse %} problem-section--reverse{% endif %}{% if mobile_stack_order == 'copy_first' %} problem-section--copy-first{% else %} problem-section--media-first{% endif %}{% if media_aspect == 'square' %} problem-section--media-square{% endif %}{% if media_aspect_m == 'square' %} problem-section--media-square-m{% endif %}{% if media_fit == 'contain' or media_fit == 'fit' %} problem-section--media-contain{% endif %}{% if media_fit == 'cover_inset' %} problem-section--cover-inset{% elsif media_fit == 'cover' or media_fit == blank %} problem-section--cover-flush{% endif %}{% if image_fit_mobile == 'fit' or image_fit_mobile == 'contain' %} problem-section--fit-mobile{% endif %}{% if media_fit == 'contain' %} problem-section--media-contain{% endif %}"
+  id="{{ section.settings.anchor_id | default: 'problem' | handleize }}"
+  aria-label="{{ section.settings.aria_label | default: section.settings.title | escape }}"
+  style="{% render 'section-inset-vars' %} --pr-cta-bg: {{ cta_bg }}; --pr-cta-border: {{ cta_border }}; --pr-cta-text: {{ cta_text_color }}; --pr-mobile-media-height: {{ mobile_media_height }}px; --pr-desk-media-min: {{ min_height }}px; --pr-copy-stack-gap: {{ copy_stack_gap }}px; --pr-panel-bg: {{ panel_bg }}; --pr-media-pad-bg: {{ media_pad_bg }}; --pr-split-media: {{ split_media }}; --pr-split-copy: {{ split_copy }};"
+>
+  <div class="problem-shell">
+    <div class="problem-layout{% if has_media %} problem-layout--with-media{% endif %}">
+      {% if has_media %}
+        <div class="problem-media" style="background: {{ media_pad_bg }};">
+          <div class="problem-media__clip">
+            {% if section.settings.video != blank %}
+              {{
+                section.settings.video
+                | video_tag:
+                  image_size: '1600x',
+                  autoplay: true,
+                  loop: true,
+                  muted: true,
+                  controls: false,
+                  playsinline: true,
+                  class: 'problem-media__video'
+              }}
+            {% elsif video_src != blank %}
+              <video
+                class="problem-media__video"
+                autoplay
+                muted
+                loop
+                playsinline
+                webkit-playsinline
+                preload="auto"
+                disablepictureinpicture
+                {% if poster_url != blank %}poster="{{ poster_url | escape }}"{% endif %}
+              >
+                <source src="{{ video_src | escape }}" type="{{ video_source_type }}">
+              </video>
+            {% elsif section.settings.image != blank %}
+              {%- if section.settings.image_mobile != blank -%}<picture style="display:contents"><source media="(max-width: 768px)" srcset="{{ section.settings.image_mobile | image_url: width: 780 }} 780w, {{ section.settings.image_mobile | image_url: width: 1170 }} 1170w" sizes="100vw">{%- endif -%}
+              {% render 'media-img',
+                 image: section.settings.image,
+                 alt: pr_alt,
+                 class: 'problem-media__img',
+                 widths: '600, 900, 1200, 1600',
+                 width_default: 1600,
+                 sizes: '(max-width: 768px) 100vw, 50vw',
+                 loading: 'lazy',
+                 position: 'css' %}
+              {%- if section.settings.image_mobile != blank -%}</picture>{%- endif %}
+            {% elsif section.settings.image_url != blank %}
+              {% render 'media-img',
+                 url: section.settings.image_url,
+                 alt: pr_alt,
+                 class: 'problem-media__img',
+                 sizes: '(max-width: 768px) 100vw, 50vw',
+                 loading: 'lazy',
+                 position: 'css' %}
+            {% elsif video_asset != blank %}
+              <video
+                class="problem-media__video"
+                autoplay
+                muted
+                loop
+                playsinline
+                webkit-playsinline
+                preload="auto"
+                disablepictureinpicture
+              >
+                <source src="{{ video_asset | asset_url }}" type="video/mp4">
+              </video>
+            {% else %}
+              <div class="problem-media__placeholder" aria-hidden="true"></div>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+      <div class="problem-inner">
+        <div>
+          {% if section.settings.show_trust_strip %}<div class="problem-trust"><span class="problem-trust__stars" aria-hidden="true">★★★★★</span>{% if section.settings.trust_text != blank %}<span class="problem-trust__text">{{ section.settings.trust_text | escape }}</span>{% endif %}</div>{% endif %}
+          <{{ pr_hl }} class="problem-title h2-display">{{ section.settings.title }}</{{ pr_hl }}>
+          {% if section.settings.body != blank %}
+            <p class="problem-body">{{ section.settings.body }}</p>
+          {% endif %}
+        </div>
+        <div>
+          {% if section.blocks.size > 0 %}
+            <ul class="problem-list">
+              {% for block in section.blocks %}
+                {% if block.settings.text != blank %}
+                <li {{ block.shopify_attributes }}>
+                  <span class="problem-list__x" aria-hidden="true">×</span>
+                  <span>{{ block.settings.text }}</span>
+                </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          {% endif %}
+          {% if section.settings.cta_text != blank %}
+            <div class="problem-resolve">
+              <a class="problem-resolve__cta{% if cta_style == 'outline' %} problem-resolve__cta--outline{% endif %}" href="{{ pr_href }}">
+                {{ section.settings.cta_text }}
+              </a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{%- comment -%}
+  TE live preview (restored 2026-10-06; pattern verified on draft 2026-10-03 in 108fff6 / PR #36 and acd8a93 / PR #35):
+  Shopify hot-patches this {% style %} block when settings change. Values must read section.settings.* directly
+  (not top-of-file assigns). !important beats the inline --pr-* vars on .problem-section and the static <style> block.
+  Keep this block render-free (no {% render %}).
+{%- endcomment -%}
+{% style %}
+  {%- liquid
+    assign te_cta_bg = section.settings.cta_bg_color | default: '#c45c3f'
+    assign te_cta_border = section.settings.cta_border_color | default: te_cta_bg
+    assign te_cta_text = section.settings.cta_text_color | default: '#ffffff'
+    if section.settings.cta_style == 'outline'
+      assign te_cta_tc = te_cta_text | downcase
+      if te_cta_tc == '#ffffff' or te_cta_tc == '#fff' or te_cta_tc == 'white' or section.settings.cta_text_color == blank
+        assign te_cta_text = te_cta_border
+      endif
+    endif
+    assign te_split_media = '1fr'
+    assign te_split_copy = '1fr'
+    if section.settings.desktop_split == '62_38'
+      assign te_split_media = '1.63fr'
+    elsif section.settings.desktop_split == '38_62'
+      assign te_split_copy = '1.63fr'
+    endif
+    if section.settings.bg_preset == 'white'
+      assign te_panel_bg = '#ffffff'
+    elsif section.settings.bg_preset == 'cream'
+      assign te_panel_bg = '#faf8f6'
+    else
+      assign te_panel_bg = section.settings.bg_color | default: '#faf8f6'
+    endif
+    if section.settings.media_bg_preset == 'cream'
+      assign te_media_bg = '#faf8f6'
+    elsif section.settings.media_bg_preset == 'white'
+      assign te_media_bg = '#ffffff'
+    else
+      assign te_media_bg = section.settings.media_bg | default: '#ffffff'
+    endif
+    assign te_in_t = section.settings.inset_top | default: 0
+    assign te_in_b = section.settings.inset_bottom | default: 0
+    assign te_in_x = section.settings.inset_x | default: 0
+    if section.settings.inset_custom_mobile
+      assign te_in_tm = section.settings.inset_top_mobile | default: 0
+      assign te_in_bm = section.settings.inset_bottom_mobile | default: 0
+      assign te_in_xm = section.settings.inset_x_mobile | default: 0
+    else
+      assign te_in_tm = te_in_t
+      assign te_in_bm = te_in_b
+      assign te_in_xm = te_in_x
+    endif
+  -%}
+  #shopify-section-{{ section.id }} .problem-section {
+    --pr-cta-bg: {{ te_cta_bg }} !important;
+    --pr-cta-border: {{ te_cta_border }} !important;
+    --pr-cta-text: {{ te_cta_text }} !important;
+    --pr-mobile-media-height: {{ section.settings.mobile_media_height | default: 520 }}px !important;
+    --pr-desk-media-min: {{ section.settings.min_height | default: 860 }}px !important;
+    --pr-copy-stack-gap: {{ section.settings.copy_stack_gap | default: 16 }}px !important;
+    --pr-panel-bg: {{ te_panel_bg }} !important;
+    --pr-media-pad-bg: {{ te_media_bg }} !important;
+    --pr-split-media: {{ te_split_media }} !important;
+    --pr-split-copy: {{ te_split_copy }} !important;
+    --section-inset-top: {{ te_in_t }}px !important;
+    --section-inset-right: {{ te_in_x }}px !important;
+    --section-inset-bottom: {{ te_in_b }}px !important;
+    --section-inset-left: {{ te_in_x }}px !important;
+    --section-inset-top-m: {{ te_in_tm }}px !important;
+    --section-inset-right-m: {{ te_in_xm }}px !important;
+    --section-inset-bottom-m: {{ te_in_bm }}px !important;
+    --section-inset-left-m: {{ te_in_xm }}px !important;
+  }
+  /* Panel + media pad colours (static <style> and inline background use assigns). */
+  #shopify-section-{{ section.id }} .problem-section,
+  #shopify-section-{{ section.id }} .problem-section--cover-flush .problem-inner {
+    background: {{ te_panel_bg }} !important;
+  }
+  #shopify-section-{{ section.id }} .problem-media {
+    background: {{ te_media_bg }} !important;
+  }
+  @media (min-width: 769px) {
+    #shopify-section-{{ section.id }} .problem-section--with-media .problem-layout--with-media {
+      min-height: {{ section.settings.min_height | default: 860 }}px;
+    }
+  }
+  {%- comment -%} Photo focal point (restored 2026-10-06 from 108fff6 schema). Defaults = center = today's look. {%- endcomment -%}
+  {%- liquid
+    assign te_pos = section.settings.image_position | default: 'center'
+    if te_pos == 'custom'
+      assign te_pos = section.settings.focal_x | default: 50 | append: '% ' | append: section.settings.focal_y | default: 50 | append: '%'
+    endif
+    assign te_pos_m = section.settings.image_position_mobile | default: 'same'
+    if te_pos_m == 'same' or te_pos_m == blank
+      assign te_pos_m = te_pos
+    elsif te_pos_m == 'custom'
+      assign te_pos_m = section.settings.focal_x_mobile | default: 50 | append: '% ' | append: section.settings.focal_y_mobile | default: 50 | append: '%'
+    endif
+  -%}
+  #shopify-section-{{ section.id }} .problem-section .problem-media__img,
+  #shopify-section-{{ section.id }} .problem-section .problem-media__video {
+    object-position: {{ te_pos }};
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .problem-section .problem-media__img,
+    #shopify-section-{{ section.id }} .problem-section .problem-media__video {
+      object-position: {{ te_pos_m }};
+    }
+  }
+{% endstyle %}
+
+{%- comment -%}
+  108fff6 layout controls (restored 2026-10-06 r4), live in Theme Editor: this block reads section.settings directly.
+  Each rule is emitted only when a control is moved off its default; defaults = today's rendered values, so nothing changes at defaults.
+{%- endcomment -%}
+{% style %}
+  {%- liquid
+    assign te_ty = section.settings.text_pad_y | default: 72
+    assign te_sx = section.settings.side_padding | default: 40
+    assign te_tym = section.settings.text_pad_y_mobile | default: 48
+    assign te_sxm = section.settings.text_pad_x_mobile | default: 16
+    assign te_mc = section.settings.media_column_pct | default: 50
+    assign te_mw = section.settings.mobile_media_width | default: 100
+    assign te_gap = section.settings.section_gap | default: 0
+    assign te_gapm = section.settings.section_gap_mobile | default: 0
+    assign te_bgs = ''
+    if section.settings.bg_style == 'white'
+      assign te_bgs = '#ffffff'
+    elsif section.settings.bg_style == 'cream'
+      assign te_bgs = '#faf8f6'
+    elsif section.settings.bg_style == 'darker_cream'
+      assign te_bgs = '#efe9dd'
+    endif
+  -%}
+  {%- if te_ty != 72 or te_sx != 40 or te_mc != 50 or te_gap > 0 %}
+  @media (min-width: 769px) {
+    {%- if te_ty != 72 or te_sx != 40 %}
+    #shopify-section-{{ section.id }} .problem-section:not(.problem-section--with-media),
+    #shopify-section-{{ section.id }} .problem-section--with-media:not(.problem-section--cover-flush),
+    #shopify-section-{{ section.id }} .problem-section.problem-section--cover-flush .problem-inner {
+      {%- if te_ty != 72 %}
+      padding-top: {{ te_ty }}px !important;
+      padding-bottom: {{ te_ty }}px !important;
+      {%- endif %}
+      {%- if te_sx != 40 %}
+      padding-left: {{ te_sx }}px !important;
+      padding-right: {{ te_sx }}px !important;
+      {%- endif %}
+    }
+    {%- endif %}
+    {%- if te_mc != 50 %}
+    #shopify-section-{{ section.id }} .problem-section.problem-section {
+      --pr-split-media: {{ te_mc }}fr !important;
+      --pr-split-copy: {{ 100 | minus: te_mc }}fr !important;
+    }
+    {%- endif %}
+    {%- if te_gap > 0 %}
+    #shopify-section-{{ section.id }} {
+      padding-top: {{ te_gap }}px;
+      padding-bottom: {{ te_gap }}px;
+    }
+    {%- endif %}
+  }
+  {%- endif %}
+  {%- if te_tym != 48 or te_sxm != 16 or te_mw != 100 or te_gapm > 0 %}
+  @media (max-width: 768px) {
+    {%- if te_tym != 48 or te_sxm != 16 %}
+    #shopify-section-{{ section.id }} .problem-section:not(.problem-section--with-media),
+    #shopify-section-{{ section.id }} .problem-section--with-media:not(.problem-section--cover-flush),
+    #shopify-section-{{ section.id }} .problem-section.problem-section--cover-flush .problem-inner {
+      {%- if te_tym != 48 %}
+      padding-top: {{ te_tym }}px !important;
+      padding-bottom: {{ te_tym }}px !important;
+      {%- endif %}
+      {%- if te_sxm != 16 %}
+      padding-left: {{ te_sxm }}px !important;
+      padding-right: {{ te_sxm }}px !important;
+      {%- endif %}
+    }
+    {%- endif %}
+    {%- if te_mw != 100 %}
+    #shopify-section-{{ section.id }} .problem-layout--with-media .problem-media {
+      width: {{ te_mw }}% !important;
+      justify-self: center;
+      margin-left: auto !important;
+      margin-right: auto !important;
+    }
+    {%- endif %}
+    {%- if te_gapm > 0 %}
+    #shopify-section-{{ section.id }} {
+      padding-bottom: {{ te_gapm }}px;
+    }
+    {%- endif %}
+  }
+  {%- endif %}
+  {%- if te_bgs != blank %}
+  #shopify-section-{{ section.id }} .problem-section.problem-section {
+    --pr-panel-bg: {{ te_bgs }} !important;
+    background: {{ te_bgs }} !important;
+  }
+  #shopify-section-{{ section.id }} .problem-section.problem-section--cover-flush .problem-inner {
+    background: {{ te_bgs }} !important;
+  }
+  {%- endif %}
+{% endstyle %}
+
+<style>
+  {%- if section.settings.heading_size_override != blank %}
+  #shopify-section-{{ section.id }} { {% render 'type-override-vars', title_size: section.settings.heading_size_override %} --te-title-size-n: {{ section.settings.heading_size_override }}; }
+  {%- endif %}
+  {%- assign _hso_n = section.settings.heading_size_override | plus: 0 -%}
+  {%- if section.settings.heading_size_override != blank and _hso_n > 0 %}
+  #shopify-section-{{ section.id }} { --section-heading-size-m: {{ _hso_n }}px; }
+  {%- endif %}
+  .problem-section {
+    padding: 72px 40px;
+    background: {{ panel_bg }};
+  }
+  /* Cover (fill half): media column bleeds edge-to-edge in its 50%. Text keeps cream. */
+  #shopify-section-{{ section.id }} .problem-section--with-media.problem-section--cover-flush {
+    padding: 0;
+  }
+  /* Cover flush: kill shell max-width/centering — that was the left-margin pad. */
+  #shopify-section-{{ section.id }} .problem-section--cover-flush .problem-shell {
+    max-width: none;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  #shopify-section-{{ section.id }} .problem-section--cover-flush .problem-layout--with-media {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    gap: 0;
+    align-items: stretch;
+  }
+  /* Cover flush + Landscape: fill the full media half (edge-to-edge). */
+  #shopify-section-{{ section.id }} .problem-section--cover-flush:not(.problem-section--media-square) .problem-media__clip {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    max-height: none;
+    aspect-ratio: auto;
+    border-radius: 0;
+  }
+  /* Cover flush + Square desk: still left-flush to margin, but 1:1 frame (Frame shape works). */
+  #shopify-section-{{ section.id }} .problem-section--cover-flush.problem-section--media-square .problem-media {
+    position: relative;
+    align-self: start;
+    height: auto;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+  }
+  #shopify-section-{{ section.id }} .problem-section--cover-flush.problem-section--media-square .problem-media__clip {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    aspect-ratio: 1 / 1;
+    border-radius: 0;
+    margin: 0;
+    padding: 0;
+  }
+  /* Cover inset (sit in panel): preserve Never-slip sitting-in look (pad + gap + radius). */
+  #shopify-section-{{ section.id }} .problem-section--with-media.problem-section--cover-inset {
+    padding: 72px 40px;
+  }
+  {% if template.name == 'collection' %}
+  #shopify-section-{{ section.id }} .problem-section {
+    background: {{ panel_bg }};
+  }
+  {% endif %}
+  .problem-shell {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  #shopify-section-{{ section.id }} .problem-layout--with-media {
+    display: grid;
+    grid-template-columns: var(--pr-split-media, 1fr) var(--pr-split-copy, 1fr);
+    gap: 48px;
+    align-items: stretch;
+    max-width: none;
+  }
+  #shopify-section-{{ section.id }} .problem-section--cover-flush .problem-layout--with-media {
+    gap: 0;
+    align-items: stretch;
+  }
+  #shopify-section-{{ section.id }} .problem-section--cover-inset .problem-layout--with-media {
+    gap: 48px;
+  }
+  #shopify-section-{{ section.id }} .problem-layout--with-media .problem-shell {
+    max-width: none;
+  }
+  #shopify-section-{{ section.id }} .problem-layout--with-media {
+    align-items: start;
+  }
+  #shopify-section-{{ section.id }} .problem-section--cover-flush .problem-layout--with-media {
+    align-items: stretch;
+  }
+  #shopify-section-{{ section.id }} .problem-media__clip {
+    position: relative;
+    width: 100%;
+    height: var(--pr-desk-media-min, 860px);
+    min-height: var(--pr-desk-media-min, 860px);
+    max-height: var(--pr-desk-media-min, 860px);
+    overflow: hidden;
+    border-radius: 4px;
+    background: var(--pr-media-pad-bg, #ffffff);
+  }
+  #shopify-section-{{ section.id }} .problem-media {
+    background: {{ media_pad_bg }};
+  }
+  /* Cover flush: no radius, stretch to full half, clip absolute fill */
+  #shopify-section-{{ section.id }} .problem-section--cover-flush .problem-media {
+    align-self: stretch;
+    height: 100%;
+    min-height: var(--pr-desk-media-min, 860px);
+    margin: 0;
+    padding: 0;
+  }
+  #shopify-section-{{ section.id }} .problem-section--cover-flush:not(.problem-section--media-square) .problem-media__clip {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    max-height: none;
+    border-radius: 0;
+    margin: 0;
+    padding: 0;
+  }
+  #shopify-section-{{ section.id }} .problem-section--cover-flush .problem-media {
+    position: relative;
+  }
+  /* Text column keeps cream pad when media is flush */
+  #shopify-section-{{ section.id }} .problem-section--cover-flush .problem-inner {
+    padding: 72px 40px;
+    background: {{ panel_bg }};
+    box-sizing: border-box;
+  }
+  /* Cover inset: keep rounded card sitting in panel */
+  #shopify-section-{{ section.id }} .problem-section--cover-inset .problem-media__clip {
+    border-radius: 4px;
+  }
+  #shopify-section-{{ section.id }} .problem-section--media-square .problem-media__clip,
+  #shopify-section-{{ section.id }} .problem-section--cover-inset.problem-section--media-square .problem-media__clip {
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    aspect-ratio: 1 / 1;
+  }
+  /* Cover fill = 50/50 law: absolute inset + object-fit cover.
+     Theme base sets video { max-width:100%; height:auto } which blocks fill. */
+  #shopify-section-{{ section.id }} .problem-media__clip {
+    position: relative;
+    overflow: hidden;
+  }
+  #shopify-section-{{ section.id }} .problem-media__video,
+  #shopify-section-{{ section.id }} .problem-media__img,
+  #shopify-section-{{ section.id }} .problem-media__placeholder {
+    display: block;
+    position: absolute;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+    object-fit: cover;
+    object-position: center center;
+  }
+  #shopify-section-{{ section.id }} .problem-media__placeholder {
+    background: linear-gradient(135deg, #e8e2da, #f0ebe4);
+    object-fit: unset;
+  }
+  #shopify-section-{{ section.id }} .problem-section--media-contain .problem-media__video,
+  #shopify-section-{{ section.id }} .problem-section--media-contain .problem-media__img {
+    object-fit: contain;
+  }
+
+  .problem-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+  #shopify-section-{{ section.id }} .problem-layout--with-media .problem-inner {
+    grid-column: auto;
+    grid-template-columns: 1fr;
+    gap: var(--pr-copy-stack-gap, 28px);
+  }
+  .problem-title {
+    max-width: none;
+    margin: 0 0 var(--gap-b);
+  }
+  /* GLOBAL HEADING SYSTEM (locked 2026-09-27): one display head for this section type.
+     56 desktop, standard tier (fluid to 36 on tablet) / 36 phone / 400. Theme Editor title size, weight
+     and role settings are intentionally ignored so every page renders the same. */
+  #shopify-section-{{ section.id }} .problem-title.h2-display {
+    font-size: clamp(var(--heading-phone, 36px), calc(var(--te-title-size-n, var(--heading-standard-desktop-n, 56)) * 4.8vw / 56), var(--te-title-size, var(--heading-standard-desktop, 56px)));
+    font-weight: 400;
+    line-height: var(--type-h2-display-leading, 1.1);
+    letter-spacing: var(--type-h2-display-tracking, -0.028em);
+    text-wrap: balance; /* no lone one-word last line (e.g. Pose) on phone at 36 */
+  }
+  #shopify-section-{{ section.id }} .problem-title.h2-display strong,
+  #shopify-section-{{ section.id }} .problem-title.h2-display b {
+    font-weight: inherit;
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .problem-title.h2-display {
+      font-size: var(--section-heading-size-m, 36px);
+    }
+  }
+  .problem-body {
+    font-size: var(--type-body-size);
+    font-weight: var(--type-body-weight);
+    color: var(--text-body);
+    line-height: var(--type-body-leading);
+    margin: 0;
+    max-width: 38ch;
+  }
+  .problem-layout--with-media .problem-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .problem-layout--with-media .problem-list,
+  .problem-layout--with-media .problem-resolve {
+    /* list block starts after title/body */
+  }
+  .problem-layout--with-media .problem-inner > div:last-child {
+    margin-top: var(--pr-copy-stack-gap, 12px);
+  }
+  .problem-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .problem-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 0;
+    border-top: 1px solid #d6cfc0;
+    font-size: 15px;
+    color: #4a4a4a;
+    line-height: 1.45;
+  }
+  .problem-list li:last-child { border-bottom: 1px solid #d6cfc0; }
+  .problem-list__x {
+    color: #c45c3f;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .problem-resolve {
+    margin-top: 28px;
+    padding-top: 0;
+    border-top: none;
+  }
+  #shopify-section-{{ section.id }} .problem-resolve__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    min-height: var(--type-cta-min-height);
+    padding: var(--type-cta-pad-y) var(--type-cta-pad-x);
+    background: var(--pr-cta-bg, #c45c3f);
+    color: var(--pr-cta-text, #fff);
+    font-size: var(--type-cta-size);
+    font-weight: var(--type-cta-weight);
+    letter-spacing: var(--type-cta-tracking);
+    line-height: var(--type-cta-leading, 1);
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 4px;
+    border: 1px solid var(--pr-cta-border, var(--pr-cta-bg, #c45c3f));
+    transition: opacity 0.15s ease;
+  }
+  #shopify-section-{{ section.id }} .problem-resolve__cta--outline {
+    background: transparent;
+    /* Outline ink = remapped --pr-cta-text (white→border in liquid). Border fallback if unset. */
+    color: var(--pr-cta-text, var(--pr-cta-border, #c45c3f));
+    border-color: var(--pr-cta-border, #c45c3f);
+  }
+  #shopify-section-{{ section.id }} .problem-resolve__cta:hover { opacity: 0.92; }
+  #shopify-section-{{ section.id }} .problem-resolve__cta--outline:hover { opacity: 0.85; }
+  
+  /* Desk L/R — same mechanism as fifty-fifty reverse (CSS order, not % crop) */
+  #shopify-section-{{ section.id }} .problem-layout--with-media {
+    display: grid;
+    grid-template-columns: var(--pr-split-media, 1fr) var(--pr-split-copy, 1fr);
+  }
+  #shopify-section-{{ section.id }} .problem-section--reverse .problem-layout--with-media {
+    grid-template-columns: var(--pr-split-copy, 1fr) var(--pr-split-media, 1fr);
+  }
+  #shopify-section-{{ section.id }} .problem-layout--with-media .problem-media { order: 1; }
+  #shopify-section-{{ section.id }} .problem-layout--with-media .problem-inner { order: 2; }
+  #shopify-section-{{ section.id }} .problem-section--reverse .problem-layout--with-media .problem-media { order: 2; }
+  #shopify-section-{{ section.id }} .problem-section--reverse .problem-layout--with-media .problem-inner { order: 1; }
+
+  /* Phone U/D — same idea as fifty-fifty mobile_stack_order */
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .problem-layout--with-media {
+      grid-template-columns: 1fr;
+    }
+    #shopify-section-{{ section.id }} .problem-section--media-first .problem-layout--with-media .problem-media { order: 1; }
+    #shopify-section-{{ section.id }} .problem-section--media-first .problem-layout--with-media .problem-inner { order: 2; }
+    #shopify-section-{{ section.id }} .problem-section--copy-first .problem-layout--with-media .problem-inner { order: 1; }
+    #shopify-section-{{ section.id }} .problem-section--copy-first .problem-layout--with-media .problem-media { order: 2; }
+    /* reset desk reverse on phone */
+    #shopify-section-{{ section.id }} .problem-section--reverse .problem-layout--with-media .problem-media,
+    #shopify-section-{{ section.id }} .problem-section--reverse .problem-layout--with-media .problem-inner { order: unset; }
+    #shopify-section-{{ section.id }} .problem-section--media-first.problem-section--reverse .problem-layout--with-media .problem-media { order: 1; }
+    #shopify-section-{{ section.id }} .problem-section--media-first.problem-section--reverse .problem-layout--with-media .problem-inner { order: 2; }
+    #shopify-section-{{ section.id }} .problem-section--copy-first.problem-section--reverse .problem-layout--with-media .problem-inner { order: 1; }
+    #shopify-section-{{ section.id }} .problem-section--copy-first.problem-section--reverse .problem-layout--with-media .problem-media { order: 2; }
+  }
+@media (max-width: 768px) {
+    .problem-section {
+      padding: var(--text-pad-mobile, 48px) 16px;
+      min-height: var(--text-min-h-mobile, auto);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    #shopify-section-{{ section.id }} .problem-section--with-media.problem-section--cover-flush {
+      padding: 0;
+    }
+    #shopify-section-{{ section.id }} .problem-section--cover-flush .problem-inner {
+      padding: var(--text-pad-mobile, 48px) 16px;
+      min-height: var(--text-min-h-mobile, auto);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    /* Phone: media column follows the clip (mobile_media_height), not the desktop 860 min-height.
+       Without this the column stays 860 tall under a 600 clip = blank bar (Home Chair Pose, 2026-09-30). */
+    #shopify-section-{{ section.id }} .problem-section--cover-flush .problem-media {
+      height: auto;
+      min-height: 0;
+    }
+    #shopify-section-{{ section.id }} .problem-section--cover-flush .problem-media__clip {
+      position: relative;
+      inset: auto;
+      height: var(--pr-mobile-media-height, 520px);
+      min-height: var(--pr-mobile-media-height, 520px);
+      max-height: var(--pr-mobile-media-height, 520px);
+      border-radius: 0;
+    }
+    #shopify-section-{{ section.id }} .problem-section--with-media.problem-section--cover-inset {
+      padding: var(--text-pad-mobile, 48px) 16px;
+      min-height: var(--text-min-h-mobile, auto);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    #shopify-section-{{ section.id }} .problem-layout--with-media {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+    #shopify-section-{{ section.id }} .problem-section--cover-flush .problem-layout--with-media {
+      gap: 0;
+    }
+    #shopify-section-{{ section.id }} .problem-media__clip {
+      height: var(--pr-mobile-media-height, 520px);
+      min-height: var(--pr-mobile-media-height, 520px);
+      max-height: var(--pr-mobile-media-height, 520px);
+      aspect-ratio: auto;
+    }
+    /* Phone landscape: desk square must not force 1:1 over height slider */
+    #shopify-section-{{ section.id }} .problem-section--media-square:not(.problem-section--media-square-m) .problem-media__clip {
+      height: var(--pr-mobile-media-height, 520px);
+      min-height: var(--pr-mobile-media-height, 520px);
+      max-height: var(--pr-mobile-media-height, 520px);
+      aspect-ratio: auto;
+    }
+    /* Phone square frame — 1/1; height follows width (ignore height slider). */
+
+    /* Frame shape — phone: Square under Cover flush */
+    #shopify-section-{{ section.id }} .problem-section--cover-flush.problem-section--media-square-m .problem-media {
+      height: auto;
+      min-height: 0;
+      align-self: stretch;
+    }
+    #shopify-section-{{ section.id }} .problem-section--cover-flush.problem-section--media-square-m .problem-media__clip {
+      position: relative !important;
+      inset: auto !important;
+      width: 100%;
+      height: auto !important;
+      min-height: 0 !important;
+      max-height: none !important;
+      aspect-ratio: 1 / 1;
+      border-radius: 0;
+    }
+    /* Frame shape — phone: Landscape under Cover flush = full-width height slider */
+    #shopify-section-{{ section.id }} .problem-section--cover-flush:not(.problem-section--media-square-m) .problem-media__clip {
+      position: relative;
+      inset: auto;
+      width: 100%;
+      height: var(--pr-mobile-media-height, 520px);
+      min-height: var(--pr-mobile-media-height, 520px);
+      max-height: none;
+      aspect-ratio: auto;
+      border-radius: 0;
+    }
+
+    #shopify-section-{{ section.id }} .problem-section--media-square-m .problem-media__clip {
+      height: auto;
+      min-height: 0;
+      max-height: none;
+      aspect-ratio: 1 / 1;
+    }
+    .problem-inner {
+      grid-template-columns: 1fr;
+      gap: var(--pr-copy-stack-gap, 28px);
+    }
+    #shopify-section-{{ section.id }} .problem-media__video,
+    #shopify-section-{{ section.id }} .problem-media__img {
+      object-position: center center;
+    }
+  }
+  @media (min-width: 769px) {
+    #shopify-section-{{ section.id }} .problem-media__video,
+    #shopify-section-{{ section.id }} .problem-media__img {
+      object-position: center center;
+    }
+  }
+
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .problem-section--fit-mobile .problem-media__video,
+    #shopify-section-{{ section.id }} .problem-section--fit-mobile .problem-media__img {
+      object-fit: contain;
+    }
+  }
+  /* Trust strip (108fff6 show_trust_strip; off by default). */
+  #shopify-section-{{ section.id }} .problem-trust {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 18px;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  #shopify-section-{{ section.id }} .problem-trust__stars {
+    color: #d4af37;
+    font-size: 15px;
+    letter-spacing: 0.22em;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .problem-trust__text {
+    font-size: 13px;
+    font-weight: 400;
+    color: #4a4a4a;
+    letter-spacing: 0;
+  }
+</style>
+
+{% if section.settings.video != blank or video_src != blank %}
+<script>
+  (function () {
+    var root = document.getElementById('shopify-section-{{ section.id }}');
+    if (!root) return;
+    var video = root.querySelector('.problem-media__video');
+    if (!video || video.hasAttribute('controls')) return;
+    function kick() {
+      video.muted = true;
+      video.defaultMuted = true;
+      video.setAttribute('muted', '');
+      video.playsInline = true;
+      var p = video.play();
+      if (p && p.catch) p.catch(function () {});
+    }
+    video.addEventListener('loadeddata', kick);
+    video.addEventListener('canplay', kick);
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) kick(); });
+      }, { rootMargin: '80px 0px' });
+      io.observe(video);
+    }
+    kick();
+  })();
+</script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Problem section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Shared \u2014 Content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Never slip in Chair Pose"
+    },
+    {
+      "type": "number",
+      "id": "heading_size_override",
+      "label": "Heading size override (px, desktop)",
+      "info": "Leave blank to follow Theme settings > Section headings. A number sets this section's desktop heading size only. Phones keep the global phone size."
+    },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Body",
+      "default": "Never slip again in side plank or flat back chair. Try that in a barre grip sock."
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA label",
+      "default": "Shop Now"
+    },
+    {
+      "type": "select",
+      "id": "cta_style",
+      "label": "CTA style",
+      "options": [
+        {
+          "value": "solid",
+          "label": "Solid fill"
+        },
+        {
+          "value": "outline",
+          "label": "Outline only"
+        }
+      ],
+      "default": "solid"
+    },
+    {
+      "type": "color",
+      "id": "cta_bg_color",
+      "label": "CTA background color",
+      "default": "#c45c3f",
+      "info": "Solid fill. Outline ignores fill; border still applies."
+    },
+    {
+      "type": "color",
+      "id": "cta_border_color",
+      "label": "CTA outline / border color",
+      "default": "#c45c3f"
+    },
+    {
+      "type": "color",
+      "id": "cta_text_color",
+      "label": "CTA label color",
+      "default": "#ffffff",
+      "info": "Solid: usually white. Outline auto-uses border color when left white."
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "CTA link"
+    },
+    {
+      "type": "header",
+      "content": "Media (optional)"
+    },
+    {
+      "type": "paragraph",
+      "content": "When set, shows muted looping video (or still image) beside copy. Priority: Shopify video \u2192 Video URL \u2192 Image. All videos are always muted."
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Shopify video"
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "Video URL",
+      "info": "CDN/external mp4. Ignored when Shopify video is set. Legacy theme-asset filenames in saved settings still work."
+    },
+    {
+      "type": "text",
+      "id": "video_asset",
+      "label": "Theme asset fallback (don't use if Shopify video/image set)",
+      "info": "e.g. chair-pose-home.mp4 in Assets. Wins over Video URL."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Poster / still image",
+      "info": "Poster for video URL, or still image when no video is set."
+    },
+    {"type": "text", "id": "poster_url", "label": "Video poster: still before video loads", "info": "Used when Video URL is set and Image is empty."},
+    {"type": "text", "id": "image_url", "label": "Image URL", "info": "Used when Shopify image is empty (and no video)."},
+    {"type": "text", "id": "image_alt", "label": "Image alt text", "info": "Blank = heading text."},
+    {"type": "image_picker", "id": "image_mobile", "label": "Phone image (optional)", "info": "Replaces the still on phones (\u2264768px). Ignored when video is set."},
+    {"type": "select", "id": "image_position", "label": "Focal point — desktop (default: Center)", "default": "center", "options": [{"value": "top left", "label": "Top left"}, {"value": "top", "label": "Top"}, {"value": "top right", "label": "Top right"}, {"value": "left", "label": "Left"}, {"value": "center", "label": "Center (default)"}, {"value": "right", "label": "Right"}, {"value": "bottom left", "label": "Bottom left"}, {"value": "bottom", "label": "Bottom"}, {"value": "bottom right", "label": "Bottom right"}, {"value": "custom", "label": "Custom (sliders below)"}]},
+    {"type": "range", "id": "focal_x", "label": "Custom focal — horizontal (default 50)", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50, "visible_if": "{{ section.settings.image_position == 'custom' }}"},
+    {"type": "range", "id": "focal_y", "label": "Custom focal — vertical (default 50)", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50, "visible_if": "{{ section.settings.image_position == 'custom' }}"},
+    {"type": "select", "id": "image_position_mobile", "label": "Focal point — phone (default: Same as desktop)", "default": "same", "options": [{"value": "same", "label": "Same as desktop (default)"}, {"value": "top left", "label": "Top left"}, {"value": "top", "label": "Top"}, {"value": "top right", "label": "Top right"}, {"value": "left", "label": "Left"}, {"value": "center", "label": "Center (default)"}, {"value": "right", "label": "Right"}, {"value": "bottom left", "label": "Bottom left"}, {"value": "bottom", "label": "Bottom"}, {"value": "bottom right", "label": "Bottom right"}, {"value": "custom", "label": "Custom (sliders below)"}]},
+    {"type": "range", "id": "focal_x_mobile", "label": "Custom phone focal — horizontal (default 50)", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50, "visible_if": "{{ section.settings.image_position_mobile == 'custom' }}"},
+    {"type": "range", "id": "focal_y_mobile", "label": "Custom phone focal — vertical (default 50)", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50, "visible_if": "{{ section.settings.image_position_mobile == 'custom' }}"},
+    {
+      "type": "range",
+      "id": "mobile_media_height",
+      "label": "Photo height \u2014 phone",
+      "min": 320,
+      "max": 720,
+      "step": 20,
+      "unit": "px",
+      "default": 520,
+      "info": "Same control as 50/50."
+    },
+    {
+      "type": "header",
+      "content": "Media (50/50 standard)"
+    },
+    {
+      "type": "select",
+      "id": "media_fit",
+      "label": "Media fit",
+      "default": "cover",
+      "options": [
+        {
+          "value": "cover",
+          "label": "Cover (fill half)"
+        },
+        {
+          "value": "cover_inset",
+          "label": "Cover inset (sit in panel)"
+        },
+        {
+          "value": "fit",
+          "label": "Fit (whole photo in the frame)"
+        },
+        {
+          "value": "contain",
+          "label": "Contain (packshot)"
+        }
+      ],
+      "info": "Cover = edge-to-edge in the media half. Cover inset = current Never-slip sitting-in look (pad + gap + radius). Fit/Contain unchanged."
+    },
+    {
+      "type": "select",
+      "id": "image_fit_mobile",
+      "label": "Media fit \u2014 phone",
+      "default": "cover",
+      "options": [
+        {
+          "value": "cover",
+          "label": "Cover (same as desktop)"
+        },
+        {
+          "value": "fit",
+          "label": "Fit \u2014 full photo, no crop"
+        },
+        {
+          "value": "contain",
+          "label": "Contain (packshot)"
+        }
+      ],
+      "info": "Same control as 50/50."
+    },
+    {
+      "type": "select",
+      "id": "desktop_split",
+      "label": "Desktop split",
+      "default": "50_50",
+      "options": [
+        { "value": "50_50", "label": "Even (current)" },
+        { "value": "62_38", "label": "Image larger" },
+        { "value": "38_62", "label": "Text larger" }
+      ],
+      "info": "Desktop only. Phone stays stacked. Default keeps today’s 50/50."
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "label": "Desktop min height",
+      "min": 400,
+      "max": 1200,
+      "step": 20,
+      "unit": "px",
+      "default": 860,
+      "info": "Same control as 50/50. Interni-like ~640; Grip/One Pair Home often 860."
+    },
+    {
+      "type": "header",
+      "content": "Frame shape"
+    },
+    {
+      "type": "select",
+      "id": "media_aspect",
+      "label": "Frame shape — desktop",
+      "default": "stretch",
+      "options": [
+        {
+          "value": "stretch",
+          "label": "Fill height"
+        },
+        {
+          "value": "square",
+          "label": "Square"
+        }
+      ],
+      "info": "Fill height keeps value stretch (backward compatible). Square = 1:1 media column on desktop."
+    },
+    {
+      "type": "select",
+      "id": "media_aspect_mobile",
+      "label": "Frame shape — phone",
+      "default": "stretch",
+      "options": [
+        {
+          "value": "stretch",
+          "label": "Fill height"
+        },
+        {
+          "value": "square",
+          "label": "Square"
+        }
+      ],
+      "info": "Fill height uses Photo height — phone slider. Square forces 1:1 on phone (height follows width)."
+    },
+    {
+      "type": "header",
+      "content": "Backgrounds"
+    },
+    {
+      "type": "select",
+      "id": "bg_preset",
+      "label": "Text panel background",
+      "options": [
+        {
+          "value": "white",
+          "label": "White (#ffffff)"
+        },
+        {
+          "value": "cream",
+          "label": "Cream — sock-era (#faf8f6)"
+        },
+        {
+          "value": "custom",
+          "label": "Custom (picker below)"
+        }
+      ],
+      "default": "custom",
+      "info": "Pick Custom, then use the color picker. Default cream matches Home Never-slip. Unset older sections still get cream #faf8f6."
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Custom text panel color",
+      "default": "#faf8f6",
+      "info": "Pick Custom above, then set this. White=#ffffff. Cream=#faf8f6 only (never #f5f2ec)."
+    },
+    {
+      "type": "select",
+      "id": "media_bg_preset",
+      "label": "Media pad / letterbox background",
+      "options": [
+        {
+          "value": "white",
+          "label": "White (#ffffff)"
+        },
+        {
+          "value": "cream",
+          "label": "Cream — sock-era (#faf8f6)"
+        },
+        {
+          "value": "custom",
+          "label": "Custom (picker below)"
+        }
+      ],
+      "default": "custom",
+      "info": "Always paints the media column (Cover included). Pick Custom, then use the color picker below."
+    },
+    {
+      "type": "color",
+      "id": "media_bg",
+      "label": "Custom media pad / letterbox color",
+      "default": "#ffffff",
+      "info": "Pick Custom above, then set this. White=#ffffff. Cream=#faf8f6 only (never #f5f2ec)."
+    },
+    {
+      "type": "checkbox",
+      "id": "reverse",
+      "label": "Reverse layout (text left, media right)",
+      "default": false,
+      "info": "Desktop only (769px+)."
+    },
+    {
+      "type": "select",
+      "id": "mobile_stack_order",
+      "label": "Mobile stack order",
+      "default": "media_first",
+      "options": [
+        {
+          "value": "media_first",
+          "label": "Image above copy"
+        },
+        {
+          "value": "copy_first",
+          "label": "Copy above image"
+        }
+      ],
+      "info": "Below 768px only."
+    },
+    {
+      "type": "header",
+      "content": "Section \u2014 Problem"
+    },
+    {
+      "type": "range",
+      "id": "copy_stack_gap",
+      "label": "Space above bullet list",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 12,
+      "info": "Smaller = bullets sit tighter under the title."
+    },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Anchor ID",
+      "default": "problem"
+    },
+    {"type": "header", "content": "Layout \u2014 width & text padding"},
+    {"type": "range", "id": "media_column_pct", "label": "Image width \u2014 desktop (default 50%)", "min": 35, "max": 72, "step": 1, "unit": "%", "default": 50, "info": "50 = follow Desktop split above."},
+    {"type": "range", "id": "mobile_media_width", "label": "Image width \u2014 phone (default 100%)", "min": 70, "max": 100, "step": 5, "unit": "%", "default": 100},
+    {"type": "range", "id": "text_pad_y", "label": "Text pad top & bottom \u2014 desktop (default 72)", "min": 32, "max": 120, "step": 4, "unit": "px", "default": 72},
+    {"type": "range", "id": "side_padding", "label": "Text pad left & right \u2014 desktop (default 40)", "min": 16, "max": 96, "step": 4, "unit": "px", "default": 40},
+    {"type": "range", "id": "text_pad_y_mobile", "label": "Text pad top & bottom \u2014 phone (default 48)", "min": 16, "max": 120, "step": 4, "unit": "px", "default": 48},
+    {"type": "range", "id": "text_pad_x_mobile", "label": "Text pad left & right \u2014 phone (default 16)", "min": 12, "max": 48, "step": 4, "unit": "px", "default": 16},
+    {"type": "select", "id": "bg_style", "label": "Text panel background (default: Background colour)", "default": "picker", "options": [{"value": "picker", "label": "Use Background settings above (default)"}, {"value": "white", "label": "White (#ffffff)"}, {"value": "cream", "label": "Cream (#faf8f6)"}, {"value": "darker_cream", "label": "Darker cream (#efe9dd)"}]},
+    {"type": "header", "content": "Section gap"},
+    {"type": "range", "id": "section_gap", "label": "Space above & below \u2014 desktop (default 0)", "min": 0, "max": 96, "step": 4, "unit": "px", "default": 0},
+    {"type": "range", "id": "section_gap_mobile", "label": "Space after section \u2014 phone (default 0)", "min": 0, "max": 96, "step": 4, "unit": "px", "default": 0},
+    {"type": "header", "content": "Heading / CTA / trust"},
+    {"type": "select", "id": "heading_level", "label": "Heading level (default H2)", "default": "h2", "options": [{"value": "h1", "label": "H1"}, {"value": "h2", "label": "H2"}, {"value": "h3", "label": "H3"}, {"value": "h4", "label": "H4"}, {"value": "h5", "label": "H5"}, {"value": "h6", "label": "H6"}]},
+    {"type": "select", "id": "cta_link_target", "label": "CTA link (default: Custom URL\u2026)", "default": "custom", "options": [{"value": "custom", "label": "Custom URL\u2026"}, {"value": "#variants", "label": "#variants \u2014 Shop styles"}, {"value": "#buy", "label": "#buy \u2014 Buy box"}, {"value": "#problem", "label": "#problem"}]},
+    {"type": "checkbox", "id": "show_trust_strip", "label": "Show stars + trust line above copy", "default": false},
+    {"type": "text", "id": "trust_text", "label": "Trust line"},
+    {"type": "text", "id": "aria_label", "label": "Accessibility name (aria-label)", "info": "Blank = heading text."},
+    {
+      "type": "header",
+      "content": "Shared \u2014 Section frame"
+    },
+    {
+      "type": "paragraph",
+      "content": "OUTER inset from the page edges (margin). Top and bottom are independent; left & right = one control. Custom mobile OFF = mobile uses the same inset as desktop. Defaults 0 = full bleed."
+    },
+    {
+      "type": "checkbox",
+      "id": "inset_custom_mobile",
+      "label": "Custom mobile inset",
+      "default": false,
+      "info": "OFF (default): ignore the mobile inset sliders \u2014 mobile uses desktop Inset top / bottom / left & right. ON: use the mobile inset sliders instead."
+    },
+    {
+      "type": "range",
+      "id": "inset_top",
+      "label": "Inset top",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom",
+      "label": "Inset bottom",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x",
+      "label": "Inset left & right",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Same value on both sides."
+    },
+    {
+      "type": "range",
+      "id": "inset_top_mobile",
+      "label": "Inset top \u2014 mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom_mobile",
+      "label": "Inset bottom \u2014 mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x_mobile",
+      "label": "Inset left & right \u2014 mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_desktop",
+      "label": "Hide on desktop",
+      "default": false
+    },
+    {"type": "header", "content": "Legacy (hidden \u2014 do not edit)"},
+    {"type": "text", "id": "image_asset", "label": "Legacy: Theme asset image filename", "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"},
+    {"type": "checkbox", "id": "quote_italic", "label": "Legacy: quote italic", "default": true, "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"},
+    {"type": "range", "id": "text_pad_top", "label": "Legacy: Text pad top \u2014 desktop", "min": 32, "max": 120, "step": 4, "unit": "px", "default": 96, "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"},
+    {"type": "range", "id": "text_pad_bottom", "label": "Legacy: Text pad bottom \u2014 desktop", "min": 32, "max": 120, "step": 4, "unit": "px", "default": 96, "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"},
+    {"type": "range", "id": "text_pad_top_mobile", "label": "Legacy: Text pad top \u2014 phone", "min": 16, "max": 120, "step": 4, "unit": "px", "default": 96, "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"},
+    {"type": "range", "id": "text_pad_bottom_mobile", "label": "Legacy: Text pad bottom \u2014 phone", "min": 16, "max": 120, "step": 4, "unit": "px", "default": 96, "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"},
+    {"type": "range", "id": "vertical_padding", "label": "Legacy: Text pad \u2014 desktop (single slider)", "min": 32, "max": 120, "step": 4, "unit": "px", "default": 88, "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"}
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Pain point",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Grip socks that peel, stretch out, and quit"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Problem section",
+      "blocks": [
+        {
+          "type": "item",
+          "settings": {
+            "text": "Flat back chair & water ski \u2014 resetting mid-set"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "text": "Reformer footwork \u2014 adjusting between sets"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "text": "Deep lunges on barre, reformer & Megaformer"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "text": "Grip socks that peel, stretch out, and quit"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

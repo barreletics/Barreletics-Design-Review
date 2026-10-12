@@ -1,0 +1,273 @@
+{% comment %}
+  About page — cover hero (v25 Locked)
+  Standardized controls: Photo height + Focal (matches collection-hero + press-row pattern).
+{% endcomment %}
+
+{%- liquid
+  assign pah_media_h = section.settings.media_height | default: 520
+  assign pah_media_h_m = section.settings.media_height_mobile | default: 460
+  assign pah_pos = section.settings.media_position | default: 'center'
+  assign pah_pos_m = section.settings.media_position_mobile | default: 'center'
+  assign pah_ar_m = section.settings.aspect_ratio_mobile | default: 'natural'
+
+  case pah_pos
+    when 'top'
+      assign pah_focal_css = 'center top'
+    when 'bottom'
+      assign pah_focal_css = 'center bottom'
+    else
+      assign pah_focal_css = 'center center'
+  endcase
+
+  case pah_pos_m
+    when 'top'
+      assign pah_focal_css_m = 'center top'
+    when 'bottom'
+      assign pah_focal_css_m = 'center bottom'
+    else
+      assign pah_focal_css_m = 'center center'
+  endcase
+-%}
+
+<section
+  class="page-about-hero"
+  {{ section.shopify_attributes }}
+  aria-label="{{ section.settings.aria_label | default: 'Barreletics in motion' | escape }}"
+ style="{% render 'unified-text-pads-vars', y_d: 0, side_d: 0, y_m: 0, x_m: 0 %}">
+  {% if section.settings.image != blank %}
+    {% render 'media-img',
+       image: section.settings.image,
+       alt: section.settings.image_alt,
+       fit: 'cover',
+       class: 'page-about-hero__img',
+       sizes: '100vw',
+       widths: '800, 1200, 1600, 2000, 2400',
+       width_default: 2400,
+       loading: 'eager',
+       fetchpriority: 'high',
+       position: 'css' %}
+  {% elsif section.settings.image_url != blank %}
+    {% render 'media-img',
+       url: section.settings.image_url,
+       alt: section.settings.image_alt,
+       fit: 'cover',
+       class: 'page-about-hero__img',
+       loading: 'eager',
+       fetchpriority: 'high',
+       position: 'css',
+       width_attr: 2400,
+       height_attr: 1600 %}
+  {% endif %}
+</section>
+
+{% style %}
+  #shopify-section-{{ section.id }} .page-about-hero {
+    position: relative;
+    height: {{ pah_media_h }}px;
+    min-height: 320px;
+    overflow: hidden;
+    background: #1c1916;
+    padding: var(--utp-y-d, 0px) var(--utp-side-d, 0px);
+  }
+  #shopify-section-{{ section.id }} .page-about-hero__img {
+    object-position: {{ pah_focal_css }};
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .page-about-hero {
+      padding: var(--utp-y-m, 0px) var(--utp-x-m, 0px);
+      {%- case pah_ar_m -%}
+        {%- when 'square' -%}
+        height: auto; aspect-ratio: 1 / 1;
+        {%- when 'portrait' -%}
+        height: auto; aspect-ratio: 3 / 4;
+        {%- when 'landscape' -%}
+        height: auto; aspect-ratio: 4 / 3;
+        {%- when 'widescreen' -%}
+        height: auto; aspect-ratio: 16 / 9;
+        {%- else -%}
+        height: {{ pah_media_h_m }}px;
+      {%- endcase -%}
+      min-height: 260px;
+    }
+    #shopify-section-{{ section.id }} .page-about-hero__img {
+      object-position: {{ pah_focal_css_m }};
+    }
+  }
+{% endstyle %}
+
+{%- comment -%} TE pads: Shopify's wrapper div owns id=shopify-section-<id>; '.page-about-hero' is this section's root inside it, so the snippet's '#shopify-section-<id> .page-about-hero' matches it. {%- endcomment -%}
+{% render 'unified-text-pads-te-style', selector: '.page-about-hero', y_d: 0, side_d: 0, y_m: 0, x_m: 0 %}
+
+{% schema %}
+{
+  "name": "About \u2014 Hero",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Hero image"
+    },
+    {
+      "type": "text",
+      "id": "image_url",
+      "label": "Image URL fallback",
+      "default": "https://barreletics.com/cdn/shop/products/barreletixxjumpingtogether.jpg?v=1619360969&width=2400"
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image alt",
+      "default": "Two women in Performance Skins"
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "ARIA label",
+      "default": "Barreletics in motion"
+    },
+    {
+      "type": "range",
+      "id": "media_height",
+      "label": "Photo height",
+      "min": 360,
+      "max": 720,
+      "step": 10,
+      "unit": "px",
+      "default": 520
+    },
+    {
+      "type": "select",
+      "id": "media_position",
+      "label": "Focal",
+      "default": "center",
+      "info": "For Cover \u2014 Top keeps heads in frame.",
+      "options": [
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Mobile (phone only)"
+    },
+    {
+      "type": "range",
+      "id": "media_height_mobile",
+      "label": "Photo height mobile",
+      "min": 280,
+      "max": 900,
+      "step": 10,
+      "unit": "px",
+      "default": 460
+    },
+    {
+      "type": "select",
+      "id": "aspect_ratio_mobile",
+      "label": "Aspect ratio mobile",
+      "default": "natural",
+      "info": "Natural = uses Photo height mobile. Others force an aspect ratio (ignores the height slider).",
+      "options": [
+        {
+          "value": "natural",
+          "label": "Natural \u2014 Photo height"
+        },
+        {
+          "value": "square",
+          "label": "Square (1:1)"
+        },
+        {
+          "value": "portrait",
+          "label": "Portrait (3:4)"
+        },
+        {
+          "value": "landscape",
+          "label": "Landscape (4:3)"
+        },
+        {
+          "value": "widescreen",
+          "label": "Widescreen (16:9)"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "media_position_mobile",
+      "label": "Focal mobile",
+      "default": "center",
+      "options": [
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Layout \u2014 text padding"
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 0)",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 0)",
+      "min": 0,
+      "max": 96,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 0)",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 0)",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "About \u2014 Hero"
+    }
+  ]
+}
+{% endschema %}

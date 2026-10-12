@@ -1,0 +1,175 @@
+{% comment %}
+  Contact-primary terminal CTA (R-08) — FAQ closing, not newsletter Subscribe
+{% endcomment %}
+
+<section class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} contact-cta" aria-label="Contact" style="{% render 'section-inset-vars' %}{% if section.settings.bg_color != blank %} background: {{ section.settings.bg_color }};{% endif %}">
+  <div class="contact-cta__inner">
+    {% if section.settings.eyebrow != blank %}
+      <p class="contact-cta__eyebrow">{{ section.settings.eyebrow }}</p>
+    {% endif %}
+    <h2 class="contact-cta__title">{{ section.settings.title }}</h2>
+    {% if section.settings.body != blank %}
+      <p class="contact-cta__body">{{ section.settings.body }}</p>
+    {% endif %}
+    {% assign cta_href = section.settings.cta_url | default: '/pages/contact-us-form' %}
+    <a class="btn btn--primary contact-cta__btn" href="{{ cta_href }}">
+      {{ section.settings.cta_text }}
+    </a>
+  </div>
+</section>
+
+<style>
+  .contact-cta {
+    padding: var(--space-13, 64px) var(--section-padding-x, 40px);
+    border-top: 1px solid var(--border-default, #d6cfc0);
+    text-align: center;
+  }
+  .contact-cta__inner {
+    max-width: 560px;
+    margin: 0 auto;
+  }
+  .contact-cta__eyebrow {
+    margin: 0 0 8px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #8a8a8a;
+  }
+  .contact-cta__title {
+    margin: 0 0 12px;
+    font-size: 32px;
+    font-weight: 700;
+    color: #1c1916;
+  }
+  .contact-cta__body {
+    margin: 0 0 24px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #4a4a4a;
+  }
+  .contact-cta__btn {
+    display: inline-block;
+    min-height: var(--type-cta-min-height);
+    padding: var(--type-cta-pad-y) var(--type-cta-pad-x);
+  }
+  @media (max-width: 768px) {
+    .contact-cta {
+      padding: 48px 16px;
+    }
+    .contact-cta__title {
+      font-size: 28px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Contact CTA",
+  "settings": [
+        { "type": "color", "id": "bg_color", "label": "Background", "default": "#ffffff" },
+{ "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Still have questions?" },
+    { "type": "text", "id": "title", "label": "Title", "default": "Get in touch." },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Body",
+      "default": "Can't find what you're looking for? Contact us and we'll get back within 24–48 hours."
+    },
+    { "type": "text", "id": "cta_text", "label": "CTA text", "default": "Contact Us" },
+    { "type": "url", "id": "cta_url", "label": "CTA URL" },
+
+    {
+      "type": "header",
+      "content": "Shared — Section frame"
+    },
+    {
+      "type": "paragraph",
+      "content": "OUTER inset from the page edges (margin). Top and bottom are independent; left & right = one control. Custom mobile OFF = mobile uses the same inset as desktop. Defaults 0 = full bleed."
+    },
+    {
+      "type": "checkbox",
+      "id": "inset_custom_mobile",
+      "label": "Custom mobile inset",
+      "default": false,
+      "info": "OFF (default): ignore the mobile inset sliders — mobile uses desktop Inset top / bottom / left & right. ON: use the mobile inset sliders instead."
+    },
+    {
+      "type": "range",
+      "id": "inset_top",
+      "label": "Inset top",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom",
+      "label": "Inset bottom",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x",
+      "label": "Inset left & right",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Same value on both sides."
+    },
+    {
+      "type": "range",
+      "id": "inset_top_mobile",
+      "label": "Inset top — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom_mobile",
+      "label": "Inset bottom — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x_mobile",
+      "label": "Inset left & right — mobile",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "Only when Custom mobile inset is on."
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_desktop",
+      "label": "Hide on desktop",
+      "default": false
+    }
+  ],
+  "presets": [{ "name": "Contact CTA" }]
+}
+{% endschema %}

@@ -1,0 +1,1574 @@
+{% comment %}
+  Split hero — 50/50 media | copy (Theme Editor parity with fifty-fifty / problem-section).
+  Unique: type-hero title scale, trust stars + links, hashtag line, 92vh × media_height.
+  Font family is brand Type OS — size/weight only; no font_picker. CSS: assets/split-hero.css
+{% endcomment %}
+
+{{ 'split-hero.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign image = section.settings.image
+  assign image_url = section.settings.image_url
+  assign video = section.settings.video
+  assign video_url = section.settings.video_url
+  assign image_alt = section.settings.image_alt
+  assign title = section.settings.title
+  assign body = section.settings.body
+  assign cta_text = section.settings.cta_text
+  assign tag_text = section.settings.tag_text
+  assign trust_text = section.settings.trust_text
+
+  assign heading_level = section.settings.heading_level | default: 'h1'
+  if heading_level != 'h1' and heading_level != 'h2' and heading_level != 'h3' and heading_level != 'h4' and heading_level != 'h5' and heading_level != 'h6'
+    assign heading_level = 'h1'
+  endif
+
+  assign cta_target = section.settings.cta_link_target | default: 'custom'
+  if cta_target != blank and cta_target != 'custom'
+    assign cta_url = cta_target
+  else
+    assign cta_url = section.settings.cta_url
+  endif
+
+  assign trust_target = section.settings.trust_link_target | default: 'custom'
+  if trust_target != blank and trust_target != 'custom'
+    assign trust_url = trust_target
+  else
+    assign trust_url = section.settings.trust_url
+  endif
+
+  assign tag_target = section.settings.tag_link_target | default: 'custom'
+  if tag_target != blank and tag_target != 'custom'
+    assign tag_url = tag_target
+  else
+    assign tag_url = section.settings.tag_url
+  endif
+
+  if image_alt == blank and image != blank
+    assign image_alt = image.alt | default: title
+  endif
+
+  assign reverse_layout = section.settings.reverse
+  if reverse_layout == nil
+    assign reverse_layout = section.settings.reverse_layout
+  endif
+
+  assign show_trust_row = section.settings.show_trust_strip
+  if show_trust_row == nil
+    assign show_trust_row = section.settings.show_trust
+  endif
+  if show_trust_row == nil
+    assign show_trust_row = true
+  endif
+
+  assign title_size = section.settings.title_size | default: 'default'
+  assign body_size = section.settings.body_size | default: 'default'
+  assign title_weight = section.settings.title_weight | default: 'default'
+  assign body_weight = section.settings.body_weight | default: 'default'
+  assign cta_size = section.settings.cta_size | default: 'default'
+  assign star_color = section.settings.star_color | default: settings.star_color_global | default: '#E5C71F'
+  assign star_size = section.settings.star_size | default: settings.star_size_global | default: 14
+  assign trust_text_size = section.settings.trust_text_size | default: 'default'
+  assign trust_gap = section.settings.trust_gap | default: 10
+  assign trust_below = section.settings.trust_below | default: 16
+
+  assign media_pct = section.settings.media_column_pct
+  if media_pct == blank
+    assign media_pct = 50
+  endif
+  assign media_radius = section.settings.media_radius | default: 0
+  assign media_height = section.settings.media_height | default: 0
+  if media_height == blank or media_height == 0
+    assign media_height = 100
+  endif
+
+  assign media_fit = section.settings.media_fit | default: 'cover'
+  assign image_fit_m = section.settings.image_fit_mobile | default: 'cover'
+  assign media_aspect = section.settings.media_aspect | default: 'stretch'
+  assign media_aspect_m = section.settings.media_aspect_mobile | default: 'stretch'
+  assign mobile_media_height = section.settings.mobile_media_height | default: 0
+  assign mobile_media_width = section.settings.mobile_media_width | default: 100
+
+  assign bg_style = section.settings.bg_style
+  if bg_style == 'white'
+    assign panel_bg = '#ffffff'
+  elsif bg_style == 'cream'
+    assign panel_bg = '#faf8f6'
+  elsif bg_style == 'darker_cream'
+    assign panel_bg = '#efe9dd'
+  else
+    assign legacy_bg = section.settings.bg_color | default: ''
+    if legacy_bg == '#faf8f6' or legacy_bg == '#FAF8F6'
+      assign panel_bg = '#faf8f6'
+    elsif legacy_bg == '#efe9dd' or legacy_bg == '#EFE9DD'
+      assign panel_bg = '#efe9dd'
+    elsif legacy_bg != blank
+      assign panel_bg = legacy_bg
+    else
+      assign panel_bg = '#ffffff'
+    endif
+  endif
+
+  assign media_pad_bg = section.settings.media_bg | default: '#ffffff'
+  if media_pad_bg == blank
+    assign media_pad_bg = '#ffffff'
+  endif
+
+  assign side_padding = section.settings.side_padding | default: 56
+  assign text_pad_y_d = section.settings.text_pad_y | default: 72
+  assign text_pad_y_m = section.settings.text_pad_y_mobile | default: 52
+  assign text_pad_x_m = section.settings.text_pad_x_mobile | default: 24
+
+  assign section_gap = 0
+  if section.settings.section_gap == 0 or section.settings.section_gap != blank
+    assign section_gap = section.settings.section_gap
+  endif
+  assign section_gap_m = 0
+  if section.settings.section_gap_mobile == 0 or section.settings.section_gap_mobile != blank
+    assign section_gap_m = section.settings.section_gap_mobile
+  endif
+
+  assign cta_style = section.settings.cta_style | default: 'rust_solid'
+  if cta_style == 'solid'
+    assign cta_style = 'rust_solid'
+  elsif cta_style == 'outline'
+    assign cta_style = 'rust_outline'
+  endif
+  case cta_style
+    when 'rust_outline', 'outline'
+      assign cta_btn_class = 'btn--brand-outline'
+    when 'black_solid', 'primary'
+      assign cta_btn_class = 'btn--primary'
+    when 'black_outline', 'secondary'
+      assign cta_btn_class = 'btn--secondary'
+    else
+      assign cta_btn_class = 'btn--brand'
+  endcase
+
+  assign region_label = section.settings.aria_label | strip
+  if region_label == blank and title != blank
+    assign region_label = title | strip_html | strip
+  endif
+  if region_label == blank
+    assign region_label = 'Split hero'
+  endif
+
+  assign sh_pos = section.settings.image_position
+  if sh_pos == blank
+    assign sh_px = section.settings.image_pos_x | default: 50
+    assign sh_py = section.settings.image_pos_y | default: 50
+    if sh_px == 50 and sh_py == 50
+      assign sh_pos = 'center'
+    else
+      assign sh_pos = 'custom'
+    endif
+  endif
+
+  assign img_scale = section.settings.image_scale
+  if img_scale == blank
+    assign img_scale = section.settings.image_zoom | default: 100
+  endif
+
+  if sh_pos == 'custom'
+    assign img_x = section.settings.focal_x
+    if img_x == blank
+      assign img_x = section.settings.image_pos_x | default: 50
+    endif
+    assign img_y = section.settings.focal_y
+    if img_y == blank
+      assign img_y = section.settings.image_pos_y | default: 50
+    endif
+  elsif sh_pos == 'top left'
+    assign img_x = 0
+    assign img_y = 0
+  elsif sh_pos == 'top'
+    assign img_x = 50
+    assign img_y = 0
+  elsif sh_pos == 'top right'
+    assign img_x = 100
+    assign img_y = 0
+  elsif sh_pos == 'left'
+    assign img_x = 0
+    assign img_y = 50
+  elsif sh_pos == 'right'
+    assign img_x = 100
+    assign img_y = 50
+  elsif sh_pos == 'bottom left'
+    assign img_x = 0
+    assign img_y = 100
+  elsif sh_pos == 'bottom'
+    assign img_x = 50
+    assign img_y = 100
+  elsif sh_pos == 'bottom right'
+    assign img_x = 100
+    assign img_y = 100
+  else
+    assign img_x = 50
+    assign img_y = 50
+  endif
+
+  assign sh_pos_m = section.settings.image_position_mobile | default: 'same'
+  assign img_scale_m = section.settings.image_scale_mobile
+  if img_scale_m == blank
+    assign img_scale_m = section.settings.image_zoom_mobile | default: img_scale
+  endif
+
+  if sh_pos_m == 'same' or sh_pos_m == blank
+    assign img_x_m = img_x
+    assign img_y_m = img_y
+  elsif sh_pos_m == 'custom'
+    assign img_x_m = section.settings.focal_x_mobile
+    if img_x_m == blank
+      assign img_x_m = section.settings.image_pos_x_mobile | default: img_x
+    endif
+    assign img_y_m = section.settings.focal_y_mobile
+    if img_y_m == blank
+      assign img_y_m = section.settings.image_pos_y_mobile | default: img_y
+    endif
+  elsif sh_pos_m == 'top left'
+    assign img_x_m = 0
+    assign img_y_m = 0
+  elsif sh_pos_m == 'top'
+    assign img_x_m = 50
+    assign img_y_m = 0
+  elsif sh_pos_m == 'top right'
+    assign img_x_m = 100
+    assign img_y_m = 0
+  elsif sh_pos_m == 'left'
+    assign img_x_m = 0
+    assign img_y_m = 50
+  elsif sh_pos_m == 'right'
+    assign img_x_m = 100
+    assign img_y_m = 50
+  elsif sh_pos_m == 'bottom left'
+    assign img_x_m = 0
+    assign img_y_m = 100
+  elsif sh_pos_m == 'bottom'
+    assign img_x_m = 50
+    assign img_y_m = 100
+  elsif sh_pos_m == 'bottom right'
+    assign img_x_m = 100
+    assign img_y_m = 100
+  else
+    assign img_x_m = 50
+    assign img_y_m = 50
+  endif
+
+  assign has_video = false
+  if video != blank or video_url != blank
+    assign has_video = true
+  endif
+
+  assign sh_media_kind = 'image'
+  if has_video
+    assign sh_media_kind = 'video'
+  endif
+
+  assign sh_pos_css = 'css'
+  assign sh_widths = '800, 1200, 1600, 2000, 2400'
+  assign sh_width_default = 2400
+  assign sh_widths_v = '600, 900, 1200, 1600'
+  assign sh_width_default_v = 1600
+  assign sh_sizes = '(max-width: 768px) 100vw, 62vw'
+  assign sh_sizes_v = '(max-width: 768px) 100vw, 50vw'
+  assign sh_alt_fallback = 'Barreletics Performance Skins — grip that holds in every studio workout'
+-%}
+
+<div
+  class="section-frame{% if section.settings.hide_on_mobile %} section-frame--hide-mobile{% endif %}{% if section.settings.hide_on_desktop %} section-frame--hide-desktop{% endif %} split-hero{% if reverse_layout %} split-hero--reverse{% endif %}{% if media_fit == 'contain' or media_fit == 'cover_inset' %} split-hero--contain{% endif %}{% if media_fit == 'fit' %} split-hero--fit{% endif %}{% if image_fit_m == 'fit' %} split-hero--fit-m{% endif %}{% if image_fit_m == 'contain' %} split-hero--contain-m{% endif %}{% if media_aspect == 'square' %} split-hero--media-square{% endif %}{% if media_aspect_m == 'square' %} split-hero--media-square-m{% endif %}{% render 'split-mobile-stack-class', mobile_stack_order: section.settings.mobile_stack_order %}"
+  id="split-hero-{{ section.id }}"
+  role="region"
+  aria-label="{{ region_label | escape }}"
+  style="{% render 'section-inset-vars' %}"
+>
+  <div class="split-hero__media" data-media-type="{{ sh_media_kind }}">
+    {%- assign sh_pic = false -%}
+    {%- if section.settings.image_mobile != blank and has_video == false -%}{%- assign sh_pic = true -%}
+    <picture style="display:contents">
+      <source media="(max-width: 768px)" srcset="{{ section.settings.image_mobile | image_url: width: 780 }} 780w, {{ section.settings.image_mobile | image_url: width: 1170 }} 1170w" sizes="100vw" width="{{ section.settings.image_mobile.width }}" height="{{ section.settings.image_mobile.height }}">
+    {%- endif -%}
+    {%- if video != blank -%}
+      {{
+        video
+        | video_tag:
+          image_size: '1600x',
+          autoplay: true,
+          loop: true,
+          muted: true,
+          controls: false,
+          playsinline: true,
+          preload: 'metadata',
+          class: 'split-hero__video'
+      }}
+    {%- elsif video_url != blank -%}
+      <video
+        class="split-hero__video"
+        autoplay
+        muted
+        loop
+        playsinline
+        webkit-playsinline
+        preload="metadata"
+        {% if image != blank %}
+          poster="{{ image | image_url: width: 1600 }}"
+        {% elsif section.settings.poster_url != blank %}
+          poster="{{ section.settings.poster_url | escape }}"
+        {% endif %}
+      >
+        <source src="{{ video_url | escape }}" type="video/mp4">
+      </video>
+    {%- elsif image != blank -%}
+      {%- assign sh_alt_i = image_alt -%}
+      {% render 'media-img',
+         image: image,
+         alt: sh_alt_i,
+         class: 'split-hero__img',
+         widths: sh_widths,
+         width_default: sh_width_default,
+         sizes: sh_sizes,
+         loading: 'eager',
+         fetchpriority: 'high',
+         position: sh_pos_css %}
+    {%- elsif image_url != blank -%}
+      {%- liquid
+        assign sh_alt_url = image_alt | default: sh_alt_fallback
+        if image_url contains '://'
+          assign sh_src_url = image_url
+        else
+          assign sh_src_url = image_url | asset_url
+        endif
+      -%}
+      {% render 'media-img',
+         url: sh_src_url,
+         alt: sh_alt_url,
+         class: 'split-hero__img',
+         loading: 'eager',
+         fetchpriority: 'high',
+         position: sh_pos_css,
+         width_attr: 2400,
+         height_attr: 1890 %}
+    {%- else -%}
+      <div class="split-hero__placeholder" role="img" aria-label="Add hero image in Theme Editor">
+        Add hero image or video in Theme Editor
+      </div>
+    {%- endif -%}
+    {%- if sh_pic %}</picture>{% endif %}
+  </div>
+
+  <div class="split-hero__copy">
+    <div class="split-hero__stack">
+      {%- if show_trust_row -%}
+        {%- assign trust_plain = trust_text | strip_html | strip -%}
+        {%- if section.settings.show_stars or trust_plain != blank -%}
+          <div class="split-hero__trust">
+            {%- if section.settings.show_stars -%}
+              <span class="split-hero__stars" aria-hidden="true">★★★★★</span>
+              <span class="visually-hidden">5 out of 5 stars</span>
+            {%- endif -%}
+            {%- if trust_plain != blank -%}
+              {%- if trust_url != blank -%}
+                <a class="split-hero__trust-link" href="{{ trust_url }}">{{ trust_plain | escape }}</a>
+              {%- else -%}
+                <div class="split-hero__trust-text rte">{{ trust_text }}</div>
+              {%- endif -%}
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      {%- endif -%}
+
+      {%- if title != blank -%}
+        {%- liquid
+          assign sh_title_words = title | strip | split: ' '
+          if sh_title_words.size > 2
+            assign sh_title_last = sh_title_words | last | escape
+            assign sh_title_head_n = sh_title_words.size | minus: 1
+            assign sh_title_html = ''
+            for sh_w in sh_title_words limit: sh_title_head_n
+              assign sh_w_esc = sh_w | escape
+              if forloop.first
+                assign sh_title_html = sh_w_esc
+              else
+                assign sh_title_html = sh_title_html | append: ' ' | append: sh_w_esc
+              endif
+            endfor
+            assign sh_title_html = sh_title_html | append: ' ' | append: sh_title_last
+          else
+            assign sh_title_html = title | escape
+          endif
+        -%}
+        {% case heading_level %}
+          {% when 'h2' %}
+            <h2 class="split-hero__title type-hero">{{ sh_title_html }}</h2>
+          {% when 'h3' %}
+            <h3 class="split-hero__title type-hero">{{ sh_title_html }}</h3>
+          {% when 'h4' %}
+            <h4 class="split-hero__title type-hero">{{ sh_title_html }}</h4>
+          {% when 'h5' %}
+            <h5 class="split-hero__title type-hero">{{ sh_title_html }}</h5>
+          {% when 'h6' %}
+            <h6 class="split-hero__title type-hero">{{ sh_title_html }}</h6>
+          {% else %}
+            <h1 class="split-hero__title type-hero">{{ sh_title_html }}</h1>
+        {% endcase %}
+      {%- endif -%}
+
+      {%- if body != blank -%}
+        <div class="split-hero__body rte">{{ body }}</div>
+      {%- endif -%}
+
+      {%- if cta_text != blank -%}
+        <div class="split-hero__ctas">
+          <a
+            href="{{ cta_url | default: routes.all_products_collection_url }}"
+            class="btn {{ cta_btn_class }} split-hero__cta"
+          >
+            {{ cta_text | escape }}
+          </a>
+        </div>
+      {%- endif -%}
+
+      {%- if tag_text != blank and tag_url != blank -%}
+        <a class="split-hero__tag" href="{{ tag_url }}">{{ tag_text | escape }}</a>
+      {%- elsif tag_text != blank -%}
+        <span class="split-hero__tag">{{ tag_text | escape }}</span>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{%- comment -%}
+  TE live preview: Shopify hot-patches this {% style %} block when sliders change.
+  Values must read section.settings.* directly (not top-of-file assigns) — same pattern as fifty-fifty.liquid.
+  !important beats split-hero.css and the section-frame inset inline style.
+{%- endcomment -%}
+{% style %}
+  {%- liquid
+    assign sh_te_pos = section.settings.image_position
+    if sh_te_pos == blank
+      assign sh_te_lpx = section.settings.image_pos_x | default: 50
+      assign sh_te_lpy = section.settings.image_pos_y | default: 50
+      if sh_te_lpx == 50 and sh_te_lpy == 50
+        assign sh_te_pos = 'center'
+      else
+        assign sh_te_pos = 'custom'
+      endif
+    endif
+    if sh_te_pos == 'custom'
+      assign sh_te_ix = section.settings.focal_x | default: section.settings.image_pos_x | default: 50
+      assign sh_te_iy = section.settings.focal_y | default: section.settings.image_pos_y | default: 50
+    elsif sh_te_pos == 'top left'
+      assign sh_te_ix = 0
+      assign sh_te_iy = 0
+    elsif sh_te_pos == 'top'
+      assign sh_te_ix = 50
+      assign sh_te_iy = 0
+    elsif sh_te_pos == 'top right'
+      assign sh_te_ix = 100
+      assign sh_te_iy = 0
+    elsif sh_te_pos == 'left'
+      assign sh_te_ix = 0
+      assign sh_te_iy = 50
+    elsif sh_te_pos == 'right'
+      assign sh_te_ix = 100
+      assign sh_te_iy = 50
+    elsif sh_te_pos == 'bottom left'
+      assign sh_te_ix = 0
+      assign sh_te_iy = 100
+    elsif sh_te_pos == 'bottom'
+      assign sh_te_ix = 50
+      assign sh_te_iy = 100
+    elsif sh_te_pos == 'bottom right'
+      assign sh_te_ix = 100
+      assign sh_te_iy = 100
+    else
+      assign sh_te_ix = 50
+      assign sh_te_iy = 50
+    endif
+    assign sh_te_scale = section.settings.image_scale | default: section.settings.image_zoom | default: 100
+    assign sh_te_pm = section.settings.image_position_mobile | default: 'same'
+    if sh_te_pm == 'same' or sh_te_pm == blank
+      assign sh_te_ixm = sh_te_ix
+      assign sh_te_iym = sh_te_iy
+      assign sh_te_scale_m = section.settings.image_scale_mobile | default: section.settings.image_zoom_mobile | default: sh_te_scale
+    elsif sh_te_pm == 'custom'
+      assign sh_te_ixm = section.settings.focal_x_mobile | default: section.settings.image_pos_x_mobile | default: sh_te_ix
+      assign sh_te_iym = section.settings.focal_y_mobile | default: section.settings.image_pos_y_mobile | default: sh_te_iy
+      assign sh_te_scale_m = section.settings.image_scale_mobile | default: section.settings.image_zoom_mobile | default: sh_te_scale
+    elsif sh_te_pm == 'top left'
+      assign sh_te_ixm = 0
+      assign sh_te_iym = 0
+      assign sh_te_scale_m = section.settings.image_scale_mobile | default: section.settings.image_zoom_mobile | default: sh_te_scale
+    elsif sh_te_pm == 'top'
+      assign sh_te_ixm = 50
+      assign sh_te_iym = 0
+      assign sh_te_scale_m = section.settings.image_scale_mobile | default: section.settings.image_zoom_mobile | default: sh_te_scale
+    elsif sh_te_pm == 'top right'
+      assign sh_te_ixm = 100
+      assign sh_te_iym = 0
+      assign sh_te_scale_m = section.settings.image_scale_mobile | default: section.settings.image_zoom_mobile | default: sh_te_scale
+    elsif sh_te_pm == 'left'
+      assign sh_te_ixm = 0
+      assign sh_te_iym = 50
+      assign sh_te_scale_m = section.settings.image_scale_mobile | default: section.settings.image_zoom_mobile | default: sh_te_scale
+    elsif sh_te_pm == 'right'
+      assign sh_te_ixm = 100
+      assign sh_te_iym = 50
+      assign sh_te_scale_m = section.settings.image_scale_mobile | default: section.settings.image_zoom_mobile | default: sh_te_scale
+    elsif sh_te_pm == 'bottom left'
+      assign sh_te_ixm = 0
+      assign sh_te_iym = 100
+      assign sh_te_scale_m = section.settings.image_scale_mobile | default: section.settings.image_zoom_mobile | default: sh_te_scale
+    elsif sh_te_pm == 'bottom'
+      assign sh_te_ixm = 50
+      assign sh_te_iym = 100
+      assign sh_te_scale_m = section.settings.image_scale_mobile | default: section.settings.image_zoom_mobile | default: sh_te_scale
+    elsif sh_te_pm == 'bottom right'
+      assign sh_te_ixm = 100
+      assign sh_te_iym = 100
+      assign sh_te_scale_m = section.settings.image_scale_mobile | default: section.settings.image_zoom_mobile | default: sh_te_scale
+    else
+      assign sh_te_ixm = 50
+      assign sh_te_iym = 50
+      assign sh_te_scale_m = section.settings.image_scale_mobile | default: section.settings.image_zoom_mobile | default: sh_te_scale
+    endif
+    assign sh_te_mh = section.settings.media_height | default: 0
+    if sh_te_mh == blank or sh_te_mh == 0
+      assign sh_te_mh = 100
+    endif
+    assign sh_te_pct = section.settings.media_column_pct | default: 50
+  -%}
+  #shopify-section-{{ section.id }} {
+    padding-block: {{ section.settings.section_gap | default: 0 }}px !important;
+    box-sizing: border-box;
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} {
+      padding-block-start: 0 !important;
+      padding-block-end: {{ section.settings.section_gap_mobile | default: 0 }}px !important;
+    }
+  }
+  #shopify-section-{{ section.id }},
+  #split-hero-{{ section.id }} {
+    --sh-media-pct: {{ sh_te_pct }}% !important;
+    --sh-height-scale: {{ sh_te_mh | times: 0.01 }} !important;
+    --sh-media-radius: {{ section.settings.media_radius | default: 0 }}px !important;
+    --sh-img-x: {{ sh_te_ix }}% !important;
+    --sh-img-y: {{ sh_te_iy }}% !important;
+    --sh-img-zoom: {{ sh_te_scale | at_least: 100 | times: 0.01 }} !important;
+    --sh-img-x-m: {{ sh_te_ixm }}% !important;
+    --sh-img-y-m: {{ sh_te_iym }}% !important;
+    --sh-img-zoom-m: {{ sh_te_scale_m | at_least: 100 | times: 0.01 }} !important;
+    --sh-star-color: {{ section.settings.star_color | default: '#d4af37' }} !important;
+    --sh-star-size: {{ section.settings.star_size | default: 14 }}px !important;
+    --sh-trust-gap: {{ section.settings.trust_gap | default: 10 }}px !important;
+    --sh-trust-below: {{ section.settings.trust_below | default: 16 }}px !important;
+    --hero-copy-pad-y-mobile: {{ section.settings.text_pad_y_mobile | default: 52 }}px !important;
+    --hero-copy-pad-x-mobile: {{ section.settings.text_pad_x_mobile | default: 24 }}px !important;
+    {%- if section.settings.inset_custom_mobile -%}
+    --section-inset-top-m: {{ section.settings.inset_top_mobile | default: 0 }}px !important;
+    --section-inset-bottom-m: {{ section.settings.inset_bottom_mobile | default: 0 }}px !important;
+    --section-inset-left-m: {{ section.settings.inset_x_mobile | default: 0 }}px !important;
+    --section-inset-right-m: {{ section.settings.inset_x_mobile | default: 0 }}px !important;
+    {%- else -%}
+    --section-inset-top-m: {{ section.settings.inset_top | default: 0 }}px !important;
+    --section-inset-bottom-m: {{ section.settings.inset_bottom | default: 0 }}px !important;
+    --section-inset-left-m: {{ section.settings.inset_x | default: 0 }}px !important;
+    --section-inset-right-m: {{ section.settings.inset_x | default: 0 }}px !important;
+    {%- endif -%}
+    --section-inset-top: {{ section.settings.inset_top | default: 0 }}px !important;
+    --section-inset-bottom: {{ section.settings.inset_bottom | default: 0 }}px !important;
+    --section-inset-left: {{ section.settings.inset_x | default: 0 }}px !important;
+    --section-inset-right: {{ section.settings.inset_x | default: 0 }}px !important;
+    {%- if section.settings.trust_text_size != blank and section.settings.trust_text_size != 'default' -%}
+    --sh-trust-size: {{ section.settings.trust_text_size }}px !important;
+    {%- endif -%}
+    {%- if section.settings.title_size != blank and section.settings.title_size != 'default' -%}
+    --sh-title-size: {{ section.settings.title_size }}px !important;
+    {%- endif -%}
+    {%- if section.settings.title_weight != blank and section.settings.title_weight != 'default' -%}
+    --sh-title-weight: {{ section.settings.title_weight }} !important;
+    {%- endif -%}
+    {%- if section.settings.body_size != blank and section.settings.body_size != 'default' -%}
+    --sh-body-size: {{ section.settings.body_size }}px !important;
+    {%- endif -%}
+    {%- if section.settings.body_weight != blank and section.settings.body_weight != 'default' -%}
+    --sh-body-weight: {{ section.settings.body_weight }} !important;
+    {%- endif -%}
+    {%- if section.settings.cta_size != blank and section.settings.cta_size != 'default' -%}
+    --sh-cta-size: {{ section.settings.cta_size }}px !important;
+    {%- endif -%}
+    {%- if section.settings.bg_style == 'white' -%}
+    --sh-copy-bg: #ffffff !important;
+    {%- elsif section.settings.bg_style == 'cream' -%}
+    --sh-copy-bg: #faf8f6 !important;
+    {%- elsif section.settings.bg_style == 'darker_cream' -%}
+    --sh-copy-bg: #efe9dd !important;
+    {%- else -%}
+    --sh-copy-bg: {{ section.settings.bg_color | default: '#ffffff' }} !important;
+    {%- endif -%}
+  }
+  #split-hero-{{ section.id }} .split-hero__media {
+    background: {{ section.settings.media_bg | default: '#ffffff' }} !important;
+  }
+  #split-hero-{{ section.id }} .split-hero__copy {
+    background: var(--sh-copy-bg, #ffffff) !important;
+    padding: {{ section.settings.text_pad_y | default: 72 }}px {{ section.settings.side_padding | default: 56 }}px !important;
+  }
+  @media (min-width: 769px) {
+    #split-hero-{{ section.id }} .split-hero__copy {
+      min-height: calc(92vh * var(--sh-height-scale, 1)) !important;
+    }
+    #split-hero-{{ section.id }} .split-hero__stack {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      width: 100%;
+      margin-block: auto;
+    }
+  }
+  #split-hero-{{ section.id }} .split-hero__stack {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+  #split-hero-{{ section.id }} .split-hero__stack > :first-child {
+    margin-top: 0 !important;
+  }
+  #split-hero-{{ section.id }} .split-hero__stack > :last-child {
+    margin-bottom: 0 !important;
+  }
+  #split-hero-{{ section.id }} .split-hero__cta.btn {
+    min-height: var(--type-cta-min-height);
+    padding: var(--type-cta-pad-y) var(--type-cta-pad-x);
+    font-size: var(--sh-cta-size, var(--type-cta-size));
+    font-weight: var(--type-cta-weight);
+    letter-spacing: var(--type-cta-tracking);
+    line-height: var(--type-cta-leading, 1);
+    text-transform: uppercase;
+    border-radius: var(--radius-button);
+    text-decoration: none;
+    transition: opacity var(--transition-fast);
+  }
+  #split-hero-{{ section.id }} .split-hero__cta.btn:hover {
+    opacity: 0.92;
+    text-decoration: none;
+  }
+  #split-hero-{{ section.id }} .split-hero__cta.btn--brand-outline:hover,
+  #split-hero-{{ section.id }} .split-hero__cta.btn--secondary:hover {
+    opacity: 0.85;
+  }
+  #split-hero-{{ section.id }}.split-hero--contain .split-hero__media .split-hero__img,
+  #split-hero-{{ section.id }}.split-hero--contain .split-hero__media .split-hero__video,
+  #split-hero-{{ section.id }}.split-hero--contain .split-hero__media video,
+  #split-hero-{{ section.id }}.split-hero--fit .split-hero__media .split-hero__img,
+  #split-hero-{{ section.id }}.split-hero--fit .split-hero__media .split-hero__video,
+  #split-hero-{{ section.id }}.split-hero--fit .split-hero__media video {
+    object-fit: contain !important;
+  }
+  #split-hero-{{ section.id }}.split-hero--media-square .split-hero__media {
+    aspect-ratio: 1 / 1;
+    height: auto !important;
+    max-height: none !important;
+  }
+  @media (max-width: 768px) {
+    #split-hero-{{ section.id }}.split-hero--contain-m .split-hero__media .split-hero__img,
+    #split-hero-{{ section.id }}.split-hero--contain-m .split-hero__media .split-hero__video,
+    #split-hero-{{ section.id }}.split-hero--contain-m .split-hero__media video,
+    #split-hero-{{ section.id }}.split-hero--fit-m .split-hero__media .split-hero__img,
+    #split-hero-{{ section.id }}.split-hero--fit-m .split-hero__media .split-hero__video,
+    #split-hero-{{ section.id }}.split-hero--fit-m .split-hero__media video {
+      object-fit: contain !important;
+    }
+    #split-hero-{{ section.id }}.split-hero--media-square-m .split-hero__media {
+      aspect-ratio: 1 / 1;
+      max-height: none !important;
+      height: auto !important;
+    }
+    {%- if section.settings.mobile_media_height > 0 %}
+    #split-hero-{{ section.id }} .split-hero__media {
+      height: {{ section.settings.mobile_media_height }}px !important;
+      min-height: {{ section.settings.mobile_media_height }}px !important;
+      max-height: {{ section.settings.mobile_media_height }}px !important;
+      aspect-ratio: auto !important;
+    }
+    {%- endif %}
+    #split-hero-{{ section.id }} .split-hero__media {
+      width: {{ section.settings.mobile_media_width | default: 100 }}% !important;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+{% endstyle %}
+
+{% render 'bg-video-autoplay-script',
+  section_id: section.id,
+  root_class: 'split-hero',
+  video_selector: 'video.split-hero__video, .split-hero__media video'
+%}
+
+{% schema %}
+{
+  "name": "Split hero",
+  "tag": "section",
+  "class": "section-split-hero",
+  "settings": [
+    { "type": "header", "content": "1 — Photo / video" },
+    {
+      "type": "paragraph",
+      "content": "Pick ONE. Priority: Shopify video → Video URL → Shopify image → Image URL."
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Shopify video",
+      "info": "Preferred when the file lives in Shopify Files. Use this OR Video URL — not both."
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "Video URL (mp4)",
+      "info": "External/CDN mp4. Ignored if Shopify video is set."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image / poster (Shopify)",
+      "info": "Still image, or poster when using Video URL."
+    },
+    {
+      "type": "text",
+      "id": "poster_url",
+      "label": "Video poster: still before video loads",
+      "info": "Used when Video URL is set and Image / poster (Shopify) is empty."
+    },
+    {
+      "type": "text",
+      "id": "image_url",
+      "label": "Image URL",
+      "info": "Used when Shopify image is empty (and no video)."
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image alt text",
+      "default": "Barreletics Performance Skins — grip that holds in every studio workout"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Phone image (optional)",
+      "info": "Replaces the still on phones (≤768px). Ignored when video is set."
+    },
+    { "type": "header", "content": "2 — Focus + height" },
+    {
+      "type": "select",
+      "id": "media_fit",
+      "label": "Media fit — desktop (default: Cover)",
+      "default": "cover",
+      "options": [
+        { "value": "cover", "label": "Cover (fill half)" },
+        { "value": "fit", "label": "Fit (whole photo in frame)" }
+      ],
+      "info": "Cover = edge-to-edge. Legacy cover inset / contain values in JSON still render."
+    },
+    {
+      "type": "select",
+      "id": "image_fit_mobile",
+      "label": "Media fit — phone (default: Cover)",
+      "default": "cover",
+      "options": [
+        { "value": "cover", "label": "Cover (same as desktop)" },
+        { "value": "fit", "label": "Fit — full photo, no crop" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Focal point — desktop (default: Center)",
+      "default": "center",
+      "options": [
+        { "value": "top left", "label": "Top left" },
+        { "value": "top", "label": "Top" },
+        { "value": "top right", "label": "Top right" },
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center (default)" },
+        { "value": "right", "label": "Right" },
+        { "value": "bottom left", "label": "Bottom left" },
+        { "value": "bottom", "label": "Bottom" },
+        { "value": "bottom right", "label": "Bottom right" },
+        { "value": "custom", "label": "Custom (sliders below)" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "focal_x",
+      "label": "Custom focal — horizontal (default 50)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "visible_if": "{{ section.settings.image_position == 'custom' }}"
+    },
+    {
+      "type": "range",
+      "id": "focal_y",
+      "label": "Custom focal — vertical (default 50)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "visible_if": "{{ section.settings.image_position == 'custom' }}"
+    },
+    {
+      "type": "range",
+      "id": "image_scale",
+      "label": "Zoom — desktop (default 100)",
+      "min": 50,
+      "max": 160,
+      "step": 2,
+      "unit": "%",
+      "default": 100,
+      "info": "100 = fill; above 100 = tighter crop.",
+      "visible_if": "{{ section.settings.image_position == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "image_position_mobile",
+      "label": "Focal point — phone (default: Same as desktop)",
+      "default": "same",
+      "options": [
+        { "value": "same", "label": "Same as desktop (default)" },
+        { "value": "top left", "label": "Top left" },
+        { "value": "top", "label": "Top" },
+        { "value": "top right", "label": "Top right" },
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" },
+        { "value": "bottom left", "label": "Bottom left" },
+        { "value": "bottom", "label": "Bottom" },
+        { "value": "bottom right", "label": "Bottom right" },
+        { "value": "custom", "label": "Custom (sliders below)" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "focal_x_mobile",
+      "label": "Custom phone focal — horizontal (default 50)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "visible_if": "{{ section.settings.image_position_mobile == 'custom' }}"
+    },
+    {
+      "type": "range",
+      "id": "focal_y_mobile",
+      "label": "Custom phone focal — vertical (default 50)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "visible_if": "{{ section.settings.image_position_mobile == 'custom' }}"
+    },
+    {
+      "type": "range",
+      "id": "image_scale_mobile",
+      "label": "Zoom — phone (default 100)",
+      "min": 50,
+      "max": 160,
+      "step": 2,
+      "unit": "%",
+      "default": 100,
+      "visible_if": "{{ section.settings.image_position_mobile == 'custom' }}"
+    },
+    {
+      "type": "color",
+      "id": "media_bg",
+      "label": "Letterbox colour — fit only (default: white)",
+      "default": "#ffffff",
+      "info": "Media column pad behind fit/contain or while video loads."
+    },
+    {
+      "type": "range",
+      "id": "media_height",
+      "label": "Height — desktop (default 0 = 92vh)",
+      "min": 0,
+      "max": 150,
+      "step": 2,
+      "unit": "%",
+      "default": 0,
+      "info": "0 = theme default (100% of 92vh frame). Scales media + copy together."
+    },
+    {
+      "type": "range",
+      "id": "media_column_pct",
+      "label": "Image width — desktop (default 50%)",
+      "min": 20,
+      "max": 80,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "info": "Media (left) width. Text gets the rest."
+    },
+    {
+      "type": "range",
+      "id": "mobile_media_height",
+      "label": "Image height — phone (default 0 = theme 500px)",
+      "min": 0,
+      "max": 700,
+      "step": 10,
+      "unit": "px",
+      "default": 0,
+      "info": "0 = theme default (hero uses 4:5 aspect). Set px to override height."
+    },
+    {
+      "type": "range",
+      "id": "mobile_media_width",
+      "label": "Image width — phone (default 100%)",
+      "min": 70,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "select",
+      "id": "media_aspect",
+      "label": "Frame shape — desktop (default: Fill height)",
+      "default": "stretch",
+      "options": [
+        { "value": "stretch", "label": "Fill height (default)" },
+        { "value": "square", "label": "Square" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "media_aspect_mobile",
+      "label": "Frame shape — phone (default: Fill height)",
+      "default": "stretch",
+      "options": [
+        { "value": "stretch", "label": "Fill height (default)" },
+        { "value": "square", "label": "Square" }
+      ]
+    },
+    { "type": "header", "content": "3 — Heading / body / CTA" },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "The Pilates Sock Era is Over",
+      "info": "Family is brand Type OS — use Title size/weight below to adjust."
+    },
+    {
+      "type": "select",
+      "id": "heading_level",
+      "label": "Heading level (default H1)",
+      "default": "h1",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "h4", "label": "H4" },
+        { "value": "h5", "label": "H5" },
+        { "value": "h6", "label": "H6" }
+      ],
+      "info": "Real HTML tag for SEO. Visual size is Title size — not this control."
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body",
+      "default": "<p>Outperforms barre socks, Pilates socks, and yoga socks — combined.</p>"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA label",
+      "default": "Shop Now"
+    },
+    {
+      "type": "select",
+      "id": "cta_link_target",
+      "label": "CTA link",
+      "default": "#variants",
+      "options": [
+        { "value": "custom", "label": "Custom URL…" },
+        { "value": "#variants", "label": "#variants — Shop styles" },
+        { "value": "#knock-socks", "label": "#knock-socks — Statement" },
+        { "value": "#reviews", "label": "#reviews" },
+        { "value": "#guarantee", "label": "#guarantee" },
+        { "value": "#never-loses-grip", "label": "#never-loses-grip" },
+        { "value": "#one-pair", "label": "#one-pair" },
+        { "value": "#coperni", "label": "#coperni — Collab" },
+        { "value": "#problem", "label": "#problem" }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "cta_url",
+      "label": "Custom CTA URL",
+      "info": "Used when CTA link = Custom URL…"
+    },
+    {
+      "type": "select",
+      "id": "cta_style",
+      "label": "Button",
+      "default": "rust_solid",
+      "options": [
+        { "value": "rust_solid", "label": "Rust" },
+        { "value": "black_solid", "label": "Black" },
+        { "value": "rust_outline", "label": "Rust outline" },
+        { "value": "black_outline", "label": "Black outline" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "title_size",
+      "label": "Title size",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "12", "label": "12px" },
+        { "value": "13", "label": "13px" },
+        { "value": "14", "label": "14px" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" },
+        { "value": "18", "label": "18px" },
+        { "value": "20", "label": "20px" },
+        { "value": "22", "label": "22px" },
+        { "value": "24", "label": "24px" },
+        { "value": "26", "label": "26px" },
+        { "value": "28", "label": "28px" },
+        { "value": "30", "label": "30px" },
+        { "value": "32", "label": "32px" },
+        { "value": "36", "label": "36px" },
+        { "value": "40", "label": "40px" },
+        { "value": "44", "label": "44px" },
+        { "value": "48", "label": "48px" },
+        { "value": "56", "label": "56px" },
+        { "value": "64", "label": "64px" },
+        { "value": "72", "label": "72px" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" },
+        { "value": "700", "label": "700" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "select",
+      "id": "body_size",
+      "label": "Body size",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "12", "label": "12px" },
+        { "value": "13", "label": "13px" },
+        { "value": "14", "label": "14px" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "17", "label": "17px" },
+        { "value": "18", "label": "18px" },
+        { "value": "20", "label": "20px" },
+        { "value": "22", "label": "22px" },
+        { "value": "24", "label": "24px" },
+        { "value": "26", "label": "26px" },
+        { "value": "28", "label": "28px" },
+        { "value": "30", "label": "30px" },
+        { "value": "32", "label": "32px" },
+        { "value": "36", "label": "36px" },
+        { "value": "40", "label": "40px" },
+        { "value": "44", "label": "44px" },
+        { "value": "48", "label": "48px" },
+        { "value": "56", "label": "56px" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "select",
+      "id": "body_weight",
+      "label": "Body weight",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "400", "label": "400" },
+        { "value": "500", "label": "500" },
+        { "value": "600", "label": "600" },
+        { "value": "700", "label": "700" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "select",
+      "id": "cta_size",
+      "label": "CTA font size",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "11", "label": "11px" },
+        { "value": "12", "label": "12px" },
+        { "value": "13", "label": "13px" },
+        { "value": "14", "label": "14px" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "18", "label": "18px" },
+        { "value": "20", "label": "20px" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "text",
+      "id": "tag_text",
+      "label": "Hashtag line (under button)",
+      "default": "#letusknockyoursocksoff"
+    },
+    {
+      "type": "select",
+      "id": "tag_link_target",
+      "label": "Hashtag link",
+      "default": "#knock-socks",
+      "options": [
+        { "value": "custom", "label": "Custom URL… / none" },
+        { "value": "#variants", "label": "#variants — Shop styles" },
+        { "value": "#knock-socks", "label": "#knock-socks — Statement" },
+        { "value": "#reviews", "label": "#reviews" },
+        { "value": "#guarantee", "label": "#guarantee" },
+        { "value": "#never-loses-grip", "label": "#never-loses-grip" },
+        { "value": "#one-pair", "label": "#one-pair" },
+        { "value": "#coperni", "label": "#coperni — Collab" },
+        { "value": "#problem", "label": "#problem" }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "tag_url",
+      "label": "Custom hashtag URL"
+    },
+    { "type": "header", "content": "4 — Trust strip" },
+    {
+      "type": "checkbox",
+      "id": "show_trust_strip",
+      "label": "Show trust row",
+      "default": true,
+      "info": "Stars + trust line above the headline."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_stars",
+      "label": "Show stars",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Star color",
+      "default": "#d4af37"
+    },
+    {
+      "type": "range",
+      "id": "star_size",
+      "label": "Star size",
+      "min": 10,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "trust_text_size",
+      "label": "Trust text size",
+      "options": [
+        { "value": "default", "label": "Default / Type OS" },
+        { "value": "12", "label": "12px" },
+        { "value": "13", "label": "13px" },
+        { "value": "14", "label": "14px" },
+        { "value": "15", "label": "15px" },
+        { "value": "16", "label": "16px" },
+        { "value": "18", "label": "18px" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "range",
+      "id": "trust_gap",
+      "label": "Trust row gap (stars ↔ text)",
+      "min": 4,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "trust_below",
+      "label": "Gap below trust row",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "richtext",
+      "id": "trust_text",
+      "label": "Trust text",
+      "default": "<p>Trusted by 1,000s of instructors & studios</p>"
+    },
+    {
+      "type": "select",
+      "id": "trust_link_target",
+      "label": "Trust link",
+      "default": "#reviews",
+      "options": [
+        { "value": "custom", "label": "Custom URL… / none" },
+        { "value": "#variants", "label": "#variants — Shop styles" },
+        { "value": "#knock-socks", "label": "#knock-socks — Statement" },
+        { "value": "#reviews", "label": "#reviews" },
+        { "value": "#guarantee", "label": "#guarantee" },
+        { "value": "#never-loses-grip", "label": "#never-loses-grip" },
+        { "value": "#one-pair", "label": "#one-pair" },
+        { "value": "#coperni", "label": "#coperni — Collab" },
+        { "value": "#problem", "label": "#problem" }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "trust_url",
+      "label": "Custom trust URL"
+    },
+    { "type": "header", "content": "5 — Layout" },
+    {
+      "type": "checkbox",
+      "id": "reverse",
+      "label": "Image on right — desktop (default: off)",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "mobile_stack_order",
+      "label": "Phone stack (default: image on top)",
+      "default": "media_first",
+      "options": [
+        { "value": "media_first", "label": "Image above copy (default)" },
+        { "value": "copy_first", "label": "Copy above image" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y",
+      "label": "Text pad top & bottom — desktop (default 72)",
+      "min": 32,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Text pad left & right — desktop (default 56)",
+      "min": 16,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "text_pad_y_mobile",
+      "label": "Text pad top & bottom — phone (default 52)",
+      "min": 16,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 52
+    },
+    {
+      "type": "range",
+      "id": "text_pad_x_mobile",
+      "label": "Text pad left & right — phone (default 24)",
+      "min": 12,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "bg_style",
+      "label": "Text panel background (default: White)",
+      "default": "white",
+      "options": [
+        { "value": "white", "label": "White (#ffffff)" },
+        { "value": "cream", "label": "Cream (#faf8f6)" },
+        { "value": "darker_cream", "label": "Darker cream (#efe9dd)" }
+      ],
+      "info": "Legacy bg_color still applies when unset on older instances."
+    },
+    {
+      "type": "range",
+      "id": "media_radius",
+      "label": "Corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 0,
+      "info": "Photo side and text side."
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Accessibility name (aria-label)"
+    },
+    { "type": "header", "content": "6 — Section gap" },
+    {
+      "type": "range",
+      "id": "section_gap",
+      "label": "Space above & below — desktop (default 0)",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "section_gap_mobile",
+      "label": "Space after section — phone (default 0)",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide on phone",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_desktop",
+      "label": "Hide on desktop",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "inset_top",
+      "label": "Inset top — desktop",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom",
+      "label": "Inset bottom — desktop",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "inset_x",
+      "label": "Inset left & right — desktop",
+      "min": 0,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "checkbox",
+      "id": "inset_custom_mobile",
+      "label": "Use different frame margins on phone",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "inset_top_mobile",
+      "label": "Inset top — phone",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ section.settings.inset_custom_mobile }}"
+    },
+    {
+      "type": "range",
+      "id": "inset_bottom_mobile",
+      "label": "Inset bottom — phone",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ section.settings.inset_custom_mobile }}"
+    },
+    {
+      "type": "range",
+      "id": "inset_x_mobile",
+      "label": "Inset left & right — phone",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ section.settings.inset_custom_mobile }}"
+    },
+    { "type": "header", "content": "Legacy (hidden — do not edit)" },
+    {
+      "type": "paragraph",
+      "content": "Preserves stored values on Theme Editor save. Not shown in the panel."
+    },
+    {
+      "type": "select",
+      "id": "media_type",
+      "label": "Legacy: Media type",
+      "default": "image",
+      "options": [
+        { "value": "image", "label": "Image" },
+        { "value": "video", "label": "Video" }
+      ],
+      "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "range",
+      "id": "image_pos_x",
+      "label": "Legacy: Custom focal horizontal",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "range",
+      "id": "image_pos_y",
+      "label": "Legacy: Custom focal vertical",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "range",
+      "id": "image_zoom",
+      "label": "Legacy: Zoom desktop",
+      "min": 50,
+      "max": 160,
+      "step": 2,
+      "unit": "%",
+      "default": 100,
+      "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "range",
+      "id": "image_pos_x_mobile",
+      "label": "Legacy: Phone focal horizontal",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "range",
+      "id": "image_pos_y_mobile",
+      "label": "Legacy: Phone focal vertical",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50,
+      "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "range",
+      "id": "image_zoom_mobile",
+      "label": "Legacy: Zoom phone",
+      "min": 50,
+      "max": 160,
+      "step": 2,
+      "unit": "%",
+      "default": 100,
+      "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "reverse_layout",
+      "label": "Legacy: Reverse layout",
+      "default": false,
+      "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trust",
+      "label": "Legacy: Show trust row",
+      "default": true,
+      "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "color",
+      "id": "cta_bg_color",
+      "label": "Legacy: CTA background",
+      "default": "#c45c3f",
+      "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "color",
+      "id": "cta_border_color",
+      "label": "Legacy: CTA border",
+      "default": "#c45c3f",
+      "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "color",
+      "id": "cta_text_color",
+      "label": "Legacy: CTA label color",
+      "default": "#ffffff",
+      "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Legacy: Custom text panel color",
+      "default": "#ffffff",
+      "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_controls",
+      "label": "Legacy: Show video controls",
+      "default": false,
+      "visible_if": "{{ section.settings.heading_level == '__legacy_hidden__' }}"
+    }
+  ],
+  "presets": [
+    { "name": "Split hero" }
+  ]
+}
+{% endschema %}
