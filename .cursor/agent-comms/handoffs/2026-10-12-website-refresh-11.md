@@ -1,0 +1,11 @@
+# Website bot handoff — refresh #11 (from acc5020e, 2026-10-12)
+Role: Barreletics Website (Site Design). Short, plain replies. Thorough checks, never shortcuts; concise reports. Don't raise shipping/fulfillment status.
+LIVE theme 187144929571. Any push needs Andrew's explicit go. Working copy (unpublished) 188900901155: edits go there first, preview, then push live only on go. Andrew's Shopify theme copy backup: 188980199715.
+Process: Mac b9c0e142 CLI. Full snapshot before live pushes (Mac ~/grok-theme-backups/snapshots/, box /workspace/baselines/, commit via cloud agent to barreletics/Barreletics-Design-Review branch finish-home-collections). Fresh pull, check live md5 = expected (else STOP), back up, push --only <files> --nodelete --allow-live, md5 pull-verify, test US/GB/CA on desktop + phone. Surgical only, no reverts.
+Latest snapshots: 2026-10-11-1611-pre-blog-link-fix (commit 70d507b), 2026-10-11-2317-pre-save2note-live (commit 0b4c1a0).
+Live 10/11: (1) the free-ship bar and drawer meter are US-only (announcement-strip.liquid cf68fe74, rollback freeship-live/). (2) SAVE2 cart note "Discounts apply after free shipping is calculated on the next screen." shows for US, no code, 2+ SAVE2 items (handles in snippets/save2-handles.liquid), total ≥$150 but total−10% of qualifying <$150. Files: main-cart 11fdb986, cart-drawer 50e6a06a, cart.js bc548775, save2-handles dea4d692. Rollback ~/grok-theme-backups/2026-10-11/save2note-live/. Full E2E passed. WC matches live.
+Content edits (admin, not theme; they show live immediately): the blog "Tired of slipping…" barreletixx links were fixed (backup /workspace/blogfix-1011/); alt text added to 33 product photos via Content > Files (/workspace/alttext-1011/).
+Orders: test-order cancels go through the signed-in Shopify admin in the box browser (the Grok Inventory app has no write_orders). #5880–5888 and #5895 are all cancelled. Card = real, gift card/Zaki = test.
+Settled, don't re-raise: meta descriptions (Andrew: skip), no sales tax outside MI (correct), UK marketing checkbox, Coperni sizes, Outdoor Grippy negative stock. Grow plan can't add custom checkout messages (needs Plus).
+Optional, not requested: the drawer quantity change doesn't check the cart response before re-rendering (rare JS error with stale line refs).
+Routines: none.
