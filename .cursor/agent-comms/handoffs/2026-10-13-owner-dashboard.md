@@ -9,7 +9,7 @@
 - The old branch `cursor/owner-dashboard-v1-6beb` / PR #16 in barreletics-ops is superseded and was not touched.
 
 ## Schedule
-publish.yml runs at 11:00 and 23:00 UTC (7 AM / 7 PM ET) and on manual dispatch. Steps: pull the br-paid-dashboard latest.json (token), refresh_owner.py, build_static.py, inject PWA tags, staticrypt 3.5.4 (remember up to 30 days), scripts/check_leaks.py, push to the public repo.
+publish.yml runs hourly at :30 from 8:30 AM to 9:30 PM ET (cron "30 12-23,0,1 * * *" UTC, on EDT. After DST ends Nov 1 it runs an hour earlier unless changed to "30 13-23,0,1,2 * * *") and on manual dispatch (header "Refresh data" button opens the workflow page; "Reload" reloads the page). Steps: pull the br-paid-dashboard latest.json (token), refresh_owner.py, build_static.py, inject PWA tags, staticrypt 3.5.4 (remember up to 30 days), scripts/check_leaks.py, push to the public repo.
 
 ## Secrets (owner-dashboard; values never in git)
 OWNER_PAGE_STATICRYPT_PASSWORD, SNAPSHOT_DEPLOY_TOKEN (Andrew's fine-grained PAT, also GITHUB_DASHBOARD_TOKEN on the box), SHOPIFY_CLIENT_ID, SHOPIFY_CLIENT_SECRET, XERO_CLIENT_ID, XERO_CLIENT_SECRET (the working "_NEW" value), META_ACCESS_TOKEN, GA_SERVICE_ACCOUNT_JSON (normalized JSON for dashboard-reader@valiant-bonbon-489502-g4), HELPSCOUT_APP_ID, HELPSCOUT_APP_SECRET.
