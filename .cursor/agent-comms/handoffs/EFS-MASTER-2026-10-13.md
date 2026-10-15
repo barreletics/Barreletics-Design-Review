@@ -17,7 +17,7 @@ Superseded wholesale: [H1] and [RM]/[K]/[EX] "Phase 1" rate lines (120%/120%, Pr
 | 9 | 🔒 International = FedEx International Connect Plus (FICP) only, **+50%**; no UPS/DHL | Sep 17; Oct 12–13 | MK; G3 |
 | 10 | 🔒 International tested live with **Managed Markets OFF**, one order per region, short window, Eric on the phone; MM back on after | Oct 13 | TR(T5); G3 |
 | 11 | 🔒 April 2026 out-of-stock errors (US and intl) were caused by Managed Markets. Do not ask Eric | Oct 13 4:01 PM | K correction; TR(T4) |
-| 12 | 🔒 1 lb per pair; live shoes 2 lb → 1 lb on go-live day | Sep 17; Oct 12 | K §5 |
+| 12 | 🔒 1 lb per pair; live shoes 3 lb (Andrew 10/14 correction) → 1 lb on go-live day | Sep 17; Oct 12 | K §5 |
 | 13 | 🔒 "%" = extra on top of the FedEx account quote | Oct 4/12 | K §5 |
 | 14 | 🔒 eFS ships DDP; don't ask. Don't ask about Saturday shipping | Oct 4 | K §6, §2 |
 | 15 | 🔒 Don't recommend MM or the $99 Duty & Tax app | Oct 5 | K §6 |
