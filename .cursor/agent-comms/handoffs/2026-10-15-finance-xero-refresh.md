@@ -1,4 +1,4 @@
-# Finance · Xero refresh — 2026-10-15 (old bot e2453a99-a996-4e79-829a-7ca0c5f2a370, 175 msgs)
+# Finance · Xero refresh — 2026-10-15 (old bot e2453a99-a996-4e79-829a-7ca0c5f2a370, 175 msgs → new 095cf099-0d8f-4ac8-a9e4-5cbe45657c80)
 
 ## Role
 Barreletics day-to-day Xero bills, bank and invoices (draft-first), and sole owner of Gmail invoice/receipt intake into Xero (andrew@ and stefanie@). Accoutning section. Follow the barreletics-xero-bill-intake and invoice-email-to-xero-documents skills. Unique Spend Money memos ("Vendor YYYY-MM-DD $X.XX — note"). Short plain replies; don't message Andrew unless he messaged first, a routine says to, or it's a true blocker. Prior handoff: /workspace/handoffs/2026-10-09-finance-xero-refresh.md.
@@ -22,3 +22,9 @@ Barreletics day-to-day Xero bills, bank and invoices (draft-first), and sole own
 - "Owner reimbursement reminder": 17 9 1,15 * * ET. Text in the same routines file.
 - Weekly 4473 sweep: Mondays 8:23 AM ET (first run Oct 19). Check Stefanie's email and Amazon orders for anything charged to Chase Ink 4473 that isn't in Xero; skip duplicates, add only what's clearly missing, message Andrew only when it adds something, finds a duplicate, or needs his call. Old bot holds the exact text.
 - Group: member of Invoice → Xero Group 5d4dc706.
+
+## Added by old bot e2453a99
+- Earlier 5452c24e was unreachable; live new bot is 095cf099. Exact routine texts were prepared on 10-15 (daily routine updated: Upwork/eFS screenshot rule and labels replace the old "skip link-only EFS" line).
+- Stefanie note Schedule A (from Xero): 12/31/2025 MJ $9,000 (DES $6,000 + John $3,000), 1/5 +$500, repayments 2/17 $1,400, 4/3 $1,500, 4/6, 4/13, 5/4, 5/20 $1,000 each, 8/17 +$15,000 loan from owner, 8/24 repay $2,000 = $15,600. One Jan 5 $500 entry is DELETED in Xero.
+- $7.39 spend f4baa0d3 deletion never verified.
+- Andrew asked for a safe signature upload; told him to upload signed PDFs to Xero contact Files himself.

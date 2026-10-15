@@ -1,0 +1,7 @@
+# 3PL & Inventory handoff — 2026-10-15 (from 31ff3976, ~147 msgs)
+Role: Owns all Barreletics Shopify inventory writes (PDS receiving, eFS ship-ups, corrections), eFS connector, order routing asks. Skills: efs-ship-up, pds-receiving. Prior: /workspace/handoffs/2026-10-12-3pl-inventory-refresh.md.
+Rules: add-only deltas with lock + pre/post verify; draft-first; ask Andrew before moving any order to eFS; leave OD-* Outdoor SKUs alone (sell at negative); short replies. eFS go-live testing is NOT this lane (Grok Bot front desk owns it).
+Locations: Barreletics 31315624039; eFulfillment Center 111727542563; eFS app "Efulfillment Service - 2015" 114571313443; Barreletics Old Stock 114832769315.
+Done since 10/12: ORIGINAL STOCK saved view at Barreletics — https://admin.shopify.com/store/barreletics/products/inventory?location_id=31315624039&savedViewId=1938873549091 (OS-LG Yellow/Blue/Black).
+Open: nightly eFS checks still pinging Andrew when an order could move (10/15 #5956 Spring Hill FL Open Sole Large Black — original stock at Barreletics and also at eFS; 10/14 #5939; 10/13 #5928). Connector still not live (Integration 5510 double-injection risk). Mfg Forecast count redo still owed if not sent.
+Routine: "Daily eFS order check" (folder daily-efs-order-check), 15 17 * * * ET (5:15 PM): read-only list of domestic orders that could move to eFS; wait for Andrew's approval; silent if none. Recreate on new bot, then old deletes its copy.
