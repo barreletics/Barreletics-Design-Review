@@ -1,7 +1,7 @@
 # Barreletics Blueprint — Project Dashboard
 
 **Last Updated:** 2026-07-19
-**Current Milestone:** 4C — Validation (Ready for Review)
+**Current Milestone:** 4D — Launch Preparation 🔒 Locked (planning complete — execution pending deployment)
 
 ---
 
@@ -217,8 +217,8 @@
 | M4A | Production Assembly | 🔒 Locked | M1-3 locked + Pre-Deployment Truth Set |
 | M4B | Integrations | 🔒 Locked | M4A complete |
 | M4C | Validation | 🔒 Locked | M4B complete + Policy Freeze Gate (D-040) |
-| M4D | Launch | 🟡 In Progress | M4C complete + Pre-Deployment Truth Set verified |
-| M4E | Stabilization | ⚪ | M4D complete (theme live) |
+| M4D | Launch Preparation | 🔒 Locked | Planning complete — execution pending Owner prerequisites + deployment |
+| M4E | Stabilization | ⚪ Not Started | M4D execution complete (theme live) |
 
 > **M4B locked** — all integration code in place with graceful degradation. D-045 documents production tracking strategy (Shopify native preferred, theme-level as fallback). Credential-dependent activation deferred to M4D Launch.
 
@@ -270,28 +270,34 @@
 
 ### M4D Deliverables
 
+> **M4D Launch Preparation locked** — 12 planning documents approved (PR #7). Architecture phase complete. Next: deployment & live validation (D-048).
+
 | Deliverable | Status | File |
 |-------------|--------|------|
 | **Planning Documents** | | |
-| Launch Plan | 🟡 | `planning/m4d-launch-plan.md` |
-| Deferred Validations (15 items) | 🟡 | `planning/m4d-deferred-validations.md` |
-| Rollback Procedure | 🟡 | `planning/m4d-rollback-procedure.md` |
-| DNS Checklist | 🟡 | `planning/m4d-dns-checklist.md` |
-| Theme Publish Checklist | 🟡 | `planning/m4d-theme-publish-checklist.md` |
-| Launch Day Timeline | 🟡 | `planning/m4d-launch-day-timeline.md` |
-| Monitoring Plan (24h) | 🟡 | `planning/m4d-monitoring-plan.md` |
-| 24-Hour Post-Launch Checklist | 🟡 | `planning/m4d-24h-checklist.md` |
-| 7-Day Stabilization Checklist | 🟡 | `planning/m4d-7day-stabilization.md` |
-| Severity Matrix | 🟡 | `planning/m4d-severity-matrix.md` |
-| Decision Tree (Go/Rollback) | 🟡 | `planning/m4d-decision-tree.md` |
-| Owner Launch Checklist | 🟡 | `planning/m4d-owner-launch-checklist.md` |
-| **Execution Items** | | |
-| 15 deferred validations executed with evidence | ⚪ | Requires deployed preview |
+| Launch Plan | 🔒 | `planning/m4d-launch-plan.md` |
+| Deferred Validations (15 items) | 🔒 | `planning/m4d-deferred-validations.md` |
+| Rollback Procedure | 🔒 | `planning/m4d-rollback-procedure.md` |
+| DNS Checklist | 🔒 | `planning/m4d-dns-checklist.md` |
+| Theme Publish Checklist | 🔒 | `planning/m4d-theme-publish-checklist.md` |
+| Launch Day Timeline | 🔒 | `planning/m4d-launch-day-timeline.md` |
+| Monitoring Plan (24h) | 🔒 | `planning/m4d-monitoring-plan.md` |
+| 24-Hour Post-Launch Checklist | 🔒 | `planning/m4d-24h-checklist.md` |
+| 7-Day Stabilization Checklist | 🔒 | `planning/m4d-7day-stabilization.md` |
+| Severity Matrix | 🔒 | `planning/m4d-severity-matrix.md` |
+| Decision Tree (Go/Rollback) | 🔒 | `planning/m4d-decision-tree.md` |
+| Owner Launch Checklist | 🔒 | `planning/m4d-owner-launch-checklist.md` |
+| **Execution Items (M4D Execution)** | | |
+| 15 deferred validations executed with evidence | ⚪ Awaiting Owner Prerequisites | Requires deployed preview |
 | Theme uploaded to Shopify | ⚪ | Builder action |
 | Test transaction completed | ⚪ | Joint action |
 | Theme published to production | ⚪ | Joint action |
 | 24-hour monitoring complete | ⚪ | Joint action |
 | 7-day stabilization complete | ⚪ | Joint action |
+
+### Technical Documentation — 🔒 Locked
+
+> **25-document developer reference approved** (PR #8). See `docs/01-repository-structure.md` through `docs/25-future-extension-guide.md`.
 
 ### M4A Deliverables
 
@@ -326,6 +332,26 @@
 | D-045 | Production tracking strategy — Shopify native preferred, theme-level fallback only |
 | D-046 | M4B Integrations locked — credential activation deferred to M4D |
 | D-047 | M4C Validation Gate locked — 109 pass, 6 fixed, 15 deferred to M4D |
+| D-048 | M4D Launch Package + Technical Documentation locked — architecture phase complete |
+
+## Next Phase: Deployment & Live Validation
+
+**Prerequisites (Owner):**
+1. Provide tracking IDs (GA4, Meta Pixel, Pinterest, Clarity)
+2. Complete Policy Freeze Gate
+3. Choose hero headline (D-041)
+4. Deliver production assets (favicon, OG image)
+5. Approve content inventory
+6. Configure Judge.me, Help Scout, Tidio
+
+**Once prerequisites met:**
+1. Shopify preview deployment
+2. Runtime validation of 15 deferred M4C items
+3. Analytics verification
+4. Performance / Lighthouse audit
+5. Launch readiness confirmation
+6. Production publish
+7. M4E Stabilization (24h → 48h → 7-day → 30-day)
 
 ## Milestone 5: Growth Platform (v1) — ⚪ Planning
 
