@@ -2,16 +2,18 @@
 
 ---
 document: 05 – PDP Architecture
-version: 1.0
+version: 1.1
 status: 🔒 Locked
 approved_by: Owner / Architect
 approval_date: 2026-07-18
-last_modified: 2026-07-18
+last_modified: 2026-07-20
 depends_on: [03, 04, 07, 08]
 supersedes: []
+frozen_spec: specs/frozen/pdp.md
 ---
 
-**Approved Source:** `Barreletics PDP - APPROVED July 17.html`
+**Approved Source:** `Barreletics PDP - APPROVED July 17.html`  
+**Build freeze (2026-07-20):** DP-02/DP-07/DP-09/DP-10 — July 17 stack + buy-box micro-quotes; keep video fifty-fifty as motion; value-strip not 6-pillars; v49 Enhanced = tokens/optional modules only. See `specs/frozen/pdp.md`.
 
 ## Page Purpose
 
@@ -48,10 +50,8 @@ Two-column desktop, single-column mobile. Max content width: 1200px. Gutters: 32
 - Add to Cart button: full width, 18px padding, `#1c1916` bg, 6px radius, hover → `#c45c3f`
 - Trust row below ATC: Ships 1–2 days · 30-day returns · 90-day warranty · Latex- & silicone-free · Made in USA
 
-### Section 2: Brand Pillars Strip
-- Warm cream background (`#f5f2ec`)
-- 6 pillar items with icons
-- Same component as homepage pillar strip
+### Section 2: Value / Trust Strip (launch)
+- Shared `value-strip` (DP-10). Full 6-pillar strip Optional later (Enhanced reference only).
 
 ### Section 3: Variant Grid — "The Studio Collection"
 - Tab filtering: Closed Sole / Open Sole
@@ -81,10 +81,10 @@ Two-column desktop, single-column mobile. Max content width: 1200px. Gutters: 32
 - Autoplay on hover/interaction (not on load)
 - Mobile: tap to play
 
-### Section 7: Justifier Testimonials — "Real feedback from the floor."
-- Justifier cards: 12px radius, left border 5px solid `#c45c3f`
-- Tag: 11px `#c45c3f` uppercase
-- Customer quotes with name and city
+### Section 7: Buy-box micro-quotes / Justifier (DP-07)
+- Launch: 2–3 micro-quotes in buy box (highest trust ROI)
+- Optional: full v49 justifier card strip when assets ready
+- Left-border rust cards remain the Enhanced/component reference
 
 ### Section 8: FAQ — "Everything you need to know."
 - Accordion component, max-width 760px, centered

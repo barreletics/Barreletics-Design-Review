@@ -28,6 +28,9 @@
         {% endif %}
         <span class="sole-card__tag">Full Coverage</span>
         <h3 class="sole-card__title">Closed Sole</h3>
+        {% if section.settings.closed_best_for != blank %}
+          <p class="sole-card__best">Pick this if: {{ section.settings.closed_best_for }}</p>
+        {% endif %}
         <p class="sole-card__desc">{{ section.settings.closed_desc }}</p>
       </div>
       <div class="sole-card">
@@ -44,6 +47,9 @@
         {% endif %}
         <span class="sole-card__tag">Barefoot Feel</span>
         <h3 class="sole-card__title">Open Sole</h3>
+        {% if section.settings.open_best_for != blank %}
+          <p class="sole-card__best">Pick this if: {{ section.settings.open_best_for }}</p>
+        {% endif %}
         <p class="sole-card__desc">{{ section.settings.open_desc }}</p>
       </div>
     </div>
@@ -108,6 +114,14 @@
     color: var(--text-muted);
   }
 
+  .sole-card__best {
+    margin: 0;
+    font-size: 13px;
+    font-weight: var(--weight-semibold);
+    color: var(--accent-primary, #c45c3f);
+    line-height: 1.4;
+  }
+
   .sole-card__title {
     font-size: 22px;
     font-weight: var(--weight-bold);
@@ -158,11 +172,13 @@
   "settings": [
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Two Versions. One Performance." },
     { "type": "text", "id": "title", "label": "Title (fallback)", "default": "Shop All Styles & Colors" },
-    { "type": "textarea", "id": "body", "label": "Body (fallback)", "default": "One patented grip system, two builds. Same 360° grip, same durability, same $74. Choose the one that fits your practice." },
+    { "type": "textarea", "id": "body", "label": "SEO / category subhead (fallback)", "default": "Performance Skins replace disposable grip socks — one patented 360° grip system, two builds. Closed Sole or Open Sole. Same durability. Same $74. Shop all styles and colors." },
     { "type": "checkbox", "id": "show_sole_cards", "label": "Show Open/Closed comparison cards", "default": true },
     { "type": "image_picker", "id": "closed_image", "label": "Closed Sole image" },
+    { "type": "text", "id": "closed_best_for", "label": "Closed Sole — Pick this if", "default": "you want full-foot lockdown for reformer, barre, and Lagree." },
     { "type": "textarea", "id": "closed_desc", "label": "Closed Sole description", "default": "Full coverage including heel — more protection everywhere. 360° grip across the entire underfoot." },
     { "type": "image_picker", "id": "open_image", "label": "Open Sole image" },
+    { "type": "text", "id": "open_best_for", "label": "Open Sole — Pick this if", "default": "you want a grounded heel feel for mat work, yoga, and heated studios." },
     { "type": "textarea", "id": "open_desc", "label": "Open Sole description", "default": "Open heel with a mid-foot vent — your heel contacts the surface directly for a grounded, barefoot-like feel." }
   ],
   "presets": [{ "name": "Collection Hero" }]
