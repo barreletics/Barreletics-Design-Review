@@ -1,0 +1,12 @@
+# Mfg Forecast bot — handoff 2026-10-21 (pre-refresh)
+- **Role/lane:** Manufacturing forecast + Color Masters colorant work (docs/bots/manufacturing). Full state: [COLOR-MASTERS.md](../COLOR-MASTERS.md) § "2026-10-21 settled state"; also [MFG-FORECAST-STATE.md](../MFG-FORECAST-STATE.md).
+- **Final sheet:** "Grok Barreletics + Colormasters (10-21 final)" `1PeO4YYIbZVKsUbD9VBBCSGpUb5rsrk8BB_nE_XiRIi8`, folder `1EraY81JNBqqgnUDRfeSrjiaNPcLZM45D`. Hidden: Nude Colors (permanent), Collecting. Original `1imr8opr…` untouched.
+- **Last finished task:** Custom Color Pricing one-table rebuild, PDS On Hand restructure, PO-2000 subtotal/credit/net on PO log, Pantone search (Blue Heaven 14-4506 TCX).
+- **Standing rules:** never unhide rows/cols/tabs; never add fields unless asked; export LIVE sheet before any rebuild (export → openpyxl → new Sheet same name/folder → verify → trash old); no Color Master/PDS contact or outside email without Andrew's go; do not reply to Stacy Spornhauer; no Shopify inventory writes.
+- **Waiting on Andrew:** go on 50 vs 25 lb nude buy (50 lb recommended, +$127 / +$121.50); nude names; Copper/Coral softer let-down question; NUDE + Copper Swirl carrier; 10 vs 4 stock colors.
+- **Open items:** $600 credit details (9/14 CREDIT PACKET email); PO-2003 forecast incl. nudes; batch cadence + TPE reorder points owed to Distribution; Deep Teal GR2704M vs GR2730M; Spain 300–500 pairs TPE question; unsent drafts to Stacy/Brandon/Jodie (none pending send).
+- **Artifacts:** [nude quotes + invoice 215373](../artifacts/).
+- **Routines:** none owned by this bot.
+- **Nude quotes:** Q136295 1Y10-SP BN1848M 3%: $21.71/13.40/9.25/6.75 (25/50/100/250 lb); Q136293 1Y08-SP BN1847M: $21.48/13.17/9.01/6.52.
+- **PO-2000 (inv 215373):** subtotal $1,861.80, −$600 credit, net $1,261.80.
+- **Previous save:** cdeff48. Shared decision line added to [DECISIONS.md](../../DECISIONS.md).
