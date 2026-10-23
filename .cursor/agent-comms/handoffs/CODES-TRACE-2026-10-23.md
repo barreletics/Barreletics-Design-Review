@@ -1,0 +1,39 @@
+# FB-EMAIL / IG-EMAIL code trace, 2026-10-23 (read only)
+Pulls: Shopify Admin GraphQL 2025-10 and ManyChat API, Oct 23 2026 9:09-9:13 AM ET; storefront fetched 9:10 AM ET. Nothing changed, nothing sent. Scratch files in /workspace/codes-trace/.
+
+## Bottom line
+1. **Issuer: Shopify's "Facebook & Instagram" sales channel app (Meta), NOT ManyChat.** Shopify's own event log on each code says "Facebook & Instagram created this discount." [SHOP, discount node `events`, appTitle "Facebook & Instagram"]. This is present on 123 of 123 codes that still have events, which is every code created Jul 25 onward, including **all 14 created Oct 8-23**. Older codes show no event (Shopify only keeps about 90 days).
+2. **Mechanism (Meta Help Center, 832707885973695):** Meta's "email sign-up offer for ads that lead to your website". On a mobile FB/IG ad click, the shopper enters an email, Meta shows a single-use code, the site auto-applies it in the in-app browser, and the email lands in Shopify Customers as subscribed. Matches the data: each code is bound to one brand-new customer created in the same second as the code, single opt-in subscribed, 0 orders (Oct 8+: 14 of 14 new). Meta says the site's own email pop-up is disabled while this offer runs.
+3. **Are the codes working? Yes, as far as the rules show.** Every post-Oct 8 code is valid on paper (details below). The 7 created since Oct 17 are active with 4-7 days left.
+4. **Did something break at the Oct 8 relaunch? Not supported.** The codes kept being created on the new theme (Oct 9, 10, 11, 17, 20, 22, 23), so the Meta app still reaches Shopify. The creation rate Oct 8-22 (0.87/day) equals the Sep 1-24 baseline (0.83/day). What looks odd is the **Sep 25-Oct 7 spike (5.3/day, 69 codes)**, not the drop after it. Cause of the spike unknown.
+
+## 1. Shopify: full list (all 669 codes titled FB-EMAIL*/IG-EMAIL*, since 2024-02-14)
+Pulled 9:09 AM ET. Monthly (created / redeemed): Feb 2026 37/1, Mar 114/9, Apr 129/8, May 124/4, Jun 85/4, Jul 35/0, Aug 11/1, Sep 50/7, Oct (to 23rd) 53/4. Older years: 1-9 a month, nearly 0 used. Raw JSON: /workspace/codes-trace/codes.json.
+Config of all 61 codes created Sep 26-Oct 23 : DiscountCodeBasic, 10% off, all products (no collection/product restriction), no minimum, usage limit 1, once per customer, tied to exactly 1 customer (new, email-subscribed), combinesWith = none (cannot stack with order/product/shipping discounts), one-time purchase only, starts at creation.
+- **No config difference pre vs post Oct 8** in value, minimum, items, customer binding, limit or combinesWith.
+- **Expiry mix, same before and after:** each code ends either 7 days or about 30 days after creation. This mix exists back to March (e.g. Mar: 67 thirty-day, 47 seven-day; Jun-Aug all 7-day; Sep 22 thirty-day/28 seven-day; Oct 32 thirty-day/21 seven-day). So the length is not a post-Oct 8 change. Of 14 codes created Oct 8+: 3 are EXPIRED (Oct 9 08:05, Oct 10, Oct 11 09:35, all 7-day, expired normally); 11 ACTIVE.
+- Post-Oct 8 active codes: created Oct 9 12:01 (ends Nov 8), Oct 11 00:37 (Nov 9), Oct 11 05:53 (Nov 10), Oct 17 13:41 (Oct 24 1:41 PM!), Oct 20 06:44 (Oct 27), Oct 20 15:22 (Oct 27), Oct 20 15:51 (Oct 27), Oct 20 16:17 (Nov 19), Oct 22 17:45 (Oct 29), Oct 22 23:28 (Oct 29), Oct 23 00:43 (Oct 30). Usage 0/1 each.
+- Created windows: Sep 1-24: 20 (0 used); Sep 25-Oct 7: 69 (11 used); Oct 8-23: 14 (0 used). Ratio check: 0 of 14 is not unusual against the longer baseline (Sep 1-24 also 0 of 20; all codes before Sep 25: 27 of 559 = 4.8%). The 11 used were all spike-period codes, redeemed 3-20 minutes after creation (in-app browser auto-apply pattern), except one at 98 min.
+- Customers on the 83 codes since Sep 25: 69 no tags, 8 "Login with Shop", 3 POWR "Save 10 Welcome", 3 abandoned-cart tags; 68 had 0 orders, 13 had 1, 2 had 2. 8 of the 69 spike-window customers existed before the code (returning customers).
+
+## 2. ManyChat API (token not printed; GET only: info, flows, growth tools, tags, custom fields, bot fields)
+Pulled 9:10 AM ET. **Nothing in ManyChat creates these codes.** Facts:
+- 24 flows (6 system). Flow list and 14 growth tools are byte-identical to the Oct 6 snapshot (/workspace/manychat/raw). Flow names: AI flow IG/FB/TikTok step 2, Comment-to-DM step 1 (IG, FB, Spanish IG/FB), keyword/auto-DM link flows, "Do you offer discounts?" (IG and FB), "Send a freebie, grow your email list" (template from 2025-03-27), TikTok to website, Delete Contact, 3 Untitled. No flow named for email code or Shopify.
+- Custom fields: History, count, Ai > Response, User > Fallback, Falback. **No email field, no code field.** Tags: contact delete, Turn Off Ai, link_clicked (2026-05-30). Bot field: Training data only. No tag or field related to email capture or codes.
+- The Training data text says the "welcome code goes out via email after signup" and tells the AI to escalate instructor codes; it never mentions FB-EMAIL/IG-EMAIL. DM-exclusive code SAVE15 was removed in v4.9; the bot sells SAVE2 + Shop Pay.
+- **API cannot show:** flow steps, External Request/Shopify actions, publish/active status, last runs, subscriber counts, trigger keywords/posts, integrations, change history. So I cannot prove no ManyChat flow ever touches Shopify, but there is no evidence of one, and Shopify attributes the codes to Meta's app.
+- Why a ManyChat origin is unlikely: Shopify's event log names the Meta app; the codes' customers are created in the same second as the code with SINGLE_OPT_IN subscribed (Meta sync behavior), not a custom Admin API flow; the Meta help page describes this exact FB-EMAIL/IG-EMAIL naming.
+
+## 3. Live storefront (barreletics.com, theme 187144929571 published, fetched 9:10 AM ET)
+- Homepage 200, 427 KB. No ig.me, m.me or manychat links; no popup or script for email capture (no Klaviyo/Privy/Omnisend/POWR). Only email capture: footer form "Join the list - New colorways and studio stories." (POST /contact, tag `newsletter`, no discount offered). Instagram link to instagram.com/barreletics and a Juicer.io feed.
+- Meta side is present: `facebook-domain-verification` meta tag, Shopify web pixel `facebook_pixel`, `facebookCapiEnabled: true` on the live theme. Nothing on the page that references FB/IG codes (expected: the offer is shown inside the Meta ad flow, not on the site).
+- Judge.me review coupon 20% is configured (separate, not these codes).
+
+## 4. Would a post-Oct 8 code validate?
+Rule check only (no checkout/order made): ACTIVE, started, unexpired (for those listed above), 0/1 used, no minimum, all items, no collection filter. Constraint to know: it only works for the one customer it is bound to (the email that signed up; must be that email or signed-in account at checkout), and cannot combine with SAVE2 or other discounts. Not checked: whether the Meta ad flow auto-applies the code on the new theme (auto-apply is by Meta in the in-app browser, not visible by API) and whether the checkout accepts it live.
+
+## Unknown / next checks
+- Why creation spiked Sep 25-Oct 7 (69 codes, 5.3/day, 1.86 codes per 100 Meta clicks vs 0.22 before and 0.44 after). Daily corr with Meta clicks over Sep 1-Oct 22 is about 0 (r 0.03). Meta Commerce Manager > Settings > Marketing (email sign-up offer, Website box), and Shopify admin > Facebook & Instagram app settings would show the offer and any change date. Andrew's view that "all links are the same" fits: no site link is needed.
+- Whether the Meta app stays the sole issuer going forward, and whether Meta's check after relaunch (domain/pixel/catalog) changed ad eligibility. Meta change log not pulled.
+- Meta says the site email pop-up is disabled while the offer runs; if the offer was on during the spike it may explain why the site showed no popup.
+- ManyChat flow steps/status (UI only).
