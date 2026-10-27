@@ -1,0 +1,1 @@
+- **2026-10-21/22 — Settled items** (Meta history verified, GRIP vs $12k Yellow Shoes facts, strategy is proposal only, Pinterest hold $25/day, PayPal off, Managed Markets ON, Oct 22 low-sales cause, Oct 23 recheck): [DECISIONS-2026-10-21-22.md](DECISIONS-2026-10-21-22.md). Handoff: [handoffs/2026-10-22-social-perf-refresh.md](handoffs/2026-10-22-social-perf-refresh.md).
