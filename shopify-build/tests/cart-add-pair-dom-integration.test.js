@@ -10,17 +10,7 @@ var FIXTURE_PRODUCT = {
     { name: 'Size', position: 1, values: ['M (W 5.5-7.5)'] },
     { name: 'Color', position: 2, values: ['Purple'] }
   ],
-  variants: [
-    {
-      id: 101,
-      option1: 'M (W 5.5-7.5)',
-      option2: 'Purple',
-      available: true,
-      featured_image: {
-        src: 'https://cdn.shopify.com/s/files/1/0045/0612/4391/files/swatch-copper-swirl.png?v=1'
-      }
-    }
-  ]
+  variants: [{ id: 101, option1: 'M (W 5.5-7.5)', option2: 'Purple', available: true }]
 };
 
 function installDom() {
@@ -88,10 +78,8 @@ test('DOM: failed native add keeps error visible and allows same-selection retry
     .then(function () {
       var swatch = container.querySelector('[data-swatch-color="Purple"]');
       assert.ok(swatch, 'purple swatch rendered');
-      assert.equal(
-        swatch.getAttribute('data-swatch-src'),
-        'https://cdn.shopify.com/s/files/1/0045/0612/4391/files/swatch-copper-swirl.png?v=1'
-      );
+      assert.equal(swatch.getAttribute('data-swatch-kind'), 'text');
+      assert.equal(swatch.textContent, 'Purple');
       swatch.click();
       var sizeSel = container.querySelector('[data-size-select]');
       assert.ok(sizeSel);

@@ -396,48 +396,36 @@
     };
   }
 
-  var SWATCH_HEX = {
-    Black: '#1c1916',
-    White: '#f3f3f1',
-    Coral: '#e8847c',
-    'Rivian Green': '#5a7a6a',
-    'Rivian green': '#5a7a6a',
-    'Dusty Blue': '#8aa4b8',
-    Purple: '#6b4c8a',
-    'Deep Teal': '#2d5a5a',
-    'Bright Yellow': '#e8c547',
-    Navy: '#2b3d5c',
-    Blue: '#4a6fa5'
-  };
-
-  function swatchHexForColor(name) {
-    return SWATCH_HEX[name] || '#c8c4c0';
-  }
-
-  /** Native PDP provenance: snippets/variant-card.liquid (variant.featured_image) + product.json variants[].featured_image */
-  function swatchImageForColor(variants, colorKey, colorName) {
-    for (var i = 0; i < (variants || []).length; i++) {
-      var v = variants[i];
-      if (v[colorKey] !== colorName) continue;
-      var img = v.featured_image;
-      if (img && img.src) return img.src;
-    }
-    return '';
-  }
-
-  function applySwatchButtonStyle(btn, variants, colorKey, colorName) {
-    var src = swatchImageForColor(variants, colorKey, colorName);
+  /** Native PDP sources only (see cart-bundle-promo-config.liquid colorSwatch* maps). */
+  function applySwatchButtonStyle(btn, colorName, config) {
+    btn.classList.remove('cart-bundle-promo__swatch--text');
+    btn.textContent = '';
     btn.style.backgroundColor = '';
     btn.style.backgroundImage = '';
     btn.style.backgroundSize = '';
+    btn.style.backgroundPosition = '';
+    btn.removeAttribute('data-swatch-src');
+    btn.removeAttribute('data-swatch-kind');
+
+    var imgMap = (config && config.colorSwatchImages) || {};
+    var styleMap = (config && config.colorSwatchStyles) || {};
+    var src = imgMap[colorName];
+    var css = styleMap[colorName];
+
     if (src) {
       btn.style.backgroundImage = 'url(' + src + ')';
       btn.style.backgroundSize = 'cover';
       btn.style.backgroundPosition = 'center';
       btn.setAttribute('data-swatch-src', src);
+      btn.setAttribute('data-swatch-kind', 'native-image');
+    } else if (css) {
+      btn.style.backgroundColor = css;
+      btn.setAttribute('data-swatch-kind', 'native-pdp-css');
     } else {
-      btn.style.backgroundColor = swatchHexForColor(colorName);
-      btn.removeAttribute('data-swatch-src');
+      btn.classList.add('cart-bundle-promo__swatch--text');
+      btn.textContent = colorName;
+      btn.setAttribute('aria-label', colorName);
+      btn.setAttribute('data-swatch-kind', 'text');
     }
   }
 
@@ -476,12 +464,58 @@
     return item.final_line_price || 0;
   }
 
-  function lineDiscountAllocCents(item) {
-    if (!item) return 0;
+  function discountApplicationsFromContext(items, opts) {
+    var o = opts || {};
+    if (o.discountApplications && o.discountApplications.length) {
+      return o.discountApplications;
+    }
+    if (o.cart) {
+      if (o.cart.cart_level_discount_applications && o.cart.cart_level_discount_applications.length) {
+        return o.cart.cart_level_discount_applications;
+      }
+      if (o.cart.discount_applications && o.cart.discount_applications.length) {
+        return o.cart.discount_applications;
+      }
+    }
+    return [];
+  }
+
+  function discountApplicationForAllocation(alloc, apps) {
+    if (!alloc) return null;
+    if (alloc.discount_application) return alloc.discount_application;
+    if (alloc.discount_application_index == null || !apps || !apps.length) return null;
+    return apps[alloc.discount_application_index] || null;
+  }
+
+  function requiredFootwearPercent(config) {
+    if (config.pairPromoMode === 'live_2for15') return config.livePairPercent || 15;
+    return config.tierTwoPercent || 10;
+  }
+
+  function isVerifiedFootwearPercentDiscount(app, config) {
+    if (!app) return false;
+    if (app.target_type && app.target_type === 'shipping_line') return false;
+    if (app.value_type === 'percentage') {
+      var val = parseFloat(app.value, 10);
+      if (isNaN(val)) return false;
+      return val + 0.001 >= requiredFootwearPercent(config);
+    }
+    return false;
+  }
+
+  function verifiedQualifyingSkinDiscountCents(items, skinPredicate, apps, config) {
     var sum = 0;
-    var allocs = item.line_level_discount_allocations || item.discount_allocations || [];
-    for (var i = 0; i < allocs.length; i++) {
-      sum += allocs[i].amount || 0;
+    for (var i = 0; i < (items || []).length; i++) {
+      var item = items[i];
+      if (!skinPredicate(item)) continue;
+      var allocs = item.line_level_discount_allocations || [];
+      for (var j = 0; j < allocs.length; j++) {
+        var alloc = allocs[j];
+        var app = discountApplicationForAllocation(alloc, apps);
+        if (!app) continue;
+        if (!isVerifiedFootwearPercentDiscount(app, config)) continue;
+        sum += alloc.amount || 0;
+      }
     }
     return sum;
   }
@@ -490,29 +524,28 @@
     var qty = 0;
     var finalSubtotal = 0;
     var originalSubtotal = 0;
-    var discountAlloc = 0;
     for (var i = 0; i < items.length; i++) {
       if (!predicate(items[i])) continue;
       qty += items[i].quantity || 0;
       finalSubtotal += items[i].final_line_price || items[i].line_price || 0;
       originalSubtotal += lineOriginalCents(items[i]);
-      discountAlloc += lineDiscountAllocCents(items[i]);
     }
     return {
       quantity: qty,
       subtotalCents: finalSubtotal,
       finalSubtotalCents: finalSubtotal,
-      originalSubtotalCents: originalSubtotal,
-      discountAllocCents: discountAlloc
+      originalSubtotalCents: originalSubtotal
     };
   }
 
-  function computePairSavings(skinSum, config) {
+  function computePairSavings(items, skinPredicate, skinSum, config, opts) {
     if (!skinSum || skinSum.quantity < 2) {
       return { cents: 0, mode: 'none' };
     }
-    if (skinSum.discountAllocCents > 0) {
-      return { cents: skinSum.discountAllocCents, mode: 'applied' };
+    var apps = discountApplicationsFromContext(items, opts);
+    var verified = verifiedQualifyingSkinDiscountCents(items, skinPredicate, apps, config);
+    if (verified > 0) {
+      return { cents: verified, mode: 'applied' };
     }
     var pct = pairTierPercent(skinSum.quantity, config);
     var base = skinSum.originalSubtotalCents || skinSum.subtotalCents;
@@ -572,10 +605,6 @@
     });
   }
 
-  function estimatePairSavings(skinSum, config) {
-    return computePairSavings(skinSum, config).cents;
-  }
-
   function pantsSaleCents(config) {
     return Math.round(config.pantsProposedPriceCents * (1 - config.pantsPercent / 100));
   }
@@ -585,7 +614,7 @@
     return config[key] !== false;
   }
 
-  function computeBundlePromoControl(cartItems, rawConfig, cartTotalCents) {
+  function computeBundlePromoControl(cartItems, rawConfig, cartTotalCents, opts) {
     var config = controlConfigForArm(rawConfig);
     var items = cartItems || [];
 
@@ -600,7 +629,10 @@
       return isEligiblePant(item, config);
     });
 
-    var pairSave = computePairSavings(skin, config);
+    var skinPred = function (item) {
+      return isClosedSoleSkin5a(item, config);
+    };
+    var pairSave = computePairSavings(items, skinPred, skin, config, opts);
     var pairSavingsCents = pairSave.cents;
     var pairSavingsMode = pairSave.mode;
     var pantsSavingsCents = 0;
@@ -704,7 +736,7 @@
     };
   }
 
-  function computeBundlePromoVariant(cartItems, rawConfig, cartTotalCents) {
+  function computeBundlePromoVariant(cartItems, rawConfig, cartTotalCents, opts) {
     var config = mergeConfig(rawConfig);
     var items = cartItems || [];
 
@@ -719,7 +751,10 @@
       return isEligiblePant(item, config);
     });
 
-    var pairSave = computePairSavings(skin, config);
+    var skinPredV = function (item) {
+      return isPerformanceSkin(item, config);
+    };
+    var pairSave = computePairSavings(items, skinPredV, skin, config, opts);
     var pairSavingsCents = pairSave.cents;
     var pairSavingsMode = pairSave.mode;
     var pantsSavingsCents = 0;
@@ -841,10 +876,11 @@
 
   function computeBundlePromo(cartItems, rawConfig, cartTotalCents, opts) {
     var arm = resolveOfferArm(opts || {});
+    var o = opts || {};
     if (arm === 'variant') {
-      return computeBundlePromoVariant(cartItems, rawConfig, cartTotalCents);
+      return computeBundlePromoVariant(cartItems, rawConfig, cartTotalCents, o);
     }
-    return computeBundlePromoControl(cartItems, rawConfig, cartTotalCents);
+    return computeBundlePromoControl(cartItems, rawConfig, cartTotalCents, o);
   }
 
   function escapeHtml(str) {
@@ -1255,7 +1291,7 @@
         btn.setAttribute('data-swatch-color', c);
         btn.setAttribute('aria-label', c);
         btn.setAttribute('role', 'option');
-        applySwatchButtonStyle(btn, state.variants, state.colorKey, c);
+        applySwatchButtonStyle(btn, c, config);
         btn.addEventListener('click', function () {
           if (state.pending) return;
           setColor(c);
