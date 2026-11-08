@@ -293,7 +293,9 @@
   function renderPromoHtml(result) {
     if (!result || !result.showPanel) return '';
 
-    var html = '<div class="cart-bundle-promo" data-cart-bundle-promo role="region" aria-label="Bundle savings preview">';
+    var html =
+      '<div class="cart-bundle-promo" data-cart-bundle-promo role="region" aria-label="Cart bundle preview — not checkout pricing">';
+    html += '<p class="cart-bundle-promo__label">Offer preview (not applied at checkout)</p>';
 
     if (result.nudge) {
       html += '<div class="cart-bundle-promo__progress">' + escapeHtml(result.nudge) + '</div>';
@@ -301,14 +303,10 @@
 
     if (result.savingsLine) {
       html +=
-        '<div class="cart-bundle-promo__savings"><span>' + escapeHtml(result.savingsLine) + '</span></div>';
-    }
-
-    if (result.shippingEarned) {
-      html +=
-        '<p class="cart-bundle-promo__earned">Complimentary US shipping over $' +
-        (result.freeShippingThresholdCents / 100).toFixed(0) +
-        ' after discounts.</p>';
+        '<div class="cart-bundle-promo__savings"><span class="cart-bundle-promo__preview-tag">Preview</span> ' +
+        '<span>' +
+        escapeHtml(result.savingsLine) +
+        '</span></div>';
     }
 
     if (result.showPantsOffer) {
@@ -335,7 +333,7 @@
           '</span>' +
           '<strong class="cart-bundle-promo__pants-sale">' +
           formatMoney(result.pantsSaleCents) +
-          '</strong>' +
+          ' <span class="cart-bundle-promo__preview-tag">preview</span></strong>' +
           '</div></div>' +
           '<div class="cart-bundle-promo__pants-picker" data-bundle-pants-picker hidden>' +
           '<div class="cart-bundle-promo__pants-selects" data-pants-selects></div>' +

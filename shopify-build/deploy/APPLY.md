@@ -18,10 +18,12 @@
 From Design Review repo (implementation source):
 
 ```bash
-cd shopify-build && npm run test:cart-bundle
+cd shopify-build && npm run test:cart-all
 ```
 
-Expect **11/11** pass (math + variant resolution).
+Expect **18/18** pass (11 promo math + **7 checkout static regressions** vs fresh baseline).
+
+**Not proven by automation:** live draft after `theme push`, mobile/desktop QA, checkout discount application (parent stops before checkout).
 
 ## 2. Files — `shopify theme push --only` (minimal)
 
@@ -91,7 +93,7 @@ After push, in **Theme settings → Cart bundle preview (Nov08)**:
 
 1. Add 2× Closed Sole Performance Skins → open cart drawer.
 2. Confirm: nudge, green savings line, pants block, **size selects**, **Add yoga pants** disabled until size chosen.
-3. Add pant → drawer qty/remove still works; subtotal still Shopify live prices; estimated row labeled preview.
+3. Add pant (explicit size + click only) → qty/remove still works; drawer **Subtotal** still Shopify `cart.total_price`; preview savings only inside labeled bundle panel (no footer estimated total).
 4. Full cart `/cart` — same promo block + checkout form unchanged.
 5. Flag **off** → no promo panel; cart behaves as before merge.
 
