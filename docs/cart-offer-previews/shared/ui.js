@@ -18,27 +18,27 @@
     return base + pants;
   }
 
-  function previewSavings() {
-    if (M.pairCount(state) < 2) return 0;
-    return Math.round(M.pairCount(state) * 74 * 100 * 0.15) / 100;
-  }
-
   function renderLines() {
-    return state.pairs
-      .map(function (p, i) {
-        return (
-          '<li class="cart-line" data-idx="' +
-          i +
-          '"><span class="cart-line__name">' +
-          escape(p.label) +
-          '</span><span class="cart-line__meta">' +
-          escape(p.size) +
-          ' · illustrative</span><span class="cart-line__price">' +
-          money(1) +
-          '</span></li>'
-        );
-      })
-      .join('');
+    var lines = state.pairs.map(function (p, i) {
+      return (
+        '<li class="cart-line" data-idx="' +
+        i +
+        '"><span class="cart-line__name">' +
+        escape(p.label) +
+        '</span><span class="cart-line__meta">' +
+        escape(p.size) +
+        ' · illustrative</span><span class="cart-line__price">' +
+        money(1) +
+        '</span></li>'
+      );
+    });
+    if (state.pants) {
+      lines.push(
+        '<li class="cart-line cart-line--pants"><span class="cart-line__name">Yoga Pant</span>' +
+          '<span class="cart-line__meta">illustrative</span><span class="cart-line__price">$89</span></li>'
+      );
+    }
+    return lines.join('');
   }
 
   function escape(s) {
@@ -51,81 +51,82 @@
     var st = M.stage(state);
     var html = '';
     if (st === 'add-pair') {
-      html += '<section class="offer" aria-live="polite">';
+      html += '<section class="offer offer--benefit-first" aria-live="polite">';
       html += '<p class="offer__notice">' + escape(M.NOTICE) + '</p>';
-      html +=
-        '<p class="offer__count">Performance Skin pairs in cart: <strong>' + M.pairCount(state) + '</strong></p>';
-      html += '<h2 class="offer__headline">Add one more pair of Performance Skins</h2>';
-      html += '<div class="offer__sole-row">';
-      ['open', 'closed'].forEach(function (sole) {
-        var on = state.pick.sole === sole;
+      html += '<h2 class="offer__headline">Buy 2 or more pairs. Get 15% off.</h2>';
+      html += '<p class="offer__support">You have ' + M.pairCount(state) + ' pair. Add another to qualify.</p>';
+      if (!state.addPickerOpen) {
         html +=
-          '<button type="button" class="offer__sole-btn' +
-          (on ? ' is-active' : '') +
-          '" data-sole="' +
-          sole +
-          '">' +
-          escape(M.CATALOG[sole].label) +
-          '</button>';
-      });
-      html += '</div>';
-      if (state.pick.sole) {
-        var colors = M.availableColors(state, state.pick.sole);
-        html += '<div class="offer__pickers">';
-        if (!colors.length) {
+          '<button type="button" class="offer__submit" data-open-add-pickers>Add another pair</button>';
+      } else {
+        html += '<div class="offer__pickers-wrap" data-pickers-wrap>';
+        html += '<div class="offer__sole-row">';
+        ['open', 'closed'].forEach(function (sole) {
+          var on = state.pick.sole === sole;
           html +=
-            '<p class="offer__status offer__status--warn">No illustrative colors in fixture for this sole.</p>';
-        } else {
-          html += '<label class="offer__field">Color<select data-color><option value="">Choose color</option>';
-          colors.forEach(function (c) {
+            '<button type="button" class="offer__sole-btn' +
+            (on ? ' is-active' : '') +
+            '" data-sole="' +
+            sole +
+            '">' +
+            escape(M.CATALOG[sole].label) +
+            '</button>';
+        });
+        html += '</div>';
+        if (state.pick.sole) {
+          var colors = M.availableColors(state, state.pick.sole);
+          html += '<div class="offer__pickers">';
+          if (!colors.length) {
             html +=
-              '<option value="' +
-              escape(c) +
-              '"' +
-              (state.pick.color === c ? ' selected' : '') +
-              '>' +
-              escape(c) +
-              '</option>';
-          });
-          html += '</select></label>';
-          html += '<label class="offer__field">Size<select data-size' + (state.pick.color ? '' : ' disabled') + '>';
-          html += '<option value="">Choose size</option>';
-          if (state.pick.color) {
-            M.CATALOG[state.pick.sole].sizes.forEach(function (sz) {
+              '<p class="offer__status offer__status--warn">No illustrative colors in fixture for this sole.</p>';
+          } else {
+            html += '<label class="offer__field">Color<select data-color><option value="">Choose color</option>';
+            colors.forEach(function (c) {
               html +=
                 '<option value="' +
-                escape(sz) +
+                escape(c) +
                 '"' +
-                (state.pick.size === sz ? ' selected' : '') +
+                (state.pick.color === c ? ' selected' : '') +
                 '>' +
-                escape(sz) +
+                escape(c) +
                 '</option>';
             });
+            html += '</select></label>';
+            html += '<label class="offer__field">Size<select data-size' + (state.pick.color ? '' : ' disabled') + '>';
+            html += '<option value="">Choose size</option>';
+            if (state.pick.color) {
+              M.CATALOG[state.pick.sole].sizes.forEach(function (sz) {
+                html +=
+                  '<option value="' +
+                  escape(sz) +
+                  '"' +
+                  (state.pick.size === sz ? ' selected' : '') +
+                  '>' +
+                  escape(sz) +
+                  '</option>';
+              });
+            }
+            html += '</select></label>';
+            html +=
+              '<button type="button" class="offer__submit" data-add-pair' +
+              (M.canAddPair(state) ? '' : ' disabled') +
+              '>Add to cart (simulated)</button>';
           }
-          html += '</select></label>';
-          html +=
-            '<button type="button" class="offer__submit" data-add-pair' +
-            (M.canAddPair(state) ? '' : ' disabled') +
-            '>Add pair to cart</button>';
         }
+        html += '</div></div>';
       }
       html += '</section>';
     } else if (st === 'pants-offer') {
-      html += '<section class="offer offer--stage-two">';
+      html += '<section class="offer offer--stage-two offer--outfit" aria-live="polite">';
       html += '<p class="offer__notice">' + escape(M.NOTICE) + '</p>';
-      html +=
-        '<p class="offer__qual">Buy 2+ pairs of Performance Skins. Save <strong>15%</strong> <span class="tag">preview</span></p>';
-      var save = previewSavings();
-      if (save > 0) {
-        html += '<p class="offer__save">You save $' + save.toFixed(2) + ' <span class="tag">preview</span></p>';
-      }
-      html += '<h2 class="offer__headline">Save 35% on one pair of yoga pants with 2+ Performance Skin pairs.</h2>';
+      html += '<h2 class="offer__headline">Complete your outfit.</h2>';
+      html += '<p class="offer__support">Get 35% off one pair of yoga pants.</p>';
       html += '<div class="offer__pants">';
       html += '<img src="' + M.PANTS_IMG + '" alt="" width="72" height="72" loading="lazy" />';
       html += '<div><p class="offer__pants-title">Lightly Padded Knee Yoga Pant</p>';
       html += '<p class="offer__pants-price"><s>$98.00</s> <strong>$63.70</strong> <span class="tag">preview</span></p>';
       html += '<p class="offer__fine">Illustrative catalog image · not live stock</p></div></div>';
-      html += '<button type="button" class="offer__submit" data-add-pants>Add yoga pants (simulated)</button>';
+      html += '<button type="button" class="offer__submit" data-add-pants>Choose yoga pants</button>';
       html += '<button type="button" class="offer__ghost" data-remove-pair>Remove last pair</button>';
       html += '</section>';
     } else {
@@ -157,6 +158,11 @@
     root.addEventListener('click', function (e) {
       var t = e.target;
       if (!(t instanceof HTMLElement)) return;
+      if (t.matches('[data-open-add-pickers]')) {
+        state.addPickerOpen = true;
+        paint();
+        return;
+      }
       if (t.matches('[data-sole]')) {
         state.pick.sole = t.getAttribute('data-sole');
         state.pick.color = '';
@@ -210,6 +216,7 @@
       paint();
     },
     runAddFlow: function () {
+      state.addPickerOpen = true;
       state.pick = { sole: 'open', color: 'Black', size: 'M (W 5.5-7.5)' };
       state = M.addPair(state);
       paint();

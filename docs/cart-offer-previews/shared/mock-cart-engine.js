@@ -34,7 +34,8 @@
       pairs: [{ sole: 'closed', color: 'Purple', size: 'M (W 5.5-7.5)', label: 'Closed Sole — Purple' }],
       pants: false,
       pick: { sole: null, color: '', size: '' },
-      pending: false
+      pending: false,
+      addPickerOpen: false
     };
   }
 
@@ -78,6 +79,7 @@
     state = JSON.parse(JSON.stringify(state));
     state.pairs.push(next);
     state.pick = { sole: null, color: '', size: '' };
+    state.addPickerOpen = false;
     return state;
   }
 
@@ -87,6 +89,7 @@
     else state = initialState();
     state.pants = false;
     state.pick = { sole: null, color: '', size: '' };
+    state.addPickerOpen = false;
     return state;
   }
 
