@@ -19,6 +19,15 @@ function appFixed() {
   return { value_type: 'fixed_amount', value: '20.0', target_type: 'line_item', title: 'Fixed $20' };
 }
 
+function appOtherPct(pct) {
+  return {
+    value_type: 'percentage',
+    value: String(pct) + '.0',
+    target_type: 'line_item',
+    title: 'Other coupon ' + pct + '%'
+  };
+}
+
 function skinLine(qty, originalEach, finalEach, allocs) {
   return {
     quantity: qty,
@@ -110,4 +119,36 @@ test('preview undiscounted 2×$74 shows $22.20', function () {
   assert.equal(r.pairSavingsCents, 2220);
   assert.equal(r.pairSavingsMode, 'preview');
   assert.equal(r.estimatedTotalCents, 12580);
+});
+
+test('20% other coupon on $148 original: not Applied 15%; preview $22.20', function () {
+  var items = [skinLine(2, 7400, 5920, [{ amount: 2960, discount_application: appOtherPct(20) }])];
+  var r = bundle.computeBundlePromo(items, LIVE, 11840, VARIANT);
+  assert.equal(r.pairSavingsMode, 'preview');
+  assert.equal(r.savingsTag, 'Preview');
+  assert.equal(r.pairSavingsCents, 2220);
+  assert.notEqual(r.savingsLine, 'You save $29.60.');
+  var html = bundle.renderPromoHtml(r);
+  assert.ok(!html.includes('>Applied</span>'));
+});
+
+test('25% and 30% linked coupons: never Applied 15%', function () {
+  [25, 30].forEach(function (pct) {
+    var disc = Math.round(14800 * (pct / 100));
+    var final = 14800 - disc;
+    var per = Math.round(disc / 2);
+    var items = [skinLine(2, 7400, final / 2, [{ amount: disc, discount_application: appOtherPct(pct) }])];
+    var r = bundle.computeBundlePromo(items, LIVE, final, VARIANT);
+    assert.equal(r.pairSavingsMode, 'preview', 'pct ' + pct);
+    assert.equal(r.savingsTag, 'Preview', 'pct ' + pct);
+  });
+});
+
+test('exact 15.0 string value matches configured live offer', function () {
+  var items = [
+    skinLine(2, 7400, 6290, [{ amount: 2220, discount_application: app15() }])
+  ];
+  var r = bundle.computeBundlePromo(items, LIVE, 12580, VARIANT);
+  assert.equal(r.savingsTag, 'Applied');
+  assert.match(r.savingsLine, /\$22\.20/);
 });

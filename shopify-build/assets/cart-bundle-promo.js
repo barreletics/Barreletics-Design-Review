@@ -495,12 +495,11 @@
   function isVerifiedFootwearPercentDiscount(app, config) {
     if (!app) return false;
     if (app.target_type && app.target_type === 'shipping_line') return false;
-    if (app.value_type === 'percentage') {
-      var val = parseFloat(app.value, 10);
-      if (isNaN(val)) return false;
-      return val + 0.001 >= requiredFootwearPercent(config);
-    }
-    return false;
+    if (app.value_type !== 'percentage') return false;
+    var val = parseFloat(app.value, 10);
+    if (isNaN(val)) return false;
+    var need = requiredFootwearPercent(config);
+    return Math.abs(val - need) < 0.01;
   }
 
   function verifiedQualifyingSkinDiscountCents(items, skinPredicate, apps, config) {
