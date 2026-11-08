@@ -145,6 +145,10 @@
 
     updateShippingBar(cart.total_price);
     bindDrawerControls();
+    if (window.BarreleticsCartBundlePromo && typeof window.BarreleticsCartBundlePromo.update === 'function') {
+      window.BarreleticsCartBundlePromo.update(cart);
+    }
+    document.dispatchEvent(new CustomEvent('cart:rendered', { detail: { cart: cart } }));
   }
 
   function updateShippingBar(totalCents) {
