@@ -1,5 +1,5 @@
 /**
- * Cart bundle preview + interactive add-pair draft (checkout unchanged).
+ * Cart bundle preview — URL arm ?br_cart_offer=control|variant (default control).
  */
 (function (root, factory) {
   if (typeof module === 'object' && module.exports) {
@@ -59,6 +59,99 @@
     pantTitleNeedles: ['Yoga Pant', 'Pant'],
     skinRequireClosedSole: false
   };
+
+  var CART_OFFER_PARAM = 'br_cart_offer';
+
+  function parseCartOfferArm(searchString) {
+    var q = String(searchString || '');
+    if (q.charAt(0) !== '?' && q.indexOf(CART_OFFER_PARAM) !== -1) {
+      q = '?' + q.replace(/^[?&]/, '');
+    }
+    var val = '';
+    if (typeof URLSearchParams !== 'undefined') {
+      try {
+        val = new URLSearchParams(q.charAt(0) === '?' ? q.slice(1) : q).get(CART_OFFER_PARAM) || '';
+      } catch (e) {
+        val = '';
+      }
+    } else {
+      var m = q.match(new RegExp('[?&]' + CART_OFFER_PARAM + '=([^&]+)', 'i'));
+      val = m ? m[1] : '';
+    }
+    val = String(val || '')
+      .toLowerCase()
+      .trim();
+    if (val === 'variant') return 'variant';
+    return 'control';
+  }
+
+  function resolveOfferArm(opts) {
+    if (opts && opts.offerArm === 'variant') return 'variant';
+    if (opts && opts.offerArm === 'control') return 'control';
+    var search = opts && opts.search;
+    if (!search && typeof window !== 'undefined' && window.location) {
+      search = window.location.search || '';
+    }
+    return parseCartOfferArm(search || '');
+  }
+
+  function controlConfigForArm(rawConfig) {
+    var base = mergeConfig(rawConfig);
+    return mergeConfig(
+      Object.assign({}, base, {
+        footwearOfferTemplate: 'Buy 2+ Closed Sole pairs. Save {{percent}}%.',
+        pantsOfferTemplate:
+          'Save {{percent}}% on one pair of yoga pants with 2+ Closed Sole pairs.',
+        pantsHeadline:
+          'Save {{percent}}% on one pair of yoga pants with 2+ Closed Sole pairs.',
+        pantsQualTemplate: 'Add 1 more Closed Sole pair for {{percent}}% off yoga pants',
+        skinHandleNeedles: ['closed-sole'],
+        skinTitleNeedles: ['Closed Sole', 'Performance Skin'],
+        skinRequireClosedSole: true
+      })
+    );
+  }
+
+  function isUnpublishedThemeRole() {
+    if (typeof window === 'undefined') return null;
+    var theme = window.Shopify && window.Shopify.theme;
+    if (!theme || !theme.role) return null;
+    return theme.role !== 'main';
+  }
+
+  function hrefWithOfferArm(href, arm) {
+    if (arm !== 'variant' || !href || String(href).indexOf('/checkout') !== -1) return href;
+    try {
+      var base =
+        typeof window !== 'undefined' && window.location ? window.location.origin : 'https://example.com';
+      var url = new URL(href, base);
+      if (url.pathname.indexOf('/checkout') === 0) return href;
+      url.searchParams.set(CART_OFFER_PARAM, 'variant');
+      return url.pathname + url.search + url.hash;
+    } catch (e) {
+      return href;
+    }
+  }
+
+  function decorateCartOfferNavLinks(arm) {
+    if (arm !== 'variant' || typeof document === 'undefined') return;
+    if (parseCartOfferArm(typeof window !== 'undefined' && window.location && window.location.search) !== 'variant') {
+      return;
+    }
+    var sel = ['[data-cart-trigger]', 'a[href="/cart"]', 'a[href^="/cart?"]'];
+    sel.forEach(function (q) {
+      document.querySelectorAll(q).forEach(function (el) {
+        var href = el.getAttribute('href');
+        if (!href || el.dataset.cartOfferDecorated === '1') return;
+        if (href.indexOf('/checkout') !== -1) return;
+        var next = hrefWithOfferArm(href, 'variant');
+        if (next && next !== href) {
+          el.setAttribute('href', next);
+        }
+        el.dataset.cartOfferDecorated = '1';
+      });
+    });
+  }
 
   function mergeConfig(config) {
     var out = {};
@@ -324,12 +417,118 @@
     return Math.round(config.pantsProposedPriceCents * (1 - config.pantsPercent / 100));
   }
 
-  function computeBundlePromo(cartItems, rawConfig, cartTotalCents) {
+  function computeBundlePromoControl(cartItems, rawConfig, cartTotalCents) {
+    var config = controlConfigForArm(rawConfig);
+    var items = cartItems || [];
+
+    if (!config.enabled) {
+      return { enabled: false, showPanel: false, totalSavingsCents: 0, offerArm: 'control' };
+    }
+
+    var skin = sumEligible(items, function (item) {
+      return isClosedSoleSkin(item, config);
+    });
+    var pants = sumEligible(items, function (item) {
+      return isEligiblePant(item, config);
+    });
+
+    var pairSavingsCents = estimatePairSavings(skin.quantity, skin.subtotalCents, config);
+    var pantsSavingsCents = 0;
+    if (pants.quantity > 0 && skin.quantity >= config.pantsMinPairs) {
+      pantsSavingsCents =
+        Math.round(config.pantsProposedPriceCents * (config.pantsPercent / 100)) *
+        Math.min(pants.quantity, 1);
+    }
+
+    var totalSavingsCents = pairSavingsCents + pantsSavingsCents;
+    var subtotalCents =
+      typeof cartTotalCents === 'number' ? cartTotalCents : skin.subtotalCents + pants.subtotalCents;
+    var estimatedTotalCents = Math.max(0, subtotalCents - totalSavingsCents);
+    var afterPairOnlyCents = Math.max(0, subtotalCents - pairSavingsCents);
+
+    var nudge =
+      config.pairPromoMode === 'future_tiers' && skin.quantity > 0
+        ? nudgeCopy(skin.quantity, config)
+        : '';
+    var footwearPct =
+      config.pairPromoMode === 'live_2for15' ? config.livePairPercent : config.tierTwoPercent;
+    var footwearOfferLine =
+      skin.quantity > 0
+        ? fillTemplate(
+            config.footwearOfferTemplate || 'Buy 2+ Closed Sole pairs. Save {{percent}}%.',
+            { percent: footwearPct }
+          )
+        : '';
+    var savingsLine =
+      totalSavingsCents > 0
+        ? fillTemplate(config.savingsTemplate, { amount: formatMoney(totalSavingsCents) })
+        : '';
+
+    var showPantsOffer = skin.quantity >= 1 && pants.quantity === 0;
+    var pantsQualOnly = showPantsOffer && skin.quantity < config.pantsMinPairs;
+    var pantsPickerVisible = showPantsOffer && !pantsQualOnly;
+
+    var qualNote = '';
+    if (pantsQualOnly) {
+      var need = config.pantsMinPairs - skin.quantity;
+      qualNote = fillTemplate(config.pantsQualTemplate, {
+        percent: config.pantsPercent,
+        count: need,
+        unit: need === 1 ? 'pair' : 'pairs'
+      });
+    }
+
+    var pantsTemplate = config.pantsOfferTemplate || config.pantsHeadline;
+    var pantsOfferLine = fillTemplate(pantsTemplate, { percent: config.pantsPercent });
+
+    var shippingGapCents = 0;
+    var shippingEarned = false;
+    if (skin.quantity > 0) {
+      if (afterPairOnlyCents >= config.freeShippingThresholdCents) {
+        shippingEarned = true;
+      } else {
+        shippingGapCents = config.freeShippingThresholdCents - afterPairOnlyCents;
+      }
+    }
+
+    return {
+      enabled: true,
+      showPanel: skin.quantity > 0,
+      offerArm: 'control',
+      pairCount: skin.quantity,
+      pantCount: pants.quantity,
+      pairSavingsCents: pairSavingsCents,
+      pantsSavingsCents: pantsSavingsCents,
+      totalSavingsCents: totalSavingsCents,
+      subtotalCents: subtotalCents,
+      estimatedTotalCents: estimatedTotalCents,
+      nudge: nudge,
+      footwearOfferLine: footwearOfferLine,
+      previewNotice: config.previewNotice,
+      savingsLine: savingsLine,
+      showAddPairStage: false,
+      showPantsOffer: showPantsOffer,
+      pantsQualOnly: pantsQualOnly,
+      pantsPickerVisible: pantsPickerVisible,
+      pantsOfferLine: pantsOfferLine,
+      pantsHeadline: pantsOfferLine,
+      pantsQualNote: qualNote,
+      pantsWasCents: config.pantsProposedPriceCents,
+      pantsSaleCents: pantsSaleCents(config),
+      disclaimer: config.previewDisclaimer,
+      shippingGapCents: shippingGapCents,
+      shippingEarned: shippingEarned,
+      freeShippingThresholdCents: config.freeShippingThresholdCents,
+      config: config
+    };
+  }
+
+  function computeBundlePromoVariant(cartItems, rawConfig, cartTotalCents) {
     var config = mergeConfig(rawConfig);
     var items = cartItems || [];
 
     if (!config.enabled) {
-      return { enabled: false, showPanel: false, totalSavingsCents: 0 };
+      return { enabled: false, showPanel: false, totalSavingsCents: 0, offerArm: 'variant' };
     }
 
     var skin = sumEligible(items, function (item) {
@@ -394,6 +593,7 @@
     return {
       enabled: true,
       showPanel: skin.quantity > 0,
+      offerArm: 'variant',
       pairCount: skin.quantity,
       pantCount: pants.quantity,
       pairSavingsCents: pairSavingsCents,
@@ -423,6 +623,14 @@
     };
   }
 
+  function computeBundlePromo(cartItems, rawConfig, cartTotalCents, opts) {
+    var arm = resolveOfferArm(opts || {});
+    if (arm === 'variant') {
+      return computeBundlePromoVariant(cartItems, rawConfig, cartTotalCents);
+    }
+    return computeBundlePromoControl(cartItems, rawConfig, cartTotalCents);
+  }
+
   function escapeHtml(str) {
     return String(str)
       .replace(/&/g, '&amp;')
@@ -431,17 +639,99 @@
       .replace(/"/g, '&quot;');
   }
 
-  function renderPromoHtml(result) {
+  function renderPromoHtmlControl(result) {
     if (!result || !result.showPanel) return '';
 
     var html =
-      '<div class="cart-bundle-promo" data-cart-bundle-promo role="region" aria-label="Cart bundle preview — not checkout pricing">';
+      '<div class="cart-bundle-promo" data-cart-bundle-promo data-offer-arm="control" role="region" aria-label="Cart bundle preview — not checkout pricing">';
     html +=
       '<p class="cart-bundle-promo__notice">' + escapeHtml(result.previewNotice) + '</p>';
 
+    if (result.footwearOfferLine) {
+      html +=
+        '<p class="cart-bundle-promo__footwear-offer">' + escapeHtml(result.footwearOfferLine) + '</p>';
+    }
+
+    if (result.nudge) {
+      html += '<div class="cart-bundle-promo__progress">' + escapeHtml(result.nudge) + '</div>';
+    }
+
+    if (result.savingsLine) {
+      html +=
+        '<div class="cart-bundle-promo__savings"><span class="cart-bundle-promo__preview-tag">Preview</span> ' +
+        '<span>' +
+        escapeHtml(result.savingsLine) +
+        '</span></div>';
+    }
+
+    if (result.showPantsOffer) {
+      var cfg = result.config;
+      html += '<div class="cart-bundle-promo__pants' + (result.pantsQualOnly ? ' is-qual-only' : '') + '">';
+      if (!result.pantsQualOnly) {
+        html += '<p class="cart-bundle-promo__pants-headline">' + escapeHtml(result.pantsOfferLine) + '</p>';
+      }
+      if (result.pantsQualNote) {
+        html += '<p class="cart-bundle-promo__pants-qual">' + escapeHtml(result.pantsQualNote) + '</p>';
+      }
+      html +=
+        '<div class="cart-bundle-promo__pants-row">' +
+        '<img src="' +
+        escapeHtml(cfg.pantsImageUrl) +
+        '" alt="" width="56" height="56" loading="lazy" class="cart-bundle-promo__pants-img" />' +
+        '<div class="cart-bundle-promo__pants-copy">' +
+        '<span class="cart-bundle-promo__pants-title">' +
+        escapeHtml(cfg.pantsProductTitle) +
+        '</span>' +
+        '</div>' +
+        '<div class="cart-bundle-promo__pants-prices">' +
+        '<span class="cart-bundle-promo__pants-was">' +
+        formatMoney(result.pantsWasCents) +
+        '</span>' +
+        '<strong class="cart-bundle-promo__pants-sale">' +
+        formatMoney(result.pantsSaleCents) +
+        ' <span class="cart-bundle-promo__preview-tag">preview</span></strong>' +
+        '</div></div>';
+      if (result.pantsPickerVisible) {
+        html +=
+          '<div class="cart-bundle-promo__pants-picker" data-bundle-pants-picker hidden>' +
+          '<div class="cart-bundle-promo__pants-selects" data-pants-selects></div>' +
+          '<button type="button" class="cart-bundle-promo__pants-add" data-bundle-add-pant disabled>' +
+          escapeHtml(cfg.pantsAddLabel) +
+          '</button>' +
+          '<a class="cart-bundle-promo__pants-link" data-pants-fallback href="' +
+          escapeHtml(cfg.pantsProductUrl || '/products/' + (cfg.pantsProductHandle || '')) +
+          '">Choose on product page</a>' +
+          '</div>';
+      }
+      html += '</div>';
+    }
+
+    html +=
+      '<p class="cart-bundle-promo__disclaimer">' + escapeHtml(result.disclaimer) + '</p></div>';
+    return html;
+  }
+
+  function renderPromoHtmlVariant(result) {
+    if (!result || !result.showPanel) return '';
+
+    var html =
+      '<div class="cart-bundle-promo cart-bundle-promo--variant" data-cart-bundle-promo data-offer-arm="variant" role="region" aria-label="Cart bundle preview — not checkout pricing">';
+    html +=
+      '<p class="cart-bundle-promo__notice">' + escapeHtml(result.previewNotice) + '</p>';
+
+    if (result.pairCount > 0) {
+      html +=
+        '<p class="cart-bundle-promo__pair-count" data-bundle-pair-count>Performance Skin pairs in cart: ' +
+        escapeHtml(String(result.pairCount)) +
+        '</p>';
+    }
+
     if (result.showAddPairStage) {
       var cfg = result.config;
-      html += '<div class="cart-bundle-promo__add-pair" data-bundle-add-pair>';
+      html +=
+        '<p class="cart-bundle-promo__cross-sell-label" id="cart-bundle-add-pair-label">Recommended add-on (inline)</p>';
+      html +=
+        '<div class="cart-bundle-promo__add-pair" data-bundle-add-pair role="group" aria-labelledby="cart-bundle-add-pair-label">';
       html +=
         '<p class="cart-bundle-promo__add-pair-headline">' +
         escapeHtml(result.addPairHeadline || cfg.addPairHeadline) +
@@ -485,7 +775,9 @@
 
     if (result.showPantsOffer) {
       var cfgP = result.config;
-      html += '<div class="cart-bundle-promo__pants">';
+      html +=
+        '<p class="cart-bundle-promo__cross-sell-label" id="cart-bundle-pants-label">Optional add-on (inline, preview)</p>';
+      html += '<div class="cart-bundle-promo__pants" role="group" aria-labelledby="cart-bundle-pants-label">';
       html += '<p class="cart-bundle-promo__pants-headline">' + escapeHtml(result.pantsOfferLine) + '</p>';
       html +=
         '<div class="cart-bundle-promo__pants-row">' +
@@ -523,6 +815,12 @@
     html +=
       '<p class="cart-bundle-promo__disclaimer">' + escapeHtml(result.disclaimer) + '</p></div>';
     return html;
+  }
+
+  function renderPromoHtml(result) {
+    if (!result || !result.showPanel) return '';
+    if (result.offerArm === 'variant') return renderPromoHtmlVariant(result);
+    return renderPromoHtmlControl(result);
   }
 
   function defaultFetchProduct(handle) {
@@ -759,9 +1057,10 @@
     }
   }
 
-  function mountPromo(container, cartItems, config, cartTotalCents) {
+  function mountPromo(container, cartItems, config, cartTotalCents, opts) {
     if (!container) return null;
-    var result = computeBundlePromo(cartItems, config, cartTotalCents);
+    var arm = resolveOfferArm(opts || {});
+    var result = computeBundlePromo(cartItems, config, cartTotalCents, Object.assign({}, opts, { offerArm: arm }));
     if (!result.showPanel) {
       container.innerHTML = '';
       container.setAttribute('hidden', 'hidden');
@@ -769,12 +1068,13 @@
     }
     container.removeAttribute('hidden');
     container.innerHTML = renderPromoHtml(result);
-    if (result.showAddPairStage) {
+    if (result.offerArm === 'variant' && result.showAddPairStage) {
       initAddPairFlow(container, mergeConfig(config), cartItems);
     }
     if (result.pantsPickerVisible) {
       initPantsPicker(container, result.config);
     }
+    decorateCartOfferNavLinks(arm);
     return result;
   }
 
@@ -889,10 +1189,27 @@
     }
   }
 
+  if (typeof document !== 'undefined' && document.readyState !== 'loading') {
+    decorateCartOfferNavLinks(resolveOfferArm({}));
+  } else if (typeof document !== 'undefined') {
+    document.addEventListener('DOMContentLoaded', function () {
+      decorateCartOfferNavLinks(resolveOfferArm({}));
+    });
+  }
+
   return {
+    CART_OFFER_PARAM: CART_OFFER_PARAM,
     DEFAULTS: DEFAULTS,
     mergeConfig: mergeConfig,
+    parseCartOfferArm: parseCartOfferArm,
+    resolveOfferArm: resolveOfferArm,
+    controlConfigForArm: controlConfigForArm,
+    decorateCartOfferNavLinks: decorateCartOfferNavLinks,
+    hrefWithOfferArm: hrefWithOfferArm,
+    isUnpublishedThemeRole: isUnpublishedThemeRole,
     computeBundlePromo: computeBundlePromo,
+    computeBundlePromoControl: computeBundlePromoControl,
+    computeBundlePromoVariant: computeBundlePromoVariant,
     renderPromoHtml: renderPromoHtml,
     mountPromo: mountPromo,
     initPantsPicker: initPantsPicker,

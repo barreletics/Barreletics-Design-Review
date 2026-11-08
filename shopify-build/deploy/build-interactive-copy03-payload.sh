@@ -22,6 +22,7 @@ TEST_LOG="$OUT/evidence/VERIFY-ALL-TESTS.log"
 sync
 sleep 0.2
 sha256sum "$OUT/payload/"*/* >"$OUT/evidence/PAYLOAD-SHA256.txt"
+cp "$SRC/deploy/CART-OFFER-AB-GUIDE.md" "$OUT/"
 REV_BASE_COMMIT="$BASE" SRC="$SRC" OUT="$OUT" node -e "
 const fs=require('fs');const crypto=require('crypto');const path=require('path');const {execSync}=require('child_process');
 const base=process.env.REV_BASE_COMMIT, src=process.env.SRC, out=process.env.OUT;
@@ -39,13 +40,14 @@ const m={
   baselineFull:execSync('git -C /workspace rev-parse '+base,{encoding:'utf8'}).trim(),
   allowlist:list,
   files,
-  stageNote:'Interactive add-pair at 1 pair; pants photo/picker only at 2+ qualifying footwear pairs.',
+  stageNote:'URL A/B default control (5a01277); variant COPY03 inline cross-sell.',
+  abParam:'br_cart_offer=control|variant',
   excludedFromPush:['config/settings_schema.json','config/settings_data.json','assets/cart.js','layout/theme.liquid','sections/main-cart.liquid']
 };
 fs.writeFileSync(path.join(out,'MANIFEST-COPY03.json'),JSON.stringify(m,null,2)+'\n');
 fs.writeFileSync(path.join(out,'PUSH-ONLY.txt'),'# Parent-approved theme push only (not run by cloud agent)\n'+list.map(p=>'shopify theme push ... --only '+p).join('\n')+'\n');
 fs.writeFileSync(path.join(out,'COPY03-HANDOFF.txt'),
-['COPY03 progressive cart module',
+['COPY03 progressive cart module + URL A/B (br_cart_offer=control|variant)',
  '- At 1 qualifying Performance Skin pair: exact headline + Add Open/Closed Sole flow.',
  '- At 2+ pairs: 15% preview line/savings then 35% one-pant photo/picker.',
  '- Preview notice on all stages; no unlock/discount codes/checkout intercept.',

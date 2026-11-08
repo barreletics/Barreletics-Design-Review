@@ -5,6 +5,7 @@ var assert = require('node:assert/strict');
 var bundle = require('../assets/cart-bundle-promo.js');
 
 var LIVE = bundle.mergeConfig({ enabled: true, pairPromoMode: 'live_2for15' });
+var VARIANT = { offerArm: 'variant' };
 
 function closedSkin(qty, color) {
   return {
@@ -51,7 +52,7 @@ var FIXTURE_PRODUCT = {
 };
 
 test('at 1 pair: add-pair stage on, pants offer off', function () {
-  var r = bundle.computeBundlePromo([closedSkin(1, 'Purple')], LIVE, 7400);
+  var r = bundle.computeBundlePromo([closedSkin(1, 'Purple')], LIVE, 7400, VARIANT);
   assert.equal(r.showAddPairStage, true);
   assert.equal(r.showPantsOffer, false);
   assert.equal(r.footwearOfferLine, '');
@@ -59,7 +60,7 @@ test('at 1 pair: add-pair stage on, pants offer off', function () {
 
 test('at 2+ pairs: pants stage on, add-pair off', function () {
   var mixed = [closedSkin(1, 'Purple'), openSkin(1, 'Black')];
-  var r = bundle.computeBundlePromo(mixed, LIVE, 14800);
+  var r = bundle.computeBundlePromo(mixed, LIVE, 14800, VARIANT);
   assert.equal(r.showAddPairStage, false);
   assert.equal(r.showPantsOffer, true);
   assert.equal(r.pantsPickerVisible, true);
@@ -73,7 +74,7 @@ test('pants not counted as footwear pairs', function () {
 
 test('1 pant in cart suppresses second pants offer at 2 pairs', function () {
   var items = [closedSkin(2, 'Purple'), pantItem()];
-  var r = bundle.computeBundlePromo(items, LIVE, 23700);
+  var r = bundle.computeBundlePromo(items, LIVE, 23700, VARIANT);
   assert.equal(r.showPantsOffer, false);
 });
 
@@ -91,17 +92,19 @@ test('colorsUsedInCart excludes duplicate color offers', function () {
 });
 
 test('render at 1 pair: exact headline, no pants image', function () {
-  var r = bundle.computeBundlePromo([closedSkin(1)], LIVE, 7400);
+  var r = bundle.computeBundlePromo([closedSkin(1)], LIVE, 7400, VARIANT);
   var html = bundle.renderPromoHtml(r);
   assert.match(html, /Add one more pair of Performance Skins/);
   assert.match(html, /data-bundle-add-pair/);
+  assert.match(html, /Performance Skin pairs in cart: 1/);
+  assert.match(html, /Recommended add-on \(inline\)/);
   assert.match(html, /Preview only—offers aren't applied at checkout/);
   assert.ok(!html.includes('cart-bundle-promo__pants-img'));
   assert.ok(!html.includes('unlock'));
 });
 
 test('render at 2 pairs includes pants block and preview savings', function () {
-  var r = bundle.computeBundlePromo([closedSkin(2)], LIVE, 14800);
+  var r = bundle.computeBundlePromo([closedSkin(2)], LIVE, 14800, VARIANT);
   var html = bundle.renderPromoHtml(r);
   assert.match(html, /cart-bundle-promo__pants-img/);
   assert.match(html, /data-bundle-pants-picker/);
@@ -118,7 +121,7 @@ test('sizesForColor respects availability flag', function () {
 });
 
 test('no discount redirect links in rendered html', function () {
-  var r = bundle.computeBundlePromo([closedSkin(2)], LIVE, 14800);
+  var r = bundle.computeBundlePromo([closedSkin(2)], LIVE, 14800, VARIANT);
   var html = bundle.renderPromoHtml(r);
   assert.ok(!html.includes('/discount/'));
 });
