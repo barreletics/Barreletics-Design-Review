@@ -972,6 +972,18 @@
     return Promise.reject(new Error('cart-add-unavailable'));
   }
 
+  function recoverAddPairSubmitState(state, submitBtn, previousLabel, syncSubmit) {
+    state.pending = false;
+    if (submitBtn) {
+      submitBtn.textContent = previousLabel;
+    }
+    if (typeof syncSubmit === 'function') {
+      syncSubmit();
+    } else if (typeof state.syncSubmit === 'function') {
+      state.syncSubmit();
+    }
+  }
+
   function initAddPairFlow(root, config, cartItems) {
     var block = root.querySelector('[data-bundle-add-pair]');
     if (!block) return;
@@ -989,7 +1001,8 @@
       sizeKey: 'option1',
       selected: {},
       pending: false,
-      pickerOpen: false
+      pickerOpen: false,
+      syncSubmit: null
     };
 
     function setStatus(msg, isError) {
@@ -1152,6 +1165,7 @@
       selectsWrap.appendChild(swatchRow);
       selectsWrap.appendChild(swatchName);
       selectsWrap.appendChild(sizeLabel);
+      state.syncSubmit = syncSubmit;
       syncSubmit();
     }
 
@@ -1223,8 +1237,7 @@
             setStatus('Could not add this pair. Try again.', true);
           })
           .finally(function () {
-            state.pending = false;
-            submitBtn.textContent = prev;
+            recoverAddPairSubmitState(state, submitBtn, prev, state.syncSubmit);
           });
       });
     }
@@ -1387,6 +1400,7 @@
     mountPromo: mountPromo,
     initPantsPicker: initPantsPicker,
     initAddPairFlow: initAddPairFlow,
+    recoverAddPairSubmitState: recoverAddPairSubmitState,
     resolveVariantFromOptions: resolveVariantFromOptions,
     isClosedSoleSkin: isClosedSoleSkin,
     isClosedSoleSkin5a: isClosedSoleSkin5a,
