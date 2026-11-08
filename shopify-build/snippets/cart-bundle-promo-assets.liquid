@@ -1,0 +1,19 @@
+{% comment %} Load once from cart-drawer (layout). Full cart reads the same JSON config. {% endcomment %}
+<script type="application/json" id="cart-bundle-promo-config">
+{
+  "enabled": {{ settings.bundles_promo_enabled | json }},
+  "tier2Percent": {{ settings.bundles_tier2_percent | default: 10 | json }},
+  "tier3Percent": {{ settings.bundles_tier3_percent | default: 15 | json }},
+  "pantsPercent": {{ settings.bundles_pants_percent | default: 35 | json }},
+  "pantsPreviewCents": {{ settings.bundles_pants_preview_cents | default: 9800 | json }},
+  "skinMatch": {{ settings.bundles_skin_title_match | default: 'Closed Sole' | json }},
+  "skinExclude": {{ settings.bundles_skin_title_exclude | default: 'open sole' | json }},
+  "pantsMatch": {{ settings.bundles_pants_title_match | default: 'yoga pant' | json }},
+  "copyAddPair": {{ settings.bundles_copy_add_pair | default: 'Add {count} pair. Save {percent}.' | json }},
+  "copyYouSave": {{ settings.bundles_copy_you_save | default: 'You save {amount}.' | json }},
+  "copyPantsCta": {{ settings.bundles_copy_pants_cta | default: 'Complete your set. Save {percent}% on yoga pants.' | json }},
+  "copyPreview": {{ settings.bundles_copy_preview_notice | default: 'Preview pricing only. Active checkout discounts are managed in Shopify Admin, not in this theme setting.' | json }},
+  "collectionCta": {{ settings.bundles_closed_sole_collection_url | default: '/collections/closed-sole' | json }}
+}
+</script>
+{{ 'cart-bundle-promo.js' | asset_url | script_tag }}

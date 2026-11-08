@@ -1,0 +1,193 @@
+{% comment %}
+  Full cart page — mirrors drawer AJAX behavior via cart.js when loaded.
+{% endcomment %}
+
+<section class="main-cart section" id="main-cart">
+  <div class="main-cart__inner page-width">
+    <h1 class="main-cart__title">Your cart</h1>
+
+    {% render 'cart-bundle-promo', context: 'page' %}
+
+    <div id="main-cart-items" class="main-cart__items">
+      {% if cart.item_count == 0 %}
+        <p class="main-cart__empty">Your cart is empty.</p>
+        <a href="/collections/closed-sole" class="btn btn--primary">Shop Performance Skins</a>
+      {% else %}
+        {% for item in cart.items %}
+          <div class="main-cart__item" data-line-key="{{ item.key }}">
+            <a href="{{ item.url }}" class="main-cart__item-image">
+              <img
+                src="{{ item.image | image_url: width: 160 }}"
+                alt="{{ item.product.title | escape }}"
+                width="96"
+                height="96"
+                loading="lazy"
+              >
+            </a>
+            <div class="main-cart__item-body">
+              <a href="{{ item.url }}" class="main-cart__item-title">{{ item.product.title }}</a>
+              <p class="main-cart__item-variant">{{ item.variant.title }}</p>
+              <div class="main-cart__item-qty">
+                <button type="button" data-qty-change="-1" aria-label="Decrease quantity">−</button>
+                <span>{{ item.quantity }}</span>
+                <button type="button" data-qty-change="1" aria-label="Increase quantity">+</button>
+              </div>
+            </div>
+            <div class="main-cart__item-price">{{ item.final_line_price | money }}</div>
+            <button type="button" class="main-cart__item-remove" data-remove-item>Remove</button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+
+    {% if cart.item_count > 0 %}
+      <footer class="main-cart__footer">
+        <div class="main-cart__subtotal">
+          <span>Subtotal</span>
+          <span id="main-cart-subtotal">{{ cart.total_price | money }}</span>
+        </div>
+        <a href="/checkout" class="btn btn--primary main-cart__checkout" data-checkout-button>Checkout</a>
+      </footer>
+    {% endif %}
+  </div>
+</section>
+
+{{ 'cart.js' | asset_url | script_tag }}
+
+<script>
+  (function () {
+    function bindMainCartPage() {
+      var section = document.getElementById('main-cart');
+      if (!section || section.dataset.bound) return;
+      section.dataset.bound = 'true';
+
+      function syncFromCart(cart) {
+        if (window.BarreleticsCartBundlePromo) {
+          window.BarreleticsCartBundlePromo.update(cart);
+        }
+      }
+
+      if (window.BarreleticsCart && window.BarreleticsCart.fetch) {
+        window.BarreleticsCart.fetch().then(syncFromCart);
+      }
+
+      document.addEventListener('cart:rendered', function (e) {
+        if (e.detail && e.detail.cart) syncFromCart(e.detail.cart);
+      });
+
+      section.querySelectorAll('[data-qty-change], [data-remove-item]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          if (!window.BarreleticsCart) return;
+          var row = btn.closest('[data-line-key]');
+          if (!row) return;
+          var key = row.getAttribute('data-line-key');
+          if (btn.hasAttribute('data-remove-item')) {
+            window.BarreleticsCart.change(key, 0);
+            return;
+          }
+          var span = row.querySelector('.main-cart__item-qty span');
+          var qty = parseInt(span.textContent, 10) || 1;
+          var delta = parseInt(btn.getAttribute('data-qty-change'), 10);
+          window.BarreleticsCart.change(key, Math.max(0, qty + delta));
+        });
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', bindMainCartPage);
+    } else {
+      bindMainCartPage();
+    }
+  })();
+</script>
+
+<style>
+  .main-cart__inner {
+    max-width: var(--max-width, 1200px);
+    margin: 0 auto;
+    padding: var(--space-8) var(--space-6);
+  }
+
+  .main-cart__title {
+    font-size: var(--text-lg, 1.25rem);
+    margin: 0 0 var(--space-6);
+  }
+
+  .main-cart__item {
+    display: grid;
+    grid-template-columns: 96px 1fr auto auto;
+    gap: var(--space-4);
+    align-items: start;
+    padding: var(--space-4) 0;
+    border-bottom: 1px solid var(--border-default, #e5e0d8);
+  }
+
+  .main-cart__item-image img {
+    width: 96px;
+    height: 96px;
+    object-fit: cover;
+    border-radius: var(--radius-card-sm, 8px);
+  }
+
+  .main-cart__item-title {
+    font-weight: var(--weight-semibold, 600);
+    color: var(--text-primary, #1c1916);
+    text-decoration: none;
+  }
+
+  .main-cart__item-variant {
+    font-size: 12px;
+    color: var(--text-muted, #8a8a8a);
+    margin: var(--space-1) 0 var(--space-2);
+  }
+
+  .main-cart__item-qty {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    border: 1px solid var(--border-default, #e5e0d8);
+    border-radius: var(--radius-badge, 4px);
+    padding: 4px 8px;
+  }
+
+  .main-cart__item-qty button {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .main-cart__item-remove {
+    background: none;
+    border: none;
+    font-size: 12px;
+    text-decoration: underline;
+    cursor: pointer;
+    color: var(--text-muted, #8a8a8a);
+  }
+
+  .main-cart__footer {
+    margin-top: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    align-items: flex-end;
+  }
+
+  .main-cart__subtotal {
+    display: flex;
+    gap: var(--space-8);
+    font-weight: var(--weight-bold, 700);
+  }
+
+  .main-cart__checkout {
+    min-width: 240px;
+    text-align: center;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Main cart",
+  "settings": []
+}
+{% endschema %}
