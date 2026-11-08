@@ -21,6 +21,7 @@ test('cart-bundle-promo-config: no Liquid tags inside default filter string lite
     liquid.includes('default_pants_headline'),
     'headline default must use assign concatenation'
   );
+  assert.equal(liquid.indexOf('{% raw %}'), -1, 'must not contain raw tag token in file');
 });
 
 test('settings_schema: url setting cart_bundle_pant_product_url has no relative-path default', () => {

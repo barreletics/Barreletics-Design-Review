@@ -1,10 +1,10 @@
 {% comment %}
-  Injects cart bundle preview config for cart-bundle-promo.js (feature off by default).
-  Placeholder tokens use {% raw %}-free concatenation so Shopify Liquid does not parse {{...}} inside defaults.
+  Cart bundle preview JSON config for cart-bundle-promo.js (off unless theme setting enabled).
+  Template placeholders use assign+append (no Liquid tags inside filter string literals).
 {% endcomment %}
 {% liquid
-  assign _l = '{{'
-  assign _r = '}}'
+  assign _l = '{' | append: '{'
+  assign _r = '}' | append: '}'
   assign _pct = _l | append: 'percent' | append: _r
   assign _cnt = _l | append: 'count' | append: _r
   assign _unit = _l | append: 'unit' | append: _r
