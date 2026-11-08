@@ -44,7 +44,8 @@ test('live variant 1 pair: add-pair flow only', () => {
   const r = bundle.computeBundlePromo(items, LIVE, 7400, VARIANT);
   const html = bundle.renderPromoHtml(r);
   assert.equal(r.showAddPairStage, true);
-  assert.match(html, /Add one more pair of Performance Skins/);
+  assert.match(html, /Buy 2 or more pairs\. Get 15% off\./);
+  assert.match(html, /data-open-add-pair-picker/);
   assert.ok(!html.includes('cart-bundle-promo__pants-img'));
 });
 

@@ -64,7 +64,7 @@ test('at 2+ pairs: pants stage on, add-pair off', function () {
   assert.equal(r.showAddPairStage, false);
   assert.equal(r.showPantsOffer, true);
   assert.equal(r.pantsPickerVisible, true);
-  assert.match(r.footwearOfferLine, /Save 15%/);
+  assert.equal(r.footwearOfferLine, '');
 });
 
 test('pants not counted as footwear pairs', function () {
@@ -91,24 +91,37 @@ test('colorsUsedInCart excludes duplicate color offers', function () {
   assert.deepEqual(meta.colors, ['White']);
 });
 
-test('render at 1 pair: exact headline, no pants image', function () {
+test('colorValuesForAddPair allows repeat colors when cart color is known', function () {
+  var cart = [closedSkin(1, 'Purple')];
+  var meta = bundle.colorValuesForAddPair(FIXTURE_PRODUCT, cart, LIVE);
+  assert.equal(meta.unresolved, false);
+  assert.ok(meta.colors.indexOf('Purple') !== -1);
+  assert.equal(meta.colors.length, 3);
+});
+
+test('render at 1 pair: benefit-first headline, hidden picker until CTA', function () {
   var r = bundle.computeBundlePromo([closedSkin(1)], LIVE, 7400, VARIANT);
   var html = bundle.renderPromoHtml(r);
-  assert.match(html, /Add one more pair of Performance Skins/);
+  assert.match(html, /Buy 2 or more pairs\. Get 15% off\./);
+  assert.match(html, /You have 1 pair\. Add another to qualify\./);
+  assert.match(html, /data-open-add-pair-picker/);
+  assert.match(html, /data-add-pair-body hidden/);
   assert.match(html, /data-bundle-add-pair/);
-  assert.match(html, /Performance Skin pairs in cart: 1/);
-  assert.ok(!html.includes('Recommended add-on'));
+  assert.ok(!html.includes('Performance Skin pairs in cart:'));
   assert.match(html, /Preview only—offers aren't applied at checkout/);
   assert.ok(!html.includes('cart-bundle-promo__pants-img'));
   assert.ok(!html.includes('unlock'));
 });
 
-test('render at 2 pairs includes pants block and preview savings', function () {
+test('render at 2 pairs includes outfit pants block, no competing add-pair', function () {
   var r = bundle.computeBundlePromo([closedSkin(2)], LIVE, 14800, VARIANT);
   var html = bundle.renderPromoHtml(r);
+  assert.equal(r.showAddPairStage, false);
+  assert.match(html, /Complete your outfit\./);
+  assert.match(html, /Get 35% off one pair of yoga pants\./);
   assert.match(html, /cart-bundle-promo__pants-img/);
   assert.match(html, /data-bundle-pants-picker/);
-  assert.match(html, /You save/);
+  assert.ok(!html.includes('data-bundle-add-pair'));
 });
 
 test('sizesForColor respects availability flag', function () {
