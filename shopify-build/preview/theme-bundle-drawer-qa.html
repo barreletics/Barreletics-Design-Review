@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Theme bundle drawer QA (shopify-build)</title>
+  <link rel="stylesheet" href="../assets/design-tokens.css" />
+  <link rel="stylesheet" href="../assets/cart-bundle-promo.css" />
+  <style>
+    body { margin: 0; font-family: Roboto, Helvetica, Arial, sans-serif; background: #f0eeec; }
+    .ribbon { background: #1a1a1a; color: #f5f5f5; text-align: center; padding: 8px; font-size: 13px; }
+    .panel {
+      width: 400px; max-width: 100%; margin: 0 auto; background: #fff; min-height: 100vh;
+      box-shadow: -8px 0 32px rgba(0,0,0,0.12); display: flex; flex-direction: column;
+    }
+    .head { display: flex; justify-content: space-between; padding: 16px 18px; border-bottom: 1px solid #e8e4e0; }
+    .body { padding: 14px 18px; flex: 1; }
+    .foot { border-top: 1px solid #e8e4e0; padding: 14px 18px 18px; }
+    .line { display: grid; grid-template-columns: 72px 1fr auto; gap: 12px; padding: 12px 0; border-bottom: 1px solid #e8e4e0; font-size: 14px; }
+    .line img { width: 72px; height: 72px; object-fit: cover; border-radius: 4px; }
+    .meta { font-size: 12px; color: #5c5c5c; margin: 4px 0 0; }
+  </style>
+</head>
+<body>
+  <p class="ribbon">Theme QA — shopify-build bundle module · not Shopify-rendered Liquid</p>
+  <div class="panel" id="panel">
+    <div class="head"><strong id="title">Your cart (2)</strong><span>×</span></div>
+    <div class="body" id="body"></div>
+    <div class="foot">
+      <div style="display:flex;justify-content:space-between"><span>Subtotal</span><span id="sub">$148.00</span></div>
+      <div class="cart-drawer__estimated" id="est-row"><span>Estimated total</span><span id="est"></span></div>
+      <p class="cart-drawer__ship-preview" id="ship"></p>
+      <button style="width:100%;margin-top:12px;padding:12px;background:#1c1916;color:#fff;border:0">Check out</button>
+    </div>
+  </div>
+  <script id="cart-bundle-promo-config" type="application/json">
+  {"enabled":true,"pairPromoMode":"future_tiers","tierTwoPercent":10,"tierThreePlusPercent":15,"pantsPercent":35,"pantsProposedPriceCents":9800,"pantsMinPairs":2,"pantsHeadline":"Complete your set. Save {{percent}}% on yoga pants.","nudgeAddPairTemplate":"Add {{count}} {{unit}}. Save {{percent}}%.","savingsTemplate":"You save {{amount}}.","pantsProductTitle":"Lightly Padded Knee Yoga Pant","pantsImageUrl":"https://cdn.shopify.com/s/files/1/0045/0612/4391/files/IMG_2914.jpg?v=1741040643","pantsAddLabel":"Add yoga pants","freeShippingThresholdCents":15000,"skinHandleNeedles":["closed-sole"],"skinTitleNeedles":["Closed Sole"],"pantHandleNeedles":["pant"],"pantTitleNeedles":["Pant"],"skinRequireClosedSole":true}
+  </script>
+  <script src="../assets/cart-bundle-promo.js"></script>
+  <script>
+    var items = [
+      { quantity: 1, final_line_price: 7400, product_title: 'Performance Skins — Closed Sole', variant_title: 'Purple · M', url: '/products/x-closed-sole', image: 'https://cdn.shopify.com/s/files/1/0045/0612/4391/files/Purple_45b2348c-f5a1-45a8-a704-88f8afd10414.jpg?v=1776454640' },
+      { quantity: 1, final_line_price: 7400, product_title: 'Performance Skins — Closed Sole', variant_title: 'Dusty Rose · L', url: '/products/x-closed-sole', image: 'https://cdn.shopify.com/s/files/1/0045/0612/4391/files/Dusty_Rose_5e602111-f285-4b53-98b2-b3cdc3ff25a2.png?v=1773521063' }
+    ];
+    var body = document.getElementById('body');
+    body.innerHTML = items.map(function (it) {
+      return '<article class="line"><img src="' + it.image + '" alt="" /><div><div>' + it.product_title + '</div><p class="meta">' + it.variant_title + '</p></div><div>$74.00</div></article>';
+    }).join('') + '<div id="cart-bundle-promo-mount"></div>';
+    var cfg = JSON.parse(document.getElementById('cart-bundle-promo-config').textContent);
+    var result = window.BarreleticsCartBundle.mountPromo(document.getElementById('cart-bundle-promo-mount'), items, cfg, 14800);
+    document.getElementById('est').textContent = '$' + (result.estimatedTotalCents / 100).toFixed(2);
+    document.getElementById('ship').textContent = '$16.80 away from $150 after-discount free shipping (US storefront rule).';
+  </script>
+</body>
+</html>

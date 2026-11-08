@@ -4,123 +4,103 @@ var test = require('node:test');
 var assert = require('node:assert/strict');
 var bundle = require('../assets/cart-bundle-promo.js');
 
-var BASE = bundle.mergeConfig({ enabled: true });
-
 function skinItem(qty, priceCents) {
   return {
     quantity: qty,
     final_line_price: priceCents * qty,
-    product_title: 'Studio Performance Skin — Closed Sole',
+    product_title: 'Performance Skins — Closed Sole',
     product_type: 'Grippy Shoes',
-    variant_title: 'Onyx / M',
+    variant_title: 'Purple · M',
     url: '/products/studio-performance-skin-closed-sole'
   };
 }
 
-function pantItem(qty, priceCents) {
+function pantItem(qty) {
   return {
     quantity: qty,
-    final_line_price: priceCents * qty,
-    product_title: 'High-Waist Yoga Pant',
+    final_line_price: 8900 * qty,
+    product_title: 'Lightly Padded Knee Yoga Pant',
     product_type: 'Apparel',
-    variant_title: 'Black / S',
+    variant_title: 'Black · M',
     url: '/products/high-waist-yoga-pant'
   };
 }
 
+var FUTURE = bundle.mergeConfig({ enabled: true, pairPromoMode: 'future_tiers' });
+var LIVE = bundle.mergeConfig({ enabled: true, pairPromoMode: 'live_2for15' });
+
 test('flag off hides panel', function () {
-  var result = bundle.computeBundlePromo([skinItem(2, 7400)], { enabled: false });
-  assert.equal(result.showPanel, false);
-  assert.equal(result.totalSavingsCents, 0);
+  var r = bundle.computeBundlePromo([skinItem(2, 7400)], { enabled: false }, 14800);
+  assert.equal(r.showPanel, false);
 });
 
-test('0 pairs — no pair savings line with message', function () {
-  var result = bundle.computeBundlePromo([], BASE);
-  assert.equal(result.pairCount, 0);
-  assert.equal(result.totalSavingsCents, 0);
+test('future: 2 pairs — 10% savings $14.80 and tier-3 nudge', function () {
+  var items = [skinItem(1, 7400), skinItem(1, 7400)];
+  var r = bundle.computeBundlePromo(items, FUTURE, 14800);
+  assert.equal(r.pairSavingsCents, 1480);
+  assert.equal(r.nudge, 'Add 1 pair. Save 15%.');
+  assert.equal(r.savingsLine, 'You save $14.80.');
+  assert.equal(r.estimatedTotalCents, 13320);
+  assert.equal(r.shippingGapCents, 1680);
 });
 
-test('1 pair — nudge Add 1 pair Save 15% in live mode', function () {
-  var result = bundle.computeBundlePromo([skinItem(1, 7400)], BASE);
-  var nudge = result.lines.find(function (l) {
-    return l.variant === 'nudge';
-  });
-  assert.ok(nudge);
-  assert.equal(nudge.message, 'Add 1 pair. Save 15%.');
-  assert.equal(result.totalSavingsCents, 0);
+test('live: 1 pair nudge 15%, no savings', function () {
+  var r = bundle.computeBundlePromo([skinItem(1, 7400)], LIVE, 7400);
+  assert.equal(r.nudge, 'Add 1 pair. Save 15%.');
+  assert.equal(r.totalSavingsCents, 0);
 });
 
-test('2 pairs — live 15% on pair subtotal', function () {
-  var result = bundle.computeBundlePromo([skinItem(2, 7400)], BASE);
-  assert.equal(result.pairCount, 2);
-  assert.equal(result.totalSavingsCents, Math.round(14800 * 0.15));
+test('live: 2 pairs — 15% savings, no nudge', function () {
+  var r = bundle.computeBundlePromo([skinItem(2, 7400)], LIVE, 14800);
+  assert.equal(r.pairSavingsCents, 2220);
+  assert.equal(r.nudge, '');
 });
 
-test('3+ pairs — future tier uses 15% not a fourth tier', function () {
-  var cfg = bundle.mergeConfig({
-    enabled: true,
-    pairPromoMode: 'future_tiers',
-    tierTwoPercent: 10,
-    tierThreePlusPercent: 15
-  });
-  var two = bundle.computeBundlePromo([skinItem(2, 7400)], cfg);
-  assert.equal(two.totalSavingsCents, Math.round(14800 * 0.1));
-
-  var three = bundle.computeBundlePromo([skinItem(3, 7400)], cfg);
-  assert.equal(three.totalSavingsCents, Math.round(22200 * 0.15));
-
-  var four = bundle.computeBundlePromo([skinItem(4, 7400)], cfg);
-  assert.equal(four.totalSavingsCents, Math.round(29600 * 0.15));
+test('pants offer qual-only at 1 pair', function () {
+  var r = bundle.computeBundlePromo([skinItem(1, 7400)], FUTURE, 7400);
+  assert.equal(r.showPantsOffer, true);
+  assert.equal(r.pantsQualOnly, true);
+  assert.equal(r.pantsPickerVisible, false);
 });
 
-test('pants promo requires 2+ pairs and caps at one pant unit savings', function () {
-  var items = [skinItem(2, 7400), pantItem(1, 8900)];
-  var result = bundle.computeBundlePromo(items, BASE);
-  var pantsLine = result.lines.find(function (l) {
-    return l.type === 'pants';
-  });
-  assert.ok(pantsLine);
-  assert.equal(pantsLine.previewUnitPriceCents, 6370);
-  assert.equal(pantsLine.savingsCents, Math.round(9800 * 0.35));
-  assert.ok(result.lines.some(function (l) {
-    return l.message.indexOf('You save $') === 0;
-  }));
+test('pants picker at 2+ pairs with proposed $98 / 35%', function () {
+  var r = bundle.computeBundlePromo([skinItem(2, 7400)], FUTURE, 14800);
+  assert.equal(r.pantsPickerVisible, true);
+  assert.equal(r.pantsSaleCents, 6370);
+  assert.equal(r.pantsHeadline, 'Complete your set. Save 35% on yoga pants.');
 });
 
-test('two pants — only one unit of 35% proposed savings', function () {
-  var items = [skinItem(2, 7400), pantItem(2, 8900)];
-  var result = bundle.computeBundlePromo(items, BASE);
-  var pantsSave = Math.round(9800 * 0.35);
-  assert.equal(result.totalSavingsCents, Math.round(14800 * 0.15) + pantsSave);
+test('one pant in cart — one unit savings only', function () {
+  var items = [skinItem(2, 7400), pantItem(2)];
+  var r = bundle.computeBundlePromo(items, FUTURE, 14800 + 17800);
+  assert.equal(r.pantsSavingsCents, 3430);
+  assert.equal(r.totalSavingsCents, 1480 + 3430);
 });
 
-test('pants ignored below pair threshold', function () {
-  var items = [skinItem(1, 7400), pantItem(1, 8900)];
-  var result = bundle.computeBundlePromo(items, BASE);
-  assert.ok(!result.lines.some(function (l) {
-    return l.type === 'pants';
-  }));
+test('percent edit updates headline and sale price', function () {
+  var cfg = bundle.mergeConfig({ enabled: true, pantsPercent: 30, pantsProposedPriceCents: 10000 });
+  var r = bundle.computeBundlePromo([skinItem(2, 7400)], cfg, 14800);
+  assert.equal(r.pantsHeadline, 'Complete your set. Save 30% on yoga pants.');
+  assert.equal(bundle.pantsSaleCents(cfg), 7000);
 });
 
-test('custom percent edits propagate', function () {
-  var cfg = bundle.mergeConfig({
-    enabled: true,
-    pantsPercent: 30,
-    pantsProposedPriceCents: 10000,
-    livePairPercent: 20
-  });
-  var items = [skinItem(2, 5000), pantItem(1, 8900)];
-  var result = bundle.computeBundlePromo(items, cfg);
-  assert.equal(result.totalSavingsCents, Math.round(10000 * 0.2) + Math.round(10000 * 0.3));
-});
-
-test('open sole does not count toward closed sole pairs', function () {
+test('open sole excluded from pair count', function () {
   var openSole = {
     quantity: 2,
     final_line_price: 14800,
-    product_title: 'Studio Performance Skin — Open Sole',
+    product_title: 'Performance Skins — Open Sole',
     url: '/products/studio-performance-skin-open-sole'
   };
-  var result = bundle.computeBundlePromo([openSole], BASE);
-  assert.equal(result.pairCount, 0);
+  var r = bundle.computeBundlePromo([openSole], FUTURE, 14800);
+  assert.equal(r.pairCount, 0);
+  assert.equal(r.showPanel, false);
+});
+
+test('HTML render includes progress, savings, pants prices', function () {
+  var r = bundle.computeBundlePromo([skinItem(2, 7400)], FUTURE, 14800);
+  var html = bundle.renderPromoHtml(r);
+  assert.match(html, /cart-bundle-promo__progress/);
+  assert.match(html, /You save \$14\.80/);
+  assert.match(html, /\$98\.00/);
+  assert.match(html, /\$63\.70/);
 });

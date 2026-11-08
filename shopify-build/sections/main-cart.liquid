@@ -1,10 +1,12 @@
 {% comment %}
-  Full cart page (drawer remains primary). Bundle promo block mirrors cart drawer preview.
+  Full cart page — mirrors drawer bundle preview block; preserves cart form POST /checkout.
 {% endcomment %}
 
 <section class="cart-page section" id="main-cart" data-section-type="main-cart">
   <div class="cart-page__inner page-width">
-    <h1 class="cart-page__title">Your cart</h1>
+    <h1 class="cart-page__title" id="cart-page-title">
+      {%- if cart.item_count > 0 -%}Your cart ({{ cart.item_count }}){%- else -%}Your cart{%- endif -%}
+    </h1>
 
     {% if cart.item_count == 0 %}
       <div class="cart-page__empty">
@@ -12,8 +14,6 @@
         <a href="/collections/closed-sole" class="btn btn--primary">Shop Performance Skins</a>
       </div>
     {% else %}
-      <div id="cart-page-bundle-promo" hidden></div>
-
       <form action="{{ routes.cart_url }}" method="post" id="cart-form" class="cart-page__form">
         <div class="cart-page__items" id="cart-page-items">
           {% for item in cart.items %}
@@ -47,18 +47,21 @@
           {% endfor %}
         </div>
 
+        <div id="cart-page-bundle-promo" class="cart-page__bundle-slot" hidden></div>
+
         <div class="cart-page__summary">
           <div class="cart-page__subtotal">
             <span>Subtotal</span>
             <span id="cart-page-subtotal">{{ cart.total_price | money }}</span>
           </div>
+          <div class="cart-page__estimated-row" id="cart-page-estimated-row" hidden>
+            <span>Estimated total</span>
+            <strong id="cart-page-estimated-total"></strong>
+          </div>
+          <p id="cart-page-ship-preview" class="cart-page__ship-preview" hidden></p>
           <p class="cart-page__note">Shipping and discounts calculated at checkout.</p>
-          <p id="cart-page-estimated-savings" class="cart-page__estimated-total" hidden>
-            <span>Preview bundle savings</span>
-            <strong data-estimated-savings></strong>
-          </p>
           <button type="submit" name="checkout" class="btn btn--primary cart-page__checkout" data-checkout-button>
-            Checkout
+            Check out
           </button>
         </div>
       </form>
@@ -66,17 +69,16 @@
   </div>
 </section>
 
-{{ 'cart-bundle-promo.css' | asset_url | stylesheet_tag }}
-
 <style>
   .cart-page__inner {
-    max-width: var(--page-width, 720px);
+    max-width: 720px;
     margin: 0 auto;
     padding: var(--space-8) var(--space-6);
   }
 
   .cart-page__title {
     font-size: var(--text-2xl);
+    font-weight: var(--weight-medium);
     margin: 0 0 var(--space-6);
   }
 
@@ -92,10 +94,11 @@
     font-weight: var(--weight-semibold);
     color: var(--text-primary);
     text-decoration: none;
+    font-size: 14px;
   }
 
   .cart-page__item-variant {
-    font-size: var(--text-sm);
+    font-size: 12px;
     color: var(--text-muted);
     margin: var(--space-1) 0;
   }
@@ -105,13 +108,28 @@
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
+    border-top: 1px solid var(--border-default);
+    padding-top: var(--space-5);
   }
 
-  .cart-page__subtotal {
+  .cart-page__subtotal,
+  .cart-page__estimated-row {
     display: flex;
     justify-content: space-between;
+    font-size: var(--text-md);
+  }
+
+  .cart-page__estimated-row {
     font-weight: var(--weight-bold);
-    font-size: var(--text-lg);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--border-default);
+  }
+
+  .cart-page__ship-preview {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin: 0;
+    line-height: 1.4;
   }
 
   .cart-page__checkout {
@@ -125,31 +143,3 @@
     margin: 0;
   }
 </style>
-
-<script>
-  (function () {
-    if (!window.BarreleticsCartBundle) return;
-    var configEl = document.getElementById('cart-bundle-promo-config');
-    if (!configEl) return;
-    var config;
-    try {
-      config = JSON.parse(configEl.textContent);
-    } catch (e) {
-      return;
-    }
-    var mount = document.getElementById('cart-page-bundle-promo');
-    if (!mount) return;
-    window.BarreleticsCartBundle.mountPromo(
-      mount,
-      {{ cart.items | json }},
-      config
-    );
-    var result = window.BarreleticsCartBundle.computeBundlePromo({{ cart.items | json }}, config);
-    var est = document.getElementById('cart-page-estimated-savings');
-    if (est && result && result.showPanel && result.totalSavingsCents > 0) {
-      est.hidden = false;
-      est.querySelector('[data-estimated-savings]').textContent =
-        '$' + (result.totalSavingsCents / 100).toFixed(2);
-    }
-  })();
-</script>

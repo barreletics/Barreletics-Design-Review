@@ -7,6 +7,10 @@
 (function () {
   'use strict';
 
+  if (window.BarreleticsCart && window.BarreleticsCart.__initialized) {
+    return;
+  }
+
   var FREE_SHIPPING_THRESHOLD = 15000; // $150 in cents
   var liveRegion;
   var bundleConfig = null;
@@ -24,23 +28,90 @@
   }
 
   function updateBundlePromo(cart) {
-    if (!window.BarreleticsCartBundle) return;
+    var drawer = document.getElementById('cart-drawer');
     var cfg = readBundleConfig();
-    var mount = document.getElementById('cart-bundle-promo-mount');
-    if (mount) {
-      window.BarreleticsCartBundle.mountPromo(mount, cart.items, cfg);
+    var bundleOn = cfg && cfg.enabled && window.BarreleticsCartBundle;
+    if (drawer) {
+      drawer.classList.toggle('is-bundle-active', !!bundleOn);
     }
+
+    if (!bundleOn) {
+      var mountOff = document.getElementById('cart-bundle-promo-mount');
+      if (mountOff) {
+        mountOff.innerHTML = '';
+        mountOff.setAttribute('hidden', 'hidden');
+      }
+      toggleEstimatedFooter(null);
+      return;
+    }
+
+    var result = window.BarreleticsCartBundle.mountPromo(
+      document.getElementById('cart-bundle-promo-mount'),
+      cart.items,
+      cfg,
+      cart.total_price
+    );
+
+    var titleEl = document.getElementById('cart-drawer-title');
+    if (titleEl && cart.item_count > 0) {
+      titleEl.textContent = 'Your cart (' + cart.item_count + ')';
+    } else if (titleEl) {
+      titleEl.textContent = 'Your cart';
+    }
+
+    toggleEstimatedFooter(result);
+
     var pageMount = document.getElementById('cart-page-bundle-promo');
     if (pageMount) {
-      var result = window.BarreleticsCartBundle.mountPromo(pageMount, cart.items, cfg);
-      var est = document.getElementById('cart-page-estimated-savings');
-      if (est) {
-        if (result && result.showPanel && result.totalSavingsCents > 0) {
-          est.hidden = false;
-          est.querySelector('[data-estimated-savings]').textContent = formatMoney(result.totalSavingsCents);
-        } else {
-          est.hidden = true;
-        }
+      window.BarreleticsCartBundle.mountPromo(pageMount, cart.items, cfg, cart.total_price);
+      var pageEst = document.getElementById('cart-page-estimated-total');
+      var pageShip = document.getElementById('cart-page-ship-preview');
+      if (pageEst && result) {
+        pageEst.textContent = formatMoneyExact(result.estimatedTotalCents);
+        var estRow = document.getElementById('cart-page-estimated-row');
+        if (estRow) estRow.hidden = !result.showPanel;
+      }
+      if (pageShip && result && result.shippingGapCents > 0) {
+        pageShip.hidden = false;
+        pageShip.textContent =
+          formatMoneyExact(result.shippingGapCents) +
+          ' away from $' +
+          (result.freeShippingThresholdCents / 100).toFixed(0) +
+          ' after-discount free shipping (US storefront rule).';
+      } else if (pageShip) {
+        pageShip.hidden = true;
+      }
+    }
+  }
+
+  function toggleEstimatedFooter(result) {
+    var estRow = document.getElementById('cart-drawer-estimated-row');
+    var estVal = document.getElementById('cart-estimated-total');
+    var shipLine = document.getElementById('cart-ship-preview-line');
+
+    if (!result || !result.showPanel) {
+      if (estRow) estRow.hidden = true;
+      if (shipLine) shipLine.hidden = true;
+      return;
+    }
+
+    if (estRow && estVal) {
+      estRow.hidden = false;
+      estVal.textContent = formatMoneyExact(result.estimatedTotalCents);
+    }
+
+    if (shipLine) {
+      if (result.shippingEarned) {
+        shipLine.hidden = true;
+      } else if (result.shippingGapCents > 0) {
+        shipLine.hidden = false;
+        shipLine.textContent =
+          formatMoneyExact(result.shippingGapCents) +
+          ' away from $' +
+          (result.freeShippingThresholdCents / 100).toFixed(0) +
+          ' after-discount free shipping (US storefront rule).';
+      } else {
+        shipLine.hidden = true;
       }
     }
   }
@@ -55,6 +126,12 @@
 
     bindAddToCartForms();
     bindDrawerControls();
+    fetchCart()
+      .then(function (cart) {
+        updateBundlePromo(cart);
+        updateCartCount(cart.item_count);
+      })
+      .catch(function () {});
   }
 
   /* ── Public API ── */
@@ -147,8 +224,10 @@
         '<div class="cart-drawer__empty">' +
           '<p>Your cart is empty</p>' +
           '<a href="/collections/closed-sole" class="btn btn--primary">Shop Performance Skins</a>' +
-        '</div>';
+        '</div><div id="cart-bundle-promo-mount" class="cart-drawer__bundle-slot" hidden></div>';
       if (footer) footer.style.display = 'none';
+      var drawer = document.getElementById('cart-drawer');
+      if (drawer) drawer.classList.remove('is-bundle-active');
     } else {
       var html = '';
       cart.items.forEach(function (item) {
@@ -172,6 +251,7 @@
             '</div>' +
           '</div>';
       });
+      html += '<div id="cart-bundle-promo-mount" class="cart-drawer__bundle-slot" hidden></div>';
       itemsContainer.innerHTML = html;
       if (footer) footer.style.display = '';
     }
@@ -293,6 +373,16 @@
       el.dataset.bound = 'true';
       el.addEventListener('click', closeDrawer);
     });
+
+    drawer.querySelectorAll('[data-bundle-add-pant]').forEach(function (btn) {
+      if (btn.dataset.bound) return;
+      btn.dataset.bound = 'true';
+      btn.addEventListener('click', function () {
+        var vid = parseInt(btn.getAttribute('data-variant-id'), 10);
+        if (!vid) return;
+        addToCart(vid, 1);
+      });
+    });
   }
 
   function showError(form, message) {
@@ -316,6 +406,10 @@
     return '$' + (cents / 100).toFixed(2).replace(/\.00$/, '');
   }
 
+  function formatMoneyExact(cents) {
+    return '$' + (cents / 100).toFixed(2);
+  }
+
   function getSizedUrl(src, width) {
     if (!src) return '';
     if (src.indexOf('_') > -1 && src.match(/_\d+x\./)) {
@@ -337,7 +431,8 @@
     fetch: fetchCart,
     change: changeItem,
     open: openDrawer,
-    close: closeDrawer
+    close: closeDrawer,
+    __initialized: true
   };
 
   /* ── Keyboard handling + focus trap for drawer ── */

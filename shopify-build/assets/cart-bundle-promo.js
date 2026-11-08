@@ -1,6 +1,5 @@
 /**
- * Cart bundle / mix-match promo — preview estimates only (no checkout discounts).
- * Shared logic for Node tests and browser (BarreleticsCartBundle).
+ * Cart bundle preview — mirrors approved 2026-11-07 mock math/copy (checkout unchanged).
  */
 (function (root, factory) {
   if (typeof module === 'object' && module.exports) {
@@ -17,16 +16,26 @@
     livePairPercent: 15,
     tierTwoPercent: 10,
     tierThreePlusPercent: 15,
+    tierThreeMin: 3,
     pantsMinPairs: 2,
     pantsPercent: 35,
     pantsProposedPriceCents: 9800,
-    pantsHeadline: 'Complete your set. Save 35% on yoga pants.',
-    nudgeAddPairTemplate: 'Add 1 pair. Save {{percent}}%.',
+    pantsHeadline: 'Complete your set. Save {{percent}}% on yoga pants.',
+    pantsQualTemplate:
+      'Add {{count}} more {{unit}} of Performance Skins to qualify.',
+    nudgeAddPairTemplate: 'Add {{count}} {{unit}}. Save {{percent}}%.',
     savingsTemplate: 'You save {{amount}}.',
     previewDisclaimer:
       'Preview estimate only. Your cart still uses live Shopify prices; checkout discounts are not applied by this theme preview.',
+    pantsProductTitle: 'Lightly Padded Knee Yoga Pant',
+    pantsImageUrl:
+      'https://cdn.shopify.com/s/files/1/0045/0612/4391/files/IMG_2914.jpg?v=1741040643',
+    pantsAddLabel: 'Add yoga pants',
+    pantsProductUrl: '',
+    pantsDefaultVariantId: 0,
+    freeShippingThresholdCents: 15000,
     skinHandleNeedles: ['closed-sole'],
-    skinTitleNeedles: ['Closed Sole'],
+    skinTitleNeedles: ['Closed Sole', 'Performance Skin'],
     pantHandleNeedles: ['pant', 'yoga-pant'],
     pantTitleNeedles: ['Yoga Pant', 'Pant'],
     skinRequireClosedSole: true
@@ -143,17 +152,37 @@
     if (config.pairPromoMode === 'live_2for15') {
       return config.livePairPercent;
     }
-    if (pairCount >= 3) return config.tierThreePlusPercent;
+    if (pairCount >= config.tierThreeMin) {
+      return config.tierThreePlusPercent;
+    }
     return config.tierTwoPercent;
   }
 
-  function nextPairNudgePercent(pairCount, config) {
+  function pairsNeededForNextTier(pairCount, config) {
     if (config.pairPromoMode === 'live_2for15') {
-      return config.livePairPercent;
+      if (pairCount < 2) {
+        return { add: 2 - pairCount, savePct: config.livePairPercent };
+      }
+      return null;
     }
-    if (pairCount === 0) return config.tierTwoPercent;
-    if (pairCount === 1) return config.tierTwoPercent;
-    return config.tierThreePlusPercent;
+    if (pairCount < 2) {
+      return { add: 2 - pairCount, savePct: config.tierTwoPercent };
+    }
+    if (pairCount < config.tierThreeMin) {
+      return { add: config.tierThreeMin - pairCount, savePct: config.tierThreePlusPercent };
+    }
+    return null;
+  }
+
+  function nudgeCopy(pairCount, config) {
+    var next = pairsNeededForNextTier(pairCount, config);
+    if (!next || next.add <= 0) return '';
+    var unit = next.add === 1 ? 'pair' : 'pairs';
+    return fillTemplate(config.nudgeAddPairTemplate, {
+      count: next.add,
+      unit: unit,
+      percent: next.savePct
+    });
   }
 
   function estimatePairSavings(pairQty, pairSubtotalCents, config) {
@@ -162,12 +191,16 @@
     return Math.round(pairSubtotalCents * (pct / 100));
   }
 
-  function computeBundlePromo(cartItems, rawConfig) {
+  function pantsSaleCents(config) {
+    return Math.round(config.pantsProposedPriceCents * (1 - config.pantsPercent / 100));
+  }
+
+  function computeBundlePromo(cartItems, rawConfig, cartTotalCents) {
     var config = mergeConfig(rawConfig);
     var items = cartItems || [];
 
     if (!config.enabled) {
-      return { enabled: false, totalSavingsCents: 0, lines: [], showPanel: false };
+      return { enabled: false, showPanel: false, totalSavingsCents: 0 };
     }
 
     var skin = sumEligible(items, function (item) {
@@ -177,98 +210,75 @@
       return isEligiblePant(item, config);
     });
 
-    var lines = [];
-    var totalSavingsCents = 0;
+    var pairSavingsCents = estimatePairSavings(skin.quantity, skin.subtotalCents, config);
+    var pantsSavingsCents = 0;
+    if (pants.quantity > 0 && skin.quantity >= config.pantsMinPairs) {
+      pantsSavingsCents =
+        Math.round(config.pantsProposedPriceCents * (config.pantsPercent / 100)) *
+        Math.min(pants.quantity, 1);
+    }
 
-    var activePairPct = pairTierPercent(skin.quantity, config);
+    var totalSavingsCents = pairSavingsCents + pantsSavingsCents;
+    var subtotalCents = typeof cartTotalCents === 'number' ? cartTotalCents : skin.subtotalCents + pants.subtotalCents;
+    var estimatedTotalCents = Math.max(0, subtotalCents - totalSavingsCents);
+    var afterPairOnlyCents = Math.max(0, subtotalCents - pairSavingsCents);
 
-    if (skin.quantity === 0) {
-      lines.push({
-        type: 'pair',
-        variant: 'empty',
-        message: null
-      });
-    } else if (skin.quantity === 1) {
-      var nudgePct = nextPairNudgePercent(1, config);
-      lines.push({
-        type: 'pair',
-        variant: 'nudge',
-        message: fillTemplate(config.nudgeAddPairTemplate, { percent: nudgePct })
-      });
-    } else {
-      var pairSave = estimatePairSavings(skin.quantity, skin.subtotalCents, config);
-      totalSavingsCents += pairSave;
-      lines.push({
-        type: 'pair',
-        variant: 'active',
-        message:
-          config.pairPromoMode === 'live_2for15'
-            ? 'Pair offer (live): save ' + activePairPct + '% on eligible Performance Skins pairs.'
-            : 'Pair offer: save ' + activePairPct + '% on eligible Performance Skins pairs.',
-        savingsCents: pairSave,
-        pairCount: skin.quantity
+    var nudge = skin.quantity > 0 ? nudgeCopy(skin.quantity, config) : '';
+    var savingsLine =
+      totalSavingsCents > 0
+        ? fillTemplate(config.savingsTemplate, { amount: formatMoney(totalSavingsCents) })
+        : '';
+
+    var showPantsOffer = skin.quantity >= 1 && pants.quantity === 0;
+    var pantsQualOnly = showPantsOffer && skin.quantity < config.pantsMinPairs;
+    var pantsPickerVisible = showPantsOffer && !pantsQualOnly;
+
+    var qualNote = '';
+    if (pantsQualOnly) {
+      var need = config.pantsMinPairs - skin.quantity;
+      qualNote = fillTemplate(config.pantsQualTemplate, {
+        count: need,
+        unit: need === 1 ? 'pair' : 'pairs'
       });
     }
 
-    if (skin.quantity >= config.pantsMinPairs) {
-      var pantsSave = 0;
-      if (pants.quantity > 0) {
-        var discountedUnits = Math.min(pants.quantity, 1);
-        pantsSave = Math.round(config.pantsProposedPriceCents * (config.pantsPercent / 100)) * discountedUnits;
-        totalSavingsCents += pantsSave;
+    var headline = fillTemplate(config.pantsHeadline, { percent: config.pantsPercent });
+
+  var shippingGapCents = 0;
+    var shippingEarned = false;
+    if (skin.quantity > 0) {
+      if (afterPairOnlyCents >= config.freeShippingThresholdCents) {
+        shippingEarned = true;
+      } else {
+        shippingGapCents = config.freeShippingThresholdCents - afterPairOnlyCents;
       }
-      lines.push({
-        type: 'pants',
-        variant: pants.quantity > 0 ? 'active' : 'eligible',
-        message: fillTemplate(config.pantsHeadline, { percent: config.pantsPercent }),
-        savingsCents: pantsSave,
-        previewUnitPriceCents: Math.round(config.pantsProposedPriceCents * (1 - config.pantsPercent / 100))
-      });
-    }
-
-    if (totalSavingsCents > 0) {
-      lines.push({
-        type: 'total',
-        variant: 'savings',
-        message: fillTemplate(config.savingsTemplate, { amount: formatMoney(totalSavingsCents) })
-      });
     }
 
     return {
       enabled: true,
-      showPanel: true,
+      showPanel: skin.quantity > 0,
       pairCount: skin.quantity,
       pantCount: pants.quantity,
+      pairSavingsCents: pairSavingsCents,
+      pantsSavingsCents: pantsSavingsCents,
       totalSavingsCents: totalSavingsCents,
-      lines: lines,
+      subtotalCents: subtotalCents,
+      estimatedTotalCents: estimatedTotalCents,
+      nudge: nudge,
+      savingsLine: savingsLine,
+      showPantsOffer: showPantsOffer,
+      pantsQualOnly: pantsQualOnly,
+      pantsPickerVisible: pantsPickerVisible,
+      pantsHeadline: headline,
+      pantsQualNote: qualNote,
+      pantsWasCents: config.pantsProposedPriceCents,
+      pantsSaleCents: pantsSaleCents(config),
       disclaimer: config.previewDisclaimer,
-      estimatedSubtotalCents: null
+      shippingGapCents: shippingGapCents,
+      shippingEarned: shippingEarned,
+      freeShippingThresholdCents: config.freeShippingThresholdCents,
+      config: config
     };
-  }
-
-  function renderPromoHtml(result) {
-    if (!result || !result.showPanel) return '';
-
-    var html =
-      '<div class="cart-bundle-promo" data-cart-bundle-promo role="region" aria-label="Bundle savings preview">' +
-      '<p class="cart-bundle-promo__badge">Preview estimate</p>';
-
-    for (var i = 0; i < result.lines.length; i++) {
-      var line = result.lines[i];
-      if (!line.message) continue;
-      var mod = 'cart-bundle-promo__line--' + line.type;
-      if (line.variant) mod += ' cart-bundle-promo__line--' + line.variant;
-      html +=
-        '<p class="cart-bundle-promo__line ' +
-        mod +
-        '">' +
-        escapeHtml(line.message) +
-        '</p>';
-    }
-
-    html +=
-      '<p class="cart-bundle-promo__disclaimer">' + escapeHtml(result.disclaimer) + '</p></div>';
-    return html;
   }
 
   function escapeHtml(str) {
@@ -279,9 +289,87 @@
       .replace(/"/g, '&quot;');
   }
 
-  function mountPromo(container, cartItems, config) {
+  function renderPromoHtml(result) {
+    if (!result || !result.showPanel) return '';
+
+    var html = '<div class="cart-bundle-promo" data-cart-bundle-promo role="region" aria-label="Bundle savings preview">';
+
+    if (result.nudge) {
+      html += '<div class="cart-bundle-promo__progress">' + escapeHtml(result.nudge) + '</div>';
+    }
+
+    if (result.savingsLine) {
+      html +=
+        '<div class="cart-bundle-promo__savings"><span>' + escapeHtml(result.savingsLine) + '</span></div>';
+    }
+
+    if (result.shippingEarned) {
+      html +=
+        '<p class="cart-bundle-promo__earned">Complimentary US shipping over $' +
+        (result.freeShippingThresholdCents / 100).toFixed(0) +
+        ' after discounts.</p>';
+    }
+
+    if (result.showPantsOffer) {
+      var cfg = result.config;
+      html += '<div class="cart-bundle-promo__pants' + (result.pantsQualOnly ? ' is-qual-only' : '') + '">';
+      html += '<p class="cart-bundle-promo__pants-headline">' + escapeHtml(result.pantsHeadline) + '</p>';
+      if (result.pantsQualNote) {
+        html += '<p class="cart-bundle-promo__pants-qual">' + escapeHtml(result.pantsQualNote) + '</p>';
+      }
+      if (result.pantsPickerVisible) {
+        html +=
+          '<div class="cart-bundle-promo__pants-row">' +
+          '<img src="' +
+          escapeHtml(cfg.pantsImageUrl) +
+          '" alt="" width="56" height="56" loading="lazy" class="cart-bundle-promo__pants-img" />' +
+          '<div class="cart-bundle-promo__pants-copy">' +
+          '<span class="cart-bundle-promo__pants-title">' +
+          escapeHtml(cfg.pantsProductTitle) +
+          '</span>' +
+          '<p class="cart-bundle-promo__pants-note">Preview variants — choose on product page.</p>' +
+          '</div>' +
+          '<div class="cart-bundle-promo__pants-prices">' +
+          '<span class="cart-bundle-promo__pants-was">' +
+          formatMoney(result.pantsWasCents) +
+          '</span>' +
+          '<strong class="cart-bundle-promo__pants-sale">' +
+          formatMoney(result.pantsSaleCents) +
+          '</strong>' +
+          '</div></div>';
+        var variantId = parseInt(cfg.pantsDefaultVariantId, 10) || 0;
+        if (variantId > 0) {
+          html +=
+            '<button type="button" class="cart-bundle-promo__pants-add" data-bundle-add-pant data-variant-id="' +
+            variantId +
+            '">' +
+            escapeHtml(cfg.pantsAddLabel) +
+            '</button>';
+        } else if (cfg.pantsProductUrl) {
+          html +=
+            '<a class="cart-bundle-promo__pants-add" href="' +
+            escapeHtml(cfg.pantsProductUrl) +
+            '">' +
+            escapeHtml(cfg.pantsAddLabel) +
+            '</a>';
+        } else {
+          html +=
+            '<button type="button" class="cart-bundle-promo__pants-add" disabled>' +
+            escapeHtml(cfg.pantsAddLabel) +
+            '</button>';
+        }
+      }
+      html += '</div>';
+    }
+
+    html +=
+      '<p class="cart-bundle-promo__disclaimer">' + escapeHtml(result.disclaimer) + '</p></div>';
+    return html;
+  }
+
+  function mountPromo(container, cartItems, config, cartTotalCents) {
     if (!container) return null;
-    var result = computeBundlePromo(cartItems, config);
+    var result = computeBundlePromo(cartItems, config, cartTotalCents);
     if (!result.showPanel) {
       container.innerHTML = '';
       container.setAttribute('hidden', 'hidden');
@@ -299,6 +387,7 @@
     renderPromoHtml: renderPromoHtml,
     mountPromo: mountPromo,
     isClosedSoleSkin: isClosedSoleSkin,
-    isEligiblePant: isEligiblePant
+    isEligiblePant: isEligiblePant,
+    pantsSaleCents: pantsSaleCents
   };
 });

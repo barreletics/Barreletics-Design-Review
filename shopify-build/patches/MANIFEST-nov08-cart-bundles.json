@@ -1,29 +1,31 @@
 {
   "name": "nov08-cart-drawer-bundle-preview",
-  "description": "Isolated theme patch: cart drawer + full cart bundle preview (feature flag default off). No settings_data.json replacement.",
+  "description": "Rebasable hunks only — append theme settings group; do not replace settings_data.json or full settings_schema baseline.",
   "alternate_projects_source": {
     "repository": "alternate-projects",
     "ref": "main",
     "commit": "ca0cd8af5a8256ed7d7af919959330650fe7f0b1",
-    "note": "Per docs/bots/BOOT.md rule 1 — theme numeric IDs live only in THEMES.md on that repo; this manifest never copies them."
+    "approved_mock": "approved_90da.html",
+    "note": "BOOT rule 1: theme numeric IDs only in alternate-projects THEMES.md"
   },
-  "target_scope": "Nov08 Cart + bundles draft only (former draft untouched)",
   "shopify_push_this_run": false,
-  "files": [
-    "assets/cart-bundle-promo.js",
-    "assets/cart-bundle-promo.css",
-    "assets/cart.js",
-    "config/settings_schema.json",
-    "layout/theme.liquid",
-    "sections/main-cart.liquid",
-    "snippets/cart-bundle-promo-config.liquid",
-    "snippets/cart-drawer.liquid",
-    "tests/cart-bundle-promo.test.js"
+  "hunks": [
+    { "path": "assets/cart-bundle-promo.js", "action": "add_or_replace" },
+    { "path": "assets/cart-bundle-promo.css", "action": "add_or_replace" },
+    { "path": "assets/cart.js", "action": "patch" },
+    { "path": "config/settings_schema.json", "action": "append_group_only", "group": "Cart bundle preview (Nov08)" },
+    { "path": "layout/theme.liquid", "action": "patch", "anchors": ["cart-bundle-promo-config", "cart-bundle-promo.js", "cart.js"] },
+    { "path": "sections/main-cart.liquid", "action": "add_or_replace" },
+    { "path": "sections/pdp-buy-box.liquid", "action": "patch", "note": "remove duplicate cart.js script_tag" },
+    { "path": "snippets/cart-bundle-promo-config.liquid", "action": "add_or_replace" },
+    { "path": "snippets/cart-drawer.liquid", "action": "patch" },
+    { "path": "tests/cart-bundle-promo.test.js", "action": "add_or_replace" }
   ],
   "deployment_prerequisites": [
-    "Parent agent: fresh theme pull / backup / parity on approved Nov08 draft before shopify theme push",
-    "Enable feature in Theme settings → Cart bundle preview (Nov08) after copy and eligibility strings verified against live catalog handles",
-    "Wire Shopify discount functions or codes separately — not included in this patch",
-    "Do not publish theme or change global prices from this PR"
+    "Parent: fresh target pull + backup parity on Nov08 Cart + bundles draft",
+    "Parent supplies alternate-projects source bundle (BOOT read failed in cloud)",
+    "Merge hunks onto fresh Shopify pull — never wholesale settings_schema/settings_data",
+    "Enable flag in theme editor after handle/variant needles verified",
+    "No publish / no checkout backend activation from this patch"
   ]
 }

@@ -16,7 +16,7 @@
 
   <aside class="cart-drawer__panel">
     <header class="cart-drawer__header">
-      <h2 class="cart-drawer__title">Your Cart</h2>
+      <h2 class="cart-drawer__title" id="cart-drawer-title">Your cart</h2>
       <button
         class="cart-drawer__close"
         data-cart-close
@@ -35,8 +35,6 @@
         Free shipping on orders over ${{ settings.free_shipping_threshold | default: 150 }}
       </p>
     </div>
-
-  <div id="cart-bundle-promo-mount" class="cart-drawer__bundle-promo" hidden></div>
 
     <div class="cart-drawer__body" id="cart-drawer-items">
       {% if cart.item_count == 0 %}
@@ -72,6 +70,7 @@
           </div>
         {% endfor %}
       {% endif %}
+      <div id="cart-bundle-promo-mount" class="cart-drawer__bundle-slot" hidden></div>
     </div>
 
     {% if cart.item_count > 0 %}
@@ -80,8 +79,13 @@
           <span>Subtotal</span>
           <span id="cart-subtotal">{{ cart.total_price | money }}</span>
         </div>
+        <div class="cart-drawer__estimated" id="cart-drawer-estimated-row" hidden>
+          <span>Estimated total</span>
+          <span id="cart-estimated-total"></span>
+        </div>
+        <p class="cart-drawer__ship-preview" id="cart-ship-preview-line" hidden></p>
         <a href="/cart" class="cart-drawer__view-cart">View Full Cart</a>
-        <a href="/checkout" class="cart-drawer__checkout btn btn--primary">Checkout</a>
+        <a href="/checkout" class="cart-drawer__checkout btn btn--primary">Check out</a>
       </footer>
     {% endif %}
   </aside>
@@ -160,10 +164,6 @@
   .cart-drawer__shipping-bar {
     padding: var(--space-3) var(--space-6);
     border-bottom: 1px solid var(--border-default);
-  }
-
-  .cart-drawer__bundle-promo:not([hidden]) {
-    flex-shrink: 0;
   }
 
   .cart-drawer__shipping-progress {
