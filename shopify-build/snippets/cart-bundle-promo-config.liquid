@@ -9,10 +9,13 @@
   assign _cnt = _l | append: 'count' | append: _r
   assign _unit = _l | append: 'unit' | append: _r
   assign _amt = _l | append: 'amount' | append: _r
-  assign default_pants_headline = 'Complete your set. Save ' | append: _pct | append: '% on yoga pants.'
-  assign default_pants_qual = 'Add ' | append: _cnt | append: ' more ' | append: _unit | append: ' of Performance Skins to qualify.'
+  assign default_footwear_offer = 'Buy 2+ Closed Sole pairs. Save ' | append: _pct | append: '%.'
+  assign default_pants_offer = 'Save ' | append: _pct | append: '% on one pair of yoga pants with 2+ Closed Sole pairs.'
+  assign default_pants_headline = default_pants_offer
+  assign default_pants_qual = 'Add 1 more Closed Sole pair for the ' | append: _pct | append: '% yoga-pants offer.'
   assign default_nudge = 'Add ' | append: _cnt | append: ' ' | append: _unit | append: '. Save ' | append: _pct | append: '.'
   assign default_savings = 'You save ' | append: _amt | append: '.'
+  assign default_preview_notice = "Preview only—offers aren't applied at checkout."
   assign default_pants_url = '/products/' | append: 'lightly-padded-knee-yoga-pant-black'
 %}
 <script id="cart-bundle-promo-config" type="application/json">
@@ -25,9 +28,12 @@
   "pantsMinPairs": {{ settings.cart_bundle_pants_min_pairs | default: 2 | json }},
   "pantsPercent": {{ settings.cart_bundle_pants_percent | default: 35 | json }},
   "pantsProposedPriceCents": {{ settings.cart_bundle_pants_proposed_price | default: 9800 | json }},
+  "footwearOfferTemplate": {{ settings.cart_bundle_footwear_offer_template | default: default_footwear_offer | json }},
+  "pantsOfferTemplate": {{ settings.cart_bundle_pants_offer_template | default: default_pants_offer | json }},
   "pantsHeadline": {{ settings.cart_bundle_pants_headline | default: default_pants_headline | json }},
   "pantsQualTemplate": {{ settings.cart_bundle_pants_qual_template | default: default_pants_qual | json }},
   "nudgeAddPairTemplate": {{ settings.cart_bundle_nudge_template | default: default_nudge | json }},
+  "previewNotice": {{ settings.cart_bundle_preview_notice | default: default_preview_notice | json }},
   "pantsProductTitle": {{ settings.cart_bundle_pant_product_title | default: 'Lightly Padded Knee Yoga Pant' | json }},
   "pantsImageUrl": {{ settings.cart_bundle_pant_image_url | default: 'https://cdn.shopify.com/s/files/1/0045/0612/4391/files/IMG_2914.jpg?v=1741040643' | json }},
   "pantsAddLabel": {{ settings.cart_bundle_pant_add_label | default: 'Add yoga pants' | json }},
@@ -36,7 +42,7 @@
   "pantsDefaultVariantId": {{ settings.cart_bundle_pant_variant_id | default: 0 | json }},
   "freeShippingThresholdCents": {{ settings.cart_bundle_free_ship_threshold | default: 15000 | json }},
   "savingsTemplate": {{ settings.cart_bundle_savings_template | default: default_savings | json }},
-  "previewDisclaimer": {{ settings.cart_bundle_preview_disclaimer | default: 'Preview estimate only. Your cart still uses live Shopify prices; checkout discounts are not applied by this theme preview.' | json }},
+  "previewDisclaimer": {{ settings.cart_bundle_preview_disclaimer | default: 'Cart subtotal and checkout are unchanged. These lines are illustrative savings math only.' | json }},
   "skinHandleNeedles": {{ settings.cart_bundle_skin_handles | default: 'closed-sole' | split: ',' | json }},
   "skinTitleNeedles": {{ settings.cart_bundle_skin_titles | default: 'Closed Sole,Performance Skin' | split: ',' | json }},
   "pantHandleNeedles": {{ settings.cart_bundle_pant_handles | default: 'pant,yoga-pant' | split: ',' | json }},

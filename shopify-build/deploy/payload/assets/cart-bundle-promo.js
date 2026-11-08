@@ -20,13 +20,17 @@
     pantsMinPairs: 2,
     pantsPercent: 35,
     pantsProposedPriceCents: 9800,
-    pantsHeadline: 'Complete your set. Save {{percent}}% on yoga pants.',
+    footwearOfferTemplate: 'Buy 2+ Closed Sole pairs. Save {{percent}}%.',
+    pantsOfferTemplate:
+      'Save {{percent}}% on one pair of yoga pants with 2+ Closed Sole pairs.',
+    pantsHeadline: 'Save {{percent}}% on one pair of yoga pants with 2+ Closed Sole pairs.',
     pantsQualTemplate:
-      'Add {{count}} more {{unit}} of Performance Skins to qualify.',
+      'Add 1 more Closed Sole pair for the {{percent}}% yoga-pants offer.',
     nudgeAddPairTemplate: 'Add {{count}} {{unit}}. Save {{percent}}%.',
     savingsTemplate: 'You save {{amount}}.',
+    previewNotice: "Preview only—offers aren't applied at checkout.",
     previewDisclaimer:
-      'Preview estimate only. Your cart still uses live Shopify prices; checkout discounts are not applied by this theme preview.',
+      'Cart subtotal and checkout are unchanged. These lines are illustrative savings math only.',
     pantsProductTitle: 'Lightly Padded Knee Yoga Pant',
     pantsImageUrl:
       'https://cdn.shopify.com/s/files/1/0045/0612/4391/files/IMG_2914.jpg?v=1741040643',
@@ -224,10 +228,24 @@
     var estimatedTotalCents = Math.max(0, subtotalCents - totalSavingsCents);
     var afterPairOnlyCents = Math.max(0, subtotalCents - pairSavingsCents);
 
-    var nudge = skin.quantity > 0 ? nudgeCopy(skin.quantity, config) : '';
+    var nudge =
+      config.pairPromoMode === 'future_tiers' && skin.quantity > 0
+        ? nudgeCopy(skin.quantity, config)
+        : '';
     var savingsLine =
       totalSavingsCents > 0
         ? fillTemplate(config.savingsTemplate, { amount: formatMoney(totalSavingsCents) })
+        : '';
+
+    var footwearPct =
+      config.pairPromoMode === 'live_2for15'
+        ? config.livePairPercent
+        : config.tierTwoPercent;
+    var footwearOfferLine =
+      skin.quantity > 0
+        ? fillTemplate(config.footwearOfferTemplate || 'Buy 2+ Closed Sole pairs. Save {{percent}}%.', {
+            percent: footwearPct
+          })
         : '';
 
     var showPantsOffer = skin.quantity >= 1 && pants.quantity === 0;
@@ -238,12 +256,14 @@
     if (pantsQualOnly) {
       var need = config.pantsMinPairs - skin.quantity;
       qualNote = fillTemplate(config.pantsQualTemplate, {
+        percent: config.pantsPercent,
         count: need,
         unit: need === 1 ? 'pair' : 'pairs'
       });
     }
 
-    var headline = fillTemplate(config.pantsHeadline, { percent: config.pantsPercent });
+    var pantsTemplate = config.pantsOfferTemplate || config.pantsHeadline;
+    var pantsOfferLine = fillTemplate(pantsTemplate, { percent: config.pantsPercent });
 
   var shippingGapCents = 0;
     var shippingEarned = false;
@@ -266,11 +286,14 @@
       subtotalCents: subtotalCents,
       estimatedTotalCents: estimatedTotalCents,
       nudge: nudge,
+      footwearOfferLine: footwearOfferLine,
+      previewNotice: config.previewNotice,
       savingsLine: savingsLine,
       showPantsOffer: showPantsOffer,
       pantsQualOnly: pantsQualOnly,
       pantsPickerVisible: pantsPickerVisible,
-      pantsHeadline: headline,
+      pantsOfferLine: pantsOfferLine,
+      pantsHeadline: pantsOfferLine,
       pantsQualNote: qualNote,
       pantsWasCents: config.pantsProposedPriceCents,
       pantsSaleCents: pantsSaleCents(config),
@@ -295,7 +318,13 @@
 
     var html =
       '<div class="cart-bundle-promo" data-cart-bundle-promo role="region" aria-label="Cart bundle preview — not checkout pricing">';
-    html += '<p class="cart-bundle-promo__label">Offer preview (not applied at checkout)</p>';
+    html +=
+      '<p class="cart-bundle-promo__notice">' + escapeHtml(result.previewNotice) + '</p>';
+
+    if (result.footwearOfferLine) {
+      html +=
+        '<p class="cart-bundle-promo__footwear-offer">' + escapeHtml(result.footwearOfferLine) + '</p>';
+    }
 
     if (result.nudge) {
       html += '<div class="cart-bundle-promo__progress">' + escapeHtml(result.nudge) + '</div>';
@@ -312,29 +341,30 @@
     if (result.showPantsOffer) {
       var cfg = result.config;
       html += '<div class="cart-bundle-promo__pants' + (result.pantsQualOnly ? ' is-qual-only' : '') + '">';
-      html += '<p class="cart-bundle-promo__pants-headline">' + escapeHtml(result.pantsHeadline) + '</p>';
+      html += '<p class="cart-bundle-promo__pants-headline">' + escapeHtml(result.pantsOfferLine) + '</p>';
       if (result.pantsQualNote) {
         html += '<p class="cart-bundle-promo__pants-qual">' + escapeHtml(result.pantsQualNote) + '</p>';
       }
+      html +=
+        '<div class="cart-bundle-promo__pants-row">' +
+        '<img src="' +
+        escapeHtml(cfg.pantsImageUrl) +
+        '" alt="" width="56" height="56" loading="lazy" class="cart-bundle-promo__pants-img" />' +
+        '<div class="cart-bundle-promo__pants-copy">' +
+        '<span class="cart-bundle-promo__pants-title">' +
+        escapeHtml(cfg.pantsProductTitle) +
+        '</span>' +
+        '</div>' +
+        '<div class="cart-bundle-promo__pants-prices">' +
+        '<span class="cart-bundle-promo__pants-was">' +
+        formatMoney(result.pantsWasCents) +
+        '</span>' +
+        '<strong class="cart-bundle-promo__pants-sale">' +
+        formatMoney(result.pantsSaleCents) +
+        ' <span class="cart-bundle-promo__preview-tag">preview</span></strong>' +
+        '</div></div>';
       if (result.pantsPickerVisible) {
         html +=
-          '<div class="cart-bundle-promo__pants-row">' +
-          '<img src="' +
-          escapeHtml(cfg.pantsImageUrl) +
-          '" alt="" width="56" height="56" loading="lazy" class="cart-bundle-promo__pants-img" />' +
-          '<div class="cart-bundle-promo__pants-copy">' +
-          '<span class="cart-bundle-promo__pants-title">' +
-          escapeHtml(cfg.pantsProductTitle) +
-          '</span>' +
-          '</div>' +
-          '<div class="cart-bundle-promo__pants-prices">' +
-          '<span class="cart-bundle-promo__pants-was">' +
-          formatMoney(result.pantsWasCents) +
-          '</span>' +
-          '<strong class="cart-bundle-promo__pants-sale">' +
-          formatMoney(result.pantsSaleCents) +
-          ' <span class="cart-bundle-promo__preview-tag">preview</span></strong>' +
-          '</div></div>' +
           '<div class="cart-bundle-promo__pants-picker" data-bundle-pants-picker hidden>' +
           '<div class="cart-bundle-promo__pants-selects" data-pants-selects></div>' +
           '<button type="button" class="cart-bundle-promo__pants-add" data-bundle-add-pant disabled>' +

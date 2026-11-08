@@ -44,9 +44,10 @@ test('future: 2 pairs — 10% savings $14.80 and tier-3 nudge', function () {
   assert.equal(r.shippingGapCents, 1680);
 });
 
-test('live: 1 pair nudge 15%, no savings', function () {
+test('live: 1 pair footwear offer line, no nudge, no savings', function () {
   var r = bundle.computeBundlePromo([skinItem(1, 7400)], LIVE, 7400);
-  assert.equal(r.nudge, 'Add 1 pair. Save 15%.');
+  assert.equal(r.nudge, '');
+  assert.equal(r.footwearOfferLine, 'Buy 2+ Closed Sole pairs. Save 15%.');
   assert.equal(r.totalSavingsCents, 0);
 });
 
@@ -61,13 +62,17 @@ test('pants offer qual-only at 1 pair', function () {
   assert.equal(r.showPantsOffer, true);
   assert.equal(r.pantsQualOnly, true);
   assert.equal(r.pantsPickerVisible, false);
+  assert.equal(r.pantsQualNote, 'Add 1 more Closed Sole pair for the 35% yoga-pants offer.');
 });
 
 test('pants picker at 2+ pairs with proposed $98 / 35%', function () {
   var r = bundle.computeBundlePromo([skinItem(2, 7400)], FUTURE, 14800);
   assert.equal(r.pantsPickerVisible, true);
   assert.equal(r.pantsSaleCents, 6370);
-  assert.equal(r.pantsHeadline, 'Complete your set. Save 35% on yoga pants.');
+  assert.equal(
+    r.pantsOfferLine,
+    'Save 35% on one pair of yoga pants with 2+ Closed Sole pairs.'
+  );
 });
 
 test('one pant in cart — one unit savings only', function () {
@@ -80,7 +85,10 @@ test('one pant in cart — one unit savings only', function () {
 test('percent edit updates headline and sale price', function () {
   var cfg = bundle.mergeConfig({ enabled: true, pantsPercent: 30, pantsProposedPriceCents: 10000 });
   var r = bundle.computeBundlePromo([skinItem(2, 7400)], cfg, 14800);
-  assert.equal(r.pantsHeadline, 'Complete your set. Save 30% on yoga pants.');
+  assert.equal(
+    r.pantsOfferLine,
+    'Save 30% on one pair of yoga pants with 2+ Closed Sole pairs.'
+  );
   assert.equal(bundle.pantsSaleCents(cfg), 7000);
 });
 
