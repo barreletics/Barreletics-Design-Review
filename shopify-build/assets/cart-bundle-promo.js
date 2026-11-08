@@ -31,7 +31,8 @@
     pantsImageUrl:
       'https://cdn.shopify.com/s/files/1/0045/0612/4391/files/IMG_2914.jpg?v=1741040643',
     pantsAddLabel: 'Add yoga pants',
-    pantsProductUrl: '',
+    pantsProductHandle: 'lightly-padded-knee-yoga-pant-black',
+    pantsProductUrl: '/products/lightly-padded-knee-yoga-pant-black',
     pantsDefaultVariantId: 0,
     freeShippingThresholdCents: 15000,
     skinHandleNeedles: ['closed-sole'],
@@ -327,7 +328,6 @@
           '<span class="cart-bundle-promo__pants-title">' +
           escapeHtml(cfg.pantsProductTitle) +
           '</span>' +
-          '<p class="cart-bundle-promo__pants-note">Preview variants — choose on product page.</p>' +
           '</div>' +
           '<div class="cart-bundle-promo__pants-prices">' +
           '<span class="cart-bundle-promo__pants-was">' +
@@ -336,28 +336,16 @@
           '<strong class="cart-bundle-promo__pants-sale">' +
           formatMoney(result.pantsSaleCents) +
           '</strong>' +
-          '</div></div>';
-        var variantId = parseInt(cfg.pantsDefaultVariantId, 10) || 0;
-        if (variantId > 0) {
-          html +=
-            '<button type="button" class="cart-bundle-promo__pants-add" data-bundle-add-pant data-variant-id="' +
-            variantId +
-            '">' +
-            escapeHtml(cfg.pantsAddLabel) +
-            '</button>';
-        } else if (cfg.pantsProductUrl) {
-          html +=
-            '<a class="cart-bundle-promo__pants-add" href="' +
-            escapeHtml(cfg.pantsProductUrl) +
-            '">' +
-            escapeHtml(cfg.pantsAddLabel) +
-            '</a>';
-        } else {
-          html +=
-            '<button type="button" class="cart-bundle-promo__pants-add" disabled>' +
-            escapeHtml(cfg.pantsAddLabel) +
-            '</button>';
-        }
+          '</div></div>' +
+          '<div class="cart-bundle-promo__pants-picker" data-bundle-pants-picker hidden>' +
+          '<div class="cart-bundle-promo__pants-selects" data-pants-selects></div>' +
+          '<button type="button" class="cart-bundle-promo__pants-add" data-bundle-add-pant disabled>' +
+          escapeHtml(cfg.pantsAddLabel) +
+          '</button>' +
+          '<a class="cart-bundle-promo__pants-link" data-pants-fallback href="' +
+          escapeHtml(cfg.pantsProductUrl || '/products/' + (cfg.pantsProductHandle || '')) +
+          '">Choose on product page</a>' +
+          '</div>';
       }
       html += '</div>';
     }
@@ -377,7 +365,123 @@
     }
     container.removeAttribute('hidden');
     container.innerHTML = renderPromoHtml(result);
+    if (result.pantsPickerVisible) {
+      initPantsPicker(container, result.config);
+    }
     return result;
+  }
+
+  function resolveVariantFromOptions(variants, selected) {
+    if (!variants || !variants.length) return null;
+    for (var i = 0; i < variants.length; i++) {
+      var v = variants[i];
+      var match = true;
+      if (selected.option1 !== undefined && v.option1 !== selected.option1) match = false;
+      if (selected.option2 !== undefined && v.option2 !== selected.option2) match = false;
+      if (selected.option3 !== undefined && v.option3 !== selected.option3) match = false;
+      if (match) return v;
+    }
+    return null;
+  }
+
+  function initPantsPicker(root, config) {
+    var block = root.querySelector('[data-bundle-pants-picker]');
+    if (!block) return;
+    var selectsWrap = block.querySelector('[data-pants-selects]');
+    var addBtn = block.querySelector('[data-bundle-add-pant]');
+    var fallback = block.querySelector('[data-pants-fallback]');
+    var handle = config.pantsProductHandle;
+    if (!handle) {
+      block.hidden = false;
+      return;
+    }
+
+    var overrideId = parseInt(config.pantsDefaultVariantId, 10) || 0;
+    if (overrideId > 0 && addBtn) {
+      block.hidden = false;
+      addBtn.disabled = false;
+      addBtn.setAttribute('data-variant-id', String(overrideId));
+      if (selectsWrap) selectsWrap.innerHTML = '<p class="cart-bundle-promo__pants-note">Using theme default variant — change in theme settings.</p>';
+      return;
+    }
+
+    fetch('/products/' + encodeURIComponent(handle) + '.js', {
+      headers: { Accept: 'application/json' }
+    })
+      .then(function (res) {
+        if (!res.ok) throw new Error('product-js-failed');
+        return res.json();
+      })
+      .then(function (data) {
+        var product = data.product || data;
+        var variants = product.variants || [];
+        if (!variants.length) throw new Error('no-variants');
+        var options = product.options || [];
+        block.hidden = false;
+        if (fallback) fallback.hidden = true;
+        selectsWrap.innerHTML = '';
+        var selected = {};
+
+        options.forEach(function (opt, idx) {
+          var name = opt.name;
+          var position = opt.position || idx + 1;
+          var key = 'option' + position;
+          var sel = document.createElement('select');
+          sel.className = 'cart-bundle-promo__pants-select';
+          sel.setAttribute('aria-label', name);
+          sel.dataset.optionKey = key;
+          var placeholder = document.createElement('option');
+          placeholder.value = '';
+          placeholder.textContent = name;
+          placeholder.disabled = true;
+          placeholder.selected = true;
+          sel.appendChild(placeholder);
+          (opt.values || []).forEach(function (val) {
+            var o = document.createElement('option');
+            o.value = val;
+            o.textContent = val;
+            sel.appendChild(o);
+          });
+          sel.addEventListener('change', function () {
+            selected[key] = sel.value || undefined;
+            updatePantsAddButton(addBtn, variants, selected);
+          });
+          selectsWrap.appendChild(sel);
+        });
+
+        updatePantsAddButton(addBtn, variants, selected);
+      })
+      .catch(function () {
+        block.hidden = false;
+        if (selectsWrap) {
+          selectsWrap.innerHTML =
+            '<p class="cart-bundle-promo__pants-note">Could not load sizes here. Use product page.</p>';
+        }
+        if (addBtn) addBtn.hidden = true;
+        if (fallback) fallback.hidden = false;
+      });
+  }
+
+  function updatePantsAddButton(btn, variants, selected) {
+    if (!btn) return;
+    var need = {};
+    var keys = Object.keys(selected);
+    if (keys.length === 0) {
+      btn.disabled = true;
+      btn.removeAttribute('data-variant-id');
+      return;
+    }
+    keys.forEach(function (k) {
+      if (selected[k]) need[k] = selected[k];
+    });
+    var resolved = resolveVariantFromOptions(variants, need);
+    if (resolved && resolved.id) {
+      btn.disabled = false;
+      btn.setAttribute('data-variant-id', String(resolved.id));
+    } else {
+      btn.disabled = true;
+      btn.removeAttribute('data-variant-id');
+    }
   }
 
   return {
@@ -386,6 +490,8 @@
     computeBundlePromo: computeBundlePromo,
     renderPromoHtml: renderPromoHtml,
     mountPromo: mountPromo,
+    initPantsPicker: initPantsPicker,
+    resolveVariantFromOptions: resolveVariantFromOptions,
     isClosedSoleSkin: isClosedSoleSkin,
     isEligiblePant: isEligiblePant,
     pantsSaleCents: pantsSaleCents

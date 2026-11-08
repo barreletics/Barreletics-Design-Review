@@ -96,6 +96,15 @@ test('open sole excluded from pair count', function () {
   assert.equal(r.showPanel, false);
 });
 
+test('resolveVariantFromOptions matches size and color', function () {
+  var variants = [
+    { id: 1, option1: 'Small (2-4)', option2: 'Black' },
+    { id: 2, option1: 'Medium (6-8)', option2: 'Black' }
+  ];
+  var v = bundle.resolveVariantFromOptions(variants, { option1: 'Medium (6-8)', option2: 'Black' });
+  assert.equal(v.id, 2);
+});
+
 test('HTML render includes progress, savings, pants prices', function () {
   var r = bundle.computeBundlePromo([skinItem(2, 7400)], FUTURE, 14800);
   var html = bundle.renderPromoHtml(r);

@@ -378,6 +378,7 @@
       if (btn.dataset.bound) return;
       btn.dataset.bound = 'true';
       btn.addEventListener('click', function () {
+        if (btn.disabled) return;
         var vid = parseInt(btn.getAttribute('data-variant-id'), 10);
         if (!vid) return;
         addToCart(vid, 1);
