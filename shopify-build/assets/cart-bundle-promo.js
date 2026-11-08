@@ -12,6 +12,8 @@
 
   var DEFAULTS = {
     enabled: false,
+    addPairOfferEnabled: true,
+    pantsOfferEnabled: true,
     pairPromoMode: 'live_2for15',
     livePairPercent: 15,
     tierTwoPercent: 10,
@@ -515,6 +517,11 @@
     return Math.round(config.pantsProposedPriceCents * (1 - config.pantsPercent / 100));
   }
 
+  function isOfferToggleOn(config, key) {
+    if (!config || !Object.prototype.hasOwnProperty.call(config, key)) return true;
+    return config[key] !== false;
+  }
+
   function computeBundlePromoControl(cartItems, rawConfig, cartTotalCents) {
     var config = controlConfigForArm(rawConfig);
     var items = cartItems || [];
@@ -562,7 +569,8 @@
         ? fillTemplate(config.savingsTemplate, { amount: formatMoney(totalSavingsCents) })
         : '';
 
-    var showPantsOffer = skin.quantity >= 1 && pants.quantity === 0;
+    var pantsOn = isOfferToggleOn(config, 'pantsOfferEnabled');
+    var showPantsOffer = pantsOn && skin.quantity >= 1 && pants.quantity === 0;
     var pantsQualOnly = showPantsOffer && skin.quantity < config.pantsMinPairs;
     var pantsPickerVisible = showPantsOffer && !pantsQualOnly;
 
@@ -656,8 +664,10 @@
         : '';
     var footwearPct =
       config.pairPromoMode === 'live_2for15' ? config.livePairPercent : config.tierTwoPercent;
-    var showAddPairStage = skin.quantity === 1 && pants.quantity === 0;
-    var showPantsOffer = skin.quantity >= config.pantsMinPairs && pants.quantity === 0;
+    var addPairOn = isOfferToggleOn(config, 'addPairOfferEnabled');
+    var pantsOn = isOfferToggleOn(config, 'pantsOfferEnabled');
+    var showAddPairStage = addPairOn && skin.quantity === 1 && pants.quantity === 0;
+    var showPantsOffer = pantsOn && skin.quantity >= config.pantsMinPairs && pants.quantity === 0;
     var pantsPickerVisible = showPantsOffer;
     var pantsQualOnly = false;
 
@@ -693,9 +703,11 @@
       }
     }
 
+    var showPanel = skin.quantity > 0 && (showAddPairStage || showPantsOffer);
+
     return {
       enabled: true,
-      showPanel: skin.quantity > 0,
+      showPanel: showPanel,
       offerArm: 'variant',
       pairCount: skin.quantity,
       pantCount: pants.quantity,
