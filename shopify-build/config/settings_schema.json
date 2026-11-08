@@ -507,10 +507,45 @@
         "info": "Used only for preview savings math (e.g. 9800 = $98.00 → $63.70 at 35%). Live catalog price (e.g. $89) is not modified."
       },
       {
+        "type": "select",
+        "id": "cart_bundle_draft_display_mode",
+        "label": "Draft display mode",
+        "default": "qualification_test",
+        "options": [
+          { "value": "qualification_test", "label": "Qualification test (code-at-checkout messaging)" },
+          { "value": "simulation", "label": "Simulation (explicit simulation labels)" }
+        ],
+        "info": "Theme never auto-applies discounts. qualification_test shows savings when cart qualifies; optional /discount/ links only when codes are set below."
+      },
+      {
         "type": "text",
         "id": "cart_bundle_preview_notice",
-        "label": "Preview notice (shown at 1+ pairs)",
-        "default": "Preview only—offers aren't applied at checkout."
+        "label": "Draft test notice (shown at 1+ pairs)",
+        "default": "Draft test: savings show when cart qualifies. Codes are not auto-applied—use checkout or an offer link below when configured."
+      },
+      {
+        "type": "text",
+        "id": "cart_bundle_footwear_discount_code",
+        "label": "Footwear discount code (optional, verified in Admin only)",
+        "info": "Leave blank until parent confirms code. When set and cart has 2+ Closed Sole pairs, shows optional /discount/CODE link (customer must click)."
+      },
+      {
+        "type": "text",
+        "id": "cart_bundle_pants_discount_code",
+        "label": "Yoga pants discount code (optional, verified in Admin only)",
+        "info": "Leave blank until parent confirms 35% pants code exists and combines as expected."
+      },
+      {
+        "type": "text",
+        "id": "cart_bundle_footwear_code_link_label",
+        "label": "Footwear code link label",
+        "default": "Apply footwear offer code at checkout"
+      },
+      {
+        "type": "text",
+        "id": "cart_bundle_pants_code_link_label",
+        "label": "Pants code link label",
+        "default": "Apply yoga pants offer code at checkout"
       },
       {
         "type": "text",
@@ -536,7 +571,7 @@
         "type": "text",
         "id": "cart_bundle_pants_qual_template",
         "label": "Pants qualify note (1 Closed Sole pair)",
-        "default": "Add 1 more Closed Sole pair for the {{percent}}% yoga-pants offer."
+        "default": "Add 1 more Closed Sole pair for {{percent}}% off yoga pants"
       },
       {
         "type": "text",

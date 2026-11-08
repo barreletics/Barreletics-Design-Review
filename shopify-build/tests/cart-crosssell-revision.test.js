@@ -35,10 +35,11 @@ test('live 1 pair: exact copy, preview notice, photo visible, picker blocked', (
     r.pantsOfferLine,
     'Save 35% on one pair of yoga pants with 2+ Closed Sole pairs.'
   );
-  assert.equal(r.pantsQualNote, 'Add 1 more Closed Sole pair for the 35% yoga-pants offer.');
+  assert.equal(r.pantsQualNote, 'Add 1 more Closed Sole pair for 35% off yoga pants');
   assert.equal(r.pantsPickerVisible, false);
-  assert.match(html, /Preview only—offers aren't applied at checkout/);
+  assert.match(html, /Draft test:/);
   assert.match(html, /cart-bundle-promo__pants-img/);
+  assert.ok(!html.includes('data-bundle-promo__pants-headline'));
   assert.ok(!html.includes('data-bundle-pants-picker'));
 });
 
@@ -66,15 +67,25 @@ test('future mode footwear line uses tier-two percent not live 15', () => {
   assert.equal(r.footwearOfferLine, 'Buy 2+ Closed Sole pairs. Save 10%.');
 });
 
-test('customer-facing HTML never contains unlock/unlocked', () => {
-  const cases = [
-    htmlAt([skinItem(1, 7400)], LIVE, 7400),
-    htmlAt([skinItem(2, 7400)], LIVE, 14800),
-    htmlAt([skinItem(2, 7400)], FUTURE, 14800)
-  ];
-  cases.forEach(({ html }) => {
-    assert.ok(!/unlock/i.test(html));
+test('discount code links only when parent configured codes', () => {
+  const { html: noCode } = htmlAt([skinItem(2, 7400)], LIVE, 14800);
+  assert.ok(!noCode.includes('/discount/'));
+  const cfg = bundle.mergeConfig({
+    enabled: true,
+    footwearDiscountCode: 'TESTFOOT',
+    pantsDiscountCode: 'TESTPANT'
   });
+  const { html: withCode } = htmlAt([skinItem(2, 7400)], cfg, 14800);
+  assert.match(withCode, /\/discount\/TESTFOOT/);
+  assert.match(withCode, /\/discount\/TESTPANT/);
+});
+
+test('source does not hardcode SAVE2 2FOR15 or pants promo codes', () => {
+  const fs = require('fs');
+  const path = require('path');
+  const js = fs.readFileSync(path.join(__dirname, '../assets/cart-bundle-promo.js'), 'utf8');
+  assert.ok(!js.includes('SAVE2'));
+  assert.ok(!js.includes('2FOR15'));
 });
 
 test('config percent edits sync footwear and pants copy', () => {

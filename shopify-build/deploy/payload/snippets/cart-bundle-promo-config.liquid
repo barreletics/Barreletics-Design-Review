@@ -12,10 +12,11 @@
   assign default_footwear_offer = 'Buy 2+ Closed Sole pairs. Save ' | append: _pct | append: '%.'
   assign default_pants_offer = 'Save ' | append: _pct | append: '% on one pair of yoga pants with 2+ Closed Sole pairs.'
   assign default_pants_headline = default_pants_offer
-  assign default_pants_qual = 'Add 1 more Closed Sole pair for the ' | append: _pct | append: '% yoga-pants offer.'
+  assign default_pants_qual = 'Add 1 more Closed Sole pair for ' | append: _pct | append: '% off yoga pants'
+  assign default_draft_notice = 'Draft test: savings show when cart qualifies. Codes are not auto-applied—use checkout or an offer link below when configured.'
   assign default_nudge = 'Add ' | append: _cnt | append: ' ' | append: _unit | append: '. Save ' | append: _pct | append: '.'
   assign default_savings = 'You save ' | append: _amt | append: '.'
-  assign default_preview_notice = "Preview only—offers aren't applied at checkout."
+  assign default_preview_notice = default_draft_notice
   assign default_pants_url = '/products/' | append: 'lightly-padded-knee-yoga-pant-black'
 %}
 <script id="cart-bundle-promo-config" type="application/json">
@@ -33,7 +34,12 @@
   "pantsHeadline": {{ settings.cart_bundle_pants_headline | default: default_pants_headline | json }},
   "pantsQualTemplate": {{ settings.cart_bundle_pants_qual_template | default: default_pants_qual | json }},
   "nudgeAddPairTemplate": {{ settings.cart_bundle_nudge_template | default: default_nudge | json }},
+  "draftDisplayMode": {{ settings.cart_bundle_draft_display_mode | default: 'qualification_test' | json }},
   "previewNotice": {{ settings.cart_bundle_preview_notice | default: default_preview_notice | json }},
+  "footwearDiscountCode": {{ settings.cart_bundle_footwear_discount_code | default: '' | json }},
+  "pantsDiscountCode": {{ settings.cart_bundle_pants_discount_code | default: '' | json }},
+  "footwearCodeLinkLabel": {{ settings.cart_bundle_footwear_code_link_label | default: 'Apply footwear offer code at checkout' | json }},
+  "pantsCodeLinkLabel": {{ settings.cart_bundle_pants_code_link_label | default: 'Apply yoga pants offer code at checkout' | json }},
   "pantsProductTitle": {{ settings.cart_bundle_pant_product_title | default: 'Lightly Padded Knee Yoga Pant' | json }},
   "pantsImageUrl": {{ settings.cart_bundle_pant_image_url | default: 'https://cdn.shopify.com/s/files/1/0045/0612/4391/files/IMG_2914.jpg?v=1741040643' | json }},
   "pantsAddLabel": {{ settings.cart_bundle_pant_add_label | default: 'Add yoga pants' | json }},

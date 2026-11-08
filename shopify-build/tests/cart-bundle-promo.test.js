@@ -62,7 +62,7 @@ test('pants offer qual-only at 1 pair', function () {
   assert.equal(r.showPantsOffer, true);
   assert.equal(r.pantsQualOnly, true);
   assert.equal(r.pantsPickerVisible, false);
-  assert.equal(r.pantsQualNote, 'Add 1 more Closed Sole pair for the 35% yoga-pants offer.');
+  assert.equal(r.pantsQualNote, 'Add 1 more Closed Sole pair for 35% off yoga pants');
 });
 
 test('pants picker at 2+ pairs with proposed $98 / 35%', function () {

@@ -24,13 +24,18 @@
     pantsOfferTemplate:
       'Save {{percent}}% on one pair of yoga pants with 2+ Closed Sole pairs.',
     pantsHeadline: 'Save {{percent}}% on one pair of yoga pants with 2+ Closed Sole pairs.',
-    pantsQualTemplate:
-      'Add 1 more Closed Sole pair for the {{percent}}% yoga-pants offer.',
+    pantsQualTemplate: 'Add 1 more Closed Sole pair for {{percent}}% off yoga pants',
     nudgeAddPairTemplate: 'Add {{count}} {{unit}}. Save {{percent}}%.',
     savingsTemplate: 'You save {{amount}}.',
-    previewNotice: "Preview only—offers aren't applied at checkout.",
+    draftDisplayMode: 'qualification_test',
+    previewNotice:
+      'Draft test: savings show when cart qualifies. Codes are not auto-applied—use checkout or an offer link below when configured.',
     previewDisclaimer:
-      'Cart subtotal and checkout are unchanged. These lines are illustrative savings math only.',
+      'Theme does not change cart prices. Savings lines are estimates unless a configured discount link is used.',
+    footwearDiscountCode: '',
+    pantsDiscountCode: '',
+    footwearCodeLinkLabel: 'Apply footwear offer code at checkout',
+    pantsCodeLinkLabel: 'Apply yoga pants offer code at checkout',
     pantsProductTitle: 'Lightly Padded Knee Yoga Pant',
     pantsImageUrl:
       'https://cdn.shopify.com/s/files/1/0045/0612/4391/files/IMG_2914.jpg?v=1741040643',
@@ -264,6 +269,12 @@
 
     var pantsTemplate = config.pantsOfferTemplate || config.pantsHeadline;
     var pantsOfferLine = fillTemplate(pantsTemplate, { percent: config.pantsPercent });
+    var isQualTest = config.draftDisplayMode === 'qualification_test';
+    var footwearCode = String(config.footwearDiscountCode || '').trim();
+    var pantsCode = String(config.pantsDiscountCode || '').trim();
+    var showFootwearCodeLink = isQualTest && footwearCode && skin.quantity >= 2;
+    var showPantsCodeLink =
+      isQualTest && pantsCode && skin.quantity >= config.pantsMinPairs && pants.quantity === 0;
 
   var shippingGapCents = 0;
     var shippingEarned = false;
@@ -288,6 +299,12 @@
       nudge: nudge,
       footwearOfferLine: footwearOfferLine,
       previewNotice: config.previewNotice,
+      draftDisplayMode: config.draftDisplayMode,
+      isQualificationTest: isQualTest,
+      showFootwearCodeLink: showFootwearCodeLink,
+      showPantsCodeLink: showPantsCodeLink,
+      footwearDiscountCode: footwearCode,
+      pantsDiscountCode: pantsCode,
       savingsLine: savingsLine,
       showPantsOffer: showPantsOffer,
       pantsQualOnly: pantsQualOnly,
@@ -305,6 +322,19 @@
     };
   }
 
+  function sanitizeDiscountCode(code) {
+    var c = String(code || '').trim();
+    if (!c || !/^[A-Za-z0-9_-]+$/.test(c)) return '';
+    return c;
+  }
+
+  function discountLink(code, redirectPath) {
+    var safe = sanitizeDiscountCode(code);
+    if (!safe) return '';
+    var redir = redirectPath || '/cart';
+    return '/discount/' + encodeURIComponent(safe) + '?redirect=' + encodeURIComponent(redir);
+  }
+
   function escapeHtml(str) {
     return String(str)
       .replace(/&/g, '&amp;')
@@ -316,8 +346,10 @@
   function renderPromoHtml(result) {
     if (!result || !result.showPanel) return '';
 
+    var cfg = result.config;
+    var simMode = !result.isQualificationTest;
     var html =
-      '<div class="cart-bundle-promo" data-cart-bundle-promo role="region" aria-label="Cart bundle preview — not checkout pricing">';
+      '<div class="cart-bundle-promo" data-cart-bundle-promo role="region" aria-label="Cart bundle offer draft test">';
     html +=
       '<p class="cart-bundle-promo__notice">' + escapeHtml(result.previewNotice) + '</p>';
 
@@ -331,17 +363,30 @@
     }
 
     if (result.savingsLine) {
+      html += '<div class="cart-bundle-promo__savings">';
+      if (simMode) {
+        html += '<span class="cart-bundle-promo__preview-tag">Simulation</span> ';
+      }
+      html += '<span>' + escapeHtml(result.savingsLine) + '</span></div>';
+    }
+
+    if (result.showFootwearCodeLink) {
+      var fwHref = discountLink(result.footwearDiscountCode, '/cart');
       html +=
-        '<div class="cart-bundle-promo__savings"><span class="cart-bundle-promo__preview-tag">Preview</span> ' +
-        '<span>' +
-        escapeHtml(result.savingsLine) +
-        '</span></div>';
+        '<p class="cart-bundle-promo__code-offer"><a class="cart-bundle-promo__code-link" href="' +
+        escapeHtml(fwHref) +
+        '">' +
+        escapeHtml(cfg.footwearCodeLinkLabel) +
+        ' (' +
+        escapeHtml(result.footwearDiscountCode) +
+        ')</a></p>';
     }
 
     if (result.showPantsOffer) {
-      var cfg = result.config;
       html += '<div class="cart-bundle-promo__pants' + (result.pantsQualOnly ? ' is-qual-only' : '') + '">';
-      html += '<p class="cart-bundle-promo__pants-headline">' + escapeHtml(result.pantsOfferLine) + '</p>';
+      if (!result.pantsQualOnly) {
+        html += '<p class="cart-bundle-promo__pants-headline">' + escapeHtml(result.pantsOfferLine) + '</p>';
+      }
       if (result.pantsQualNote) {
         html += '<p class="cart-bundle-promo__pants-qual">' + escapeHtml(result.pantsQualNote) + '</p>';
       }
@@ -361,8 +406,20 @@
         '</span>' +
         '<strong class="cart-bundle-promo__pants-sale">' +
         formatMoney(result.pantsSaleCents) +
-        ' <span class="cart-bundle-promo__preview-tag">preview</span></strong>' +
+        (simMode ? ' <span class="cart-bundle-promo__preview-tag">simulation</span>' : '') +
+        '</strong>' +
         '</div></div>';
+      if (result.showPantsCodeLink) {
+        var ptHref = discountLink(result.pantsDiscountCode, '/cart');
+        html +=
+          '<p class="cart-bundle-promo__code-offer"><a class="cart-bundle-promo__code-link" href="' +
+          escapeHtml(ptHref) +
+          '">' +
+          escapeHtml(cfg.pantsCodeLinkLabel) +
+          ' (' +
+          escapeHtml(result.pantsDiscountCode) +
+          ')</a></p>';
+      }
       if (result.pantsPickerVisible) {
         html +=
           '<div class="cart-bundle-promo__pants-picker" data-bundle-pants-picker hidden>' +
