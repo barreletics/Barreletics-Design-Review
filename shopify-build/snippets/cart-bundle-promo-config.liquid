@@ -1,0 +1,24 @@
+{% comment %}
+  Injects cart bundle preview config for cart-bundle-promo.js (feature off by default).
+{% endcomment %}
+<script id="cart-bundle-promo-config" type="application/json">
+{
+  "enabled": {{ settings.cart_bundle_promo_enabled | default: false | json }},
+  "pairPromoMode": {{ settings.cart_bundle_pair_mode | default: 'live_2for15' | json }},
+  "livePairPercent": {{ settings.cart_bundle_live_pair_percent | default: 15 | json }},
+  "tierTwoPercent": {{ settings.cart_bundle_tier_two_percent | default: 10 | json }},
+  "tierThreePlusPercent": {{ settings.cart_bundle_tier_three_plus_percent | default: 15 | json }},
+  "pantsMinPairs": {{ settings.cart_bundle_pants_min_pairs | default: 2 | json }},
+  "pantsPercent": {{ settings.cart_bundle_pants_percent | default: 35 | json }},
+  "pantsProposedPriceCents": {{ settings.cart_bundle_pants_proposed_price | default: 9800 | json }},
+  "pantsHeadline": {{ settings.cart_bundle_pants_headline | default: 'Complete your set. Save 35% on yoga pants.' | json }},
+  "nudgeAddPairTemplate": {{ settings.cart_bundle_nudge_template | default: 'Add 1 pair. Save {{percent}}%.' | json }},
+  "savingsTemplate": {{ settings.cart_bundle_savings_template | default: 'You save {{amount}}.' | json }},
+  "previewDisclaimer": {{ settings.cart_bundle_preview_disclaimer | default: 'Preview estimate only. Your cart still uses live Shopify prices; checkout discounts are not applied by this theme preview.' | json }},
+  "skinHandleNeedles": {{ settings.cart_bundle_skin_handles | default: 'closed-sole' | split: ',' | json }},
+  "skinTitleNeedles": {{ settings.cart_bundle_skin_titles | default: 'Closed Sole,Performance Skin' | split: ',' | json }},
+  "pantHandleNeedles": {{ settings.cart_bundle_pant_handles | default: 'pant,yoga-pant' | split: ',' | json }},
+  "pantTitleNeedles": {{ settings.cart_bundle_pant_titles | default: 'Yoga Pant,Pant' | split: ',' | json }},
+  "skinRequireClosedSole": {{ settings.cart_bundle_require_closed_sole | default: true | json }}
+}
+</script>

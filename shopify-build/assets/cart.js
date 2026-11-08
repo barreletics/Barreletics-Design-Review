@@ -9,6 +9,41 @@
 
   var FREE_SHIPPING_THRESHOLD = 15000; // $150 in cents
   var liveRegion;
+  var bundleConfig = null;
+
+  function readBundleConfig() {
+    if (bundleConfig) return bundleConfig;
+    var el = document.getElementById('cart-bundle-promo-config');
+    if (!el || !el.textContent) return null;
+    try {
+      bundleConfig = JSON.parse(el.textContent);
+    } catch (e) {
+      bundleConfig = null;
+    }
+    return bundleConfig;
+  }
+
+  function updateBundlePromo(cart) {
+    if (!window.BarreleticsCartBundle) return;
+    var cfg = readBundleConfig();
+    var mount = document.getElementById('cart-bundle-promo-mount');
+    if (mount) {
+      window.BarreleticsCartBundle.mountPromo(mount, cart.items, cfg);
+    }
+    var pageMount = document.getElementById('cart-page-bundle-promo');
+    if (pageMount) {
+      var result = window.BarreleticsCartBundle.mountPromo(pageMount, cart.items, cfg);
+      var est = document.getElementById('cart-page-estimated-savings');
+      if (est) {
+        if (result && result.showPanel && result.totalSavingsCents > 0) {
+          est.hidden = false;
+          est.querySelector('[data-estimated-savings]').textContent = formatMoney(result.totalSavingsCents);
+        } else {
+          est.hidden = true;
+        }
+      }
+    }
+  }
 
   function init() {
     liveRegion = document.createElement('div');
@@ -42,6 +77,7 @@
       renderDrawer(cart);
       updateCartCount(cart.item_count);
       announce('Item added to cart');
+      dispatchCartItemAdded(cart);
       openDrawer();
       return cart;
     });
@@ -68,6 +104,7 @@
       } else {
         announce('Cart updated');
       }
+      dispatchCartUpdated(cart);
       return cart;
     });
   }
@@ -109,7 +146,7 @@
       itemsContainer.innerHTML =
         '<div class="cart-drawer__empty">' +
           '<p>Your cart is empty</p>' +
-          '<a href="/collections/grippy-shoes" class="btn btn--primary">Shop Grippy Shoes</a>' +
+          '<a href="/collections/closed-sole" class="btn btn--primary">Shop Performance Skins</a>' +
         '</div>';
       if (footer) footer.style.display = 'none';
     } else {
@@ -144,7 +181,29 @@
     }
 
     updateShippingBar(cart.total_price);
+    updateBundlePromo(cart);
     bindDrawerControls();
+  }
+
+  function dispatchCartItemAdded(cart) {
+    if (!cart || !cart.items || !cart.items.length) return;
+    var last = cart.items[cart.items.length - 1];
+    document.dispatchEvent(
+      new CustomEvent('cart:item-added', {
+        detail: {
+          id: last.variant_id,
+          sku: last.sku,
+          title: last.product_title || last.title,
+          variant_title: last.variant_title,
+          price: last.price,
+          quantity: last.quantity
+        }
+      })
+    );
+  }
+
+  function dispatchCartUpdated(cart) {
+    document.dispatchEvent(new CustomEvent('cart:updated', { detail: { cart: cart } }));
   }
 
   function updateShippingBar(totalCents) {

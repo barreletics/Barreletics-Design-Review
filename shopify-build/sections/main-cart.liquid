@@ -1,0 +1,155 @@
+{% comment %}
+  Full cart page (drawer remains primary). Bundle promo block mirrors cart drawer preview.
+{% endcomment %}
+
+<section class="cart-page section" id="main-cart" data-section-type="main-cart">
+  <div class="cart-page__inner page-width">
+    <h1 class="cart-page__title">Your cart</h1>
+
+    {% if cart.item_count == 0 %}
+      <div class="cart-page__empty">
+        <p>Your cart is empty</p>
+        <a href="/collections/closed-sole" class="btn btn--primary">Shop Performance Skins</a>
+      </div>
+    {% else %}
+      <div id="cart-page-bundle-promo" hidden></div>
+
+      <form action="{{ routes.cart_url }}" method="post" id="cart-form" class="cart-page__form">
+        <div class="cart-page__items" id="cart-page-items">
+          {% for item in cart.items %}
+            <div class="cart-page__item" data-line-key="{{ item.key }}">
+              <a href="{{ item.url }}" class="cart-page__item-img">
+                <img
+                  src="{{ item.image | image_url: width: 160 }}"
+                  alt="{{ item.title | escape }}"
+                  width="96"
+                  height="96"
+                  loading="lazy"
+                >
+              </a>
+              <div class="cart-page__item-details">
+                <a href="{{ item.url }}" class="cart-page__item-title">{{ item.product.title }}</a>
+                <p class="cart-page__item-variant">{{ item.variant.title }}</p>
+                <div class="cart-page__item-qty">
+                  <label class="visually-hidden" for="qty-{{ forloop.index }}">Quantity</label>
+                  <input
+                    id="qty-{{ forloop.index }}"
+                    type="number"
+                    name="updates[]"
+                    value="{{ item.quantity }}"
+                    min="0"
+                    data-qty-input
+                  >
+                </div>
+              </div>
+              <span class="cart-page__item-price">{{ item.final_line_price | money }}</span>
+            </div>
+          {% endfor %}
+        </div>
+
+        <div class="cart-page__summary">
+          <div class="cart-page__subtotal">
+            <span>Subtotal</span>
+            <span id="cart-page-subtotal">{{ cart.total_price | money }}</span>
+          </div>
+          <p class="cart-page__note">Shipping and discounts calculated at checkout.</p>
+          <p id="cart-page-estimated-savings" class="cart-page__estimated-total" hidden>
+            <span>Preview bundle savings</span>
+            <strong data-estimated-savings></strong>
+          </p>
+          <button type="submit" name="checkout" class="btn btn--primary cart-page__checkout" data-checkout-button>
+            Checkout
+          </button>
+        </div>
+      </form>
+    {% endif %}
+  </div>
+</section>
+
+{{ 'cart-bundle-promo.css' | asset_url | stylesheet_tag }}
+
+<style>
+  .cart-page__inner {
+    max-width: var(--page-width, 720px);
+    margin: 0 auto;
+    padding: var(--space-8) var(--space-6);
+  }
+
+  .cart-page__title {
+    font-size: var(--text-2xl);
+    margin: 0 0 var(--space-6);
+  }
+
+  .cart-page__item {
+    display: grid;
+    grid-template-columns: 96px 1fr auto;
+    gap: var(--space-4);
+    padding: var(--space-4) 0;
+    border-bottom: 1px solid var(--border-default);
+  }
+
+  .cart-page__item-title {
+    font-weight: var(--weight-semibold);
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  .cart-page__item-variant {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    margin: var(--space-1) 0;
+  }
+
+  .cart-page__summary {
+    margin-top: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .cart-page__subtotal {
+    display: flex;
+    justify-content: space-between;
+    font-weight: var(--weight-bold);
+    font-size: var(--text-lg);
+  }
+
+  .cart-page__checkout {
+    width: 100%;
+    text-align: center;
+  }
+
+  .cart-page__note {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    margin: 0;
+  }
+</style>
+
+<script>
+  (function () {
+    if (!window.BarreleticsCartBundle) return;
+    var configEl = document.getElementById('cart-bundle-promo-config');
+    if (!configEl) return;
+    var config;
+    try {
+      config = JSON.parse(configEl.textContent);
+    } catch (e) {
+      return;
+    }
+    var mount = document.getElementById('cart-page-bundle-promo');
+    if (!mount) return;
+    window.BarreleticsCartBundle.mountPromo(
+      mount,
+      {{ cart.items | json }},
+      config
+    );
+    var result = window.BarreleticsCartBundle.computeBundlePromo({{ cart.items | json }}, config);
+    var est = document.getElementById('cart-page-estimated-savings');
+    if (est && result && result.showPanel && result.totalSavingsCents > 0) {
+      est.hidden = false;
+      est.querySelector('[data-estimated-savings]').textContent =
+        '$' + (result.totalSavingsCents / 100).toFixed(2);
+    }
+  })();
+</script>

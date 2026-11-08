@@ -1,0 +1,29 @@
+{
+  "name": "nov08-cart-drawer-bundle-preview",
+  "description": "Isolated theme patch: cart drawer + full cart bundle preview (feature flag default off). No settings_data.json replacement.",
+  "alternate_projects_source": {
+    "repository": "alternate-projects",
+    "ref": "main",
+    "commit": "ca0cd8af5a8256ed7d7af919959330650fe7f0b1",
+    "note": "Per docs/bots/BOOT.md rule 1 — theme numeric IDs live only in THEMES.md on that repo; this manifest never copies them."
+  },
+  "target_scope": "Nov08 Cart + bundles draft only (former draft untouched)",
+  "shopify_push_this_run": false,
+  "files": [
+    "assets/cart-bundle-promo.js",
+    "assets/cart-bundle-promo.css",
+    "assets/cart.js",
+    "config/settings_schema.json",
+    "layout/theme.liquid",
+    "sections/main-cart.liquid",
+    "snippets/cart-bundle-promo-config.liquid",
+    "snippets/cart-drawer.liquid",
+    "tests/cart-bundle-promo.test.js"
+  ],
+  "deployment_prerequisites": [
+    "Parent agent: fresh theme pull / backup / parity on approved Nov08 draft before shopify theme push",
+    "Enable feature in Theme settings → Cart bundle preview (Nov08) after copy and eligibility strings verified against live catalog handles",
+    "Wire Shopify discount functions or codes separately — not included in this patch",
+    "Do not publish theme or change global prices from this PR"
+  ]
+}
