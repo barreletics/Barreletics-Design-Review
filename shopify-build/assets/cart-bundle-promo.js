@@ -977,10 +977,11 @@
     if (submitBtn) {
       submitBtn.textContent = previousLabel;
     }
+    var recoverOpts = { preserveStatus: true };
     if (typeof syncSubmit === 'function') {
-      syncSubmit();
+      syncSubmit(recoverOpts);
     } else if (typeof state.syncSubmit === 'function') {
-      state.syncSubmit();
+      state.syncSubmit(recoverOpts);
     }
   }
 
@@ -1085,8 +1086,9 @@
       sizeSel.appendChild(sizePlaceholder());
       sizeLabel.appendChild(sizeSel);
 
-      function syncSubmit() {
+      function syncSubmit(recoverOpts) {
         if (!submitBtn) return;
+        var preserveStatus = recoverOpts && recoverOpts.preserveStatus;
         if (!state.selected.color || !state.selected.size) {
           submitBtn.disabled = true;
           submitBtn.removeAttribute('data-variant-id');
@@ -1103,7 +1105,9 @@
         if (match && match.available !== false && match.id) {
           submitBtn.disabled = false;
           submitBtn.setAttribute('data-variant-id', String(match.id));
-          setStatus('');
+          if (!preserveStatus) {
+            setStatus('');
+          }
         } else if (match && match.available === false) {
           submitBtn.disabled = true;
           submitBtn.removeAttribute('data-variant-id');

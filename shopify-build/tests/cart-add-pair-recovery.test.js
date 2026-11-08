@@ -13,8 +13,10 @@ test('recoverAddPairSubmitState clears pending and re-runs syncSubmit after fail
     removeAttribute: function () {}
   };
   var syncRuns = 0;
-  function syncSubmit() {
+  var lastPreserve;
+  function syncSubmit(opts) {
     syncRuns += 1;
+    lastPreserve = opts && opts.preserveStatus;
     btn.disabled = false;
     btn.setAttribute('data-variant-id', '101');
   }
@@ -25,6 +27,7 @@ test('recoverAddPairSubmitState clears pending and re-runs syncSubmit after fail
   assert.equal(state.pending, false);
   assert.equal(btn.textContent, 'Add pair');
   assert.equal(syncRuns, 1);
+  assert.equal(lastPreserve, true);
   assert.equal(btn.disabled, false);
 });
 
