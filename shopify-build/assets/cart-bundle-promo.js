@@ -1,5 +1,5 @@
 /**
- * Cart bundle preview — mirrors approved 2026-11-07 mock math/copy (checkout unchanged).
+ * Cart bundle preview + interactive add-pair draft (checkout unchanged).
  */
 (function (root, factory) {
   if (typeof module === 'object' && module.exports) {
@@ -20,11 +20,11 @@
     pantsMinPairs: 2,
     pantsPercent: 35,
     pantsProposedPriceCents: 9800,
-    footwearOfferTemplate: 'Buy 2+ Closed Sole pairs. Save {{percent}}%.',
+    footwearOfferTemplate: 'Buy 2+ pairs of Performance Skins. Save {{percent}}%.',
     pantsOfferTemplate:
-      'Save {{percent}}% on one pair of yoga pants with 2+ Closed Sole pairs.',
+      'Save {{percent}}% on one pair of yoga pants with 2+ Performance Skin pairs.',
     pantsHeadline:
-      'Save {{percent}}% on one pair of yoga pants with 2+ Closed Sole pairs.',
+      'Save {{percent}}% on one pair of yoga pants with 2+ Performance Skin pairs.',
     pantsQualTemplate: 'Add 1 more Closed Sole pair for {{percent}}% off yoga pants',
     nudgeAddPairTemplate: 'Add {{count}} {{unit}}. Save {{percent}}%.',
     savingsTemplate: 'You save {{amount}}.',
@@ -39,11 +39,25 @@
     pantsProductUrl: '/products/lightly-padded-knee-yoga-pant-black',
     pantsDefaultVariantId: 0,
     freeShippingThresholdCents: 15000,
-    skinHandleNeedles: ['closed-sole'],
-    skinTitleNeedles: ['Closed Sole', 'Performance Skin'],
+    openSoleProductHandle: 'studio-performance-skin-footwear',
+    closedSoleProductHandle: 'best-reformer-pilates-legree-workout-shoes',
+    addPairHeadline: 'Add one more pair of Performance Skins',
+    openSoleAddLabel: 'Add Open Sole',
+    closedSoleAddLabel: 'Add Closed Sole',
+    addPairSubmitLabel: 'Add pair to cart',
+    skinHandleNeedles: [
+      'closed-sole',
+      'open-sole',
+      'performance-skin',
+      'reformer-pilates',
+      'studio-performance',
+      'studio-performance-skin-footwear',
+      'best-reformer-pilates-legree-workout-shoes'
+    ],
+    skinTitleNeedles: ['Closed Sole', 'Open Sole', 'Performance Skin', 'Grippy Shoes'],
     pantHandleNeedles: ['pant', 'yoga-pant'],
     pantTitleNeedles: ['Yoga Pant', 'Pant'],
-    skinRequireClosedSole: true
+    skinRequireClosedSole: false
   };
 
   function mergeConfig(config) {
@@ -89,6 +103,41 @@
     return false;
   }
 
+  function normalizeColorLabel(raw) {
+    var s = String(raw || '')
+      .toLowerCase()
+      .replace(/[·•/]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+    s = s.replace(/\blight\s*grey\b/g, 'light grey');
+    s = s.replace(/\bdark\s*grey\b/g, 'dark grey');
+    s = s.replace(/\blightgrey\b/g, 'light grey');
+    s = s.replace(/\bdarkgrey\b/g, 'dark grey');
+    return s;
+  }
+
+  function extractColorFromLineItem(item) {
+    if (!item) return '';
+    var vt = String(item.variant_title || item.title || '');
+    if (vt.indexOf('/') !== -1) {
+      var parts = vt.split('/');
+      if (parts.length >= 2) return parts[parts.length - 1].trim();
+    }
+    if (vt.indexOf('·') !== -1) {
+      return vt.split('·')[0].trim();
+    }
+    var opts = item.options_with_values || item.options || [];
+    if (Array.isArray(opts)) {
+      for (var i = 0; i < opts.length; i++) {
+        var o = opts[i];
+        if (o && String(o.name || '').toLowerCase().indexOf('color') !== -1) {
+          return o.value || '';
+        }
+      }
+    }
+    return '';
+  }
+
   function isClosedSoleSkin(item, config) {
     var handles = parseNeedles(config.skinHandleNeedles);
     var titles = parseNeedles(config.skinTitleNeedles);
@@ -100,15 +149,90 @@
       needlesMatch(title, titles) ||
       needlesMatch(productType, titles);
     if (!matchesSkin) return false;
+    var closedNeedle = ['closed sole', 'closed-sole'];
+    return (
+      needlesMatch(title, closedNeedle) ||
+      needlesMatch(handle, ['closed-sole', config.closedSoleProductHandle]) ||
+      needlesMatch(productType, closedNeedle) ||
+      handle === String(config.closedSoleProductHandle || '').toLowerCase()
+    );
+  }
+
+  function isPerformanceSkin(item, config) {
+    if (isEligiblePant(item, config)) return false;
+    var handle = itemHandle(item);
+    var openH = String(config.openSoleProductHandle || '').toLowerCase();
+    var closedH = String(config.closedSoleProductHandle || '').toLowerCase();
+    if (openH && handle === openH) return true;
+    if (closedH && handle === closedH) return true;
+    var handles = parseNeedles(config.skinHandleNeedles);
+    var titles = parseNeedles(config.skinTitleNeedles);
+    var title = (item.product_title || item.title || '') + ' ' + (item.variant_title || '');
+    var productType = item.product_type || '';
+    var matchesSkin =
+      needlesMatch(handle, handles) ||
+      needlesMatch(title, titles) ||
+      needlesMatch(productType, titles);
+    if (!matchesSkin) return false;
     if (config.skinRequireClosedSole) {
-      var closedNeedle = ['closed sole', 'closed-sole'];
-      return (
-        needlesMatch(title, closedNeedle) ||
-        needlesMatch(handle, ['closed-sole']) ||
-        needlesMatch(productType, closedNeedle)
-      );
+      return isClosedSoleSkin(item, config);
     }
     return true;
+  }
+
+  function colorsUsedInCart(items, config) {
+    var used = {};
+    var list = items || [];
+    for (var i = 0; i < list.length; i++) {
+      if (!isPerformanceSkin(list[i], config)) continue;
+      var c = extractColorFromLineItem(list[i]);
+      if (c) used[normalizeColorLabel(c)] = true;
+    }
+    return used;
+  }
+
+  function optionIndexByName(options, namePart) {
+    namePart = String(namePart || '').toLowerCase();
+    for (var i = 0; i < (options || []).length; i++) {
+      if (String(options[i].name || '').toLowerCase().indexOf(namePart) !== -1) {
+        return options[i].position || i + 1;
+      }
+    }
+    return 0;
+  }
+
+  function colorValuesForProduct(product, usedColors) {
+    var options = product.options || [];
+    var colorPos = optionIndexByName(options, 'color');
+    if (!colorPos) return { colors: [], colorKey: 'option2' };
+    var colorKey = 'option' + colorPos;
+    var opt = null;
+    for (var i = 0; i < options.length; i++) {
+      if ((options[i].position || i + 1) === colorPos) opt = options[i];
+    }
+    var values = (opt && opt.values) || [];
+    var out = [];
+    var used = usedColors || {};
+    for (var j = 0; j < values.length; j++) {
+      var norm = normalizeColorLabel(values[j]);
+      if (!used[norm]) out.push(values[j]);
+    }
+    return { colors: out, colorKey: colorKey, sizeKey: colorPos === 1 ? 'option2' : 'option1' };
+  }
+
+  function sizesForColor(variants, colorKey, colorValue, sizeKey) {
+    var sizes = [];
+    var seen = {};
+    for (var i = 0; i < (variants || []).length; i++) {
+      var v = variants[i];
+      if (v[colorKey] !== colorValue) continue;
+      var sizeVal = v[sizeKey];
+      if (!sizeVal || seen[sizeVal]) continue;
+      var available = v.available !== false;
+      seen[sizeVal] = true;
+      sizes.push({ value: sizeVal, available: available, variant: v });
+    }
+    return sizes;
   }
 
   function isEligiblePant(item, config) {
@@ -209,7 +333,7 @@
     }
 
     var skin = sumEligible(items, function (item) {
-      return isClosedSoleSkin(item, config);
+      return isPerformanceSkin(item, config);
     });
     var pants = sumEligible(items, function (item) {
       return isEligiblePant(item, config);
@@ -224,7 +348,8 @@
     }
 
     var totalSavingsCents = pairSavingsCents + pantsSavingsCents;
-    var subtotalCents = typeof cartTotalCents === 'number' ? cartTotalCents : skin.subtotalCents + pants.subtotalCents;
+    var subtotalCents =
+      typeof cartTotalCents === 'number' ? cartTotalCents : skin.subtotalCents + pants.subtotalCents;
     var estimatedTotalCents = Math.max(0, subtotalCents - totalSavingsCents);
     var afterPairOnlyCents = Math.max(0, subtotalCents - pairSavingsCents);
 
@@ -233,39 +358,30 @@
         ? nudgeCopy(skin.quantity, config)
         : '';
     var footwearPct =
-      config.pairPromoMode === 'live_2for15'
-        ? config.livePairPercent
-        : config.tierTwoPercent;
-    var footwearOfferLine =
-      skin.quantity > 0
-        ? fillTemplate(
-            config.footwearOfferTemplate || 'Buy 2+ Closed Sole pairs. Save {{percent}}%.',
-            { percent: footwearPct }
-          )
-        : '';
+      config.pairPromoMode === 'live_2for15' ? config.livePairPercent : config.tierTwoPercent;
+    var showAddPairStage = skin.quantity === 1 && pants.quantity === 0;
+    var showPantsOffer = skin.quantity >= config.pantsMinPairs && pants.quantity === 0;
+    var pantsPickerVisible = showPantsOffer;
+    var pantsQualOnly = false;
+
+    var footwearOfferLine = '';
+    if (skin.quantity >= config.pantsMinPairs) {
+      footwearOfferLine = fillTemplate(
+        config.footwearOfferTemplate || 'Buy 2+ pairs of Performance Skins. Save {{percent}}%.',
+        { percent: footwearPct }
+      );
+    }
+
     var savingsLine =
       totalSavingsCents > 0
         ? fillTemplate(config.savingsTemplate, { amount: formatMoney(totalSavingsCents) })
         : '';
 
-    var showPantsOffer = skin.quantity >= 1 && pants.quantity === 0;
-    var pantsQualOnly = showPantsOffer && skin.quantity < config.pantsMinPairs;
-    var pantsPickerVisible = showPantsOffer && !pantsQualOnly;
-
     var qualNote = '';
-    if (pantsQualOnly) {
-      var need = config.pantsMinPairs - skin.quantity;
-      qualNote = fillTemplate(config.pantsQualTemplate, {
-        percent: config.pantsPercent,
-        count: need,
-        unit: need === 1 ? 'pair' : 'pairs'
-      });
-    }
-
     var pantsTemplate = config.pantsOfferTemplate || config.pantsHeadline;
     var pantsOfferLine = fillTemplate(pantsTemplate, { percent: config.pantsPercent });
 
-  var shippingGapCents = 0;
+    var shippingGapCents = 0;
     var shippingEarned = false;
     if (skin.quantity > 0) {
       if (afterPairOnlyCents >= config.freeShippingThresholdCents) {
@@ -289,6 +405,7 @@
       footwearOfferLine: footwearOfferLine,
       previewNotice: config.previewNotice,
       savingsLine: savingsLine,
+      showAddPairStage: showAddPairStage,
       showPantsOffer: showPantsOffer,
       pantsQualOnly: pantsQualOnly,
       pantsPickerVisible: pantsPickerVisible,
@@ -301,6 +418,7 @@
       shippingGapCents: shippingGapCents,
       shippingEarned: shippingEarned,
       freeShippingThresholdCents: config.freeShippingThresholdCents,
+      addPairHeadline: config.addPairHeadline,
       config: config
     };
   }
@@ -321,6 +439,33 @@
     html +=
       '<p class="cart-bundle-promo__notice">' + escapeHtml(result.previewNotice) + '</p>';
 
+    if (result.showAddPairStage) {
+      var cfg = result.config;
+      html += '<div class="cart-bundle-promo__add-pair" data-bundle-add-pair>';
+      html +=
+        '<p class="cart-bundle-promo__add-pair-headline">' +
+        escapeHtml(result.addPairHeadline || cfg.addPairHeadline) +
+        '</p>';
+      html += '<div class="cart-bundle-promo__sole-row">';
+      html +=
+        '<button type="button" class="cart-bundle-promo__sole-btn" data-sole-choice="open">' +
+        escapeHtml(cfg.openSoleAddLabel) +
+        '</button>';
+      html +=
+        '<button type="button" class="cart-bundle-promo__sole-btn" data-sole-choice="closed">' +
+        escapeHtml(cfg.closedSoleAddLabel) +
+        '</button>';
+      html += '</div>';
+      html +=
+        '<div class="cart-bundle-promo__add-pair-picker" data-add-pair-picker hidden>' +
+        '<p class="cart-bundle-promo__add-pair-status" data-add-pair-status hidden></p>' +
+        '<div class="cart-bundle-promo__add-pair-selects" data-add-pair-selects></div>' +
+        '<button type="button" class="cart-bundle-promo__add-pair-submit" data-bundle-add-skin-pair disabled>' +
+        escapeHtml(cfg.addPairSubmitLabel) +
+        '</button>' +
+        '</div></div>';
+    }
+
     if (result.footwearOfferLine) {
       html +=
         '<p class="cart-bundle-promo__footwear-offer">' + escapeHtml(result.footwearOfferLine) + '</p>';
@@ -339,41 +484,36 @@
     }
 
     if (result.showPantsOffer) {
-      var cfg = result.config;
-      html += '<div class="cart-bundle-promo__pants' + (result.pantsQualOnly ? ' is-qual-only' : '') + '">';
-      if (!result.pantsQualOnly) {
-        html += '<p class="cart-bundle-promo__pants-headline">' + escapeHtml(result.pantsOfferLine) + '</p>';
-      }
-      if (result.pantsQualNote) {
-        html += '<p class="cart-bundle-promo__pants-qual">' + escapeHtml(result.pantsQualNote) + '</p>';
-      }
+      var cfgP = result.config;
+      html += '<div class="cart-bundle-promo__pants">';
+      html += '<p class="cart-bundle-promo__pants-headline">' + escapeHtml(result.pantsOfferLine) + '</p>';
       html +=
-          '<div class="cart-bundle-promo__pants-row">' +
-          '<img src="' +
-          escapeHtml(cfg.pantsImageUrl) +
-          '" alt="" width="56" height="56" loading="lazy" class="cart-bundle-promo__pants-img" />' +
-          '<div class="cart-bundle-promo__pants-copy">' +
-          '<span class="cart-bundle-promo__pants-title">' +
-          escapeHtml(cfg.pantsProductTitle) +
-          '</span>' +
-          '</div>' +
-          '<div class="cart-bundle-promo__pants-prices">' +
-          '<span class="cart-bundle-promo__pants-was">' +
-          formatMoney(result.pantsWasCents) +
-          '</span>' +
-          '<strong class="cart-bundle-promo__pants-sale">' +
-          formatMoney(result.pantsSaleCents) +
-          ' <span class="cart-bundle-promo__preview-tag">preview</span></strong>' +
-          '</div></div>';
+        '<div class="cart-bundle-promo__pants-row">' +
+        '<img src="' +
+        escapeHtml(cfgP.pantsImageUrl) +
+        '" alt="" width="56" height="56" loading="lazy" class="cart-bundle-promo__pants-img" />' +
+        '<div class="cart-bundle-promo__pants-copy">' +
+        '<span class="cart-bundle-promo__pants-title">' +
+        escapeHtml(cfgP.pantsProductTitle) +
+        '</span>' +
+        '</div>' +
+        '<div class="cart-bundle-promo__pants-prices">' +
+        '<span class="cart-bundle-promo__pants-was">' +
+        formatMoney(result.pantsWasCents) +
+        '</span>' +
+        '<strong class="cart-bundle-promo__pants-sale">' +
+        formatMoney(result.pantsSaleCents) +
+        ' <span class="cart-bundle-promo__preview-tag">preview</span></strong>' +
+        '</div></div>';
       if (result.pantsPickerVisible) {
         html +=
           '<div class="cart-bundle-promo__pants-picker" data-bundle-pants-picker hidden>' +
           '<div class="cart-bundle-promo__pants-selects" data-pants-selects></div>' +
           '<button type="button" class="cart-bundle-promo__pants-add" data-bundle-add-pant disabled>' +
-          escapeHtml(cfg.pantsAddLabel) +
+          escapeHtml(cfgP.pantsAddLabel) +
           '</button>' +
           '<a class="cart-bundle-promo__pants-link" data-pants-fallback href="' +
-          escapeHtml(cfg.pantsProductUrl || '/products/' + (cfg.pantsProductHandle || '')) +
+          escapeHtml(cfgP.pantsProductUrl || '/products/' + (cfgP.pantsProductHandle || '')) +
           '">Choose on product page</a>' +
           '</div>';
       }
@@ -383,6 +523,240 @@
     html +=
       '<p class="cart-bundle-promo__disclaimer">' + escapeHtml(result.disclaimer) + '</p></div>';
     return html;
+  }
+
+  function defaultFetchProduct(handle) {
+    return fetch('/products/' + encodeURIComponent(handle) + '.js', {
+      headers: { Accept: 'application/json' }
+    }).then(function (res) {
+      if (!res.ok) throw new Error('product-js-failed');
+      return res.json();
+    });
+  }
+
+  function defaultAddToCart(variantId) {
+    if (typeof window !== 'undefined' && window.BarreleticsCart && window.BarreleticsCart.add) {
+      return window.BarreleticsCart.add(variantId, 1);
+    }
+    return Promise.reject(new Error('cart-add-unavailable'));
+  }
+
+  function initAddPairFlow(root, config, cartItems) {
+    var block = root.querySelector('[data-bundle-add-pair]');
+    if (!block) return;
+    var picker = block.querySelector('[data-add-pair-picker]');
+    var selectsWrap = block.querySelector('[data-add-pair-selects]');
+    var statusEl = block.querySelector('[data-add-pair-status]');
+    var submitBtn = block.querySelector('[data-bundle-add-skin-pair]');
+    var usedColors = colorsUsedInCart(cartItems, config);
+    var state = {
+      handle: null,
+      product: null,
+      variants: [],
+      colorKey: 'option2',
+      sizeKey: 'option1',
+      selected: {},
+      pending: false
+    };
+
+    function setStatus(msg, isError) {
+      if (!statusEl) return;
+      if (!msg) {
+        statusEl.hidden = true;
+        statusEl.textContent = '';
+        return;
+      }
+      statusEl.hidden = false;
+      statusEl.textContent = msg;
+      statusEl.classList.toggle('is-error', !!isError);
+    }
+
+    function setSoleActive(sole) {
+      block.querySelectorAll('[data-sole-choice]').forEach(function (btn) {
+        var on = btn.getAttribute('data-sole-choice') === sole;
+        btn.classList.toggle('is-active', on);
+        btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+    }
+
+    function clearPicker() {
+      state.product = null;
+      state.variants = [];
+      state.selected = {};
+      if (selectsWrap) selectsWrap.innerHTML = '';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.removeAttribute('data-variant-id');
+      }
+    }
+
+    function renderPicker(product) {
+      var meta = colorValuesForProduct(product, usedColors);
+      if (!meta.colors.length) {
+        setStatus('No other colors available for this sole type.', true);
+        if (picker) picker.hidden = true;
+        return;
+      }
+      setStatus('');
+      if (picker) picker.hidden = false;
+      if (!selectsWrap) return;
+      selectsWrap.innerHTML = '';
+      state.colorKey = meta.colorKey;
+      state.sizeKey = meta.sizeKey;
+
+      var colorSel = document.createElement('select');
+      colorSel.className = 'cart-bundle-promo__add-pair-select';
+      colorSel.setAttribute('aria-label', 'Color');
+      var colorPh = document.createElement('option');
+      colorPh.value = '';
+      colorPh.textContent = 'Choose color';
+      colorPh.disabled = true;
+      colorPh.selected = true;
+      colorSel.appendChild(colorPh);
+      meta.colors.forEach(function (c) {
+        var o = document.createElement('option');
+        o.value = c;
+        o.textContent = c;
+        colorSel.appendChild(o);
+      });
+
+      var sizeSel = document.createElement('select');
+      sizeSel.className = 'cart-bundle-promo__add-pair-select';
+      sizeSel.setAttribute('aria-label', 'Size');
+      sizeSel.disabled = true;
+      function sizePlaceholder() {
+        var ph = document.createElement('option');
+        ph.value = '';
+        ph.textContent = 'Choose size';
+        ph.disabled = true;
+        ph.selected = true;
+        return ph;
+      }
+      sizeSel.appendChild(sizePlaceholder());
+
+      function syncSubmit() {
+        if (!submitBtn) return;
+        if (!state.selected.color || !state.selected.size) {
+          submitBtn.disabled = true;
+          submitBtn.removeAttribute('data-variant-id');
+          return;
+        }
+        var match = null;
+        for (var i = 0; i < state.variants.length; i++) {
+          var v = state.variants[i];
+          if (v[state.colorKey] === state.selected.color && v[state.sizeKey] === state.selected.size) {
+            match = v;
+            break;
+          }
+        }
+        if (match && match.available !== false && match.id) {
+          submitBtn.disabled = false;
+          submitBtn.setAttribute('data-variant-id', String(match.id));
+          setStatus('');
+        } else if (match && match.available === false) {
+          submitBtn.disabled = true;
+          submitBtn.removeAttribute('data-variant-id');
+          setStatus('That size is out of stock.', true);
+        } else {
+          submitBtn.disabled = true;
+          submitBtn.removeAttribute('data-variant-id');
+        }
+      }
+
+      colorSel.addEventListener('change', function () {
+        state.selected.color = colorSel.value || '';
+        state.selected.size = '';
+        sizeSel.innerHTML = '';
+        sizeSel.appendChild(sizePlaceholder());
+        sizeSel.disabled = !state.selected.color;
+        if (!state.selected.color) {
+          syncSubmit();
+          return;
+        }
+        var sizes = sizesForColor(state.variants, state.colorKey, state.selected.color, state.sizeKey);
+        sizes.forEach(function (row) {
+          var o = document.createElement('option');
+          o.value = row.value;
+          o.textContent = row.available ? row.value : row.value + ' (out of stock)';
+          o.disabled = !row.available;
+          sizeSel.appendChild(o);
+        });
+        syncSubmit();
+      });
+
+      sizeSel.addEventListener('change', function () {
+        state.selected.size = sizeSel.value || '';
+        syncSubmit();
+      });
+
+      selectsWrap.appendChild(colorSel);
+      selectsWrap.appendChild(sizeSel);
+      syncSubmit();
+    }
+
+    function loadProduct(handle, sole) {
+      if (state.pending) return;
+      state.handle = handle;
+      setSoleActive(sole);
+      clearPicker();
+      setStatus('Loading…', false);
+      if (picker) picker.hidden = true;
+      var fetchFn = config.fetchProductJson || defaultFetchProduct;
+      state.pending = true;
+      block.querySelectorAll('[data-sole-choice]').forEach(function (b) {
+        b.disabled = true;
+      });
+      fetchFn(handle)
+        .then(function (data) {
+          var product = data.product || data;
+          state.product = product;
+          state.variants = product.variants || [];
+          if (!state.variants.length) throw new Error('no-variants');
+          renderPicker(product);
+        })
+        .catch(function () {
+          setStatus('Could not load product options. Try again.', true);
+        })
+        .finally(function () {
+          state.pending = false;
+          block.querySelectorAll('[data-sole-choice]').forEach(function (b) {
+            b.disabled = false;
+          });
+        });
+    }
+
+    block.querySelectorAll('[data-sole-choice]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        if (state.pending) return;
+        var sole = btn.getAttribute('data-sole-choice');
+        var handle =
+          sole === 'open' ? config.openSoleProductHandle : config.closedSoleProductHandle;
+        if (!handle) return;
+        loadProduct(handle, sole);
+      });
+    });
+
+    if (submitBtn && !submitBtn.dataset.boundAddPair) {
+      submitBtn.dataset.boundAddPair = 'true';
+      submitBtn.addEventListener('click', function () {
+        if (submitBtn.disabled || state.pending) return;
+        var vid = parseInt(submitBtn.getAttribute('data-variant-id'), 10);
+        if (!vid) return;
+        state.pending = true;
+        submitBtn.disabled = true;
+        var prev = submitBtn.textContent;
+        submitBtn.textContent = 'Adding…';
+        var addFn = config.addToCartFn || defaultAddToCart;
+        addFn(vid)
+          .catch(function () {
+            setStatus('Could not add this pair. Try again.', true);
+          })
+          .finally(function () {
+            state.pending = false;
+            submitBtn.textContent = prev;
+          });
+      });
+    }
   }
 
   function mountPromo(container, cartItems, config, cartTotalCents) {
@@ -395,6 +769,9 @@
     }
     container.removeAttribute('hidden');
     container.innerHTML = renderPromoHtml(result);
+    if (result.showAddPairStage) {
+      initAddPairFlow(container, mergeConfig(config), cartItems);
+    }
     if (result.pantsPickerVisible) {
       initPantsPicker(container, result.config);
     }
@@ -431,17 +808,15 @@
       block.hidden = false;
       addBtn.disabled = false;
       addBtn.setAttribute('data-variant-id', String(overrideId));
-      if (selectsWrap) selectsWrap.innerHTML = '<p class="cart-bundle-promo__pants-note">Using theme default variant — change in theme settings.</p>';
+      if (selectsWrap) {
+        selectsWrap.innerHTML =
+          '<p class="cart-bundle-promo__pants-note">Using theme default variant — change in theme settings.</p>';
+      }
       return;
     }
 
-    fetch('/products/' + encodeURIComponent(handle) + '.js', {
-      headers: { Accept: 'application/json' }
-    })
-      .then(function (res) {
-        if (!res.ok) throw new Error('product-js-failed');
-        return res.json();
-      })
+    var fetchFn = config.fetchProductJson || defaultFetchProduct;
+    fetchFn(handle)
       .then(function (data) {
         var product = data.product || data;
         var variants = product.variants || [];
@@ -521,9 +896,16 @@
     renderPromoHtml: renderPromoHtml,
     mountPromo: mountPromo,
     initPantsPicker: initPantsPicker,
+    initAddPairFlow: initAddPairFlow,
     resolveVariantFromOptions: resolveVariantFromOptions,
     isClosedSoleSkin: isClosedSoleSkin,
+    isPerformanceSkin: isPerformanceSkin,
     isEligiblePant: isEligiblePant,
+    normalizeColorLabel: normalizeColorLabel,
+    extractColorFromLineItem: extractColorFromLineItem,
+    colorsUsedInCart: colorsUsedInCart,
+    colorValuesForProduct: colorValuesForProduct,
+    sizesForColor: sizesForColor,
     pantsSaleCents: pantsSaleCents
   };
 });

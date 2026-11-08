@@ -28,25 +28,24 @@ test('0 Closed Sole pairs: panel hidden', () => {
   assert.equal(r.showPanel, false);
 });
 
-test('live 1 pair: exact copy, preview notice, photo visible, picker blocked', () => {
+test('live 1 pair: add-pair flow only, no pants photo or picker', () => {
   const { r, html } = htmlAt([skinItem(1, 7400)], LIVE, 7400);
-  assert.equal(r.footwearOfferLine, 'Buy 2+ Closed Sole pairs. Save 15%.');
-  assert.equal(
-    r.pantsOfferLine,
-    'Save 35% on one pair of yoga pants with 2+ Closed Sole pairs.'
-  );
-  assert.equal(r.pantsQualNote, 'Add 1 more Closed Sole pair for 35% off yoga pants');
+  assert.equal(r.showAddPairStage, true);
+  assert.equal(r.showPantsOffer, false);
+  assert.equal(r.footwearOfferLine, '');
   assert.equal(r.pantsPickerVisible, false);
   assert.match(html, /Preview only—offers aren't applied at checkout/);
-  assert.match(html, /cart-bundle-promo__pants-img/);
-  assert.ok(!html.includes('data-bundle-promo__pants-headline'));
+  assert.match(html, /Add one more pair of Performance Skins/);
+  assert.match(html, /data-sole-choice="open"/);
+  assert.ok(!html.includes('cart-bundle-promo__pants-img'));
   assert.ok(!html.includes('data-bundle-pants-picker'));
 });
 
-test('live 2 pairs: picker allowed, footwear line persists', () => {
+test('live 2 pairs: picker allowed, footwear preview line', () => {
   const { r, html } = htmlAt([skinItem(2, 7400)], LIVE, 14800);
+  assert.equal(r.showAddPairStage, false);
   assert.equal(r.pantsPickerVisible, true);
-  assert.equal(r.footwearOfferLine, 'Buy 2+ Closed Sole pairs. Save 15%.');
+  assert.equal(r.footwearOfferLine, 'Buy 2+ pairs of Performance Skins. Save 15%.');
   assert.match(html, /data-bundle-pants-picker/);
   assert.equal(r.nudge, '');
 });
@@ -62,9 +61,11 @@ test('pant already in cart: no pants cross-sell block', () => {
   assert.equal(r.showPantsOffer, false);
 });
 
-test('future mode footwear line uses tier-two percent not live 15', () => {
-  const r = bundle.computeBundlePromo([skinItem(1, 7400)], FUTURE, 7400);
-  assert.equal(r.footwearOfferLine, 'Buy 2+ Closed Sole pairs. Save 10%.');
+test('future mode: footwear line only at 2+ pairs', () => {
+  const r1 = bundle.computeBundlePromo([skinItem(1, 7400)], FUTURE, 7400);
+  assert.equal(r1.footwearOfferLine, '');
+  const r2 = bundle.computeBundlePromo([skinItem(2, 7400)], FUTURE, 14800);
+  assert.equal(r2.footwearOfferLine, 'Buy 2+ pairs of Performance Skins. Save 10%.');
 });
 
 test('visual preview HTML has no discount auto-apply links', () => {
@@ -86,10 +87,10 @@ test('config percent edits sync footwear and pants copy', () => {
     livePairPercent: 20,
     pantsPercent: 40
   });
-  const r = bundle.computeBundlePromo([skinItem(1, 7400)], cfg, 7400);
-  assert.equal(r.footwearOfferLine, 'Buy 2+ Closed Sole pairs. Save 20%.');
+  const r = bundle.computeBundlePromo([skinItem(2, 7400)], cfg, 14800);
+  assert.equal(r.footwearOfferLine, 'Buy 2+ pairs of Performance Skins. Save 20%.');
   assert.equal(
     r.pantsOfferLine,
-    'Save 40% on one pair of yoga pants with 2+ Closed Sole pairs.'
+    'Save 40% on one pair of yoga pants with 2+ Performance Skin pairs.'
   );
 });

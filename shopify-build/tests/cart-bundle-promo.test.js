@@ -44,10 +44,12 @@ test('future: 2 pairs — 10% savings $14.80 and tier-3 nudge', function () {
   assert.equal(r.shippingGapCents, 1680);
 });
 
-test('live: 1 pair footwear offer line, no nudge, no savings', function () {
+test('live: 1 pair add-pair stage, no footwear line or savings yet', function () {
   var r = bundle.computeBundlePromo([skinItem(1, 7400)], LIVE, 7400);
   assert.equal(r.nudge, '');
-  assert.equal(r.footwearOfferLine, 'Buy 2+ Closed Sole pairs. Save 15%.');
+  assert.equal(r.footwearOfferLine, '');
+  assert.equal(r.showAddPairStage, true);
+  assert.equal(r.showPantsOffer, false);
   assert.equal(r.totalSavingsCents, 0);
 });
 
@@ -57,12 +59,11 @@ test('live: 2 pairs — 15% savings, no nudge', function () {
   assert.equal(r.nudge, '');
 });
 
-test('pants offer qual-only at 1 pair', function () {
+test('pants offer hidden at 1 pair (progressive stage)', function () {
   var r = bundle.computeBundlePromo([skinItem(1, 7400)], FUTURE, 7400);
-  assert.equal(r.showPantsOffer, true);
-  assert.equal(r.pantsQualOnly, true);
+  assert.equal(r.showPantsOffer, false);
+  assert.equal(r.showAddPairStage, true);
   assert.equal(r.pantsPickerVisible, false);
-  assert.equal(r.pantsQualNote, 'Add 1 more Closed Sole pair for 35% off yoga pants');
 });
 
 test('pants picker at 2+ pairs with proposed $98 / 35%', function () {
@@ -71,7 +72,7 @@ test('pants picker at 2+ pairs with proposed $98 / 35%', function () {
   assert.equal(r.pantsSaleCents, 6370);
   assert.equal(
     r.pantsOfferLine,
-    'Save 35% on one pair of yoga pants with 2+ Closed Sole pairs.'
+    'Save 35% on one pair of yoga pants with 2+ Performance Skin pairs.'
   );
 });
 
@@ -87,21 +88,22 @@ test('percent edit updates headline and sale price', function () {
   var r = bundle.computeBundlePromo([skinItem(2, 7400)], cfg, 14800);
   assert.equal(
     r.pantsOfferLine,
-    'Save 30% on one pair of yoga pants with 2+ Closed Sole pairs.'
+    'Save 30% on one pair of yoga pants with 2+ Performance Skin pairs.'
   );
   assert.equal(bundle.pantsSaleCents(cfg), 7000);
 });
 
-test('open sole excluded from pair count', function () {
+test('open sole counts toward pair stages', function () {
   var openSole = {
     quantity: 2,
     final_line_price: 14800,
     product_title: 'Performance Skins — Open Sole',
-    url: '/products/studio-performance-skin-open-sole'
+    url: '/products/studio-performance-skin-footwear'
   };
   var r = bundle.computeBundlePromo([openSole], FUTURE, 14800);
-  assert.equal(r.pairCount, 0);
-  assert.equal(r.showPanel, false);
+  assert.equal(r.pairCount, 2);
+  assert.equal(r.showPanel, true);
+  assert.equal(r.showPantsOffer, true);
 });
 
 test('resolveVariantFromOptions matches size and color', function () {
