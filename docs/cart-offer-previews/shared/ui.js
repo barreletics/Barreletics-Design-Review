@@ -47,6 +47,76 @@
       .replace(/</g, '&lt;');
   }
 
+  function isSoftCard() {
+    return document.body && document.body.getAttribute('data-design') === 'soft-card';
+  }
+
+  var SWATCH_HEX = {
+    Black: '#1c1916',
+    White: '#f3f3f1',
+    Coral: '#e8847c',
+    'Rivian Green': '#5a7a6a',
+    'Dusty Blue': '#8aa4b8',
+    Purple: '#6b4c8a',
+    'Deep Teal': '#2d5a5a',
+    'Bright Yellow': '#e8c547'
+  };
+
+  function soleLabel(sole) {
+    if (isSoftCard()) return sole === 'open' ? 'Open Sole' : 'Closed Sole';
+    return M.CATALOG[sole].label;
+  }
+
+  function renderColorField(colors) {
+    if (isSoftCard()) {
+      var html =
+        '<div class="offer__field"><span class="offer__field-label">Color</span>' +
+        '<div class="offer__swatch-row" role="listbox" aria-label="Color">';
+      colors.forEach(function (c) {
+        var on = state.pick.color === c;
+        var hex = SWATCH_HEX[c] || '#ccc';
+        html +=
+          '<button type="button" class="offer__swatch' +
+          (on ? ' is-active' : '') +
+          '" role="option" aria-label="' +
+          escape(c) +
+          '" aria-selected="' +
+          (on ? 'true' : 'false') +
+          '" data-swatch-color="' +
+          escape(c) +
+          '" style="background:' +
+          hex +
+          '"><span class="visually-hidden">' +
+          escape(c) +
+          '</span></button>';
+      });
+      html += '</div>';
+      if (state.pick.color) {
+        html += '<p class="offer__swatch-name">' + escape(state.pick.color) + '</p>';
+      }
+      html += '</div>';
+      return html;
+    }
+    var sel =
+      '<label class="offer__field">Color<select data-color><option value="">Choose color</option>';
+    colors.forEach(function (c) {
+      sel +=
+        '<option value="' +
+        escape(c) +
+        '"' +
+        (state.pick.color === c ? ' selected' : '') +
+        '>' +
+        escape(c) +
+        '</option>';
+    });
+    sel += '</select></label>';
+    return sel;
+  }
+
+  function addPairButtonLabel() {
+    return isSoftCard() ? 'Add pair' : 'Add to cart (simulated)';
+  }
+
   function renderOffer() {
     var st = M.stage(state);
     var html = '';
@@ -54,22 +124,28 @@
       html += '<section class="offer offer--benefit-first" aria-live="polite">';
       html += '<p class="offer__notice">' + escape(M.NOTICE) + '</p>';
       html += '<h2 class="offer__headline">Buy 2 or more pairs. Get 15% off.</h2>';
-      html += '<p class="offer__support">You have ' + M.pairCount(state) + ' pair. Add another to qualify.</p>';
+      var n = M.pairCount(state);
+      html +=
+        '<p class="offer__support">You have ' +
+        n +
+        ' pair' +
+        (n === 1 ? '' : 's') +
+        '. Add another to qualify.</p>';
       if (!state.addPickerOpen) {
         html +=
           '<button type="button" class="offer__submit" data-open-add-pickers>Add another pair</button>';
       } else {
         html += '<div class="offer__pickers-wrap" data-pickers-wrap>';
-        html += '<div class="offer__sole-row">';
+        html += '<div class="offer__sole-row offer__sole-row--pills">';
         ['open', 'closed'].forEach(function (sole) {
           var on = state.pick.sole === sole;
           html +=
-            '<button type="button" class="offer__sole-btn' +
+            '<button type="button" class="offer__sole-btn offer__sole-btn--pill' +
             (on ? ' is-active' : '') +
             '" data-sole="' +
             sole +
             '">' +
-            escape(M.CATALOG[sole].label) +
+            escape(soleLabel(sole)) +
             '</button>';
         });
         html += '</div>';
@@ -80,18 +156,7 @@
             html +=
               '<p class="offer__status offer__status--warn">No illustrative colors in fixture for this sole.</p>';
           } else {
-            html += '<label class="offer__field">Color<select data-color><option value="">Choose color</option>';
-            colors.forEach(function (c) {
-              html +=
-                '<option value="' +
-                escape(c) +
-                '"' +
-                (state.pick.color === c ? ' selected' : '') +
-                '>' +
-                escape(c) +
-                '</option>';
-            });
-            html += '</select></label>';
+            html += renderColorField(colors);
             html += '<label class="offer__field">Size<select data-size' + (state.pick.color ? '' : ' disabled') + '>';
             html += '<option value="">Choose size</option>';
             if (state.pick.color) {
@@ -108,9 +173,11 @@
             }
             html += '</select></label>';
             html +=
-              '<button type="button" class="offer__submit" data-add-pair' +
+              '<button type="button" class="offer__submit offer__submit--add-pair" data-add-pair' +
               (M.canAddPair(state) ? '' : ' disabled') +
-              '>Add to cart (simulated)</button>';
+              '>' +
+              escape(addPairButtonLabel()) +
+              '</button>';
           }
         }
         html += '</div></div>';
@@ -160,6 +227,12 @@
       if (!(t instanceof HTMLElement)) return;
       if (t.matches('[data-open-add-pickers]')) {
         state.addPickerOpen = true;
+        paint();
+        return;
+      }
+      if (t.matches('[data-swatch-color]')) {
+        state.pick.color = t.getAttribute('data-swatch-color') || '';
+        state.pick.size = '';
         paint();
         return;
       }
