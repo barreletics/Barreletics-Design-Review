@@ -121,7 +121,8 @@ test('product option swatch.color used when present in product JSON', function (
       {
         quantity: 1,
         final_line_price: 7400,
-        product_title: 'Skin',
+        product_title: 'Closed Sole Performance Skin',
+        variant_title: 'Black · M',
         url: '/products/best-reformer-pilates-legree-workout-shoes'
       }
     ],
