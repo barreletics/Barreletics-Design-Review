@@ -34,6 +34,20 @@ test('variant URL then absent search resets to control (same-tab, no storage)', 
   assert.equal(bundle.resolveOfferArm({}), 'control');
 });
 
+test('control excludes closed product handle when title lacks Closed Sole (5a)', function () {
+  var item = {
+    quantity: 1,
+    final_line_price: 7400,
+    product_title: 'Performance Skins',
+    url: '/products/best-reformer-pilates-legree-workout-shoes',
+    variant_title: 'Purple'
+  };
+  var b = baseline.computeBundlePromo([item], LIVE, 7400);
+  var c = bundle.computeBundlePromo([item], LIVE, 7400);
+  assert.equal(b.showPanel, false);
+  assert.equal(c.showPanel, false);
+});
+
 test('control arm matches 5a01277 compute for 1 pair', function () {
   var items = [skinItem(1, 7400)];
   var b = baseline.computeBundlePromo(items, LIVE, 7400);

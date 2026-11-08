@@ -17,14 +17,14 @@ When the current URL includes `br_cart_offer=variant`, `[data-cart-trigger]` and
 
 ## Preview URL patterns (parent fills theme id after push)
 
-Replace `{DRAFT_THEME_ID}` with the unpublished theme id from Admin or `shopify theme list` (not stored in this repo):
+Replace `{DRAFT_THEME_ID}` with the unpublished theme id from Admin or `shopify theme list` (parent only — not in this repo):
 
 ```
-https://barreletics.com/?preview_theme_id={DRAFT_THEME_ID}&br_cart_offer=control
-https://barreletics.com/?preview_theme_id={DRAFT_THEME_ID}&br_cart_offer=variant
+https://barreletics.com/cart?preview_theme_id={DRAFT_THEME_ID}&br_cart_offer=control
+https://barreletics.com/cart?preview_theme_id={DRAFT_THEME_ID}&br_cart_offer=variant
 ```
 
-Cart drawer on any qualifying PDP/collection URL: same params on that page URL before opening cart.
+Use the **cart URL** so the arm param is not dropped by cart navigation. PDP testing: keep the same query params on the page URL before opening the drawer, or use the cart links above.
 
 **Source phase:** links are patterns only until parent uploads the three theme files.
 
@@ -37,8 +37,7 @@ When `window.Shopify.theme.role` is present and not `main`, preview is on an unp
 Parent cited [inline cart recommendations](https://baymard.com/research-articles/product-recommendations-cart) and [cross-sell step type](https://baymard.com/checkout-usability/benchmark/step-type/cross-sell): prefer **clearly labeled inline** cross-sells; avoid **blocking** separate upsell steps. VARIANT implements:
 
 - Inline progressive picker (no modal/popup).
-- Labels: “Recommended add-on (inline)”, “Optional add-on (inline, preview)”.
-- Simple **pair counter** text only (not a shipping progress bar).
+- Short owner copy + pair counter text only (not a shipping progress bar). No extra “add-on” jargon labels.
 - Prominent preview disclaimer; preview prices tagged; **no** earned/applied checkout discount claims.
 
 CONTROL unchanged.

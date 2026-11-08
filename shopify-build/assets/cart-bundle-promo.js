@@ -209,29 +209,66 @@
     return s;
   }
 
-  function extractColorFromLineItem(item) {
-    if (!item) return '';
-    var vt = String(item.variant_title || item.title || '');
-    if (vt.indexOf('/') !== -1) {
-      var parts = vt.split('/');
-      if (parts.length >= 2) return parts[parts.length - 1].trim();
-    }
-    if (vt.indexOf('·') !== -1) {
-      return vt.split('·')[0].trim();
-    }
+  function isLikelySizeToken(raw) {
+    var t = String(raw || '')
+      .toLowerCase()
+      .trim();
+    if (!t) return false;
+    if (/^\d+(\.\d+)?$/.test(t)) return true;
+    if (/\(w\s*\d/i.test(t)) return true;
+    if (/\bw\s*\d+\s*[-–]/.test(t)) return true;
+    if (/^(xx?s|x?s|small|sm|medium|med|large|lg|xl|xxl|xxxl)\b/.test(t)) return true;
+    if (/^[msl]$/.test(t)) return true;
+    if (/^(one size|os)\b/.test(t)) return true;
+    return false;
+  }
+
+  function colorFromNamedOptions(item) {
     var opts = item.options_with_values || item.options || [];
-    if (Array.isArray(opts)) {
-      for (var i = 0; i < opts.length; i++) {
-        var o = opts[i];
-        if (o && String(o.name || '').toLowerCase().indexOf('color') !== -1) {
-          return o.value || '';
-        }
-      }
+    if (!Array.isArray(opts)) return '';
+    for (var i = 0; i < opts.length; i++) {
+      var o = opts[i];
+      if (!o) continue;
+      var name = String(o.name || '').toLowerCase();
+      if (name.indexOf('color') === -1 && name.indexOf('colour') === -1) continue;
+      var val = String(o.value || '').trim();
+      if (val && !isLikelySizeToken(val)) return val;
     }
     return '';
   }
 
-  function isClosedSoleSkin(item, config) {
+  function colorFromVariantTitle(vt) {
+    vt = String(vt || '').trim();
+    if (!vt) return '';
+    if (vt.indexOf('·') !== -1) {
+      var left = vt.split('·')[0].trim();
+      if (left && !isLikelySizeToken(left)) return left;
+    }
+    if (vt.indexOf('/') === -1) {
+      if (!isLikelySizeToken(vt)) return vt;
+      return '';
+    }
+    var parts = vt.split('/').map(function (p) {
+      return p.trim();
+    });
+    var first = parts[0];
+    var last = parts[parts.length - 1];
+    if (isLikelySizeToken(last) && !isLikelySizeToken(first)) return first;
+    if (isLikelySizeToken(first) && !isLikelySizeToken(last)) return last;
+    if (!isLikelySizeToken(last)) return last;
+    if (!isLikelySizeToken(first)) return first;
+    return '';
+  }
+
+  function extractColorFromLineItem(item) {
+    if (!item) return '';
+    var fromOpt = colorFromNamedOptions(item);
+    if (fromOpt) return fromOpt;
+    return colorFromVariantTitle(item.variant_title || item.title || '');
+  }
+
+  /** Exact 5a01277 closed-sole eligibility — control arm only. */
+  function isClosedSoleSkin5a(item, config) {
     var handles = parseNeedles(config.skinHandleNeedles);
     var titles = parseNeedles(config.skinTitleNeedles);
     var handle = itemHandle(item);
@@ -242,13 +279,19 @@
       needlesMatch(title, titles) ||
       needlesMatch(productType, titles);
     if (!matchesSkin) return false;
-    var closedNeedle = ['closed sole', 'closed-sole'];
-    return (
-      needlesMatch(title, closedNeedle) ||
-      needlesMatch(handle, ['closed-sole', config.closedSoleProductHandle]) ||
-      needlesMatch(productType, closedNeedle) ||
-      handle === String(config.closedSoleProductHandle || '').toLowerCase()
-    );
+    if (config.skinRequireClosedSole) {
+      var closedNeedle = ['closed sole', 'closed-sole'];
+      return (
+        needlesMatch(title, closedNeedle) ||
+        needlesMatch(handle, ['closed-sole']) ||
+        needlesMatch(productType, closedNeedle)
+      );
+    }
+    return true;
+  }
+
+  function isClosedSoleSkin(item, config) {
+    return isClosedSoleSkin5a(item, config);
   }
 
   function isPerformanceSkin(item, config) {
@@ -426,7 +469,7 @@
     }
 
     var skin = sumEligible(items, function (item) {
-      return isClosedSoleSkin(item, config);
+      return isClosedSoleSkin5a(item, config);
     });
     var pants = sumEligible(items, function (item) {
       return isEligiblePant(item, config);
@@ -728,10 +771,7 @@
 
     if (result.showAddPairStage) {
       var cfg = result.config;
-      html +=
-        '<p class="cart-bundle-promo__cross-sell-label" id="cart-bundle-add-pair-label">Recommended add-on (inline)</p>';
-      html +=
-        '<div class="cart-bundle-promo__add-pair" data-bundle-add-pair role="group" aria-labelledby="cart-bundle-add-pair-label">';
+      html += '<div class="cart-bundle-promo__add-pair" data-bundle-add-pair>';
       html +=
         '<p class="cart-bundle-promo__add-pair-headline">' +
         escapeHtml(result.addPairHeadline || cfg.addPairHeadline) +
@@ -775,9 +815,7 @@
 
     if (result.showPantsOffer) {
       var cfgP = result.config;
-      html +=
-        '<p class="cart-bundle-promo__cross-sell-label" id="cart-bundle-pants-label">Optional add-on (inline, preview)</p>';
-      html += '<div class="cart-bundle-promo__pants" role="group" aria-labelledby="cart-bundle-pants-label">';
+      html += '<div class="cart-bundle-promo__pants">';
       html += '<p class="cart-bundle-promo__pants-headline">' + escapeHtml(result.pantsOfferLine) + '</p>';
       html +=
         '<div class="cart-bundle-promo__pants-row">' +
@@ -1216,10 +1254,13 @@
     initAddPairFlow: initAddPairFlow,
     resolveVariantFromOptions: resolveVariantFromOptions,
     isClosedSoleSkin: isClosedSoleSkin,
+    isClosedSoleSkin5a: isClosedSoleSkin5a,
+    isLikelySizeToken: isLikelySizeToken,
+    colorFromNamedOptions: colorFromNamedOptions,
+    extractColorFromLineItem: extractColorFromLineItem,
     isPerformanceSkin: isPerformanceSkin,
     isEligiblePant: isEligiblePant,
     normalizeColorLabel: normalizeColorLabel,
-    extractColorFromLineItem: extractColorFromLineItem,
     colorsUsedInCart: colorsUsedInCart,
     colorValuesForProduct: colorValuesForProduct,
     sizesForColor: sizesForColor,

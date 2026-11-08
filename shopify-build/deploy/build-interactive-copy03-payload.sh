@@ -3,7 +3,8 @@
 set -euo pipefail
 BASE="${REV_BASE_COMMIT:-5a01277}"
 SRC="${1:-/workspace/shopify-build}"
-OUT="${2:-/opt/cursor/artifacts/cart-interactive-copy03}"
+OUT="${2:-/opt/cursor/artifacts/cart-interactive-copy03-fixed}"
+TAR_NAME="${TAR_NAME:-cart-interactive-copy03-fixed.tar.gz}"
 ALLOWLIST=(
   assets/cart-bundle-promo.js
   assets/cart-bundle-promo.css
@@ -35,7 +36,7 @@ const files=list.map(rel=>{
   return {path:rel,sha256_before:before?shaBuf(before):null,sha256_after:shaBuf(after),status:before?'modified':'added'}
 });
 const m={
-  deliverable:'cart-interactive-copy03',
+  deliverable:'cart-interactive-copy03-fixed',
   baselineCommit:base,
   baselineFull:execSync('git -C /workspace rev-parse '+base,{encoding:'utf8'}).trim(),
   allowlist:list,
@@ -54,6 +55,6 @@ fs.writeFileSync(path.join(out,'COPY03-HANDOFF.txt'),
  '- Source tests mock product JSON + add path; browser proof is parent-only.',
  ''].join('\n'));
 "
-tar --warning=no-file-changed -czf "$(dirname "$OUT")/$(basename "$OUT").tar.gz" -C "$(dirname "$OUT")" "$(basename "$OUT")"
-sha256sum "$(dirname "$OUT")/$(basename "$OUT").tar.gz"
-echo "Wrote $OUT and $(dirname "$OUT")/$(basename "$OUT").tar.gz"
+tar --warning=no-file-changed -czf "$(dirname "$OUT")/$TAR_NAME" -C "$(dirname "$OUT")" "$(basename "$OUT")"
+sha256sum "$(dirname "$OUT")/$TAR_NAME"
+echo "Wrote $OUT and $(dirname "$OUT")/$TAR_NAME"

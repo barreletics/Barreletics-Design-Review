@@ -97,7 +97,7 @@ test('render at 1 pair: exact headline, no pants image', function () {
   assert.match(html, /Add one more pair of Performance Skins/);
   assert.match(html, /data-bundle-add-pair/);
   assert.match(html, /Performance Skin pairs in cart: 1/);
-  assert.match(html, /Recommended add-on \(inline\)/);
+  assert.ok(!html.includes('Recommended add-on'));
   assert.match(html, /Preview only—offers aren't applied at checkout/);
   assert.ok(!html.includes('cart-bundle-promo__pants-img'));
   assert.ok(!html.includes('unlock'));
