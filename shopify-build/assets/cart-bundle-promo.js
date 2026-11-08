@@ -43,9 +43,10 @@
     freeShippingThresholdCents: 15000,
     openSoleProductHandle: 'studio-performance-skin-footwear',
     closedSoleProductHandle: 'best-reformer-pilates-legree-workout-shoes',
-    benefitHeadline: 'Buy 2 or more pairs. Get 15% off.',
-    benefitSupportTemplate: 'You have {{count}} pair. Add another to qualify.',
+    benefitHeadline: 'Buy 2 or more pairs. Save 15%.',
+    benefitSupportTemplate: 'Choose your second pair below.',
     benefitCtaLabel: 'Add another pair',
+    footwearQualifiedTemplate: 'Save {{percent}}% on your Performance Skin pairs.',
     addPairHeadline: 'Add one more pair of Performance Skins',
     openSoleAddLabel: 'Open Sole',
     closedSoleAddLabel: 'Closed Sole',
@@ -413,6 +414,33 @@
     return SWATCH_HEX[name] || '#c8c4c0';
   }
 
+  /** Native PDP provenance: snippets/variant-card.liquid (variant.featured_image) + product.json variants[].featured_image */
+  function swatchImageForColor(variants, colorKey, colorName) {
+    for (var i = 0; i < (variants || []).length; i++) {
+      var v = variants[i];
+      if (v[colorKey] !== colorName) continue;
+      var img = v.featured_image;
+      if (img && img.src) return img.src;
+    }
+    return '';
+  }
+
+  function applySwatchButtonStyle(btn, variants, colorKey, colorName) {
+    var src = swatchImageForColor(variants, colorKey, colorName);
+    btn.style.backgroundColor = '';
+    btn.style.backgroundImage = '';
+    btn.style.backgroundSize = '';
+    if (src) {
+      btn.style.backgroundImage = 'url(' + src + ')';
+      btn.style.backgroundSize = 'cover';
+      btn.style.backgroundPosition = 'center';
+      btn.setAttribute('data-swatch-src', src);
+    } else {
+      btn.style.backgroundColor = swatchHexForColor(colorName);
+      btn.removeAttribute('data-swatch-src');
+    }
+  }
+
   function sizesForColor(variants, colorKey, colorValue, sizeKey) {
     var sizes = [];
     var seen = {};
@@ -441,17 +469,54 @@
     );
   }
 
+  function lineOriginalCents(item) {
+    if (!item) return 0;
+    if (typeof item.original_line_price === 'number') return item.original_line_price;
+    if (typeof item.line_price === 'number') return item.line_price;
+    return item.final_line_price || 0;
+  }
+
+  function lineDiscountAllocCents(item) {
+    if (!item) return 0;
+    var sum = 0;
+    var allocs = item.line_level_discount_allocations || item.discount_allocations || [];
+    for (var i = 0; i < allocs.length; i++) {
+      sum += allocs[i].amount || 0;
+    }
+    return sum;
+  }
+
   function sumEligible(items, predicate) {
     var qty = 0;
-    var subtotal = 0;
+    var finalSubtotal = 0;
+    var originalSubtotal = 0;
+    var discountAlloc = 0;
     for (var i = 0; i < items.length; i++) {
-      if (predicate(items[i])) {
-        var q = items[i].quantity || 0;
-        qty += q;
-        subtotal += items[i].final_line_price || items[i].line_price || 0;
-      }
+      if (!predicate(items[i])) continue;
+      qty += items[i].quantity || 0;
+      finalSubtotal += items[i].final_line_price || items[i].line_price || 0;
+      originalSubtotal += lineOriginalCents(items[i]);
+      discountAlloc += lineDiscountAllocCents(items[i]);
     }
-    return { quantity: qty, subtotalCents: subtotal };
+    return {
+      quantity: qty,
+      subtotalCents: finalSubtotal,
+      finalSubtotalCents: finalSubtotal,
+      originalSubtotalCents: originalSubtotal,
+      discountAllocCents: discountAlloc
+    };
+  }
+
+  function computePairSavings(skinSum, config) {
+    if (!skinSum || skinSum.quantity < 2) {
+      return { cents: 0, mode: 'none' };
+    }
+    if (skinSum.discountAllocCents > 0) {
+      return { cents: skinSum.discountAllocCents, mode: 'applied' };
+    }
+    var pct = pairTierPercent(skinSum.quantity, config);
+    var base = skinSum.originalSubtotalCents || skinSum.subtotalCents;
+    return { cents: Math.round(base * (pct / 100)), mode: 'preview' };
   }
 
   function formatMoney(cents) {
@@ -507,10 +572,8 @@
     });
   }
 
-  function estimatePairSavings(pairQty, pairSubtotalCents, config) {
-    if (pairQty < 2) return 0;
-    var pct = pairTierPercent(pairQty, config);
-    return Math.round(pairSubtotalCents * (pct / 100));
+  function estimatePairSavings(skinSum, config) {
+    return computePairSavings(skinSum, config).cents;
   }
 
   function pantsSaleCents(config) {
@@ -537,7 +600,9 @@
       return isEligiblePant(item, config);
     });
 
-    var pairSavingsCents = estimatePairSavings(skin.quantity, skin.subtotalCents, config);
+    var pairSave = computePairSavings(skin, config);
+    var pairSavingsCents = pairSave.cents;
+    var pairSavingsMode = pairSave.mode;
     var pantsSavingsCents = 0;
     if (pants.quantity > 0 && skin.quantity >= config.pantsMinPairs) {
       pantsSavingsCents =
@@ -548,8 +613,14 @@
     var totalSavingsCents = pairSavingsCents + pantsSavingsCents;
     var subtotalCents =
       typeof cartTotalCents === 'number' ? cartTotalCents : skin.subtotalCents + pants.subtotalCents;
-    var estimatedTotalCents = Math.max(0, subtotalCents - totalSavingsCents);
-    var afterPairOnlyCents = Math.max(0, subtotalCents - pairSavingsCents);
+    var estimatedTotalCents = subtotalCents;
+    if (pairSavingsMode === 'preview' || pantsSavingsCents > 0) {
+      estimatedTotalCents = Math.max(0, subtotalCents - totalSavingsCents);
+    }
+    var afterPairOnlyCents =
+      pairSavingsMode === 'preview'
+        ? Math.max(0, subtotalCents - pairSavingsCents)
+        : subtotalCents;
 
     var nudge =
       config.pairPromoMode === 'future_tiers' && skin.quantity > 0
@@ -565,9 +636,11 @@
           )
         : '';
     var savingsLine =
-      totalSavingsCents > 0
-        ? fillTemplate(config.savingsTemplate, { amount: formatMoney(totalSavingsCents) })
+      pairSavingsCents > 0
+        ? fillTemplate(config.savingsTemplate, { amount: formatMoney(pairSavingsCents) })
         : '';
+    var savingsTag =
+      pairSavingsMode === 'applied' ? 'Applied' : pairSavingsMode === 'preview' ? 'Preview' : '';
 
     var pantsOn = isOfferToggleOn(config, 'pantsOfferEnabled');
     var showPantsOffer = pantsOn && skin.quantity >= 1 && pants.quantity === 0;
@@ -612,6 +685,8 @@
       footwearOfferLine: footwearOfferLine,
       previewNotice: config.previewNotice,
       savingsLine: savingsLine,
+      savingsTag: savingsTag,
+      pairSavingsMode: pairSavingsMode,
       showAddPairStage: false,
       showPantsOffer: showPantsOffer,
       pantsQualOnly: pantsQualOnly,
@@ -644,7 +719,9 @@
       return isEligiblePant(item, config);
     });
 
-    var pairSavingsCents = estimatePairSavings(skin.quantity, skin.subtotalCents, config);
+    var pairSave = computePairSavings(skin, config);
+    var pairSavingsCents = pairSave.cents;
+    var pairSavingsMode = pairSave.mode;
     var pantsSavingsCents = 0;
     if (pants.quantity > 0 && skin.quantity >= config.pantsMinPairs) {
       pantsSavingsCents =
@@ -655,8 +732,14 @@
     var totalSavingsCents = pairSavingsCents + pantsSavingsCents;
     var subtotalCents =
       typeof cartTotalCents === 'number' ? cartTotalCents : skin.subtotalCents + pants.subtotalCents;
-    var estimatedTotalCents = Math.max(0, subtotalCents - totalSavingsCents);
-    var afterPairOnlyCents = Math.max(0, subtotalCents - pairSavingsCents);
+    var estimatedTotalCents = subtotalCents;
+    if (pairSavingsMode === 'preview' || pantsSavingsCents > 0) {
+      estimatedTotalCents = Math.max(0, subtotalCents - totalSavingsCents);
+    }
+    var afterPairOnlyCents =
+      pairSavingsMode === 'preview'
+        ? Math.max(0, subtotalCents - pairSavingsCents)
+        : subtotalCents;
 
     var nudge =
       config.pairPromoMode === 'future_tiers' && skin.quantity > 0
@@ -672,7 +755,13 @@
     var pantsQualOnly = false;
 
     var footwearOfferLine = '';
-    if (skin.quantity >= config.pantsMinPairs && !showPantsOffer) {
+    var footwearConfirmationLine = '';
+    if (skin.quantity >= 2) {
+      footwearConfirmationLine = fillTemplate(
+        config.footwearQualifiedTemplate || 'Save {{percent}}% on your Performance Skin pairs.',
+        { percent: footwearPct }
+      );
+    } else if (skin.quantity >= config.pantsMinPairs && !showPantsOffer) {
       footwearOfferLine = fillTemplate(
         config.footwearOfferTemplate || 'Buy 2+ pairs of Performance Skins. Save {{percent}}%.',
         { percent: footwearPct }
@@ -685,9 +774,11 @@
     }
 
     var savingsLine =
-      totalSavingsCents > 0
-        ? fillTemplate(config.savingsTemplate, { amount: formatMoney(totalSavingsCents) })
+      pairSavingsCents > 0
+        ? fillTemplate(config.savingsTemplate, { amount: formatMoney(pairSavingsCents) })
         : '';
+    var savingsTag =
+      pairSavingsMode === 'applied' ? 'Applied' : pairSavingsMode === 'preview' ? 'Preview' : '';
 
     var qualNote = '';
     var pantsTemplate = config.pantsOfferTemplate || config.pantsHeadline;
@@ -712,6 +803,7 @@
       pairCount: skin.quantity,
       pantCount: pants.quantity,
       pairSavingsCents: pairSavingsCents,
+      pairSavingsMode: pairSavingsMode,
       pantsSavingsCents: pantsSavingsCents,
       totalSavingsCents: totalSavingsCents,
       subtotalCents: subtotalCents,
@@ -720,6 +812,8 @@
       footwearOfferLine: footwearOfferLine,
       previewNotice: config.previewNotice,
       savingsLine: savingsLine,
+      savingsTag: savingsTag,
+      footwearConfirmationLine: footwearConfirmationLine,
       showAddPairStage: showAddPairStage,
       showPantsOffer: showPantsOffer,
       pantsQualOnly: pantsQualOnly,
@@ -779,8 +873,11 @@
     }
 
     if (result.savingsLine) {
+      var tagC = result.savingsTag || 'Preview';
       html +=
-        '<div class="cart-bundle-promo__savings"><span class="cart-bundle-promo__preview-tag">Preview</span> ' +
+        '<div class="cart-bundle-promo__savings"><span class="cart-bundle-promo__preview-tag">' +
+        escapeHtml(tagC) +
+        '</span> ' +
         '<span>' +
         escapeHtml(result.savingsLine) +
         '</span></div>';
@@ -843,8 +940,7 @@
 
     if (result.showAddPairStage) {
       var cfg = result.config;
-      var supportTpl = result.benefitSupportTemplate || cfg.benefitSupportTemplate;
-      var supportLine = fillTemplate(supportTpl, { count: String(result.pairCount) });
+      var supportLine = result.benefitSupportTemplate || cfg.benefitSupportTemplate;
       html += '<div class="cart-bundle-promo__add-pair cart-bundle-promo__add-pair--softcard" data-bundle-add-pair>';
       html +=
         '<h2 class="cart-bundle-promo__benefit-headline">' +
@@ -857,13 +953,7 @@
           escapeHtml(result.addPairColorUnresolvedNotice) +
           '</p>';
       }
-      html +=
-        '<button type="button" class="cart-bundle-promo__benefit-cta" data-open-add-pair-picker' +
-        (result.addPairColorUnresolvedNotice ? ' disabled' : '') +
-        '>' +
-        escapeHtml(result.benefitCtaLabel || cfg.benefitCtaLabel) +
-        '</button>';
-      html += '<div class="cart-bundle-promo__add-pair-body" data-add-pair-body hidden>';
+      html += '<div class="cart-bundle-promo__add-pair-body" data-add-pair-body>';
       html += '<div class="cart-bundle-promo__sole-row cart-bundle-promo__sole-row--pills">';
       html +=
         '<button type="button" class="cart-bundle-promo__sole-btn cart-bundle-promo__sole-btn--pill" data-sole-choice="open">' +
@@ -884,7 +974,15 @@
         '</div></div></div>';
     }
 
-    if (result.footwearOfferLine) {
+    if (result.footwearConfirmationLine) {
+      var qTag = result.savingsTag || 'Preview';
+      html +=
+        '<p class="cart-bundle-promo__footwear-qualified"><span class="cart-bundle-promo__preview-tag">' +
+        escapeHtml(qTag) +
+        '</span> ' +
+        escapeHtml(result.footwearConfirmationLine) +
+        '</p>';
+    } else if (result.footwearOfferLine) {
       html +=
         '<p class="cart-bundle-promo__footwear-offer">' + escapeHtml(result.footwearOfferLine) + '</p>';
     }
@@ -894,8 +992,11 @@
     }
 
     if (result.savingsLine) {
+      var tagV = result.savingsTag || 'Preview';
       html +=
-        '<div class="cart-bundle-promo__savings"><span class="cart-bundle-promo__preview-tag">Preview</span> ' +
+        '<div class="cart-bundle-promo__savings"><span class="cart-bundle-promo__preview-tag">' +
+        escapeHtml(tagV) +
+        '</span> ' +
         '<span>' +
         escapeHtml(result.savingsLine) +
         '</span></div>';
@@ -988,7 +1089,6 @@
   function initAddPairFlow(root, config, cartItems) {
     var block = root.querySelector('[data-bundle-add-pair]');
     if (!block) return;
-    var openBtn = block.querySelector('[data-open-add-pair-picker]');
     var bodyEl = block.querySelector('[data-add-pair-body]');
     var picker = block.querySelector('[data-add-pair-picker]');
     var selectsWrap = block.querySelector('[data-add-pair-selects]');
@@ -1002,9 +1102,11 @@
       sizeKey: 'option1',
       selected: {},
       pending: false,
-      pickerOpen: false,
+      pickerOpen: true,
       syncSubmit: null
     };
+
+    if (bodyEl) bodyEl.hidden = false;
 
     function setStatus(msg, isError) {
       if (!statusEl) return;
@@ -1153,7 +1255,7 @@
         btn.setAttribute('data-swatch-color', c);
         btn.setAttribute('aria-label', c);
         btn.setAttribute('role', 'option');
-        btn.style.backgroundColor = swatchHexForColor(c);
+        applySwatchButtonStyle(btn, state.variants, state.colorKey, c);
         btn.addEventListener('click', function () {
           if (state.pending) return;
           setColor(c);
@@ -1204,19 +1306,9 @@
         });
     }
 
-    if (openBtn && !openBtn.dataset.boundOpenPicker) {
-      openBtn.dataset.boundOpenPicker = 'true';
-      openBtn.addEventListener('click', function () {
-        if (openBtn.disabled || state.pending) return;
-        state.pickerOpen = true;
-        if (bodyEl) bodyEl.hidden = false;
-        openBtn.hidden = true;
-      });
-    }
-
     block.querySelectorAll('[data-sole-choice]').forEach(function (btn) {
       btn.addEventListener('click', function () {
-        if (state.pending || !state.pickerOpen) return;
+        if (state.pending) return;
         var sole = btn.getAttribute('data-sole-choice');
         var handle =
           sole === 'open' ? config.openSoleProductHandle : config.closedSoleProductHandle;

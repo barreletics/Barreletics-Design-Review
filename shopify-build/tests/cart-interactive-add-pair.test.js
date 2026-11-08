@@ -99,13 +99,14 @@ test('colorValuesForAddPair allows repeat colors when cart color is known', func
   assert.equal(meta.colors.length, 3);
 });
 
-test('render at 1 pair: benefit-first headline, hidden picker until CTA', function () {
+test('render at 1 pair: immediate sole pills and approved copy', function () {
   var r = bundle.computeBundlePromo([closedSkin(1)], LIVE, 7400, VARIANT);
   var html = bundle.renderPromoHtml(r);
-  assert.match(html, /Buy 2 or more pairs\. Get 15% off\./);
-  assert.match(html, /You have 1 pair\. Add another to qualify\./);
-  assert.match(html, /data-open-add-pair-picker/);
-  assert.match(html, /data-add-pair-body hidden/);
+  assert.match(html, /Buy 2 or more pairs\. Save 15%\./);
+  assert.match(html, /Choose your second pair below\./);
+  assert.match(html, /data-sole-choice="closed"/);
+  assert.ok(!html.includes('data-open-add-pair-picker'));
+  assert.ok(!html.includes('data-add-pair-body hidden'));
   assert.match(html, /data-bundle-add-pair/);
   assert.ok(!html.includes('Performance Skin pairs in cart:'));
   assert.match(html, /Preview only—offers aren't applied at checkout/);

@@ -10,7 +10,17 @@ var FIXTURE_PRODUCT = {
     { name: 'Size', position: 1, values: ['M (W 5.5-7.5)'] },
     { name: 'Color', position: 2, values: ['Purple'] }
   ],
-  variants: [{ id: 101, option1: 'M (W 5.5-7.5)', option2: 'Purple', available: true }]
+  variants: [
+    {
+      id: 101,
+      option1: 'M (W 5.5-7.5)',
+      option2: 'Purple',
+      available: true,
+      featured_image: {
+        src: 'https://cdn.shopify.com/s/files/1/0045/0612/4391/files/swatch-copper-swirl.png?v=1'
+      }
+    }
+  ]
 };
 
 function installDom() {
@@ -62,9 +72,10 @@ test('DOM: failed native add keeps error visible and allows same-selection retry
 
   bundle.mountPromo(container, [closedSkin()], config, 7400, { offerArm: 'variant' });
 
-  var openBtn = container.querySelector('[data-open-add-pair-picker]');
-  assert.ok(openBtn);
-  openBtn.click();
+  assert.ok(container.querySelector('[data-sole-choice="closed"]'), 'sole pills visible immediately');
+  assert.match(container.textContent, /Buy 2 or more pairs\. Save 15%\./);
+  assert.match(container.textContent, /Choose your second pair below\./);
+  assert.equal(container.querySelector('[data-open-add-pair-picker]'), null);
 
   var closedSole = container.querySelector('[data-sole-choice="closed"]');
   assert.ok(closedSole);
@@ -77,6 +88,10 @@ test('DOM: failed native add keeps error visible and allows same-selection retry
     .then(function () {
       var swatch = container.querySelector('[data-swatch-color="Purple"]');
       assert.ok(swatch, 'purple swatch rendered');
+      assert.equal(
+        swatch.getAttribute('data-swatch-src'),
+        'https://cdn.shopify.com/s/files/1/0045/0612/4391/files/swatch-copper-swirl.png?v=1'
+      );
       swatch.click();
       var sizeSel = container.querySelector('[data-size-select]');
       assert.ok(sizeSel);
