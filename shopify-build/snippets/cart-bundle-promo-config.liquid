@@ -18,6 +18,63 @@
   assign default_savings = 'You save ' | append: _amt | append: '.'
   assign default_pants_url = '/products/' | append: 'lightly-padded-knee-yoga-pant-black'
 %}
+{%- comment -%}
+  Native cart swatches mirror sections/pdp-buy-box.liquid lines 653–684 (owner attachment sha256 9e038bfb…).
+  images[{handle}.png], value.swatch.color, last-word handle, Copper Swirl asset override — no invented hex map.
+{%- endcomment -%}
+{%- capture _native_swatches_json -%}
+{%- assign _swatch_handles = 'best-reformer-pilates-legree-workout-shoes,studio-performance-skin-footwear' | split: ',' -%}
+{%- assign _first_handle = true -%}
+{
+{%- for _handle in _swatch_handles -%}
+{%- assign _product = all_products[_handle] -%}
+{%- if _product == blank -%}{%- continue -%}{%- endif -%}
+{%- unless _first_handle -%},{%- endunless -%}
+{%- assign _first_handle = false -%}
+{{ _handle | json }}: {
+{%- assign _first_color = true -%}
+{%- for _option in _product.options_with_values -%}
+{%- assign _opt_down = _option.name | downcase -%}
+{%- if _opt_down contains 'color' or _opt_down contains 'colour' -%}
+{%- for _value in _option.values -%}
+{%- liquid
+  assign _label = _value
+  if _value.name != blank
+    assign _label = _value.name
+  endif
+  assign swatch_file_name = _label | handle | append: '.png'
+  assign swatch_bg_img = blank
+  if images[swatch_file_name] != blank
+    assign swatch_bg_img = swatch_file_name | file_img_url: '50x50' | prepend: 'https:' | split: '?' | first
+  endif
+  assign swatch_bg = _label | split: ' ' | last | handle
+  if _value.swatch.color != blank and swatch_bg_img == blank
+    assign swatch_bg = _value.swatch.color
+  endif
+  if _label == 'Copper Swirl'
+    assign swatch_bg = '#574535'
+    assign swatch_bg_img = 'swatch-copper-swirl.png' | asset_url
+  endif
+  assign swatch_is_white = false
+  if swatch_bg == 'white' or swatch_bg == '#ffffff' or swatch_bg == '#fff'
+    assign swatch_is_white = true
+  endif
+-%}
+{%- unless _first_color -%},{%- endunless -%}
+{%- assign _first_color = false -%}
+{{ _label | json }}: {
+  "backgroundColor": {{ swatch_bg | json }},
+  "imageUrl": {% if swatch_bg_img != blank %}{{ swatch_bg_img | json }}{% else %}null{% endif %},
+  "whiteInset": {{ swatch_is_white | json }},
+  "source": "sections/pdp-buy-box.liquid:653-684"
+}
+{%- endfor -%}
+{%- endif -%}
+{%- endfor -%}
+}
+{%- endfor -%}
+}
+{%- endcapture -%}
 <script id="cart-bundle-promo-config" type="application/json">
 {
   "enabled": {{ settings.cart_bundle_promo_enabled | default: false | json }},
@@ -55,18 +112,13 @@
   "benefitHeadline": "Buy 2 or more pairs. Save 15%.",
   "benefitSupportTemplate": "Choose your second pair below.",
   "footwearQualifiedTemplate": "Save {{percent}}% on your Performance Skin pairs.",
-  "pdpSwatchProvenance": "sections/pdp-buy-box.liquid (.pdp-buy__swatch style map); assets/swatch-copper-swirl.png (variant-grid pattern); no product thumbnail guessing",
-  "colorSwatchStyles": {
-    "Onyx": "#050505",
-    "Dusty Rose": "#e9d3cb",
-    "Stone": "#c9c5b8",
-    "Sage": "#7b8c84",
-    "Espresso": "#3d3530",
-    "Mist": "#b8c4c0"
+  "pdpSwatchSourceRead": {
+    "file": "sections/pdp-buy-box.liquid",
+    "ownerAttachmentSha256": "9e038bfbf4826df16b55d3068e055b1d5dc679cfe4463652d571db781613cab7",
+    "logicLines": "653-684",
+    "oneOffPhotoBranchLines": "643-651"
   },
-  "colorSwatchImages": {
-    "Copper Swirl": {{ 'swatch-copper-swirl.png' | asset_url | json }}
-  },
+  "nativeProductSwatches": {% assign _trim = _native_swatches_json | strip %}{% if _trim == blank or _trim == '{}' %}{}{% else %}{{ _trim }}{% endif %},
   "benefitCtaLabel": "Add another pair",
   "addPairHeadline": "Add one more pair of Performance Skins",
   "openSoleAddLabel": "Open Sole",

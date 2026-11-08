@@ -396,37 +396,79 @@
     };
   }
 
-  /** Native PDP sources only (see cart-bundle-promo-config.liquid colorSwatch* maps). */
-  function applySwatchButtonStyle(btn, colorName, config) {
+  function nativeSwatchEntry(config, productHandle, colorName) {
+    if (!config || !productHandle || !colorName) return null;
+    var maps = config.nativeProductSwatches || {};
+    var bucket = maps[productHandle];
+    return bucket && bucket[colorName] ? bucket[colorName] : null;
+  }
+
+  function optionValueSwatchFromProduct(product, colorName) {
+    if (!product || !colorName) return null;
+    var opts = product.options_with_values || [];
+    for (var i = 0; i < opts.length; i++) {
+      var o = opts[i];
+      var n = (o.name || '').toLowerCase();
+      if (n.indexOf('color') === -1 && n.indexOf('colour') === -1) continue;
+      var vals = o.values || [];
+      for (var j = 0; j < vals.length; j++) {
+        var v = vals[j];
+        var label = typeof v === 'string' ? v : v && v.name;
+        if (label !== colorName) continue;
+        if (v && v.swatch && v.swatch.color) {
+          return {
+            backgroundColor: v.swatch.color,
+            imageUrl: null,
+            whiteInset: false,
+            source: 'product.options_with_values[].swatch.color'
+          };
+        }
+      }
+    }
+    return null;
+  }
+
+  /** Native PDP: liquid nativeProductSwatches (pdp-buy-box 653–684) then option swatch metadata; else text. */
+  function applySwatchButtonStyle(btn, colorName, config, productHandle, product) {
     btn.classList.remove('cart-bundle-promo__swatch--text');
     btn.textContent = '';
     btn.style.backgroundColor = '';
     btn.style.backgroundImage = '';
     btn.style.backgroundSize = '';
     btn.style.backgroundPosition = '';
+    btn.style.boxShadow = '';
     btn.removeAttribute('data-swatch-src');
     btn.removeAttribute('data-swatch-kind');
+    btn.removeAttribute('data-swatch-source');
 
-    var imgMap = (config && config.colorSwatchImages) || {};
-    var styleMap = (config && config.colorSwatchStyles) || {};
-    var src = imgMap[colorName];
-    var css = styleMap[colorName];
+    var entry =
+      nativeSwatchEntry(config, productHandle, colorName) ||
+      optionValueSwatchFromProduct(product, colorName);
 
-    if (src) {
-      btn.style.backgroundImage = 'url(' + src + ')';
-      btn.style.backgroundSize = 'cover';
-      btn.style.backgroundPosition = 'center';
-      btn.setAttribute('data-swatch-src', src);
-      btn.setAttribute('data-swatch-kind', 'native-image');
-    } else if (css) {
-      btn.style.backgroundColor = css;
-      btn.setAttribute('data-swatch-kind', 'native-pdp-css');
-    } else {
-      btn.classList.add('cart-bundle-promo__swatch--text');
-      btn.textContent = colorName;
-      btn.setAttribute('aria-label', colorName);
-      btn.setAttribute('data-swatch-kind', 'text');
+    if (entry) {
+      if (entry.backgroundColor) {
+        btn.style.backgroundColor = entry.backgroundColor;
+      }
+      if (entry.imageUrl) {
+        btn.style.backgroundImage = 'url(' + entry.imageUrl + ')';
+        btn.style.backgroundSize = 'cover';
+        btn.style.backgroundPosition = 'center';
+        btn.setAttribute('data-swatch-src', entry.imageUrl);
+      }
+      if (entry.whiteInset && !entry.imageUrl) {
+        btn.style.boxShadow = 'inset 0 0 0 1px #ccc';
+      }
+      btn.setAttribute('data-swatch-kind', entry.imageUrl ? 'native-image' : 'native-pdp');
+      if (entry.source) {
+        btn.setAttribute('data-swatch-source', entry.source);
+      }
+      return;
     }
+
+    btn.classList.add('cart-bundle-promo__swatch--text');
+    btn.textContent = colorName;
+    btn.setAttribute('aria-label', colorName);
+    btn.setAttribute('data-swatch-kind', 'text');
   }
 
   function sizesForColor(variants, colorKey, colorValue, sizeKey) {
@@ -1290,7 +1332,7 @@
         btn.setAttribute('data-swatch-color', c);
         btn.setAttribute('aria-label', c);
         btn.setAttribute('role', 'option');
-        applySwatchButtonStyle(btn, c, config);
+        applySwatchButtonStyle(btn, c, config, state.handle, state.product);
         btn.addEventListener('click', function () {
           if (state.pending) return;
           setColor(c);
