@@ -17,6 +17,9 @@
   assign default_nudge = 'Add ' | append: _cnt | append: ' ' | append: _unit | append: '. Save ' | append: _pct | append: '.'
   assign default_savings = 'You save ' | append: _amt | append: '.'
   assign default_footwear_qualified = 'Save ' | append: _pct | append: '% on your Performance Skin pairs.'
+  assign default_visual_nudge = 'Add one more pair to save ' | append: _pct | append: '%.'
+  assign default_visual_applied = "You're saving " | append: _amt | append: '.'
+  assign default_visual_preview = 'Your potential savings: ' | append: _amt
   assign default_pants_url = '/products/' | append: 'lightly-padded-knee-yoga-pant-black'
 %}
 {%- comment -%}
@@ -113,9 +116,9 @@
   "benefitHeadline": "Buy 2 or more pairs. Save 15%.",
   "benefitSupportTemplate": "Choose your second pair below.",
   "benefitSupportAddTemplate": "Add another pair below.",
-  "visualSavingsNudgeTemplate": "Add one more pair to save {{percent}}%.",
-  "visualSavingsAppliedTemplate": "You're saving {{amount}}.",
-  "visualSavingsPreviewTemplate": "Your potential savings: {{amount}}",
+  "visualSavingsNudgeTemplate": {{ default_visual_nudge | json }},
+  "visualSavingsAppliedTemplate": {{ default_visual_applied | json }},
+  "visualSavingsPreviewTemplate": {{ default_visual_preview | json }},
   "footwearQualifiedTemplate": {{ default_footwear_qualified | json }},
   "pdpSwatchSourceRead": {
     "file": "sections/pdp-buy-box.liquid",
