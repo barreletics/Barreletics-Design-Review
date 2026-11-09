@@ -194,10 +194,11 @@ test('at 2 pairs qualified line shows 15% when template retains JS placeholder',
     footwearQualifiedTemplate: 'Save {{percent}}% on your Performance Skin pairs.'
   });
   var r = bundle.computeBundlePromo([closedSkin(2)], cfg, 14800, VARIANT);
-  assert.equal(r.footwearConfirmationLine, 'Save 15% on your Performance Skin pairs.');
+  assert.equal(r.visualSavingsMode, 'preview');
+  assert.match(r.visualSavingsLine, /Your potential savings: \$22\.20/);
   var html = bundle.renderPromoHtml(r);
-  assert.match(html, /Save 15% on your Performance Skin pairs/);
-  assert.ok(!html.match(/Save % on your Performance Skin/));
+  assert.match(html, /Your potential savings: \$22\.20/);
+  assert.ok(!html.includes('cart-bundle-promo__footwear-qualified'));
 
   var copperCart = [
     {
@@ -237,7 +238,8 @@ test('regression: Liquid-stripped template yields bare Save % in DOM', function 
   var container = document.createElement('div');
   document.body.appendChild(container);
   mod.mountPromo(container, [closedSkin(2)], fixed, 14800, VARIANT);
-  var qualified = container.querySelector('.cart-bundle-promo__footwear-qualified');
-  assert.ok(qualified);
-  assert.match(qualified.textContent, /Save 15% on your Performance Skin pairs/);
+  var vs = container.querySelector('[data-visual-savings]');
+  assert.ok(vs);
+  assert.match(vs.textContent, /Your potential savings: \$22\.20/);
+  assert.ok(!vs.textContent.match(/Save % on/));
 });

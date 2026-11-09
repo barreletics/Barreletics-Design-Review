@@ -46,6 +46,9 @@
     benefitHeadline: 'Buy 2 or more pairs. Save 15%.',
     benefitSupportTemplate: 'Choose your second pair below.',
     benefitSupportAddTemplate: 'Add another pair below.',
+    visualSavingsNudgeTemplate: 'Add one more pair to save {{percent}}%.',
+    visualSavingsAppliedTemplate: "You're saving {{amount}}.",
+    visualSavingsPreviewTemplate: 'Your potential savings: {{amount}}',
     benefitCtaLabel: 'Add another pair',
     footwearQualifiedTemplate: 'Save {{percent}}% on your Performance Skin pairs.',
     addPairHeadline: 'Add one more pair of Performance Skins',
@@ -857,6 +860,30 @@
     var savingsTag =
       pairSavingsMode === 'applied' ? 'Applied' : pairSavingsMode === 'preview' ? 'Preview' : '';
 
+    var visualSavingsLine = '';
+    var visualSavingsMode = 'none';
+    if (showAddPairStage && skin.quantity === 1 && pairSavingsCents === 0) {
+      visualSavingsLine = fillTemplate(
+        config.visualSavingsNudgeTemplate || 'Add one more pair to save {{percent}}%.',
+        { percent: footwearPct }
+      );
+      visualSavingsMode = 'nudge';
+    } else if (skin.quantity >= 2 && pairSavingsCents > 0) {
+      if (pairSavingsMode === 'applied') {
+        visualSavingsLine = fillTemplate(
+          config.visualSavingsAppliedTemplate || "You're saving {{amount}}.",
+          { amount: formatMoney(pairSavingsCents) }
+        );
+        visualSavingsMode = 'applied';
+      } else if (pairSavingsMode === 'preview') {
+        visualSavingsLine = fillTemplate(
+          config.visualSavingsPreviewTemplate || 'Your potential savings: {{amount}}',
+          { amount: formatMoney(pairSavingsCents) }
+        );
+        visualSavingsMode = 'preview';
+      }
+    }
+
     var qualNote = '';
     var pantsTemplate = config.pantsOfferTemplate || config.pantsHeadline;
     var pantsOfferLine = fillTemplate(pantsTemplate, { percent: config.pantsPercent });
@@ -915,8 +942,31 @@
       pantsOutfitSupport: config.pantsOutfitSupport,
       addPairColorUnresolvedNotice: unresolvedNotice,
       unknownCartColorNotice: unresolvedNotice,
+      visualSavingsLine: visualSavingsLine,
+      visualSavingsMode: visualSavingsMode,
       config: config
     };
+  }
+
+  function renderVisualSavingsHtml(result) {
+    if (!result || !result.visualSavingsLine) return '';
+    var mode = result.visualSavingsMode || 'none';
+    var cls = 'cart-bundle-promo__visual-savings';
+    if (mode === 'applied') cls += ' is-applied';
+    if (mode === 'preview') cls += ' is-preview';
+    if (mode === 'nudge') cls += ' is-nudge';
+    var html =
+      '<p class="' +
+      cls +
+      '" data-visual-savings data-visual-savings-mode="' +
+      escapeHtml(mode) +
+      '">';
+    if (mode === 'preview') {
+      html += '<span class="cart-bundle-promo__preview-tag">PREVIEW</span> ';
+    }
+    html += '<span class="cart-bundle-promo__visual-savings-text">' + escapeHtml(result.visualSavingsLine);
+    html += '</span></p>';
+    return html;
   }
 
   function computeBundlePromo(cartItems, rawConfig, cartTotalCents, opts) {
@@ -995,6 +1045,7 @@
         html +=
           '<div class="cart-bundle-promo__pants-picker" data-bundle-pants-picker hidden>' +
           '<div class="cart-bundle-promo__pants-selects" data-pants-selects></div>' +
+          '<p class="cart-bundle-promo__pants-add-status" data-pants-add-status hidden></p>' +
           '<button type="button" class="cart-bundle-promo__pants-add" data-bundle-add-pant disabled>' +
           escapeHtml(cfg.pantsAddLabel) +
           '</button>' +
@@ -1028,6 +1079,9 @@
         escapeHtml(result.benefitHeadline || cfg.benefitHeadline) +
         '</h2>';
       html += '<p class="cart-bundle-promo__benefit-support">' + escapeHtml(supportLine) + '</p>';
+      if (result.visualSavingsMode === 'nudge') {
+        html += renderVisualSavingsHtml(result);
+      }
       if (result.addPairColorUnresolvedNotice) {
         html +=
           '<p class="cart-bundle-promo__add-pair-status is-error" data-add-pair-unresolved>' +
@@ -1055,32 +1109,11 @@
         '</div></div></div>';
     }
 
-    if (result.footwearConfirmationLine) {
-      var qTag = result.savingsTag || 'Preview';
-      html +=
-        '<p class="cart-bundle-promo__footwear-qualified"><span class="cart-bundle-promo__preview-tag">' +
-        escapeHtml(qTag) +
-        '</span> ' +
-        escapeHtml(result.footwearConfirmationLine) +
-        '</p>';
+    if (result.visualSavingsMode === 'applied' || result.visualSavingsMode === 'preview') {
+      html += renderVisualSavingsHtml(result);
     } else if (result.footwearOfferLine) {
       html +=
         '<p class="cart-bundle-promo__footwear-offer">' + escapeHtml(result.footwearOfferLine) + '</p>';
-    }
-
-    if (result.nudge) {
-      html += '<div class="cart-bundle-promo__progress">' + escapeHtml(result.nudge) + '</div>';
-    }
-
-    if (result.savingsLine) {
-      var tagV = result.savingsTag || 'Preview';
-      html +=
-        '<div class="cart-bundle-promo__savings"><span class="cart-bundle-promo__preview-tag">' +
-        escapeHtml(tagV) +
-        '</span> ' +
-        '<span>' +
-        escapeHtml(result.savingsLine) +
-        '</span></div>';
     }
 
     if (result.showPantsOffer) {
@@ -1116,6 +1149,7 @@
         html +=
           '<div class="cart-bundle-promo__pants-picker" data-bundle-pants-picker hidden>' +
           '<div class="cart-bundle-promo__pants-selects" data-pants-selects></div>' +
+          '<p class="cart-bundle-promo__pants-add-status" data-pants-add-status hidden></p>' +
           '<button type="button" class="cart-bundle-promo__pants-add" data-bundle-add-pant disabled>' +
           escapeHtml(cfgP.pantsAddLabel || cfgP.pantsOutfitCta || 'Choose yoga pants') +
           '</button>' +
@@ -1165,6 +1199,36 @@
     } else if (typeof state.syncSubmit === 'function') {
       state.syncSubmit(recoverOpts);
     }
+  }
+
+  function recoverPantsSubmitState(state, addBtn, previousLabel, revalidate) {
+    state.pending = false;
+    if (addBtn) {
+      addBtn.textContent = previousLabel;
+    }
+    if (typeof revalidate === 'function') {
+      revalidate();
+    }
+  }
+
+  function pantsOptionKeysCount(options) {
+    return (options || []).length;
+  }
+
+  function pantsSelectionComplete(selected, optionCount) {
+    for (var i = 1; i <= optionCount; i++) {
+      var key = 'option' + i;
+      if (!selected[key]) return false;
+    }
+    return optionCount > 0;
+  }
+
+  function variantAvailableForOptionValue(variants, optionKey, value) {
+    for (var i = 0; i < (variants || []).length; i++) {
+      var v = variants[i];
+      if (v[optionKey] === value && v.available !== false) return true;
+    }
+    return false;
   }
 
   function initAddPairFlow(root, config, cartItems) {
@@ -1436,7 +1500,7 @@
       initAddPairFlow(container, mergeConfig(config), cartItems);
     }
     if (result.pantsPickerVisible) {
-      initPantsPicker(container, result.config);
+      initPantsPicker(container, mergeConfig(config));
     }
     decorateCartOfferNavLinks(arm);
     return result;
@@ -1455,9 +1519,53 @@
     return null;
   }
 
+  function setPantsAddStatus(statusEl, message, isError) {
+    if (!statusEl) return;
+    if (!message) {
+      statusEl.hidden = true;
+      statusEl.textContent = '';
+      statusEl.classList.remove('is-error');
+      return;
+    }
+    statusEl.hidden = false;
+    statusEl.textContent = message;
+    statusEl.classList.toggle('is-error', !!isError);
+  }
+
+  function wirePantsAddButton(block, addBtn, config, revalidateFn) {
+    if (!addBtn || addBtn.dataset.boundPantsPromo === '1') return;
+    addBtn.dataset.boundPantsPromo = '1';
+    addBtn.dataset.bound = 'true';
+    var statusEl = block.querySelector('[data-pants-add-status]');
+    var state = { pending: false };
+
+    addBtn.addEventListener('click', function () {
+      if (addBtn.disabled || state.pending) return;
+      var vid = parseInt(addBtn.getAttribute('data-variant-id'), 10);
+      if (!vid) {
+        setPantsAddStatus(statusEl, 'Choose all options before adding.', true);
+        return;
+      }
+      state.pending = true;
+      addBtn.disabled = true;
+      var prev = addBtn.textContent;
+      addBtn.textContent = 'Adding…';
+      setPantsAddStatus(statusEl, '', false);
+      var addFn = config.addToCartFn || defaultAddToCart;
+      addFn(vid)
+        .catch(function () {
+          setPantsAddStatus(statusEl, 'Could not add yoga pants. Try again.', true);
+        })
+        .finally(function () {
+          recoverPantsSubmitState(state, addBtn, prev, revalidateFn);
+        });
+    });
+  }
+
   function initPantsPicker(root, config) {
     var block = root.querySelector('[data-bundle-pants-picker]');
-    if (!block) return;
+    if (!block || block.dataset.pantsPickerInit === '1') return;
+    block.dataset.pantsPickerInit = '1';
     var selectsWrap = block.querySelector('[data-pants-selects]');
     var addBtn = block.querySelector('[data-bundle-add-pant]');
     var fallback = block.querySelector('[data-pants-fallback]');
@@ -1476,20 +1584,31 @@
         selectsWrap.innerHTML =
           '<p class="cart-bundle-promo__pants-note">Using theme default variant — change in theme settings.</p>';
       }
+      wirePantsAddButton(block, addBtn, config, function () {
+        addBtn.disabled = false;
+      });
       return;
     }
 
     var fetchFn = config.fetchProductJson || defaultFetchProduct;
+    var state = { pending: false, variants: [], selected: {}, optionCount: 0 };
+
+    function revalidatePantsAdd() {
+      updatePantsAddButton(addBtn, state.variants, state.selected, state.optionCount);
+    }
+
     fetchFn(handle)
       .then(function (data) {
         var product = data.product || data;
         var variants = product.variants || [];
         if (!variants.length) throw new Error('no-variants');
         var options = product.options || [];
+        state.variants = variants;
+        state.optionCount = pantsOptionKeysCount(options);
         block.hidden = false;
         if (fallback) fallback.hidden = true;
         selectsWrap.innerHTML = '';
-        var selected = {};
+        state.selected = {};
 
         options.forEach(function (opt, idx) {
           var name = opt.name;
@@ -1508,17 +1627,21 @@
           (opt.values || []).forEach(function (val) {
             var o = document.createElement('option');
             o.value = val;
-            o.textContent = val;
+            var inStock = variantAvailableForOptionValue(variants, key, val);
+            o.textContent = inStock ? val : val + ' (out of stock)';
+            o.disabled = !inStock;
             sel.appendChild(o);
           });
           sel.addEventListener('change', function () {
-            selected[key] = sel.value || undefined;
-            updatePantsAddButton(addBtn, variants, selected);
+            state.selected[key] = sel.value || undefined;
+            if (!sel.value) delete state.selected[key];
+            revalidatePantsAdd();
           });
           selectsWrap.appendChild(sel);
         });
 
-        updatePantsAddButton(addBtn, variants, selected);
+        revalidatePantsAdd();
+        wirePantsAddButton(block, addBtn, config, revalidatePantsAdd);
       })
       .catch(function () {
         block.hidden = false;
@@ -1531,20 +1654,15 @@
       });
   }
 
-  function updatePantsAddButton(btn, variants, selected) {
+  function updatePantsAddButton(btn, variants, selected, optionCount) {
     if (!btn) return;
-    var need = {};
-    var keys = Object.keys(selected);
-    if (keys.length === 0) {
+    if (!pantsSelectionComplete(selected, optionCount)) {
       btn.disabled = true;
       btn.removeAttribute('data-variant-id');
       return;
     }
-    keys.forEach(function (k) {
-      if (selected[k]) need[k] = selected[k];
-    });
-    var resolved = resolveVariantFromOptions(variants, need);
-    if (resolved && resolved.id) {
+    var resolved = resolveVariantFromOptions(variants, selected);
+    if (resolved && resolved.id && resolved.available !== false) {
       btn.disabled = false;
       btn.setAttribute('data-variant-id', String(resolved.id));
     } else {
