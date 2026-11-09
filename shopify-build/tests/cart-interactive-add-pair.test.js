@@ -2,7 +2,12 @@
 
 var test = require('node:test');
 var assert = require('node:assert/strict');
+var fs = require('fs');
+var path = require('path');
+var { parseHTML } = require('linkedom');
 var bundle = require('../assets/cart-bundle-promo.js');
+
+var SNIPPET = path.join(__dirname, '../snippets/cart-bundle-promo-config.liquid');
 
 var LIVE = bundle.mergeConfig({ enabled: true, pairPromoMode: 'live_2for15' });
 var VARIANT = { offerArm: 'variant' };
@@ -138,4 +143,66 @@ test('no discount redirect links in rendered html', function () {
   var r = bundle.computeBundlePromo([closedSkin(2)], LIVE, 14800, VARIANT);
   var html = bundle.renderPromoHtml(r);
   assert.ok(!html.includes('/discount/'));
+});
+
+test('snippet footwearQualifiedTemplate: assign+json placeholder (Liquid must not strip {{percent}})', function () {
+  var liquid = fs.readFileSync(SNIPPET, 'utf8');
+  assert.ok(liquid.includes('"footwearQualifiedTemplate": {{ default_footwear_qualified | json }}'));
+  assert.ok(!liquid.match(/"footwearQualifiedTemplate":\s*"Save \{\{percent\}\}/));
+});
+
+test('at 2 pairs qualified line shows 15% when template retains JS placeholder', function () {
+  var cfg = bundle.mergeConfig({
+    enabled: true,
+    pairPromoMode: 'live_2for15',
+    livePairPercent: 15,
+    footwearQualifiedTemplate: 'Save {{percent}}% on your Performance Skin pairs.'
+  });
+  var r = bundle.computeBundlePromo([closedSkin(2)], cfg, 14800, VARIANT);
+  assert.equal(r.footwearConfirmationLine, 'Save 15% on your Performance Skin pairs.');
+  var html = bundle.renderPromoHtml(r);
+  assert.match(html, /Save 15% on your Performance Skin pairs/);
+  assert.ok(!html.match(/Save % on your Performance Skin/));
+
+  var copperCart = [
+    {
+      quantity: 2,
+      final_line_price: 15600,
+      product_title: 'Closed Sole Performance Skin',
+      product_type: 'Grippy Shoes',
+      variant_title: 'Copper Swirl · L (W 8-11)',
+      url: '/products/best-reformer-pilates-legree-workout-shoes'
+    }
+  ];
+  var r156 = bundle.computeBundlePromo(copperCart, cfg, 15600, VARIANT);
+  assert.equal(r156.footwearConfirmationLine, 'Save 15% on your Performance Skin pairs.');
+  assert.equal(r156.pairSavingsCents, 2340);
+});
+
+test('regression: Liquid-stripped template yields bare Save % in DOM', function () {
+  var stripped = bundle.mergeConfig({
+    enabled: true,
+    pairPromoMode: 'live_2for15',
+    footwearQualifiedTemplate: 'Save % on your Performance Skin pairs.'
+  });
+  var r = bundle.computeBundlePromo([closedSkin(2)], stripped, 14800, VARIANT);
+  assert.match(r.footwearConfirmationLine, /^Save % on/);
+
+  var parsed = parseHTML('<!DOCTYPE html><html><body></body></html>');
+  globalThis.window = parsed.window;
+  globalThis.document = parsed.document;
+  delete require.cache[path.join(__dirname, '../assets/cart-bundle-promo.js')];
+  var mod = require('../assets/cart-bundle-promo.js');
+  var fixed = mod.mergeConfig({
+    enabled: true,
+    pairPromoMode: 'live_2for15',
+    livePairPercent: 15,
+    footwearQualifiedTemplate: 'Save {{percent}}% on your Performance Skin pairs.'
+  });
+  var container = document.createElement('div');
+  document.body.appendChild(container);
+  mod.mountPromo(container, [closedSkin(2)], fixed, 14800, VARIANT);
+  var qualified = container.querySelector('.cart-bundle-promo__footwear-qualified');
+  assert.ok(qualified);
+  assert.match(qualified.textContent, /Save 15% on your Performance Skin pairs/);
 });
