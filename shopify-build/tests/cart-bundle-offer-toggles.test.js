@@ -38,12 +38,20 @@ test('toggle matrix: add OFF, pants ON at 1 pair hides panel (variant)', functio
   assert.equal(r.showPanel, false);
 });
 
-test('toggle matrix: add ON, pants OFF at 2 pairs shows panel without pants', function () {
+test('toggle matrix: add ON, pants OFF at 2 pairs shows add-pair only', function () {
   var c = cfg({ addPairOfferEnabled: true, pantsOfferEnabled: false });
   var r = bundle.computeBundlePromo([closedSkin(2)], c, 14800, VARIANT);
-  assert.equal(r.showAddPairStage, false);
+  assert.equal(r.showAddPairStage, true);
   assert.equal(r.showPantsOffer, false);
-  assert.equal(r.showPanel, false);
+  assert.equal(r.showPanel, true);
+});
+
+test('toggle matrix: both ON at 2 pairs shows add-pair and pants', function () {
+  var c = cfg({ addPairOfferEnabled: true, pantsOfferEnabled: true });
+  var r = bundle.computeBundlePromo([closedSkin(2)], c, 14800, VARIANT);
+  assert.equal(r.showAddPairStage, true);
+  assert.equal(r.showPantsOffer, true);
+  assert.equal(r.showPanel, true);
 });
 
 test('toggle matrix: add OFF, pants ON at 2 pairs shows pants only', function () {

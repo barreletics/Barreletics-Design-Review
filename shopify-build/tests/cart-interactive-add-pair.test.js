@@ -63,12 +63,13 @@ test('at 1 pair: add-pair stage on, pants offer off', function () {
   assert.equal(r.footwearOfferLine, '');
 });
 
-test('at 2+ pairs: pants stage on, add-pair off', function () {
+test('at 2+ pairs: pants stage on, add-pair stays on', function () {
   var mixed = [closedSkin(1, 'Purple'), openSkin(1, 'Black')];
   var r = bundle.computeBundlePromo(mixed, LIVE, 14800, VARIANT);
-  assert.equal(r.showAddPairStage, false);
+  assert.equal(r.showAddPairStage, true);
   assert.equal(r.showPantsOffer, true);
   assert.equal(r.pantsPickerVisible, true);
+  assert.equal(r.benefitSupportTemplate, 'Add another pair below.');
   assert.equal(r.footwearOfferLine, '');
 });
 
@@ -119,15 +120,49 @@ test('render at 1 pair: immediate sole pills and approved copy', function () {
   assert.ok(!html.includes('unlock'));
 });
 
-test('render at 2 pairs includes outfit pants block, no competing add-pair', function () {
+test('render at 2 pairs includes add-pair pills and outfit pants block', function () {
   var r = bundle.computeBundlePromo([closedSkin(2)], LIVE, 14800, VARIANT);
   var html = bundle.renderPromoHtml(r);
-  assert.equal(r.showAddPairStage, false);
+  assert.equal(r.showAddPairStage, true);
+  assert.match(html, /Add another pair below\./);
+  assert.ok(!html.includes('Choose your second pair below.'));
+  assert.match(html, /data-sole-choice="closed"/);
   assert.match(html, /Complete your outfit\./);
   assert.match(html, /Get 35% off one pair of yoga pants\./);
   assert.match(html, /cart-bundle-promo__pants-img/);
   assert.match(html, /data-bundle-pants-picker/);
-  assert.ok(!html.includes('data-bundle-add-pair'));
+  assert.match(html, /data-bundle-add-pair/);
+  assert.equal((html.match(/data-bundle-add-skin-pair/g) || []).length, 1);
+});
+
+test('mountPromo at 1→2→3→4→2→1: sole pills and single Add pair persist', function () {
+  var counts = [1, 2, 3, 4, 2, 1];
+  for (var i = 0; i < counts.length; i++) {
+    var n = counts[i];
+    var parsed = parseHTML('<!DOCTYPE html><html><body></body></html>');
+    globalThis.window = parsed.window;
+    globalThis.document = parsed.document;
+    delete require.cache[path.join(__dirname, '../assets/cart-bundle-promo.js')];
+    var mod = require('../assets/cart-bundle-promo.js');
+    var container = document.createElement('div');
+    document.body.appendChild(container);
+    var items = [closedSkin(n)];
+    mod.mountPromo(container, items, LIVE, 7400 * n, VARIANT);
+    assert.equal(
+      container.querySelectorAll('[data-sole-choice]').length,
+      2,
+      'pairCount ' + n
+    );
+    assert.equal(container.querySelectorAll('[data-bundle-add-skin-pair]').length, 1);
+    assert.ok(container.querySelector('[data-bundle-add-pair]'));
+    if (n >= 2) {
+      assert.ok(container.querySelector('[data-bundle-pants-picker]'));
+      assert.match(container.textContent, /Add another pair below\./);
+    } else {
+      assert.ok(!container.querySelector('[data-bundle-pants-picker]'));
+      assert.match(container.textContent, /Choose your second pair below\./);
+    }
+  }
 });
 
 test('sizesForColor respects availability flag', function () {

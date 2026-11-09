@@ -45,6 +45,7 @@
     closedSoleProductHandle: 'best-reformer-pilates-legree-workout-shoes',
     benefitHeadline: 'Buy 2 or more pairs. Save 15%.',
     benefitSupportTemplate: 'Choose your second pair below.',
+    benefitSupportAddTemplate: 'Add another pair below.',
     benefitCtaLabel: 'Add another pair',
     footwearQualifiedTemplate: 'Save {{percent}}% on your Performance Skin pairs.',
     addPairHeadline: 'Add one more pair of Performance Skins',
@@ -825,7 +826,7 @@
       config.pairPromoMode === 'live_2for15' ? config.livePairPercent : config.tierTwoPercent;
     var addPairOn = isOfferToggleOn(config, 'addPairOfferEnabled');
     var pantsOn = isOfferToggleOn(config, 'pantsOfferEnabled');
-    var showAddPairStage = addPairOn && skin.quantity === 1 && pants.quantity === 0;
+    var showAddPairStage = addPairOn && skin.quantity >= 1 && pants.quantity === 0;
     var showPantsOffer = pantsOn && skin.quantity >= config.pantsMinPairs && pants.quantity === 0;
     var pantsPickerVisible = showPantsOffer;
     var pantsQualOnly = false;
@@ -905,7 +906,10 @@
       freeShippingThresholdCents: config.freeShippingThresholdCents,
       addPairHeadline: config.addPairHeadline,
       benefitHeadline: config.benefitHeadline,
-      benefitSupportTemplate: config.benefitSupportTemplate,
+      benefitSupportTemplate:
+        skin.quantity === 1
+          ? config.benefitSupportTemplate || 'Choose your second pair below.'
+          : config.benefitSupportAddTemplate || 'Add another pair below.',
       benefitCtaLabel: config.benefitCtaLabel,
       pantsOutfitHeadline: config.pantsOutfitHeadline,
       pantsOutfitSupport: config.pantsOutfitSupport,
@@ -1165,7 +1169,8 @@
 
   function initAddPairFlow(root, config, cartItems) {
     var block = root.querySelector('[data-bundle-add-pair]');
-    if (!block) return;
+    if (!block || block.dataset.addPairFlowInit === '1') return;
+    block.dataset.addPairFlowInit = '1';
     var bodyEl = block.querySelector('[data-add-pair-body]');
     var picker = block.querySelector('[data-add-pair-picker]');
     var selectsWrap = block.querySelector('[data-add-pair-selects]');
