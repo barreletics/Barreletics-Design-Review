@@ -1,0 +1,139 @@
+{% comment %}
+  Cart bundle preview JSON config for cart-bundle-promo.js (off unless theme setting enabled).
+  Template placeholders use assign+append (no Liquid tags inside filter string literals).
+{% endcomment %}
+{% liquid
+  assign _l = '{' | append: '{'
+  assign _r = '}' | append: '}'
+  assign _pct = _l | append: 'percent' | append: _r
+  assign _cnt = _l | append: 'count' | append: _r
+  assign _unit = _l | append: 'unit' | append: _r
+  assign _amt = _l | append: 'amount' | append: _r
+  assign default_footwear_offer = 'Buy 2+ Closed Sole pairs. Save ' | append: _pct | append: '%.'
+  assign default_pants_offer = 'Save ' | append: _pct | append: '% on one pair of yoga pants with 2+ Closed Sole pairs.'
+  assign default_pants_headline = default_pants_offer
+  assign default_pants_qual = 'Add 1 more Closed Sole pair for ' | append: _pct | append: '% off yoga pants'
+  assign default_preview_notice = "Preview only—offers aren't applied at checkout."
+  assign default_nudge = 'Add ' | append: _cnt | append: ' ' | append: _unit | append: '. Save ' | append: _pct | append: '.'
+  assign default_savings = 'You save ' | append: _amt | append: '.'
+  assign default_footwear_qualified = 'Save ' | append: _pct | append: '% on your Performance Skin pairs.'
+  assign default_visual_nudge = 'Add one more pair to save ' | append: _pct | append: '%.'
+  assign default_visual_applied = "You're saving " | append: _amt | append: '.'
+  assign default_visual_preview = 'Your potential savings: ' | append: _amt
+  assign default_pants_url = '/products/' | append: 'lightly-padded-knee-yoga-pant-black'
+%}
+{%- comment -%}
+  Native cart swatches mirror sections/pdp-buy-box.liquid lines 653–684 (owner attachment sha256 9e038bfb…).
+  images[{handle}.png], value.swatch.color, last-word handle, Copper Swirl asset override — no invented hex map.
+{%- endcomment -%}
+{%- capture _native_swatches_json -%}
+{%- assign _swatch_handles = 'best-reformer-pilates-legree-workout-shoes,studio-performance-skin-footwear' | split: ',' -%}
+{%- assign _first_handle = true -%}
+{
+{%- for _handle in _swatch_handles -%}
+{%- assign _product = all_products[_handle] -%}
+{%- if _product == blank -%}{%- continue -%}{%- endif -%}
+{%- unless _first_handle -%},{%- endunless -%}
+{%- assign _first_handle = false -%}
+{{ _handle | json }}: {
+{%- assign _first_color = true -%}
+{%- for _option in _product.options_with_values -%}
+{%- assign _opt_down = _option.name | downcase -%}
+{%- if _opt_down contains 'color' or _opt_down contains 'colour' -%}
+{%- for _value in _option.values -%}
+{%- liquid
+  assign _label = _value
+  if _value.name != blank
+    assign _label = _value.name
+  endif
+  assign swatch_file_name = _label | handle | append: '.png'
+  assign swatch_bg_img = blank
+  if images[swatch_file_name] != blank
+    assign swatch_bg_img = swatch_file_name | file_img_url: '50x50' | prepend: 'https:' | split: '?' | first
+  endif
+  assign swatch_bg = _label | split: ' ' | last | handle
+  if _value.swatch.color != blank and swatch_bg_img == blank
+    assign swatch_bg = _value.swatch.color
+  endif
+  if _label == 'Copper Swirl'
+    assign swatch_bg = '#574535'
+    assign swatch_bg_img = 'swatch-copper-swirl.png' | asset_url
+  endif
+  assign swatch_is_white = false
+  if swatch_bg == 'white' or swatch_bg == '#ffffff' or swatch_bg == '#fff'
+    assign swatch_is_white = true
+  endif
+-%}
+{%- unless _first_color -%},{%- endunless -%}
+{%- assign _first_color = false -%}
+{{ _label | json }}: {
+  "backgroundColor": {{ swatch_bg | json }},
+  "imageUrl": {% if swatch_bg_img != blank %}{{ swatch_bg_img | json }}{% else %}null{% endif %},
+  "whiteInset": {{ swatch_is_white | json }},
+  "source": "sections/pdp-buy-box.liquid:653-684"
+}
+{%- endfor -%}
+{%- endif -%}
+{%- endfor -%}
+}
+{%- endfor -%}
+}
+{%- endcapture -%}
+<script id="cart-bundle-promo-config" type="application/json">
+{
+  "enabled": {{ settings.cart_bundle_promo_enabled | default: false | json }},
+  "addPairOfferEnabled": {% if settings.cart_bundle_add_pair_offer_enabled == false %}false{% else %}true{% endif %},
+  "pantsOfferEnabled": {% if settings.cart_bundle_pants_offer_enabled == false %}false{% else %}true{% endif %},
+  "pairPromoMode": {{ settings.cart_bundle_pair_mode | default: 'live_2for15' | json }},
+  "livePairPercent": {{ settings.cart_bundle_live_pair_percent | default: 15 | json }},
+  "tierTwoPercent": {{ settings.cart_bundle_tier_two_percent | default: 10 | json }},
+  "tierThreePlusPercent": {{ settings.cart_bundle_tier_three_plus_percent | default: 15 | json }},
+  "pantsMinPairs": {{ settings.cart_bundle_pants_min_pairs | default: 2 | json }},
+  "pantsPercent": {{ settings.cart_bundle_pants_percent | default: 35 | json }},
+  "pantsProposedPriceCents": {{ settings.cart_bundle_pants_proposed_price | default: 9800 | json }},
+  "footwearOfferTemplate": {{ settings.cart_bundle_footwear_offer_template | default: default_footwear_offer | json }},
+  "pantsOfferTemplate": {{ settings.cart_bundle_pants_offer_template | default: default_pants_offer | json }},
+  "pantsHeadline": {{ settings.cart_bundle_pants_headline | default: default_pants_headline | json }},
+  "pantsQualTemplate": {{ settings.cart_bundle_pants_qual_template | default: default_pants_qual | json }},
+  "previewNotice": {{ settings.cart_bundle_preview_notice | default: default_preview_notice | json }},
+  "nudgeAddPairTemplate": {{ settings.cart_bundle_nudge_template | default: default_nudge | json }},
+  "pantsProductTitle": {{ settings.cart_bundle_pant_product_title | default: 'Lightly Padded Knee Yoga Pant' | json }},
+  "pantsImageUrl": {{ settings.cart_bundle_pant_image_url | default: 'https://cdn.shopify.com/s/files/1/0045/0612/4391/files/IMG_2914.jpg?v=1741040643' | json }},
+  "pantsAddLabel": {{ settings.cart_bundle_pant_add_label | default: 'Add yoga pants' | json }},
+  "pantsProductHandle": {{ settings.cart_bundle_pant_product_handle | default: 'lightly-padded-knee-yoga-pant-black' | json }},
+  "pantsProductUrl": {% if settings.cart_bundle_pant_product_url != blank %}{{ settings.cart_bundle_pant_product_url | json }}{% else %}{{ default_pants_url | json }}{% endif %},
+  "pantsDefaultVariantId": {{ settings.cart_bundle_pant_variant_id | default: 0 | json }},
+  "freeShippingThresholdCents": {{ settings.cart_bundle_free_ship_threshold | default: 15000 | json }},
+  "savingsTemplate": {{ settings.cart_bundle_savings_template | default: default_savings | json }},
+  "previewDisclaimer": {{ settings.cart_bundle_preview_disclaimer | default: 'Preview estimate only. Your cart still uses live Shopify prices; checkout discounts are not applied by this theme preview.' | json }},
+  "skinHandleNeedles": {{ settings.cart_bundle_skin_handles | default: 'closed-sole' | split: ',' | json }},
+  "skinTitleNeedles": {{ settings.cart_bundle_skin_titles | default: 'Closed Sole,Performance Skin' | split: ',' | json }},
+  "pantHandleNeedles": {{ settings.cart_bundle_pant_handles | default: 'pant,yoga-pant' | split: ',' | json }},
+  "pantTitleNeedles": {{ settings.cart_bundle_pant_titles | default: 'Yoga Pant,Pant' | split: ',' | json }},
+  "skinRequireClosedSole": {{ settings.cart_bundle_require_closed_sole | default: true | json }},
+  "openSoleProductHandle": "studio-performance-skin-footwear",
+  "closedSoleProductHandle": "best-reformer-pilates-legree-workout-shoes",
+  "benefitHeadline": "Buy 2 or more pairs. Save 15%.",
+  "benefitSupportTemplate": "Choose your second pair below.",
+  "benefitSupportAddTemplate": "Add another pair below.",
+  "visualSavingsNudgeTemplate": {{ default_visual_nudge | json }},
+  "visualSavingsAppliedTemplate": {{ default_visual_applied | json }},
+  "visualSavingsPreviewTemplate": {{ default_visual_preview | json }},
+  "footwearQualifiedTemplate": {{ default_footwear_qualified | json }},
+  "pdpSwatchSourceRead": {
+    "file": "sections/pdp-buy-box.liquid",
+    "ownerAttachmentSha256": "9e038bfbf4826df16b55d3068e055b1d5dc679cfe4463652d571db781613cab7",
+    "logicLines": "653-684",
+    "oneOffPhotoBranchLines": "643-651"
+  },
+  "nativeProductSwatches": {% assign _trim = _native_swatches_json | strip %}{% if _trim == blank or _trim == '{}' %}{}{% else %}{{ _trim }}{% endif %},
+  "benefitCtaLabel": "Add another pair",
+  "addPairHeadline": "Add one more pair of Performance Skins",
+  "openSoleAddLabel": "Open Sole",
+  "closedSoleAddLabel": "Closed Sole",
+  "addPairSubmitLabel": "Add pair",
+  "unresolvedCartColorNotice": "We could not read the color on a Performance Skin in your cart. Update that line item before adding another pair here.",
+  "pantsOutfitHeadline": "Complete your outfit.",
+  "pantsOutfitSupport": "Get 35% off one pair of yoga pants."
+}
+</script>

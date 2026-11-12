@@ -1,0 +1,31 @@
+{
+  "name": "nov08-cart-drawer-bundle-preview",
+  "description": "Rebasable hunks only — append theme settings group; do not replace settings_data.json or full settings_schema baseline.",
+  "alternate_projects_source": {
+    "repository": "alternate-projects",
+    "ref": "main",
+    "commit": "ca0cd8af5a8256ed7d7af919959330650fe7f0b1",
+    "approved_mock": "approved_90da.html",
+    "note": "BOOT rule 1: theme numeric IDs only in alternate-projects THEMES.md"
+  },
+  "shopify_push_this_run": false,
+  "hunks": [
+    { "path": "assets/cart-bundle-promo.js", "action": "add_or_replace" },
+    { "path": "assets/cart-bundle-promo.css", "action": "add_or_replace" },
+    { "path": "assets/cart.js", "action": "patch" },
+    { "path": "config/settings_schema.json", "action": "append_group_only", "group": "Cart bundle preview (Nov08)" },
+    { "path": "layout/theme.liquid", "action": "patch", "anchors": ["cart-bundle-promo-config", "cart-bundle-promo.js", "cart.js"] },
+    { "path": "sections/main-cart.liquid", "action": "add_or_replace" },
+    { "path": "sections/pdp-buy-box.liquid", "action": "patch", "note": "remove duplicate cart.js script_tag" },
+    { "path": "snippets/cart-bundle-promo-config.liquid", "action": "add_or_replace" },
+    { "path": "snippets/cart-drawer.liquid", "action": "patch" },
+    { "path": "tests/cart-bundle-promo.test.js", "action": "add_or_replace" }
+  ],
+  "deployment_prerequisites": [
+    "Parent: fresh target pull + backup parity on Nov08 Cart + bundles draft",
+    "Parent supplies alternate-projects source bundle (BOOT read failed in cloud)",
+    "Merge hunks onto fresh Shopify pull — never wholesale settings_schema/settings_data",
+    "Enable flag in theme editor after handle/variant needles verified",
+    "No publish / no checkout backend activation from this patch"
+  ]
+}
